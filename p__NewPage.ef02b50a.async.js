@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[7],{"4TiL":function(P,E,_){"use strict";_.r(E);var s=_("IzEo"),n=_("bx4M"),D=_("tU7J"),a=_("wFql"),M=_("q1tI"),d=_.n(M),O=_("tMyG"),t=_("nKUr"),l=_.n(t);E.default=function(){return Object(t.jsx)(O.a,{children:Object(t.jsx)(n.a,{children:Object(t.jsx)(a.a.Text,{strong:!0,children:"Hello I'm new Escola LMS Page"})})})}}}]);
