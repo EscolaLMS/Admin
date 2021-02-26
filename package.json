@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "Headless LMS Admin panel",
+  "homepage": "https://escolalms.github.io/Admin",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",

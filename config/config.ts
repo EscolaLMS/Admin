@@ -55,4 +55,6 @@ export default defineConfig({
     schemaPath: join(__dirname, 'oneapi.json'),
     mock: false,
   },
+  base: '/Admin/',
+  publicPath: '/Admin/',
 });

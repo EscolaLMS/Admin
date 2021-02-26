@@ -1,17 +1,10 @@
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import { Alert, Space, message, Tabs, Divider } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Alert, message, Divider } from 'antd';
 import React, { useState } from 'react';
-import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
-import { login, getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { login } from '@/services/ant-design-pro/login';
 
 import styles from './index.less';
 
@@ -41,7 +34,6 @@ const goto = () => {
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
@@ -59,7 +51,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     setSubmitting(true);
     try {
-      const msg = await login({ ...values, type });
+      const msg = await login({ ...values });
       if (msg.status === 'ok') {
         message.success('success');
         await fetchUserInfo();
@@ -72,7 +64,7 @@ const Login: React.FC = () => {
     }
     setSubmitting(false);
   };
-  const { status, type: loginType } = userLoginState;
+  const { status } = userLoginState;
 
   return (
     <div className={styles.container}>
@@ -113,7 +105,7 @@ const Login: React.FC = () => {
               handleSubmit(values as API.LoginParams);
             }}
           >
-            {status === 'error' && loginType === 'account' && (
+            {status === 'error' && (
               <LoginMessage
                 content={intl.formatMessage({
                   id: 'pages.login.accountLogin.errorMessage',
@@ -121,54 +113,54 @@ const Login: React.FC = () => {
                 })}
               />
             )}
-            {type === 'account' && (
-              <>
-                <ProFormText
-                  name="username"
-                  fieldProps={{
-                    size: 'large',
-                    prefix: <UserOutlined className={styles.prefixIcon} />,
-                  }}
-                  placeholder={intl.formatMessage({
-                    id: 'pages.login.username.placeholder',
-                    defaultMessage: 'admin or user',
-                  })}
-                  rules={[
-                    {
-                      required: true,
-                      message: (
-                        <FormattedMessage
-                          id="pages.login.username.required"
-                          defaultMessage="required!"
-                        />
-                      ),
-                    },
-                  ]}
-                />
-                <ProFormText.Password
-                  name="password"
-                  fieldProps={{
-                    size: 'large',
-                    prefix: <LockOutlined className={styles.prefixIcon} />,
-                  }}
-                  placeholder={intl.formatMessage({
-                    id: 'pages.login.password.placeholder',
-                    defaultMessage: ' ant.design',
-                  })}
-                  rules={[
-                    {
-                      required: true,
-                      message: (
-                        <FormattedMessage
-                          id="pages.login.password.required"
-                          defaultMessage="required"
-                        />
-                      ),
-                    },
-                  ]}
-                />
-              </>
-            )}
+
+            <>
+              <pre>username/password: admin/ant.design</pre>
+              <ProFormText
+                name="username"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.username.placeholder',
+                  defaultMessage: 'admin or user',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.username.required"
+                        defaultMessage="required!"
+                      />
+                    ),
+                  },
+                ]}
+              />
+              <ProFormText.Password
+                name="password"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.password.placeholder',
+                  defaultMessage: ' ant.design',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.password.required"
+                        defaultMessage="required"
+                      />
+                    ),
+                  },
+                ]}
+              />
+            </>
 
             <div
               style={{
