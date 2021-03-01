@@ -1,1 +1,1 @@
-web: npm i which && PORT=$PORT npm run start
+web: PORT=$PORT npm run start
