@@ -1,0 +1,17 @@
+version: "3"
+
+volumes:
+  frontend-node-modules: ~
+
+services:
+  build:
+    environment:
+      - PORT=5017
+    image: node:14-alpine
+    ports:
+      - 5017:5017
+    volumes:
+      - ./:/srv
+      - frontend-node-modules:/srv/node_modules/
+    working_dir: /srv/app
+    command: "sh -c 'PORT=$PORT yarn && yarn start'"
