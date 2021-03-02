@@ -6,7 +6,7 @@ export default (): React.ReactNode => {
   return (
     <PageContainer>
       <Card>
-        <Typography.Text strong>Hello I'm new Escola LMS Page</Typography.Text>
+        <Typography.Text strong>Hello I'm new Escola LMS Page.</Typography.Text>
       </Card>
     </PageContainer>
   );
