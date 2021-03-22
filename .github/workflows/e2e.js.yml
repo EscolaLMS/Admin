@@ -7,9 +7,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - run: npm i
+
       - name: Cypress.io
         uses: cypress-io/github-action@v2.8.2
         with:
-          build: npm install
-          start: npm start
+          start: npm run start
           wait-on: http://localhost:8000
