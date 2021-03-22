@@ -10,6 +10,6 @@ jobs:
       - name: Cypress.io
         uses: cypress-io/github-action@v2.8.2
         with:
-          build: npm
+          build: npm install
           start: npm start
           wait-on: http://localhost:8000
