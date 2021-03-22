@@ -8,9 +8,9 @@ const getPaths = (routes) => {
     routes
       .map((route) => {
         if (route.routes) {
-          return [route.path, ...getPaths(route.routes)];
+          return [route.component ? route.path : '', ...getPaths(route.routes)];
         }
-        return route.layout === false ? '' : route.path;
+        return route.component ? route.path : '';
       })
       .flat(100000)
       .filter((path) => !!path),
