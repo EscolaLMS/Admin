@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["cypress"],
     "outDir": "build/dist",
     "module": "esnext",
     "target": "esnext",
@@ -36,5 +37,11 @@
     "jest.config.js",
     "mock/*"
   ],
-  "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"]
+  "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "createDefaultProgram": true
+  }
 }
