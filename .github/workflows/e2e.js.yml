@@ -1,5 +1,10 @@
 name: End-to-end tests
-on: [push]
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -12,8 +17,12 @@ jobs:
       - name: Cypress.io
         uses: cypress-io/github-action@v2.8.2
         with:
+          record: true
           start: npm run start
           wait-on: http://localhost:8000
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # after the test run completes
       # store videos and any screenshots
