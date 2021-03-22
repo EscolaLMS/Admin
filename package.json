@@ -32,14 +32,24 @@
     "test": "umi test",
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "cypress": "cypress open",
+    "cypress-run": "cypress run",
+    "cypress-test": "start-server-and-test start http://localhost:8000 cypress-run",
+    "cypress-ci": "start-server-and-test start http://localhost:8000 cypress-run"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": ["prettier --write"]
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier --write"
+    ]
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 10"],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-descriptions": "^1.2.0",
@@ -51,6 +61,7 @@
     "antd": "^4.12.0",
     "classnames": "^2.2.6",
     "cross-env": "^7.0.0",
+    "cypress": "^6.8.0",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",
@@ -58,6 +69,7 @@
     "react-dev-inspector": "^1.1.1",
     "react-dom": "^17.0.0",
     "react-helmet-async": "^1.0.4",
+    "start-server-and-test": "^1.12.1",
     "umi": "^3.2.14",
     "umi-request": "^1.0.8"
   },
@@ -83,6 +95,7 @@
     "detect-installer": "^1.0.1",
     "enzyme": "^3.11.0",
     "eslint": "^7.1.0",
+    "eslint-plugin-cypress": "^2.11.2",
     "express": "^4.17.1",
     "gh-pages": "^3.0.0",
     "jsdom-global": "^3.0.2",

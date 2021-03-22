@@ -1,5 +1,7 @@
 # Escola LMS
 
+[![Admin Panel](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/diinyp&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/diinyp/runs)
+
 This project is initialized with [Escola LMS](https://pro.ant.design). Follow is the quick guide for how to use.
 
 ## Environment Prepare
