@@ -1,10 +1,20 @@
 module.exports = {
-  testURL: 'http://localhost:8000',
-  testEnvironment: './tests/PuppeteerEnvironment',
-  verbose: true,
-  extraSetupFiles: ['./tests/setupTests.js'],
-  globals: {
-    ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: false,
-    localStorage: null,
+  preset: 'ts-jest',
+  moduleDirectories: ['node_modules'],
+  transform: {
+    '\\.tsx?$': 'ts-jest',
+    '\\.jsx?$': 'babel-jest', // if you have jsx tests too
+    // 'node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$': 'ts-jest',
   },
+  globals: {
+    'ts-jest': {
+      tsConfig: '<rootDir>/tsconfig.json',
+    },
+  },
+  transformIgnorePatterns: [
+    '[/\\\\]node_modules[/\\\\](?!lodash-es/).+\\.js$',
+    '/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$',
+    'node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$',
+    '[/\\\\]node_modules[/\\\\](?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$',
+  ],
 };
