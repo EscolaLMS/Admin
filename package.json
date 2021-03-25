@@ -28,18 +28,13 @@
     "start:no-ui": "cross-env UMI_UI=none UMI_ENV=dev umi dev",
     "start:pre": "cross-env REACT_APP_ENV=pre UMI_ENV=dev umi dev",
     "start:test": "cross-env REACT_APP_ENV=test MOCK=none UMI_ENV=dev umi dev",
-    "pretest": "node ./tests/beforeTest",
-    "test": "umi test",
-    "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tsc": "tsc --noEmit",
     "cypress": "cypress open",
     "cypress-run": "cypress run",
     "cypress-test": "start-server-and-test start http://localhost:8000 cypress-run",
     "cypress-ci": "start-server-and-test start http://localhost:8000 cypress-run",
-    "jest": "jest",
-    "mocha": "NODE_ENV=test mocha -r ts-node/register --ui bdd './src/**/*.spec.{js,jsx,ts,tsx}'",
-    "mocha2": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
+    "test": "jest"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -137,7 +132,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/tests/setupTests.js"
+      "<rootDir>/config/jest/setupTests.js"
     ],
     "transform": {
       "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
