@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: "14.x"
       - run: npm i
-      - run: npm run jest
+      - run: npm run test
 
       - name: Code Coverage upload
         uses: codecov/codecov-action@v1
