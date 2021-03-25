@@ -37,7 +37,9 @@
     "cypress-run": "cypress run",
     "cypress-test": "start-server-and-test start http://localhost:8000 cypress-run",
     "cypress-ci": "start-server-and-test start http://localhost:8000 cypress-run",
-    "jest": "jest"
+    "jest": "jest",
+    "mocha": "NODE_ENV=test mocha -r ts-node/register --ui bdd './src/**/*.spec.{js,jsx,ts,tsx}'",
+    "mocha2": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -58,16 +60,21 @@
     "@ant-design/pro-layout": "^6",
     "@ant-design/pro-table": "^2.17.0",
     "@testing-library/jest-dom": "^5.11.9",
+    "@types/enzyme": "^3.10.8",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^8.2.2",
     "@umijs/plugin-openapi": "^1.0.1",
     "@umijs/route-utils": "^1.0.33",
     "antd": "^4.12.0",
     "babel-plugin-import": "^1.13.3",
+    "chai": "^4.3.4",
     "classnames": "^2.2.6",
     "cross-env": "^7.0.0",
     "cypress": "^6.8.0",
     "cypress-localstorage-commands": "^1.4.1",
     "jest-esm-transformer": "^1.0.0",
     "lodash": "^4.17.11",
+    "mocha": "^8.3.2",
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",
     "react": "^17.0.0",
@@ -77,6 +84,8 @@
     "react-helmet-async": "^1.0.4",
     "start-server-and-test": "^1.12.1",
     "ts-jest": "^26",
+    "ts-mocha": "^8.0.0",
+    "ts-node": "^9.1.1",
     "umi": "^3.2.14",
     "umi-request": "^1.0.8"
   },
@@ -97,10 +106,13 @@
     "@umijs/preset-dumi": "^1.1.0-rc.6",
     "@umijs/preset-react": "^1.7.4",
     "@umijs/yorkie": "^2.0.3",
+    "babel-jest": "^26.6.3",
+    "babel-preset-react-app": "^10.0.0",
     "carlo": "^0.9.46",
     "cross-port-killer": "^1.1.1",
     "detect-installer": "^1.0.1",
     "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^7.1.0",
     "eslint-plugin-cypress": "^2.11.2",
     "express": "^4.17.1",
@@ -118,25 +130,26 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
+      "@umijs/preset-ant-design-pro",
+      "@umijs/preset-dumi",
+      "@umijs/preset-react"
     ],
     "plugins": [
       "@babel/plugin-transform-modules-commonjs",
       "@babel/plugin-transform-react-jsx"
     ]
   },
-  "jest1": {
-    "moduleDirectories": [
-      "src",
-      "node_modules"
-    ]
-  },
-  "jest12": {
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setupTests.js"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
     "transformIgnorePatterns": [
-      "node_modules/antd/es/notification/style/index.js",
-      "node_modules/antd/es/layout/style/index.js",
-      "<rootDir>node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+      "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
     ],
     "coverageReporters": [
       "json",
@@ -146,51 +159,10 @@
     ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "roots": [
-      "<rootDir>/src"
-    ],
     "collectCoverageFrom": [
       "src/components/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts",
       "!src/.umi/**/*"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setupTests.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatternsXXX": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss|less)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss|less)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": []
+    ]
   }
 }
