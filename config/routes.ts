@@ -31,7 +31,7 @@
     path: '/courses',
     name: 'Courses',
     icon: 'book',
-    component: './NewPage',
+    component: './Courses',
   },
   {
     path: '/interactive',
