@@ -21,4 +21,10 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  title: 'Title',
+  options: 'Options',
+  base_price: 'Base price',
+  duration: 'Duration',
+  categories: 'Categories',
+  tags: 'Tags',
 };

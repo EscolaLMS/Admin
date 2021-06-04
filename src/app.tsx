@@ -6,9 +6,11 @@ import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import type { ResponseError } from 'umi-request';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import type { ResponseError, RequestOptionsInit } from 'umi-request';
+import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+
+import config from './config/config';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -22,8 +24,8 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  currentUser?: API.User;
+  fetchUserInfo?: () => Promise<API.User | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -116,8 +118,17 @@ const codeMessage = {
  * @see https://beta-pro.ant.design/docs/request-cn
  */
 const errorHandler = (error: ResponseError) => {
-  const { response } = error;
-  if (response && response.status) {
+  const { response, data } = error;
+
+  if (data as API.DefaultResponseError) {
+    const { message, errors } = data;
+    notification.error({
+      message,
+      description: Object.keys(errors).map(
+        (errorKey) => `${errorKey}: ${errors[errorKey].join(', ')}`,
+      ),
+    });
+  } else if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
 
@@ -127,16 +138,26 @@ const errorHandler = (error: ResponseError) => {
     });
   }
 
-  if (!response) {
+  if (!response && !data) {
     notification.error({
       description: 'Error',
       message: 'Error',
     });
   }
+
   throw error;
 };
 
-// https://umijs.org/zh-CN/plugins/plugin-request
+const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+  const token = localStorage.getItem('TOKEN');
+  const authHeader = new Headers(token ? { Authorization: `Bearer ${token}` } : {});
+  return {
+    url: `${config.API_URL}${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
 export const request: RequestConfig = {
   errorHandler,
+  requestInterceptors: [authHeaderInterceptor],
 };

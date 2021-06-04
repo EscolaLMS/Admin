@@ -2,20 +2,16 @@
 /* eslint-disable */
 import { request } from 'umi';
 
-const URL = 'http://localhost:1000/api';
-
 /**  GET /api/rule */
 export async function course(
-  params: Partial<API.PaginatedListParams> & {
+  params: API.CourseParams & {
     // query
     current?: number;
     pageSize?: number;
-    order_by?: string;
-    order?: 'ASC' | 'DESC';
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.CourseList>(`${URL}/courses`, {
+  return request<API.CourseList>(`/api/courses`, {
     method: 'GET',
     params: {
       ...params,
