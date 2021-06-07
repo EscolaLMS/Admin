@@ -39,9 +39,8 @@ export async function addRule(options?: { [key: string]: any }) {
 }
 
 /**  DELETE /api/rule */
-export async function removeRule(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/rule', {
+export async function removeCourse(id: number) {
+  return request<Record<string, any>>(`/api/courses/${id}`, {
     method: 'DELETE',
-    ...(options || {}),
   });
 }

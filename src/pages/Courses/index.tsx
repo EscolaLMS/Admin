@@ -1,23 +1,46 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Drawer, Tag } from 'antd';
-import React, { useState, useRef } from 'react';
+import { Button, Drawer, Tag, Tooltip, Popconfirm, message } from 'antd';
+import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
-import { course } from '@/services/escola-lms/course';
+import { course, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.CourseListItem>();
 
   const intl = useIntl();
+
+  const handleRemove = useCallback(
+    async (id: number) => {
+      setLoading(true);
+      const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+      try {
+        await removeCourse(id);
+        hide();
+        message.success(<FormattedMessage id="success" defaultMessage="success" />);
+        setLoading(false);
+        actionRef.current?.reload();
+        return true;
+      } catch (error) {
+        hide();
+        message.error(<FormattedMessage id="error" defaultMessage="error" />);
+        setLoading(false);
+        return false;
+      }
+    },
+    [actionRef],
+  );
 
   const columns: ProColumns<API.CourseListItem>[] = [
     {
@@ -111,13 +134,25 @@ const TableList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <Link to={`/courses/${record.id}`}>
-          <Button>
-            <FormattedMessage id="edit" defaultMessage="edit" />
-          </Button>
+          <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+            <Button type="primary" icon={<EditOutlined />}></Button>
+          </Tooltip>
         </Link>,
-        <Button>
-          <FormattedMessage id="delete" defaultMessage="delete" />
-        </Button>,
+        <Popconfirm
+          title={
+            <FormattedMessage
+              id="deleteQuestion"
+              defaultMessage="Are you sure to delete this record?"
+            />
+          }
+          onConfirm={() => record.id && handleRemove(record.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+          </Tooltip>
+        </Popconfirm>,
       ],
     },
   ];
@@ -125,6 +160,7 @@ const TableList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.CourseListItem, API.CourseParams>
+        loading={loading}
         headerTitle={intl.formatMessage({
           id: 'Courses',
           defaultMessage: 'Courses List',
@@ -143,7 +179,7 @@ const TableList: React.FC = () => {
         ]}
         request={({ pageSize, current, title, category_id, tag }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
-
+          setLoading(true);
           return course({
             title,
             pageSize,
@@ -156,7 +192,10 @@ const TableList: React.FC = () => {
                 ? 'ASC'
                 : 'DESC'
               : undefined,
-          }).then((data) => (data.success ? data.data : []));
+          }).then((data) => {
+            setLoading(false);
+            return data.success ? data.data : [];
+          });
         }}
         columns={columns}
       />
