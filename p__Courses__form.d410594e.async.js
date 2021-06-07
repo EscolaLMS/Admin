@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[8],{nHoc:function(a,n,t){"use strict";t.r(n);var _=t("q1tI"),s=t.n(_),o=t("tMyG"),E=t("nKUr"),M=t.n(E),r=function(){return Object(E.jsx)(o.a,{children:"New / Edit course"})};n.default=r}}]);
