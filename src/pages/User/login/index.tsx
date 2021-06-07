@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/login';
+import { login } from '@/services/escola-lms/login';
 
 import styles from './index.less';
 
@@ -33,7 +33,7 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [userLoginState, setUserLoginState] = useState<API.LoginResponse>();
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
@@ -48,11 +48,12 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.LoginRequest) => {
     setSubmitting(true);
     try {
       const msg = await login({ ...values });
-      if (msg.status === 'ok') {
+      if (msg.success) {
+        localStorage.setItem('TOKEN', msg.token);
         message.success('success');
         await fetchUserInfo();
         goto();
@@ -60,11 +61,10 @@ const Login: React.FC = () => {
       }
       setUserLoginState(msg);
     } catch (error) {
-      message.error(error);
+      console.log(error);
     }
     setSubmitting(false);
   };
-  const { status } = userLoginState;
 
   return (
     <div className={styles.container}>
@@ -102,10 +102,10 @@ const Login: React.FC = () => {
               },
             }}
             onFinish={async (values) => {
-              handleSubmit(values as API.LoginParams);
+              handleSubmit(values as API.LoginRequest);
             }}
           >
-            {status === 'error' && (
+            {userLoginState && !userLoginState.success && (
               <LoginMessage
                 content={intl.formatMessage({
                   id: 'pages.login.accountLogin.errorMessage',
@@ -115,9 +115,9 @@ const Login: React.FC = () => {
             )}
 
             <>
-              <pre>username/password: admin/ant.design</pre>
+              <pre>email/password: admin@escola-lms.com/secret</pre>
               <ProFormText
-                name="username"
+                name="email"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,

@@ -5,7 +5,7 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_URL } = process.env;
 
 export default defineConfig({
   //history: { type: 'hash' },
@@ -23,10 +23,10 @@ export default defineConfig({
   // https://umijs.org/zh-CN/plugins/plugin-locale
   locale: {
     // default zh-CN
-    default: 'zh-CN',
+    default: 'en-US',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
+    baseNavigator: false,
   },
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
@@ -55,6 +55,10 @@ export default defineConfig({
     // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
     schemaPath: join(__dirname, 'oneapi.json'),
     mock: false,
+  },
+  define: {
+    REACT_APP_API_URL:
+      typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : 'http://localhost:1000', // API address
   },
   //base: '/Admin/',
   //publicPath: '/Admin/',
