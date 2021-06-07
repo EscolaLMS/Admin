@@ -10,8 +10,6 @@ import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
-import config from './config/config';
-
 const isDev = process.env.NODE_ENV === 'development';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
@@ -152,7 +150,7 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   const token = localStorage.getItem('TOKEN');
   const authHeader = new Headers(token ? { Authorization: `Bearer ${token}` } : {});
   return {
-    url: `${config.API_URL}${url}`,
+    url: `${REACT_APP_API_URL}${url}`,
     options: { ...options, interceptors: true, headers: authHeader },
   };
 };

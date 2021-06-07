@@ -5,7 +5,7 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_URL } = process.env;
 
 export default defineConfig({
   //history: { type: 'hash' },
@@ -55,6 +55,10 @@ export default defineConfig({
     // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
     schemaPath: join(__dirname, 'oneapi.json'),
     mock: false,
+  },
+  define: {
+    REACT_APP_API_URL:
+      typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : 'http://localhost:1000', // API address
   },
   //base: '/Admin/',
   //publicPath: '/Admin/',
