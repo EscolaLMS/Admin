@@ -18,7 +18,7 @@ jobs:
         uses: cypress-io/github-action@v2.8.2
         with:
           record: true
-          start: npm run start
+          start: "npm run start:mock"
           wait-on: http://localhost:8000
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
