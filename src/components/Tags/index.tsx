@@ -8,7 +8,7 @@ type Tag = {
   title: string;
 };
 
-export const CategoryTree: React.FC<{
+export const Tags: React.FC<{
   state: {
     type: number;
   };
@@ -40,4 +40,4 @@ export const CategoryTree: React.FC<{
   );
 };
 
-export default CategoryTree;
+export default Tags;

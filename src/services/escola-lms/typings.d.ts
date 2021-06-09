@@ -116,17 +116,19 @@ declare namespace API {
     | DefaultResponseError;
 
   type User = {
-    data: {
-      id: number;
-      name: string;
-      first_name: string;
-      last_name: string;
-      email: string;
-      is_active: boolean;
-      created_at: string;
-      onboarding_completed: boolean;
-      email_verified: boolean;
-      interests: string[];
-    };
+    data: UserItem;
+  };
+
+  type UserItem = {
+    id: number;
+    name: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    is_active: boolean;
+    created_at: string;
+    onboarding_completed: boolean;
+    email_verified: boolean;
+    interests: string[];
   };
 }
