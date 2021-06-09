@@ -26,11 +26,10 @@ export const CategoryTree: React.FC<{
   state: {
     type: number;
   };
+  multiple?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-}> = (props) => {
-  const { value, onChange } = props;
-
+}> = ({ value, onChange, multiple = false }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
 
   useEffect(() => {
@@ -43,6 +42,7 @@ export const CategoryTree: React.FC<{
 
   return (
     <TreeSelect
+      multiple={multiple}
       showSearch
       style={{ width: '100%' }}
       value={value}

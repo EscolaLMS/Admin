@@ -148,10 +148,16 @@ const errorHandler = (error: ResponseError) => {
 
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   const token = localStorage.getItem('TOKEN');
-  const authHeader = new Headers(token ? { Authorization: `Bearer ${token}` } : {});
+
   return {
     url: `${REACT_APP_API_URL}${url}`,
-    options: { ...options, interceptors: true, headers: authHeader },
+    options: {
+      ...options,
+      interceptors: true,
+      headers: token
+        ? { ...options.headers, Accept: 'application/json', Authorization: `Bearer ${token}` }
+        : options.headers,
+    },
   };
 };
 

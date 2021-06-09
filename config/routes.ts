@@ -41,6 +41,13 @@
     hideInMenu: true,
   },
   {
+    path: '/courses/:course/:tab',
+    name: 'Course Form',
+    icon: 'book',
+    component: './Courses/form',
+    hideInMenu: true,
+  },
+  {
     path: '/interactive',
     name: 'Interactives',
     icon: 'book',
