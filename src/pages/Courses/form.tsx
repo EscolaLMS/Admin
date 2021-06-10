@@ -1,20 +1,40 @@
-import React, { useMemo } from 'react';
-import { message, Divider, Card } from 'antd';
+import React, { useMemo, useState, useEffect } from 'react';
+import { message, Card, Spin, Row, Col } from 'antd';
 import ProForm, { ProFormText, ProFormDigit } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-
-import { useParams } from 'umi';
+import { useParams, history } from 'umi';
 import { getCourse, updateCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
-import { history } from 'umi';
-
 import UserSelect from '@/components/UserSelect';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
+import TagsInput from '@/components/TagsInput';
+
+const categoriesArrToIds = (category: API.Category | string | number) =>
+  typeof category === 'object' ? category.id : category;
+
+const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
   const { course, tab } = params;
+
+  const [data, setData] = useState<API.Course>();
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await getCourse(Number(course));
+      if (response.success) {
+        setData({
+          ...response.data,
+          categories: response.data.categories?.map(categoriesArrToIds),
+          tags: response.data.tags?.map(tagsArrToIds),
+        });
+      }
+    };
+    fetch();
+  }, [course]);
 
   const formProps = useMemo(
     () => ({
@@ -23,6 +43,8 @@ export default () => {
         await updateCourse(Number(course), values);
         message.success('Saved');
       },
+      initialValues: data,
+      /*
       request: async () => {
         const response = await getCourse(Number(course));
         if (response.success) {
@@ -30,13 +52,18 @@ export default () => {
         }
         return {};
       },
+      */
     }),
-    [course],
+    [course, data],
   );
+
+  if (!data) {
+    return <Spin />;
+  }
 
   return (
     <ProCard
-      title="Course Form"
+      title={`Course: ${data.title}`}
       tabs={{
         type: 'card',
         activeKey: tab || 'attributes',
@@ -90,23 +117,43 @@ export default () => {
       </ProCard.TabPane>
       <ProCard.TabPane key="media" tab="Media">
         <ProForm {...formProps}>
-          <ProFormImageUpload
-            action={`/api/courses/${course}`}
-            src_name="image_url"
-            form_name="image"
-            getUploadedSrcField={(info) => info.file.response.data.image_url}
-          />
-          <Divider />
-          <ProFormVideoUpload
-            action={`/api/courses/${course}`}
-            src_name="video_url"
-            form_name="video"
-            getUploadedSrcField={(info) => info.file.response.data.video_url}
-          />
+          <Row>
+            <Col span={12}>
+              <ProFormImageUpload
+                action={`/api/courses/${course}`}
+                src_name="image_url"
+                form_name="image"
+                getUploadedSrcField={(info) => info.file.response.data.image_url}
+              />
+            </Col>
+            <Col span={12}>
+              <ProFormVideoUpload
+                action={`/api/courses/${course}`}
+                src_name="video_url"
+                form_name="video"
+                getUploadedSrcField={(info) => info.file.response.data.video_url}
+              />
+            </Col>
+          </Row>
         </ProForm>
       </ProCard.TabPane>
       <ProCard.TabPane key="categories" tab="Categories & Tags">
-        media
+        <Row>
+          <Col span={12}>
+            <ProForm {...formProps}>
+              <ProForm.Item label="Categories" name="categories" valuePropName="value">
+                <CategoryCheckboxTree />
+              </ProForm.Item>
+            </ProForm>
+          </Col>
+          <Col span={12}>
+            <ProForm {...formProps}>
+              <ProForm.Item label="Tags" name="tags" valuePropName="value">
+                <TagsInput />
+              </ProForm.Item>
+            </ProForm>
+          </Col>
+        </Row>
       </ProCard.TabPane>
       <ProCard.TabPane key="program" tab="Program">
         program

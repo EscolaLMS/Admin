@@ -27,4 +27,8 @@ export default {
   duration: 'Duration',
   categories: 'Categories',
   tags: 'Tags',
+  'menu.Courses': 'Courses',
+  'menu.Users': 'Users',
+  'menu.Welcome': 'Welcome',
+  'menu.Course Form': 'Course Form',
 };

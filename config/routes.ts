@@ -48,24 +48,6 @@
     hideInMenu: true,
   },
   {
-    path: '/interactive',
-    name: 'Interactives',
-    icon: 'book',
-    component: './NewPage',
-  },
-  {
-    path: '/categories',
-    name: 'Categories',
-    icon: 'book',
-    component: './NewPage',
-  },
-  {
-    path: '/payments',
-    name: 'Payments',
-    icon: 'book',
-    component: './NewPage',
-  },
-  {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
