@@ -46,6 +46,21 @@ export async function updateCourse(
   });
 }
 
+/**  POST /api/courses */
+export async function createCourse(
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request(`/api/courses`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /**  POST /api/courses/${id} */
 /*
 export async function updateCourseCategories(

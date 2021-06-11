@@ -35,7 +35,7 @@
   },
   {
     path: '/courses/:course',
-    name: 'Course Form',
+    name: 'Form',
     icon: 'book',
     component: './Courses/form',
     hideInMenu: true,
