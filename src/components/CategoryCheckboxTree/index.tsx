@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { TreeSelect } from 'antd';
+import { Tree, Spin } from 'antd';
 
 import { categoryTree } from '@/services/escola-lms/category';
 
 type TreeNodeType = {
   title: string;
-  value: string | number;
+  key: string | number;
   children?: TreeNodeType[];
 };
 
@@ -13,23 +13,23 @@ const treeConvert = (category: API.Category): TreeNodeType => {
   return category.subcategories && category.subcategories.length
     ? {
         title: category.name,
-        value: category.id,
+        key: category.id,
         children: category.subcategories.map((cat) => treeConvert(cat)),
       }
     : {
         title: category.name,
-        value: category.id,
+        key: category.id,
       };
 };
 
-export const CategoryTree: React.FC<{
+export const CategoryCheckboxTree: React.FC<{
   state?: {
     type: number;
   };
   multiple?: boolean;
-  value?: string | string[] | number | number[];
-  onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  value?: (string | number)[];
+  onChange?: (value: (string | number)[]) => void;
+}> = ({ value, onChange, multiple = true }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
 
   useEffect(() => {
@@ -40,22 +40,22 @@ export const CategoryTree: React.FC<{
     return categories.map((cat) => treeConvert(cat));
   }, [categories]);
 
+  if (categories.length === 0) {
+    return <Spin />;
+  }
+
   return (
-    <TreeSelect<string | string[] | number | number[]>
-      loading={categories.length === 0}
+    <Tree
       multiple={multiple}
-      showSearch
+      checkable
+      defaultExpandAll
       style={{ width: '100%' }}
-      value={value}
-      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-      placeholder="Please select"
-      allowClear
-      treeDefaultExpandAll
-      onChange={onChange}
+      checkedKeys={value}
+      onCheck={(checkedKeys) => onChange && Array.isArray(checkedKeys) && onChange(checkedKeys)}
       treeData={treeData}
       disabled={categories.length === 0}
-    ></TreeSelect>
+    ></Tree>
   );
 };
 
-export default CategoryTree;
+export default CategoryCheckboxTree;

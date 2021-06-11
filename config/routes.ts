@@ -35,7 +35,7 @@
   },
   {
     path: '/courses/:course',
-    name: 'Course Form',
+    name: 'Form',
     icon: 'book',
     component: './Courses/form',
     hideInMenu: true,
@@ -46,24 +46,6 @@
     icon: 'book',
     component: './Courses/form',
     hideInMenu: true,
-  },
-  {
-    path: '/interactive',
-    name: 'Interactives',
-    icon: 'book',
-    component: './NewPage',
-  },
-  {
-    path: '/categories',
-    name: 'Categories',
-    icon: 'book',
-    component: './NewPage',
-  },
-  {
-    path: '/payments',
-    name: 'Payments',
-    icon: 'book',
-    component: './NewPage',
   },
   {
     path: '/admin',

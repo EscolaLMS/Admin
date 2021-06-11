@@ -30,7 +30,7 @@ export async function getCourse(id: number, options?: { [key: string]: any }) {
   });
 }
 
-/**  PUT /api/rule */
+/**  POST /api/courses/${id} */
 export async function updateCourse(
   id: number,
   body?: { [key: string]: any },
@@ -40,12 +40,44 @@ export async function updateCourse(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer aaa',
     },
     data: body,
     ...(options || {}),
   });
 }
+
+/**  POST /api/courses */
+export async function createCourse(
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request(`/api/courses`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/courses/${id} */
+/*
+export async function updateCourseCategories(
+  id: number,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request(`/api/courses/attach/${id}/categories`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+*/
 
 /**  PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {

@@ -41,8 +41,8 @@ declare namespace API {
     author_id?: number;
     image_url?: string;
     video_url?: string;
-    categories?: Category[];
-    tags?: Tag[];
+    categories?: Category[] | (number | string)[];
+    tags?: Tag[] | string[];
   };
 
   type PaginatedList<Model> = {
