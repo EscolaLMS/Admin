@@ -2,6 +2,15 @@
 /* eslint-disable */
 import { request } from 'umi';
 
+export enum TopicType {
+  Unselected = '',
+  RichText = 'EscolaLms\\Courses\\Models\\TopicContent\\RichText',
+  OEmbed = 'EscolaLms\\Courses\\Models\\TopicContent\\OEmbed',
+  Audio = 'EscolaLms\\Courses\\Models\\TopicContent\\Audio',
+  Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
+  H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
+}
+
 /**  GET /api/courses */
 export async function course(
   params: API.CourseParams & {
@@ -56,6 +65,72 @@ export async function createCourse(
     headers: {
       'Content-Type': 'application/json',
     },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/courses/{id}/program */
+export async function program(
+  id: number,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.CourseProgram>>(`/api/courses/${id}/program`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function createLesson(
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.Lesson>>(`/api/lessons`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function updateLesson(
+  id: number | false,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.Lesson>>(`/api/lessons/${id}?_method=PUT`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  DELETE /api/rule */
+export async function removeLesson(id: number) {
+  return request<Record<string, any>>(`/api/lessons/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function createTopic(body?: { [key: string]: any }, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<API.Topic>>(`/api/topics`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function updateTopic(
+  id: number,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.Topic>>(`/api/topics/${id}?_method=PUT`, {
+    method: 'POST',
     data: body,
     ...(options || {}),
   });

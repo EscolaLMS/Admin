@@ -31,4 +31,5 @@ export default {
   'menu.Users': 'Users',
   'menu.Welcome': 'Welcome',
   'menu.Course Form': 'Course Form',
+  'menu.Form': 'Form',
 };
