@@ -9,14 +9,18 @@ export const SecureUpload: React.FC<{
   extra?: string;
   onChange?: (info: UploadChangeParam) => void;
   accept?: string;
-}> = ({ onChange, url, name, extra, accept }) => {
+  data?: Record<string, any>;
+}> = ({ onChange, url, name, extra, accept, data }) => {
   return (
     <ProFormUploadButton
+      title={'Click here to upload'}
+      placeholder={'Click here to upload'}
       onChange={onChange}
       name={name}
       label="Upload"
       max={2}
       fieldProps={{
+        data,
         accept,
         name,
         headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },

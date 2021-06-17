@@ -1,23 +1,21 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { Context } from '@/context/curriculum';
-import API, { getFormData } from '@/services/api';
-import Resources from './resources';
-import { Alert, Row } from 'antd';
+import { getFormData } from '@/services/api';
+import { Alert } from 'antd';
 import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
-import Tabs from 'antd/lib/tabs';
 import Divider from 'antd/lib/divider';
-import Badge from 'antd/lib/badge';
 import TopicEditForm from './editform';
-import TopicMediaForm from './mediaform';
+import MediaUpload from './media/upload';
 import { Popconfirm } from 'antd';
 import { Radio } from 'antd';
 import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/course';
 
-const { TabPane } = Tabs;
-
-const TopicButtons = ({ onDelete, loading }) => {
+const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
+  onDelete,
+  loading,
+}) => {
   return (
     <React.Fragment>
       <Divider type="vertical" />
@@ -27,7 +25,7 @@ const TopicButtons = ({ onDelete, loading }) => {
         okText="Yes"
         cancelText="No"
       >
-        <Button loading={loading} size="small" type="danger">
+        <Button loading={loading} size="small" danger>
           Delete
         </Button>
       </Popconfirm>
@@ -35,10 +33,7 @@ const TopicButtons = ({ onDelete, loading }) => {
   );
 };
 
-export const Topic: React.FC<{ topic: API.Topic; itemsLength: number }> = ({
-  topic,
-  itemsLength,
-}) => {
+export const Topic: React.FC<{ topic: API.Topic; itemsLength?: number }> = ({ topic }) => {
   const { updateTopic, deleteTopic } = useContext(Context);
 
   const [state, setState] = useState<API.Topic>({
@@ -48,34 +43,46 @@ export const Topic: React.FC<{ topic: API.Topic; itemsLength: number }> = ({
 
   const type = state.topicable_type;
 
-  const [sortOrder, setSortOrder] = useState(state.sort_order);
+  const [sortOrder /* , setSortOrder */] = useState(state.order);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setState((prevState) => ({
-      ...prevState,
-      ...topic,
-    }));
+    setState((prevState) => {
+      return {
+        ...topic,
+        value: prevState.value,
+      };
+    });
   }, [topic]);
 
-  const updateValue = useCallback(
-    (key, value) => {
-      setState((prevState) => ({
-        ...prevState,
-        [key]: value,
-      }));
-    },
-    [state],
-  );
+  const updateValue = useCallback((key, value) => {
+    setState((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  }, []);
 
-  const updateValues = useCallback(
-    (values) => {
-      setState((prevState) => ({
-        ...prevState,
-        ...values,
-      }));
+  const updateValues = useCallback((values) => {
+    setState((prevState) => ({
+      ...prevState,
+      ...values,
+    }));
+  }, []);
+
+  const handleSave = useCallback(
+    (formData) => {
+      if (updateTopic && state.id) {
+        setLoading(true);
+
+        updateTopic(state.id, formData)
+          .then(() => setLoading(false))
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+          });
+      }
     },
-    [state],
+    [state, updateTopic],
   );
 
   const onFormSubmit = useCallback(() => {
@@ -95,46 +102,15 @@ export const Topic: React.FC<{ topic: API.Topic; itemsLength: number }> = ({
       */
 
     handleSave(formData);
-  }, [state]);
-
-  const onMediaUpdate = useCallback(
-    (data) => {
-      switch (type) {
-        case TopicType.RichText:
-          break;
-        default:
-          break;
-      }
-    },
-    [state, type],
-  );
-
-  const onEdit = useCallback(() => {
-    // setShowEdit(prevState => !prevState);
-  }, []);
+  }, [state, handleSave, sortOrder]);
 
   const onDelete = useCallback(() => {
     if (topic.isNew) {
-      return deleteTopic(state.id);
-    } else {
-      setLoading(true);
-      deleteTopic(state.id);
+      return deleteTopic && state.id && deleteTopic(state.id);
     }
-  }, [state]);
-
-  const handleSave = useCallback(
-    (formData) => {
-      setLoading(true);
-
-      updateTopic(state.id, formData)
-        .then(() => setLoading(false))
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
-    },
-    [state],
-  );
+    setLoading(true);
+    return deleteTopic && state.id && deleteTopic(state.id);
+  }, [state, deleteTopic, topic.isNew]);
 
   return (
     <React.Fragment>
@@ -147,11 +123,7 @@ export const Topic: React.FC<{ topic: API.Topic; itemsLength: number }> = ({
           </Button>,
         ]}
       >
-        <TopicEditForm
-          topic={state}
-          onChange={(values) => updateValues(values)}
-          loading={loading}
-        />
+        <TopicEditForm topic={state} onChange={(values) => updateValues(values)} />
         <Divider>Select type of Topic to continue...</Divider>
         <Radio.Group
           name="radiogroup"
@@ -168,6 +140,14 @@ export const Topic: React.FC<{ topic: API.Topic; itemsLength: number }> = ({
         {!type && <Alert message="Select type of Topic to continue..." type="info" />}
         {type && type === TopicType.RichText && (
           <RichTextEditor text={state.value} onChange={(value) => updateValue('value', value)} />
+        )}
+        {type && (type === TopicType.Video || type === TopicType.Audio) && (
+          <MediaUpload
+            type={type}
+            topic={topic}
+            onUpdate={(info) => console.log(info)}
+            disabled={false}
+          />
         )}
       </Card>
 

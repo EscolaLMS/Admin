@@ -2,7 +2,14 @@
 /* eslint-disable */
 
 declare namespace API {
-  import { TopicType } from './course';
+  enum TopicType {
+    Unselected = '',
+    RichText = 'EscolaLms\\Courses\\Models\\TopicContent\\RichText',
+    OEmbed = 'EscolaLms\\Courses\\Models\\TopicContent\\OEmbed',
+    Audio = 'EscolaLms\\Courses\\Models\\TopicContent\\Audio',
+    Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
+    H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
+  }
 
   type Category = {
     id: number;
@@ -143,17 +150,19 @@ declare namespace API {
     course_id?: number;
     duration?: string;
     topics?: Topic[];
+    isNew?: boolean;
   };
 
   type TopicBase = {
+    lesson_id?: number;
     created_at?: string;
     updated_at?: string;
     id?: number;
-    id?: number;
     order?: number;
     title?: string;
-    value?: string | any;
+    value?: any;
     topicable_id?: number;
+    isNew?: boolean;
     /*
     topicable_type?:
       | TopicType.RichText
@@ -165,60 +174,45 @@ declare namespace API {
       */
   };
 
+  type TopicableBase = {
+    created_at?: string;
+    updated_at?: string;
+    id: number;
+    value: string;
+  };
+
   type TopicRichText = TopicBase & {
     topicable_type: TopicType.RichText;
-    topicable: {
-      created_at?: string;
-      updated_at?: string;
-      id: number;
-      value: string;
-    };
+    topicable: TopicableBase;
   };
 
   type TopicOEmbed = TopicBase & {
     topicable_type: TopicType.OEmbed;
-    topicable: {
-      created_at?: string;
-      updated_at?: string;
-      id: number;
-      value: string;
-    };
+    topicable: TopicableBase;
   };
 
   type TopicAudio = TopicBase & {
     topicable_type: TopicType.Audio;
-    topicable: {
-      created_at?: string;
-      updated_at?: string;
+    topicable: TopicableBase & {
       length: number;
       url: string;
-      value: string;
     };
   };
 
   type TopicVideo = TopicBase & {
     topicable_type: TopicType.Video;
-    topicable: {
-      created_at?: string;
-      updated_at?: string;
+    topicable: TopicableBase & {
       height: number;
-      id: number;
       poster: string;
       poster_url: string;
       url: string;
-      value: string;
       width: number;
     };
   };
 
   type TopicH5P = TopicBase & {
     topicable_type: TopicType.H5P;
-    topicable: {
-      created_at?: string;
-      updated_at?: string;
-      id: number;
-      value: string;
-    };
+    topicable: TopicableBase;
   };
 
   type TopicUnselected = TopicBase & {
@@ -227,6 +221,8 @@ declare namespace API {
   };
 
   type Topic = TopicUnselected | TopicRichText | TopicOEmbed | TopicAudio | TopicVideo | TopicH5P;
+
+  type TopicNotEmpty = TopicRichText | TopicOEmbed | TopicAudio | TopicVideo | TopicH5P;
 
   type CourseProgram = Course & {
     lessons: Lesson[];

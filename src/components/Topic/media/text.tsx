@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { Input } from 'antd';
-import Button from 'antd/lib/button';
-import Divider from 'antd/lib/divider';
+import React from 'react';
 
 import FormWysiwygProps from '@/components/WysiwygMarkdown';
 
-export const MediaText = ({ text, onChange }) => {
+export const MediaText: React.FC<{ text: string; onChange: (value: string) => void }> = ({
+  text,
+  onChange,
+}) => {
   return (
     <div>
       <FormWysiwygProps

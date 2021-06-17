@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { PortalProvider } from 'react-portal-hook';
-import API, { getFormData } from '@/services/api';
 
 import {
   program,
@@ -8,17 +7,44 @@ import {
   updateLesson as apiUpdateLesson,
   createTopic as apiCreateTopic,
   updateTopic as apiUpdateTopic,
+  TopicType,
 } from '@/services/escola-lms/course';
 
-export const Context = React.createContext();
+type ProgramContext = {
+  state?: API.CourseProgram;
+  h5ps?: any[];
+  // token: credentials.token,
+  id?: number;
+  addNewLesson?: () => void;
+  updateLesson?: (lesson_id: number, data: FormData) => Promise<void | boolean>;
+  updateTopic?: (topic_id: number, data: FormData) => Promise<void>;
+  // addResource,
+  // removeResource,
+  deleteLesson?: (lesson_id: number) => void;
+  // updateH5P,
+  sortLesson?: (lesson_id: number, upDirection?: boolean) => void;
+  addNewTopic?: (lesson_id: number) => void;
+  deleteTopic?: (topic_id: number) => void;
+  sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
+};
 
-export const AppContext = ({ children, credentials }) => {
+export const Context = React.createContext<ProgramContext>({});
+
+const getRandomId = () => Math.round(Math.random() * 99999);
+
+export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = ({
+  children,
+  id,
+}) => {
   const [state, setState] = useState<API.CourseProgram>();
 
   const [h5ps, setH5ps] = useState([]);
 
-  const { token, id } = credentials;
+  useEffect(() => {
+    setH5ps([]);
+  }, []);
 
+  /*
   useEffect(() => {
     API(`h5p`, token)
       .then((response) => response.json())
@@ -27,28 +53,30 @@ export const AppContext = ({ children, credentials }) => {
       });
     //.then(() => addNewLesson());
   }, []);
+  */
 
   const getLessons = useCallback(() => {
     program(id).then((data) => {
-      console.log('data', data);
-      setState(data.data);
+      return data.success && setState(data.data);
     });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     getLessons();
-    //.then(() => addNewLesson());
-  }, []);
+  }, [getLessons]);
 
-  const getLessonByTopicId = useCallback(
-    (id) => {
-      const lesson = state.lessons.find((lesson) => lesson.topics.find((topic) => topic.id == id));
+  const getLessonIdByTopicId = useCallback(
+    (topic_id) => {
+      const lesson = state?.lessons.find((lesson_item) =>
+        lesson_item?.topics?.find((topic) => topic.id === topic_id),
+      );
       return lesson ? lesson.id : null;
     },
     [state],
   );
 
-  const getQuizIdByResourseId = useCallback(
+  /*
+  const getTopicIdByResourceId = useCallback(
     (resId) => {
       const topic = state.lessons
         .map((lesson) => lesson.topics)
@@ -58,6 +86,7 @@ export const AppContext = ({ children, credentials }) => {
     },
     [state],
   );
+  */
 
   const addNewLesson = useCallback(() => {
     setState((prevState) => ({
@@ -68,36 +97,40 @@ export const AppContext = ({ children, credentials }) => {
           image: null,
           topics: [],
           isNew: true,
-          id: prevState.lessons.length + 1, // New Lesson
+          id: prevState ? prevState.lessons.length + 1 : getRandomId(), // New Lesson
           order: 0,
           title: 'Add title here',
         },
-        ...prevState.lessons,
+        ...(prevState ? prevState.lessons : []),
       ],
     }));
-  }, [state]);
+  }, [id]);
 
   const updateLesson = useCallback(
     (lesson_id, formData) => {
-      console.log(id, lesson_id, state.lessons, state);
-
-      const isNew = !!state.lessons.find((lesson) => lesson.id == lesson_id).isNew;
+      const newLesson = state?.lessons?.find((lesson) => lesson.id === lesson_id);
+      const isNew = newLesson && newLesson.isNew;
 
       return (isNew ? apiCreateLesson(formData) : apiUpdateLesson(lesson_id, formData)).then(
         (data) => {
-          setState((prevState) => ({
-            ...prevState,
-            lessons: prevState.lessons.map((lesson) => {
-              if (lesson.id === lesson_id) {
-                return {
-                  ...lesson,
-                  ...data.data,
-                  isNew: false,
-                };
-              }
-              return lesson;
-            }),
-          }));
+          return (
+            data.success &&
+            setState((prevState) => ({
+              ...prevState,
+              lessons: prevState?.lessons
+                ? prevState.lessons.map((lesson) => {
+                    if (lesson.id === lesson_id) {
+                      return {
+                        ...lesson,
+                        ...data.data,
+                        isNew: false,
+                      };
+                    }
+                    return lesson;
+                  })
+                : [data.data],
+            }))
+          );
         },
       );
     },
@@ -105,13 +138,14 @@ export const AppContext = ({ children, credentials }) => {
   );
 
   const sortLesson = useCallback(
-    (id, up = true) => {
-      const cIndex = state.lessons.findIndex((lesson) => lesson.id == id);
+    (lesson_id, up = true) => {
+      const cIndex = state?.lessons.findIndex((lesson) => lesson.id === lesson_id) || 0;
 
       const swapIndex = up ? cIndex - 1 : cIndex + 1;
 
-      const lessons = state.lessons.map((lesson, index, arr) => {
+      const lessons = state?.lessons.map((lesson, index, arr) => {
         const newLesson =
+          // eslint-disable-next-line
           index == cIndex ? arr[swapIndex] : index == swapIndex ? arr[cIndex] : lesson;
         return {
           ...newLesson,
@@ -121,9 +155,11 @@ export const AppContext = ({ children, credentials }) => {
 
       setState((prevState) => ({
         ...prevState,
-        lessons,
+        lessons: lessons || [],
       }));
 
+      // TODO: call sorting function once this is ready
+      /**
       const formData = new FormData();
 
       lessons.forEach((lesson, index) => {
@@ -134,41 +170,49 @@ export const AppContext = ({ children, credentials }) => {
       return API(`sort/lesson`, token, 'POST', formData)
         .then((response) => response.json())
         .catch((err) => console.log(err));
+
+        */
     },
     [state],
   );
 
   const sortTopic = useCallback(
-    (id, topic_id, up = true) => {
-      const lesson = state.lessons.find((lesson) => lesson.id == id);
+    (lesson_id, topic_id, up = true) => {
+      const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
 
-      const lIndex = lesson.topics.findIndex((topic) => topic.id == topic_id);
+      const lIndex = lesson?.topics?.findIndex((topic) => topic.id === topic_id) || 0;
 
       const swapIndex = up ? lIndex - 1 : lIndex + 1;
 
-      const topics = lesson.topics.map((topic, index, arr) => {
-        const newTopic =
-          index == lIndex ? arr[swapIndex] : index == swapIndex ? arr[lIndex] : topic;
+      const topics =
+        lesson?.topics?.map((topic, index, arr) => {
+          const newTopic =
+            // eslint-disable-next-line
+            index == lIndex ? arr[swapIndex] : index == swapIndex ? arr[lIndex] : topic;
 
-        return {
-          ...newTopic,
-          sort_order: index,
-        };
-      });
+          return {
+            ...newTopic,
+            sort_order: index,
+          };
+        }) || [];
 
       setState((prevState) => ({
         ...prevState,
-        lessons: prevState.lessons.map((lesson) => {
-          if (lesson.id == id) {
-            return {
-              ...lesson,
-              topics,
-            };
-          }
-          return lesson;
-        }),
+        lessons: prevState
+          ? prevState.lessons.map((lesson_item) => {
+              if (lesson_item.id === lesson_id) {
+                return {
+                  ...lesson_item,
+                  topics,
+                };
+              }
+              return lesson_item;
+            })
+          : [],
       }));
 
+      // TODO call sorting endpoint
+      /**
       const formData = new FormData();
 
       topics.forEach((topic, index) => {
@@ -181,21 +225,29 @@ export const AppContext = ({ children, credentials }) => {
         .then((response) => response.json())
 
         .catch((err) => console.log(err));
+         */
     },
     [state],
   );
 
   const deleteLesson = useCallback(
     (lesson_id) => {
-      const isNew = !!state.lessons.find((lesson) => lesson.id == lesson_id).isNew;
+      const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
+      if (!lesson) {
+        return;
+      }
+      const { isNew } = lesson;
 
       if (isNew) {
-        return setState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
-          lessons: prevState.lessons.filter((lesson) => lesson.id != lesson_id),
+          lessons: prevState?.lessons?.filter((lesson_item) => lesson_item.id !== lesson_id) || [],
         }));
       }
 
+      // TODO call actual API to delete lesson
+
+      /**
       return API(`lesson/delete/${lesson_id}`, token, 'POST')
         .then((response) => response.json())
         .then(() => {
@@ -204,69 +256,93 @@ export const AppContext = ({ children, credentials }) => {
             lessons: prevState.lessons.filter((lesson) => lesson.id !== lesson_id),
           }));
         });
+
+         */
     },
     [state],
   );
 
   const updateTopic = useCallback(
     (topic_id, formData) => {
-      const lesson_id = getLessonByTopicId(topic_id);
+      const lesson_id = getLessonIdByTopicId(topic_id);
 
-      const isNew = !!state.lessons
-        .find((lesson) => lesson.id == lesson_id)
-        .topics.find((lesson) => lesson.id == lesson_id).isNew;
+      const lesson = state?.lessons?.find((lesson_item) => lesson_item.id === lesson_id);
 
-      return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then((data) =>
-        setState((prevState) => ({
-          ...prevState,
-          lessons: prevState.lessons.map((lesson) => {
-            if (lesson.id === lesson_id) {
-              return {
-                ...lesson,
-                topics: lesson.topics.map((topic) => {
-                  if (topic.id === topic_id) {
-                    return {
-                      ...topic,
-                      ...data.data,
-                      isNew: false,
-                    };
-                  }
-                  return topic;
-                }),
-              };
-            }
-            return lesson;
-          }),
-        })),
+      const topic = lesson && lesson.topics?.find((topic_item) => topic_item.id === topic_id);
+
+      const isNew = topic?.isNew;
+
+      return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then(
+        (data) => {
+          if (data.success) {
+            setState((prevState) => ({
+              ...prevState,
+              lessons: prevState
+                ? prevState.lessons.map((lesson_item) => {
+                    if (lesson_item.id === lesson_id) {
+                      return {
+                        ...lesson_item,
+                        topics:
+                          lesson_item.topics?.map((topic_item) => {
+                            if (topic_item.id === topic_id) {
+                              if (data.data.topicable_type) {
+                                const newTopic: API.TopicNotEmpty = {
+                                  ...topic_item,
+                                  ...data.data,
+                                  isNew: false,
+                                };
+                                return newTopic;
+                              }
+                            }
+                            return topic_item;
+                          }) || [],
+                      };
+                    }
+                    return lesson_item;
+                  })
+                : [],
+            }));
+          }
+        },
       );
     },
-    [state],
+    [getLessonIdByTopicId, state],
   );
 
   const deleteTopic = useCallback(
     (topic_id) => {
-      const lesson_id = getLessonByTopicId(topic_id);
+      const lesson_id = getLessonIdByTopicId(topic_id);
 
-      const isNew = !!state.lessons
-        .find((lesson) => lesson.id == lesson_id)
-        .topics.find((lesson) => lesson.id == lesson_id).isNew;
+      const lesson = state?.lessons?.find((lesson_item) => lesson_item.id === lesson_id);
 
-      if (isNew) {
-        return setState((prevState) => ({
-          ...prevState,
-          lessons: prevState.lessons.map((lesson) => {
-            if (lesson.id == lesson_id) {
-              return {
-                ...lesson,
-                topics: lesson.topics.filter((topic) => topic.id != topic_id),
-              };
-            }
-            return lesson;
-          }),
-        }));
+      if (!lesson) {
+        return;
       }
 
-      return API(`topic/delete/${id}`, token, 'POST')
+      const topic = lesson.topics?.find((topic_item) => topic_item.id === topic_id);
+
+      const isNew = topic?.isNew;
+
+      if (isNew) {
+        setState((prevState) => ({
+          ...prevState,
+          lessons: prevState
+            ? prevState.lessons.map((lesson_item) => {
+                if (lesson_item.id === lesson_id) {
+                  return {
+                    ...lesson_item,
+                    topics:
+                      lesson_item.topics?.filter((topic_item) => topic_item.id !== topic_id) || [],
+                  };
+                }
+                return lesson_item;
+              })
+            : [],
+        }));
+      } else {
+        // TODO call API to delete
+        /**
+         return API(`topic/delete/${id}`, token, 'POST')
         .then((response) => response.json())
         .then(() =>
           setState((prevState) => ({
@@ -282,8 +358,10 @@ export const AppContext = ({ children, credentials }) => {
             }),
           })),
         );
+         */
+      }
     },
-    [state],
+    [state, getLessonIdByTopicId],
   );
 
   /*
@@ -394,39 +472,36 @@ export const AppContext = ({ children, credentials }) => {
   );
   */
 
-  const addNewTopic = useCallback(
-    (lesson_id) => {
-      setState((prevState) => ({
-        ...prevState,
-        lessons: prevState.lessons.map((lesson) => {
-          if (lesson.id == lesson_id) {
-            return {
-              ...lesson,
-              topics: [
-                ...lesson.topics,
-                {
-                  isNew: true,
-                  lesson_id: lesson_id,
-                  id: lesson.topics.length,
-                  order: lesson.topics.length,
-                  title: 'Add new title here',
-                },
-              ],
-            };
-          }
-
-          return lesson;
-        }),
-      }));
-    },
-    [state],
-  );
+  const addNewTopic = useCallback((lesson_id) => {
+    setState((prevState) => ({
+      ...prevState,
+      lessons: prevState
+        ? prevState.lessons?.map((lesson) => {
+            if (lesson.id === lesson_id) {
+              const topics = lesson.topics || [];
+              const newTopic: API.Topic = {
+                topicable_type: TopicType.Unselected,
+                isNew: true,
+                id: getRandomId(),
+                order: 0,
+                title: 'Add new title here',
+              };
+              return {
+                ...lesson,
+                topics: [...topics, newTopic],
+              };
+            }
+            return lesson;
+          })
+        : [],
+    }));
+  }, []);
 
   const value = {
     state,
     h5ps,
-    token: credentials.token,
-    id: credentials.id,
+    // token: credentials.token,
+    id,
     addNewLesson,
     updateLesson,
     updateTopic,

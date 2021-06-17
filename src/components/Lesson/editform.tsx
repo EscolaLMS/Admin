@@ -1,10 +1,15 @@
 import React from 'react';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
+import type { FormLayout } from 'antd/lib/form/Form.js';
 
-export const LessonEditForm = ({ lesson, onChangeHandler, onInputChange, layout = 'vertical' }) => {
+export const LessonEditForm: React.FC<{
+  lesson: API.Lesson;
+  onInputChange: (value: any) => void;
+  layout?: FormLayout;
+}> = ({ lesson, onInputChange, layout = 'horizontal' }) => {
   return (
-    <Form layout="horizontal" name="basic" layout={layout} initialValues={lesson}>
+    <Form name="basic" layout={layout} initialValues={lesson}>
       <Form.Item
         label="Title"
         name="title"

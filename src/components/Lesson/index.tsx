@@ -3,15 +3,9 @@ import Topic from '@/components/Topic';
 import { Context } from '@/context/curriculum';
 import { getFormData } from '@/services/api';
 import LessonEditForm from './editform';
-import Button from 'antd/lib/button';
-import Divider from 'antd/lib/divider';
-import Card from 'antd/lib/card';
-import Avatar from 'antd/lib/avatar';
-import Image from 'antd/lib/image';
-import Popover from 'antd/lib/popover';
-import Popconfirm from 'antd/lib/popconfirm';
-import Collapse from 'antd/lib/collapse';
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Divider, Card, Popover, Popconfirm, Collapse } from 'antd';
+
+import { PlusOutlined } from '@ant-design/icons';
 import SortingButtons from '@/components/sortingbuttons';
 import TopicHeader from '../Topic/header';
 
@@ -19,47 +13,39 @@ const { Meta } = Card;
 const { Panel } = Collapse;
 
 export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
-  const [state, setState] = useState(lesson);
-  const [topicList, setTopicList] = useState([]);
+  const [state, setState] = useState<API.Lesson>(lesson);
+  const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
   const [validate, setValidate] = useState(false);
   const { id, updateLesson, deleteLesson, addNewTopic, sortTopic } = useContext(Context);
 
   useEffect(() => {
     setState(lesson);
-    setTopicList(lesson.topics);
+    return lesson.topics && setTopicList(lesson.topics);
   }, [lesson]);
 
   useEffect(() => {
-    if (state.title.length > 100) {
+    if (state.title && state.title.length > 100) {
       setValidate(true);
     } else {
       setValidate(false);
     }
-  }, [state]);
+  }, [state.title]);
 
-  const onInputChange = useCallback(
-    (e) => {
-      const { value } = e.target;
-      setState((prevState) => {
-        return {
-          ...prevState,
-          title: value,
-        };
-      });
-    },
-    [state],
+  const onInputChange = useCallback((e) => {
+    const { value } = e.target;
+    setState((prevState) => {
+      return {
+        ...prevState,
+        title: value,
+      };
+    });
+  }, []);
+
+  const onNew = useCallback(
+    () => addNewTopic && lesson.id && addNewTopic(lesson.id),
+    [addNewTopic, lesson.id],
   );
-
-  const onSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      handleSave();
-    },
-    [state, id],
-  );
-
-  const onNew = useCallback(() => addNewTopic(lesson.id), [state, id]);
 
   const handleSave = useCallback(() => {
     setLoading(true);
@@ -68,7 +54,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
       state.isNew
         ? {
             course_id: lesson.course_id,
-            //id: state.id,
+            id: state.id,
             title: state.title,
             order: state.order,
           }
@@ -80,28 +66,40 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
           },
     );
 
-    updateLesson(state.id, formData)
-      .then(() => setLoading(false))
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [state]);
+    return (
+      updateLesson &&
+      state.id &&
+      updateLesson(state.id, formData)
+        .then(() => setLoading(false))
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        })
+    );
+  }, [state, lesson.course_id, updateLesson]);
 
   const handleDelete = useCallback(
     (e) => {
       e.preventDefault();
 
-      deleteLesson(state.id);
+      return state.id && deleteLesson && deleteLesson(state.id);
     },
-    [state, id],
+    [deleteLesson, state.id],
   );
 
   const onSort = useCallback(
-    (id, up) => {
-      sortTopic(lesson.id, id, up);
+    (lesson_id, up) => {
+      return lesson.id && sortTopic && id && sortTopic(lesson.id, id, up);
     },
-    [state, lesson],
+    [id, sortTopic, lesson],
+  );
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      handleSave();
+    },
+    [handleSave],
   );
 
   return (
@@ -150,12 +148,14 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
             topicList.map((topic, index, arr) => (
               <Panel
                 header={<TopicHeader topic={topic} />}
-                key={index}
+                key={topic.id || index}
                 extra={
+                  // eslint-disable-next-line no-nested-ternary
                   topic.isNew ? (
                     <React.Fragment />
                   ) : arr.length > 1 ? (
                     <SortingButtons
+                      // eslint-disable-next-line no-nested-ternary
                       mode={index === 0 ? 'first' : index === arr.length - 1 ? 'last' : 'middle'}
                       onUp={() => onSort(topic.id, true)}
                       onDown={() => onSort(topic.id, false)}

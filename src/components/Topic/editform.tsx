@@ -1,22 +1,16 @@
-import React, { useState } from 'react';
-import Button from 'antd/lib/button';
-import Upload from 'antd/lib/upload';
-import { UploadOutlined } from '@ant-design/icons';
+import React from 'react';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Checkbox from 'antd/lib/checkbox';
 
-const tailLayout = {
-  wrapperCol: { offset: 0, span: 16 },
-};
+type Values = Record<string, any>;
 
-export const TopicEditForm = ({ topic, onSubmit, loading = false, onChange }) => {
-  const onFinish = (values) => {
-    onSubmit(values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+export const TopicEditForm: React.FC<{
+  topic: API.Topic;
+  onSubmit?: (values: Values) => void;
+  onChange: (values: Values) => void;
+}> = ({ topic, onSubmit, onChange }) => {
+  const onFinish = (values: Values) => {
+    return onSubmit && onSubmit(values);
   };
 
   return (
@@ -27,7 +21,6 @@ export const TopicEditForm = ({ topic, onSubmit, loading = false, onChange }) =>
       name="basic"
       initialValues={topic}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       onValuesChange={(values) => onChange && onChange(values)}
     >
       <Form.Item
