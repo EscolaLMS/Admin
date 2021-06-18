@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
-import { Context } from '@/context/curriculum';
+import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
 import { Alert } from 'antd';
 import Card from 'antd/lib/card';
@@ -33,8 +33,12 @@ const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   );
 };
 
-export const Topic: React.FC<{ topic: API.Topic; itemsLength?: number }> = ({ topic }) => {
-  const { updateTopic, deleteTopic } = useContext(Context);
+export const Topic: React.FC<{
+  topic: API.Topic;
+  itemsLength?: number;
+  onUpload?: (topic: API.Topic) => void;
+}> = ({ topic, onUpload }) => {
+  const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
 
   const [state, setState] = useState<API.Topic>({
     ...topic,
@@ -87,7 +91,7 @@ export const Topic: React.FC<{ topic: API.Topic; itemsLength?: number }> = ({ to
 
   const onFormSubmit = useCallback(() => {
     const values = {
-      lesson_id: state.id,
+      lesson_id: state.lesson_id,
       order: sortOrder,
       title: state.title,
       topicable_type: state.topicable_type,
@@ -145,7 +149,11 @@ export const Topic: React.FC<{ topic: API.Topic; itemsLength?: number }> = ({ to
           <MediaUpload
             type={type}
             topic={topic}
-            onUpdate={(info) => console.log(info)}
+            currentState={state}
+            onUpdate={(info) => {
+              if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
+              if (onUpload) onUpload(info.file.response.data);
+            }}
             disabled={false}
           />
         )}

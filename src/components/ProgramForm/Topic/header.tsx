@@ -1,7 +1,8 @@
 import React from 'react';
 import { getTypeName } from './media';
 import Tag from 'antd/lib/tag';
-const TopicHeader = ({ topic }) => {
+
+const TopicHeader: React.FC<{ topic: API.Topic }> = ({ topic }) => {
   return (
     <span>
       {topic.isNew ? (

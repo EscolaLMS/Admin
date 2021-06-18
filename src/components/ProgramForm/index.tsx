@@ -1,21 +1,14 @@
 import React from 'react';
 
-import { AppContext } from '@/context/curriculum';
-import Curriculum from '@/components/curriculum';
-
-import { program } from '@/services/escola-lms/course';
+import { AppContext } from '@/components/ProgramForm/Context';
+import Program from '@/components/ProgramForm/Program';
 
 export const ProgramForm: React.FC<{
   id: number | string;
 }> = ({ id }) => {
   return (
-    <AppContext
-      credentials={{
-        token: localStorage.getItem('TOKEN'),
-        id,
-      }}
-    >
-      <Curriculum />
+    <AppContext id={Number(id)}>
+      <Program />
     </AppContext>
   );
 };

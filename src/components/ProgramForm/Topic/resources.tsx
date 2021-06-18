@@ -1,3 +1,8 @@
+import React from 'react';
+
+export default () => <React.Fragment />;
+/*
+
 import React, { useCallback, useEffect, useState, useContext, useRef } from 'react';
 import { Context } from '@/context/curriculum';
 import { getFormData } from '@/services/api';
@@ -110,9 +115,11 @@ export const Resources = ({ resources, quizId }) => {
         )}
       />
       <Divider />
-      {/* <ResourceUploadForm id={quizId} onUpload={onUpload} /> */}
+
+      <ResourceUploadForm id={quizId} onUpload={onUpload} />
     </React.Fragment>
   );
 };
 
 export default Resources;
+ */

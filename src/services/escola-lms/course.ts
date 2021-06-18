@@ -45,7 +45,7 @@ export async function updateCourse(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request(`/api/courses/${id}`, {
+  return request<API.DefaultResponse<API.Course>>(`/api/courses/${id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export async function createCourse(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request(`/api/courses`, {
+  return request<API.DefaultResponse<API.Course>>(`/api/courses`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -109,13 +109,6 @@ export async function updateLesson(
   });
 }
 
-/**  DELETE /api/rule */
-export async function removeLesson(id: number) {
-  return request<Record<string, any>>(`/api/lessons/${id}`, {
-    method: 'DELETE',
-  });
-}
-
 export async function createTopic(body?: { [key: string]: any }, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Topic>>(`/api/topics`, {
     method: 'POST',
@@ -131,6 +124,18 @@ export async function updateTopic(
 ) {
   return request<API.DefaultResponse<API.Topic>>(`/api/topics/${id}?_method=PUT`, {
     method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/courses/sort */
+export async function sort(body?: { [key: string]: any }, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<{}>>(`/api/courses/sort`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     data: body,
     ...(options || {}),
   });
@@ -172,7 +177,21 @@ export async function addRule(options?: { [key: string]: any }) {
 
 /**  DELETE /api/rule */
 export async function removeCourse(id: number) {
-  return request<Record<string, any>>(`/api/courses/${id}`, {
+  return request<API.DefaultResponse<{}>>(`/api/courses/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+/**  DELETE /api/rule */
+export async function removeLesson(id: number) {
+  return request<API.DefaultResponse<{}>>(`/api/lessons/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+/**  DELETE /api/rule */
+export async function removeTopic(id: number) {
+  return request<API.DefaultResponse<{}>>(`/api/topics/${id}`, {
     method: 'DELETE',
   });
 }

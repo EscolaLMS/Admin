@@ -118,14 +118,22 @@ const codeMessage = {
 const errorHandler = (error: ResponseError) => {
   const { response, data } = error;
 
-  if (data as API.DefaultResponseError) {
+  if (data && (data as API.DefaultResponseError)) {
     const { message, errors } = data;
-    notification.error({
-      message,
-      description: Object.keys(errors).map(
-        (errorKey) => `${errorKey}: ${errors[errorKey].join(', ')}`,
-      ),
-    });
+    if (message && errors) {
+      notification.error({
+        message,
+        description: Object.keys(errors).map(
+          (errorKey) => `${errorKey}: ${errors[errorKey].join(', ')}`,
+        ),
+      });
+    }
+    if (typeof data.error === 'string') {
+      notification.error({
+        message: 'Error',
+        description: data.error,
+      });
+    }
   } else if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;

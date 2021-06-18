@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { PortalProvider } from 'react-portal-hook';
 
 import {
   program,
@@ -7,15 +6,20 @@ import {
   updateLesson as apiUpdateLesson,
   createTopic as apiCreateTopic,
   updateTopic as apiUpdateTopic,
+  removeLesson as apiRemoveLesson,
+  removeTopic as apiRemoveTopic,
   TopicType,
+  sort,
 } from '@/services/escola-lms/course';
+
+import type { UploadChangeParam } from 'antd/lib/upload';
 
 type ProgramContext = {
   state?: API.CourseProgram;
   h5ps?: any[];
   // token: credentials.token,
   id?: number;
-  addNewLesson?: () => void;
+  addNewLesson?: () => API.Lesson;
   updateLesson?: (lesson_id: number, data: FormData) => Promise<void | boolean>;
   updateTopic?: (topic_id: number, data: FormData) => Promise<void>;
   // addResource,
@@ -23,9 +27,10 @@ type ProgramContext = {
   deleteLesson?: (lesson_id: number) => void;
   // updateH5P,
   sortLesson?: (lesson_id: number, upDirection?: boolean) => void;
-  addNewTopic?: (lesson_id: number) => void;
+  addNewTopic?: (lesson_id: number) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
+  onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
 };
 
 export const Context = React.createContext<ProgramContext>({});
@@ -89,22 +94,21 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   */
 
   const addNewLesson = useCallback(() => {
+    const newLesson: API.Lesson = {
+      course_id: id,
+      topics: [],
+      isNew: true,
+      id: state ? state.lessons.length + 1 : getRandomId(), // New Lesson
+      order: 0,
+      title: 'Add title here',
+    };
     setState((prevState) => ({
       ...prevState,
-      lessons: [
-        {
-          course_id: id,
-          image: null,
-          topics: [],
-          isNew: true,
-          id: prevState ? prevState.lessons.length + 1 : getRandomId(), // New Lesson
-          order: 0,
-          title: 'Add title here',
-        },
-        ...(prevState ? prevState.lessons : []),
-      ],
+      lessons: [newLesson, ...(prevState ? prevState.lessons : [])],
     }));
-  }, [id]);
+
+    return newLesson;
+  }, [id, state]);
 
   const updateLesson = useCallback(
     (lesson_id, formData) => {
@@ -149,7 +153,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           index == cIndex ? arr[swapIndex] : index == swapIndex ? arr[cIndex] : lesson;
         return {
           ...newLesson,
-          sort_order: index,
+          order: index,
         };
       });
 
@@ -158,29 +162,24 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         lessons: lessons || [],
       }));
 
-      // TODO: call sorting function once this is ready
-      /**
-      const formData = new FormData();
+      const orders = lessons
+        ?.filter((lesson) => !lesson.isNew)
+        .map((lesson) => [lesson.id, lesson.order]);
 
-      lessons.forEach((lesson, index) => {
-        formData.append(`lessondata[${index}][id]`, lesson.id);
-        formData.append(`lessondata[${index}][position]`, lesson.sort_order);
-      });
-
-      return API(`sort/lesson`, token, 'POST', formData)
-        .then((response) => response.json())
-        .catch((err) => console.log(err));
-
-        */
+      sort({ class: 'Lesson', orders, course_id: id });
     },
-    [state],
+    [state, id],
   );
 
   const sortTopic = useCallback(
     (lesson_id, topic_id, up = true) => {
       const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
 
-      const lIndex = lesson?.topics?.findIndex((topic) => topic.id === topic_id) || 0;
+      const lIndex = lesson?.topics?.findIndex((topic) => topic.id === topic_id);
+
+      if (lIndex === undefined || lIndex === -1) {
+        return;
+      }
 
       const swapIndex = up ? lIndex - 1 : lIndex + 1;
 
@@ -192,7 +191,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
           return {
             ...newTopic,
-            sort_order: index,
+            order: index,
           };
         }) || [];
 
@@ -211,27 +210,17 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           : [],
       }));
 
-      // TODO call sorting endpoint
-      /**
-      const formData = new FormData();
+      const orders = topics
+        ?.filter((topic) => !topic.isNew)
+        .map((topic) => [topic.id, topic.order]);
 
-      topics.forEach((topic, index) => {
-        formData.append(`topicquizdata[${index}][id]`, topic.id);
-        formData.append(`topicquizdata[${index}][lessonid]`, id);
-        formData.append(`topicquizdata[${index}][position]`, topic.sort_order);
-      });
-
-      return API(`sort/topicquiz`, token, 'POST', formData)
-        .then((response) => response.json())
-
-        .catch((err) => console.log(err));
-         */
+      sort({ class: 'Topic', orders, course_id: id });
     },
-    [state],
+    [state, id],
   );
 
   const deleteLesson = useCallback(
-    (lesson_id) => {
+    (lesson_id: number) => {
       const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
       if (!lesson) {
         return;
@@ -244,6 +233,17 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           lessons: prevState?.lessons?.filter((lesson_item) => lesson_item.id !== lesson_id) || [],
         }));
       }
+
+      apiRemoveLesson(lesson_id).then((data) => {
+        if (data.success) {
+          setState((prevState) => ({
+            ...prevState,
+            lessons: prevState
+              ? prevState.lessons.filter((lesson_item) => lesson_item.id !== lesson_id)
+              : [],
+          }));
+        }
+      });
 
       // TODO call actual API to delete lesson
 
@@ -271,6 +271,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       const topic = lesson && lesson.topics?.find((topic_item) => topic_item.id === topic_id);
 
       const isNew = topic?.isNew;
+
+      console.log(topic, isNew);
 
       return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then(
         (data) => {
@@ -310,7 +312,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const deleteTopic = useCallback(
-    (topic_id) => {
+    (topic_id: number) => {
       const lesson_id = getLessonIdByTopicId(topic_id);
 
       const lesson = state?.lessons?.find((lesson_item) => lesson_item.id === lesson_id);
@@ -340,6 +342,27 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
             : [],
         }));
       } else {
+        apiRemoveTopic(topic_id).then((data) => {
+          if (data.success) {
+            setState((prevState) => ({
+              ...prevState,
+              lessons: prevState
+                ? prevState.lessons.map((lesson_item) => {
+                    if (lesson_item.id === lesson_id) {
+                      return {
+                        ...lesson_item,
+                        topics: lesson_item.topics
+                          ? lesson_item.topics.filter((topic_item) => topic_item.id !== topic_id)
+                          : [],
+                      };
+                    }
+                    return lesson_item;
+                  })
+                : [],
+            }));
+          }
+        });
+
         // TODO call API to delete
         /**
          return API(`topic/delete/${id}`, token, 'POST')
@@ -472,20 +495,22 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
   */
 
-  const addNewTopic = useCallback((lesson_id) => {
+  const addNewTopic = useCallback((lesson_id: number) => {
+    const newTopic: API.Topic = {
+      lesson_id,
+      topicable_type: TopicType.Unselected,
+      isNew: true,
+      id: getRandomId(),
+      order: 0,
+      title: 'Add new title here',
+    };
     setState((prevState) => ({
       ...prevState,
       lessons: prevState
         ? prevState.lessons?.map((lesson) => {
             if (lesson.id === lesson_id) {
               const topics = lesson.topics || [];
-              const newTopic: API.Topic = {
-                topicable_type: TopicType.Unselected,
-                isNew: true,
-                id: getRandomId(),
-                order: 0,
-                title: 'Add new title here',
-              };
+
               return {
                 ...lesson,
                 topics: [...topics, newTopic],
@@ -495,7 +520,31 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           })
         : [],
     }));
+    return newTopic;
   }, []);
+
+  const onTopicUploaded = (prevTopicId: number, info: UploadChangeParam) => {
+    const lesson_id = getLessonIdByTopicId(prevTopicId);
+    setState((prevState) => ({
+      ...prevState,
+      lessons: prevState
+        ? prevState.lessons?.map((lesson) => {
+            if (lesson.id === lesson_id) {
+              return {
+                ...lesson,
+                topics: lesson.topics?.map((topic) => {
+                  if (topic.id === prevTopicId) {
+                    return info.file.response.data;
+                  }
+                  return topic;
+                }),
+              };
+            }
+            return lesson;
+          })
+        : [],
+    }));
+  };
 
   const value = {
     state,
@@ -513,11 +562,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     addNewTopic,
     deleteTopic,
     sortTopic,
+    onTopicUploaded,
   };
 
-  return (
-    <Context.Provider value={value}>
-      <PortalProvider>{children} </PortalProvider>
-    </Context.Provider>
-  );
+  return <Context.Provider value={value}>{children}</Context.Provider>;
 };

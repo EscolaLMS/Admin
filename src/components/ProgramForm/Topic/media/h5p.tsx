@@ -1,3 +1,10 @@
+import React from 'react';
+
+export default () => <React.Fragment />;
+
+// eslint-disable-next-line no-lone-blocks
+
+/*
 import React, { useCallback, useEffect, useState, useContext } from "react";
 import { Context } from "@/context/curriculum";
 import Form from "antd/lib/form";
@@ -90,3 +97,4 @@ export const MediaInteractive = ({ media, onUpdate }) => {
 };
 
 export default MediaInteractive;
+*/
