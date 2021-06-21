@@ -3,6 +3,8 @@ const { uniq } = require('lodash');
 
 const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 
+const hash = Cypress.env('router') === 'hash' ? '#/' : '';
+
 const getPaths = (routes) => {
   return uniq(
     routes
@@ -35,7 +37,7 @@ describe('Routes. Other', () => {
   const routers = getPaths(RouterConfig);
   routers.forEach((route) => {
     it(`test page ${route}`, () => {
-      cy.visit(`${BASE_URL}${route}`);
+      cy.visit(`${BASE_URL}${hash}${route}`);
       cy.setLocalStorage('antd-pro-authority', '["admin"]');
       cy.get('footer').should('be.visible');
     });
