@@ -5,10 +5,11 @@ import './index.css';
 
 interface FormWysiwygProps {
   value?: string;
+  defaultValue?: string;
   onChange?: (value: string) => void;
 }
 
-export const FormWysiwyg: React.FC<FormWysiwygProps> = ({ value = '', onChange }) => {
+export const FormWysiwyg: React.FC<FormWysiwygProps> = ({ value, onChange }) => {
   return (
     <div className="form-wysiwyg-markdown">
       <Editor

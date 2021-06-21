@@ -11,6 +11,7 @@ import { Popconfirm } from 'antd';
 import { Radio } from 'antd';
 import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/course';
+import Oembed from './media/oembed';
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
@@ -53,11 +54,22 @@ export const Topic: React.FC<{
   useEffect(() => {
     setState((prevState) => {
       return {
+        ...prevState,
+        value: type === topic.topicable_type ? topic.topicable?.value : '',
+      };
+    });
+  }, [type, topic]);
+
+  /*
+  useEffect(() => {
+    setState((prevState) => {
+      return {
         ...topic,
         value: prevState.value,
       };
     });
   }, [topic]);
+  */
 
   const updateValue = useCallback((key, value) => {
     setState((prevState) => ({
@@ -80,8 +92,7 @@ export const Topic: React.FC<{
 
         updateTopic(state.id, formData)
           .then(() => setLoading(false))
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
             setLoading(false);
           });
       }
@@ -98,12 +109,6 @@ export const Topic: React.FC<{
       value: state.value,
     };
     const formData = getFormData(values);
-
-    /*
-      if (values && values.image && values.image.file) {
-        formData.set('image', values.image.file);
-      }
-      */
 
     handleSave(formData);
   }, [state, handleSave, sortOrder]);
@@ -122,7 +127,12 @@ export const Topic: React.FC<{
         title={`Topic: ${state.title}`}
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
-          <Button type="primary" onClick={onFormSubmit} disabled={type === TopicType.Unselected}>
+          <Button
+            type="primary"
+            onClick={onFormSubmit}
+            disabled={type === TopicType.Unselected}
+            loading={loading}
+          >
             Save
           </Button>,
         ]}
@@ -143,19 +153,27 @@ export const Topic: React.FC<{
         <Divider />
         {!type && <Alert message="Select type of Topic to continue..." type="info" />}
         {type && type === TopicType.RichText && (
-          <RichTextEditor text={state.value} onChange={(value) => updateValue('value', value)} />
+          <RichTextEditor
+            text={topic.topicable_type === TopicType.RichText ? topic.topicable.value || '' : ''}
+            onChange={(value) => updateValue('value', value)}
+          />
         )}
         {type && (type === TopicType.Video || type === TopicType.Audio) && (
           <MediaUpload
             type={type}
             topic={topic}
             currentState={state}
+            onChange={() => setLoading(true)}
             onUpdate={(info) => {
               if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
               if (onUpload) onUpload(info.file.response.data);
+              setLoading(false);
             }}
             disabled={false}
           />
+        )}
+        {type && type === TopicType.OEmbed && (
+          <Oembed text={state.value} onChange={(value) => updateValue('value', value)} />
         )}
       </Card>
 

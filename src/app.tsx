@@ -157,6 +157,13 @@ const errorHandler = (error: ResponseError) => {
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   const token = localStorage.getItem('TOKEN');
 
+  if (url.includes('login')) {
+    return {
+      url: `${REACT_APP_API_URL}${url}`,
+      options,
+    };
+  }
+
   return {
     url: `${REACT_APP_API_URL}${url}`,
     options: {

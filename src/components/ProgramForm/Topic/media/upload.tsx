@@ -30,7 +30,7 @@ export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }>
       );
     case TopicType.Video:
       return topic.topicable_type === TopicType.Video && topic.topicable?.url ? (
-        <video preload="none" controls src={topic.topicable.url} />
+        <video controls src={topic.topicable.url} width="100%" />
       ) : (
         <React.Fragment />
       );
@@ -44,16 +44,17 @@ export const MediaUploadForm: React.FC<{
   currentState: API.Topic;
   type: TopicType.Audio | TopicType.Video;
   onUpdate: (info: UploadChangeParam) => void;
+  onChange: (info: UploadChangeParam) => void;
   disabled: boolean;
-}> = ({ topic, type, onUpdate, disabled = false, currentState }) => {
-  const onChange = useCallback(
+}> = ({ topic, type, onUpdate, disabled = false, currentState, onChange }) => {
+  const onInfoChange = useCallback(
     (info) => {
       if (info.file.status === 'done') {
         return onUpdate && onUpdate(info);
       }
-      return false;
+      return onChange && onChange(info);
     },
-    [onUpdate],
+    [onUpdate, onChange],
   );
 
   const data = {
@@ -65,7 +66,7 @@ export const MediaUploadForm: React.FC<{
     <Row>
       <Col span={12}>
         <SecureUpload
-          onChange={onChange}
+          onChange={onInfoChange}
           name="value"
           url={topic.isNew ? `/api/topics` : `/api/topics/${topic.id}?_method=PUT`}
           accept={CONFIG.acceptedTypes[type]}
@@ -77,7 +78,9 @@ export const MediaUploadForm: React.FC<{
         </SecureUpload>
       </Col>
       <Col span={12}>
-        <MediaUploadPreview type={type} topic={topic} />
+        <div style={{ padding: '0 12px' }}>
+          <MediaUploadPreview type={type} topic={topic} />
+        </div>
       </Col>
     </Row>
   );
