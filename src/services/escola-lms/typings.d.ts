@@ -2,6 +2,15 @@
 /* eslint-disable */
 
 declare namespace API {
+  enum TopicType {
+    Unselected = '',
+    RichText = 'EscolaLms\\Courses\\Models\\TopicContent\\RichText',
+    OEmbed = 'EscolaLms\\Courses\\Models\\TopicContent\\OEmbed',
+    Audio = 'EscolaLms\\Courses\\Models\\TopicContent\\Audio',
+    Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
+    H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
+  }
+
   type Category = {
     id: number;
     name: string;
@@ -130,5 +139,92 @@ declare namespace API {
     onboarding_completed: boolean;
     email_verified: boolean;
     interests: string[];
+  };
+
+  type Lesson = {
+    id?: number;
+    created_at?: string;
+    updated_at?: string;
+    title?: string;
+    order?: number;
+    course_id?: number;
+    duration?: string;
+    topics?: Topic[];
+    isNew?: boolean;
+  };
+
+  type TopicBase = {
+    lesson_id?: number;
+    created_at?: string;
+    updated_at?: string;
+    id?: number;
+    order?: number;
+    title?: string;
+    value?: any;
+    topicable_id?: number;
+    isNew?: boolean;
+    /*
+    topicable_type?:
+      | TopicType.RichText
+      | TopicType.OEmbed
+      | TopicType.Audio
+      | TopicType.H5P
+      | TopicType.Unselected
+      | TopicType.Video;
+      */
+  };
+
+  type TopicableBase = {
+    created_at?: string;
+    updated_at?: string;
+    id: number;
+    value: string;
+  };
+
+  type TopicRichText = TopicBase & {
+    topicable_type: TopicType.RichText;
+    topicable: TopicableBase;
+  };
+
+  type TopicOEmbed = TopicBase & {
+    topicable_type: TopicType.OEmbed;
+    topicable: TopicableBase;
+  };
+
+  type TopicAudio = TopicBase & {
+    topicable_type: TopicType.Audio;
+    topicable: TopicableBase & {
+      length: number;
+      url: string;
+    };
+  };
+
+  type TopicVideo = TopicBase & {
+    topicable_type: TopicType.Video;
+    topicable: TopicableBase & {
+      height: number;
+      poster: string;
+      poster_url: string;
+      url: string;
+      width: number;
+    };
+  };
+
+  type TopicH5P = TopicBase & {
+    topicable_type: TopicType.H5P;
+    topicable: TopicableBase;
+  };
+
+  type TopicUnselected = TopicBase & {
+    topicable_type?: TopicType.Unselected;
+    topicable?: never;
+  };
+
+  type Topic = TopicUnselected | TopicRichText | TopicOEmbed | TopicAudio | TopicVideo | TopicH5P;
+
+  type TopicNotEmpty = TopicRichText | TopicOEmbed | TopicAudio | TopicVideo | TopicH5P;
+
+  type CourseProgram = Course & {
+    lessons: Lesson[];
   };
 }

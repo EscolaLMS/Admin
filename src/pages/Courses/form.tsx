@@ -11,6 +11,7 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import TagsInput from '@/components/TagsInput';
 import { PageContainer } from '@ant-design/pro-layout';
+import ProgramForm from '@/components/ProgramForm';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -202,7 +203,7 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane key="program" tab="Program">
-            program
+            <ProgramForm id={course} />
           </ProCard.TabPane>
         )}
       </ProCard>
