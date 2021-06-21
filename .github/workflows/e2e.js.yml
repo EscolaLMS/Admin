@@ -20,6 +20,7 @@ jobs:
           record: true
           start: "npm run start:mock"
           wait-on: http://localhost:8000
+          wait-on-timeout: 110
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
