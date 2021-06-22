@@ -27,9 +27,13 @@ export default {
   duration: 'Duration',
   categories: 'Categories',
   tags: 'Tags',
+  H5Ps: 'H5Ps',
+  new: 'new',
+  library: 'Library',
   'menu.Courses': 'Courses',
   'menu.Users': 'Users',
   'menu.Welcome': 'Welcome',
   'menu.Course Form': 'Course Form',
   'menu.Form': 'Form',
+  'menu.H5Ps': 'H5Ps',
 };

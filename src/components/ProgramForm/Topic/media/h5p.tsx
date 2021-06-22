@@ -1,100 +1,96 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Row, Col, Divider, Button, List, Typography, Alert } from 'antd';
+import H5PContentSelect from '@/components/H5PContentSelect';
+import { EditorContextProvider } from 'h5p-player/src/components/hh5p/context/index';
+import Player from 'h5p-player/src/components/hh5p/player/index';
+import type { XAPIEvent } from 'h5p-player/src/types/index';
+import { Link } from 'umi';
 
-export default () => <React.Fragment />;
-
-// eslint-disable-next-line no-lone-blocks
-
-/*
-import React, { useCallback, useEffect, useState, useContext } from "react";
-import { Context } from "@/context/curriculum";
-import Form from "antd/lib/form";
-import Button from "antd/lib/button";
-import Select from "antd/lib/select";
-import Divider from "antd/lib/divider";
-import { usePortals } from "react-portal-hook";
-
-const { Option } = Select;
-
-export const MediaInteractive = ({ media, onUpdate }) => {
-  const [state, setState] = useState(
-    media && media.id ? parseInt(media.id) : -1
-  );
-  const { h5ps } = useContext(Context);
-
-  const portalManager = usePortals();
-
-  const showPreview = useCallback(iframe => {
-    // Calling this from anywhere in your app will render a notification
-    portalManager.open(
-      portal => (
-        <div className="iframe-portal">
-          <Button type="primary" onClick={() => portal.close()}>
-            Close Preview
-          </Button>
-          <div className="iframe">
-            <iframe src={iframe} />
-          </div>
-        </div>
-      ),
-      {
-        appendTo: document && document.getElementById("course-portal")
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    if (media && media.id) {
-      setState(parseInt(media.id));
-    }
-  }, [media]);
-
+const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
+  const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
   return (
-    <Form wrapperCol={{ span: 10 }} layout="vertical">
-      <Form.Item label="Select interactive Element">
-        <Select value={state} onChange={value => setState(value)}>
-          <Option value={-1} disabled>
-            Select h5p content
-          </Option>
-          {h5ps.map(h5p => (
-            <Option key={h5p.id} value={h5p.id}>
-              {h5p.title} <small>({h5p.library.title})</small>
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      <Form.Item label="Actions">
-        <Button
-          type="primary"
-          onClick={e => {
-            e.preventDefault();
-            onUpdate && onUpdate(state);
-          }}
-        >
-          Save interactive element
-        </Button>
-
-        {state && state != -1 && (
-          <React.Fragment>
-            <Divider type="vertical" />
-            <Button
-              onClick={e => {
-                e.preventDefault();
-                showPreview(`/admin/h5p/h5p/embed/${state}`);
-              }}
-            >
-              Preview Element
-            </Button>
-            <Divider type="vertical" />
-            <Button href={`/admin/h5p/h5p/${state}/edit`} target="_blank">
-              Edit Element
-            </Button>
-          </React.Fragment>
-        )}
-      </Form.Item>
-    </Form>
+    <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+      <Divider />
+      <Player id={id} onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])} />
+      <Divider />
+      <div style={{ overflow: 'auto', maxHeight: '200px' }}>
+        <List
+          dataSource={XAPIEvents}
+          header="XAPI Events"
+          renderItem={(item) => (
+            <List.Item>
+              <Typography.Text code>{JSON.stringify(item)}</Typography.Text>
+            </List.Item>
+          )}
+        ></List>
+      </div>
+    </EditorContextProvider>
   );
 };
 
-export default MediaInteractive;
-*/
+export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }> = ({
+  id,
+  onChange,
+}) => {
+  const [previewId, setPreviewId] = useState<number>();
+  return (
+    <React.Fragment>
+      <Row>
+        <Col span={12}>
+          <Row>
+            <Col span={12}>
+              <H5PContentSelect
+                value={id}
+                onChange={(value) => {
+                  onChange(value);
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <Button
+                disabled={!id}
+                onClick={() => {
+                  setPreviewId(Number(id));
+                }}
+              >
+                Preview
+              </Button>
+            </Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Alert
+            message="H5P Info"
+            description={
+              <span>
+                To assign Interactive HTML5 element to lesson topic you need to{' '}
+                <Link to="/h5ps/new">create it first</Link> or use one{' '}
+                <Link to="/h5ps/new">from the list</Link> if it's already created. Press{' '}
+                <Button
+                  size="small"
+                  disabled={!id}
+                  onClick={() => {
+                    setPreviewId(Number(id));
+                  }}
+                >
+                  Preview
+                </Button>{' '}
+                button to see how does content looks like and see list of `XAPI` events.
+              </span>
+            }
+            type="info"
+          />
+        </Col>
+      </Row>
+      {previewId && (
+        <Row>
+          <Col span={24}>
+            <H5PTopicPlayer id={previewId} />
+          </Col>
+        </Row>
+      )}
+    </React.Fragment>
+  );
+};
+
+export default H5PForm;

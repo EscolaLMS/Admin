@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { message, Card, Spin, Row, Col } from 'antd';
+import { message, Spin, Row, Col } from 'antd';
 import ProForm, { ProFormText, ProFormDigit } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
@@ -209,6 +209,4 @@ export default () => {
       </ProCard>
     </PageContainer>
   );
-
-  return <Card></Card>;
 };

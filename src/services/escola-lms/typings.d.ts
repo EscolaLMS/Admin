@@ -227,4 +227,51 @@ declare namespace API {
   type CourseProgram = Course & {
     lessons: Lesson[];
   };
+
+  type H5PLibrary = {
+    id: number;
+    created_at: string;
+    updated_at: string;
+    name: string;
+    title: string;
+    runnable: number;
+    restricted: number;
+    fullscreen: number;
+    embed_types: string;
+    semantics: object;
+    machineName: string;
+    uberName: string;
+    majorVersion: string;
+    minorVersion: string;
+    patchVersion: string;
+    preloadedJs: string;
+    preloadedCss: string;
+    dropLibraryCss: string;
+    tutorialUrl: string;
+    hasIcon: string;
+    libraryId: number;
+  };
+
+  type H5PContent = {
+    id: number;
+    created_at: string;
+    updated_at: string;
+    user_id: string | number;
+    title: string;
+    library_id: string;
+    parameters: string;
+    filtered: string;
+    slug: string;
+    embed_type: string;
+    params: object;
+    metadata: object;
+    library: H5PLibrary;
+    nonce: string;
+  };
+
+  type H5PContentList = PaginatedList<H5PContent>;
+
+  type H5PContentListItem = H5PContent;
+
+  type H5PContentParams = PageParams & PaginationParams;
 }
