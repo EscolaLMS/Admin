@@ -34,6 +34,19 @@
     component: './Courses',
   },
   {
+    path: '/h5ps',
+    name: 'H5Ps',
+    icon: 'book',
+    component: './H5P',
+  },
+  {
+    path: '/h5ps/:h5p',
+    name: 'H5Ps',
+    icon: 'book',
+    component: './H5P/form',
+    hideInMenu: true,
+  },
+  {
     path: '/courses/:course',
     name: 'Form',
     icon: 'book',

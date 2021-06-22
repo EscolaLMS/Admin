@@ -12,6 +12,7 @@ import { Radio } from 'antd';
 import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/course';
 import Oembed from './media/oembed';
+import H5PForm from './media/h5p';
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
@@ -174,6 +175,9 @@ export const Topic: React.FC<{
         )}
         {type && type === TopicType.OEmbed && (
           <Oembed text={state.value} onChange={(value) => updateValue('value', value)} />
+        )}
+        {type && type === TopicType.H5P && (
+          <H5PForm id={state.value} onChange={(value) => updateValue('value', value)} />
         )}
       </Card>
 
