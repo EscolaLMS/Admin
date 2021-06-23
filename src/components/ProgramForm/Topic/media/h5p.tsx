@@ -6,7 +6,7 @@ import Player from 'h5p-player/src/components/hh5p/player/index';
 import type { XAPIEvent } from 'h5p-player/src/types/index';
 import { Link } from 'umi';
 
-const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
+export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
   const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
   return (
     <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
@@ -65,7 +65,7 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
               <span>
                 To assign Interactive HTML5 element to lesson topic you need to{' '}
                 <Link to="/h5ps/new">create it first</Link> or use one{' '}
-                <Link to="/h5ps/new">from the list</Link> if it's already created. Press{' '}
+                <Link to="/h5ps">from the list</Link> if it's already created. Press{' '}
                 <Button
                   size="small"
                   disabled={!id}

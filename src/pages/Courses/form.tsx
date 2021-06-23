@@ -203,7 +203,7 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane key="program" tab="Program">
-            <ProgramForm id={course} />
+            {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
         )}
       </ProCard>
