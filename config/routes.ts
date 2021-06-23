@@ -47,6 +47,13 @@
     hideInMenu: true,
   },
   {
+    path: '/h5ps/preview/:h5p',
+    name: 'H5Ps',
+    icon: 'book',
+    component: './H5P/preview',
+    hideInMenu: true,
+  },
+  {
     path: '/courses/:course',
     name: 'Form',
     icon: 'book',

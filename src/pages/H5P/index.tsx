@@ -8,7 +8,7 @@ import ProTable from '@ant-design/pro-table';
 import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, BookOutlined } from '@ant-design/icons';
 
 const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
@@ -99,6 +99,11 @@ const TableList: React.FC = () => {
             <Button type="primary" icon={<DeleteOutlined />} danger></Button>
           </Tooltip>
         </Popconfirm>,
+        <Link to={`/h5ps/preview/${record.id}`}>
+          <Tooltip title={<FormattedMessage id="preview" defaultMessage="preview" />}>
+            <Button icon={<BookOutlined />}></Button>
+          </Tooltip>
+        </Link>,
       ],
     },
   ];
