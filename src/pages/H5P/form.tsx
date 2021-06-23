@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 
-import { useParams, history } from 'umi';
+import { useParams, history, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-
 import { EditorContextProvider, EditorContext } from 'h5p-player/src/components/hh5p/context/index';
 import Editor from 'h5p-player/src/components/hh5p/editor/index';
+import { Button } from 'antd';
 
 const H5PForm: React.FC<{ id?: number | string }> = ({ id }) => {
   const { state } = useContext(EditorContext);
@@ -20,6 +20,13 @@ const H5PForm: React.FC<{ id?: number | string }> = ({ id }) => {
   return (
     <PageContainer
       title={`H5P. HTML5 Content ${title}`}
+      extra={[
+        id && (
+          <Button type="primary">
+            <Link to={`/h5ps/preview/${id}`}>Preview</Link>
+          </Button>
+        ),
+      ]}
       header={{
         breadcrumb: {
           routes: [
