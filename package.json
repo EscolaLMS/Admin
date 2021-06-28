@@ -51,7 +51,7 @@
     "not ie <= 10"
   ],
   "dependencies": {
-    "h5p-player": "EscolaLMS/H5P-player#c7e3643",
+    "h5p-player": "EscolaLMS/H5P-player#e36f56b",
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-card": "^1.14.0",
     "@ant-design/pro-descriptions": "^1",
