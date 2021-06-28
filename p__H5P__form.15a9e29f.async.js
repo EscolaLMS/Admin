@@ -4,7 +4,7 @@
         const resizeObserver = new ResizeObserver((entries) =>
             postMessage({ iFrameHeight: entries[0].contentRect.height })
         );
-        const params = '`).concat(E,`'.split("\\n").join('');
+        const params = `,"`").concat(E,"`",`.split("\\n").join('');
         ns.init = function () {
             ns.$ = H5P.jQuery;
             ns.basePath = H5PIntegration.editor.libraryUrl;
