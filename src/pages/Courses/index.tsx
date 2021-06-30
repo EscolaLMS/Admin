@@ -44,6 +44,12 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.CourseListItem>[] = [
     {
+      title: <FormattedMessage id="ID" defaultMessage="ID" />,
+      dataIndex: 'id',
+      sorter: true,
+      search: false,
+    },
+    {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
       sorter: true,
@@ -95,9 +101,13 @@ const TableList: React.FC = () => {
       },
       render: (_, record) => (
         <React.Fragment>
-          {record.categories?.map(({ name }) => (
-            <Tag key={name}>{name}</Tag>
-          ))}
+          {record.categories?.map((category) =>
+            typeof category === 'object' ? (
+              <Tag key={category.name}>{category.name}</Tag>
+            ) : (
+              <Tag key={category}>{category}</Tag>
+            ),
+          )}
         </React.Fragment>
       ),
     },
@@ -122,9 +132,13 @@ const TableList: React.FC = () => {
       },
       render: (_, record) => (
         <React.Fragment>
-          {record.tags?.map(({ title }) => (
-            <Tag key={title}>{title}</Tag>
-          ))}
+          {record.tags?.map((tag) =>
+            typeof tag === 'object' ? (
+              <Tag key={tag.title}>{tag.title}</Tag>
+            ) : (
+              <Tag key={tag}>{tag}</Tag>
+            ),
+          )}
         </React.Fragment>
       ),
     },

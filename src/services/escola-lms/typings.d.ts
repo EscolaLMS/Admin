@@ -97,6 +97,10 @@ declare namespace API {
 
   type CourseListItem = Course;
 
+  type CategoryList = DataResponseSuccess<Category[]>;
+
+  type CategoryListItem = Category;
+
   type PaginationParams = {
     order_by?: string;
     order?: 'ASC' | 'DESC';
