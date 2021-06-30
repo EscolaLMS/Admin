@@ -24,19 +24,19 @@
   {
     path: '/users',
     name: 'Users',
-    icon: 'book',
+    icon: 'team',
     component: './NewPage',
   },
   {
     path: '/courses',
     name: 'Courses',
-    icon: 'book',
+    icon: 'fire',
     component: './Courses',
   },
   {
     path: '/h5ps',
     name: 'H5Ps',
-    icon: 'book',
+    icon: 'experiment',
     component: './H5P',
   },
   {
@@ -87,6 +87,12 @@
     icon: 'table',
     path: '/list',
     component: './TableList',
+  },
+  {
+    name: 'categories',
+    icon: 'calculator',
+    path: '/categories',
+    component: './Categories',
   },
   {
     path: '/',
