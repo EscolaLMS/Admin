@@ -65,6 +65,25 @@ declare namespace API {
     total: number;
   };
 
+  type PaginatedMetaList<Model> = {
+    links: {
+      first: string;
+      last: string;
+      next: string;
+      prev: string;
+    };
+    data: Model[];
+    meta: {
+      current_page: number;
+      next_page_url: string;
+      path: string;
+      per_page: number;
+      prev_page_url: string;
+      to: number;
+      total: number;
+    };
+  };
+
   type PaginatedListParams = {
     current_page: number;
     total: number;
@@ -100,6 +119,22 @@ declare namespace API {
   type CategoryList = DataResponseSuccess<Category[]>;
 
   type CategoryListItem = Category;
+
+  type UserList = PaginatedMetaList<UserItem>;
+
+  type UserListItem = UserItem;
+
+  type OrderList = PaginatedMetaList<Order>;
+
+  type OrderListItem = Order;
+
+  type PaymentList = PaginatedMetaList<Payment>;
+
+  type PaymentListItem = Payment;
+
+  type PageList = PaginatedMetaList<Page>;
+
+  type PageListItem = Page;
 
   type PaginationParams = {
     order_by?: string;
@@ -278,4 +313,35 @@ declare namespace API {
   type H5PContentListItem = H5PContent;
 
   type H5PContentParams = PageParams & PaginationParams;
+
+  type Order = {
+    // TODO update me
+    id: number;
+    total: number;
+    user_id: number;
+  };
+
+  type Payment = {
+    amount: number;
+    billable_id: number;
+    billable_type: string;
+    created_at: string;
+    currency: string;
+    description: string;
+    id: number;
+    order_id: number;
+    payable_id: null;
+    payable_type: null;
+    status: 'new' | 'paid'; // TODO: what are possible statuses ?
+    updated_at: string;
+  };
+
+  type Page = {
+    id: number;
+    slug: string;
+    title: string;
+    author_id: number;
+    author: UserItem;
+    content: string;
+  };
 }

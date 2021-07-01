@@ -6,7 +6,7 @@ export default (): React.ReactNode => {
   return (
     <PageContainer>
       <Card>
-        <Typography.Text strong>Hello and welcome to EscolaLMS!</Typography.Text>
+        <Typography.Text strong>Pages files list will be here</Typography.Text>
       </Card>
     </PageContainer>
   );
