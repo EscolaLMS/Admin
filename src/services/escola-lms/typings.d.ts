@@ -344,4 +344,13 @@ declare namespace API {
     author: UserItem;
     content: string;
   };
+
+  type File = {
+    name: string;
+    created_at: string;
+    mime: 'directory' | 'file';
+    url: string;
+  };
+
+  type FileList = DefaultResponse<PaginatedList<File>>;
 }
