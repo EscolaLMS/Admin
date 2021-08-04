@@ -353,4 +353,6 @@ declare namespace API {
   };
 
   type FileList = DefaultResponse<PaginatedList<File>>;
+
+  type FileUpload = DefaultResponse<File[]>;
 }
