@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col } from 'antd';
-import ProForm, { ProFormText, ProFormDigit } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
@@ -124,14 +124,29 @@ export default () => {
               />
               <ProFormText
                 width="md"
+                name="subtitle"
+                label="Subtitle"
+                tooltip="Subtitle"
+                placeholder="Subtitle"
+              />
+              <ProFormText
+                width="sm"
+                name="language"
+                label="Language"
+                tooltip="Language"
+                placeholder="Language"
+              />
+              <ProFormSwitch name="active" label="Is Active?" />
+            </ProForm.Group>
+
+            <ProForm.Group>
+              <ProFormText
+                width="md"
                 name="duration"
                 label="Duration"
                 tooltip="duration"
                 placeholder="duration"
               />
-            </ProForm.Group>
-
-            <ProForm.Group>
               <ProFormDigit
                 width="md"
                 name="base_price"
@@ -142,6 +157,15 @@ export default () => {
                 max={9999}
                 fieldProps={{ step: 0.01 }}
               />
+
+              <ProFormText
+                width="sm"
+                name="level"
+                label="Level"
+                tooltip="Level"
+                placeholder="Level"
+              />
+
               <ProForm.Item name="author_id" label="Author/Tutor" valuePropName="value">
                 <UserSelect />
               </ProForm.Item>
@@ -150,6 +174,15 @@ export default () => {
             <ProForm.Item
               name="summary"
               label="Summary"
+              tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
+              valuePropName="value"
+            >
+              <WysiwygMarkdown />
+            </ProForm.Item>
+
+            <ProForm.Item
+              name="description"
+              label="Description"
               tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
               valuePropName="value"
             >
@@ -204,6 +237,11 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="program" tab="Program">
             {course && <ProgramForm id={course} />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane key="scorm" tab="Scorm">
+            SCORM Select form will go here
           </ProCard.TabPane>
         )}
       </ProCard>

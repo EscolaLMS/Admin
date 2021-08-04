@@ -20,7 +20,7 @@ export async function course(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.CourseList>(`/api/courses`, {
+  return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
     params: {
       ...params,
@@ -33,7 +33,7 @@ export async function course(
 
 /**  GET /api/courses/:id */
 export async function getCourse(id: number, options?: { [key: string]: any }) {
-  return request<API.DefaultResponse<API.Course>>(`/api/courses/${id}`, {
+  return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'GET',
     ...(options || {}),
   });
@@ -45,7 +45,7 @@ export async function updateCourse(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Course>>(`/api/courses/${id}`, {
+  return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export async function createCourse(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Course>>(`/api/courses`, {
+  return request<API.DefaultResponse<API.Course>>(`/api/admin/courses`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export async function program(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.CourseProgram>>(`/api/courses/${id}/program`, {
+  return request<API.DefaultResponse<API.CourseProgram>>(`/api/admin/courses/${id}/program`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export async function createLesson(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Lesson>>(`/api/lessons`, {
+  return request<API.DefaultResponse<API.Lesson>>(`/api/admin/lessons`, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -102,7 +102,7 @@ export async function updateLesson(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Lesson>>(`/api/lessons/${id}?_method=PUT`, {
+  return request<API.DefaultResponse<API.Lesson>>(`/api/admin/lessons/${id}?_method=PUT`, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -110,7 +110,7 @@ export async function updateLesson(
 }
 
 export async function createTopic(body?: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<API.DefaultResponse<API.Topic>>(`/api/topics`, {
+  return request<API.DefaultResponse<API.Topic>>(`/api/admin/topics`, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -122,7 +122,7 @@ export async function updateTopic(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Topic>>(`/api/topics/${id}?_method=PUT`, {
+  return request<API.DefaultResponse<API.Topic>>(`/api/admin/topics/${id}?_method=PUT`, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -131,7 +131,7 @@ export async function updateTopic(
 
 /**  POST /api/courses/sort */
 export async function sort(body?: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<API.DefaultResponse<{}>>(`/api/courses/sort`, {
+  return request<API.DefaultResponse<{}>>(`/api/admin/courses/sort`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -159,39 +159,23 @@ export async function updateCourseCategories(
 }
 */
 
-/**  PUT /api/rule */
-export async function updateRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
-    method: 'PUT',
-    ...(options || {}),
-  });
-}
-
-/**  POST /api/rule */
-export async function addRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
-    method: 'POST',
-    ...(options || {}),
-  });
-}
-
 /**  DELETE /api/rule */
 export async function removeCourse(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/courses/${id}`, {
+  return request<API.DefaultResponse<{}>>(`/api/admin/courses/${id}`, {
     method: 'DELETE',
   });
 }
 
 /**  DELETE /api/rule */
 export async function removeLesson(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/lessons/${id}`, {
+  return request<API.DefaultResponse<{}>>(`/api/admin/lessons/${id}`, {
     method: 'DELETE',
   });
 }
 
 /**  DELETE /api/rule */
 export async function removeTopic(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/topics/${id}`, {
+  return request<API.DefaultResponse<{}>>(`/api/admin/topics/${id}`, {
     method: 'DELETE',
   });
 }
