@@ -10,7 +10,11 @@ interface FormWysiwygProps {
   directory?: string;
 }
 
-export const FormWysiwyg: React.FC<FormWysiwygProps> = ({ value, onChange, directory = '/' }) => {
+export const FormWysiwyg: React.FC<FormWysiwygProps> = ({
+  value,
+  onChange,
+  directory = '/wysiwyg',
+}) => {
   return (
     <div className="form-wysiwyg-markdown">
       <Editor
