@@ -155,7 +155,7 @@ export default () => {
                 placeholder="Base Price"
                 min={0}
                 max={9999}
-                fieldProps={{ step: 0.01 }}
+                fieldProps={{ step: 1 }}
               />
 
               <ProFormText

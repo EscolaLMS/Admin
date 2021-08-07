@@ -188,6 +188,8 @@ declare namespace API {
     order?: number;
     course_id?: number;
     duration?: string;
+    active?: boolean;
+    summary?: string;
     topics?: Topic[];
     isNew?: boolean;
   };
@@ -202,6 +204,8 @@ declare namespace API {
     value?: any;
     topicable_id?: number;
     isNew?: boolean;
+    active?: boolean;
+    preview?: boolean;
     /*
     topicable_type?:
       | TopicType.RichText
