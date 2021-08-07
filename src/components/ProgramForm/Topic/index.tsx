@@ -5,7 +5,6 @@ import { Alert } from 'antd';
 import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
-import TopicEditForm from './editform';
 import MediaUpload from './media/upload';
 import { Popconfirm } from 'antd';
 import { Radio } from 'antd';
@@ -13,6 +12,7 @@ import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/course';
 import Oembed from './media/oembed';
 import H5PForm from './media/h5p';
+import TopicForm from './form';
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
@@ -103,11 +103,10 @@ export const Topic: React.FC<{
 
   const onFormSubmit = useCallback(() => {
     const values = {
-      lesson_id: state.lesson_id,
+      ...state,
+      active: state.active ? 1 : 0,
+      preview: state.preview ? 1 : 0,
       order: sortOrder,
-      title: state.title,
-      topicable_type: state.topicable_type,
-      value: state.value,
     };
     const formData = getFormData(values);
 
@@ -138,7 +137,7 @@ export const Topic: React.FC<{
           </Button>,
         ]}
       >
-        <TopicEditForm topic={state} onChange={(values) => updateValues(values)} />
+        <TopicForm initialValues={state} onValuesChange={(values) => updateValues(values)} />
         <Divider>Select type of Topic to continue...</Divider>
         <Radio.Group
           name="radiogroup"

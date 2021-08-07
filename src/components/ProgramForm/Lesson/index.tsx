@@ -2,21 +2,20 @@ import React, { useCallback, useEffect, useState, useContext } from 'react';
 import Topic from '@/components/ProgramForm/Topic';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import LessonEditForm from './editform';
-import { Button, Divider, Card, Popover, Popconfirm, Collapse } from 'antd';
+import { Button, Divider, Card, Collapse, Typography, Popconfirm } from 'antd';
 
 import { PlusOutlined } from '@ant-design/icons';
 import SortingButtons from '@/components/sortingbuttons';
 import TopicHeader from '@/components/ProgramForm/Topic/header';
 
-const { Meta } = Card;
+import LessonForm from './form';
+
 const { Panel } = Collapse;
 
 export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
   const [state, setState] = useState<API.Lesson>(lesson);
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
-  const [validate, setValidate] = useState(false);
   const { id, updateLesson, deleteLesson, addNewTopic, sortTopic } = useContext(Context);
 
   const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
@@ -25,24 +24,6 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
     setState(lesson);
     return lesson.topics && setTopicList(lesson.topics);
   }, [lesson]);
-
-  useEffect(() => {
-    if (state.title && state.title.length > 100) {
-      setValidate(true);
-    } else {
-      setValidate(false);
-    }
-  }, [state.title]);
-
-  const onInputChange = useCallback((e) => {
-    const { value } = e.target;
-    setState((prevState) => {
-      return {
-        ...prevState,
-        title: value,
-      };
-    });
-  }, []);
 
   const onNew = useCallback(() => {
     const newTopic = addNewTopic && lesson.id && addNewTopic(lesson.id);
@@ -54,42 +35,29 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
   const handleSave = useCallback(() => {
     setLoading(true);
 
-    const formData = getFormData(
-      state.isNew
-        ? {
-            course_id: lesson.course_id,
-            id: state.id,
-            title: state.title,
-            order: state.order,
-          }
-        : {
-            course_id: lesson.course_id,
-            id: state.id,
-            title: state.title,
-            order: state.order,
-          },
-    );
+    const formData = getFormData({
+      course_id: lesson.course_id,
+      ...state,
+      active: state.active ? 1 : 0,
+    });
 
-    return (
-      updateLesson &&
-      state.id &&
-      updateLesson(state.id, formData)
+    if (updateLesson && state.id) {
+      return updateLesson(state.id, formData)
         .then(() => setLoading(false))
         .catch((err) => {
           console.log(err);
           setLoading(false);
-        })
-    );
+        });
+    }
+    return Promise.resolve();
   }, [state, lesson.course_id, updateLesson]);
 
-  const handleDelete = useCallback(
-    (e) => {
-      e.preventDefault();
-
-      return state.id && deleteLesson && deleteLesson(state.id);
-    },
-    [deleteLesson, state.id],
-  );
+  const handleDelete = useCallback(() => {
+    if (state.id && deleteLesson) {
+      deleteLesson(state.id);
+    }
+    return Promise.resolve();
+  }, [deleteLesson, state.id]);
 
   const onSort = useCallback(
     (topic_id, up) => {
@@ -98,55 +66,39 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
     [id, sortTopic, lesson],
   );
 
-  const onSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      handleSave();
-    },
-    [handleSave],
-  );
-
   return (
-    <Card>
-      <Meta
-        style={{ marginBottom: '30px' }}
-        title={`Lesson: ${state.title}`}
-        description={
-          lesson.isNew ? (
-            <div className="meta-extra">
-              <Button type="primary" danger onClick={handleDelete}>
-                Delete
-              </Button>
-            </div>
-          ) : (
-            <div className="meta-extra">
-              <Popover
-                content={<LessonEditForm lesson={state} onInputChange={onInputChange} />}
-                title="Edit"
-                trigger="click"
-              >
-                <Button>Edit</Button>
-              </Popover>
-              <Divider type="vertical" />
-              <Button disabled={validate} onClick={onSubmit} type="primary" loading={loading}>
-                Save
-              </Button>
-              <Divider type="vertical" />
-              <Popconfirm
-                title="Are you sure to delete this lesson?"
-                onConfirm={handleDelete}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button type="primary" danger>
-                  Delete
-                </Button>
-              </Popconfirm>
-            </div>
-          )
-        }
+    <Card
+      title={`Lesson: ${state.title}`}
+      extra={
+        <Popconfirm
+          title="Are you sure to delete this topic?"
+          onConfirm={handleDelete}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button loading={loading} size="small" danger>
+            Delete
+          </Button>
+        </Popconfirm>
+      }
+    >
+      <LessonForm
+        loading={loading}
+        lesson={state}
+        initialValues={state}
+        onDelete={handleDelete}
+        onFinish={handleSave}
+        onValuesChange={(changedValues) => {
+          setState((prevState) => ({
+            ...prevState,
+            ...changedValues,
+          }));
+        }}
       />
-      {topicList && topicList.length > 0 && (
+
+      {!lesson.isNew && <Divider>Topics</Divider>}
+
+      {topicList && topicList.length > 0 ? (
         <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
           {topicList &&
             topicList
@@ -181,17 +133,18 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
                 </Panel>
               ))}
         </Collapse>
+      ) : (
+        !lesson.isNew && (
+          <Typography.Text>
+            There are no topics yet on this lesson{' '}
+            <Button onClick={onNew} type="primary" size="small" icon={<PlusOutlined />}>
+              Add new topic
+            </Button>
+          </Typography.Text>
+        )
       )}
 
-      {lesson.isNew ? (
-        <React.Fragment>
-          <LessonEditForm layout="inline" lesson={state} onInputChange={onInputChange} />
-          <Divider />
-          <Button onClick={onSubmit} type="primary" loading={loading}>
-            Create lesson
-          </Button>
-        </React.Fragment>
-      ) : (
+      {!lesson.isNew && (
         <React.Fragment>
           <Divider />
           <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
