@@ -71,7 +71,7 @@ export const LessonForm: React.FC<{
           tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
           valuePropName="value"
         >
-          <WysiwygMarkdown />
+          <WysiwygMarkdown directory={`course/${lesson.course_id}/lesson/${lesson.id}/wysiwyg`} />
         </ProForm.Item>
       </ProForm.Group>
     </ProForm>

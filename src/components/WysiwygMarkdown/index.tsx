@@ -21,7 +21,10 @@ export const FormWysiwyg: React.FC<FormWysiwygProps> = ({
         uploadImage={async (file) => {
           const result = await upload(file, directory);
           if (result.success) {
-            return resizedImage(`${directory}${result.data[0].name}`, 1000);
+            const resizePath = result.data[0].name.includes('/')
+              ? result.data[0].name
+              : `${directory}${result.data[0].name}`;
+            return resizedImage(resizePath, 1000);
           }
           throw new Error('Error while uploading');
         }}
