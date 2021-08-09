@@ -177,7 +177,7 @@ export default () => {
               tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
               valuePropName="value"
             >
-              <WysiwygMarkdown />
+              <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
             </ProForm.Item>
 
             <ProForm.Item
@@ -186,7 +186,7 @@ export default () => {
               tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
               valuePropName="value"
             >
-              <WysiwygMarkdown />
+              <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
             </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>

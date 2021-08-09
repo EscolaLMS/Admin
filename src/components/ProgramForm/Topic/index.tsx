@@ -39,7 +39,8 @@ export const Topic: React.FC<{
   topic: API.Topic;
   itemsLength?: number;
   onUpload?: (topic: API.Topic) => void;
-}> = ({ topic, onUpload }) => {
+  courseId?: number;
+}> = ({ topic, onUpload, courseId }) => {
   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
 
   const [state, setState] = useState<API.Topic>({
@@ -154,6 +155,7 @@ export const Topic: React.FC<{
         {!type && <Alert message="Select type of Topic to continue..." type="info" />}
         {type && type === TopicType.RichText && (
           <RichTextEditor
+            directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
             text={topic.topicable_type === TopicType.RichText ? topic.topicable.value || '' : ''}
             onChange={(value) => updateValue('value', value)}
           />

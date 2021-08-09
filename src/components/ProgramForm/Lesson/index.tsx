@@ -124,6 +124,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
                   }
                 >
                   <Topic
+                    courseId={lesson.course_id}
                     key={topic.id}
                     topic={topic}
                     onUpload={(uploadedTopic) =>
