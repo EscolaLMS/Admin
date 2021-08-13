@@ -118,6 +118,10 @@ const codeMessage = {
 const errorHandler = (error: ResponseError) => {
   const { response, data } = error;
 
+  if (error.name === 'AbortError') {
+    return;
+  }
+
   if (data && (data as API.DefaultResponseError)) {
     const { message, errors } = data;
     if (message && errors) {

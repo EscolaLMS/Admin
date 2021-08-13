@@ -8,7 +8,11 @@ const TopicHeader: React.FC<{ topic: API.Topic }> = ({ topic }) => {
       {topic.isNew ? (
         <Tag color="#2db7f5">NEW</Tag>
       ) : (
-        <Tag color="#87d068">{getTypeName(topic)}</Tag>
+        <React.Fragment>
+          <Tag color="#87d068">{getTypeName(topic)}</Tag>
+          <Tag>{topic.active ? 'Active' : 'Inactive'}</Tag>
+          {topic.preview && <Tag>Preview</Tag>}
+        </React.Fragment>
       )}{' '}
       {topic.title}
     </span>

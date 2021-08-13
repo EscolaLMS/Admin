@@ -45,6 +45,7 @@ export const Curriculum = () => {
                     <span>
                       {lesson.isNew && <Tag color="#2db7f5">NEW</Tag>}
                       Lesson: <strong>{lesson.title}</strong>{' '}
+                      <Tag>{lesson.active ? 'Active' : 'Inactive'}</Tag>
                       {lesson?.topics?.length !== 0 && (
                         <small>
                           ({lesson?.topics?.length} topic
