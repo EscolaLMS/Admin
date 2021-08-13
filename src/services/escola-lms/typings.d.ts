@@ -120,7 +120,9 @@ declare namespace API {
 
   type CategoryListItem = Category;
 
-  type UserList = PaginatedMetaList<UserItem>;
+  type UserList = DefaultResponse<PaginatedMetaList<UserItem>>;
+
+  type UserRow = DefaultResponse<UserItem>;
 
   type UserListItem = UserItem;
 

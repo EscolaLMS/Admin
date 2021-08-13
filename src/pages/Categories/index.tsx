@@ -18,7 +18,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 const handleUpdate = async (fields: API.CategoryListItem, id?: number) => {
   const hide = message.loading('loading');
   try {
-    await (id ? updateCategory(id, { ...fields }) : createCategory({ ...fields }));
+    await (id && id !== -1 ? updateCategory(id, { ...fields }) : createCategory({ ...fields }));
     hide();
     message.success('success');
     return true;

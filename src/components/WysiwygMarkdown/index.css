@@ -9,6 +9,10 @@
   display: list-item;
 }
 
+.form-wysiwyg-markdown ol li {
+  list-style: decimal;
+}
+
 .form-wysiwyg-markdown ul, 
 .form-wysiwyg-markdown ol {
   list-style: initial;

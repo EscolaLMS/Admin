@@ -196,7 +196,7 @@ export default () => {
               <Row>
                 <Col span={12}>
                   <ProFormImageUpload
-                    action={`/api/courses/${course}`}
+                    action={`/api/admin/courses/${course}`}
                     src_name="image_url"
                     form_name="image"
                     getUploadedSrcField={(info) => info.file.response.data.image_url}
@@ -204,7 +204,7 @@ export default () => {
                 </Col>
                 <Col span={12}>
                   <ProFormVideoUpload
-                    action={`/api/courses/${course}`}
+                    action={`/api/admin/courses/${course}`}
                     src_name="video_url"
                     form_name="video"
                     getUploadedSrcField={(info) => info.file.response.data.video_url}

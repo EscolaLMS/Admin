@@ -68,7 +68,7 @@ export const MediaUploadForm: React.FC<{
         <SecureUpload
           onChange={onInfoChange}
           name="value"
-          url={topic.isNew ? `/api/topics` : `/api/topics/${topic.id}?_method=PUT`}
+          url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
           accept={CONFIG.acceptedTypes[type]}
           data={data}
         >
