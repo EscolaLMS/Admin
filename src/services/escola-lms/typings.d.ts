@@ -158,12 +158,7 @@ declare namespace API {
     password: string;
   };
 
-  type LoginResponse =
-    | {
-        success: true;
-        token: string;
-      }
-    | DefaultResponseError;
+  type LoginResponse = DefaultResponse<{ token: string }>;
 
   type User = {
     data: UserItem;

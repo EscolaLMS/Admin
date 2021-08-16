@@ -53,7 +53,7 @@ const Login: React.FC = () => {
     try {
       const msg = await login({ ...values });
       if (msg.success) {
-        localStorage.setItem('TOKEN', msg.token);
+        localStorage.setItem('TOKEN', msg.data.token);
         message.success('success');
         await fetchUserInfo();
         goto();
