@@ -165,6 +165,7 @@ declare namespace API {
   };
 
   type UserItem = {
+    bio: string;
     id: number;
     name: string;
     first_name: string;
@@ -175,6 +176,8 @@ declare namespace API {
     onboarding_completed: boolean;
     email_verified: boolean;
     interests: string[];
+    path_avatar: string;
+    avatar: string;
   };
 
   type Lesson = {

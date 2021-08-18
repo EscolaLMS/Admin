@@ -26,3 +26,18 @@ export async function user(id: number, options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+export async function profile(options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/profile/me`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+export async function updateProfile(data: Partial<API.UserItem>, options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/profile/me`, {
+    data,
+    method: 'PUT',
+    ...(options || {}),
+  });
+}
