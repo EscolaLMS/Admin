@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { outLogin } from '@/services/ant-design-pro/login';
+import { FormattedMessage } from 'umi';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -44,7 +45,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         loginOut();
         return;
       }
-      history.push(`/account/${key}`);
+      history.push(`/users/${key}`);
     },
     [initialState, setInitialState],
   );
@@ -85,8 +86,16 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       )}
       {menu && <Menu.Divider />}
 
+      <Menu.Item key="me">
+        <SettingOutlined />
+        <FormattedMessage id="me" defaultMessage="My Profile" />
+      </Menu.Item>
+
+      <Menu.Divider />
+
       <Menu.Item key="logout">
         <LogoutOutlined />
+        <FormattedMessage id="logout" defaultMessage="Logout" />
       </Menu.Item>
     </Menu>
   );

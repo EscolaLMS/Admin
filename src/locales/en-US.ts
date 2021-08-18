@@ -32,6 +32,7 @@ export default {
   library: 'Library',
   'menu.Courses': 'Courses',
   'menu.Users': 'Users',
+  'menu.User Form': 'Users',
   'menu.Welcome': 'Welcome',
   'menu.Course Form': 'Course Form',
   'menu.Form': 'Form',

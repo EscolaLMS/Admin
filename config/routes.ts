@@ -28,6 +28,13 @@
     component: './Users',
   },
   {
+    path: '/users/me',
+    name: 'User Form',
+    icon: 'component',
+    component: './Users/me',
+    hideInMenu: true,
+  },
+  {
     path: '/orders',
     name: 'Orders',
     icon: 'fund',
