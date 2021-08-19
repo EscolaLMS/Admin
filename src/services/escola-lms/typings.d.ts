@@ -9,6 +9,7 @@ declare namespace API {
     Audio = 'EscolaLms\\Courses\\Models\\TopicContent\\Audio',
     Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
     H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
+    Image = 'EscolaLms\\Courses\\Models\\TopicContent\\Image',
   }
 
   type Category = {
@@ -250,6 +251,15 @@ declare namespace API {
     };
   };
 
+  type TopicImage = TopicBase & {
+    topicable_type: TopicType.Image;
+    topicable: TopicableBase & {
+      height: number;
+      url: string;
+      width: number;
+    };
+  };
+
   type TopicH5P = TopicBase & {
     topicable_type: TopicType.H5P;
     topicable: TopicableBase;
@@ -260,9 +270,22 @@ declare namespace API {
     topicable?: never;
   };
 
-  type Topic = TopicUnselected | TopicRichText | TopicOEmbed | TopicAudio | TopicVideo | TopicH5P;
+  type Topic =
+    | TopicUnselected
+    | TopicRichText
+    | TopicOEmbed
+    | TopicAudio
+    | TopicVideo
+    | TopicH5P
+    | TopicImage;
 
-  type TopicNotEmpty = TopicRichText | TopicOEmbed | TopicAudio | TopicVideo | TopicH5P;
+  type TopicNotEmpty =
+    | TopicRichText
+    | TopicOEmbed
+    | TopicAudio
+    | TopicVideo
+    | TopicH5P
+    | TopicImage;
 
   type CourseProgram = Course & {
     lessons: Lesson[];
