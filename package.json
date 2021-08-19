@@ -52,7 +52,6 @@
         "not ie <= 10"
     ],
     "dependencies": {
-        "h5p-player": "EscolaLMS/H5P-player#e36f56b",
         "@ant-design/icons": "^4.0.0",
         "@ant-design/pro-card": "^1.14.0",
         "@ant-design/pro-descriptions": "^1",
@@ -67,9 +66,11 @@
         "antd": "^4",
         "babel-plugin-import": "^1.13.3",
         "classnames": "^2.2.6",
+        "conditional-wrap": "^1.0.2",
         "cross-env": "^7.0.0",
         "cypress": "^6.8.0",
         "cypress-localstorage-commands": "^1.4.1",
+        "h5p-player": "EscolaLMS/H5P-player#e36f56b",
         "jest-esm-transformer": "^1.0.0",
         "lodash": "^4.17.11",
         "moment": "^2.25.3",

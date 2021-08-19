@@ -1,23 +1,16 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm } from 'antd';
+import { Button, Tooltip, Popconfirm, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-import { users } from '@/services/escola-lms/user';
+import { users, deleteUser } from '@/services/escola-lms/user';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
-/*
-const handleUpdate = async (fields: API.UserListItem, id?: number) => {
-  console.log('handleUpdate', fields, id);
-  return true;
-};
-*/
-
 const handleRemove = async (id: number) => {
-  console.log('handleRemove', id);
+  await deleteUser(id);
   return true;
 };
 
@@ -59,6 +52,35 @@ const TableList: React.FC = () => {
     },
 
     {
+      title: <FormattedMessage id="is_active" defaultMessage="is_active" />,
+      dataIndex: 'is_active',
+      hideInSearch: true,
+      render: (_, record) => [
+        <Tag color={record.is_active ? 'green' : 'red'}>
+          {record.is_active ? 'active' : 'inactive'}
+        </Tag>,
+      ],
+    },
+
+    {
+      title: <FormattedMessage id="email_verified" defaultMessage="email_verified" />,
+      dataIndex: 'email_verified',
+      hideInSearch: true,
+      render: (_, record) => [
+        <Tag color={record.is_active ? 'green' : 'red'}>
+          {record.is_active ? 'verified' : 'unverified'}
+        </Tag>,
+      ],
+    },
+
+    {
+      title: <FormattedMessage id="roles" defaultMessage="roles" />,
+      dataIndex: 'roles',
+      hideInSearch: true,
+      render: (_, record) => record.roles.map((role) => <Tag key={role}>{role}</Tag>),
+    },
+
+    {
       title: 'role',
       key: 'role',
       valueType: 'select',
@@ -80,13 +102,11 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => setModalVisible(record.id)}
-          ></Button>
-        </Tooltip>,
+        <Link to={`/users/${record.id}`}>
+          <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+            <Button type="primary" icon={<EditOutlined />}></Button>
+          </Tooltip>
+        </Link>,
         <Popconfirm
           key="delete"
           title={
@@ -98,7 +118,6 @@ const TableList: React.FC = () => {
           onConfirm={async () => {
             const success = await handleRemove(record.id);
             if (success) {
-              setModalVisible(false);
               if (actionRef.current) {
                 actionRef.current.reload();
               }

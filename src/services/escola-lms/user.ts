@@ -46,3 +46,22 @@ export async function updateProfile(data: Partial<API.UserItem>, options?: { [ke
     ...(options || {}),
   });
 }
+
+export async function updateUser(
+  id: number,
+  data: Partial<API.UserItem>,
+  options?: { [key: string]: any },
+) {
+  return request<API.UserRow>(`/api/admin/users/${id}`, {
+    data,
+    method: 'PUT',
+    ...(options || {}),
+  });
+}
+
+export async function deleteUser(id: number, options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/admin/users/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}

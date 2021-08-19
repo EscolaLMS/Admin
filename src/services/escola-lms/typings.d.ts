@@ -177,6 +177,7 @@ declare namespace API {
     interests: string[];
     path_avatar: string;
     avatar: string;
+    roles: ('admin' | 'tutor' | 'student')[];
   };
 
   type Lesson = {

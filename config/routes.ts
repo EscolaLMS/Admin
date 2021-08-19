@@ -30,8 +30,15 @@
   {
     path: '/users/me',
     name: 'User Form',
-    icon: 'component',
+    icon: 'team',
     component: './Users/me',
+    hideInMenu: true,
+  },
+  {
+    path: '/users/:user',
+    name: 'Form',
+    icon: 'team',
+    component: './Users/form',
     hideInMenu: true,
   },
   {
