@@ -1,19 +1,31 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin } from 'antd';
+import { message, Spin, Form, Button, Space, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { user as fetchUser, updateUser, createUser } from '@/services/escola-lms/user';
+import { user as fetchUser, updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
+import { useCallback } from 'react';
 
 export default () => {
   const params = useParams<{ user?: string }>();
   const { user } = params;
+  const isNew = user === 'new';
 
   const [data, setData] = useState<Partial<API.UserItem>>();
+
+  const fetchData = useCallback(async () => {
+    const response = await fetchUser(Number(user));
+    if (response.success) {
+      setData({
+        ...response.data,
+        bio: response.data.bio || '',
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user === 'new') {
@@ -21,17 +33,8 @@ export default () => {
       return;
     }
 
-    const fetch = async () => {
-      const response = await fetchUser(Number(user));
-      if (response.success) {
-        setData({
-          ...response.data,
-          bio: response.data.bio || '',
-        });
-      }
-    };
-    fetch();
-  }, []);
+    fetchData();
+  }, [user, fetchData]);
 
   const formProps = useMemo(
     () => ({
@@ -65,7 +68,7 @@ export default () => {
       },
       */
     }),
-    [data],
+    [data, user],
   );
 
   if (!data) {
@@ -73,7 +76,7 @@ export default () => {
   }
 
   return (
-    <PageContainer title={`User form`}>
+    <PageContainer title={`${isNew ? 'New' : 'Edit'} user form`}>
       <ProCard>
         <ProForm {...formProps}>
           <ProForm.Group>
@@ -101,7 +104,40 @@ export default () => {
               placeholder="email"
               required
             />
-            <ProFormSwitch name="email_verified" label="Email verified?" />
+            <ProFormText.Password
+              width="md"
+              name="password"
+              label="password"
+              tooltip="password"
+              placeholder="password"
+              required={user === 'new'}
+            />
+
+            {user !== 'new' && (
+              <Space direction="vertical">
+                <ProFormSwitch name="email_verified" label="Email verified?" />
+
+                <Form.Item noStyle shouldUpdate>
+                  {(form) => {
+                    return form.getFieldValue('email_verified') ? (
+                      <React.Fragment />
+                    ) : (
+                      <Button
+                        size="small"
+                        onClick={() => {
+                          resendEmail(form.getFieldValue('email')).then(() => {
+                            message.success('email resent');
+                          });
+                        }}
+                      >
+                        resend
+                      </Button>
+                    );
+                  }}
+                </Form.Item>
+              </Space>
+            )}
+
             <ProFormSwitch name="is_active" label="Is Active?" />
 
             <ProFormCheckbox.Group
@@ -118,30 +154,38 @@ export default () => {
             tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
             valuePropName="value"
           >
-            <WysiwygMarkdown directory={`users/wysiwyg`} />
+            <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
           </ProForm.Item>
 
-          <ProForm.Group>
-            <ProForm.Item name="avatar" label="avatar">
-              {data.path_avatar && (
-                <ResponsiveImage path={data.path_avatar} size={600} width={200} />
-              )}
-
-              <SecureUpload
-                wrapInForm={false}
-                url="/api/profile/upload-avatar"
-                name="avatar"
-                accept="image/*"
-                onChange={(info) => {
-                  if (info.file.status === 'done') {
-                    if (info.file.response.success) {
-                      setData(info.file.response.data);
-                    }
-                  }
-                }}
-              />
-            </ProForm.Item>
-          </ProForm.Group>
+          {user !== 'new' && (
+            <ProForm.Group>
+              <ProForm.Item name="avatar" label="avatar">
+                {data.path_avatar ? (
+                  <ResponsiveImage path={data.path_avatar} size={600} width={200} />
+                ) : (
+                  <Typography>use next for to upload an image</Typography>
+                )}
+              </ProForm.Item>
+              <Form.Item noStyle shouldUpdate>
+                {() => (
+                  <SecureUpload
+                    wrapInForm={false}
+                    url={`/api/admin/users/${user}/avatar`}
+                    name="avatar"
+                    accept="image/*"
+                    onChange={(info) => {
+                      if (info.file.status === 'done') {
+                        if (info.file.response.success) {
+                          fetchData();
+                          // setData(info.file.response.data);
+                        }
+                      }
+                    }}
+                  />
+                )}
+              </Form.Item>
+            </ProForm.Group>
+          )}
         </ProForm>
       </ProCard>
     </PageContainer>

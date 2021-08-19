@@ -73,3 +73,13 @@ export async function deleteUser(id: number, options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+export async function resendEmail(email: string, options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/auth/email/resend`, {
+    method: 'POST',
+    data: {
+      email,
+    },
+    ...(options || {}),
+  });
+}

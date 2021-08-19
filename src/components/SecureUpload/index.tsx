@@ -23,7 +23,7 @@ export const SecureUpload: React.FC<{
         title={'Click here to upload'}
         placeholder={'Click here to upload'}
         onChange={onChange}
-        name={name}
+        // name={name}
         label="Upload"
         max={2}
         fieldProps={{
