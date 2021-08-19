@@ -2,27 +2,25 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { user as fetchUser, updateUser } from '@/services/escola-lms/user';
+import { user as fetchUser, updateUser, createUser } from '@/services/escola-lms/user';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
-import { useParams } from 'umi';
+import { useParams, history } from 'umi';
 
 export default () => {
   const params = useParams<{ user?: string }>();
   const { user } = params;
-  // const isNew = course === 'new';
 
-  const [data, setData] = useState<API.UserItem>();
+  const [data, setData] = useState<Partial<API.UserItem>>();
 
   useEffect(() => {
-    /*
-    if (course === 'new') {
+    if (user === 'new') {
       setData({});
       return;
     }
-    */
+
     const fetch = async () => {
       const response = await fetchUser(Number(user));
       if (response.success) {
@@ -39,23 +37,22 @@ export default () => {
     () => ({
       // @ts-ignore
       onFinish: async (values) => {
-        // let response: API.DefaultResponse<API.UserItem>;
-        const response: API.DefaultResponse<API.UserItem> = await updateUser(Number(user), {
+        let response: API.DefaultResponse<API.UserItem>;
+        const postData: Partial<API.UserItem> = {
           ...values,
           bio: values.bio ? values.bio : undefined,
-        });
-        message.success(response.message);
-        /*
-        if (course === 'new') {
-          response = await createCourse(values);
+        };
+
+        if (user === 'new') {
+          response = await createUser(postData);
           if (response.success) {
-            history.push(`/courses/${response.data.id}/attributes`);
+            history.push(`/users/${response.data.id}`);
           }
         } else {
-          response = await updateCourse(Number(course), values);
+          response = await updateUser(Number(user), postData);
         }
-        */
-        // message.success(response.message);
+
+        message.success(response.message);
       },
       initialValues: data,
       /*
