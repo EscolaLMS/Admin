@@ -22,12 +22,12 @@ const handleRemove = async (id: number) => {
 };
 
 const TableList: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<number | false>(false);
+  // const [modalVisible, setModalVisible] = useState<number | false>(false);
   const [data, setData] = useState<API.UserListItem[]>([]);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
-  console.log('outupt', data, modalVisible);
+  console.log('data', data);
 
   const columns: ProColumns<API.UserListItem>[] = [
     {
@@ -36,9 +36,42 @@ const TableList: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="name" defaultMessage="name" />,
-      dataIndex: 'name',
+      title: <FormattedMessage id="first_name" defaultMessage="first_name" />,
+      dataIndex: 'first_name',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="last_name" defaultMessage="last_name" />,
+      dataIndex: 'last_name',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="email" defaultMessage="email" />,
+      dataIndex: 'email',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="search" defaultMessage="search" />,
+      dataIndex: 'search',
       hideInSearch: false,
+      hideInTable: true,
+      tooltip: 'will search through first_name, last_name and email',
+    },
+
+    {
+      title: 'role',
+      key: 'role',
+      valueType: 'select',
+      dataIndex: 'role',
+      initialValue: ['all'],
+      width: 100,
+      hideInTable: true,
+      valueEnum: {
+        all: { text: 'All' },
+        admin: { text: 'Admin' },
+        tutor: { text: 'Tutor' },
+        student: { text: 'Student' },
+      },
     },
 
     {
@@ -84,7 +117,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.UserListItem, API.PageParams>
+      <ProTable<API.UserListItem, API.PageParams & { search: string; role: string }>
         headerTitle={intl.formatMessage({
           id: 'users',
           defaultMessage: 'users',
@@ -105,10 +138,18 @@ const TableList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
           </Button>,
         ]}
-        request={() => {
-          return users().then((records) => {
-            setData(records.data);
-            return records;
+        request={({ pageSize, current, search, role }) => {
+          const requestRole = role && role.toString() === 'all' ? undefined : role;
+          return users({ pageSize, current, search, role: requestRole }).then((response) => {
+            if (response.success) {
+              setData(response.data.data);
+              return {
+                data: response.data.data,
+                total: response.data.meta.total,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={columns}

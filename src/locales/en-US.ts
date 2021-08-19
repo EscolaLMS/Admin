@@ -61,4 +61,8 @@ export default {
   status: 'Status',
   users: 'Users',
   user: 'User',
+  first_name: 'First Name',
+  last_name: 'Last Name',
+  email: 'Email',
+  search: 'Search',
 };
