@@ -28,7 +28,7 @@ export const FormWysiwyg: React.FC<FormWysiwygProps> = ({
           }
           throw new Error('Error while uploading');
         }}
-        defaultValue={value}
+        defaultValue={value || ''}
         onChange={(v) => onChange && onChange(v())}
         placeholder="Type here text to see the rich text editor features. Start with '/' to open formatting options or click on '+' button"
       />
