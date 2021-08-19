@@ -138,7 +138,11 @@ export const Topic: React.FC<{
           </Button>,
         ]}
       >
-        <TopicForm initialValues={state} onValuesChange={(values) => updateValues(values)} />
+        <TopicForm
+          courseId={Number(courseId)}
+          initialValues={state}
+          onValuesChange={(values) => updateValues(values)}
+        />
         <Divider>Select type of Topic to continue...</Divider>
         <Radio.Group
           name="radiogroup"
@@ -160,20 +164,21 @@ export const Topic: React.FC<{
             onChange={(value) => updateValue('value', value)}
           />
         )}
-        {type && (type === TopicType.Video || type === TopicType.Audio) && (
-          <MediaUpload
-            type={type}
-            topic={topic}
-            currentState={state}
-            onChange={() => setLoading(true)}
-            onUpdate={(info) => {
-              if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
-              if (onUpload) onUpload(info.file.response.data);
-              setLoading(false);
-            }}
-            disabled={false}
-          />
-        )}
+        {type &&
+          (type === TopicType.Video || type === TopicType.Audio || type === TopicType.Image) && (
+            <MediaUpload
+              type={type}
+              topic={topic}
+              currentState={state}
+              onChange={() => setLoading(true)}
+              onUpdate={(info) => {
+                if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
+                if (onUpload) onUpload(info.file.response.data);
+                setLoading(false);
+              }}
+              disabled={false}
+            />
+          )}
         {type && type === TopicType.OEmbed && (
           <Oembed text={state.value} onChange={(value) => updateValue('value', value)} />
         )}
