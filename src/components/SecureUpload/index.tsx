@@ -1,9 +1,9 @@
 import { ProFormUploadButton } from '@ant-design/pro-form';
 import { Form } from 'antd';
-
 import React from 'react';
-
 import type { UploadChangeParam } from 'antd/lib/upload';
+
+import ConditionalWrap from 'conditional-wrap';
 
 export const SecureUpload: React.FC<{
   url: string;
@@ -12,9 +12,13 @@ export const SecureUpload: React.FC<{
   onChange?: (info: UploadChangeParam) => void;
   accept?: string;
   data?: Record<string, any>;
-}> = ({ onChange, url, name, extra, accept, data }) => {
+  wrapInForm?: boolean;
+}> = ({ onChange, url, name, extra, accept, data, wrapInForm = true }) => {
   return (
-    <Form>
+    <ConditionalWrap
+      condition={wrapInForm}
+      wrap={(children: JSX.Element) => <Form>{children}</Form>}
+    >
       <ProFormUploadButton
         title={'Click here to upload'}
         placeholder={'Click here to upload'}
@@ -31,7 +35,7 @@ export const SecureUpload: React.FC<{
         action={`${REACT_APP_API_URL}${url}`}
         extra={extra}
       />
-    </Form>
+    </ConditionalWrap>
   );
 };
 
