@@ -59,9 +59,27 @@ export async function updateUser(
   });
 }
 
+export async function createUser(data: Partial<API.UserItem>, options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/admin/users`, {
+    data,
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 export async function deleteUser(id: number, options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/admin/users/${id}`, {
     method: 'DELETE',
+    ...(options || {}),
+  });
+}
+
+export async function resendEmail(email: string, options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/auth/email/resend`, {
+    method: 'POST',
+    data: {
+      email,
+    },
     ...(options || {}),
   });
 }
