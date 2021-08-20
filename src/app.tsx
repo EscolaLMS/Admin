@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import '@/services/ybug';
 
 const isDev = process.env.NODE_ENV === 'development';
 
