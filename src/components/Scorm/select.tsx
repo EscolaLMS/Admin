@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import { Link } from 'umi';
 
 import { scorms as fetchScorms } from '@/services/escola-lms/scorm';
 import { useCallback } from 'react';
@@ -61,7 +62,18 @@ export const ScormSelect: React.FC<{
     >
       {scorms.map((scorm) => (
         <Select.Option key={scorm.id} value={scorm.id.toString()}>
-          {scorm.id}: {scorm.scos.map((sco) => sco.title).join(', ')}
+          <React.Fragment>
+            {scorm.id}:{' '}
+            {scorm.scos.map((sco) => (
+              <React.Fragment>
+                {sco.title}
+                {'  '}
+                <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
+                  preview
+                </Link>
+              </React.Fragment>
+            ))}
+          </React.Fragment>
         </Select.Option>
       ))}
     </Select>
