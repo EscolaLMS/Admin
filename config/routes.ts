@@ -80,6 +80,19 @@
     component: './H5P',
   },
   {
+    path: '/scorms',
+    name: 'SCORMs',
+    icon: 'experiment',
+    component: './Scorm',
+  },
+  {
+    path: '/scorms/preview/:uuid',
+    name: 'SCORMs',
+    icon: 'experiment',
+    component: './Scorm/preview',
+    hideInMenu: true,
+  },
+  {
     path: '/h5ps/:h5p',
     name: 'H5Ps',
     icon: 'book',

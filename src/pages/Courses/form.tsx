@@ -12,6 +12,7 @@ import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import TagsInput from '@/components/TagsInput';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProgramForm from '@/components/ProgramForm';
+import ScormSelector from '@/components/Scorm';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -46,16 +47,19 @@ export default () => {
 
   const formProps = useMemo(
     () => ({
-      // @ts-ignore
-      onFinish: async (values) => {
+      onFinish: async (values: API.Course) => {
+        const postData = {
+          ...values,
+          scorm_id: values.scorm_id ? values.scorm_id : null,
+        };
         let response: API.DefaultResponse<API.Course>;
         if (course === 'new') {
-          response = await createCourse(values);
+          response = await createCourse(postData);
           if (response.success) {
             history.push(`/courses/${response.data.id}/attributes`);
           }
         } else {
-          response = await updateCourse(Number(course), values);
+          response = await updateCourse(Number(course), postData);
         }
         message.success(response.message);
       },
@@ -241,7 +245,11 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane key="scorm" tab="Scorm">
-            SCORM Select form will go here
+            <ProForm {...formProps}>
+              <ProForm.Item label="Scorm" name="scorm_id" valuePropName="value">
+                <ScormSelector />
+              </ProForm.Item>
+            </ProForm>
           </ProCard.TabPane>
         )}
       </ProCard>
