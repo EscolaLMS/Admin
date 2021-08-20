@@ -48,10 +48,17 @@ export const CategoryCheckboxTree: React.FC<{
     <Tree
       multiple={multiple}
       checkable
+      checkStrictly={true}
       defaultExpandAll
       style={{ width: '100%' }}
       checkedKeys={value}
-      onCheck={(checkedKeys) => onChange && Array.isArray(checkedKeys) && onChange(checkedKeys)}
+      onCheck={(keys) => {
+        if (typeof keys === 'object' && keys.hasOwnProperty('checked')) {
+          const checkedKeys = keys.checked;
+          return onChange && Array.isArray(checkedKeys) && onChange(checkedKeys);
+        }
+        return null;
+      }}
       treeData={treeData}
       disabled={categories.length === 0}
     ></Tree>
