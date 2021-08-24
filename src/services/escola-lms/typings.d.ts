@@ -109,6 +109,13 @@ declare namespace API {
     };
   };
 
+  type DefaultMetaResponse<Model> =
+    | (PaginatedMetaList<Model> & {
+        message: string;
+        success: true;
+      })
+    | DefaultResponseError;
+
   type DefaultResponse<Model> = DefaultResponseSuccess<Model> | DefaultResponseError;
 
   type DataResponse<Model> = DataResponseSuccess<Model> | DefaultResponseError;
@@ -121,13 +128,13 @@ declare namespace API {
 
   type CategoryListItem = Category;
 
-  type UserList = DefaultResponse<PaginatedMetaList<UserItem>>;
+  type UserList = DefaultMetaResponse<UserItem>;
 
   type UserRow = DefaultResponse<UserItem>;
 
   type UserListItem = UserItem;
 
-  type OrderList = PaginatedMetaList<Order>;
+  type OrderList = DefaultMetaResponse<Order>;
 
   type OrderListItem = Order;
 
@@ -342,12 +349,29 @@ declare namespace API {
 
   type H5PContentParams = PageParams & PaginationParams;
 
-  type Order = {
-    // TODO update me
+  type OrderItem = {
+    buyable_id: number;
+    buyable_type: 'EscolaLms\\Cart\\Models\\Course';
+    created_at: null;
     id: number;
-    total: number;
+    options: object;
+    order_id: number;
+    quantity: number;
+    updated_at: string;
+  };
+
+  type Order = {
+    created_at: string;
+    id: number;
+    items: OrderItem[];
+    status: PaymentStatus;
+    subtotal: string;
+    tax: string;
+    total: string;
     user_id: number;
   };
+
+  type PaymentStatus = 'NEW' | 'PAID' | 'CANCELLED' | 'FAILED';
 
   type Payment = {
     amount: number;
@@ -360,7 +384,7 @@ declare namespace API {
     order_id: number;
     payable_id: null;
     payable_type: null;
-    status: 'new' | 'paid'; // TODO: what are possible statuses ?
+    status: PaymentStatus; // TODO: what are possible statuses ?
     updated_at: string;
   };
 

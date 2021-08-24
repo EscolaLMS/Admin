@@ -1,33 +1,32 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
 import { orders } from '@/services/escola-lms/orders';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import UserLink from '@/components/UserLink';
+import CourseLink from '@/components/CourseLink';
+import UserSelect from '@/components/UserSelect';
+import CourseSelect from '@/components/CourseSelect';
 
-/*
-const handleUpdate = async (fields: API.OrderListItem, id?: number) => {
-  console.log('handleUpdate', fields, id);
-  return true;
-};
-*/
-
-const handleRemove = async (id: number) => {
-  console.log('handleRemove', id);
-  return true;
+const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
+  return (
+    <div>
+      {items.map((item) => (
+        <div key={item.id}>
+          {item.buyable_type === 'EscolaLms\\Cart\\Models\\Course' && (
+            <CourseLink id={item.buyable_id} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 const TableList: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<number | false>(false);
-  const [data, setData] = useState<API.OrderListItem[]>([]);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  console.log('outupt', data, modalVisible);
 
   const columns: ProColumns<API.OrderListItem>[] = [
     {
@@ -36,59 +35,114 @@ const TableList: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="name" defaultMessage="name" />,
+      title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
+      dataIndex: 'created_at',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="subtotal" defaultMessage="subtotal" />,
+      dataIndex: 'subtotal',
+      hideInSearch: true,
+      render: (_, record) => Number(record.subtotal) / 100,
+    },
+    {
+      title: <FormattedMessage id="tax" defaultMessage="tax" />,
+      dataIndex: 'tax',
+      hideInSearch: true,
+      render: (_, record) => Number(record.tax) / 100,
+    },
+    {
+      title: <FormattedMessage id="total" defaultMessage="total" />,
       dataIndex: 'total',
-      hideInSearch: false,
+      hideInSearch: true,
+      render: (_, record) => Number(record.total) / 100,
+    },
+    {
+      title: <FormattedMessage id="items" defaultMessage="items" />,
+      dataIndex: 'items',
+      hideInSearch: true,
+      render: (_, record) => <OrderItems items={record.items} />,
     },
     {
       title: <FormattedMessage id="user" defaultMessage="user" />,
       dataIndex: 'user_id',
+      key: 'user_id',
       hideInSearch: false,
+      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+        if (type === 'form') {
+          return null;
+        }
+        const stateType = form.getFieldValue('state');
+        return (
+          <UserSelect
+            {...rest}
+            state={{
+              type: stateType,
+            }}
+          />
+        );
+      },
+      render: (_, record) => [<UserLink id={record.user_id} />],
+    },
+
+    {
+      title: <FormattedMessage id="author" defaultMessage="author" />,
+      dataIndex: 'author_id',
+      key: 'author_id',
+      hideInSearch: false,
+      hideInTable: true,
+      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+        if (type === 'form') {
+          return null;
+        }
+        const stateType = form.getFieldValue('state');
+        return (
+          <UserSelect
+            {...rest}
+            state={{
+              type: stateType,
+            }}
+          />
+        );
+      },
+      render: (_, record) => [<UserLink id={record.user_id} />],
+    },
+
+    {
+      title: <FormattedMessage id="course" defaultMessage="course" />,
+      dataIndex: 'course_id',
+      key: 'course_id',
+      hideInSearch: false,
+      hideInTable: true,
+      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+        if (type === 'form') {
+          return null;
+        }
+        const stateType = form.getFieldValue('state');
+        return (
+          <CourseSelect
+            {...rest}
+            state={{
+              type: stateType,
+            }}
+          />
+        );
+      },
+      render: (_, record) => [<UserLink id={record.user_id} />],
     },
     {
+      title: <FormattedMessage id="status" defaultMessage="status" />,
+      dataIndex: 'status',
       hideInSearch: true,
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => setModalVisible(record.id)}
-          ></Button>
-        </Tooltip>,
-        <Popconfirm
-          key="delete"
-          title={
-            <FormattedMessage
-              id="deleteQuestion"
-              defaultMessage="Are you sure to delete this record?"
-            />
-          }
-          onConfirm={async () => {
-            const success = await handleRemove(record.id);
-            if (success) {
-              setModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
-          </Tooltip>
-        </Popconfirm>,
-      ],
     },
   ];
 
   return (
     <PageContainer>
-      <ProTable<API.OrderListItem, API.PageParams>
+      <ProTable<
+        API.OrderListItem,
+        API.PageParams & { user_id: number; author_id: number; course_id: number }
+      >
         headerTitle={intl.formatMessage({
           id: 'orders',
           defaultMessage: 'orders',
@@ -98,21 +152,16 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setModalVisible(-1);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
-          </Button>,
-        ]}
-        request={() => {
-          return orders().then((records) => {
-            setData(records.data);
-            return records;
+        request={({ pageSize, current, user_id, author_id, course_id }) => {
+          return orders({ pageSize, current, user_id, author_id, course_id }).then((response) => {
+            if (response.success) {
+              return {
+                data: response.data,
+                total: response.meta.total,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={columns}

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Select, Spin } from 'antd';
 
-import { users as fetchUsers, user as fetchUser } from '@/services/escola-lms/user';
-import { useCallback } from 'react';
+import { course as getCourses, getCourse } from '@/services/escola-lms/course';
 
-export const UserSelect: React.FC<{
+export const CourseSelect: React.FC<{
   state?: {
     type: number;
   };
@@ -12,7 +11,7 @@ export const UserSelect: React.FC<{
   value?: string;
   onChange?: (value: string) => void;
 }> = ({ value, onChange, multiple = false }) => {
-  const [users, setUsers] = useState<API.UserItem[]>([]);
+  const [courses, setCourses] = useState<API.Course[]>([]);
   const [fetching, setFetching] = useState(false);
 
   const abortController = useRef<AbortController>();
@@ -24,10 +23,10 @@ export const UserSelect: React.FC<{
     }
 
     abortController.current = new AbortController();
-    fetchUsers({ search }, { signal: abortController.current.signal })
+    getCourses({ title: search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setUsers((prevUsers) => [...prevUsers, ...response.data]);
+          setCourses((prevUsers) => [...prevUsers, ...response.data.data]);
           // TODO: don't reset just add new. unique table
         }
         setFetching(false);
@@ -46,8 +45,9 @@ export const UserSelect: React.FC<{
     const controller = new AbortController();
 
     if (value) {
-      fetchUser(Number(value), { signal: controller.signal }).then(
-        (user) => user.success && setUsers((prevUsers) => [...prevUsers, user.data]),
+      getCourse(Number(value), { signal: controller.signal }).then(
+        (response) =>
+          response.success && setCourses((prevCourses) => [...prevCourses, response.data]),
         // TODO don't reset. unique table
       );
     }
@@ -65,20 +65,20 @@ export const UserSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder="Select a person"
+      placeholder="Select a course"
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {users.map((user) => (
-        <Select.Option key={user.id} value={user.id}>
-          {user.name}
+      {courses.map((course) => (
+        <Select.Option key={course.id} value={course.id}>
+          {course.title}
         </Select.Option>
       ))}
     </Select>
   );
 };
 
-export default UserSelect;
+export default CourseSelect;
