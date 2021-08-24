@@ -34,6 +34,12 @@ export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }>
       ) : (
         <React.Fragment />
       );
+    case TopicType.Image:
+      return topic.topicable_type === TopicType.Image && topic.topicable?.url ? (
+        <img src={topic.topicable.url} width="100%" />
+      ) : (
+        <React.Fragment />
+      );
     default:
       return <React.Fragment />;
   }
@@ -42,7 +48,7 @@ export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }>
 export const MediaUploadForm: React.FC<{
   topic: API.Topic;
   currentState: API.Topic;
-  type: TopicType.Audio | TopicType.Video;
+  type: TopicType.Audio | TopicType.Video | TopicType.Image;
   onUpdate: (info: UploadChangeParam) => void;
   onChange: (info: UploadChangeParam) => void;
   disabled: boolean;
@@ -60,6 +66,8 @@ export const MediaUploadForm: React.FC<{
   const data = {
     ...currentState,
     topicable_type: type,
+    active: currentState.active ? 1 : 0,
+    preview: currentState.preview ? 1 : 0,
   };
 
   return (

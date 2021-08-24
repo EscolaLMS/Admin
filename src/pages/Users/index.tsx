@@ -143,15 +143,11 @@ const TableList: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setModalVisible(-1);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
-          </Button>,
+          <Link to="/users/new">
+            <Button type="primary" key="primary">
+              <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+            </Button>
+          </Link>,
         ]}
         request={({ pageSize, current, search, role }) => {
           const requestRole = role && role.toString() === 'all' ? undefined : role;

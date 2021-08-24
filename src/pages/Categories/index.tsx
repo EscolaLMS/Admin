@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -48,6 +48,14 @@ const TableList: React.FC = () => {
   const [data, setData] = useState<API.CategoryListItem[]>([]);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+
+  const categoryHasChildren = useCallback(
+    (id: number) => {
+      return !!data.some((category) => category.parent_id === id);
+    },
+    [data],
+  );
+
   const columns: ProColumns<API.CategoryListItem>[] = [
     {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -121,30 +129,44 @@ const TableList: React.FC = () => {
             onClick={() => setModalVisible(record.id)}
           ></Button>
         </Tooltip>,
-        <Popconfirm
-          key="delete"
-          title={
-            <FormattedMessage
-              id="deleteQuestion"
-              defaultMessage="Are you sure to delete this record?"
-            />
-          }
-          onConfirm={async () => {
-            const success = await handleRemove(record.id);
-            if (success) {
-              setModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+        categoryHasChildren(record.id) ? (
+          <Tooltip
+            key="delete"
+            title={
+              <FormattedMessage
+                id="cantDelete"
+                defaultMessage="You can't delete this category because it's parent to others"
+              />
             }
-          }}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+          >
+            <Button disabled={true} type="primary" icon={<DeleteOutlined />} danger></Button>
           </Tooltip>
-        </Popconfirm>,
+        ) : (
+          <Popconfirm
+            key="delete"
+            title={
+              <FormattedMessage
+                id="deleteQuestion"
+                defaultMessage="Are you sure to delete this record?"
+              />
+            }
+            onConfirm={async () => {
+              const success = await handleRemove(record.id);
+              if (success) {
+                setModalVisible(false);
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+              <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+            </Tooltip>
+          </Popconfirm>
+        ),
       ],
     },
   ];
