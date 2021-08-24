@@ -65,4 +65,6 @@ export default {
   last_name: 'Last Name',
   email: 'Email',
   search: 'Search',
+  roles: 'Roles',
+  email_verified: 'email verified',
 };

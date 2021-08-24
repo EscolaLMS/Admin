@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, Tag } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -15,12 +15,8 @@ const handleRemove = async (id: number) => {
 };
 
 const TableList: React.FC = () => {
-  // const [modalVisible, setModalVisible] = useState<number | false>(false);
-  const [data, setData] = useState<API.UserListItem[]>([]);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  console.log('data', data);
 
   const columns: ProColumns<API.UserListItem>[] = [
     {
@@ -102,7 +98,7 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Link to={`/users/${record.id}`}>
+        <Link to={`/users/${record.id}`} key="edit">
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
             <Button type="primary" icon={<EditOutlined />}></Button>
           </Tooltip>
@@ -142,7 +138,7 @@ const TableList: React.FC = () => {
           defaultMessage: 'users',
         })}
         actionRef={actionRef}
-        rowKey="id"
+        rowKey="key"
         search={{
           labelWidth: 120,
         }}
@@ -155,12 +151,12 @@ const TableList: React.FC = () => {
         ]}
         request={({ pageSize, current, search, role }) => {
           const requestRole = role && role.toString() === 'all' ? undefined : role;
+
           return users({ pageSize, current, search, role: requestRole }).then((response) => {
             if (response.success) {
-              setData(response.data.data);
               return {
-                data: response.data.data,
-                total: response.data.meta.total,
+                data: response.data,
+                total: response.meta.total,
                 success: true,
               };
             }
