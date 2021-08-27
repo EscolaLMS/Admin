@@ -58,6 +58,7 @@ export const UserSelect: React.FC<{
 
   return (
     <Select
+      onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}
       value={value}
