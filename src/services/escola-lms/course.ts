@@ -18,6 +18,7 @@ export async function course(
     // query
     current?: number;
     pageSize?: number;
+    title?: string;
   },
   options?: { [key: string]: any },
 ) {
