@@ -29,15 +29,15 @@ export const UserLink: React.FC<{
   }, [id]);
 
   if (loading) {
-    return <Spin />;
+    return (
+      <Link to={`/users/${id}`}>
+        {id}
+        <Spin />
+      </Link>
+    );
   }
 
-  return (
-    <Link to={`/users/${id}`}>
-      <small>{id}: </small>
-      {user && user.name}
-    </Link>
-  );
+  return <Link to={`/users/${id}`}>{user && user.name}</Link>;
 };
 
 export default UserLink;

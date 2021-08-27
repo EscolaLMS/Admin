@@ -9,6 +9,7 @@ import UserLink from '@/components/UserLink';
 import CourseLink from '@/components/CourseLink';
 import UserSelect from '@/components/UserSelect';
 import CourseSelect from '@/components/CourseSelect';
+import { format } from 'date-fns';
 
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
@@ -24,118 +25,121 @@ const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   );
 };
 
+export const TableListColumns: ProColumns<API.OrderListItem>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
+    dataIndex: 'created_at',
+    hideInSearch: true,
+    sorter: true,
+    render: (_, record) => format(new Date(record.created_at), 'yyyy-MM-dd HH:mm'),
+  },
+  {
+    title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
+    dataIndex: 'subtotal',
+    hideInSearch: true,
+    render: (_, record) => Number(record.subtotal) / 100,
+  },
+  {
+    title: <FormattedMessage id="tax" defaultMessage="Tax" />,
+    dataIndex: 'tax',
+    hideInSearch: true,
+    render: (_, record) => Number(record.tax) / 100,
+  },
+  {
+    title: <FormattedMessage id="total" defaultMessage="total" />,
+    dataIndex: 'total',
+    hideInSearch: true,
+    render: (_, record) => Number(record.total) / 100,
+  },
+  {
+    title: <FormattedMessage id="items" defaultMessage="items" />,
+    dataIndex: 'items',
+    hideInSearch: true,
+    render: (_, record) => <OrderItems items={record.items} />,
+  },
+  {
+    title: <FormattedMessage id="user" defaultMessage="user" />,
+    dataIndex: 'user_id',
+    key: 'user_id',
+    hideInSearch: false,
+    sorter: true,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <UserSelect
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => [<UserLink id={record.user_id} />],
+  },
+
+  {
+    title: <FormattedMessage id="author" defaultMessage="author" />,
+    dataIndex: 'author_id',
+    key: 'author_id',
+    hideInSearch: false,
+    hideInTable: true,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <UserSelect
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => [<UserLink id={record.user_id} />],
+  },
+
+  {
+    title: <FormattedMessage id="course" defaultMessage="course" />,
+    dataIndex: 'course_id',
+    key: 'course_id',
+    hideInSearch: false,
+    hideInTable: true,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <CourseSelect
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => [<UserLink id={record.user_id} />],
+  },
+  {
+    title: <FormattedMessage id="status" defaultMessage="status" />,
+    dataIndex: 'status',
+    hideInSearch: true,
+  },
+];
+
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  const columns: ProColumns<API.OrderListItem>[] = [
-    {
-      title: <FormattedMessage id="ID" defaultMessage="ID" />,
-      dataIndex: 'id',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
-      dataIndex: 'created_at',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="subtotal" defaultMessage="subtotal" />,
-      dataIndex: 'subtotal',
-      hideInSearch: true,
-      render: (_, record) => Number(record.subtotal) / 100,
-    },
-    {
-      title: <FormattedMessage id="tax" defaultMessage="tax" />,
-      dataIndex: 'tax',
-      hideInSearch: true,
-      render: (_, record) => Number(record.tax) / 100,
-    },
-    {
-      title: <FormattedMessage id="total" defaultMessage="total" />,
-      dataIndex: 'total',
-      hideInSearch: true,
-      render: (_, record) => Number(record.total) / 100,
-    },
-    {
-      title: <FormattedMessage id="items" defaultMessage="items" />,
-      dataIndex: 'items',
-      hideInSearch: true,
-      render: (_, record) => <OrderItems items={record.items} />,
-    },
-    {
-      title: <FormattedMessage id="user" defaultMessage="user" />,
-      dataIndex: 'user_id',
-      key: 'user_id',
-      hideInSearch: false,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        if (type === 'form') {
-          return null;
-        }
-        const stateType = form.getFieldValue('state');
-        return (
-          <UserSelect
-            {...rest}
-            state={{
-              type: stateType,
-            }}
-          />
-        );
-      },
-      render: (_, record) => [<UserLink id={record.user_id} />],
-    },
-
-    {
-      title: <FormattedMessage id="author" defaultMessage="author" />,
-      dataIndex: 'author_id',
-      key: 'author_id',
-      hideInSearch: false,
-      hideInTable: true,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        if (type === 'form') {
-          return null;
-        }
-        const stateType = form.getFieldValue('state');
-        return (
-          <UserSelect
-            {...rest}
-            state={{
-              type: stateType,
-            }}
-          />
-        );
-      },
-      render: (_, record) => [<UserLink id={record.user_id} />],
-    },
-
-    {
-      title: <FormattedMessage id="course" defaultMessage="course" />,
-      dataIndex: 'course_id',
-      key: 'course_id',
-      hideInSearch: false,
-      hideInTable: true,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        if (type === 'form') {
-          return null;
-        }
-        const stateType = form.getFieldValue('state');
-        return (
-          <CourseSelect
-            {...rest}
-            state={{
-              type: stateType,
-            }}
-          />
-        );
-      },
-      render: (_, record) => [<UserLink id={record.user_id} />],
-    },
-    {
-      title: <FormattedMessage id="status" defaultMessage="status" />,
-      dataIndex: 'status',
-      hideInSearch: true,
-    },
-  ];
 
   return (
     <PageContainer>
@@ -152,8 +156,22 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={({ pageSize, current, user_id, author_id, course_id }) => {
-          return orders({ pageSize, current, user_id, author_id, course_id }).then((response) => {
+        request={({ pageSize, current, user_id, author_id, course_id }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+
+          return orders({
+            pageSize,
+            current,
+            user_id,
+            author_id,
+            course_id,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
+          }).then((response) => {
             if (response.success) {
               return {
                 data: response.data,
@@ -164,7 +182,7 @@ const TableList: React.FC = () => {
             return [];
           });
         }}
-        columns={columns}
+        columns={TableListColumns}
       />
     </PageContainer>
   );

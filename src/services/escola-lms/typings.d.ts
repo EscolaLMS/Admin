@@ -138,7 +138,7 @@ declare namespace API {
 
   type OrderListItem = Order;
 
-  type PaymentList = PaginatedMetaList<Payment>;
+  type PaymentList = DefaultMetaResponse<Payment>;
 
   type PaymentListItem = Payment;
 
@@ -376,15 +376,15 @@ declare namespace API {
   type Payment = {
     amount: number;
     billable_id: number;
-    billable_type: string;
+    billable_type: 'EscolaLms\\Core\\Models\\User';
     created_at: string;
     currency: string;
     description: string;
     id: number;
-    order_id: number;
-    payable_id: null;
-    payable_type: null;
-    status: PaymentStatus; // TODO: what are possible statuses ?
+    order_id: string;
+    payable_id: number;
+    payable_type: 'EscolaLms\\Cart\\Models\\Order';
+    status: PaymentStatus;
     updated_at: string;
   };
 
