@@ -14,121 +14,85 @@ const handleRemove = async (id: number) => {
   return true;
 };
 
+export const TableColumns: ProColumns<API.UserListItem>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="first_name" defaultMessage="first_name" />,
+    dataIndex: 'first_name',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="last_name" defaultMessage="last_name" />,
+    dataIndex: 'last_name',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="email" defaultMessage="email" />,
+    dataIndex: 'email',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="search" defaultMessage="search" />,
+    dataIndex: 'search',
+    hideInSearch: false,
+    hideInTable: true,
+    hideInDescriptions: true,
+    tooltip: 'will search through first_name, last_name and email',
+  },
+
+  {
+    title: <FormattedMessage id="is_active" defaultMessage="is_active" />,
+    dataIndex: 'is_active',
+    hideInSearch: true,
+    render: (_, record) => [
+      <Tag color={record.is_active ? 'green' : 'red'}>
+        {record.is_active ? 'active' : 'inactive'}
+      </Tag>,
+    ],
+  },
+
+  {
+    title: <FormattedMessage id="email_verified" defaultMessage="email_verified" />,
+    dataIndex: 'email_verified',
+    hideInSearch: true,
+    render: (_, record) => [
+      <Tag color={record.is_active ? 'green' : 'red'}>
+        {record.is_active ? 'verified' : 'unverified'}
+      </Tag>,
+    ],
+  },
+
+  {
+    title: <FormattedMessage id="roles" defaultMessage="roles" />,
+    dataIndex: 'roles',
+    hideInSearch: true,
+    render: (_, record) => record.roles.map((role) => <Tag key={role}>{role}</Tag>),
+  },
+
+  {
+    title: 'role',
+    key: 'role',
+    valueType: 'select',
+    dataIndex: 'role',
+    initialValue: ['all'],
+    width: 100,
+    hideInTable: true,
+    valueEnum: {
+      all: { text: 'All' },
+      admin: { text: 'Admin' },
+      tutor: { text: 'Tutor' },
+      student: { text: 'Student' },
+    },
+  },
+];
+
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  const columns: ProColumns<API.UserListItem>[] = [
-    {
-      title: <FormattedMessage id="ID" defaultMessage="ID" />,
-      dataIndex: 'id',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="first_name" defaultMessage="first_name" />,
-      dataIndex: 'first_name',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="last_name" defaultMessage="last_name" />,
-      dataIndex: 'last_name',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="email" defaultMessage="email" />,
-      dataIndex: 'email',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="search" defaultMessage="search" />,
-      dataIndex: 'search',
-      hideInSearch: false,
-      hideInTable: true,
-      tooltip: 'will search through first_name, last_name and email',
-    },
-
-    {
-      title: <FormattedMessage id="is_active" defaultMessage="is_active" />,
-      dataIndex: 'is_active',
-      hideInSearch: true,
-      render: (_, record) => [
-        <Tag color={record.is_active ? 'green' : 'red'}>
-          {record.is_active ? 'active' : 'inactive'}
-        </Tag>,
-      ],
-    },
-
-    {
-      title: <FormattedMessage id="email_verified" defaultMessage="email_verified" />,
-      dataIndex: 'email_verified',
-      hideInSearch: true,
-      render: (_, record) => [
-        <Tag color={record.is_active ? 'green' : 'red'}>
-          {record.is_active ? 'verified' : 'unverified'}
-        </Tag>,
-      ],
-    },
-
-    {
-      title: <FormattedMessage id="roles" defaultMessage="roles" />,
-      dataIndex: 'roles',
-      hideInSearch: true,
-      render: (_, record) => record.roles.map((role) => <Tag key={role}>{role}</Tag>),
-    },
-
-    {
-      title: 'role',
-      key: 'role',
-      valueType: 'select',
-      dataIndex: 'role',
-      initialValue: ['all'],
-      width: 100,
-      hideInTable: true,
-      valueEnum: {
-        all: { text: 'All' },
-        admin: { text: 'Admin' },
-        tutor: { text: 'Tutor' },
-        student: { text: 'Student' },
-      },
-    },
-
-    {
-      hideInSearch: true,
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <Link to={`/users/${record.id}`} key="edit">
-          <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-            <Button type="primary" icon={<EditOutlined />}></Button>
-          </Tooltip>
-        </Link>,
-        <Popconfirm
-          key="delete"
-          title={
-            <FormattedMessage
-              id="deleteQuestion"
-              defaultMessage="Are you sure to delete this record?"
-            />
-          }
-          onConfirm={async () => {
-            const success = await handleRemove(record.id);
-            if (success) {
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
-          </Tooltip>
-        </Popconfirm>,
-      ],
-    },
-  ];
 
   return (
     <PageContainer>
@@ -163,7 +127,45 @@ const TableList: React.FC = () => {
             return [];
           });
         }}
-        columns={columns}
+        columns={[
+          ...TableColumns,
+          {
+            hideInSearch: true,
+            title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
+            dataIndex: 'option',
+            valueType: 'option',
+            render: (_, record) => [
+              <Link to={`/users/${record.id}`} key="edit">
+                <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                  <Button type="primary" icon={<EditOutlined />}></Button>
+                </Tooltip>
+              </Link>,
+              <Popconfirm
+                key="delete"
+                title={
+                  <FormattedMessage
+                    id="deleteQuestion"
+                    defaultMessage="Are you sure to delete this record?"
+                  />
+                }
+                onConfirm={async () => {
+                  const success = await handleRemove(record.id);
+                  if (success) {
+                    if (actionRef.current) {
+                      actionRef.current.reload();
+                    }
+                  }
+                }}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                  <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                </Tooltip>
+              </Popconfirm>,
+            ],
+          },
+        ]}
       />
     </PageContainer>
   );
