@@ -155,8 +155,8 @@ const TableList: React.FC = () => {
           return users({ pageSize, current, search, role: requestRole }).then((response) => {
             if (response.success) {
               return {
-                data: response.data.data,
-                total: response.data.meta.total,
+                data: response.data,
+                total: response.meta.total,
                 success: true,
               };
             }
