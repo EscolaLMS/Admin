@@ -1,5 +1,4 @@
-import { Drawer } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -7,64 +6,12 @@ import ProTable from '@ant-design/pro-table';
 
 import { payments } from '@/services/escola-lms/payments';
 import { format } from 'date-fns';
-import UserRow from '@/components/UserRow';
-import OrderRow from '@/components/OrderRow';
 
-import { TableColumns as UserTableColumns } from '@/pages/Users/index';
-import { TableListColumns as OrderTableListColumns } from '@/pages/Orders/index';
-
-import ProDescriptions from '@ant-design/pro-descriptions';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-
-const Billable: React.FC<{ payment: API.Payment; onData: (data: API.UserItem) => void }> = ({
-  payment,
-  onData,
-}) => {
-  switch (payment.billable_type) {
-    case 'EscolaLms\\Core\\Models\\User':
-      return <UserRow id={payment.billable_id} onLoaded={(user) => onData(user)} />;
-    default:
-      return (
-        <pre>
-          {payment.billable_type} id: {payment.billable_id}
-        </pre>
-      );
-  }
-};
-
-const Payable: React.FC<{ payment: API.Payment; onData: (data: API.Order) => void }> = ({
-  payment,
-  onData,
-}) => {
-  switch (payment.payable_type) {
-    case 'EscolaLms\\Cart\\Models\\Order':
-      return <OrderRow id={payment.payable_id} onLoaded={(order) => onData(order)} />;
-    default:
-      return (
-        <pre>
-          {payment.billable_type} id: {payment.billable_id}
-        </pre>
-      );
-  }
-};
-
-type CurrentRowType =
-  | {
-      mode: 'empty';
-    }
-  | {
-      mode: 'user';
-      value: API.UserItem;
-    }
-  | {
-      mode: 'order';
-      value: API.Order;
-    };
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-  const [currentRow, setCurrentRow] = useState<CurrentRowType>({ mode: 'empty' });
 
   const columns: ProColumns<API.PaymentListItem>[] = [
     {
@@ -125,10 +72,7 @@ const TableList: React.FC = () => {
       hideInSearch: false,
       sorter: true,
       render: (_, record) => (
-        <Billable
-          payment={record}
-          onData={(user) => setCurrentRow({ mode: 'user', value: user })}
-        />
+        <TypeButtonDrawer type={record.billable_type} type_id={record.billable_id} />
       ),
     },
     {
@@ -137,10 +81,7 @@ const TableList: React.FC = () => {
       hideInSearch: false,
       sorter: true,
       render: (_, record) => (
-        <Payable
-          payment={record}
-          onData={(order) => setCurrentRow({ mode: 'order', value: order })}
-        />
+        <TypeButtonDrawer type={record.payable_type} type_id={record.payable_id} />
       ),
     },
   ];
@@ -198,43 +139,6 @@ const TableList: React.FC = () => {
         }}
         columns={columns}
       />
-
-      <Drawer
-        width={600}
-        visible={currentRow.mode !== 'empty'}
-        onClose={() => {
-          setCurrentRow({ mode: 'empty' });
-        }}
-        closable={false}
-      >
-        {currentRow.mode === 'user' && (
-          <ProDescriptions<API.UserItem>
-            column={2}
-            title={currentRow?.mode}
-            request={async () => ({
-              data: currentRow.value || {},
-            })}
-            params={{
-              id: currentRow?.value.id,
-            }}
-            columns={UserTableColumns as ProDescriptionsItemProps<API.UserItem>[]}
-          />
-        )}
-
-        {currentRow.mode === 'order' && (
-          <ProDescriptions<API.Order>
-            column={2}
-            title={currentRow?.mode}
-            request={async () => ({
-              data: currentRow.value || {},
-            })}
-            params={{
-              id: currentRow?.value.id,
-            }}
-            columns={OrderTableListColumns as ProDescriptionsItemProps<API.Order>[]}
-          />
-        )}
-      </Drawer>
     </PageContainer>
   );
 };

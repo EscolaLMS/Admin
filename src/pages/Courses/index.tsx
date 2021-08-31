@@ -1,23 +1,116 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Drawer, Tag, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Tag, Tooltip, Popconfirm, message } from 'antd';
 import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import ProDescriptions from '@ant-design/pro-descriptions';
+
 import { course, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
+export const TableColumns: ProColumns<API.CourseListItem>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    sorter: true,
+    search: false,
+  },
+  {
+    title: <FormattedMessage id="title" defaultMessage="title" />,
+    dataIndex: 'title',
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="active" defaultMessage="active" />,
+    dataIndex: 'active',
+    sorter: false,
+    render: (_, record) => <Tag>{record.active ? 'Active' : 'Inactive'}</Tag>,
+  },
+  {
+    title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
+    dataIndex: 'base_price',
+    sorter: true,
+    valueType: 'textarea',
+    search: false,
+  },
+  {
+    title: <FormattedMessage id="duration" defaultMessage="Duration" />,
+    dataIndex: 'duration',
+    sorter: true,
+    valueType: 'textarea',
+    search: false,
+  },
+  {
+    title: <FormattedMessage id="categories" defaultMessage="Categories" />,
+    dataIndex: 'category_id',
+    key: 'category_id',
+    sorter: false,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <CategoryTree
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => (
+      <React.Fragment>
+        {record.categories?.map((category) =>
+          typeof category === 'object' ? (
+            <Tag key={category.name}>{category.name}</Tag>
+          ) : (
+            <Tag key={category}>{category}</Tag>
+          ),
+        )}
+      </React.Fragment>
+    ),
+  },
+  {
+    title: <FormattedMessage id="tags" defaultMessage="Tags" />,
+    dataIndex: 'tag',
+    key: 'tag',
+    sorter: false,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <Tags
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => (
+      <React.Fragment>
+        {record.tags?.map((tag) =>
+          typeof tag === 'object' ? (
+            <Tag key={tag.title}>{tag.title}</Tag>
+          ) : (
+            <Tag key={tag}>{tag}</Tag>
+          ),
+        )}
+      </React.Fragment>
+    ),
+  },
+];
+
 const TableList: React.FC = () => {
-  const [showDetail, setShowDetail] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.CourseListItem>();
 
   const intl = useIntl();
 
@@ -41,135 +134,6 @@ const TableList: React.FC = () => {
     },
     [actionRef],
   );
-
-  const columns: ProColumns<API.CourseListItem>[] = [
-    {
-      title: <FormattedMessage id="ID" defaultMessage="ID" />,
-      dataIndex: 'id',
-      sorter: true,
-      search: false,
-    },
-    {
-      title: <FormattedMessage id="title" defaultMessage="title" />,
-      dataIndex: 'title',
-      sorter: true,
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {entity.title}
-          </a>
-        );
-      },
-    },
-    {
-      title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
-      dataIndex: 'base_price',
-      sorter: true,
-      valueType: 'textarea',
-      search: false,
-    },
-    {
-      title: <FormattedMessage id="duration" defaultMessage="Duration" />,
-      dataIndex: 'duration',
-      sorter: true,
-      valueType: 'textarea',
-      search: false,
-    },
-    {
-      title: <FormattedMessage id="categories" defaultMessage="Categories" />,
-      dataIndex: 'category_id',
-      key: 'category_id',
-      sorter: false,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        if (type === 'form') {
-          return null;
-        }
-        const stateType = form.getFieldValue('state');
-        return (
-          <CategoryTree
-            {...rest}
-            state={{
-              type: stateType,
-            }}
-          />
-        );
-      },
-      render: (_, record) => (
-        <React.Fragment>
-          {record.categories?.map((category) =>
-            typeof category === 'object' ? (
-              <Tag key={category.name}>{category.name}</Tag>
-            ) : (
-              <Tag key={category}>{category}</Tag>
-            ),
-          )}
-        </React.Fragment>
-      ),
-    },
-    {
-      title: <FormattedMessage id="tags" defaultMessage="Tags" />,
-      dataIndex: 'tag',
-      key: 'tag',
-      sorter: false,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        if (type === 'form') {
-          return null;
-        }
-        const stateType = form.getFieldValue('state');
-        return (
-          <Tags
-            {...rest}
-            state={{
-              type: stateType,
-            }}
-          />
-        );
-      },
-      render: (_, record) => (
-        <React.Fragment>
-          {record.tags?.map((tag) =>
-            typeof tag === 'object' ? (
-              <Tag key={tag.title}>{tag.title}</Tag>
-            ) : (
-              <Tag key={tag}>{tag}</Tag>
-            ),
-          )}
-        </React.Fragment>
-      ),
-    },
-    {
-      title: <FormattedMessage id="options" defaultMessage="options" />,
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <Link to={`/courses/${record.id}`}>
-          <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-            <Button type="primary" icon={<EditOutlined />}></Button>
-          </Tooltip>
-        </Link>,
-        <Popconfirm
-          title={
-            <FormattedMessage
-              id="deleteQuestion"
-              defaultMessage="Are you sure to delete this record?"
-            />
-          }
-          onConfirm={() => record.id && handleRemove(record.id)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
-          </Tooltip>
-        </Popconfirm>,
-      ],
-    },
-  ];
 
   return (
     <PageContainer>
@@ -211,32 +175,37 @@ const TableList: React.FC = () => {
             return data.success ? data.data : [];
           });
         }}
-        columns={columns}
+        columns={[
+          ...TableColumns,
+          {
+            title: <FormattedMessage id="options" defaultMessage="options" />,
+            dataIndex: 'option',
+            valueType: 'option',
+            render: (_, record) => [
+              <Link to={`/courses/${record.id}`}>
+                <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                  <Button type="primary" icon={<EditOutlined />}></Button>
+                </Tooltip>
+              </Link>,
+              <Popconfirm
+                title={
+                  <FormattedMessage
+                    id="deleteQuestion"
+                    defaultMessage="Are you sure to delete this record?"
+                  />
+                }
+                onConfirm={() => record.id && handleRemove(record.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                  <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                </Tooltip>
+              </Popconfirm>,
+            ],
+          },
+        ]}
       />
-
-      <Drawer
-        width={600}
-        visible={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow?.title && (
-          <ProDescriptions<API.CourseListItem>
-            column={2}
-            title={currentRow?.title}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.title,
-            }}
-            columns={columns as ProDescriptionsItemProps<API.CourseListItem>[]}
-          />
-        )}
-      </Drawer>
     </PageContainer>
   );
 };
