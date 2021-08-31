@@ -7,6 +7,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
 import { DeleteOutlined, EditOutlined, BookOutlined } from '@ant-design/icons';
+import UploadH5P from '@/components/H5P/upload';
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,6 +44,28 @@ const TableList: React.FC = () => {
       sorter: false,
       search: false,
     },
+
+    {
+      title: <FormattedMessage id="newH5P" defaultMessage="newH5P" />,
+      dataIndex: 'upload',
+      hideInSearch: false,
+      hideInTable: true,
+
+      renderFormItem: () => [
+        <UploadH5P
+          onSuccess={() => {
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+            message.success(
+              <FormattedMessage id="h5p_uploaded" defaultMessage="new H5P uploaded succesfuly" />,
+            );
+          }}
+          onError={() => message.error('error')}
+        />,
+      ],
+    },
+
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
