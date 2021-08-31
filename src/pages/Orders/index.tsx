@@ -6,26 +6,24 @@ import ProTable from '@ant-design/pro-table';
 
 import { orders } from '@/services/escola-lms/orders';
 import UserLink from '@/components/UserLink';
-import CourseLink from '@/components/CourseLink';
 import UserSelect from '@/components/UserSelect';
 import CourseSelect from '@/components/CourseSelect';
 import { format } from 'date-fns';
 
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { Space } from 'antd';
+
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
-    <div>
+    <Space>
       {items.map((item) => (
-        <div key={item.id}>
-          {item.buyable_type === 'EscolaLms\\Cart\\Models\\Course' && (
-            <CourseLink id={item.buyable_id} />
-          )}
-        </div>
+        <TypeButtonDrawer type={item.buyable_type} type_id={item.buyable_id} />
       ))}
-    </div>
+    </Space>
   );
 };
 
-export const TableListColumns: ProColumns<API.OrderListItem>[] = [
+export const TableColumns: ProColumns<API.OrderListItem>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
@@ -82,7 +80,7 @@ export const TableListColumns: ProColumns<API.OrderListItem>[] = [
         />
       );
     },
-    render: (_, record) => [<UserLink id={record.user_id} />],
+    render: (_, record) => <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />,
   },
 
   {
@@ -91,6 +89,7 @@ export const TableListColumns: ProColumns<API.OrderListItem>[] = [
     key: 'author_id',
     hideInSearch: false,
     hideInTable: true,
+    hideInDescriptions: true,
     renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
       if (type === 'form') {
         return null;
@@ -114,6 +113,8 @@ export const TableListColumns: ProColumns<API.OrderListItem>[] = [
     key: 'course_id',
     hideInSearch: false,
     hideInTable: true,
+    hideInDescriptions: true,
+
     renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
       if (type === 'form') {
         return null;
@@ -182,7 +183,7 @@ const TableList: React.FC = () => {
             return [];
           });
         }}
-        columns={TableListColumns}
+        columns={TableColumns}
       />
     </PageContainer>
   );

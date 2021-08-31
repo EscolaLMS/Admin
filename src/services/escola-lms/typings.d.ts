@@ -39,6 +39,7 @@ declare namespace API {
   };
 
   type Course = {
+    active: boolean;
     id?: number;
     created_at?: string;
     updated_at?: string;
@@ -376,14 +377,17 @@ declare namespace API {
   type Payment = {
     amount: number;
     billable_id: number;
-    billable_type: 'EscolaLms\\Core\\Models\\User';
+    billable_type: 'EscolaLms\\Core\\Models\\User' | 'App\\Models\\User';
     created_at: string;
     currency: string;
     description: string;
     id: number;
     order_id: string;
     payable_id: number;
-    payable_type: 'EscolaLms\\Cart\\Models\\Order';
+    payable_type:
+      | 'EscolaLms\\Cart\\Models\\Order'
+      | 'App\\Models\\User'
+      | 'EscolaLms\\Core\\Models\\User';
     status: PaymentStatus;
     updated_at: string;
   };
@@ -450,4 +454,22 @@ declare namespace API {
   };
 
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
+
+  type LinkedType =
+    | {
+        type: '';
+        value: null;
+      }
+    | {
+        type: 'App\\Models\\User' | 'EscolaLms\\Core\\Models\\User';
+        value: API.UserItem;
+      }
+    | {
+        type: 'EscolaLms\\Cart\\Models\\Order';
+        value: API.Order;
+      }
+    | {
+        type: 'EscolaLms\\Cart\\Models\\Course';
+        value: API.Course;
+      };
 }
