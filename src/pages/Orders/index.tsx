@@ -17,7 +17,11 @@ const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
     <Space>
       {items.map((item) => (
-        <TypeButtonDrawer type={item.buyable_type} type_id={item.buyable_id} />
+        <TypeButtonDrawer
+          key={item.buyable_id}
+          type={item.buyable_type}
+          type_id={item.buyable_id}
+        />
       ))}
     </Space>
   );
@@ -30,11 +34,22 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     hideInSearch: true,
   },
   {
+    title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
+    dataIndex: 'dateRange',
+    hideInSearch: false,
+    hideInForm: true,
+    hideInTable: true,
+    valueType: 'dateRange',
+    fieldProps: {
+      allowEmpty: [true, true],
+    },
+  },
+  {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
     dataIndex: 'created_at',
     hideInSearch: true,
     sorter: true,
-    render: (_, record) => format(new Date(record.created_at), 'yyyy-MM-dd HH:mm'),
+    render: (_, record) => format(new Date(record.created_at), 'YYYY-MM-DD HH:mm'),
   },
   {
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
@@ -146,7 +161,12 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<
         API.OrderListItem,
-        API.PageParams & { user_id: number; author_id: number; course_id: number }
+        API.PageParams & {
+          user_id: number;
+          author_id: number;
+          course_id: number;
+          dateRange: [string, string];
+        }
       >
         headerTitle={intl.formatMessage({
           id: 'orders',
@@ -157,15 +177,24 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={({ pageSize, current, user_id, author_id, course_id }, sort) => {
+        request={({ pageSize, current, user_id, author_id, course_id, dateRange }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
-
+          const date_from =
+            dateRange && dateRange[0]
+              ? format(new Date(dateRange[0]), 'YYYY-MM-DD HH:mm:ss')
+              : undefined;
+          const date_to =
+            dateRange && dateRange[1]
+              ? format(new Date(dateRange[1]), 'YYYY-MM-DD HH:mm:ss')
+              : undefined;
           return orders({
             pageSize,
             current,
             user_id,
             author_id,
             course_id,
+            date_from,
+            date_to,
             order_by: sortArr && sortArr[0], // i like nested ternary
             /* eslint-disable */ order: sortArr
               ? sortArr[1] === 'ascend'
