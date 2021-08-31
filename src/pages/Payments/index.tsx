@@ -36,14 +36,14 @@ const TableList: React.FC = () => {
       dataIndex: 'created_at',
       hideInSearch: true,
       sorter: true,
-      render: (_, record) => format(new Date(record.created_at), 'yyyy-MM-dd HH:mm'),
+      render: (_, record) => format(new Date(record.created_at), 'YYYY-MM-DD HH:mm'),
     },
     {
       title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,
       dataIndex: 'updated_at',
       hideInSearch: true,
       sorter: true,
-      render: (_, record) => format(new Date(record.updated_at), 'yyyy-MM-dd HH:mm'),
+      render: (_, record) => format(new Date(record.updated_at), 'YYYY-MM-DD HH:mm'),
     },
     {
       title: <FormattedMessage id="amount" defaultMessage="amount" />,
@@ -107,11 +107,11 @@ const TableList: React.FC = () => {
         ) => {
           const date_from =
             dateRange && dateRange[0]
-              ? format(new Date(dateRange[0]), 'yyyy-MM-dd HH:mm:ss')
+              ? format(new Date(dateRange[0]), 'YYYY-MM-DD HH:mm:ss')
               : undefined;
           const date_to =
             dateRange && dateRange[1]
-              ? format(new Date(dateRange[1]), 'yyyy-MM-dd HH:mm:ss')
+              ? format(new Date(dateRange[1]), 'YYYY-MM-DD HH:mm:ss')
               : undefined;
           const sortArr = sort && Object.entries(sort)[0];
           return payments({
