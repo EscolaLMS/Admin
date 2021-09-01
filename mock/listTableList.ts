@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import moment from 'moment';
 import { parse } from 'url';
+import { DATE_FORMAT } from '@/consts/dates';
 
 // mock tableListDataSource
 const genList = (current: number, pageSize: number) => {
@@ -22,8 +23,8 @@ const genList = (current: number, pageSize: number) => {
       desc: 'Lorem ipsum',
       callNo: Math.floor(Math.random() * 1000),
       status: Math.floor(Math.random() * 10) % 4,
-      updatedAt: moment().format('YYYY-MM-DD'),
-      createdAt: moment().format('YYYY-MM-DD'),
+      updatedAt: moment().format(DATE_FORMAT),
+      createdAt: moment().format(DATE_FORMAT),
       progress: Math.ceil(Math.random() * 100),
     });
   }
@@ -39,7 +40,7 @@ function getRule(req: Request, res: Response, u: string) {
     realUrl = req.url;
   }
   const { current = 1, pageSize = 10 } = req.query;
-  const params = (parse(realUrl, true).query as unknown) as API.PageParams &
+  const params = parse(realUrl, true).query as unknown as API.PageParams &
     API.RuleListItem & {
       sorter: any;
       filter: any;
@@ -133,8 +134,8 @@ function postRule(req: Request, res: Response, u: string, b: Request) {
           desc,
           callNo: Math.floor(Math.random() * 1000),
           status: Math.floor(Math.random() * 10) % 2,
-          updatedAt: moment().format('YYYY-MM-DD'),
-          createdAt: moment().format('YYYY-MM-DD'),
+          updatedAt: moment().format(DATE_FORMAT),
+          createdAt: moment().format(DATE_FORMAT),
           progress: Math.ceil(Math.random() * 100),
         };
         tableListDataSource.unshift(newRule);
