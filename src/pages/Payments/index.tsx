@@ -8,6 +8,7 @@ import { payments } from '@/services/escola-lms/payments';
 import { format } from 'date-fns';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -36,14 +37,14 @@ const TableList: React.FC = () => {
       dataIndex: 'created_at',
       hideInSearch: true,
       sorter: true,
-      render: (_, record) => format(new Date(record.created_at), 'YYYY-MM-DD HH:mm'),
+      render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
     },
     {
       title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,
       dataIndex: 'updated_at',
       hideInSearch: true,
       sorter: true,
-      render: (_, record) => format(new Date(record.updated_at), 'YYYY-MM-DD HH:mm'),
+      render: (_, record) => format(new Date(record.updated_at), DATETIME_FORMAT),
     },
     {
       title: <FormattedMessage id="amount" defaultMessage="amount" />,
@@ -106,13 +107,9 @@ const TableList: React.FC = () => {
           sort,
         ) => {
           const date_from =
-            dateRange && dateRange[0]
-              ? format(new Date(dateRange[0]), 'YYYY-MM-DD HH:mm:ss')
-              : undefined;
+            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
-            dateRange && dateRange[1]
-              ? format(new Date(dateRange[1]), 'YYYY-MM-DD HH:mm:ss')
-              : undefined;
+            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
           const sortArr = sort && Object.entries(sort)[0];
           return payments({
             pageSize,

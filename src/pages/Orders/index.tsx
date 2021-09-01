@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { Space } from 'antd';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
@@ -49,7 +50,7 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     dataIndex: 'created_at',
     hideInSearch: true,
     sorter: true,
-    render: (_, record) => format(new Date(record.created_at), 'YYYY-MM-DD HH:mm'),
+    render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
   },
   {
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
@@ -180,13 +181,9 @@ const TableList: React.FC = () => {
         request={({ pageSize, current, user_id, author_id, course_id, dateRange }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           const date_from =
-            dateRange && dateRange[0]
-              ? format(new Date(dateRange[0]), 'YYYY-MM-DD HH:mm:ss')
-              : undefined;
+            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
-            dateRange && dateRange[1]
-              ? format(new Date(dateRange[1]), 'YYYY-MM-DD HH:mm:ss')
-              : undefined;
+            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
           return orders({
             pageSize,
             current,
