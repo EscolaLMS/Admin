@@ -147,6 +147,12 @@
     component: './Categories',
   },
   {
+    name: 'settings',
+    icon: 'calculator',
+    path: '/settings',
+    component: './Settings',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },
