@@ -455,6 +455,43 @@ declare namespace API {
 
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
 
+  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
+  type SettingBase = {
+    id: number;
+    key: string;
+    group: string;
+    value: string;
+    public: boolean;
+    enumerable: boolean;
+    sort: number;
+    type: SettingType;
+    data: any;
+  };
+
+  type Setting =
+    | (SettingBase & {
+        type: 'text';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'markdown';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'json';
+        data: object;
+      })
+    | (SettingBase & {
+        type: 'file';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'image';
+        data: string;
+      });
+
+  type SettingsList = DefaultMetaResponse<Setting>;
+
   type LinkedType =
     | {
         type: '';
