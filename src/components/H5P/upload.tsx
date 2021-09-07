@@ -2,7 +2,7 @@ import SecureUpload from '@/components/SecureUpload';
 import React from 'react';
 
 export const UploadH5P: React.FC<{
-  onSuccess: () => void;
+  onSuccess: (response: any) => void;
   onError: () => void;
 }> = ({ onSuccess, onError }) => {
   return (
@@ -13,7 +13,7 @@ export const UploadH5P: React.FC<{
       onChange={(info) => {
         if (info.file.status === 'done') {
           if (info.file.response) {
-            onSuccess();
+            onSuccess(info.file.response);
           }
         }
         if (info.file.status === 'error') {
