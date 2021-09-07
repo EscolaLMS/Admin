@@ -153,6 +153,12 @@
     component: './Settings',
   },
   {
+    name: 'reports',
+    icon: 'project',
+    path: '/reports',
+    component: './Reports',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },
