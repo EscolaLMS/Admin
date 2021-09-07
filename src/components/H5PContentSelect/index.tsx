@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Select } from 'antd';
 
 import { allContent } from '@/services/escola-lms/h5p';
@@ -11,14 +11,26 @@ export const H5PContentSelect: React.FC<{
   value?: string;
   onChange?: (value: string) => void;
 }> = ({ value, onChange, multiple = false }) => {
+  const ref = useRef();
+
   const [contents, setContents] = useState<API.H5PContentListItem[]>([]);
 
   useEffect(() => {
     allContent().then((response) => setContents(response));
   }, []);
 
+  useEffect(() => {
+    console.log(ref);
+    if (contents.length) {
+      if (!contents.find((content) => Number(content.id) === Number(value))) {
+        allContent().then((response) => setContents(response));
+      }
+    }
+  }, [value]);
+
   return (
     <Select
+      ref={ref}
       loading={contents.length === 0}
       style={{ width: '100%' }}
       value={value}
