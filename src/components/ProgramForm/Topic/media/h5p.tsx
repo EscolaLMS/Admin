@@ -5,6 +5,17 @@ import { EditorContextProvider, Player } from 'h5p-headless-player';
 import type { XAPIEvent } from 'h5p-headless-player';
 import UploadH5P from '@/components/H5P/upload';
 
+import { H5PForm as H5PFormNew } from '@/components/H5PForm';
+
+export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
+  onData,
+  id,
+}) => (
+  <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+    <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
+  </EditorContextProvider>
+);
+
 export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
   const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
   return (
@@ -32,6 +43,7 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
   onChange,
 }) => {
   const [previewId, setPreviewId] = useState<number>();
+  const [editId, setEditId] = useState<number | 'new'>();
   return (
     <React.Fragment>
       <Row gutter={8}>
@@ -57,6 +69,10 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
           >
             Preview
           </Button>
+
+          <Button type="primary" onClick={() => setEditId(Number(id))}>
+            Edit
+          </Button>
         </Col>
       </Row>
 
@@ -79,9 +95,27 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
         </Col>
 
         <Col span={8}>
-          <Button type="primary">Open new content editor</Button>
+          <Button type="primary" onClick={() => setEditId('new')}>
+            Open new content editor
+          </Button>
         </Col>
       </Row>
+      <Modal
+        okButtonProps={{ disabled: true, hidden: true }}
+        width="80vw"
+        onCancel={() => setEditId(undefined)}
+        visible={!!editId}
+      >
+        {editId && (
+          <H5PFormNewModal
+            id={editId}
+            onData={(hid) => {
+              onChange(String(hid));
+              setEditId(undefined);
+            }}
+          />
+        )}
+      </Modal>
 
       <Modal
         width="80vw"
