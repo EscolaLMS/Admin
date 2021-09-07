@@ -39,6 +39,7 @@ declare namespace API {
   };
 
   type Course = {
+    active: boolean;
     id?: number;
     created_at?: string;
     updated_at?: string;
@@ -376,14 +377,17 @@ declare namespace API {
   type Payment = {
     amount: number;
     billable_id: number;
-    billable_type: 'EscolaLms\\Core\\Models\\User';
+    billable_type: 'EscolaLms\\Core\\Models\\User' | 'App\\Models\\User';
     created_at: string;
     currency: string;
     description: string;
     id: number;
     order_id: string;
     payable_id: number;
-    payable_type: 'EscolaLms\\Cart\\Models\\Order';
+    payable_type:
+      | 'EscolaLms\\Cart\\Models\\Order'
+      | 'App\\Models\\User'
+      | 'EscolaLms\\Core\\Models\\User';
     status: PaymentStatus;
     updated_at: string;
   };
@@ -450,4 +454,59 @@ declare namespace API {
   };
 
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
+
+  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
+  type SettingBase = {
+    id: number;
+    key: string;
+    group: string;
+    value: string;
+    public: boolean;
+    enumerable: boolean;
+    sort: number;
+    type: SettingType;
+    data: any;
+  };
+
+  type Setting =
+    | (SettingBase & {
+        type: 'text';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'markdown';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'json';
+        data: object;
+      })
+    | (SettingBase & {
+        type: 'file';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'image';
+        data: string;
+      });
+
+  type SettingsList = DefaultMetaResponse<Setting>;
+
+  type LinkedType =
+    | {
+        type: '';
+        value: null;
+      }
+    | {
+        type: 'App\\Models\\User' | 'EscolaLms\\Core\\Models\\User';
+        value: API.UserItem;
+      }
+    | {
+        type: 'EscolaLms\\Cart\\Models\\Order';
+        value: API.Order;
+      }
+    | {
+        type: 'EscolaLms\\Cart\\Models\\Course';
+        value: API.Course;
+      };
 }

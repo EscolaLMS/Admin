@@ -1,21 +1,18 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Drawer, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import ProDescriptions from '@ant-design/pro-descriptions';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
 import { DeleteOutlined, EditOutlined, BookOutlined } from '@ant-design/icons';
+import UploadH5P from '@/components/H5P/upload';
 
 const TableList: React.FC = () => {
-  const [showDetail, setShowDetail] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.H5PContentListItem>();
 
   const intl = useIntl();
 
@@ -47,22 +44,35 @@ const TableList: React.FC = () => {
       sorter: false,
       search: false,
     },
+
+    {
+      title: <FormattedMessage id="newH5P" defaultMessage="newH5P" />,
+      dataIndex: 'upload',
+      hideInSearch: false,
+      hideInTable: true,
+
+      renderFormItem: () => [
+        <UploadH5P
+          onSuccess={() => {
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+            message.success(
+              <FormattedMessage id="h5p_uploaded" defaultMessage="new H5P uploaded succesfuly" />,
+            );
+          }}
+          onError={() => message.error('error')}
+        />,
+      ],
+    },
+
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
       sorter: false,
       search: false,
       render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {entity.title}
-          </a>
-        );
+        return entity.title;
       },
     },
     {
@@ -140,30 +150,6 @@ const TableList: React.FC = () => {
         }}
         columns={columns}
       />
-
-      <Drawer
-        width={600}
-        visible={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow?.title && (
-          <ProDescriptions<API.H5PContentListItem>
-            column={2}
-            title={currentRow?.title}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.title,
-            }}
-            columns={columns as ProDescriptionsItemProps<API.H5PContentListItem>[]}
-          />
-        )}
-      </Drawer>
     </PageContainer>
   );
 };

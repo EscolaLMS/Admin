@@ -6,37 +6,51 @@ import ProTable from '@ant-design/pro-table';
 
 import { orders } from '@/services/escola-lms/orders';
 import UserLink from '@/components/UserLink';
-import CourseLink from '@/components/CourseLink';
 import UserSelect from '@/components/UserSelect';
 import CourseSelect from '@/components/CourseSelect';
 import { format } from 'date-fns';
 
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { Space } from 'antd';
+import { DATETIME_FORMAT } from '@/consts/dates';
+
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
-    <div>
+    <Space>
       {items.map((item) => (
-        <div key={item.id}>
-          {item.buyable_type === 'EscolaLms\\Cart\\Models\\Course' && (
-            <CourseLink id={item.buyable_id} />
-          )}
-        </div>
+        <TypeButtonDrawer
+          key={item.buyable_id}
+          type={item.buyable_type}
+          type_id={item.buyable_id}
+        />
       ))}
-    </div>
+    </Space>
   );
 };
 
-export const TableListColumns: ProColumns<API.OrderListItem>[] = [
+export const TableColumns: ProColumns<API.OrderListItem>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
   },
   {
+    title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
+    dataIndex: 'dateRange',
+    hideInSearch: false,
+    hideInForm: true,
+    hideInTable: true,
+    valueType: 'dateRange',
+    fieldProps: {
+      allowEmpty: [true, true],
+    },
+  },
+  {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
     dataIndex: 'created_at',
     hideInSearch: true,
     sorter: true,
-    render: (_, record) => format(new Date(record.created_at), 'yyyy-MM-dd HH:mm'),
+    render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
   },
   {
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
@@ -82,7 +96,7 @@ export const TableListColumns: ProColumns<API.OrderListItem>[] = [
         />
       );
     },
-    render: (_, record) => [<UserLink id={record.user_id} />],
+    render: (_, record) => <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />,
   },
 
   {
@@ -91,6 +105,7 @@ export const TableListColumns: ProColumns<API.OrderListItem>[] = [
     key: 'author_id',
     hideInSearch: false,
     hideInTable: true,
+    hideInDescriptions: true,
     renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
       if (type === 'form') {
         return null;
@@ -114,6 +129,8 @@ export const TableListColumns: ProColumns<API.OrderListItem>[] = [
     key: 'course_id',
     hideInSearch: false,
     hideInTable: true,
+    hideInDescriptions: true,
+
     renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
       if (type === 'form') {
         return null;
@@ -145,7 +162,12 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<
         API.OrderListItem,
-        API.PageParams & { user_id: number; author_id: number; course_id: number }
+        API.PageParams & {
+          user_id: number;
+          author_id: number;
+          course_id: number;
+          dateRange: [string, string];
+        }
       >
         headerTitle={intl.formatMessage({
           id: 'orders',
@@ -156,15 +178,20 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={({ pageSize, current, user_id, author_id, course_id }, sort) => {
+        request={({ pageSize, current, user_id, author_id, course_id, dateRange }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
-
+          const date_from =
+            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
+          const date_to =
+            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
           return orders({
             pageSize,
             current,
             user_id,
             author_id,
             course_id,
+            date_from,
+            date_to,
             order_by: sortArr && sortArr[0], // i like nested ternary
             /* eslint-disable */ order: sortArr
               ? sortArr[1] === 'ascend'
@@ -182,7 +209,7 @@ const TableList: React.FC = () => {
             return [];
           });
         }}
-        columns={TableListColumns}
+        columns={TableColumns}
       />
     </PageContainer>
   );

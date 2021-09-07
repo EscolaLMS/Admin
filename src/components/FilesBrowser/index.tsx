@@ -6,9 +6,11 @@ import { List, Button, Typography, Space, Pagination } from 'antd';
 import { FolderOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import SecureUpload from '@/components/SecureUpload';
 
+import './index.css';
+
 interface FormWysiwygProps {
   defaultDirectory?: string;
-  onFile?: (value: string) => void;
+  onFile?: (value: API.File, directory?: string) => void;
 }
 
 type FileBrowserState = {
@@ -176,7 +178,9 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
                     type="text"
                     size="small"
                     onClick={() =>
-                      item.mime === 'directory' ? fetchFiles(item.url) : onFile && onFile(item.url)
+                      item.mime === 'directory'
+                        ? fetchFiles(item.url)
+                        : onFile && onFile(item, state.directory)
                     }
                   >
                     {item.name}
