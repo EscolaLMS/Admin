@@ -526,4 +526,18 @@ declare namespace API {
   type Report = ReportItem[];
 
   type ReportList = DefaultResponse<Report>;
+
+  type UserGroup = {
+    id: number;
+    name: string;
+    users: UserItem[];
+  };
+
+  type UserGroups = UserGroup[];
+
+  type UserGroupRow = DefaultResponse<UserGroup>;
+
+  type UserGroupAddRow = DefaultResponse<UserItem[]>;
+
+  type UserGroupList = DefaultMetaResponse<UserGroup>;
 }

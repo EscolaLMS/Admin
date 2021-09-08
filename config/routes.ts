@@ -24,23 +24,39 @@
   {
     path: '/users',
     name: 'Users',
-    icon: 'team',
+    icon: 'user',
     component: './Users',
   },
   {
     path: '/users/me',
     name: 'User Form',
-    icon: 'team',
+    icon: 'user',
     component: './Users/me',
     hideInMenu: true,
   },
   {
     path: '/users/:user',
     name: 'Form',
-    icon: 'team',
+    icon: 'user',
     component: './Users/form',
     hideInMenu: true,
   },
+
+  {
+    path: '/user_groups',
+    name: 'User Groups',
+    icon: 'team',
+    component: './UserGroups',
+  },
+
+  {
+    path: '/user_groups/:group',
+    name: 'Form',
+    icon: 'team',
+    component: './UserGroups/form',
+    hideInMenu: true,
+  },
+
   {
     path: '/orders',
     name: 'Orders',
