@@ -3,7 +3,6 @@ import React from 'react';
 import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
-import { useIntl } from 'umi';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -14,7 +13,6 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight: React.FC = () => {
-  const intl = useIntl();
   const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
