@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 
 import { users as fetchUsers, user as fetchUser } from '@/services/escola-lms/user';
+import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 export const UserSelect: React.FC<{
@@ -66,7 +67,7 @@ export const UserSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder="Select a person"
+      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

@@ -4,6 +4,7 @@ import Lesson from '@/components/ProgramForm/Lesson';
 import { Context } from '@/components/ProgramForm/Context';
 import { PlusOutlined } from '@ant-design/icons';
 import SortingButtons from '@/components/sortingbuttons';
+import { getLocale, FormattedMessage } from 'umi';
 
 const { Panel } = Collapse;
 
@@ -27,11 +28,30 @@ export const Curriculum = () => {
     [sortLesson],
   );
 
+  const getTopicVariant = (num: number | undefined) => {
+    if (getLocale() === 'pl-PL' && num) {
+      if (num === 1) {
+        return '';
+      }
+      if (num > 1 && num < 5) return 'y';
+      if (num > 21 && Number(String(num).slice(-1)) > 1 && Number(String(num).slice(-1)) < 5)
+        return 'y';
+      return 'ów';
+    }
+
+    if (getLocale() === 'en-US' && num) {
+      if (num > 1) return 's';
+      return '';
+    }
+
+    return undefined;
+  };
+
   if (state && state.lessons) {
     return (
       <div className="course-block">
         <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
-          Add new lesson
+          <FormattedMessage id="add_new_lesson" />
         </Button>
         <Divider />
         <div className="curriculum-lessons-wrapper">
@@ -43,13 +63,23 @@ export const Curriculum = () => {
                 <Panel
                   header={
                     <span>
-                      {lesson.isNew && <Tag color="#2db7f5">NEW</Tag>}
-                      Lesson: <strong>{lesson.title}</strong>{' '}
-                      <Tag>{lesson.active ? 'Active' : 'Inactive'}</Tag>
+                      {lesson.isNew && (
+                        <Tag color="#2db7f5">
+                          <FormattedMessage id="new" />
+                        </Tag>
+                      )}
+                      <FormattedMessage id="lesson" />: <strong>{lesson.title}</strong>{' '}
+                      <Tag>
+                        {lesson.active ? (
+                          <FormattedMessage id="Active" />
+                        ) : (
+                          <FormattedMessage id="Inactive" />
+                        )}
+                      </Tag>
                       {lesson?.topics?.length !== 0 && (
                         <small>
-                          ({lesson?.topics?.length} topic
-                          {Number(lesson?.topics?.length) > 1 ? 's' : ''})
+                          ({lesson?.topics?.length} <FormattedMessage id="topic" />
+                          {getTopicVariant(Number(lesson?.topics?.length))})
                         </small>
                       )}
                     </span>
@@ -78,7 +108,7 @@ export const Curriculum = () => {
         </div>
         <Divider />
         <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
-          Add new lesson
+          <FormattedMessage id="add_new_lesson" />
         </Button>
       </div>
     );

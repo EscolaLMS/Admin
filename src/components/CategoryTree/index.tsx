@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { TreeSelect } from 'antd';
 
 import { categoryTree } from '@/services/escola-lms/category';
+import { FormattedMessage } from 'umi';
 
 type TreeNodeType = {
   title: string;
@@ -48,7 +49,7 @@ export const CategoryTree: React.FC<{
       style={{ width: '100%' }}
       value={value}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-      placeholder="Please select"
+      placeholder={<FormattedMessage id="select" defaultMessage="Please select" />}
       allowClear
       treeDefaultExpandAll
       onChange={onChange}

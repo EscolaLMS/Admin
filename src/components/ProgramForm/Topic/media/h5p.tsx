@@ -4,7 +4,7 @@ import H5PContentSelect from '@/components/H5PContentSelect';
 import { EditorContextProvider } from 'h5p-player/src/components/hh5p/context/index';
 import Player from 'h5p-player/src/components/hh5p/player/index';
 import type { XAPIEvent } from 'h5p-player/src/types/index';
-import { Link } from 'umi';
+import { FormattedMessage, Link } from 'umi';
 
 export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
   const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
@@ -53,7 +53,7 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
                   setPreviewId(Number(id));
                 }}
               >
-                Preview
+                <FormattedMessage id="preview" />
               </Button>
             </Col>
           </Row>
@@ -63,9 +63,15 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
             message="H5P Info"
             description={
               <span>
-                To assign Interactive HTML5 element to lesson topic you need to{' '}
-                <Link to="/h5ps/new">create it first</Link> or use one{' '}
-                <Link to="/h5ps">from the list</Link> if it's already created. Press{' '}
+                <FormattedMessage id="h5p.description.first" />
+                <Link to="/h5ps/new">
+                  <FormattedMessage id="h5p.description.second" />
+                </Link>
+                <FormattedMessage id="h5p.description.third" />
+                <Link to="/h5ps">
+                  <FormattedMessage id="h5p.description.fourth" />
+                </Link>{' '}
+                <FormattedMessage id="h5p.description.fifth" />
                 <Button
                   size="small"
                   disabled={!id}
@@ -73,9 +79,9 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
                     setPreviewId(Number(id));
                   }}
                 >
-                  Preview
-                </Button>{' '}
-                button to see how does content looks like and see list of `XAPI` events.
+                  <FormattedMessage id="preview" />
+                </Button>
+                <FormattedMessage id="h5p.description.sixth" />
               </span>
             }
             type="info"

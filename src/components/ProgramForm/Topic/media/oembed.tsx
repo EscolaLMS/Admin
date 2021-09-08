@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Embed from 'react-tiny-oembed';
 import { Row, Col, Input, Button } from 'antd';
+import { FormattedMessage } from 'umi';
 
 export const Oembed: React.FC<{ text: string; onChange: (value: string) => void }> = ({
   text,
@@ -23,7 +24,9 @@ export const Oembed: React.FC<{ text: string; onChange: (value: string) => void 
             />
           </Col>
           <Col span={12}>
-            <Button onClick={() => setPreviewValue(currentValue)}>Preview</Button>
+            <Button onClick={() => setPreviewValue(currentValue)}>
+              <FormattedMessage id="preview" />
+            </Button>
           </Col>
         </Row>
       </Col>
