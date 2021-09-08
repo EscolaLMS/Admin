@@ -509,4 +509,21 @@ declare namespace API {
         type: 'EscolaLms\\Cart\\Models\\Course';
         value: API.Course;
       };
+
+  type ReportType =
+    | 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric'
+    | 'EscolaLms\\Reports\\Metrics\\CoursesPopularityMetric'
+    | 'EscolaLms\\Reports\\Metrics\\CoursesSecondsSpentMetric'
+    | 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric';
+
+  type ReportItem = {
+    label: string;
+    value: number;
+    measurable_id: number;
+    measurable_type: 'EscolaLms\\Courses\\Models\\Course' | 'EscolaLms\\Auth\\Models\\User';
+  };
+
+  type Report = ReportItem[];
+
+  type ReportList = DefaultResponse<Report>;
 }

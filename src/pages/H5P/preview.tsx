@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { useParams } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { EditorContextProvider, EditorContext } from 'h5p-player/src/components/hh5p/context/index';
-import Player from 'h5p-player/src/components/hh5p/player/index';
+import { EditorContextProvider, EditorContext, Player } from 'h5p-headless-player';
+
 import { Divider, List, Typography, Row, Col } from 'antd';
-import type { XAPIEvent } from 'h5p-player/src/types/index';
+import type { XAPIEvent } from 'h5p-headless-player';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
 

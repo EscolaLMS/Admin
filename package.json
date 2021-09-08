@@ -52,6 +52,7 @@
         "not ie <= 10"
     ],
     "dependencies": {
+        "@ant-design/charts": "^1.2.11",
         "@ant-design/icons": "^4.0.0",
         "@ant-design/pro-card": "^1.14.0",
         "@ant-design/pro-descriptions": "^1",
@@ -71,7 +72,7 @@
         "cypress": "^6.8.0",
         "cypress-localstorage-commands": "^1.4.1",
         "date-fns": "^2.23.0",
-        "h5p-player": "EscolaLMS/H5P-player#e36f56b",
+        "h5p-headless-player": "^0.1.21",
         "jest-esm-transformer": "^1.0.0",
         "lodash": "^4.17.11",
         "moment": "^2.25.3",
