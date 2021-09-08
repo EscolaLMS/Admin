@@ -7,8 +7,10 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
+import { useIntl, FormattedMessage } from 'umi';
 
 export default () => {
+  const intl = useIntl();
   // const params = useParams<{ course?: string; tab?: string }>();
   // const { course, tab = 'attributes' } = params;
   // const isNew = course === 'new';
@@ -72,39 +74,43 @@ export default () => {
   }
 
   return (
-    <PageContainer title={`User form`}>
+    <PageContainer title={<FormattedMessage id="my_profile" />}>
       <ProCard>
         <ProForm {...formProps}>
           <ProForm.Group>
             <ProFormText
               width="md"
               name="first_name"
-              label="first_name"
-              tooltip="first_name"
-              placeholder="first_name"
+              label={<FormattedMessage id="first_name" />}
+              tooltip={<FormattedMessage id="first_name" />}
+              placeholder={intl.formatMessage({
+                id: 'first_name',
+              })}
               required
             />
             <ProFormText
               width="md"
               name="last_name"
-              label="last_name"
-              tooltip="last_name"
-              placeholder="last_name"
+              label={<FormattedMessage id="last_name" />}
+              tooltip={<FormattedMessage id="last_name" />}
+              placeholder={intl.formatMessage({
+                id: 'last_name',
+              })}
               required
             />
           </ProForm.Group>
 
           <ProForm.Item
             name="bio"
-            label="bio"
-            tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
+            label={<FormattedMessage id="bio" />}
+            tooltip={<FormattedMessage id="bio_tooltip" />}
             valuePropName="value"
           >
             <WysiwygMarkdown directory={`users/wysiwyg`} />
           </ProForm.Item>
 
           <ProForm.Group>
-            <ProForm.Item name="avatar" label="avatar">
+            <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
               {data.path_avatar && (
                 <ResponsiveImage path={data.path_avatar} size={600} width={200} />
               )}

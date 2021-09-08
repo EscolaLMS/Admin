@@ -24,7 +24,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     sorter: true,
   },
   {
-    title: <FormattedMessage id="active" defaultMessage="active" />,
+    title: <FormattedMessage id="Active" defaultMessage="active" />,
     dataIndex: 'active',
     sorter: false,
     render: (_, record) => <Tag>{record.active ? 'Active' : 'Inactive'}</Tag>,
@@ -195,8 +195,8 @@ const TableList: React.FC = () => {
                   />
                 }
                 onConfirm={() => record.id && handleRemove(record.id)}
-                okText="Yes"
-                cancelText="No"
+                okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+                cancelText={<FormattedMessage id="no" defaultMessage="No" />}
               >
                 <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
                   <Button type="primary" icon={<DeleteOutlined />} danger></Button>

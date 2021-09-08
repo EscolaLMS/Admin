@@ -126,7 +126,7 @@ export const SettingsModalForm: React.FC<{
         <ProFormRadio.Group
           disabled={!isNew}
           name="type"
-          label="Radio.Group"
+          label={<FormattedMessage id="type" />}
           options={[
             {
               label: 'text',
@@ -152,8 +152,12 @@ export const SettingsModalForm: React.FC<{
         />
       </ProForm.Group>
       <div>
-        {type === 'text' && <ProFormText width="lg" name="value" label="value" />}
-        {type === 'json' && <ProFormTextArea width="lg" name="value" label="value" />}
+        {type === 'text' && (
+          <ProFormText width="lg" name="value" label={<FormattedMessage id="value" />} />
+        )}
+        {type === 'json' && (
+          <ProFormTextArea width="lg" name="value" label={<FormattedMessage id="value" />} />
+        )}
 
         {(type === 'file' || type === 'image') && (
           <ProForm.Item

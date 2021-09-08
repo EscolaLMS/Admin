@@ -3,6 +3,7 @@ import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
 import React, { useState, useRef } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
+import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
@@ -18,30 +19,54 @@ import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useEffect } from 'react';
 
-const handleUpdate = async (fields: API.Setting, id?: number) => {
-  const hide = message.loading('loading');
+const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
+  const hide = message.loading(
+    intl.formatMessage({
+      id: 'loading',
+    }),
+  );
   try {
     await (id && id !== -1 ? updateSettings(id, { ...fields }) : createSettings({ ...fields }));
     hide();
-    message.success('success');
+    message.success(
+      intl.formatMessage({
+        id: 'success',
+      }),
+    );
     return true;
   } catch (error) {
     hide();
-    message.error('error');
+    message.error(
+      intl.formatMessage({
+        id: 'error',
+      }),
+    );
     return false;
   }
 };
 
-const handleRemove = async (id: number) => {
-  const hide = message.loading('loading');
+const handleRemove = async (intl: IntlShape, id: number) => {
+  const hide = message.loading(
+    intl.formatMessage({
+      id: 'loading',
+    }),
+  );
   try {
     await deleteSettings(id);
     hide();
-    message.success('success');
+    message.success(
+      intl.formatMessage({
+        id: 'success',
+      }),
+    );
     return true;
   } catch (error) {
     hide();
-    message.error('error');
+    message.error(
+      intl.formatMessage({
+        id: 'error',
+      }),
+    );
     return false;
   }
 };
@@ -136,7 +161,7 @@ const TableList: React.FC = () => {
             />
           }
           onConfirm={async () => {
-            const success = await handleRemove(record.id);
+            const success = await handleRemove(intl, record.id);
             if (success) {
               setModalVisible(false);
               if (actionRef.current) {
@@ -144,8 +169,8 @@ const TableList: React.FC = () => {
               }
             }
           }}
-          okText="Yes"
-          cancelText="No"
+          okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+          cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
             <Button type="primary" icon={<DeleteOutlined />} danger></Button>
@@ -159,8 +184,7 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.Setting, API.PageParams & { group: string }>
         headerTitle={intl.formatMessage({
-          id: 'settings',
-          defaultMessage: 'settings',
+          id: 'menu.settings',
         })}
         actionRef={actionRef}
         rowKey="id"
@@ -175,7 +199,7 @@ const TableList: React.FC = () => {
               setModalVisible(-1);
             }}
           >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
+            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" />
           </Button>,
         ]}
         request={({ pageSize, current, group }) => {
@@ -205,7 +229,7 @@ const TableList: React.FC = () => {
           return value === false && setModalVisible(false);
         }}
         onFinish={async (value) => {
-          const success = await handleUpdate(value as API.Setting, Number(modalVisible));
+          const success = await handleUpdate(intl, value as API.Setting, Number(modalVisible));
           if (success) {
             setModalVisible(false);
             if (actionRef.current) {

@@ -64,7 +64,12 @@ const TableList: React.FC = () => {
       hideInSearch: false,
       sorter: true,
       valueType: 'select',
-      valueEnum: { new: 'new', paid: 'paid', cancelled: 'cancelled', failed: 'failed' },
+      valueEnum: {
+        new: <FormattedMessage id="new_payment" />,
+        paid: <FormattedMessage id="paid" />,
+        cancelled: <FormattedMessage id="cancelled" />,
+        failed: <FormattedMessage id="failed" />,
+      },
     },
 
     {

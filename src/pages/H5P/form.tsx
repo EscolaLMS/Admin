@@ -5,8 +5,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { EditorContextProvider, EditorContext } from 'h5p-player/src/components/hh5p/context/index';
 import Editor from 'h5p-player/src/components/hh5p/editor/index';
 import { Button } from 'antd';
+import { useIntl, FormattedMessage } from 'umi';
 
 const H5PForm: React.FC<{ id?: number | string }> = ({ id }) => {
+  const intl = useIntl();
   const { state } = useContext(EditorContext);
 
   const cid = `cid-${id}`;
@@ -19,11 +21,18 @@ const H5PForm: React.FC<{ id?: number | string }> = ({ id }) => {
 
   return (
     <PageContainer
-      title={`H5P. HTML5 Content ${title}`}
+      title={
+        <>
+          <FormattedMessage id="H5P_new_content_title" />
+          {` ${title}`}
+        </>
+      }
       extra={[
         id && (
           <Button type="primary">
-            <Link to={`/h5ps/preview/${id}`}>Preview</Link>
+            <Link to={`/h5ps/preview/${id}`}>
+              <FormattedMessage id="preview" />
+            </Link>
           </Button>
         ),
       ]}
@@ -32,11 +41,15 @@ const H5PForm: React.FC<{ id?: number | string }> = ({ id }) => {
           routes: [
             {
               path: 'h5ps',
-              breadcrumbName: 'HP5s',
+              breadcrumbName: intl.formatMessage({
+                id: 'H5P',
+              }),
             },
             {
               path: title,
-              breadcrumbName: 'Form',
+              breadcrumbName: intl.formatMessage({
+                id: 'form',
+              }),
             },
           ],
         },

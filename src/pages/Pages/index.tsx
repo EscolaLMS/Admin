@@ -75,8 +75,8 @@ const TableList: React.FC = () => {
               }
             }
           }}
-          okText="Yes"
-          cancelText="No"
+          okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+          cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
             <Button type="primary" icon={<DeleteOutlined />} danger></Button>

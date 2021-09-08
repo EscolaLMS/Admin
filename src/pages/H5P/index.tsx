@@ -39,7 +39,7 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.H5PContentListItem>[] = [
     {
-      title: <FormattedMessage id="id" defaultMessage="id" />,
+      title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       sorter: false,
       search: false,
@@ -58,14 +58,13 @@ const TableList: React.FC = () => {
               actionRef.current.reload();
             }
             message.success(
-              <FormattedMessage id="h5p_uploaded" defaultMessage="new H5P uploaded succesfuly" />,
+              <FormattedMessage id="H5P_uploaded" defaultMessage="new H5P uploaded successfully" />,
             );
           }}
           onError={() => message.error('error')}
         />,
       ],
     },
-
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
@@ -102,8 +101,8 @@ const TableList: React.FC = () => {
             />
           }
           onConfirm={() => record.id && handleRemove(record.id)}
-          okText="Yes"
-          cancelText="No"
+          okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+          cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
             <Button type="primary" icon={<DeleteOutlined />} danger></Button>
