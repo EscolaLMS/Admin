@@ -50,6 +50,7 @@ export default {
   userGroups: 'Grupy',
   new_user_group: 'Nowa Grupa',
   edit_user_group: 'Edycja Grupy',
+  addPersonToGroup: 'Wybierz osobę z listy aby dodać ją do grupy',
   Active: 'Aktywny',
   Inactive: 'Nieaktywny',
   slug: 'Slug',

@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin, List, Button, Divider } from 'antd';
+import { message, Spin, List, Button, Divider, Typography } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
@@ -56,7 +56,7 @@ export default () => {
 
   const handleAdd = useCallback(
     (user_id: number) => {
-      if (data?.users?.find((user) => user.id === user_id)) {
+      if (!user_id || data?.users?.find((user) => user.id === user_id)) {
         return;
       }
       addUserToGroup(Number(group), user_id).then((response) => {
@@ -131,7 +131,12 @@ export default () => {
 
           {group !== 'new' && (
             <React.Fragment>
-              <UserSelect onChange={(user_id) => handleAdd(Number(user_id))} />
+              <ProForm.Group>
+                <Typography>
+                  <FormattedMessage id="addPersonToGroup" defaultMessage="Add User to group" />
+                </Typography>
+                <UserSelect onChange={(user_id) => handleAdd(Number(user_id))} />
+              </ProForm.Group>
 
               <Divider />
 
