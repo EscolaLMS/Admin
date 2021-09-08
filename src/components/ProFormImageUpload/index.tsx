@@ -4,6 +4,7 @@ import { Image } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
+import { FormattedMessage } from 'umi';
 
 export const ProFormImageUpload: React.FC<{
   action: string;
@@ -12,7 +13,7 @@ export const ProFormImageUpload: React.FC<{
   getUploadedSrcField: (info: UploadChangeParam) => string;
 }> = ({ action, form_name, src_name, getUploadedSrcField }) => {
   return (
-    <ProForm.Group title="Image">
+    <ProForm.Group title={<FormattedMessage id="image" />}>
       <ProForm.Item shouldUpdate>
         {(form) => {
           return <Image width={200} src={form.getFieldValue(src_name)} />;

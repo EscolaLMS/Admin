@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Select } from 'antd';
 import { tagsUnique } from '@/services/escola-lms/tag';
+import { FormattedMessage } from 'umi';
 
 const { Option } = Select;
 
@@ -28,7 +29,7 @@ export const Tags: React.FC<{
       loading={tags.length === 0}
       showSearch
       style={{ width: 200 }}
-      placeholder="Select a Tag"
+      placeholder={<FormattedMessage id="select_tags" defaultMessage="Select tags" />}
       optionFilterProp="children"
       onChange={onChange}
       value={value}

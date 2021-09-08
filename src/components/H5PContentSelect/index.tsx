@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select } from 'antd';
-
+import { FormattedMessage } from 'umi';
 import { allContent } from '@/services/escola-lms/h5p';
 
 export const H5PContentSelect: React.FC<{
@@ -37,7 +37,7 @@ export const H5PContentSelect: React.FC<{
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
-      placeholder="Select a H5P Content"
+      placeholder={<FormattedMessage id="H5P_select_content" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

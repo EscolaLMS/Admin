@@ -4,6 +4,7 @@ import H5PContentSelect from '@/components/H5PContentSelect';
 import { EditorContextProvider, Player } from 'h5p-headless-player';
 import type { XAPIEvent } from 'h5p-headless-player';
 import UploadH5P from '@/components/H5P/upload';
+import { useIntl, FormattedMessage, Link } from 'umi';
 
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 
@@ -42,13 +43,16 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
   id,
   onChange,
 }) => {
+  const intl = useIntl();
   const [previewId, setPreviewId] = useState<number>();
   const [editId, setEditId] = useState<number | 'new'>();
   return (
     <React.Fragment>
       <Row gutter={8}>
         <Col span={4}>
-          <Typography>Reuse existing</Typography>
+          <Typography>
+            <FormattedMessage id="reuse_existing" />
+          </Typography>
         </Col>
 
         <Col span={12}>
@@ -67,11 +71,11 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
               setPreviewId(Number(id));
             }}
           >
-            Preview
+            <FormattedMessage id="preview" />
           </Button>
 
           <Button type="primary" onClick={() => setEditId(Number(id))}>
-            Edit
+            <FormattedMessage id="edit" />
           </Button>
         </Col>
       </Row>
@@ -80,7 +84,9 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
 
       <Row gutter={8}>
         <Col span={4}>
-          <Typography>Create new</Typography>
+          <Typography>
+            <FormattedMessage id="create_new" />
+          </Typography>
         </Col>
 
         <Col span={12}>
@@ -90,13 +96,19 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
                 onChange(String(data.id));
               }
             }}
-            onError={() => console.log('error')}
+            onError={() =>
+              console.log(
+                intl.formatMessage({
+                  id: 'error',
+                }),
+              )
+            }
           />
         </Col>
 
         <Col span={8}>
           <Button type="primary" onClick={() => setEditId('new')}>
-            Open new content editor
+            <FormattedMessage id="open_new_content_editor" />
           </Button>
         </Col>
       </Row>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Select, Spin } from 'antd';
 
 import { course as getCourses, getCourse } from '@/services/escola-lms/course';
+import { FormattedMessage } from 'umi';
 
 export const CourseSelect: React.FC<{
   state?: {
@@ -66,7 +67,7 @@ export const CourseSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder="Select a course"
+      placeholder={<FormattedMessage id="select_course" defaultMessage="Select a course" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

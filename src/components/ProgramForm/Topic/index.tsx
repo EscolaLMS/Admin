@@ -13,6 +13,7 @@ import { TopicType } from '@/services/escola-lms/course';
 import Oembed from './media/oembed';
 import H5PForm from './media/h5p';
 import TopicForm from './form';
+import { FormattedMessage } from 'umi';
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
@@ -22,13 +23,13 @@ const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
     <React.Fragment>
       <Divider type="vertical" />
       <Popconfirm
-        title="Are you sure to delete this topic?"
         onConfirm={onDelete}
-        okText="Yes"
-        cancelText="No"
+        title={<FormattedMessage id="deleteQuestion" />}
+        okText={<FormattedMessage id="yes" />}
+        cancelText={<FormattedMessage id="no" />}
       >
         <Button loading={loading} size="small" danger>
-          Delete
+          <FormattedMessage id="delete" />
         </Button>
       </Popconfirm>
     </React.Fragment>
@@ -125,7 +126,12 @@ export const Topic: React.FC<{
   return (
     <React.Fragment>
       <Card
-        title={`Topic: ${state.title}`}
+        title={
+          <>
+            <FormattedMessage id="topic" />
+            {`: ${state.title}`}
+          </>
+        }
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
           <Button
@@ -134,7 +140,7 @@ export const Topic: React.FC<{
             disabled={type === TopicType.Unselected}
             loading={loading}
           >
-            Save
+            <FormattedMessage id="save" />
           </Button>,
         ]}
       >
@@ -143,7 +149,10 @@ export const Topic: React.FC<{
           initialValues={state}
           onValuesChange={(values) => updateValues(values)}
         />
-        <Divider>Select type of Topic to continue...</Divider>
+        <Divider>
+          <FormattedMessage id="select_type_topic" />
+          ...
+        </Divider>
         <Radio.Group
           name="radiogroup"
           value={type}
@@ -156,7 +165,7 @@ export const Topic: React.FC<{
           ))}
         </Radio.Group>
         <Divider />
-        {!type && <Alert message="Select type of Topic to continue..." type="info" />}
+        {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
         {type && type === TopicType.RichText && (
           <RichTextEditor
             directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}

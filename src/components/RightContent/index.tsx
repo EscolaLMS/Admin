@@ -5,6 +5,7 @@ import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
+import { useIntl } from 'umi';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -15,6 +16,7 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight: React.FC = () => {
+  const intl = useIntl();
   const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
@@ -31,8 +33,9 @@ const GlobalHeaderRight: React.FC = () => {
     <Space className={className}>
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
-        placeholder="umi ui"
-        defaultValue="umi ui"
+        placeholder={intl.formatMessage({
+          id: 'search',
+        })}
         options={[
           { label: <a href="https://umijs.org/zh/guide/umi-ui.html">umi ui</a>, value: 'umi ui' },
           {

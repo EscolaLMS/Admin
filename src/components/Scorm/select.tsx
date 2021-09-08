@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
-import { Link } from 'umi';
-
+import { FormattedMessage, Link } from 'umi';
 import { scorms as fetchScorms } from '@/services/escola-lms/scorm';
 import { useCallback } from 'react';
 
@@ -53,7 +52,7 @@ export const ScormSelect: React.FC<{
       onChange={onChange}
       showSearch
       onSearch={onSearch}
-      placeholder="Select Scorm Package"
+      placeholder={<FormattedMessage id="select_scorm_package" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -69,7 +68,7 @@ export const ScormSelect: React.FC<{
                 {sco.title}
                 {'  '}
                 <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
-                  preview
+                  <FormattedMessage id="preview" />
                 </Link>
               </React.Fragment>
             ))}

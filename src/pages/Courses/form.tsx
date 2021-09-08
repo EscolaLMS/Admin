@@ -13,6 +13,7 @@ import TagsInput from '@/components/TagsInput';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProgramForm from '@/components/ProgramForm';
 import ScormSelector from '@/components/Scorm';
+import { useIntl, FormattedMessage } from 'umi';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -21,6 +22,7 @@ const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.t
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
+  const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
 
@@ -83,21 +85,33 @@ export default () => {
 
   return (
     <PageContainer
-      title={`Course ${data.title || 'new'} ${tab}`}
+      title={
+        <>
+          <FormattedMessage id={data.title ? 'course' : 'new_course'} />
+          {', '}
+          <FormattedMessage id={tab} />
+        </>
+      }
       header={{
         breadcrumb: {
           routes: [
             {
               path: 'courses',
-              breadcrumbName: 'Courses',
+              breadcrumbName: intl.formatMessage({
+                id: 'menu.Courses',
+              }),
             },
             {
               path: String(course),
-              breadcrumbName: 'Form',
+              breadcrumbName: intl.formatMessage({
+                id: 'form',
+              }),
             },
             {
               path: String(tab),
-              breadcrumbName: String(tab),
+              breadcrumbName: intl.formatMessage({
+                id: String(tab),
+              }),
             },
           ],
         },
@@ -110,7 +124,7 @@ export default () => {
           onChange: (key) => history.push(`/courses/${course}/${key}`),
         }}
       >
-        <ProCard.TabPane key="attributes" tab="Attributes">
+        <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
@@ -121,42 +135,57 @@ export default () => {
               <ProFormText
                 width="md"
                 name="title"
-                label="Title"
-                tooltip="Title"
-                placeholder="Title"
+                label={<FormattedMessage id="title" />}
+                tooltip={<FormattedMessage id="title" />}
+                placeholder={intl.formatMessage({
+                  id: 'title',
+                  defaultMessage: 'title',
+                })}
                 required
               />
               <ProFormText
                 width="md"
                 name="subtitle"
-                label="Subtitle"
-                tooltip="Subtitle"
-                placeholder="Subtitle"
+                label={<FormattedMessage id="subtitle" />}
+                tooltip={<FormattedMessage id="subtitle" />}
+                placeholder={intl.formatMessage({
+                  id: 'subtitle',
+                  defaultMessage: 'subtitle',
+                })}
               />
               <ProFormText
                 width="sm"
                 name="language"
-                label="Language"
-                tooltip="Language"
-                placeholder="Language"
+                label={<FormattedMessage id="language" />}
+                tooltip={<FormattedMessage id="language" />}
+                placeholder={intl.formatMessage({
+                  id: 'language',
+                  defaultMessage: 'language',
+                })}
               />
-              <ProFormSwitch name="active" label="Is Active?" />
+              <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
             </ProForm.Group>
 
             <ProForm.Group>
               <ProFormText
                 width="md"
                 name="duration"
-                label="Duration"
-                tooltip="duration"
-                placeholder="duration"
+                label={<FormattedMessage id="duration" />}
+                tooltip={<FormattedMessage id="duration" />}
+                placeholder={intl.formatMessage({
+                  id: 'duration',
+                  defaultMessage: 'duration',
+                })}
               />
               <ProFormDigit
                 width="md"
                 name="base_price"
-                label="Base Price"
-                tooltip="Base Price. Use 0 for free course"
-                placeholder="Base Price"
+                label={<FormattedMessage id="base_price" />}
+                tooltip={<FormattedMessage id="base_price_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'base_price',
+                  defaultMessage: 'base_price',
+                })}
                 min={0}
                 max={9999}
                 fieldProps={{ step: 1 }}
@@ -165,20 +194,27 @@ export default () => {
               <ProFormText
                 width="sm"
                 name="level"
-                label="Level"
-                tooltip="Level"
-                placeholder="Level"
+                label={<FormattedMessage id="level" />}
+                tooltip={<FormattedMessage id="level" />}
+                placeholder={intl.formatMessage({
+                  id: 'level',
+                  defaultMessage: 'level',
+                })}
               />
 
-              <ProForm.Item name="author_id" label="Author/Tutor" valuePropName="value">
+              <ProForm.Item
+                name="author_id"
+                label={<FormattedMessage id="author_tutor" />}
+                valuePropName="value"
+              >
                 <UserSelect />
               </ProForm.Item>
             </ProForm.Group>
 
             <ProForm.Item
               name="summary"
-              label="Summary"
-              tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
+              label={<FormattedMessage id="summary" />}
+              tooltip={<FormattedMessage id="summary_tooltip" />}
               valuePropName="value"
             >
               <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
@@ -186,8 +222,8 @@ export default () => {
 
             <ProForm.Item
               name="description"
-              label="Description"
-              tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
+              label={<FormattedMessage id="description" />}
+              tooltip={<FormattedMessage id="description_tooltip" />}
               valuePropName="value"
             >
               <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
@@ -195,7 +231,7 @@ export default () => {
           </ProForm>
         </ProCard.TabPane>
         {!isNew && (
-          <ProCard.TabPane key="media" tab="Media">
+          <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <Row>
                 <Col span={12}>
@@ -219,18 +255,26 @@ export default () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="categories" tab="Categories & Tags">
+          <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories_tags" />}>
             <Row>
               <Col span={12}>
                 <ProForm {...formProps}>
-                  <ProForm.Item label="Categories" name="categories" valuePropName="value">
+                  <ProForm.Item
+                    label={<FormattedMessage id="categories" />}
+                    name="categories"
+                    valuePropName="value"
+                  >
                     <CategoryCheckboxTree />
                   </ProForm.Item>
                 </ProForm>
               </Col>
               <Col span={12}>
                 <ProForm {...formProps}>
-                  <ProForm.Item label="Tags" name="tags" valuePropName="value">
+                  <ProForm.Item
+                    label={<FormattedMessage id="tags" />}
+                    name="tags"
+                    valuePropName="value"
+                  >
                     <TagsInput />
                   </ProForm.Item>
                 </ProForm>
@@ -239,12 +283,12 @@ export default () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="program" tab="Program">
+          <ProCard.TabPane key="program" tab={<FormattedMessage id="program" />}>
             {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="scorm" tab="Scorm">
+          <ProCard.TabPane key="scorm" tab={<FormattedMessage id="scorm" />}>
             <ProForm {...formProps}>
               <ProForm.Item label="Scorm" name="scorm_id" valuePropName="value">
                 <ScormSelector />

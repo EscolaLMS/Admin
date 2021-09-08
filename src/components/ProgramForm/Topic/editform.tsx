@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
+import { useIntl, FormattedMessage } from 'umi';
 
 type Values = Record<string, any>;
 
@@ -12,6 +13,7 @@ export const TopicEditForm: React.FC<{
   const onFinish = (values: Values) => {
     return onSubmit && onSubmit(values);
   };
+  const intl = useIntl();
 
   return (
     <Form
@@ -24,7 +26,8 @@ export const TopicEditForm: React.FC<{
       onValuesChange={(values) => onChange && onChange(values)}
     >
       <Form.Item
-        label="Title"
+        label={<FormattedMessage id="title" />}
+        tooltip={<FormattedMessage id="title" />}
         name="title"
         rules={[
           () => ({
@@ -32,7 +35,12 @@ export const TopicEditForm: React.FC<{
               if (value.length <= 255) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('Too many characters (max 255)'));
+              return Promise.reject(
+                new Error(`
+                  ${intl.formatMessage({
+                    id: 'too_many_chars',
+                  })}, max 255`),
+              );
             },
           }),
         ]}

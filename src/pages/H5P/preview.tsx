@@ -6,10 +6,12 @@ import { EditorContextProvider, EditorContext, Player } from 'h5p-headless-playe
 import { Divider, List, Typography, Row, Col } from 'antd';
 import type { XAPIEvent } from 'h5p-headless-player';
 import ProCard from '@ant-design/pro-card';
+import { useIntl, FormattedMessage } from 'umi';
 
 import './preview.css';
 
 const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
+  const intl = useIntl();
   const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
 
   const { state } = useContext(EditorContext);
@@ -24,17 +26,26 @@ const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
 
   return (
     <PageContainer
-      title={`H5P. HTML5 Content Preview ${title}`}
+      title={
+        <>
+          <FormattedMessage id="H5P_preview_title" />
+          {` ${title}`}
+        </>
+      }
       header={{
         breadcrumb: {
           routes: [
             {
               path: 'h5ps',
-              breadcrumbName: 'HP5s',
+              breadcrumbName: intl.formatMessage({
+                id: 'H5P',
+              }),
             },
             {
               path: title,
-              breadcrumbName: 'Preview',
+              breadcrumbName: intl.formatMessage({
+                id: 'preview',
+              }),
             },
           ],
         },

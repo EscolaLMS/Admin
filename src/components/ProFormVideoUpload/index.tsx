@@ -3,6 +3,7 @@ import ProForm from '@ant-design/pro-form';
 import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import ReactPlayer from 'react-player';
+import { FormattedMessage } from 'umi';
 
 export const ProFormVideoUpload: React.FC<{
   action: string;
@@ -11,7 +12,7 @@ export const ProFormVideoUpload: React.FC<{
   getUploadedSrcField: (info: UploadChangeParam) => string;
 }> = ({ action, form_name, src_name, getUploadedSrcField }) => {
   return (
-    <ProForm.Group title="Video">
+    <ProForm.Group title={<FormattedMessage id="video" />}>
       <ProForm.Item shouldUpdate>
         {(form) => {
           return <ReactPlayer url={form.getFieldValue(src_name)} controls />;

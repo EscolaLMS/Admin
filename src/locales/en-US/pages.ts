@@ -24,6 +24,7 @@ export default {
   'pages.welcome.advancedComponent': 'Advanced Component',
   'pages.welcome.link': 'Welcome',
   'pages.welcome.advancedLayout': 'Advanced Layout',
+  'pages.welcome.content': 'Hello and welcome to EscolaLMS!',
   'pages.welcome.alertMessage': 'Faster and stronger heavy-duty components have been released.',
   'pages.admin.subPage.title': 'This page can only be viewed by Admin',
   'pages.admin.subPage.alertMessage':
@@ -54,7 +55,7 @@ export default {
   'pages.searchTable.nameStatus.abnormal': 'abnormal',
   'pages.searchTable.titleUpdatedAt': 'Last Scheduled at',
   'pages.searchTable.exception': 'Please enter the reason for the exception!',
-  'pages.searchTable.titleOption': 'Option',
+  'pages.searchTable.titleOption': 'Options',
   'pages.searchTable.config': 'Configuration',
   'pages.searchTable.subscribeAlert': 'Subscribe to alerts',
   'pages.searchTable.title': 'Enquiry Form',
@@ -63,6 +64,8 @@ export default {
   'pages.searchTable.item': 'item',
   'pages.searchTable.totalServiceCalls': 'Total Number of Service Calls',
   'pages.searchTable.tenThousand': '0000',
-  'pages.searchTable.batchDeletion': 'bacth deletion',
+  'pages.searchTable.batchDeletion': 'batch deletion',
   'pages.searchTable.batchApproval': 'batch approval',
+  'pages.files.content': 'Files list',
+  'pages.files.filesBrowser': 'Current directory is:',
 };

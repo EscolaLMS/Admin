@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Popconfirm } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
-
+import { useIntl, FormattedMessage } from 'umi';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 
 export const LessonForm: React.FC<{
@@ -12,6 +12,7 @@ export const LessonForm: React.FC<{
   initialValues: any;
   loading: boolean;
 }> = ({ onFinish, onValuesChange, onDelete, initialValues, lesson, loading = false }) => {
+  const intl = useIntl();
   return (
     <ProForm
       submitter={{
@@ -25,18 +26,18 @@ export const LessonForm: React.FC<{
               onClick={() => props.form?.submit()}
               {...props.submitButtonProps}
             >
-              {lesson.isNew ? 'Create' : 'Save'}
+              {lesson.isNew ? <FormattedMessage id="create" /> : <FormattedMessage id="save" />}
             </Button>,
 
             <Popconfirm
               key="delete"
-              title="Are you sure to delete this lesson?"
               onConfirm={onDelete}
-              okText="Yes"
-              cancelText="No"
+              title={<FormattedMessage id="deleteQuestion" />}
+              okText={<FormattedMessage id="yes" />}
+              cancelText={<FormattedMessage id="no" />}
             >
               <Button type="primary" danger {...props.submitButtonProps} loading={loading}>
-                Delete
+                <FormattedMessage id="delete" />
               </Button>
             </Popconfirm>,
           ];
@@ -50,25 +51,29 @@ export const LessonForm: React.FC<{
         <ProFormText
           width="md"
           name="title"
-          label="Title"
-          tooltip="Title"
-          placeholder="Title"
+          label={<FormattedMessage id="title" />}
+          tooltip={<FormattedMessage id="title" />}
+          placeholder={intl.formatMessage({
+            id: 'title',
+          })}
           required
         />
         <ProFormText
           width="sm"
           name="duration"
-          label="Duration"
-          tooltip="duration"
-          placeholder="duration"
+          label={<FormattedMessage id="duration" />}
+          tooltip={<FormattedMessage id="duration" />}
+          placeholder={intl.formatMessage({
+            id: 'duration',
+          })}
         />
-        <ProFormSwitch name="active" label="Is Active?" />
+        <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
       </ProForm.Group>
       <ProForm.Group>
         <ProForm.Item
           name="summary"
-          label="Summary"
-          tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
+          label={<FormattedMessage id="summary" />}
+          tooltip={<FormattedMessage id="summary_tooltip" />}
           valuePropName="value"
         >
           <WysiwygMarkdown directory={`course/${lesson.course_id}/lesson/${lesson.id}/wysiwyg`} />

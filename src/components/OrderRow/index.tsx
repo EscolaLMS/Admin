@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from 'antd';
-
+import { FormattedMessage } from 'umi';
 import { order as fetchOrder } from '@/services/escola-lms/orders';
 
 export const OrderRow: React.FC<{
@@ -29,7 +29,8 @@ export const OrderRow: React.FC<{
 
   return (
     <Button loading={loading} onClick={fetch} size="small">
-      Order ID: {id}
+      <FormattedMessage id="order_id" />
+      {id}
     </Button>
   );
 };
