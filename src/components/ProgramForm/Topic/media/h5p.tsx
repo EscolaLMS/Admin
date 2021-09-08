@@ -4,7 +4,7 @@ import H5PContentSelect from '@/components/H5PContentSelect';
 import { EditorContextProvider, Player } from 'h5p-headless-player';
 import type { XAPIEvent } from 'h5p-headless-player';
 import UploadH5P from '@/components/H5P/upload';
-import { FormattedMessage, Link } from 'umi';
+import { useIntl, FormattedMessage, Link } from 'umi';
 
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 
@@ -43,6 +43,7 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
   id,
   onChange,
 }) => {
+  const intl = useIntl();
   const [previewId, setPreviewId] = useState<number>();
   const [editId, setEditId] = useState<number | 'new'>();
   return (
@@ -95,7 +96,13 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
                 onChange(String(data.id));
               }
             }}
-            onError={() => console.log('error')}
+            onError={() =>
+              console.log(
+                intl.formatMessage({
+                  id: 'error',
+                }),
+              )
+            }
           />
         </Col>
 

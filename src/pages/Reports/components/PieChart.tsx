@@ -60,7 +60,7 @@ const PieChart: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
 
   return (
     <ProCard
-      title={<FormattedMessage id={metric} defaultMessage={metric.split('\\').pop()} />}
+      title={<FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />}
       headerBordered
     >
       {state.mode === 'loading' && <Spin />}

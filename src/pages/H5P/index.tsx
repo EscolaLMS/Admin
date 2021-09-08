@@ -61,7 +61,7 @@ const TableList: React.FC = () => {
               <FormattedMessage id="H5P_uploaded" defaultMessage="new H5P uploaded successfully" />,
             );
           }}
-          onError={() => message.error('error')}
+          onError={() => message.error(<FormattedMessage id="error" defaultMessage="error" />)}
         />,
       ],
     },
