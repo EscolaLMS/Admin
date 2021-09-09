@@ -133,7 +133,7 @@ export default () => {
             <React.Fragment>
               <ProForm.Group>
                 <Typography>
-                  <FormattedMessage id="addPersonToGroup" defaultMessage="Add User to group" />
+                  <FormattedMessage id="add_person_to_group" defaultMessage="Add User to group" />
                 </Typography>
                 <UserSelect onChange={(user_id) => handleAdd(Number(user_id))} />
               </ProForm.Group>

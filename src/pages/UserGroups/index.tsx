@@ -32,9 +32,9 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.UserGroup, API.PageParams & { search: string; role: string }>
+      <ProTable<API.UserGroup, API.PageParams>
         headerTitle={intl.formatMessage({
-          id: 'userGroups',
+          id: 'user_groups',
           defaultMessage: 'User Groups',
         })}
         actionRef={actionRef}
@@ -49,10 +49,8 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, search, role }) => {
-          const requestRole = role && role.toString() === 'all' ? undefined : role;
-
-          return userGroups({ pageSize, current, search, role: requestRole }).then((response) => {
+        request={({ pageSize, current }) => {
+          return userGroups({ pageSize, current }).then((response) => {
             if (response.success) {
               return {
                 data: response.data,
