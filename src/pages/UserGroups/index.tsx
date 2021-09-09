@@ -1,4 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
@@ -6,7 +5,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { userGroups, deleteUserGroup } from '@/services/escola-lms/user_groups';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 const handleRemove = async (id: number) => {
   await deleteUserGroup(id);
