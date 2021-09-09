@@ -11,9 +11,8 @@ import {
 } from '@/services/escola-lms/user_groups';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { useParams, history } from 'umi';
+import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import UserSelect from '@/components/UserSelect';
