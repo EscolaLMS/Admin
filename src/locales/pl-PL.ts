@@ -47,6 +47,7 @@ export default {
   'menu.settings': 'Opcje',
   'menu.reports': 'Raporty',
   'menu.User Groups': 'Grupy',
+  access: 'Dostęp',
   user_groups: 'Grupy',
   new_user_group: 'Nowa Grupa',
   edit_user_group: 'Edycja Grupy',

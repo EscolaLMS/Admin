@@ -543,6 +543,11 @@ declare namespace API {
     users: UserItem[];
   };
 
+  type CourseAccess = {
+    users: UserItem[] | number[];
+    groups: UserGroup[] | number[];
+  };
+
   type UserGroups = UserGroup[];
 
   type UserGroupRow = DefaultResponse<UserGroup>;
@@ -550,4 +555,6 @@ declare namespace API {
   type UserGroupAddRow = DefaultResponse<UserItem[]>;
 
   type UserGroupList = DefaultMetaResponse<UserGroup>;
+
+  type CourseAccessList = DefaultResponse<CourseAccess>;
 }

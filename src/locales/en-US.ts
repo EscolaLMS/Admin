@@ -31,6 +31,7 @@ export default {
   H5Ps: 'H5Ps',
   new: 'new',
   library: 'Library',
+  access: 'Access',
   'menu.Courses': 'Courses',
   'menu.Users': 'Users',
   'menu.User Form': 'Users',
