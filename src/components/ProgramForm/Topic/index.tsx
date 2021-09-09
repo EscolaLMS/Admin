@@ -174,7 +174,10 @@ export const Topic: React.FC<{
           />
         )}
         {type &&
-          (type === TopicType.Video || type === TopicType.Audio || type === TopicType.Image) && (
+          (type === TopicType.Video ||
+            type === TopicType.Audio ||
+            type === TopicType.Image ||
+            type === TopicType.PDF) && (
             <MediaUpload
               type={type}
               topic={topic}

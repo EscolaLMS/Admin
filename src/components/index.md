@@ -44,58 +44,6 @@ export default () => {
 };
 ```
 
-## HeaderSearch
-
-Input
-
-```tsx
-/**
- * background: '#f0f2f5'
- */
-import { Button, Menu } from 'antd';
-import React from 'react';
-import HeaderSearch from '@/components/HeaderSearch';
-
-export default () => {
-  return (
-    <HeaderSearch
-      placeholder="search placeholder"
-      defaultValue="umi ui"
-      options={[
-        { label: 'Escola LMS', value: 'Escola LMS' },
-        {
-          label: 'Ant Design',
-          value: 'Ant Design',
-        },
-        {
-          label: 'Pro Table',
-          value: 'Pro Table',
-        },
-        {
-          label: 'Pro Layout',
-          value: 'Pro Layout',
-        },
-      ]}
-      onSearch={(value) => {
-        console.log('input', value);
-      }}
-    />
-  );
-};
-```
-
-### API
-
-| Parameters      | Description | Type                         | defaults |
-| --------------- | ----------- | ---------------------------- | -------- |
-| value           | lorem       | `string`                     | -        |
-| onChange        | lorem       | `(value?: string) => void`   | -        |
-| onSearch        | lorem       | `(value?: string) => void`   | -        |
-| options         | lorem       | `{label,value}[]`            | -        |
-| defaultVisible  | lorem       | `boolean`                    | -        |
-| visible         | lorem       | `boolean`                    | -        |
-| onVisibleChange | lorem       | `(visible: boolean) => void` | -        |
-
 ## NoticeIcon
 
 ```tsx
