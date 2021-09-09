@@ -7,6 +7,8 @@ import settings from './pl-PL/settings';
 import pages from './pl-PL/pages';
 
 export default {
+  select_user_group: 'Wybierz Grupę',
+  groups: 'Grupy',
   'navBar.lang': 'Języki',
   'layout.user.link.help': 'Pomoc',
   'layout.user.link.privacy': 'Prywatność',

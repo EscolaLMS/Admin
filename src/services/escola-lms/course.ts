@@ -197,3 +197,18 @@ export async function access(
     ...(options || {}),
   });
 }
+
+export async function setAccess(
+  id: number,
+  body: API.CourseAccess,
+  options?: { [key: string]: any },
+) {
+  return request<API.CourseAccessList>(`/api/admin/courses/${id}/access/set`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
