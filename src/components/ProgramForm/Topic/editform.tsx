@@ -47,48 +47,6 @@ export const TopicEditForm: React.FC<{
       >
         <Input />
       </Form.Item>
-
-      {/* <Form.Item label="Image" name="image">
-        <Upload
-          onRemove={() => setFileList([])}
-          beforeUpload={onBeforeUpload}
-          listType="picture"
-          fileList={fileList}
-          onFileChange
-        >
-          <Button icon={<UploadOutlined />}>Click to upload</Button>
-        </Upload>
-      </Form.Item> */}
-
-      {/*
-      <Form.Item
-        label="Time Limit"
-        name="duration"
-        rules={[
-          {
-            pattern: /^[0-9][0-9]:[0-9][0-9]$/,
-            message: 'Please enter a valid time format HH:MM',
-          },
-        ]}
-      >
-        <Input maxLength={5} placeholder="HH:MM" />
-      </Form.Item>
-
-      <Form.Item label="Description" name="description">
-        <Input.TextArea />
-      </Form.Item>
-
-      <Form.Item name="publish" valuePropName="checked">
-        <Checkbox>Is Published?</Checkbox>
-      </Form.Item>
-
-
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Save topic data
-        </Button>
-      </Form.Item>
-      */}
     </Form>
   );
 };

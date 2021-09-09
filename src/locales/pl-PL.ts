@@ -52,6 +52,7 @@ export default {
   edit_user_group: 'Edycja Grupy',
   add_person_to_group: 'Wybierz osobę z listy aby dodać ją do grupy',
   Active: 'Aktywny',
+  active: 'Aktywny',
   Inactive: 'Nieaktywny',
   slug: 'Slug',
   name: 'Nazwa',
