@@ -7,6 +7,7 @@ import settings from './pl-PL/settings';
 import pages from './pl-PL/pages';
 
 export default {
+  file_resources: 'Załączniki (pliki)',
   select_user_group: 'Wybierz Grupę',
   groups: 'Grupy',
   'navBar.lang': 'Języki',
@@ -57,6 +58,7 @@ export default {
   Active: 'Aktywny',
   active: 'Aktywny',
   Inactive: 'Nieaktywny',
+  inactive: 'Nieaktywny',
   slug: 'Slug',
   name: 'Nazwa',
   ID: 'ID',
