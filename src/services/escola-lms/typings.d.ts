@@ -557,4 +557,16 @@ declare namespace API {
   type UserGroupList = DefaultMetaResponse<UserGroup>;
 
   type CourseAccessList = DefaultResponse<CourseAccess>;
+
+  type Resource = {
+    id: number;
+    name: string;
+    path: string;
+    topic_id: number;
+    url: string;
+  };
+
+  type ResourceList = DefaultResponse<Resource[]>;
+
+  type ResourceRow = DefaultResponse<Resource>;
 }

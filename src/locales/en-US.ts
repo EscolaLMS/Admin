@@ -7,6 +7,7 @@ import settings from './en-US/settings';
 import pages from './en-US/pages';
 
 export default {
+  file_resources: 'File resources',
   select_user_group: 'Select User Group',
   groups: 'Groups',
   'navBar.lang': 'Languages',
@@ -56,6 +57,8 @@ export default {
   add_person_to_group: 'Add person to group',
   Active: 'Active',
   Inactive: 'Inactive',
+  active: 'Active',
+  inactive: 'Inactive',
   slug: 'Slug',
   name: 'Name',
   ID: 'ID',

@@ -212,3 +212,27 @@ export async function setAccess(
     ...(options || {}),
   });
 }
+
+export async function resources(topicId: number, options?: { [key: string]: any }) {
+  return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+export async function deleteResource(
+  topicId: number,
+  resourceId: number,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources/${resourceId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
