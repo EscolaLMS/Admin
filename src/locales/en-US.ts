@@ -7,6 +7,8 @@ import settings from './en-US/settings';
 import pages from './en-US/pages';
 
 export default {
+  select_user_group: 'Select User Group',
+  groups: 'Groups',
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',
@@ -31,6 +33,7 @@ export default {
   H5Ps: 'H5Ps',
   new: 'new',
   library: 'Library',
+  access: 'Access',
   'menu.Courses': 'Courses',
   'menu.Users': 'Users',
   'menu.User Form': 'Users',
@@ -46,6 +49,7 @@ export default {
   'menu.SCORMs': 'SCORMs',
   'menu.settings': 'Settings',
   'menu.reports': 'Reports',
+  'menu.User Groups': 'User Groups',
   user_groups: 'User Groups',
   new_user_group: 'New User Group',
   edit_user_group: 'Edit User Group',

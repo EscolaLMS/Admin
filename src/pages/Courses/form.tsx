@@ -14,6 +14,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProgramForm from '@/components/ProgramForm';
 import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
+import CourseAccess from './components/CourseAccess';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -26,7 +27,7 @@ export default () => {
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
 
-  const [data, setData] = useState<API.Course>();
+  const [data, setData] = useState<Partial<API.Course>>();
 
   useEffect(() => {
     if (course === 'new') {
@@ -294,6 +295,12 @@ export default () => {
                 <ScormSelector />
               </ProForm.Item>
             </ProForm>
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="access" tab={<FormattedMessage id="access" />}>
+            {course && <CourseAccess id={course} />}
           </ProCard.TabPane>
         )}
       </ProCard>
