@@ -8,7 +8,6 @@ export async function userGroups(
     current?: number;
     pageSize?: number;
     search?: string;
-    role?: string;
   },
   options?: { [key: string]: any },
 ) {

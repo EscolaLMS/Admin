@@ -182,3 +182,33 @@ export async function removeTopic(id: number) {
     method: 'DELETE',
   });
 }
+
+export async function access(
+  id: number,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.CourseAccessList>(`/api/admin/courses/${id}/access`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function setAccess(
+  id: number,
+  body: API.CourseAccess,
+  options?: { [key: string]: any },
+) {
+  return request<API.CourseAccessList>(`/api/admin/courses/${id}/access/set`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
