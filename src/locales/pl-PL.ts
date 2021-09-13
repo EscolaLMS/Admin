@@ -148,6 +148,10 @@ export default {
   description: 'Opis',
   description_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
+  content: 'Treść',
+  slug_tooltip: 'SLUG to część adresu URL pod jakim dostępna będzie strona',
+  content_tooltip:
+    'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
   attributes: 'Atrybuty',
   new_course: 'Nowy kurs',
   media: 'Media',
@@ -161,6 +165,9 @@ export default {
   lesson: 'Lekcja',
   topic: 'Temat',
   topics: 'Tematy',
+  pages: 'Strony',
+  new_page: 'Nowa strona tekstowa',
+  edit_page: 'Edycja strony tekstowej',
   add_new_topic: 'Dodaj nowy temat',
   no_topics: 'Brak tematów w tej lekcji',
   create: 'Utwórz',

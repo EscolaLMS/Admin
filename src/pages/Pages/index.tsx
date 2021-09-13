@@ -1,33 +1,27 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import { Button, Tooltip, Popconfirm, message } from 'antd';
+import React, { useRef } from 'react';
+import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-import { pages } from '@/services/escola-lms/pages';
+import { pages, deletePage } from '@/services/escola-lms/pages';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-
-/*
-const handleUpdate = async (fields: API.PageListItem, id?: number) => {
-  console.log('handleUpdate', fields, id);
-  return true;
-};
-*/
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 const handleRemove = async (id: number) => {
-  console.log('handleRemove', id);
-  return true;
+  return deletePage(id).then((response) => {
+    if (response.success) {
+      message.success(response.message);
+    }
+    return true;
+  });
 };
 
 const TableList: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<number | false>(false);
-  const [data, setData] = useState<API.PageListItem[]>([]);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  console.log('outupt', data, modalVisible);
 
   const columns: ProColumns<API.PageListItem>[] = [
     {
@@ -36,14 +30,26 @@ const TableList: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="name" defaultMessage="name" />,
-      dataIndex: 'total',
-      hideInSearch: false,
+      title: <FormattedMessage id="title" defaultMessage="title" />,
+      dataIndex: 'title',
+      hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="user" defaultMessage="user" />,
-      dataIndex: 'user_id',
-      hideInSearch: false,
+      title: <FormattedMessage id="slug" defaultMessage="slug" />,
+      dataIndex: 'slug',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="author" defaultMessage="author" />,
+      dataIndex: 'author_id',
+      hideInSearch: true,
+      render: (_, record) => (
+        <TypeButtonDrawer
+          key={'user'}
+          type="EscolaLms\Core\Models\User"
+          type_id={record.author_id}
+        />
+      ),
     },
     {
       hideInSearch: true,
@@ -51,13 +57,11 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => setModalVisible(record.id)}
-          ></Button>
-        </Tooltip>,
+        <Link to={`/pages/${record.id}`} key="edit">
+          <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+            <Button type="primary" icon={<EditOutlined />}></Button>
+          </Tooltip>
+        </Link>,
         <Popconfirm
           key="delete"
           title={
@@ -69,14 +73,13 @@ const TableList: React.FC = () => {
           onConfirm={async () => {
             const success = await handleRemove(record.id);
             if (success) {
-              setModalVisible(false);
               if (actionRef.current) {
                 actionRef.current.reload();
               }
             }
           }}
-          okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
-          cancelText={<FormattedMessage id="no" defaultMessage="No" />}
+          okText={<FormattedMessage id="yes" />}
+          cancelText={<FormattedMessage id="no" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
             <Button type="primary" icon={<DeleteOutlined />} danger></Button>
@@ -90,8 +93,8 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.PageListItem, API.PageParams>
         headerTitle={intl.formatMessage({
-          id: 'orders',
-          defaultMessage: 'orders',
+          id: 'pages',
+          defaultMessage: 'pages',
         })}
         actionRef={actionRef}
         rowKey="id"
@@ -99,20 +102,25 @@ const TableList: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setModalVisible(-1);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
-          </Button>,
+          <Link to="/pages/new">
+            <Button type="primary" key="primary">
+              <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+            </Button>
+          </Link>,
         ]}
-        request={() => {
-          return pages().then((records) => {
-            setData(records.data);
-            return records;
+        request={({ pageSize, current }) => {
+          return pages({
+            pageSize,
+            current,
+          }).then((response) => {
+            if (response.success) {
+              return {
+                data: response.data,
+                total: response.meta.total,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={columns}
