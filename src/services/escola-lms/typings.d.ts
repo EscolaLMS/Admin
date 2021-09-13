@@ -134,6 +134,8 @@ declare namespace API {
 
   type UserRow = DefaultResponse<UserItem>;
 
+  type UserRowPassword = DefaultResponse<UserChangePassword>;
+
   type UserListItem = UserItem;
 
   type OrderList = DefaultMetaResponse<Order>;
@@ -189,6 +191,12 @@ declare namespace API {
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];
+  };
+
+  type UserChangePassword = {
+    password: string;
+    new_password: string;
+    new_confirm_password: string;
   };
 
   type Lesson = {

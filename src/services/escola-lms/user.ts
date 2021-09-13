@@ -47,6 +47,17 @@ export async function updateProfile(data: Partial<API.UserItem>, options?: { [ke
   });
 }
 
+export async function updateProfilePassword(
+  data: Partial<API.UserChangePassword>,
+  options?: { [key: string]: any },
+) {
+  return request<API.UserRowPassword>(`/api/profile/password`, {
+    data,
+    method: 'PUT',
+    ...(options || {}),
+  });
+}
+
 export async function updateUser(
   id: number,
   data: Partial<API.UserItem>,
