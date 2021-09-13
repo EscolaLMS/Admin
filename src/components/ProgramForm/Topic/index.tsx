@@ -14,6 +14,7 @@ import Oembed from './media/oembed';
 import H5PForm from './media/h5p';
 import TopicForm from './form';
 import { FormattedMessage } from 'umi';
+import Resources from './resources';
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
@@ -62,17 +63,6 @@ export const Topic: React.FC<{
       };
     });
   }, [type, topic]);
-
-  /*
-  useEffect(() => {
-    setState((prevState) => {
-      return {
-        ...topic,
-        value: prevState.value,
-      };
-    });
-  }, [topic]);
-  */
 
   const updateValue = useCallback((key, value) => {
     setState((prevState) => ({
@@ -149,6 +139,15 @@ export const Topic: React.FC<{
           initialValues={state}
           onValuesChange={(values) => updateValues(values)}
         />
+        {!state.isNew && (
+          <React.Fragment>
+            <Divider>
+              <FormattedMessage id="file_resources" />
+            </Divider>
+            <Resources topicId={Number(topic.id)} />
+          </React.Fragment>
+        )}
+
         <Divider>
           <FormattedMessage id="select_type_topic" />
           ...
