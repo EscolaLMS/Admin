@@ -29,6 +29,13 @@
   },
   {
     path: '/users/me',
+    name: 'User',
+    icon: 'user',
+    component: './Users/me',
+    hideInMenu: true,
+  },
+  {
+    path: '/users/me/:tab',
     name: 'User Form',
     icon: 'user',
     component: './Users/me',
