@@ -136,6 +136,13 @@
     component: './Pages',
   },
   {
+    path: '/pages/:page',
+    name: 'Form',
+    icon: 'read',
+    component: './Pages/form',
+    hideInMenu: true,
+  },
+  {
     path: '/files',
     name: 'Files',
     icon: 'folderOpen',

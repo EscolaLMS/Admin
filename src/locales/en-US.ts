@@ -212,4 +212,11 @@ export default {
   TutorsPopularityMetric: 'Tutors popularity metric',
   reuse_existing: 'Reuse existing',
   open_new_content_editor: 'Open new content editor',
+  content: 'Content',
+  slug_tooltip: 'SLUG is part of Pages URL ',
+  content_tooltip:
+    'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
+  pages: 'Pages',
+  new_page: 'New static page',
+  edit_page: 'Edit static page',
 };

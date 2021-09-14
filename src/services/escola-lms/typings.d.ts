@@ -146,7 +146,7 @@ declare namespace API {
 
   type PaymentListItem = Payment;
 
-  type PageList = PaginatedMetaList<Page>;
+  type PageList = DefaultMetaResponse<Page>;
 
   type PageListItem = Page;
 
@@ -414,6 +414,7 @@ declare namespace API {
     id: number;
     slug: string;
     title: string;
+    active: boolean;
     author_id: number;
     author: UserItem;
     content: string;
