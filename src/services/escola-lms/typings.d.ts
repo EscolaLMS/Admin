@@ -172,6 +172,8 @@ declare namespace API {
 
   type LoginResponse = DefaultResponse<{ token: string }>;
 
+  type LogoutResponse = DefaultResponse;
+
   type User = {
     data: UserItem;
   };
