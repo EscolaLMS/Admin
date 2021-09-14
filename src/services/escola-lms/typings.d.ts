@@ -134,6 +134,8 @@ declare namespace API {
 
   type UserRow = DefaultResponse<UserItem>;
 
+  type UserRowPassword = DefaultResponse<UserChangePassword>;
+
   type UserListItem = UserItem;
 
   type OrderList = DefaultMetaResponse<Order>;
@@ -144,7 +146,7 @@ declare namespace API {
 
   type PaymentListItem = Payment;
 
-  type PageList = PaginatedMetaList<Page>;
+  type PageList = DefaultMetaResponse<Page>;
 
   type PageListItem = Page;
 
@@ -170,6 +172,8 @@ declare namespace API {
 
   type LoginResponse = DefaultResponse<{ token: string }>;
 
+  type LogoutResponse = DefaultResponse;
+
   type User = {
     data: UserItem;
   };
@@ -189,6 +193,12 @@ declare namespace API {
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];
+  };
+
+  type UserChangePassword = {
+    password: string;
+    new_password: string;
+    new_confirm_password: string;
   };
 
   type Lesson = {
@@ -406,6 +416,7 @@ declare namespace API {
     id: number;
     slug: string;
     title: string;
+    active: boolean;
     author_id: number;
     author: UserItem;
     content: string;

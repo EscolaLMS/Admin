@@ -29,6 +29,13 @@
   },
   {
     path: '/users/me',
+    name: 'User',
+    icon: 'user',
+    component: './Users/me',
+    hideInMenu: true,
+  },
+  {
+    path: '/users/me/:tab',
     name: 'User Form',
     icon: 'user',
     component: './Users/me',
@@ -127,6 +134,13 @@
     name: 'Pages',
     icon: 'read',
     component: './Pages',
+  },
+  {
+    path: '/pages/:page',
+    name: 'Form',
+    icon: 'read',
+    component: './Pages/form',
+    hideInMenu: true,
   },
   {
     path: '/files',
