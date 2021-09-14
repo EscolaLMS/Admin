@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined,  DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
@@ -7,7 +7,6 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
 import { pages, deletePage } from '@/services/escola-lms/pages';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 const handleRemove = async (id: number) => {
@@ -53,7 +52,7 @@ const TableList: React.FC = () => {
     },
     {
       hideInSearch: true,
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
+      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [

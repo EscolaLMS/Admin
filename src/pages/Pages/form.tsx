@@ -7,9 +7,8 @@ import { page as fetchPage, updatePage, createPage } from '@/services/escola-lms
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { useParams, history } from 'umi';
+import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
 import { slugify } from '@/services/escola-lms/slug';
 
 export default () => {
