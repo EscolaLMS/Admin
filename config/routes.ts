@@ -9,6 +9,7 @@
           {
             name: 'login',
             path: '/user/login',
+            access: 'loggedOut',
             component: './User/login',
           },
         ],
