@@ -18,6 +18,7 @@ export async function userGroups(
       page: params.current,
     },
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }
@@ -26,6 +27,7 @@ export async function userGroups(
 export async function userGroup(id: number, options?: { [key: string]: any }) {
   return request<API.UserGroupRow>(`/api/admin/user-groups/${id}`, {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }

@@ -11,6 +11,7 @@ export async function settings(
 ) {
   return request<API.SettingsList>(`/api/admin/settings`, {
     method: 'GET',
+    useCache: true,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -23,6 +24,7 @@ export async function settings(
 export async function setting(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }
@@ -69,6 +71,7 @@ export async function deleteSettings(id: number, options?: { [key: string]: any 
 export async function settingGroups(options?: { [key: string]: any }) {
   return request<API.DefaultResponse<string[]>>(`/api/admin/settings/groups`, {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }

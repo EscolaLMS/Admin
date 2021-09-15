@@ -13,6 +13,7 @@ export async function files(
 ) {
   return request<API.FileList>('/api/admin/file/list', {
     method: 'GET',
+    useCache: true,
     params,
     ...(options || {}),
   });
