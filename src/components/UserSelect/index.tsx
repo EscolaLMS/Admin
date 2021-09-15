@@ -57,14 +57,13 @@ export const UserSelect: React.FC<{
 
   useEffect(() => {
     const controller = new AbortController();
-
     if (value) {
       const values = Array.isArray(value) ? value : [value];
 
       values
         .filter((id) => !cache.current?.find((user) => user.id === id))
         .forEach((v) => {
-          fetchUser(Number(v), { signal: controller.signal }).then((response) => {
+          fetchUser(Number(v), { signal: controller.signal }, false).then((response) => {
             if (response && response.success) {
               setUsersFromResponse([response.data]);
             }
