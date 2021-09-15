@@ -10,6 +10,7 @@ import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import '@/services/ybug';
+import RestrictedPage from './pages/403';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -75,7 +76,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       : [],
     menuHeaderRender: undefined,
     //  403
-    // unAccessible: <div>unAccessible</div>,
+    unAccessible: <RestrictedPage />,
     ...initialState?.settings,
   };
 };
