@@ -10,6 +10,7 @@ export async function pages(
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
+    useCache: true,
     params: {
       ...params,
       per_page: params.pageSize,

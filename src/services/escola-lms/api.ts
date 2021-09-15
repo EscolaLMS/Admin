@@ -6,6 +6,7 @@ import { request } from 'umi';
 export async function currentUser(options?: { [key: string]: any }) {
   return request<API.User>('/api/profile/me', {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }

@@ -13,6 +13,7 @@ export async function h5p(
 ) {
   return request<API.H5PContentList>(`/api/hh5p/content`, {
     method: 'GET',
+    useCache: true,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -26,6 +27,7 @@ export async function h5p(
 export async function getH5p(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.H5PContent>>(`/api/hh5p/content/${id}`, {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }
@@ -41,6 +43,7 @@ export async function removeH5P(id: number) {
 export async function allContent(options?: { [key: string]: any }) {
   return request<API.H5PContentListItem[]>('/api/hh5p/content?per_page=0', {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }
