@@ -140,7 +140,7 @@ const TableList: React.FC = () => {
       <ProTable<API.CourseListItem, API.CourseParams>
         loading={loading}
         headerTitle={intl.formatMessage({
-          id: 'Courses',
+          id: 'menu.Courses',
           defaultMessage: 'Courses List',
         })}
         actionRef={actionRef}
