@@ -19,7 +19,7 @@ export const CategoryModalForm: React.FC<{
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (id) {
+    if (typeof id === 'number' && id > 0) {
       category(id).then((response) => {
         form.setFieldsValue(response.data);
       });
@@ -30,8 +30,8 @@ export const CategoryModalForm: React.FC<{
     <ModalForm
       form={form}
       title={intl.formatMessage({
-        id: id ? 'editCategory' : 'newCategory',
-        defaultMessage: id ? 'editCategory' : 'newCategory',
+        id: typeof id === 'number' && id > 0 ? 'editCategory' : 'newCategory',
+        defaultMessage: typeof id === 'number' && id > 0 ? 'editCategory' : 'newCategory',
       })}
       width="400px"
       visible={visible}
