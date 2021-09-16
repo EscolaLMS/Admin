@@ -107,9 +107,6 @@ export const Curriculum = () => {
           </Collapse>
         </div>
         <Divider />
-        <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
-          <FormattedMessage id="add_new_lesson" />
-        </Button>
       </div>
     );
   }
