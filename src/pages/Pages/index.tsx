@@ -1,12 +1,11 @@
-import { PlusOutlined,  DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-
-import { pages, deletePage } from '@/services/escola-lms/pages';
+import { pages, deletePage, cacheControl as pagesCacheControl } from '@/services/escola-lms/pages';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 const handleRemove = async (id: number) => {
@@ -73,6 +72,7 @@ const TableList: React.FC = () => {
             const success = await handleRemove(record.id);
             if (success) {
               if (actionRef.current) {
+                pagesCacheControl.useCache = false;
                 actionRef.current.reload();
               }
             }

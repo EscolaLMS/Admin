@@ -1,16 +1,29 @@
 import { request } from 'umi';
 
+export const cacheControl = {
+  useCache: true,
+  validateCache: function () {
+    const cache = cacheControl.useCache;
+    console.log(cacheControl.useCache, cache);
+    cacheControl.useCache = true;
+    console.log(cacheControl.useCache, 'use', cache, 'cache');
+    return cache;
+  },
+};
+
 export async function pages(
   params: {
     // query
     current?: number;
     pageSize?: number;
+    forceFetch?: boolean;
   },
   options?: { [key: string]: any },
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
     useCache: true,
+    validateCache: cacheControl.validateCache,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -23,6 +36,7 @@ export async function pages(
 export async function page(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'GET',
+    // useCache: true,
     ...(options || {}),
   });
 }
@@ -30,6 +44,7 @@ export async function page(id: number, options?: { [key: string]: any }) {
 export async function createPage(body?: Partial<API.Page>, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages`, {
     method: 'POST',
+    validateCache: cacheControl.validateCache,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -45,6 +60,7 @@ export async function updatePage(
 ) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'PATCH',
+    validateCache: cacheControl.validateCache,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -56,6 +72,7 @@ export async function updatePage(
 export async function deletePage(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'DELETE',
+    validateCache: cacheControl.validateCache,
     headers: {
       'Content-Type': 'application/json',
     },

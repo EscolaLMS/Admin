@@ -2,12 +2,17 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { page as fetchPage, updatePage, createPage } from '@/services/escola-lms/pages';
+import {
+  page as fetchPage,
+  updatePage,
+  createPage,
+  cacheControl as pagesCacheControl,
+} from '@/services/escola-lms/pages';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { useParams, history, useIntl, FormattedMessage} from 'umi';
 import { useCallback } from 'react';
 import { slugify } from '@/services/escola-lms/slug';
 
@@ -54,10 +59,14 @@ export default () => {
         if (page === 'new') {
           response = await createPage(postData);
           if (response.success) {
+            pagesCacheControl.useCache = false;
             history.push(`/pages/${response.data.id}`);
           }
         } else {
           response = await updatePage(Number(page), postData);
+          if (response.success) {
+            pagesCacheControl.useCache = false;
+          }
         }
 
         message.success(response.message);
