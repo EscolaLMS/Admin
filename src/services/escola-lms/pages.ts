@@ -44,7 +44,7 @@ export async function updatePage(
   options?: { [key: string]: any },
 ) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
