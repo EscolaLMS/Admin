@@ -32,7 +32,9 @@ export default () => {
 
   useEffect(() => {
     if (page === 'new') {
-      setData({});
+      setData({
+        active: false,
+      });
       return;
     }
 
@@ -112,6 +114,7 @@ export default () => {
             label={<FormattedMessage id="content" />}
             tooltip={<FormattedMessage id="content_tooltip" />}
             valuePropName="value"
+            required
           >
             <WysiwygMarkdown directory={`pages/${page}/wysiwyg`} />
           </ProForm.Item>
