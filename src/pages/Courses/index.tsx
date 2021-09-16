@@ -119,9 +119,13 @@ const TableList: React.FC = () => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {
-        await removeCourse(id);
+        await removeCourse(id).then((response) => {
+          setLoading(false);
+          if (response.success) {
+            message.success(response.message);
+          }
+        });
         hide();
-        message.success(<FormattedMessage id="success" defaultMessage="success" />);
         setLoading(false);
         actionRef.current?.reload();
         return true;
@@ -170,9 +174,15 @@ const TableList: React.FC = () => {
                 ? 'ASC'
                 : 'DESC'
               : undefined,
-          }).then((data) => {
+          }).then((response) => {
             setLoading(false);
-            return data.success ? data.data : [];
+            if (response.success) {
+              return {
+                data: response.data,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={[
