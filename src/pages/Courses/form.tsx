@@ -235,7 +235,7 @@ export default () => {
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <Row>
-                <Col span={12}>
+                <Col span={6}>
                   <ProFormImageUpload
                     action={`/api/admin/courses/${course}`}
                     src_name="image_url"
@@ -249,6 +249,14 @@ export default () => {
                     src_name="video_url"
                     form_name="video"
                     getUploadedSrcField={(info) => info.file.response.data.video_url}
+                  />
+                </Col>
+                <Col span={6}>
+                  <ProFormImageUpload
+                    action={`/api/admin/courses/${course}`}
+                    src_name="poster_url"
+                    form_name="poster"
+                    getUploadedSrcField={(info) => info.file.response.data.poster_url}
                   />
                 </Col>
               </Row>
