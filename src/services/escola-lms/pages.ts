@@ -4,9 +4,7 @@ export const cacheControl = {
   useCache: true,
   validateCache: function () {
     const cache = cacheControl.useCache;
-    console.log(cacheControl.useCache, cache);
     cacheControl.useCache = true;
-    console.log(cacheControl.useCache, 'use', cache, 'cache');
     return cache;
   },
 };
