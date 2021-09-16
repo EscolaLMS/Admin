@@ -122,7 +122,7 @@ declare namespace API {
 
   type DataResponse<Model> = DataResponseSuccess<Model> | DefaultResponseError;
 
-  type CourseList = DefaultResponse<PaginatedList<Course>>;
+  type CourseList = DefaultMetaResponse<Course>;
 
   type CourseListItem = Course;
 
