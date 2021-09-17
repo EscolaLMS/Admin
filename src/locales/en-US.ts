@@ -220,4 +220,5 @@ export default {
   pages: 'Pages',
   new_page: 'New static page',
   edit_page: 'Edit static page',
+  can_skip: "Can be omitted"
 };

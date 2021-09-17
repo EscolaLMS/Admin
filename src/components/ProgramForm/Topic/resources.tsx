@@ -23,7 +23,11 @@ export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
 
   const onUploaded = useCallback((response: API.ResourceRow) => {
     if (response && response.success) {
-      fetch();
+      fetchResources(topicId).then((fetchResponse) => {
+        if (fetchResponse && fetchResponse.success) {
+          setResources(fetchResponse.data);
+        }
+      });
     }
   }, []);
 
