@@ -13,6 +13,7 @@ import { setting } from '@/services/escola-lms/settings';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import FilesBrowser from '@/components/FilesBrowser';
+import ReactJson from 'react-json-view';
 
 export const FilesSelector: React.FC<{
   value?: string;
@@ -156,7 +157,25 @@ export const SettingsModalForm: React.FC<{
           <ProFormText width="lg" name="value" label={<FormattedMessage id="value" />} />
         )}
         {type === 'json' && (
-          <ProFormTextArea width="lg" name="value" label={<FormattedMessage id="value" />} />
+          <>
+            <ProFormTextArea
+              width="lg"
+              name="value"
+              label={<FormattedMessage id="value" />}
+              tooltip={`${intl.formatMessage({
+                id: 'example_json',
+              })}: {"name":"John", "age":30, "city":["New York","Warsaw"]}`}
+            />
+            <ProForm.Item noStyle shouldUpdate>
+              {() => {
+                try {
+                  return <ReactJson src={JSON.parse(form.getFieldValue('value'))} />;
+                } catch {
+                  return <ReactJson src={JSON.parse(`{ "error": "cannot parse this json" }`)} />;
+                }
+              }}
+            </ProForm.Item>
+          </>
         )}
 
         {(type === 'file' || type === 'image') && (

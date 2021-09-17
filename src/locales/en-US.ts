@@ -220,5 +220,6 @@ export default {
   pages: 'Pages',
   new_page: 'New static page',
   edit_page: 'Edit static page',
+  example_json: 'JSON Example',
   can_skip: "Can be omitted"
 };

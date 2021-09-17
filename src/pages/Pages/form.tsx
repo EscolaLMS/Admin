@@ -104,6 +104,7 @@ export default () => {
               placeholder={intl.formatMessage({
                 id: 'slug',
               })}
+              disabled
               required
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
