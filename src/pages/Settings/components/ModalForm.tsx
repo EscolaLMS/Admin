@@ -13,6 +13,7 @@ import { setting } from '@/services/escola-lms/settings';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import FilesBrowser from '@/components/FilesBrowser';
+import ReactJson from 'react-json-view';
 
 export const FilesSelector: React.FC<{
   value?: string;
@@ -52,11 +53,16 @@ export const SettingsModalForm: React.FC<{
   const isNew = !id || id === -1;
 
   const [type, setType] = useState<API.SettingType>('text');
+  const [jsonValue, setJsonValue] = useState();
+  const [formValue, setFormValue] = useState('');
 
   useEffect(() => {
     if (id && id !== -1) {
       setting(id).then((response) => {
         if (response.success) {
+          if (response.data.type === 'json') {
+            setFormValue(response.data.value);
+          }
           form.setFieldsValue(response.data);
           setType(response.data.type);
         }
@@ -69,12 +75,21 @@ export const SettingsModalForm: React.FC<{
 
   const onValuesChange = useCallback(
     (values: API.Setting) => {
+      setFormValue(values.value);
       if (values.type && values.type !== type) {
         setType(values.type);
       }
     },
     [type],
   );
+
+  const jsonPreview = () => {
+    try {
+      setJsonValue(JSON.parse(formValue));
+    } catch {
+      setJsonValue(JSON.parse(`{ "error": "cannot parse this json" }`));
+    }
+  };
 
   return (
     <ModalForm
@@ -156,7 +171,21 @@ export const SettingsModalForm: React.FC<{
           <ProFormText width="lg" name="value" label={<FormattedMessage id="value" />} />
         )}
         {type === 'json' && (
-          <ProFormTextArea width="lg" name="value" label={<FormattedMessage id="value" />} />
+          <>
+            <ProFormTextArea
+              width="lg"
+              name="value"
+              label={<FormattedMessage id="value" />}
+              tooltip={`${intl.formatMessage({
+                id: 'example_json',
+              })}: 
+              {"name":"John", "age":30, "city":["New York","Warsaw"]}`}
+            />
+            {jsonValue && <ReactJson src={jsonValue} />}
+            <Button size="small" type="primary" onClick={() => jsonPreview()}>
+              <FormattedMessage id="preview" />
+            </Button>
+          </>
         )}
 
         {(type === 'file' || type === 'image') && (
