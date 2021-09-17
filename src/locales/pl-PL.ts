@@ -31,6 +31,7 @@ export default {
   duration: 'Czas trwania',
   categories: 'Kategorie',
   tags: 'Tagi',
+  H5P: 'H5P',
   H5Ps: 'H5P',
   new: 'Nowy',
   library: 'Biblioteka',
