@@ -227,6 +227,7 @@ declare namespace API {
     isNew?: boolean;
     active?: boolean;
     preview?: boolean;
+    can_skip: boolean;
     /*
     topicable_type?:
       | TopicType.RichText
