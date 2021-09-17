@@ -53,16 +53,11 @@ export const SettingsModalForm: React.FC<{
   const isNew = !id || id === -1;
 
   const [type, setType] = useState<API.SettingType>('text');
-  const [jsonValue, setJsonValue] = useState();
-  const [formValue, setFormValue] = useState('');
 
   useEffect(() => {
     if (id && id !== -1) {
       setting(id).then((response) => {
         if (response.success) {
-          if (response.data.type === 'json') {
-            setFormValue(response.data.value);
-          }
           form.setFieldsValue(response.data);
           setType(response.data.type);
         }
@@ -75,21 +70,12 @@ export const SettingsModalForm: React.FC<{
 
   const onValuesChange = useCallback(
     (values: API.Setting) => {
-      setFormValue(values.value);
       if (values.type && values.type !== type) {
         setType(values.type);
       }
     },
     [type],
   );
-
-  const jsonPreview = () => {
-    try {
-      setJsonValue(JSON.parse(formValue));
-    } catch {
-      setJsonValue(JSON.parse(`{ "error": "cannot parse this json" }`));
-    }
-  };
 
   return (
     <ModalForm
@@ -178,13 +164,17 @@ export const SettingsModalForm: React.FC<{
               label={<FormattedMessage id="value" />}
               tooltip={`${intl.formatMessage({
                 id: 'example_json',
-              })}: 
-              {"name":"John", "age":30, "city":["New York","Warsaw"]}`}
+              })}: {"name":"John", "age":30, "city":["New York","Warsaw"]}`}
             />
-            {jsonValue && <ReactJson src={jsonValue} />}
-            <Button size="small" type="primary" onClick={() => jsonPreview()}>
-              <FormattedMessage id="preview" />
-            </Button>
+            <ProForm.Item noStyle shouldUpdate>
+              {() => {
+                try {
+                  return <ReactJson src={JSON.parse(form.getFieldValue('value'))} />;
+                } catch {
+                  return <ReactJson src={JSON.parse(`{ "error": "cannot parse this json" }`)} />;
+                }
+              }}
+            </ProForm.Item>
           </>
         )}
 
