@@ -3,16 +3,18 @@ import { useParams } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { EditorContextProvider, EditorContext, Player } from 'h5p-headless-player';
 
-import { Divider, List, Typography, Row, Col } from 'antd';
+import { Divider, Typography, Row, Col } from 'antd';
 import type { XAPIEvent } from 'h5p-headless-player';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
+import ReactJson from 'react-json-view';
 
 import './preview.css';
 
 const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
   const intl = useIntl();
   const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
+  const { Title } = Typography;
 
   const { state } = useContext(EditorContext);
 
@@ -60,17 +62,9 @@ const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
               onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])}
             />
             <Divider />
-            <div style={{ overflow: 'auto', maxHeight: '200px' }}>
-              <List
-                bordered
-                dataSource={XAPIEvents}
-                header="XAPI Events"
-                renderItem={(item) => (
-                  <List.Item>
-                    <Typography.Text code>{JSON.stringify(item)}</Typography.Text>
-                  </List.Item>
-                )}
-              ></List>
+            <div style={{ overflow: 'auto', maxHeight: '400px' }}>
+              <Title level={5}>XAPI Events</Title>
+              <ReactJson src={XAPIEvents} />
             </div>
           </Col>
         </Row>
