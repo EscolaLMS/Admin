@@ -222,4 +222,5 @@ export default {
   TutorsPopularityMetric: 'Wskaźnik popularności nauczycieli',
   reuse_existing: 'Użyj istniejącego',
   open_new_content_editor: 'Otwórz nowy edytor treści',
+  can_skip: "Możliwość pominięcia"
 };
