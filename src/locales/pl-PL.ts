@@ -31,6 +31,7 @@ export default {
   duration: 'Czas trwania',
   categories: 'Kategorie',
   tags: 'Tagi',
+  H5P: 'H5P',
   H5Ps: 'H5P',
   new: 'Nowy',
   library: 'Biblioteka',
@@ -222,4 +223,5 @@ export default {
   reuse_existing: 'Użyj istniejącego',
   open_new_content_editor: 'Otwórz nowy edytor treści',
   example_json: 'Przykładowy JSON',
+  can_skip: "Możliwość pominięcia"
 };
