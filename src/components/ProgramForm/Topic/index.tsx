@@ -98,6 +98,7 @@ export const Topic: React.FC<{
       ...state,
       active: state.active ? 1 : 0,
       preview: state.preview ? 1 : 0,
+      can_skip: state.can_skip ? 1 : 0,
       order: sortOrder,
     };
     const formData = getFormData(values);
