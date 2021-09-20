@@ -2,6 +2,7 @@ import React from 'react';
 import Editor from 'rich-markdown-editor';
 import { upload, resizedImage } from '@/services/escola-lms/files';
 import './index.css';
+import { useIntl } from 'umi';
 
 interface FormWysiwygProps {
   value?: string;
@@ -15,6 +16,7 @@ export const FormWysiwyg: React.FC<FormWysiwygProps> = ({
   onChange,
   directory = '/wysiwyg',
 }) => {
+  const intl = useIntl();
   return (
     <div className="form-wysiwyg-markdown">
       <Editor
@@ -30,7 +32,9 @@ export const FormWysiwyg: React.FC<FormWysiwygProps> = ({
         }}
         defaultValue={value || ''}
         onChange={(v) => onChange && onChange(v())}
-        placeholder="Type here text to see the rich text editor features. Start with '/' to open formatting options or click on '+' button"
+        placeholder={intl.formatMessage({
+          id: 'wysiwyg_placeholder',
+        })}
       />
     </div>
   );

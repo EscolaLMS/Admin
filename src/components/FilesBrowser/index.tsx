@@ -4,11 +4,14 @@ import { files, remove } from '@/services/escola-lms/files';
 import { List, Button, Typography, Space, Pagination } from 'antd';
 
 import { FolderOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'umi';
 import SecureUpload from '@/components/SecureUpload';
+
+import './index.css';
 
 interface FormWysiwygProps {
   defaultDirectory?: string;
-  onFile?: (value: string) => void;
+  onFile?: (value: API.File, directory?: string) => void;
 }
 
 type FileBrowserState = {
@@ -28,7 +31,8 @@ const FilesBrowserActions: React.FC<{ directory: string; onUploaded: (dir: strin
   return (
     <Space align="start">
       <Typography.Text>
-        Current dir is <Typography.Text code>{directory}</Typography.Text>
+        <FormattedMessage id="pages.files.filesBrowser" />
+        <Typography.Text code>{directory}</Typography.Text>
       </Typography.Text>
       <SecureUpload
         url="/api/admin/file/upload"
@@ -176,7 +180,9 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
                     type="text"
                     size="small"
                     onClick={() =>
-                      item.mime === 'directory' ? fetchFiles(item.url) : onFile && onFile(item.url)
+                      item.mime === 'directory'
+                        ? fetchFiles(item.url)
+                        : onFile && onFile(item, state.directory)
                     }
                   >
                     {item.name}

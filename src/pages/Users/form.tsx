@@ -9,8 +9,10 @@ import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
 import { useCallback } from 'react';
+import { useIntl, FormattedMessage } from 'umi';
 
 export default () => {
+  const intl = useIntl();
   const params = useParams<{ user?: string }>();
   const { user } = params;
   const isNew = user === 'new';
@@ -76,46 +78,59 @@ export default () => {
   }
 
   return (
-    <PageContainer title={`${isNew ? 'New' : 'Edit'} user form`}>
+    <PageContainer
+      title={isNew ? <FormattedMessage id="new_user" /> : <FormattedMessage id="edit_user" />}
+    >
       <ProCard>
         <ProForm {...formProps}>
           <ProForm.Group>
             <ProFormText
               width="md"
               name="first_name"
-              label="First name"
-              tooltip="First name"
-              placeholder="First name"
+              label={<FormattedMessage id="first_name" />}
+              tooltip={<FormattedMessage id="first_name" />}
+              placeholder={intl.formatMessage({
+                id: 'first_name',
+              })}
               required
             />
             <ProFormText
               width="md"
               name="last_name"
-              label="Last name"
-              tooltip="Last name"
-              placeholder="Last name"
+              label={<FormattedMessage id="last_name" />}
+              tooltip={<FormattedMessage id="last_name" />}
+              placeholder={intl.formatMessage({
+                id: 'last_name',
+              })}
               required
             />
             <ProFormText
               width="md"
               name="email"
-              label="email"
-              tooltip="email"
-              placeholder="email"
+              label={<FormattedMessage id="email" />}
+              tooltip={<FormattedMessage id="email" />}
+              placeholder={intl.formatMessage({
+                id: 'email',
+              })}
               required
             />
             <ProFormText.Password
               width="md"
               name="password"
-              label="password"
-              tooltip="password"
-              placeholder="password"
+              label={<FormattedMessage id="password" />}
+              tooltip={<FormattedMessage id="password" />}
+              placeholder={intl.formatMessage({
+                id: 'password',
+              })}
               required={user === 'new'}
             />
 
             {user !== 'new' && (
               <Space direction="vertical">
-                <ProFormSwitch name="email_verified" label="Email verified?" />
+                <ProFormSwitch
+                  name="email_verified"
+                  label={<FormattedMessage id="is_email_verified" />}
+                />
 
                 <Form.Item noStyle shouldUpdate>
                   {(form) => {
@@ -126,11 +141,15 @@ export default () => {
                         size="small"
                         onClick={() => {
                           resendEmail(form.getFieldValue('email')).then(() => {
-                            message.success('email resent');
+                            message.success(
+                              intl.formatMessage({
+                                id: 'email_resend',
+                              }),
+                            );
                           });
                         }}
                       >
-                        resend
+                        <FormattedMessage id="resend" />
                       </Button>
                     );
                   }}
@@ -138,20 +157,20 @@ export default () => {
               </Space>
             )}
 
-            <ProFormSwitch name="is_active" label="Is Active?" />
+            <ProFormSwitch name="is_active" label={<FormattedMessage id="is_active" />} />
 
             <ProFormCheckbox.Group
               name="roles"
               layout="horizontal"
-              label="Role"
+              label={<FormattedMessage id="roles" />}
               options={['student', 'tutor', 'admin']}
             />
           </ProForm.Group>
 
           <ProForm.Item
             name="bio"
-            label="bio"
-            tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
+            label={<FormattedMessage id="bio" />}
+            tooltip={<FormattedMessage id="bio_tooltip" />}
             valuePropName="value"
           >
             <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
@@ -159,11 +178,13 @@ export default () => {
 
           {user !== 'new' && (
             <ProForm.Group>
-              <ProForm.Item name="avatar" label="avatar">
+              <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
                 {data.path_avatar ? (
                   <ResponsiveImage path={data.path_avatar} size={600} width={200} />
                 ) : (
-                  <Typography>use next for to upload an image</Typography>
+                  <Typography>
+                    <FormattedMessage id="avatar_placeholder" />
+                  </Typography>
                 )}
               </ProForm.Item>
               <Form.Item noStyle shouldUpdate>

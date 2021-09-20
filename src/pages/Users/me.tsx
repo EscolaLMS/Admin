@@ -2,26 +2,21 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { profile, updateProfile } from '@/services/escola-lms/user';
+import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
+import { useIntl, useParams, FormattedMessage, history } from 'umi';
 
 export default () => {
-  // const params = useParams<{ course?: string; tab?: string }>();
-  // const { course, tab = 'attributes' } = params;
-  // const isNew = course === 'new';
+  const params = useParams<{ tab?: string }>();
+  const intl = useIntl();
+  const { tab = 'general' } = params;
 
   const [data, setData] = useState<API.UserItem>();
 
   useEffect(() => {
-    /*
-    if (course === 'new') {
-      setData({});
-      return;
-    }
-    */
     const fetch = async () => {
       const response = await profile();
       if (response.success) {
@@ -34,35 +29,26 @@ export default () => {
     fetch();
   }, []);
 
-  const formProps = useMemo(
+  const formPropsGeneral = useMemo(
     () => ({
-      // @ts-ignore
-      onFinish: async (values) => {
-        // let response: API.DefaultResponse<API.UserItem>;
+      onFinish: async (values: API.UserItem) => {
         const response: API.DefaultResponse<API.UserItem> = await updateProfile(values);
         message.success(response.message);
-        /*
-        if (course === 'new') {
-          response = await createCourse(values);
-          if (response.success) {
-            history.push(`/courses/${response.data.id}/attributes`);
-          }
-        } else {
-          response = await updateCourse(Number(course), values);
-        }
-        */
-        // message.success(response.message);
       },
       initialValues: data,
-      /*
-      request: async () => {
-        const response = await getCourse(Number(course));
-        if (response.success) {
-          return response.data;
-        }
-        return {};
+    }),
+    [data],
+  );
+
+  const formPropsChangePassword = useMemo(
+    () => ({
+      onFinish: async (values: API.UserChangePassword) => {
+        const response: API.DefaultResponse<API.UserChangePassword> = await updateProfilePassword(
+          values,
+        );
+        message.success(response.message);
       },
-      */
+      initialValues: data,
     }),
     [data],
   );
@@ -72,58 +58,131 @@ export default () => {
   }
 
   return (
-    <PageContainer title={`User form`}>
-      <ProCard>
-        <ProForm {...formProps}>
-          <ProForm.Group>
-            <ProFormText
-              width="md"
-              name="first_name"
-              label="first_name"
-              tooltip="first_name"
-              placeholder="first_name"
-              required
-            />
-            <ProFormText
-              width="md"
-              name="last_name"
-              label="last_name"
-              tooltip="last_name"
-              placeholder="last_name"
-              required
-            />
-          </ProForm.Group>
-
-          <ProForm.Item
-            name="bio"
-            label="bio"
-            tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
-            valuePropName="value"
-          >
-            <WysiwygMarkdown directory={`users/wysiwyg`} />
-          </ProForm.Item>
-
-          <ProForm.Group>
-            <ProForm.Item name="avatar" label="avatar">
-              {data.path_avatar && (
-                <ResponsiveImage path={data.path_avatar} size={600} width={200} />
-              )}
-
-              <SecureUpload
-                url="/api/profile/upload-avatar"
-                name="avatar"
-                accept="image/*"
-                onChange={(info) => {
-                  if (info.file.status === 'done') {
-                    if (info.file.response.success) {
-                      setData(info.file.response.data);
-                    }
-                  }
-                }}
+    <PageContainer
+      title={<FormattedMessage id="my_profile" />}
+      header={{
+        breadcrumb: {
+          routes: [
+            {
+              path: 'users',
+              breadcrumbName: intl.formatMessage({
+                id: 'menu.Users',
+              }),
+            },
+            {
+              path: 'me',
+              breadcrumbName: intl.formatMessage({
+                id: 'my_profile',
+              }),
+            },
+            {
+              path: String(tab),
+              breadcrumbName: intl.formatMessage({
+                id: String(tab),
+              }),
+            },
+          ],
+        },
+      }}
+    >
+      <ProCard
+        tabs={{
+          type: 'card',
+          activeKey: tab,
+          onChange: (key) => history.push(`/users/me/${key}`),
+        }}
+      >
+        <ProCard.TabPane key="general" tab={<FormattedMessage id="general" />}>
+          <ProForm {...formPropsGeneral}>
+            <ProForm.Group>
+              <ProFormText
+                width="md"
+                name="first_name"
+                label={<FormattedMessage id="first_name" />}
+                tooltip={<FormattedMessage id="first_name" />}
+                placeholder={intl.formatMessage({
+                  id: 'first_name',
+                })}
+                required
               />
+              <ProFormText
+                width="md"
+                name="last_name"
+                label={<FormattedMessage id="last_name" />}
+                tooltip={<FormattedMessage id="last_name" />}
+                placeholder={intl.formatMessage({
+                  id: 'last_name',
+                })}
+                required
+              />
+            </ProForm.Group>
+
+            <ProForm.Item
+              name="bio"
+              label={<FormattedMessage id="bio" />}
+              tooltip={<FormattedMessage id="bio_tooltip" />}
+              valuePropName="value"
+            >
+              <WysiwygMarkdown directory={`users/wysiwyg`} />
             </ProForm.Item>
-          </ProForm.Group>
-        </ProForm>
+
+            <ProForm.Group>
+              <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
+                {data.path_avatar && (
+                  <ResponsiveImage path={data.path_avatar} size={600} width={200} />
+                )}
+
+                <SecureUpload
+                  url="/api/profile/upload-avatar"
+                  name="avatar"
+                  accept="image/*"
+                  onChange={(info) => {
+                    if (info.file.status === 'done') {
+                      if (info.file.response.success) {
+                        setData(info.file.response.data);
+                      }
+                    }
+                  }}
+                />
+              </ProForm.Item>
+            </ProForm.Group>
+          </ProForm>
+        </ProCard.TabPane>
+        <ProCard.TabPane key="change_password" tab={<FormattedMessage id="change_password" />}>
+          <ProForm {...formPropsChangePassword}>
+            <ProForm.Group>
+              <ProFormText.Password
+                width="md"
+                name="current_password"
+                label={<FormattedMessage id="current_password" />}
+                placeholder={intl.formatMessage({
+                  id: 'current_password',
+                })}
+                required
+              />
+            </ProForm.Group>
+            <ProForm.Group>
+              <ProFormText.Password
+                width="md"
+                name="new_password"
+                label={<FormattedMessage id="new_password" />}
+                placeholder={intl.formatMessage({
+                  id: 'new_password',
+                })}
+                required
+              />
+              <ProFormText.Password
+                width="md"
+                name="new_confirm_password"
+                label={<FormattedMessage id="new_confirm_password" />}
+                placeholder={intl.formatMessage({
+                  id: 'new_confirm_password',
+                })}
+                required
+              />
+            </ProForm.Group>
+          </ProForm>
+        </ProCard.TabPane>
       </ProCard>
     </PageContainer>
   );

@@ -1,31 +1,35 @@
 import React, { useCallback } from 'react';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Menu, Spin } from 'antd';
-import { history, useModel } from 'umi';
+import { Menu, Spin, message } from 'antd';
+import { history, useModel, FormattedMessage } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { outLogin } from '@/services/ant-design-pro/login';
-import { FormattedMessage } from 'umi';
+import { logout } from '@/services/escola-lms/login';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
 
-/**
- */
 const loginOut = async () => {
-  await outLogin();
-  const { query = {}, pathname } = history.location;
-  const { redirect } = query;
-  // Note: There may be security issues, please note
-  if (window.location.pathname !== '/user/login' && !redirect) {
-    history.replace({
-      pathname: '/user/login',
-      search: stringify({
-        redirect: pathname,
-      }),
-    });
+  const msg = await logout();
+  if (msg.success) {
+    localStorage.removeItem('TOKEN');
+    message.success(msg.message);
+
+    const { query = {}, pathname } = history.location;
+    const { redirect } = query;
+    // Note: There may be security issues, please note
+    if (window.location.pathname !== '/user/login' && !redirect) {
+      history.replace({
+        pathname: '/user/login',
+        search: stringify({
+          redirect: pathname,
+        }),
+      });
+    }
+  } else {
+    message.error(msg.message);
   }
 };
 
@@ -88,14 +92,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
       <Menu.Item key="me">
         <SettingOutlined />
-        <FormattedMessage id="me" defaultMessage="My Profile" />
+        <FormattedMessage id="my_profile" />
       </Menu.Item>
 
       <Menu.Divider />
 
       <Menu.Item key="logout">
         <LogoutOutlined />
-        <FormattedMessage id="logout" defaultMessage="Logout" />
+        <FormattedMessage id="logout" />
       </Menu.Item>
     </Menu>
   );

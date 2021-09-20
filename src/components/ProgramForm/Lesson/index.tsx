@@ -7,6 +7,7 @@ import { Button, Divider, Card, Collapse, Typography, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import SortingButtons from '@/components/sortingbuttons';
 import TopicHeader from '@/components/ProgramForm/Topic/header';
+import { FormattedMessage, useParams } from 'umi';
 
 import LessonForm from './form';
 
@@ -17,6 +18,8 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
   const { id, updateLesson, deleteLesson, addNewTopic, sortTopic } = useContext(Context);
+
+  const params = useParams<{ course?: string; tab?: string }>();
 
   const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
 
@@ -36,14 +39,15 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
     setLoading(true);
 
     const formData = getFormData({
-      course_id: lesson.course_id,
+      course_id: lesson.course_id || params.course,
       ...state,
+      order: 0,
       active: state.active ? 1 : 0,
     });
 
     if (updateLesson && state.id) {
       return updateLesson(state.id, formData)
-        .then(() => setLoading(false))
+      .then(() => setLoading(false))
         .catch((err) => {
           console.log(err);
           setLoading(false);
@@ -68,16 +72,21 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
 
   return (
     <Card
-      title={`Lesson: ${state.title}`}
+      title={
+        <>
+          <FormattedMessage id="lesson" />
+          {`: ${state.title}`}
+        </>
+      }
       extra={
         <Popconfirm
-          title="Are you sure to delete this topic?"
+          title={<FormattedMessage id="deleteQuestion" />}
           onConfirm={handleDelete}
-          okText="Yes"
-          cancelText="No"
+          okText={<FormattedMessage id="yes" />}
+          cancelText={<FormattedMessage id="no" />}
         >
           <Button loading={loading} size="small" danger>
-            Delete
+            <FormattedMessage id="delete" />
           </Button>
         </Popconfirm>
       }
@@ -96,7 +105,11 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
         }}
       />
 
-      {!lesson.isNew && <Divider>Topics</Divider>}
+      {!lesson.isNew && (
+        <Divider>
+          <FormattedMessage id="topics" />
+        </Divider>
+      )}
 
       {topicList && topicList.length > 0 ? (
         <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
@@ -137,9 +150,9 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
       ) : (
         !lesson.isNew && (
           <Typography.Text>
-            There are no topics yet on this lesson{' '}
+            <FormattedMessage id="no_topics" />{' '}
             <Button onClick={onNew} type="primary" size="small" icon={<PlusOutlined />}>
-              Add new topic
+              <FormattedMessage id="add_new_topic" />
             </Button>
           </Typography.Text>
         )
@@ -149,7 +162,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
         <React.Fragment>
           <Divider />
           <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
-            Add new topic
+            <FormattedMessage id="add_new_topic" />
           </Button>
         </React.Fragment>
       )}

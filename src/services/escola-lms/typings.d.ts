@@ -10,6 +10,7 @@ declare namespace API {
     Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
     H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
     Image = 'EscolaLms\\Courses\\Models\\TopicContent\\Image',
+    PDF = 'EscolaLms\\Courses\\Models\\TopicContent\\PDF',
   }
 
   type Category = {
@@ -39,6 +40,7 @@ declare namespace API {
   };
 
   type Course = {
+    active: boolean;
     id?: number;
     created_at?: string;
     updated_at?: string;
@@ -120,7 +122,7 @@ declare namespace API {
 
   type DataResponse<Model> = DataResponseSuccess<Model> | DefaultResponseError;
 
-  type CourseList = DefaultResponse<PaginatedList<Course>>;
+  type CourseList = DefaultMetaResponse<Course>;
 
   type CourseListItem = Course;
 
@@ -132,6 +134,8 @@ declare namespace API {
 
   type UserRow = DefaultResponse<UserItem>;
 
+  type UserRowPassword = DefaultResponse<UserChangePassword>;
+
   type UserListItem = UserItem;
 
   type OrderList = DefaultMetaResponse<Order>;
@@ -142,7 +146,7 @@ declare namespace API {
 
   type PaymentListItem = Payment;
 
-  type PageList = PaginatedMetaList<Page>;
+  type PageList = DefaultMetaResponse<Page>;
 
   type PageListItem = Page;
 
@@ -168,6 +172,8 @@ declare namespace API {
 
   type LoginResponse = DefaultResponse<{ token: string }>;
 
+  type LogoutResponse = DefaultResponse;
+
   type User = {
     data: UserItem;
   };
@@ -187,6 +193,12 @@ declare namespace API {
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];
+  };
+
+  type UserChangePassword = {
+    password: string;
+    new_password: string;
+    new_confirm_password: string;
   };
 
   type Lesson = {
@@ -215,6 +227,7 @@ declare namespace API {
     isNew?: boolean;
     active?: boolean;
     preview?: boolean;
+    can_skip: boolean;
     /*
     topicable_type?:
       | TopicType.RichText
@@ -247,6 +260,13 @@ declare namespace API {
     topicable_type: TopicType.Audio;
     topicable: TopicableBase & {
       length: number;
+      url: string;
+    };
+  };
+
+  type TopicPDF = TopicBase & {
+    topicable_type: TopicType.PDF;
+    topicable: TopicableBase & {
       url: string;
     };
   };
@@ -288,7 +308,8 @@ declare namespace API {
     | TopicAudio
     | TopicVideo
     | TopicH5P
-    | TopicImage;
+    | TopicImage
+    | TopicPDF;
 
   type TopicNotEmpty =
     | TopicRichText
@@ -296,7 +317,8 @@ declare namespace API {
     | TopicAudio
     | TopicVideo
     | TopicH5P
-    | TopicImage;
+    | TopicImage
+    | TopicPDF;
 
   type CourseProgram = Course & {
     lessons: Lesson[];
@@ -376,14 +398,17 @@ declare namespace API {
   type Payment = {
     amount: number;
     billable_id: number;
-    billable_type: 'EscolaLms\\Core\\Models\\User';
+    billable_type: 'EscolaLms\\Core\\Models\\User' | 'App\\Models\\User';
     created_at: string;
     currency: string;
     description: string;
     id: number;
     order_id: string;
     payable_id: number;
-    payable_type: 'EscolaLms\\Cart\\Models\\Order';
+    payable_type:
+      | 'EscolaLms\\Cart\\Models\\Order'
+      | 'App\\Models\\User'
+      | 'EscolaLms\\Core\\Models\\User';
     status: PaymentStatus;
     updated_at: string;
   };
@@ -392,6 +417,7 @@ declare namespace API {
     id: number;
     slug: string;
     title: string;
+    active: boolean;
     author_id: number;
     author: UserItem;
     content: string;
@@ -450,4 +476,109 @@ declare namespace API {
   };
 
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
+
+  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
+  type SettingBase = {
+    id: number;
+    key: string;
+    group: string;
+    value: string;
+    public: boolean;
+    enumerable: boolean;
+    sort: number;
+    type: SettingType;
+    data: any;
+  };
+
+  type Setting =
+    | (SettingBase & {
+        type: 'text';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'markdown';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'json';
+        data: object;
+      })
+    | (SettingBase & {
+        type: 'file';
+        data: string;
+      })
+    | (SettingBase & {
+        type: 'image';
+        data: string;
+      });
+
+  type SettingsList = DefaultMetaResponse<Setting>;
+
+  type LinkedType =
+    | {
+        type: '';
+        value: null;
+      }
+    | {
+        type: 'App\\Models\\User' | 'EscolaLms\\Core\\Models\\User';
+        value: API.UserItem;
+      }
+    | {
+        type: 'EscolaLms\\Cart\\Models\\Order';
+        value: API.Order;
+      }
+    | {
+        type: 'EscolaLms\\Cart\\Models\\Course';
+        value: API.Course;
+      };
+
+  type ReportType =
+    | 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric'
+    | 'EscolaLms\\Reports\\Metrics\\CoursesPopularityMetric'
+    | 'EscolaLms\\Reports\\Metrics\\CoursesSecondsSpentMetric'
+    | 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric';
+
+  type ReportItem = {
+    label: string;
+    value: number;
+    measurable_id: number;
+    measurable_type: 'EscolaLms\\Courses\\Models\\Course' | 'EscolaLms\\Auth\\Models\\User';
+  };
+
+  type Report = ReportItem[];
+
+  type ReportList = DefaultResponse<Report>;
+
+  type UserGroup = {
+    id: number;
+    name: string;
+    users: UserItem[];
+  };
+
+  type CourseAccess = {
+    users: UserItem[] | number[];
+    groups: UserGroup[] | number[];
+  };
+
+  type UserGroups = UserGroup[];
+
+  type UserGroupRow = DefaultResponse<UserGroup>;
+
+  type UserGroupAddRow = DefaultResponse<UserItem[]>;
+
+  type UserGroupList = DefaultMetaResponse<UserGroup>;
+
+  type CourseAccessList = DefaultResponse<CourseAccess>;
+
+  type Resource = {
+    id: number;
+    name: string;
+    path: string;
+    topic_id: number;
+    url: string;
+  };
+
+  type ResourceList = DefaultResponse<Resource[]>;
+
+  type ResourceRow = DefaultResponse<Resource>;
 }

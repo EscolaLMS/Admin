@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from 'antd';
-
+import { FormattedMessage } from 'umi';
 import { user as fetchUser } from '@/services/escola-lms/user';
 
 export const UserRow: React.FC<{
@@ -29,7 +29,8 @@ export const UserRow: React.FC<{
 
   return (
     <Button loading={loading} onClick={fetch} size="small">
-      User ID: {id}
+      <FormattedMessage id="user_id" />
+      {id}
     </Button>
   );
 };

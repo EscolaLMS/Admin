@@ -41,16 +41,16 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     hideInSearch: false,
     hideInTable: true,
     hideInDescriptions: true,
-    tooltip: 'will search through first_name, last_name and email',
+    tooltip: <FormattedMessage id="search_tooltip_1" />,
   },
 
   {
-    title: <FormattedMessage id="is_active" defaultMessage="is_active" />,
+    title: <FormattedMessage id="is_active" />,
     dataIndex: 'is_active',
     hideInSearch: true,
     render: (_, record) => [
       <Tag color={record.is_active ? 'green' : 'red'}>
-        {record.is_active ? 'active' : 'inactive'}
+        {record.is_active ? <FormattedMessage id="Active" /> : <FormattedMessage id="Inactive" />}
       </Tag>,
     ],
   },
@@ -61,7 +61,11 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     hideInSearch: true,
     render: (_, record) => [
       <Tag color={record.is_active ? 'green' : 'red'}>
-        {record.is_active ? 'verified' : 'unverified'}
+        {record.is_active ? (
+          <FormattedMessage id="verified" />
+        ) : (
+          <FormattedMessage id="unverified" />
+        )}
       </Tag>,
     ],
   },
@@ -74,7 +78,7 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
   },
 
   {
-    title: 'role',
+    title: <FormattedMessage id="roles" defaultMessage="roles" />,
     key: 'role',
     valueType: 'select',
     dataIndex: 'role',
@@ -131,7 +135,7 @@ const TableList: React.FC = () => {
           ...TableColumns,
           {
             hideInSearch: true,
-            title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
+            title: <FormattedMessage id="pages.searchTable.titleOption" />,
             dataIndex: 'option',
             valueType: 'option',
             render: (_, record) => [
@@ -156,8 +160,8 @@ const TableList: React.FC = () => {
                     }
                   }
                 }}
-                okText="Yes"
-                cancelText="No"
+                okText={<FormattedMessage id="yes" />}
+                cancelText={<FormattedMessage id="no" />}
               >
                 <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
                   <Button type="primary" icon={<DeleteOutlined />} danger></Button>

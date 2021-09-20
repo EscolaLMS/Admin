@@ -52,6 +52,7 @@
         "not ie <= 10"
     ],
     "dependencies": {
+        "@ant-design/charts": "^1.2.11",
         "@ant-design/icons": "^4.0.0",
         "@ant-design/pro-card": "^1.14.0",
         "@ant-design/pro-descriptions": "^1",
@@ -61,6 +62,7 @@
         "@testing-library/jest-dom": "^5.11.9",
         "@types/enzyme": "^3.10.8",
         "@types/expect": "^24.3.0",
+        "@types/react-pdf": "^5.0.6",
         "@umijs/plugin-openapi": "^1.0.1",
         "@umijs/route-utils": "^1.0.33",
         "antd": "^4",
@@ -71,7 +73,7 @@
         "cypress": "^6.8.0",
         "cypress-localstorage-commands": "^1.4.1",
         "date-fns": "^2.23.0",
-        "h5p-player": "EscolaLMS/H5P-player#e36f56b",
+        "h5p-headless-player": "^0.1.21",
         "jest-esm-transformer": "^1.0.0",
         "lodash": "^4.17.11",
         "moment": "^2.25.3",
@@ -81,6 +83,8 @@
         "react-dev-inspector": "^1.1.1",
         "react-dom": "^17.0.0",
         "react-helmet-async": "^1.0.4",
+        "react-json-view": "^1.21.3",
+        "react-pdf": "^5.3.2",
         "react-player": "^2.9.0",
         "react-portal-hook": "^1.0.8",
         "react-tiny-oembed": "^1.0.1",
@@ -129,7 +133,7 @@
         "typescript": "^4.0.3"
     },
     "engines": {
-        "node": "14.x"
+        "node": ">=14.x"
     },
     "babel": {
         "presets": [

@@ -1,6 +1,99 @@
-import React from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
+import { resources as fetchResources, deleteResource } from '@/services/escola-lms/course';
+import { List, Button } from 'antd';
+import { DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
+import SecureUpload from '@/components/SecureUpload';
 
-export default () => <React.Fragment />;
+export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
+  const [resources, setResources] = useState<API.Resource[]>();
+  const controller = useRef<AbortController>();
+
+  const fetch = useCallback(() => {
+    if (controller.current) {
+      controller.current.abort();
+    }
+    controller.current = new AbortController();
+
+    fetchResources(topicId, { signal: controller.current.signal }).then((response) => {
+      if (response && response.success) {
+        setResources(response.data);
+      }
+    });
+  }, [topicId]);
+
+  const onUploaded = useCallback((response: API.ResourceRow) => {
+    if (response && response.success) {
+      fetchResources(topicId).then((fetchResponse) => {
+        if (fetchResponse && fetchResponse.success) {
+          setResources(fetchResponse.data);
+        }
+      });
+    }
+  }, []);
+
+  const onRemove = useCallback(
+    (resId: number) => {
+      deleteResource(topicId, resId).then((response) => {
+        if (response.success) {
+          fetch();
+        }
+      });
+    },
+    [topicId],
+  );
+
+  useEffect(() => {
+    fetch();
+  }, [topicId]);
+
+  return (
+    <List
+      size="small"
+      itemLayout="horizontal"
+      dataSource={resources}
+      header={
+        <SecureUpload
+          url={`/api/admin/topics/${topicId}/resources`}
+          name="resource"
+          onChange={(response) =>
+            response.file.status === 'done' && onUploaded(response.file.response)
+          }
+        />
+      }
+      renderItem={(item) => (
+        <List.Item
+          actions={[
+            <Button
+              type="default"
+              danger
+              icon={<DeleteOutlined />}
+              size="small"
+              onClick={() => onRemove(item.id)}
+            />,
+          ]}
+        >
+          <List.Item.Meta
+            avatar={
+              <a href={item.url} target="_blank">
+                <Button type="default" icon={<DownloadOutlined />} size="small" />
+              </a>
+            }
+            description={
+              <React.Fragment>
+                <Button type="text" size="small">
+                  {item.name}
+                </Button>
+              </React.Fragment>
+            }
+          />
+        </List.Item>
+      )}
+    />
+  );
+};
+
+export default Resources;
+
 /*
 
 import React, { useCallback, useEffect, useState, useContext, useRef } from 'react';

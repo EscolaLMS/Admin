@@ -5,6 +5,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import type { IntlShape } from 'react-intl';
 
 import {
   categories,
@@ -15,30 +16,56 @@ import {
 import CategoryModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
-const handleUpdate = async (fields: API.CategoryListItem, id?: number) => {
-  const hide = message.loading('loading');
+const handleUpdate = async (intl: IntlShape, fields: API.CategoryListItem, id?: number) => {
+  const hide = message.loading(
+    intl.formatMessage({
+      id: 'loading',
+    }),
+  );
   try {
     await (id && id !== -1 ? updateCategory(id, { ...fields }) : createCategory({ ...fields }));
     hide();
-    message.success('success');
+    message.success(
+      intl.formatMessage({
+        id: 'success',
+      }),
+    );
     return true;
   } catch (error) {
     hide();
-    message.error('error');
+    message.error(
+      message.success(
+        intl.formatMessage({
+          id: 'error',
+        }),
+      ),
+    );
     return false;
   }
 };
 
-const handleRemove = async (id: number) => {
-  const hide = message.loading('loading');
+const handleRemove = async (intl: IntlShape, id: number) => {
+  const hide = message.loading(
+    intl.formatMessage({
+      id: 'loading',
+    }),
+  );
   try {
     await deleteCategory(id);
     hide();
-    message.success('success');
+    message.success(
+      intl.formatMessage({
+        id: 'success',
+      }),
+    );
     return true;
   } catch (error) {
     hide();
-    message.error('error');
+    message.error(
+      intl.formatMessage({
+        id: 'error',
+      }),
+    );
     return false;
   }
 };
@@ -112,7 +139,11 @@ const TableList: React.FC = () => {
             </Button>
           );
         }
-        return <React.Fragment>None</React.Fragment>;
+        return (
+          <React.Fragment>
+            <FormattedMessage id="none" />
+          </React.Fragment>
+        );
       },
     },
 
@@ -151,7 +182,7 @@ const TableList: React.FC = () => {
               />
             }
             onConfirm={async () => {
-              const success = await handleRemove(record.id);
+              const success = await handleRemove(intl, record.id);
               if (success) {
                 setModalVisible(false);
                 if (actionRef.current) {
@@ -159,8 +190,8 @@ const TableList: React.FC = () => {
                 }
               }
             }}
-            okText="Yes"
-            cancelText="No"
+            okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+            cancelText={<FormattedMessage id="no" defaultMessage="No" />}
           >
             <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
               <Button type="primary" icon={<DeleteOutlined />} danger></Button>
@@ -211,7 +242,11 @@ const TableList: React.FC = () => {
           return value === false && setModalVisible(false);
         }}
         onFinish={async (value) => {
-          const success = await handleUpdate(value as API.CategoryListItem, Number(modalVisible));
+          const success = await handleUpdate(
+            intl,
+            value as API.CategoryListItem,
+            Number(modalVisible),
+          );
           if (success) {
             setModalVisible(false);
             if (actionRef.current) {

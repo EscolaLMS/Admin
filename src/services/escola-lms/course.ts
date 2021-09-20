@@ -10,6 +10,7 @@ export enum TopicType {
   Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
   H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
   Image = 'EscolaLms\\Courses\\Models\\TopicContent\\Image',
+  PDF = 'EscolaLms\\Courses\\Models\\TopicContent\\PDF',
 }
 
 /**  GET /api/courses */
@@ -24,6 +25,7 @@ export async function course(
 ) {
   return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
+    useCache: true,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -37,6 +39,7 @@ export async function course(
 export async function getCourse(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }
@@ -80,6 +83,7 @@ export async function program(
 ) {
   return request<API.DefaultResponse<API.CourseProgram>>(`/api/admin/courses/${id}/program`, {
     method: 'GET',
+    useCache: true,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -179,5 +183,61 @@ export async function removeLesson(id: number) {
 export async function removeTopic(id: number) {
   return request<API.DefaultResponse<{}>>(`/api/admin/topics/${id}`, {
     method: 'DELETE',
+  });
+}
+
+export async function access(
+  id: number,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.CourseAccessList>(`/api/admin/courses/${id}/access`, {
+    method: 'GET',
+    useCache: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function setAccess(
+  id: number,
+  body: API.CourseAccess,
+  options?: { [key: string]: any },
+) {
+  return request<API.CourseAccessList>(`/api/admin/courses/${id}/access/set`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function resources(topicId: number, options?: { [key: string]: any }) {
+  return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources`, {
+    method: 'GET',
+    useCache: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+export async function deleteResource(
+  topicId: number,
+  resourceId: number,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources/${resourceId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
   });
 }

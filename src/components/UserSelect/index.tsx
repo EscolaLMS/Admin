@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 
 import { users as fetchUsers, user as fetchUser } from '@/services/escola-lms/user';
+import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 export const UserSelect: React.FC<{
@@ -9,13 +10,26 @@ export const UserSelect: React.FC<{
     type: number;
   };
   multiple?: boolean;
-  value?: string;
-  onChange?: (value: string) => void;
+  value?: string | string[] | number | number[];
+  onChange?: (value: string | string[] | number | number[]) => void;
 }> = ({ value, onChange, multiple = false }) => {
   const [users, setUsers] = useState<API.UserItem[]>([]);
   const [fetching, setFetching] = useState(false);
 
+  const cache = useRef<API.UserItem[]>();
   const abortController = useRef<AbortController>();
+
+  const setUsersFromResponse = useCallback((responseUsers: API.UserItem[]) => {
+    setUsers((prevUsers) =>
+      [...prevUsers, ...responseUsers].filter(
+        (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
+      ),
+    );
+  }, []);
+
+  useEffect(() => {
+    cache.current = users;
+  }, [users]);
 
   const fetch = useCallback((search?: string) => {
     setFetching(true);
@@ -27,8 +41,7 @@ export const UserSelect: React.FC<{
     fetchUsers({ search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setUsers((prevUsers) => [...prevUsers, ...response.data]);
-          // TODO: don't reset just add new. unique table
+          setUsersFromResponse(response.data);
         }
         setFetching(false);
       })
@@ -44,12 +57,18 @@ export const UserSelect: React.FC<{
 
   useEffect(() => {
     const controller = new AbortController();
-
     if (value) {
-      fetchUser(Number(value), { signal: controller.signal }).then(
-        (user) => user.success && setUsers((prevUsers) => [...prevUsers, user.data]),
-        // TODO don't reset. unique table
-      );
+      const values = Array.isArray(value) ? value : [value];
+
+      values
+        .filter((id) => !cache.current?.find((user) => user.id === id))
+        .forEach((v) => {
+          fetchUser(Number(v), { signal: controller.signal }, false).then((response) => {
+            if (response && response.success) {
+              setUsersFromResponse([response.data]);
+            }
+          });
+        });
     }
     return () => {
       controller.abort();
@@ -66,7 +85,7 @@ export const UserSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder="Select a person"
+      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
