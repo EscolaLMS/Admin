@@ -52,6 +52,7 @@ export default {
   'menu.settings': 'Opcje',
   'menu.reports': 'Raporty',
   'menu.User Groups': 'Grupy',
+  'menu.Templates': 'Szablony',
   access: 'Dostęp',
   user_groups: 'Grupy',
   new_user_group: 'Nowa Grupa',
@@ -61,6 +62,10 @@ export default {
   active: 'Aktywny',
   Inactive: 'Nieaktywny',
   inactive: 'Nieaktywny',
+  new_template: 'Nowy szablon',
+  edit_template: 'Edycja Szablonu',
+  preview_pdf: 'Podgląd PDF',
+  templates: 'Szablony',
   slug: 'Slug',
   name: 'Nazwa',
   ID: 'ID',
@@ -223,5 +228,5 @@ export default {
   reuse_existing: 'Użyj istniejącego',
   open_new_content_editor: 'Otwórz nowy edytor treści',
   example_json: 'Przykładowy JSON',
-  can_skip: "Możliwość pominięcia"
+  can_skip: 'Możliwość pominięcia',
 };

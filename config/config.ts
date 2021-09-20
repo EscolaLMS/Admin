@@ -54,4 +54,17 @@ export default defineConfig({
   },
   base: BASE_PATH || '/',
   publicPath: BASE_PATH || '/',
+
+  /*
+  chainWebpack(memo) {
+    //return memo;
+    memo.module
+      .rule('cke-svg')
+      .test(/ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/)
+      .use('raw-loader').loader('raw-loader')
+
+    //memo.module.rule('ts-in-node_modules').include.clear();
+    return memo;
+  },
+  */
 });

@@ -1,0 +1,136 @@
+import React, { useMemo, useState, useEffect } from 'react';
+import { Button, message, Spin } from 'antd';
+import ProForm, { ProFormText } from '@ant-design/pro-form';
+import ProCard from '@ant-design/pro-card';
+import {
+  template as fetchTemplate,
+  updateTemplate,
+  createTemplate,
+} from '@/services/escola-lms/templates';
+import { PageContainer } from '@ant-design/pro-layout';
+
+import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { useCallback } from 'react';
+import TemplateEditor from '@/components/TemplateEditor';
+import { FilePdfFilled } from '@ant-design/icons';
+
+export default () => {
+  const intl = useIntl();
+  const params = useParams<{ template?: string }>();
+  const { template } = params;
+  const isNew = template === 'new';
+
+  const [data, setData] = useState<Partial<API.Template>>();
+  const [saved, setSaved] = useState<boolean>(false);
+
+  const [form] = ProForm.useForm();
+
+  const fetchData = useCallback(async () => {
+    const response = await fetchTemplate(Number(template));
+    if (response.success) {
+      setData({
+        ...response.data,
+        content: response.data.content || '',
+      });
+      setSaved(true);
+    }
+  }, [template]);
+
+  useEffect(() => {
+    if (template === 'new') {
+      setData({});
+      return;
+    }
+
+    fetchData();
+  }, [template, fetchData]);
+
+  const formProps = useMemo(
+    () => ({
+      onFinish: async (values: Partial<API.Template>) => {
+        let response: API.DefaultResponse<API.Template>;
+        const postData: Partial<API.Template> = {
+          ...values,
+        };
+
+        if (template === 'new') {
+          response = await createTemplate(postData);
+          if (response.success) {
+            history.push(`/templates/${response.data.id}`);
+          }
+        } else {
+          response = await updateTemplate(Number(template), postData);
+        }
+        setSaved(true);
+        message.success(response.message);
+      },
+      initialValues: data,
+    }),
+    [data, template],
+  );
+
+  if (!data) {
+    return <Spin />;
+  }
+
+  return (
+    <PageContainer
+      title={
+        isNew ? <FormattedMessage id="new_template" /> : <FormattedMessage id="new_template" />
+      }
+    >
+      <ProCard>
+        <ProForm
+          {...formProps}
+          form={form}
+          onValuesChange={(values) => {
+            if (values.content) {
+              setSaved(false);
+            }
+          }}
+        >
+          <ProForm.Group>
+            <ProFormText
+              width="md"
+              name="name"
+              label={<FormattedMessage id="name" />}
+              tooltip={<FormattedMessage id="name_tooltip" />}
+              placeholder={intl.formatMessage({
+                id: 'name',
+              })}
+              required
+            />
+            <ProFormText
+              width="sm"
+              name="type"
+              initialValue="pdf"
+              label={<FormattedMessage id="type" />}
+              tooltip={<FormattedMessage id="type_tooltip" />}
+              placeholder={intl.formatMessage({
+                id: 'type',
+              })}
+              disabled
+              required
+            />
+            <ProForm.Item label={<FormattedMessage id="preview" />}>
+              <Button type="primary" disabled={!saved} icon={<FilePdfFilled />}>
+                <FormattedMessage id="preview_pdf" />
+                {/* https://blog.mellisdesigns.com/react-authenticated-file-downloads/ for download preview */}
+              </Button>
+            </ProForm.Item>
+          </ProForm.Group>
+
+          <ProForm.Item
+            name="content"
+            label={<FormattedMessage id="content" />}
+            tooltip={<FormattedMessage id="content_tooltip" />}
+            valuePropName="value"
+            required
+          >
+            <TemplateEditor />
+          </ProForm.Item>
+        </ProForm>
+      </ProCard>
+    </PageContainer>
+  );
+};
