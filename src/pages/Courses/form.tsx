@@ -15,6 +15,7 @@ import ProgramForm from '@/components/ProgramForm';
 import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
+import TemplateEditor from '@/components/TemplateEditor';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -309,6 +310,12 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="access" tab={<FormattedMessage id="access" />}>
             {course && <CourseAccess id={course} />}
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
+            <TemplateEditor />
           </ProCard.TabPane>
         )}
       </ProCard>

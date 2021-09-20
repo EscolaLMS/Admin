@@ -59,6 +59,8 @@
         "@ant-design/pro-form": "^1",
         "@ant-design/pro-layout": "^6",
         "@ant-design/pro-table": "^2",
+        "@ckeditor/ckeditor5-build-classic": "^29.2.0",
+        "@ckeditor/ckeditor5-react": "^3.0.2",
         "@testing-library/jest-dom": "^5.11.9",
         "@types/enzyme": "^3.10.8",
         "@types/expect": "^24.3.0",
