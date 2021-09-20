@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { message } from 'antd';
 
 import {
   program,
@@ -117,6 +118,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
       return (isNew ? apiCreateLesson(formData) : apiUpdateLesson(lesson_id, formData)).then(
         (data) => {
+          message.success(data.message);
           return (
             data.success &&
             setState((prevState) => ({
@@ -166,7 +168,11 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         ?.filter((lesson) => !lesson.isNew)
         .map((lesson) => [lesson.id, lesson.order]);
 
-      sort({ class: 'Lesson', orders, course_id: id });
+      sort({ class: 'Lesson', orders, course_id: id }).then((response) => {
+        if (response.success) {
+          message.success(response.message);
+        }
+      });
     },
     [state, id],
   );
@@ -214,7 +220,11 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         ?.filter((topic) => !topic.isNew)
         .map((topic) => [topic.id, topic.order]);
 
-      sort({ class: 'Topic', orders, course_id: id });
+      sort({ class: 'Topic', orders, course_id: id }).then((response) => {
+        if (response.success) {
+          message.success(response.message);
+        }
+      });
     },
     [state, id],
   );
@@ -236,6 +246,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
       apiRemoveLesson(lesson_id).then((data) => {
         if (data.success) {
+          message.success(data.message);
           setState((prevState) => ({
             ...prevState,
             lessons: prevState
@@ -277,6 +288,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then(
         (data) => {
           if (data.success) {
+            message.success(data.message);
             setState((prevState) => ({
               ...prevState,
               lessons: prevState
@@ -344,6 +356,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       } else {
         apiRemoveTopic(topic_id).then((data) => {
           if (data.success) {
+            message.success(data.message);
             setState((prevState) => ({
               ...prevState,
               lessons: prevState

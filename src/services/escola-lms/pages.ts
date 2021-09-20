@@ -10,6 +10,7 @@ export async function pages(
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
+    useCache: true,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -43,7 +44,7 @@ export async function updatePage(
   options?: { [key: string]: any },
 ) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },

@@ -32,7 +32,9 @@ export default () => {
 
   useEffect(() => {
     if (page === 'new') {
-      setData({});
+      setData({
+        active: false,
+      });
       return;
     }
 
@@ -102,6 +104,7 @@ export default () => {
               placeholder={intl.formatMessage({
                 id: 'slug',
               })}
+              disabled
               required
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
@@ -112,6 +115,7 @@ export default () => {
             label={<FormattedMessage id="content" />}
             tooltip={<FormattedMessage id="content_tooltip" />}
             valuePropName="value"
+            required
           >
             <WysiwygMarkdown directory={`pages/${page}/wysiwyg`} />
           </ProForm.Item>

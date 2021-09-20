@@ -24,6 +24,7 @@ export async function payments(
       page: params.current,
     },
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }

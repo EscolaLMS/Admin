@@ -7,7 +7,7 @@ import { Button, Divider, Card, Collapse, Typography, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import SortingButtons from '@/components/sortingbuttons';
 import TopicHeader from '@/components/ProgramForm/Topic/header';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useParams } from 'umi';
 
 import LessonForm from './form';
 
@@ -18,6 +18,8 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
   const { id, updateLesson, deleteLesson, addNewTopic, sortTopic } = useContext(Context);
+
+  const params = useParams<{ course?: string; tab?: string }>();
 
   const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
 
@@ -37,14 +39,15 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
     setLoading(true);
 
     const formData = getFormData({
-      course_id: lesson.course_id,
+      course_id: lesson.course_id || params.course,
       ...state,
+      order: 0,
       active: state.active ? 1 : 0,
     });
 
     if (updateLesson && state.id) {
       return updateLesson(state.id, formData)
-        .then(() => setLoading(false))
+      .then(() => setLoading(false))
         .catch((err) => {
           console.log(err);
           setLoading(false);

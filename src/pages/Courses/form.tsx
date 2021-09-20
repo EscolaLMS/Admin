@@ -15,6 +15,7 @@ import ProgramForm from '@/components/ProgramForm';
 import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
+import TemplateEditor from '@/components/TemplateEditor';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -235,7 +236,7 @@ export default () => {
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <Row>
-                <Col span={12}>
+                <Col offset={1}>
                   <ProFormImageUpload
                     action={`/api/admin/courses/${course}`}
                     src_name="image_url"
@@ -243,12 +244,20 @@ export default () => {
                     getUploadedSrcField={(info) => info.file.response.data.image_url}
                   />
                 </Col>
-                <Col span={12}>
+                <Col offset={1}>
                   <ProFormVideoUpload
                     action={`/api/admin/courses/${course}`}
                     src_name="video_url"
                     form_name="video"
                     getUploadedSrcField={(info) => info.file.response.data.video_url}
+                  />
+                </Col>
+                <Col offset={1}>
+                  <ProFormImageUpload
+                    action={`/api/admin/courses/${course}`}
+                    src_name="poster_url"
+                    form_name="poster"
+                    getUploadedSrcField={(info) => info.file.response.data.poster_url}
                   />
                 </Col>
               </Row>
@@ -301,6 +310,12 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="access" tab={<FormattedMessage id="access" />}>
             {course && <CourseAccess id={course} />}
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
+            <TemplateEditor />
           </ProCard.TabPane>
         )}
       </ProCard>

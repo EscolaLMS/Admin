@@ -20,14 +20,16 @@ export async function users(
       page: params.current,
     },
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }
 
 /**  GET /api/admin/users */
-export async function user(id: number, options?: { [key: string]: any }) {
+export async function user(id: number, options?: { [key: string]: any }, cache?: boolean) {
   return request<API.UserRow>(`/api/admin/users/${id}`, {
     method: 'GET',
+    useCache: cache !== undefined ? cache : true,
     ...(options || {}),
   });
 }
@@ -35,6 +37,7 @@ export async function user(id: number, options?: { [key: string]: any }) {
 export async function profile(options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/profile/me`, {
     method: 'GET',
+    useCache: true,
     ...(options || {}),
   });
 }

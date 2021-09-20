@@ -25,6 +25,7 @@ export const TopicForm: React.FC<{
         />
         <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
         <ProFormSwitch name="preview" label={<FormattedMessage id="able_to_preview" />} />
+        <ProFormSwitch name="can_skip" label={<FormattedMessage id="can_skip" />} />
       </ProForm.Group>
       <ProForm.Group>
         <ProForm.Item

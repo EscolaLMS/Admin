@@ -3,13 +3,14 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history } from 'umi';
+import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import '@/services/ybug';
+import RestrictedPage from './pages/403';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -66,30 +67,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     links: isDev
       ? [
           <>
-            <LinkOutlined />
-            <span
-              onClick={() => {
-                window.open('/umi/plugin/openapi');
-              }}
-            >
-              openAPI
-            </span>
-          </>,
-          <>
             <BookOutlined />
-            <span
-              onClick={() => {
-                window.open('/~docs');
-              }}
-            >
-              Documentation
+            <span>
+              <Link to="/~docs">Documentation</Link>
             </span>
           </>,
         ]
       : [],
     menuHeaderRender: undefined,
     //  403
-    // unAccessible: <div>unAccessible</div>,
+    unAccessible: <RestrictedPage />,
     ...initialState?.settings,
   };
 };

@@ -122,7 +122,7 @@ declare namespace API {
 
   type DataResponse<Model> = DataResponseSuccess<Model> | DefaultResponseError;
 
-  type CourseList = DefaultResponse<PaginatedList<Course>>;
+  type CourseList = DefaultMetaResponse<Course>;
 
   type CourseListItem = Course;
 
@@ -227,6 +227,7 @@ declare namespace API {
     isNew?: boolean;
     active?: boolean;
     preview?: boolean;
+    can_skip: boolean;
     /*
     topicable_type?:
       | TopicType.RichText

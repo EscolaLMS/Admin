@@ -26,8 +26,8 @@ export default {
   ...pages,
   title: 'Title',
   options: 'Options',
-  base_price: 'Base price',
-  base_price_tooltip: 'Base Price. Use 0 for free course',
+  base_price: 'Base price [¢]',
+  base_price_tooltip: 'Base price [¢]. Use 0 for free course',
   duration: 'Duration',
   categories: 'Categories',
   tags: 'Tags',
@@ -194,7 +194,8 @@ export default {
   new_user: 'New user',
   resend: 'Resend',
   back_home: 'Back to main page',
-  '404_subtitle': 'Sorry, the page you visited does not exist',
+  '403_subtitle': 'Sorry, you are not authorized to access this page.',
+  '404_subtitle': 'Sorry, the page you visited does not exist.',
   user_id: 'User ID: ',
   order_id: 'Order ID: ',
   course_id: 'Course ID: ',
@@ -219,4 +220,6 @@ export default {
   pages: 'Pages',
   new_page: 'New static page',
   edit_page: 'Edit static page',
+  example_json: 'JSON Example',
+  can_skip: "Can be omitted"
 };
