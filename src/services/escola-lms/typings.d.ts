@@ -215,6 +215,17 @@ declare namespace API {
     isNew?: boolean;
   };
 
+  type CourseStats = {
+    EscolaLmsReportsStatsCourseAverageTime: number;
+    EscolaLmsReportsStatsCourseAverageTimePerTopic: {
+      [key: string]: number;
+    };
+    EscolaLmsReportsStatsCourseMoneyEarned: number;
+    EscolaLmsReportsStatsCoursePeopleBought: number;
+    EscolaLmsReportsStatsCoursePeopleFinished: number;
+    EscolaLmsReportsStatsCoursePeopleStarted: number;
+  };
+
   type TopicBase = {
     lesson_id?: number;
     created_at?: string;
