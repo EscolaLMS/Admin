@@ -211,6 +211,13 @@ export default {
   CoursesPopularityMetric: 'Courses popularity metric',
   CoursesSecondsSpentMetric: 'Courses seconds spent metric',
   TutorsPopularityMetric: 'Tutors popularity metric',
+  AverageTimePerTopic: 'Average time per topic',
+  MoneyEarned: 'Money earned',
+  AverageTime: 'Total time',
+  People: 'People',
+  PeopleBought: 'People who bought this course',
+  PeopleFinished: 'People who completed this course',
+  PeopleStarted: 'People who started this course',
   reuse_existing: 'Reuse existing',
   open_new_content_editor: 'Open new content editor',
   content: 'Content',
@@ -221,5 +228,7 @@ export default {
   new_page: 'New static page',
   edit_page: 'Edit static page',
   example_json: 'JSON Example',
-  can_skip: "Can be omitted"
+  can_skip: 'Can be omitted',
+  statistics: 'Statistics',
+  certificates: 'Certificates',
 };

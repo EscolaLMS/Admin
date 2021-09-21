@@ -220,8 +220,17 @@ export default {
   CoursesPopularityMetric: 'Wskaźnik popularności kursów',
   CoursesSecondsSpentMetric: 'Wskaźnik spędzonego czFasu na kursach',
   TutorsPopularityMetric: 'Wskaźnik popularności nauczycieli',
+  AverageTimePerTopic: 'Średni czas spędzony na temacie',
+  MoneyEarned: 'Zarobione pieniądze',
+  AverageTime: 'Całkowity spędzony czas na tematach',
+  People: 'Ludzie',
+  PeopleBought: 'Ilość osób, która kupiła kurs',
+  PeopleFinished: 'Ilość osób, która skończyła kurs',
+  PeopleStarted: 'Ilość osób, która zaczęła kurs',
   reuse_existing: 'Użyj istniejącego',
   open_new_content_editor: 'Otwórz nowy edytor treści',
   example_json: 'Przykładowy JSON',
-  can_skip: "Możliwość pominięcia"
+  can_skip: 'Możliwość pominięcia',
+  statistics: 'Statystyki',
+  certificates: 'Certyfikaty',
 };
