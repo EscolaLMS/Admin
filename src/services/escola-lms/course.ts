@@ -103,6 +103,18 @@ export async function createLesson(
   });
 }
 
+export async function getCourseStats(
+  id: number,
+  body?: { [key: string]: any },
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.CourseStats>>(`/api/admin/stats/course/${id}`, {
+    method: 'GET',
+    data: body,
+    ...(options || {}),
+  });
+}
+
 export async function updateLesson(
   id: number | false,
   body?: { [key: string]: any },
