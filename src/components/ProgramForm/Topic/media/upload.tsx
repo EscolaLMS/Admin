@@ -101,6 +101,7 @@ export const MediaUploadForm: React.FC<{
     topicable_type: type,
     active: currentState.active ? 1 : 0,
     preview: currentState.preview ? 1 : 0,
+    can_skip: currentState.can_skip ? 1 : 0,
   };
 
   return (
