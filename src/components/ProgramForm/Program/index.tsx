@@ -101,7 +101,7 @@ export const Curriculum = () => {
                     )
                   }
                 >
-                  <Lesson key={lesson.id} lesson={lesson} />
+                  <Lesson key={lesson.id} lesson={lesson} courseLessons={state.lessons} />
                 </Panel>
               ))}
           </Collapse>

@@ -42,7 +42,8 @@ export const Topic: React.FC<{
   itemsLength?: number;
   onUpload?: (topic: API.Topic) => void;
   courseId?: number;
-}> = ({ topic, onUpload, courseId }) => {
+  courseLessons: API.Lesson[];
+}> = ({ topic, onUpload, courseId, courseLessons }) => {
   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
 
   const [state, setState] = useState<API.Topic>({
@@ -137,6 +138,7 @@ export const Topic: React.FC<{
       >
         <TopicForm
           courseId={Number(courseId)}
+          courseLessons={courseLessons}
           initialValues={state}
           onValuesChange={(values) => updateValues(values)}
         />
