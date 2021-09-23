@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Button, message, Spin } from 'antd';
+import { message, Spin } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
@@ -13,6 +13,7 @@ import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import TemplateEditor from '@/components/TemplateEditor';
 import { FilePdfFilled } from '@ant-design/icons';
+import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
 
 export default () => {
   const intl = useIntl();
@@ -125,10 +126,15 @@ export default () => {
               required
             />
             <ProForm.Item label={<FormattedMessage id="preview" />}>
-              <Button type="primary" disabled={!saved} icon={<FilePdfFilled />}>
+              <AuthenticatedLinkButton
+                url={`/api/admin/templates/${template}/preview`}
+                filename="preview.pdf"
+                type="primary"
+                disabled={!saved}
+                icon={<FilePdfFilled />}
+              >
                 <FormattedMessage id="preview_pdf" />
-                {/* https://blog.mellisdesigns.com/react-authenticated-file-downloads/ for download preview */}
-              </Button>
+              </AuthenticatedLinkButton>
             </ProForm.Item>
           </ProForm.Group>
 
