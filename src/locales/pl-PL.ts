@@ -233,4 +233,7 @@ export default {
   can_skip: 'Możliwość pominięcia',
   statistics: 'Statystyki',
   certificates: 'Certyfikaty',
+  query: 'Szukaj',
+  reset: 'Wyczyść',
+  search_file: 'Wyszukaj plik',
 };

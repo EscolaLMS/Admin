@@ -231,4 +231,7 @@ export default {
   can_skip: 'Can be omitted',
   statistics: 'Statistics',
   certificates: 'Certificates',
+  query: 'Query',
+  reset: 'Reset',
+  search_file: 'Search file',
 };
