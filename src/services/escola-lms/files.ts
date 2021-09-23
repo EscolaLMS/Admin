@@ -18,6 +18,24 @@ export async function files(
   });
 }
 
+export async function findFile(
+  params: API.CourseParams & {
+    directory: string;
+    name: string;
+    page?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.FileList>(
+    `/api/admin/file/find`,
+    {
+      method: 'GET',
+      params,
+      ...(options || {}),
+    },
+  );
+}
+
 /**  GET /api/currentUser */
 export async function upload(file: File, directory: string, options?: { [key: string]: any }) {
   const formData = new FormData();
