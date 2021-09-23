@@ -12,13 +12,18 @@ import { Spin } from 'antd';
 interface FormWysiwygProps {
   value?: string;
   onChange?: (value: string) => void;
+  varSet: string;
 }
 
-export const TemplateEditor: React.FC<FormWysiwygProps> = ({ value, onChange }) => {
+export const TemplateEditor: React.FC<FormWysiwygProps> = ({
+  value,
+  onChange,
+  varSet = 'certificate',
+}) => {
   const [variables, setVariables] = useState<API.TemplateVariables>();
 
   useEffect(() => {
-    fetchVariables().then((response) => setVariables(response.success ? response.data : []));
+    fetchVariables().then((response) => setVariables(response.success ? response.data : {}));
   }, []);
   if (variables === undefined) {
     return <Spin />;
@@ -34,7 +39,7 @@ export const TemplateEditor: React.FC<FormWysiwygProps> = ({ value, onChange }) 
               {
                 marker: '@',
                 minimumCharacters: 1,
-                feed: variables,
+                feed: variables[varSet],
               },
             ],
           },

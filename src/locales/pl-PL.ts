@@ -65,6 +65,8 @@ export default {
   new_template: 'Nowy szablon',
   edit_template: 'Edycja Szablonu',
   preview_pdf: 'Podgląd PDF',
+  vars_set: 'Typ zmiennych',
+  vars_set_tooltip: 'Typ zmiennych to np Certyfikaty, email o nowym koncie, itp',
   templates: 'Szablony',
   slug: 'Slug',
   name: 'Nazwa',

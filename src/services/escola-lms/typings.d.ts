@@ -431,13 +431,14 @@ declare namespace API {
     id: number;
     name: string;
     type: string;
+    vars_set: string;
     course_id: number;
     content: string;
   };
 
   type TemplateVariable = string;
 
-  type TemplateVariables = TemplateVariable[];
+  type TemplateVariables = Record<string, TemplateVariable[]>;
 
   type File = {
     name: string;

@@ -112,6 +112,18 @@ export default () => {
               disabled
               required
             />
+            <ProFormText
+              width="sm"
+              name="vars_set"
+              initialValue="certificates"
+              label={<FormattedMessage id="vars_set" />}
+              tooltip={<FormattedMessage id="vars_set_tooltip" />}
+              placeholder={intl.formatMessage({
+                id: 'vars_set',
+              })}
+              disabled
+              required
+            />
             <ProForm.Item label={<FormattedMessage id="preview" />}>
               <Button type="primary" disabled={!saved} icon={<FilePdfFilled />}>
                 <FormattedMessage id="preview_pdf" />
