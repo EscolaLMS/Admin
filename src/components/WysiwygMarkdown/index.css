@@ -13,7 +13,15 @@
   list-style: decimal;
 }
 
-.form-wysiwyg-markdown ul, 
+.form-wysiwyg-markdown ul,
 .form-wysiwyg-markdown ol {
   list-style: initial;
+}
+
+.ant-modal-mask {
+  z-index: 100 !important;
+}
+
+.ant-modal-wrap {
+  z-index: 100 !important;
 }
