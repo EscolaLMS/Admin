@@ -70,6 +70,7 @@ export default {
   parent_id: 'Parent category',
   parent_id_group: 'Parent group',
   parent_id_group_tooltip: 'Search by id',
+  registerable: 'Registerable',
   edit: 'Edit',
   delete: 'Delete',
   deleteQuestion: 'Are you sure to delete this record?',

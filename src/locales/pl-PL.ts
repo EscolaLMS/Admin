@@ -71,6 +71,7 @@ export default {
   parent_id: 'Nadrzędna kategoria',
   parent_id_group: 'Nadrzędna grupa',
   parent_id_group_tooltip: 'Szukaj po id',
+  registerable: 'Pokaż w rejestracji',
   edit: 'Edytuj',
   delete: 'Usuń',
   deleteQuestion: 'Czy na pewno chcesz usunąć ten rekord?',

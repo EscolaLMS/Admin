@@ -1,4 +1,4 @@
-import { Button, Tooltip, Popconfirm } from 'antd';
+import { Button, Tooltip, Popconfirm, Tag } from 'antd';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -42,6 +42,20 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
       hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="registerable" defaultMessage="registerable" />,
+      dataIndex: 'registerable',
+      hideInForm: true,
+      hideInSearch: true,
+      render: (_, record) => (
+        <Tag color={record.registerable ? 'success' : 'error'}>
+          <FormattedMessage
+            id={record.registerable ? 'true' : 'false'}
+            defaultMessage={record.registerable ? 'true' : 'false'}
+          />
+        </Tag>
+      ),
     },
     {
       hideInSearch: false,
