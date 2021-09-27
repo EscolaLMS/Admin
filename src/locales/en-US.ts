@@ -208,7 +208,7 @@ export default {
   failed: 'failed',
   clear_selection: 'clear selection',
   form: 'Form',
-  none: 'Brak',
+  none: 'None',
   too_many_chars: 'Too many characters',
   CoursesMoneySpentMetric: 'Courses money spent metric',
   CoursesPopularityMetric: 'Courses popularity metric',

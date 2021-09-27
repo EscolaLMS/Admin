@@ -142,7 +142,11 @@ export default () => {
               label={<FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />}
               valuePropName="value"
             >
-              <Select placeholder="brak">
+              <Select
+                placeholder={
+                  <FormattedMessage id="none" />
+                }
+              >
                 {groups.map((element) => (
                   <Option value={element.id}>{element.name}</Option>
                 ))}

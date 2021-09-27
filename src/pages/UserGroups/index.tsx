@@ -17,9 +17,9 @@ const TableList: React.FC = () => {
   const [data, setData] = useState<API.UserGroup[]>([]);
   const intl = useIntl();
 
-  const categoryHasChildren = useCallback(
+  const groupHasChildren = useCallback(
     (id: number) => {
-      return !!data.some((category) => category.parent_id === id);
+      return !!data.some((userGroup) => userGroup.parent_id === id);
     },
     [data],
   );
@@ -111,7 +111,7 @@ const TableList: React.FC = () => {
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>
               </Link>,
-              categoryHasChildren(record.id) ? (
+              groupHasChildren(record.id) ? (
                 <Tooltip
                   key="delete"
                   title={
