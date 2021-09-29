@@ -85,19 +85,6 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
           <FormattedMessage id="none" />
         </React.Fragment>
       );
-      const parentCat = data.find((cat) => cat.id === record.parent_id);
-      if (parentCat) {
-        return (
-          <Link to={`/user_groups/${parentCat.id}`} key="edit">
-            <Button size="small">{parentCat.name}</Button>
-          </Link>
-        );
-      }
-      return (
-        <React.Fragment>
-          <FormattedMessage id="none" />
-        </React.Fragment>
-      );
     },
   },
 ];
