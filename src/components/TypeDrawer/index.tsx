@@ -7,6 +7,7 @@ import { FormattedMessage } from 'umi';
 import { TableColumns as UserTableColumns } from '@/pages/Users/index';
 import { TableColumns as OrderTableColumns } from '@/pages/Orders/index';
 import { TableColumns as CourseTableColumns } from '@/pages/Courses/index';
+import { TableColumns as UserGroupTableColumns } from '@/pages/UserGroups/index';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -48,6 +49,14 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
           {...descrProps}
           title={<FormattedMessage id="course" />}
           columns={CourseTableColumns as ProDescriptionsItemProps<API.Course>[]}
+        />
+      )}
+
+      {data.type === 'EscolaLms\\Auth\\Models\\UserGroup' && (
+        <ProDescriptions<API.Course>
+          {...descrProps}
+          title={<FormattedMessage id="user_group" />}
+          columns={UserGroupTableColumns as ProDescriptionsItemProps<API.UserGroup>[]}
         />
       )}
     </Drawer>

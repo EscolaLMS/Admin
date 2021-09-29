@@ -1,16 +1,106 @@
 import { Button, Tooltip, Popconfirm, Tag } from 'antd';
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { userGroups, deleteUserGroup } from '@/services/escola-lms/user_groups';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import UserGroupSelect from '../../components/UserGroupSelect';
+import TypeButtonDrawer from '../../components/TypeButtonDrawer';
 
 const handleRemove = async (id: number) => {
   await deleteUserGroup(id);
   return true;
 };
+
+export const TableColumns: ProColumns<API.UserGroup>[] = [
+  {
+    title: <FormattedMessage id="search" defaultMessage="search" />,
+    dataIndex: 'search',
+    hideInSearch: false,
+    hideInTable: true,
+    hideInDescriptions: true,
+    tooltip: <FormattedMessage id="search_tooltip_user_groups" />,
+  },
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
+    dataIndex: 'name_with_breadcrumbs',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="name" defaultMessage="name" />,
+    dataIndex: 'name',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="registerable" defaultMessage="registerable" />,
+    dataIndex: 'registerable',
+    hideInForm: true,
+    hideInSearch: true,
+    render: (_, record) => (
+      <Tag color={record.registerable ? 'success' : 'error'}>
+        <FormattedMessage
+          id={record.registerable ? 'true' : 'false'}
+          defaultMessage={record.registerable ? 'true' : 'false'}
+        />
+      </Tag>
+    ),
+  },
+  {
+    hideInSearch: false,
+    title: <FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />,
+    tooltip: <FormattedMessage id="parent_id_group_tooltip" />,
+    dataIndex: 'parent_id',
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <UserGroupSelect
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => {
+      if (record.parent_id) {
+        return (
+          <TypeButtonDrawer
+            type={'EscolaLms\\Auth\\Models\\UserGroup'}
+            type_id={record.parent_id}
+          />
+        );
+      }
+      return (
+        <React.Fragment>
+          <FormattedMessage id="none" />
+        </React.Fragment>
+      );
+      const parentCat = data.find((cat) => cat.id === record.parent_id);
+      if (parentCat) {
+        return (
+          <Link to={`/user_groups/${parentCat.id}`} key="edit">
+            <Button size="small">{parentCat.name}</Button>
+          </Link>
+        );
+      }
+      return (
+        <React.Fragment>
+          <FormattedMessage id="none" />
+        </React.Fragment>
+      );
+    },
+  },
+];
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -23,62 +113,6 @@ const TableList: React.FC = () => {
     },
     [data],
   );
-
-  const TableColumns: ProColumns<API.UserGroup>[] = [
-    {
-      title: <FormattedMessage id="search" defaultMessage="search" />,
-      dataIndex: 'search',
-      hideInSearch: false,
-      hideInTable: true,
-      hideInDescriptions: true,
-      tooltip: <FormattedMessage id="search_tooltip_user_groups" />,
-    },
-    {
-      title: <FormattedMessage id="ID" defaultMessage="ID" />,
-      dataIndex: 'id',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="name" defaultMessage="name" />,
-      dataIndex: 'name',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="registerable" defaultMessage="registerable" />,
-      dataIndex: 'registerable',
-      hideInForm: true,
-      hideInSearch: true,
-      render: (_, record) => (
-        <Tag color={record.registerable ? 'success' : 'error'}>
-          <FormattedMessage
-            id={record.registerable ? 'true' : 'false'}
-            defaultMessage={record.registerable ? 'true' : 'false'}
-          />
-        </Tag>
-      ),
-    },
-    {
-      hideInSearch: false,
-      title: <FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />,
-      tooltip: <FormattedMessage id="parent_id_group_tooltip" />,
-      dataIndex: 'parent_id',
-      render: (_, record) => {
-        const parentCat = data.find((cat) => cat.id === record.parent_id);
-        if (parentCat) {
-          return (
-            <Link to={`/user_groups/${parentCat.id}`} key="edit">
-              <Button size="small">{parentCat.name}</Button>
-            </Link>
-          );
-        }
-        return (
-          <React.Fragment>
-            <FormattedMessage id="none" />
-          </React.Fragment>
-        );
-      },
-    },
-  ];
 
   return (
     <PageContainer>

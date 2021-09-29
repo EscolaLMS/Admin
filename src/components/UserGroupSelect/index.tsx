@@ -103,7 +103,7 @@ export const UserGroupSelect: React.FC<{
     >
       {userGroups.map((userGroup) => (
         <Select.Option key={userGroup.id} value={userGroup.id}>
-          {userGroup.name}
+          {userGroup.name_with_breadcrumbs}
         </Select.Option>
       ))}
     </Select>
