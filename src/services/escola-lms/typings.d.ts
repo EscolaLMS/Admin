@@ -215,6 +215,17 @@ declare namespace API {
     isNew?: boolean;
   };
 
+  type CourseStats = {
+    EscolaLmsReportsStatsCourseAverageTime: number;
+    EscolaLmsReportsStatsCourseAverageTimePerTopic: {
+      [key: string]: number;
+    };
+    EscolaLmsReportsStatsCourseMoneyEarned: number;
+    EscolaLmsReportsStatsCoursePeopleBought: number;
+    EscolaLmsReportsStatsCoursePeopleFinished: number;
+    EscolaLmsReportsStatsCoursePeopleStarted: number;
+  };
+
   type TopicBase = {
     lesson_id?: number;
     created_at?: string;
@@ -552,6 +563,8 @@ declare namespace API {
   type UserGroup = {
     id: number;
     name: string;
+    parent_id: null | number;
+    registerable: boolean;
     users: UserItem[];
   };
 
@@ -567,6 +580,12 @@ declare namespace API {
   type UserGroupAddRow = DefaultResponse<UserItem[]>;
 
   type UserGroupList = DefaultMetaResponse<UserGroup>;
+
+  type UserGroupsParams = PageParams &
+    PaginationParams & {
+      search?: string;
+      parent_id?: number;
+    };
 
   type CourseAccessList = DefaultResponse<CourseAccess>;
 
