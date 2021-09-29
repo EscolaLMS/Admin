@@ -6,7 +6,7 @@ import { request } from 'umi';
 export async function tagsUnique(options?: { [key: string]: any }) {
   return request<API.DataResponseSuccess<{ title: string }[]>>('/api/tags/unique', {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

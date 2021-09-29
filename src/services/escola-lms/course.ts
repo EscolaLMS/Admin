@@ -25,7 +25,7 @@ export async function course(
 ) {
   return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -39,7 +39,7 @@ export async function course(
 export async function getCourse(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
@@ -83,7 +83,7 @@ export async function program(
 ) {
   return request<API.DefaultResponse<API.CourseProgram>>(`/api/admin/courses/${id}/program`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -205,7 +205,7 @@ export async function access(
 ) {
   return request<API.CourseAccessList>(`/api/admin/courses/${id}/access`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -232,7 +232,7 @@ export async function setAccess(
 export async function resources(topicId: number, options?: { [key: string]: any }) {
   return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     headers: {
       'Content-Type': 'application/json',
     },

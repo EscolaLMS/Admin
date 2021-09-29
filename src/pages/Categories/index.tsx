@@ -95,6 +95,11 @@ const TableList: React.FC = () => {
       hideInSearch: true,
     },
     {
+      title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
+      dataIndex: 'name_with_breadcrumbs',
+      hideInSearch: true,
+    },
+    {
       title: <FormattedMessage id="slug" defaultMessage="slug" />,
       dataIndex: 'slug',
       hideInSearch: true,
@@ -158,7 +163,7 @@ const TableList: React.FC = () => {
             type="primary"
             icon={<EditOutlined />}
             onClick={() => setModalVisible(record.id)}
-          ></Button>
+          />
         </Tooltip>,
         categoryHasChildren(record.id) ? (
           <Tooltip
@@ -170,7 +175,7 @@ const TableList: React.FC = () => {
               />
             }
           >
-            <Button disabled={true} type="primary" icon={<DeleteOutlined />} danger></Button>
+            <Button disabled={true} type="primary" icon={<DeleteOutlined />} danger />
           </Tooltip>
         ) : (
           <Popconfirm
@@ -194,7 +199,7 @@ const TableList: React.FC = () => {
             cancelText={<FormattedMessage id="no" defaultMessage="No" />}
           >
             <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-              <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+              <Button type="primary" icon={<DeleteOutlined />} danger />
             </Tooltip>
           </Popconfirm>
         ),
@@ -254,7 +259,7 @@ const TableList: React.FC = () => {
             }
           }
         }}
-      ></CategoryModalForm>
+      />
     </PageContainer>
   );
 };

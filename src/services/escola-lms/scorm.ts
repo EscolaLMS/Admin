@@ -19,7 +19,7 @@ export async function scorms(
       page: params.current,
     },
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

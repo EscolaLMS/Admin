@@ -1,10 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin, List, Button, Divider, Typography, Select } from 'antd';
+import { message, Spin, List, Button, Divider, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
   userGroup as fetchUserGroup,
-  userGroups,
   createUserGroup,
   updateUserGroup,
   addUserToGroup,
@@ -17,24 +16,15 @@ import { useCallback } from 'react';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import UserSelect from '@/components/UserSelect';
+import UserGroupSelect from '../../components/UserGroupSelect';
 
 export default () => {
   const intl = useIntl();
   const params = useParams<{ group?: string }>();
-  const [groups, setGroups] = useState<API.UserGroup[]>([]);
   const { group } = params;
   const isNew = group === 'new';
-  const { Option } = Select;
 
   const [data, setData] = useState<Partial<API.UserGroup>>();
-
-  useEffect(() => {
-    userGroups({}).then((response) => {
-      if (response.success) {
-        setGroups(response.data);
-      }
-    });
-  }, []);
 
   const fetchData = useCallback(async () => {
     const response = await fetchUserGroup(Number(group));
@@ -78,7 +68,7 @@ export default () => {
         }
       });
     },
-    [data],
+    [data, group],
   );
 
   useEffect(() => {
@@ -138,15 +128,12 @@ export default () => {
               required
             />
             <ProForm.Item
+              style={{ minWidth: '300px' }}
               name="parent_id"
               label={<FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />}
               valuePropName="value"
             >
-              <Select placeholder={<FormattedMessage id="none" />}>
-                {groups.map((element) => (
-                  <Option value={element.id}>{element.name}</Option>
-                ))}
-              </Select>
+              <UserGroupSelect />
             </ProForm.Item>
             <ProFormSwitch name="registerable" label={<FormattedMessage id="registerable" />} />
           </ProForm.Group>

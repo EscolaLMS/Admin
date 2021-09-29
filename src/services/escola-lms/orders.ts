@@ -23,7 +23,7 @@ export async function orders(
       page: params.current,
     },
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
@@ -32,7 +32,7 @@ export async function orders(
 export async function order(id: number, options?: { [key: string]: any }) {
   return request<API.DefaultResponse<API.Order>>(`/api/admin/orders/${id}`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

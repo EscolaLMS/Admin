@@ -7,7 +7,8 @@ type PossibleType =
   | 'App\\Models\\User'
   | 'EscolaLms\\Core\\Models\\User'
   | 'EscolaLms\\Cart\\Models\\Order'
-  | 'EscolaLms\\Cart\\Models\\Course';
+  | 'EscolaLms\\Cart\\Models\\Course'
+  | 'EscolaLms\\Auth\\Models\\UserGroup';
 
 export const TypeButtonDrawer: React.FC<{
   type: PossibleType;

@@ -541,6 +541,10 @@ declare namespace API {
     | {
         type: 'EscolaLms\\Cart\\Models\\Course';
         value: API.Course;
+      }
+    | {
+        type: 'EscolaLms\\Auth\\Models\\UserGroup';
+        value: API.UserGroup;
       };
 
   type ReportType =
@@ -563,6 +567,7 @@ declare namespace API {
   type UserGroup = {
     id: number;
     name: string;
+    name_with_breadcrumbs: string;
     parent_id: null | number;
     registerable: boolean;
     users: UserItem[];
