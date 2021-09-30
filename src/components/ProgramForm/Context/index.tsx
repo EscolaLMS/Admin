@@ -102,6 +102,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       id: state ? state.lessons.length + 1 : getRandomId(), // New Lesson
       order: 0,
       title: 'Add title here',
+      active: true,
     };
     setState((prevState) => ({
       ...prevState,
@@ -516,6 +517,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       id: getRandomId(),
       order: 0,
       title: 'Add new title here',
+      active: true,
     };
     setState((prevState) => ({
       ...prevState,

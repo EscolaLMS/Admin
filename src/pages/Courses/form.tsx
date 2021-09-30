@@ -33,7 +33,9 @@ export default () => {
 
   useEffect(() => {
     if (course === 'new') {
-      setData({});
+      setData({
+        active: true,
+      });
       return;
     }
     const fetch = async () => {
