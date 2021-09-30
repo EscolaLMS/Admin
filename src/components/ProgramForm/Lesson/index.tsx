@@ -13,7 +13,10 @@ import LessonForm from './form';
 
 const { Panel } = Collapse;
 
-export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
+export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] }> = ({
+  lesson,
+  courseLessons,
+}) => {
   const [state, setState] = useState<API.Lesson>(lesson);
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +50,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
 
     if (updateLesson && state.id) {
       return updateLesson(state.id, formData)
-      .then(() => setLoading(false))
+        .then(() => setLoading(false))
         .catch((err) => {
           console.log(err);
           setLoading(false);
@@ -138,6 +141,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson }> = ({ lesson }) => {
                 >
                   <Topic
                     courseId={lesson.course_id}
+                    courseLessons={courseLessons}
                     key={topic.id}
                     topic={topic}
                     onUpload={(uploadedTopic) =>

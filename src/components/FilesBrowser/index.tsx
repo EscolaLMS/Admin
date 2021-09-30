@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-import { files, remove } from '@/services/escola-lms/files';
-import { List, Button, Typography, Space, Pagination } from 'antd';
+import { files, remove, findFile } from '@/services/escola-lms/files';
+import { List, Button, Typography, Space, Pagination, Input } from 'antd';
 
 import { FolderOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage } from 'umi';
 import SecureUpload from '@/components/SecureUpload';
 
 import './index.css';
@@ -16,6 +16,7 @@ interface FormWysiwygProps {
 
 type FileBrowserState = {
   loading: boolean;
+  name: string;
   directory: string;
   current_page: number;
   data?: API.File[];
@@ -47,8 +48,10 @@ const FilesBrowserActions: React.FC<{ directory: string; onUploaded: (dir: strin
 };
 
 export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/', onFile }) => {
+  const intl = useIntl();
   const [state, setState] = useState<FileBrowserState>({
     loading: false,
+    name: '',
     directory: defaultDirectory,
     current_page: 1,
     data: undefined,
@@ -130,8 +133,79 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
     [fetchFiles, setLoading, state.directory],
   );
 
+  const findByInputValue = useCallback(
+    (dir, input, page = 1) => {
+      const abort = () => controllerRef.current && controllerRef.current.abort();
+      abort();
+
+      controllerRef.current = new AbortController();
+
+      setLoading(true);
+
+      findFile({ directory: dir, name: input, page }, { signal: controllerRef.current?.signal })
+        .then((response) => {
+          if (response.success) {
+            setState((prevState) => ({
+              ...prevState,
+              ...response.data,
+              data: [
+                {
+                  url: dir.split('/').slice(0, -1).join('/'),
+                  name: '..',
+                  created_at: '',
+                  mime: 'directory',
+                } as API.File,
+                ...response.data.data.map((file) => ({
+                  ...file,
+                  url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
+                })),
+              ].filter((file: API.File) => {
+                if (dir === '/') {
+                  return file.name !== '..';
+                }
+                return true;
+              }),
+              directory: dir,
+              loading: false,
+            }));
+          }
+        })
+        .catch(() => setLoading(false));
+      return () => {
+        abort();
+      };
+    },
+    [setLoading],
+  );
+
   return (
     <div className="file-browser">
+      <div className="file-browser__header">
+        <Input
+          placeholder={intl.formatMessage({
+            id: 'search_file',
+          })}
+          className="file-browser__input"
+          onChange={(e) =>
+            setState((prev) => {
+              return { ...prev, name: e.target.value };
+            })
+          }
+          value={state.name}
+        />
+        <div>
+          <Button className="file-browser__button" onClick={() => fetchFiles(state.directory)}>
+            <FormattedMessage id="reset" />
+          </Button>
+          <Button
+            className="file-browser__button"
+            type="primary"
+            onClick={() => findByInputValue(state.directory, state.name)}
+          >
+            <FormattedMessage id="query" />
+          </Button>
+        </div>
+      </div>
       <List
         loading={state.loading}
         size="small"
