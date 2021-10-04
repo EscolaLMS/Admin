@@ -102,6 +102,16 @@ export const Topic: React.FC<{
       can_skip: state.can_skip ? 1 : 0,
       order: sortOrder,
     };
+
+    if (
+      values.topicable_type &&
+      [TopicType.Audio, TopicType.Image, TopicType.Image, TopicType.PDF, TopicType.Video].includes(
+        values.topicable_type,
+      )
+    ) {
+      delete values.value;
+    }
+
     const formData = getFormData(values);
 
     handleSave(formData);
