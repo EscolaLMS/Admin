@@ -15,6 +15,12 @@ export const SecureUpload: React.FC<{
   wrapInForm?: boolean;
 }> = ({ onChange, url, name, extra, accept, data, wrapInForm = true }) => {
   const intl = useIntl();
+
+  if (data && data[name]) {
+    // eslint-disable-next-line no-param-reassign
+    delete data[name];
+  }
+
   return (
     <ConditionalWrap
       condition={wrapInForm}
