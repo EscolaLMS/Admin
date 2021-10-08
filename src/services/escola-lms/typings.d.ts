@@ -150,6 +150,10 @@ declare namespace API {
 
   type PageListItem = Page;
 
+  type TemplateList = DefaultMetaResponse<Template>;
+
+  type TemplateListItem = Template;
+
   type PaginationParams = {
     order_by?: string;
     order?: 'ASC' | 'DESC';
@@ -433,6 +437,19 @@ declare namespace API {
     author: UserItem;
     content: string;
   };
+
+  type Template = {
+    id: number;
+    name: string;
+    type: string;
+    vars_set: string;
+    course_id: number;
+    content: string;
+  };
+
+  type TemplateVariable = string;
+
+  type TemplateVariables = Record<string, Record<string, TemplateVariable[]>>;
 
   type File = {
     name: string;

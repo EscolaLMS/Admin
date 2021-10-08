@@ -1,0 +1,23 @@
+.template-editor {
+  width: 297mm;
+  height: 210mm;
+  margin: 0mm;
+  padding: 0mm;
+  background-color: #ffffff;
+  min-height: 297mm;
+  height: 297mm;
+
+  min-width: 210mm;
+  max-width: 210mm;
+  width: 210mm;
+}
+
+.template-editor .ck-editor__editable {
+  min-height: 297mm;
+  max-height: 297mm;
+  height: 297mm;
+
+  min-width: 210mm;
+  max-width: 210mm;
+  width: 210mm;
+}

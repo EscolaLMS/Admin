@@ -26,14 +26,11 @@ export async function findFile(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.FileList>(
-    `/api/admin/file/find`,
-    {
-      method: 'GET',
-      params,
-      ...(options || {}),
-    },
-  );
+  return request<API.FileList>(`/api/admin/file/find`, {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
 }
 
 /**  GET /api/currentUser */

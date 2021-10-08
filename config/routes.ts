@@ -158,6 +158,23 @@
     component: './Pages/form',
     hideInMenu: true,
   },
+
+  {
+    path: '/templates',
+    name: 'Templates',
+    icon: 'highlight',
+    access: 'adminPermission',
+    component: './Templates',
+  },
+  {
+    path: '/templates/:template',
+    name: 'Templates',
+    icon: 'highlight',
+    access: 'adminPermission',
+    component: './Templates/form',
+    hideInMenu: true,
+  },
+
   {
     path: '/files',
     name: 'Files',
