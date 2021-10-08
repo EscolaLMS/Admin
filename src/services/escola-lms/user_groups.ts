@@ -8,6 +8,7 @@ export async function userGroups(
     current?: number;
     pageSize?: number;
     search?: string;
+    parent_id?: number;
   },
   options?: { [key: string]: any },
 ) {
@@ -16,9 +17,11 @@ export async function userGroups(
       ...params,
       per_page: params.pageSize,
       page: params.current,
+      search: params.search ? params.search : undefined,
+      parent_id: params.parent_id,
     },
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
@@ -27,7 +30,7 @@ export async function userGroups(
 export async function userGroup(id: number, options?: { [key: string]: any }) {
   return request<API.UserGroupRow>(`/api/admin/user-groups/${id}`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

@@ -6,11 +6,11 @@ export async function pages(
     current?: number;
     pageSize?: number;
   },
-  options?: { [key: string]: any },
+  options?: Record<string, any>,
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     params: {
       ...params,
       per_page: params.pageSize,
@@ -20,14 +20,14 @@ export async function pages(
   });
 }
 
-export async function page(id: number, options?: { [key: string]: any }) {
+export async function page(id: number, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-export async function createPage(body?: Partial<API.Page>, options?: { [key: string]: any }) {
+export async function createPage(body?: Partial<API.Page>, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages`, {
     method: 'POST',
     headers: {
@@ -41,7 +41,7 @@ export async function createPage(body?: Partial<API.Page>, options?: { [key: str
 export async function updatePage(
   id: number,
   body?: Partial<API.Page>,
-  options?: { [key: string]: any },
+  options?: Record<string, any>,
 ) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'PATCH',
@@ -53,7 +53,7 @@ export async function updatePage(
   });
 }
 
-export async function deletePage(id: number, options?: { [key: string]: any }) {
+export async function deletePage(id: number, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'DELETE',
     headers: {

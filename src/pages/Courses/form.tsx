@@ -16,6 +16,7 @@ import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import TemplateEditor from '@/components/TemplateEditor';
+import CourseStatistics from '@/components/CourseStatistics';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -32,7 +33,9 @@ export default () => {
 
   useEffect(() => {
     if (course === 'new') {
-      setData({});
+      setData({
+        active: true,
+      });
       return;
     }
     const fetch = async () => {
@@ -316,6 +319,12 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
             <TemplateEditor />
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="statistics" tab={<FormattedMessage id="statistics" />}>
+            {course && <CourseStatistics courseId={course} />}
           </ProCard.TabPane>
         )}
       </ProCard>

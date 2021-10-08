@@ -42,7 +42,8 @@ export const Topic: React.FC<{
   itemsLength?: number;
   onUpload?: (topic: API.Topic) => void;
   courseId?: number;
-}> = ({ topic, onUpload, courseId }) => {
+  courseLessons: API.Lesson[];
+}> = ({ topic, onUpload, courseId, courseLessons }) => {
   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
 
   const [state, setState] = useState<API.Topic>({
@@ -101,6 +102,16 @@ export const Topic: React.FC<{
       can_skip: state.can_skip ? 1 : 0,
       order: sortOrder,
     };
+
+    if (
+      values.topicable_type &&
+      [TopicType.Audio, TopicType.Image, TopicType.Image, TopicType.PDF, TopicType.Video].includes(
+        values.topicable_type,
+      )
+    ) {
+      delete values.value;
+    }
+
     const formData = getFormData(values);
 
     handleSave(formData);
@@ -137,6 +148,7 @@ export const Topic: React.FC<{
       >
         <TopicForm
           courseId={Number(courseId)}
+          courseLessons={courseLessons}
           initialValues={state}
           onValuesChange={(values) => updateValues(values)}
         />

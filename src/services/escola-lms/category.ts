@@ -6,7 +6,7 @@ import { request } from 'umi';
 export async function categoryTree(options?: { [key: string]: any }) {
   return request<API.DataResponseSuccess<API.Category[]>>('/api/categories/tree', {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
@@ -14,7 +14,7 @@ export async function categoryTree(options?: { [key: string]: any }) {
 export async function categories(options?: { [key: string]: any }) {
   return request<API.CategoryList>('/api/categories', {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
@@ -22,7 +22,7 @@ export async function categories(options?: { [key: string]: any }) {
 export async function category(id: number, options?: { [key: string]: any }) {
   return request<API.DataResponseSuccess<API.Category>>(`/api/categories/${id}`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

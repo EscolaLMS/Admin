@@ -20,7 +20,7 @@ export async function users(
       page: params.current,
     },
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
@@ -37,7 +37,7 @@ export async function user(id: number, options?: { [key: string]: any }, cache?:
 export async function profile(options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/profile/me`, {
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

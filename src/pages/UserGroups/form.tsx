@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, List, Button, Divider, Typography } from 'antd';
-import ProForm, { ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
   userGroup as fetchUserGroup,
@@ -16,6 +16,7 @@ import { useCallback } from 'react';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import UserSelect from '@/components/UserSelect';
+import UserGroupSelect from '../../components/UserGroupSelect';
 
 export default () => {
   const intl = useIntl();
@@ -67,7 +68,7 @@ export default () => {
         }
       });
     },
-    [data],
+    [data, group],
   );
 
   useEffect(() => {
@@ -126,6 +127,15 @@ export default () => {
               })}
               required
             />
+            <ProForm.Item
+              style={{ minWidth: '300px' }}
+              name="parent_id"
+              label={<FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />}
+              valuePropName="value"
+            >
+              <UserGroupSelect />
+            </ProForm.Item>
+            <ProFormSwitch name="registerable" label={<FormattedMessage id="registerable" />} />
           </ProForm.Group>
 
           {group !== 'new' && (

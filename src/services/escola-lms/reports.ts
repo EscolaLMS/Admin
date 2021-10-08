@@ -14,7 +14,7 @@ export async function reports(
   return request<API.ReportList>('/api/admin/reports/report', {
     params,
     method: 'GET',
-    useCache: true,
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
