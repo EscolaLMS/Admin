@@ -1,36 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // import { useIntl } from 'umi';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from 'ckeditor-ckeditor5-build-classic-mention';
 
-import { variables as fetchVariables } from '@/services/escola-lms/templates';
-
 import './index.css';
-import { Spin } from 'antd';
+import { Space, Typography, Tag, Divider } from 'antd';
+import { FormattedMessage } from 'react-intl';
 
 interface FormWysiwygProps {
   value?: string;
   onChange?: (value: string) => void;
-  varSet: string;
+  tokens: string[];
 }
 
-export const TemplateEditor: React.FC<FormWysiwygProps> = ({
-  value,
-  onChange,
-  varSet = 'certificate',
-}) => {
-  const [variables, setVariables] = useState<API.TemplateVariables>();
+export const TemplateEditor: React.FC<FormWysiwygProps> = ({ value, onChange, tokens = [] }) => {
+  const ref = useRef();
+
+  const [key, setKey] = useState<string>(Math.random().toString());
 
   useEffect(() => {
-    fetchVariables().then((response) => setVariables(response.success ? response.data : {}));
-  }, []);
-  if (variables === undefined) {
-    return <Spin />;
-  }
+    setKey(Math.random().toString());
+  }, [tokens]);
+
   return (
     <div className="template-editor">
+      <Divider>
+        <FormattedMessage id="tokens" defaultMessage="posibble tokens:" />
+      </Divider>
+      <Space>
+        <Typography>
+          {tokens.map((token) => (
+            <Tag key={token}>{token}</Tag>
+          ))}
+        </Typography>
+      </Space>
+      <Divider />
       <CKEditor
+        key={key}
+        ref={ref}
         config={{
           width: '210mm',
           height: '297mm',
@@ -39,7 +47,7 @@ export const TemplateEditor: React.FC<FormWysiwygProps> = ({
               {
                 marker: '@',
                 minimumCharacters: 1,
-                feed: variables[varSet],
+                feed: tokens,
               },
             ],
           },
@@ -52,6 +60,7 @@ export const TemplateEditor: React.FC<FormWysiwygProps> = ({
           console.log('Editor is ready to use!', editor);
         }}
         */
+        // @ts-ignore
         onChange={(event, editor) => {
           const data = editor.getData();
           return onChange && onChange(data);

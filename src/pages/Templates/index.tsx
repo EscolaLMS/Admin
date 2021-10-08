@@ -8,8 +8,6 @@ import ProTable from '@ant-design/pro-table';
 
 import { templates, deleteTemplate } from '@/services/escola-lms/templates';
 
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-
 const handleRemove = async (id: number) => {
   return deleteTemplate(id).then((response) => {
     if (response.success) {
@@ -35,18 +33,6 @@ const TableList: React.FC = () => {
       hideInSearch: true,
     },
 
-    {
-      title: <FormattedMessage id="course" defaultMessage="course" />,
-      dataIndex: 'course',
-      hideInSearch: true,
-      render: (_, record) => (
-        <TypeButtonDrawer
-          key={'user'}
-          type="EscolaLms\Cart\Models\Course"
-          type_id={record.course_id}
-        />
-      ),
-    },
     {
       hideInSearch: true,
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,

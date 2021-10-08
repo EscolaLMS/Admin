@@ -250,4 +250,9 @@ export default {
   query: 'Szukaj',
   reset: 'Wyczyść',
   search_file: 'Wyszukaj plik',
+  tpl_vars_set_placeholder: 'Zestaw zmiennych',
+  tpl_type_placeholder: 'Typ szablonu',
+  tokens: 'Tokens',
+  tpl_vars_set: 'Zestaw zmiennych',
+  tpl_type: 'Typ szablonu',
 };

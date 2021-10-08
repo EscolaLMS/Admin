@@ -72,3 +72,13 @@ export async function variables(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+export async function preview(id: number, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<Record<string, string>>>(
+    `/api/admin/templates/${id}/preview`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
