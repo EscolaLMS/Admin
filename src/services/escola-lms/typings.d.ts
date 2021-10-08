@@ -449,7 +449,7 @@ declare namespace API {
 
   type TemplateVariable = string;
 
-  type TemplateVariables = Record<string, TemplateVariable[]>;
+  type TemplateVariables = Record<string, Record<string, TemplateVariable[]>>;
 
   type File = {
     name: string;

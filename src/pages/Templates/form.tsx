@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
-import ProForm, { ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormSelect } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
   template as fetchTemplate,
@@ -14,6 +14,7 @@ import { useCallback } from 'react';
 import TemplateEditor from '@/components/TemplateEditor';
 import { FilePdfFilled } from '@ant-design/icons';
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
+import { variables as fetchVariables } from '@/services/escola-lms/templates';
 
 export default () => {
   const intl = useIntl();
@@ -25,6 +26,12 @@ export default () => {
   const [saved, setSaved] = useState<boolean>(false);
 
   const [form] = ProForm.useForm();
+
+  const [variables, setVariables] = useState<API.TemplateVariables>();
+
+  useEffect(() => {
+    fetchVariables().then((response) => setVariables(response.success ? response.data : {}));
+  }, []);
 
   const fetchData = useCallback(async () => {
     const response = await fetchTemplate(Number(template));
@@ -101,18 +108,14 @@ export default () => {
               })}
               required
             />
-            <ProFormText
-              width="sm"
-              name="type"
-              initialValue="pdf"
-              label={<FormattedMessage id="type" />}
-              tooltip={<FormattedMessage id="type_tooltip" />}
-              placeholder={intl.formatMessage({
-                id: 'type',
-              })}
-              disabled
-              required
+            <ProFormSelect
+              name="select"
+              label="Select"
+              valueEnum={{ pdf: 'pdf', email: 'email' }}
+              placeholder="Please select a country"
+              rules={[{ required: true, message: 'Please select your country!' }]}
             />
+
             <ProFormText
               width="sm"
               name="vars_set"
