@@ -238,4 +238,6 @@ export default {
   query: 'Query',
   reset: 'Reset',
   search_file: 'Search file',
+  json: 'JSON Metadata',
+  json_tooltip: 'Additional metadata for rendering course',
 };

@@ -255,4 +255,7 @@ export default {
   tokens: 'Tokens',
   tpl_vars_set: 'Zestaw zmiennych',
   tpl_type: 'Typ szablonu',
+  json: 'JSON Metadata',
+  json_tooltip:
+    'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
 };
