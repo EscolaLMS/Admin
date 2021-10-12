@@ -3,6 +3,7 @@ import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { Select } from 'antd';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { useIntl, FormattedMessage } from 'umi';
+import JsonEditor from './jsoneditor';
 
 export const TopicForm: React.FC<{
   onValuesChange: (changedValues: any, values: Record<string, string>) => void;
@@ -40,6 +41,14 @@ export const TopicForm: React.FC<{
                 ),
             )}
           </Select>
+        </ProForm.Item>
+        <ProForm.Item
+          name="json"
+          label={<FormattedMessage id="json" />}
+          tooltip={<FormattedMessage id="json_tooltip" />}
+          valuePropName="value"
+        >
+          <JsonEditor />
         </ProForm.Item>
       </ProForm.Group>
       <ProForm.Group>
