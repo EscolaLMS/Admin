@@ -4,7 +4,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { EditorContextProvider, EditorContext, Player } from '@escolalms/h5p-react';
 
 import { Divider, Typography, Row, Col } from 'antd';
-import type { XAPIEvent } from 'h5p-headless-player';
+import type { XAPIEvent } from '@escolalms/h5p-react';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
 import ReactJson from 'react-json-view';
