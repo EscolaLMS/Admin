@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { EditorContext, Editor } from 'h5p-headless-player';
+import { EditorContext, Editor } from '@escolalms/h5p-react';
 import { useIntl, FormattedMessage } from 'umi';
 import { Button } from 'antd';
 

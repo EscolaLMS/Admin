@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Row, Col, Divider, Button, List, Typography, Modal } from 'antd';
 import H5PContentSelect from '@/components/H5PContentSelect';
-import { EditorContextProvider, Player } from 'h5p-headless-player';
-import type { XAPIEvent } from 'h5p-headless-player';
+import { EditorContextProvider, Player } from '@escolalms/h5p-react';
+import type { XAPIEvent } from '@escolalms/h5p-react';
 import UploadH5P from '@/components/H5P/upload';
-import { useIntl, FormattedMessage, Link } from 'umi';
+import { useIntl, FormattedMessage } from 'umi';
 
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 

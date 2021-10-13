@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useParams } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { EditorContextProvider, EditorContext, Player } from 'h5p-headless-player';
+import { EditorContextProvider, EditorContext, Player } from '@escolalms/h5p-react';
 
 import { Divider, Typography, Row, Col } from 'antd';
 import type { XAPIEvent } from 'h5p-headless-player';
