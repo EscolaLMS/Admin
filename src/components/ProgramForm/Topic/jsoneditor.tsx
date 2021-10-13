@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Modal, Button } from 'antd';
 import { JsonEditor as Editor } from 'jsoneditor-react';
 import 'jsoneditor-react/es/editor.min.css';
+import { FormattedMessage } from 'umi';
 
 export const JsonEditor: React.FC<{
   value?: string;
@@ -15,8 +16,8 @@ export const JsonEditor: React.FC<{
 
   return (
     <div>
-      <Button type="primary" onClick={() => setIsModalVisible(true)}>
-        Open Modal
+      <Button type="primary" onClick={() => setIsModalVisible(true)} size="small">
+        <FormattedMessage id="json_editor" />
       </Button>
       <Modal title="JSON" visible={isModalVisible} onOk={hideModal} onCancel={hideModal}>
         <Editor

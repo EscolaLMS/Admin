@@ -101,6 +101,7 @@ export const Topic: React.FC<{
       preview: state.preview ? 1 : 0,
       can_skip: state.can_skip ? 1 : 0,
       order: sortOrder,
+      json: state.json ? JSON.stringify(state.json) : null,
     };
 
     if (

@@ -243,6 +243,7 @@ declare namespace API {
     active?: boolean;
     preview?: boolean;
     can_skip: boolean;
+    json?: object;
     /*
     topicable_type?:
       | TopicType.RichText
