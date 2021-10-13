@@ -258,4 +258,5 @@ export default {
   json: 'JSON Metadata',
   json_tooltip:
     'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
+  json_editor: 'Otwórz edytor JSON',
 };
