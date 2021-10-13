@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useParams, history } from 'umi';
-import { EditorContextProvider } from 'h5p-headless-player';
+import { EditorContextProvider } from '@escolalms/h5p-react';
 
 import { H5PForm } from '@/components/H5PForm';
 

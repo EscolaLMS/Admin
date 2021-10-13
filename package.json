@@ -53,6 +53,7 @@
         "not ie <= 10"
     ],
     "dependencies": {
+        "@escolalms/h5p-react": "^0",
         "@ant-design/charts": "^1.2.11",
         "@ant-design/icons": "^4.0.0",
         "@ant-design/pro-card": "^1.14.0",
@@ -76,7 +77,6 @@
         "cypress": "^6.8.0",
         "cypress-localstorage-commands": "^1.4.1",
         "date-fns": "^2.23.0",
-        "h5p-headless-player": "^0.1.21",
         "jest-esm-transformer": "^1.0.0",
         "jsoneditor": "^9.5.6",
         "jsoneditor-react": "^3.1.1",
