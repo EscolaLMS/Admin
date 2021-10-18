@@ -259,4 +259,7 @@ export default {
   json_tooltip:
     'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
   json_editor: 'Otwórz edytor JSON',
+  introduction: 'Wprowadzenie',
+  introduction_tooltip:
+    'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
 };

@@ -240,4 +240,7 @@ export default {
   search_file: 'Search file',
   json: 'JSON Metadata',
   json_tooltip: 'Additional metadata for rendering course',
+  introduction: 'Introduction',
+  introduction_tooltip:
+    'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
 };
