@@ -65,6 +65,18 @@ export const TopicForm: React.FC<{
       </ProForm.Group>
       <ProForm.Group>
         <ProForm.Item
+          name="description"
+          label={<FormattedMessage id="description" />}
+          tooltip={<FormattedMessage id="description_tooltip" />}
+          valuePropName="value"
+        >
+          <WysiwygMarkdown
+            directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
+          />
+        </ProForm.Item>
+      </ProForm.Group>
+      <ProForm.Group>
+        <ProForm.Item
           name="summary"
           label={<FormattedMessage id="summary" />}
           tooltip={<FormattedMessage id="summary_tooltip" />}
