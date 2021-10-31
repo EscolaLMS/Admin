@@ -47,9 +47,6 @@ jobs:
         run: |
           cd api && composer install --no-scripts
 
-      - name: Install node
-        run: apt-get install nodejs -y
-
       - name: Prepare Laravel Application
         run: |
           cd api
@@ -66,8 +63,8 @@ jobs:
 
       - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: |
-          yarn
-          BASE_PATH=/ REACT_APP_API_URL='http://localhost' yarn build
+          npm i
+          BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
 
       - name: Cypress dependencies
         run: apt-get update && apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb -y --fix-missing
