@@ -73,6 +73,7 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
@@ -84,7 +85,7 @@ jobs:
         run: npm i serve -g
 
       - name: Node build
-        run: BASE_PATH=/ REACT_APP_API_URL='' npm run build
+        run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
 
       - name: Cypress.io
         uses: cypress-io/github-action@v2.8.2
