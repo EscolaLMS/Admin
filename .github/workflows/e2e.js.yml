@@ -73,12 +73,13 @@ jobs:
           record: true
           start: "npm run start"
           wait-on: http://localhost:8000
-          wait-on-timeout: 110
+          wait-on-timeout: 120
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_PATH: /
           REACT_APP_API_URL: http://localhost
+          VERIFY_TEST_RUNNER_TIMEOUT_MS: 100000
 
       # after the test run completes
       # store videos and any screenshots
