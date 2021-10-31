@@ -1,7 +1,7 @@
 import RouterConfig from '../../config/routes';
 const { uniq } = require('lodash');
 
-const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 8000}`;
 
 const hash = Cypress.env('router') === 'hash' ? '#/' : '';
 
