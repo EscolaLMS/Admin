@@ -37,6 +37,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Install git
+        run: apt-get install git -y
+
       - name: Clone API
         run: git clone git@github.com:EscolaLMS/API.git api
 
