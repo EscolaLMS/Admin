@@ -74,7 +74,7 @@ jobs:
         uses: cypress-io/github-action@v2.8.2
         with:
           record: true
-          start: "npm run start"
+          start: "serve dist"
           wait-on: http://localhost:5000
           wait-on-timeout: 120
         env:
