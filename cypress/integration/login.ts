@@ -10,7 +10,9 @@ describe('Login form', () => {
       .type('admin@escola-lms.com')
       .should('have.value', 'admin@escola-lms.com');
     cy.get('input[id="password"]').clear().type('secret').should('have.value', 'secret');
+    cy.intercept('POST', '/auth/login', []).as('postLogin');
     cy.get('form button').click();
+    cy.wait('@postLogin');
     cy.get('ul[role=menu]').should('be.visible');
   });
 });
