@@ -11,6 +11,6 @@ describe('Login form', () => {
       .should('have.value', 'admin@escola-lms.com');
     cy.get('input[id="password"]').clear().type('secret').should('have.value', 'secret');
     cy.get('form button').click();
-    cy.contains('Welcome');
+    cy.get('ul[role=menu]').should('be.visible');
   });
 });
