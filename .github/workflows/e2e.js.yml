@@ -47,6 +47,9 @@ jobs:
         run: |
           cd api && composer install --no-scripts
 
+      - name: Install node
+        run: apt-get install nodejs -y
+
       - name: Prepare Laravel Application
         run: |
           cd api
