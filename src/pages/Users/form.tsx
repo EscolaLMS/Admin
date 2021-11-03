@@ -127,10 +127,13 @@ export default () => {
 
             {user !== 'new' && (
               <Space direction="vertical">
-                <ProFormSwitch
-                  name="email_verified"
-                  label={<FormattedMessage id="is_email_verified" />}
-                />
+                {/* if he is an admin, do not display the switch */}
+                {!data.roles?.includes('admin') && (
+                  <ProFormSwitch
+                    name="email_verified"
+                    label={<FormattedMessage id="is_email_verified" />}
+                  />
+                )}
 
                 <Form.Item noStyle shouldUpdate>
                   {(form) => {
