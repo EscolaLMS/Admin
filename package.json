@@ -12,7 +12,7 @@
         "dev-stage": "REACT_APP_API_URL='https://escola-lms-api.stage.etd24.pl' yarn dev",
         "dev-awf": "REACT_APP_API_URL='https://awflms.etd24.pl/' yarn dev",
         "gh-pages": "gh-pages -d dist",
-        "gh-pages-build": "yarn && REACT_APP_API_URL='https://escola-lms-api.stage.etd24.pl/' yarn umi build && gh-pages -d dist",
+        "gh-pages-build": "yarn && BASE_PATH=/ REACT_APP_API_URL='https://escola-lms-api.stage.etd24.pl/' yarn umi build && gh-pages -d dist",
         "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
         "postinstall": "umi g tmp",
         "lint": "umi g tmp && npm run lint:js && npm run lint:style && npm run lint:prettier",
