@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
@@ -8,7 +7,7 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import { BookOutlined } from '@ant-design/icons';
 import '@/services/ybug';
 import RestrictedPage from './pages/403';
 
@@ -112,6 +111,7 @@ const errorHandler = (error: ResponseError) => {
 
   if (data && (data as API.DefaultResponseError)) {
     const { message, errors } = data;
+
     if (message && errors) {
       notification.error({
         message,
@@ -126,10 +126,16 @@ const errorHandler = (error: ResponseError) => {
         description: data.error,
       });
     }
-  } else if (response && response.status) {
-    const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
 
+    if (typeof data === 'object') {
+      notification.error({
+        description: data.data.value.map((errorMessage: string) => `${errorMessage}`),
+        message: data.message,
+      });
+    }
+  } else if (response && response.status) {
+    const { status, url } = response;
+    const errorText = codeMessage[response.status] || response.statusText;
     notification.error({
       message: `Error ${status}: ${url}`,
       description: errorText,

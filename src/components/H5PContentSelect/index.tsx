@@ -21,7 +21,6 @@ export const H5PContentSelect: React.FC<{
   }, []);
 
   useEffect(() => {
-    console.log(ref);
     if (contents.length) {
       if (!contents.find((content) => Number(content.id) === Number(value))) {
         allContent().then((response) => setContents(response));
