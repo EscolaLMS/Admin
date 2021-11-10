@@ -104,14 +104,15 @@ export const Topic: React.FC<{
       json: state.json ? JSON.stringify(state.json) : null,
     };
 
-    if (
-      values.topicable_type &&
-      [TopicType.Audio, TopicType.Image, TopicType.Image, TopicType.PDF, TopicType.Video].includes(
-        values.topicable_type,
-      )
-    ) {
-      delete values.value;
-    }
+    // it threw a validation error when the user wanted to set the skip topic to true without this code it works fine
+    // if (
+    //   values.topicable_type &&
+    //   [TopicType.Audio, TopicType.Image, TopicType.PDF, TopicType.Video].includes(
+    //     values.topicable_type,
+    //   )
+    // ) {
+    //   delete values.value;
+    // }
 
     const formData = getFormData(values);
 
