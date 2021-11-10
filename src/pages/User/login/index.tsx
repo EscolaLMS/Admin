@@ -115,7 +115,10 @@ const Login: React.FC = () => {
             )}
 
             <>
-              <pre>email/password: admin@escola-lms.com/secret</pre>
+              {REACT_APP_CREDENTIALS === 'CREDENTIALS' && (
+                <pre>email/password: admin@escola-lms.com/secret</pre>
+              )}
+
               <ProFormText
                 name="email"
                 fieldProps={{
