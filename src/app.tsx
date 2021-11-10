@@ -135,7 +135,8 @@ const errorHandler = (error: ResponseError) => {
     }
   } else if (response && response.status) {
     const { status, url } = response;
-    const errorText = codeMessage[response.status] || response.statusText;
+    const errorText = codeMessage[status] || response.statusText;
+
     notification.error({
       message: `Error ${status}: ${url}`,
       description: errorText,
