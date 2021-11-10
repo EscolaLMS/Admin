@@ -91,7 +91,7 @@ jobs:
         uses: cypress-io/github-action@v2.8.2
         with:
           record: true
-          start: "serve dist -l 8000"
+          start: 'serve dist -l 8000'
           wait-on: http://localhost:8000
           wait-on-timeout: 120
         env:
@@ -101,6 +101,7 @@ jobs:
           BASE_URL: http://localhost:8000
           PORT: 8000
           REACT_APP_API_URL: http://localhost
+          REACT_APP_CREDENTIALS: CREDENTIALS
           VERIFY_TEST_RUNNER_TIMEOUT_MS: 100000
 
       # after the test run completes
