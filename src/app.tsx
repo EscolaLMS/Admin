@@ -127,7 +127,7 @@ const errorHandler = (error: ResponseError) => {
       });
     }
 
-    if (typeof data === 'object') {
+    if (typeof data.data === 'object') {
       notification.error({
         description: data.data.value.map((errorMessage: string) => `${errorMessage}`),
         message: data.message,
