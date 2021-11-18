@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Form } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ModalForm } from '@ant-design/pro-form';
-
+import { slugify } from '@/services/escola-lms/slug';
 import { useIntl, FormattedMessage } from 'umi';
 import CategoryTree from '@/components/CategoryTree';
 import { category } from '@/services/escola-lms/category';
@@ -37,6 +37,11 @@ export const CategoryModalForm: React.FC<{
       visible={visible}
       onVisibleChange={onVisibleChange}
       onFinish={onFinish}
+      onValuesChange={(values) => {
+        if (values.name) {
+          form.setFieldsValue({ slug: slugify(values.name) });
+        }
+      }}
     >
       <ProFormText
         label={<FormattedMessage id="name" defaultMessage="name" />}
@@ -49,9 +54,14 @@ export const CategoryModalForm: React.FC<{
         name="name"
       />
       <ProFormText
-        label={<FormattedMessage id="slug" defaultMessage="slug" />}
         width="md"
         name="slug"
+        label={<FormattedMessage id="slug" />}
+        placeholder={intl.formatMessage({
+          id: 'slug',
+        })}
+        disabled
+        required
       />
       <ProFormSwitch
         name="is_active"
