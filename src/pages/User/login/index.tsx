@@ -60,8 +60,8 @@ const Login: React.FC = () => {
         return;
       }
       setUserLoginState(msg);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      message.error(error?.data?.message || 'Error');
     }
     setSubmitting(false);
   };
