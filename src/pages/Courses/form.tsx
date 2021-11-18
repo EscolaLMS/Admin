@@ -52,7 +52,6 @@ export default () => {
     fetch();
   }, [course]);
 
-  console.log({ data });
 
   const formProps = useMemo(
     () => ({
