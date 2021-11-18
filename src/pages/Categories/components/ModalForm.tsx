@@ -23,6 +23,8 @@ export const CategoryModalForm: React.FC<{
       category(id).then((response) => {
         form.setFieldsValue(response.data);
       });
+    } else {
+      form.resetFields();
     }
   }, [id, form]);
 
