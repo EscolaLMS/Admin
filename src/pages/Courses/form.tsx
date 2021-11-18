@@ -52,6 +52,8 @@ export default () => {
     fetch();
   }, [course]);
 
+  console.log({ data });
+
   const formProps = useMemo(
     () => ({
       onFinish: async (values: API.Course) => {
@@ -110,6 +112,12 @@ export default () => {
               path: String(course),
               breadcrumbName: intl.formatMessage({
                 id: 'form',
+              }),
+            },
+            {
+              path: '/',
+              breadcrumbName: intl.formatMessage({
+                id: String(data.title),
               }),
             },
             {
