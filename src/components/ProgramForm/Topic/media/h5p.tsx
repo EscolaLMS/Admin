@@ -5,7 +5,7 @@ import { EditorContextProvider, Player } from '@escolalms/h5p-react';
 import type { XAPIEvent } from '@escolalms/h5p-react';
 import UploadH5P from '@/components/H5P/upload';
 import { useIntl, FormattedMessage } from 'umi';
-
+import ReactJson from 'react-json-view';
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 
 export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
@@ -23,14 +23,14 @@ export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
     <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
       <Divider />
       <Player id={id} onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])} />
-      <Divider />
-      <div style={{ overflow: 'auto', maxHeight: '200px' }}>
+
+      <div style={{ overflow: 'auto', maxHeight: '300px' }}>
         <List
           dataSource={XAPIEvents}
           header="XAPI Events"
-          renderItem={(item) => (
+          renderItem={() => (
             <List.Item>
-              <Typography.Text code>{JSON.stringify(item)}</Typography.Text>
+              <ReactJson src={XAPIEvents} />
             </List.Item>
           )}
         ></List>

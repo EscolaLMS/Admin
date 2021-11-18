@@ -52,7 +52,6 @@ export default () => {
     fetch();
   }, [course]);
 
-
   const formProps = useMemo(
     () => ({
       onFinish: async (values: API.Course) => {
