@@ -151,6 +151,11 @@ export default {
   subtitle: 'Subtitle',
   language: 'Language',
   level: 'Level',
+  active_from: 'Active from',
+  active_to: 'Active to',
+  hours_to_complete: 'Hours to complete',
+  purchasable: 'Purchasable',
+  findable: 'Findable',
   author_tutor: 'Author / Tutor',
   summary: 'Summary',
   summary_tooltip:
