@@ -39,6 +39,7 @@ declare namespace API {
     updated_at: string;
   };
 
+  // TODO: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
   type Course = {
     active: boolean;
     id?: number;
@@ -56,6 +57,11 @@ declare namespace API {
     categories?: Category[] | (number | string)[];
     tags?: Tag[] | string[];
     scorm_id?: number;
+    active_from?: string;
+    active_to?: string;
+    hours_to_complete?: number;
+    purchasable?: boolean;
+    boolean?: boolean;
   };
 
   type PaginatedList<Model> = {

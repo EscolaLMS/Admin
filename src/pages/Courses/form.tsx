@@ -1,6 +1,12 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col } from 'antd';
-import ProForm, { ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormText,
+  ProFormDigit,
+  ProFormSwitch,
+  ProFormDatePicker,
+  ProFormCheckbox,
+} from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
@@ -221,7 +227,58 @@ export default () => {
                 <UserSelect />
               </ProForm.Item>
             </ProForm.Group>
-
+            <ProForm.Group>
+              <ProFormDatePicker
+                width="sm"
+                name="active_from"
+                label={<FormattedMessage id="active_from" />}
+                tooltip={<FormattedMessage id="active_from" />}
+                placeholder={intl.formatMessage({
+                  id: 'active_from',
+                  defaultMessage: 'active_from',
+                })}
+              />
+              <ProFormDatePicker
+                width="sm"
+                name="active_to"
+                label={<FormattedMessage id="active_to" />}
+                tooltip={<FormattedMessage id="active_to" />}
+                placeholder={intl.formatMessage({
+                  id: 'active_to',
+                  defaultMessage: 'active_to',
+                })}
+              />
+              <ProFormDigit
+                width="sm"
+                name="hours_to_complete"
+                label={<FormattedMessage id="hours_to_complete" />}
+                tooltip={<FormattedMessage id="hours_to_complete" />}
+                placeholder={intl.formatMessage({
+                  id: 'hours_to_complete',
+                  defaultMessage: 'hours_to_complete',
+                })}
+              />
+              <ProFormCheckbox
+                width="sm"
+                name="purchasable"
+                label={<FormattedMessage id="purchasable" />}
+                tooltip={<FormattedMessage id="purchasable" />}
+                placeholder={intl.formatMessage({
+                  id: 'purchasable',
+                  defaultMessage: 'purchasable',
+                })}
+              />
+              <ProFormCheckbox
+                width="sm"
+                name="findable"
+                label={<FormattedMessage id="findable" />}
+                tooltip={<FormattedMessage id="findable" />}
+                placeholder={intl.formatMessage({
+                  id: 'findable',
+                  defaultMessage: 'findable',
+                })}
+              />
+            </ProForm.Group>
             <ProForm.Item
               name="summary"
               label={<FormattedMessage id="summary" />}

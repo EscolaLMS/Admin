@@ -162,6 +162,11 @@ export default {
   subtitle: 'Podtytuł',
   language: 'Język',
   level: 'Poziom',
+  active_from: 'Aktywny od',
+  active_to: 'Aktywny do',
+  hours_to_complete: 'Godziny do ukończenia',
+  purchasable: 'Do kupienia',
+  findable: 'Możliwy do wyszukania',
   author_tutor: 'Autor / Nauczyciel',
   summary: 'Podsumowanie',
   summary_tooltip:
