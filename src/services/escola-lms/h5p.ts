@@ -47,3 +47,11 @@ export async function allContent(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+/**  GET /api/hh5p/content/:id/export */
+export async function exportH5p(id: number) {
+  return request<any>(`/api/h5ps/content/${id}/export`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+  });
+}

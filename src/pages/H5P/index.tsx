@@ -5,8 +5,8 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { h5p, removeH5P } from '@/services/escola-lms/h5p';
-import { DeleteOutlined, EditOutlined, BookOutlined } from '@ant-design/icons';
+import { h5p, removeH5P, exportH5p } from '@/services/escola-lms/h5p';
+import { DeleteOutlined, EditOutlined, BookOutlined, ExportOutlined } from '@ant-design/icons';
 import UploadH5P from '@/components/H5P/upload';
 
 const TableList: React.FC = () => {
@@ -113,6 +113,10 @@ const TableList: React.FC = () => {
             <Button icon={<BookOutlined />}></Button>
           </Tooltip>
         </Link>,
+
+        <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
+          <Button onClick={() => exportH5p(record.id)} icon={<ExportOutlined />}></Button>
+        </Tooltip>,
       ],
     },
   ];
