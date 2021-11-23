@@ -173,6 +173,7 @@ declare namespace API {
       category_id?: number;
       author_id?: number;
       tag?: string;
+      active?: boolean;
     };
 
   type LoginRequest = {
