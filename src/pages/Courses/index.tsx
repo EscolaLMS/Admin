@@ -27,6 +27,13 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     title: <FormattedMessage id="Active" defaultMessage="active" />,
     dataIndex: 'active',
     sorter: false,
+
+    valueEnum: {
+      true: { text: <FormattedMessage id="Active" defaultMessage="active" /> },
+      false: {
+        text: <FormattedMessage id="Inactive" defaultMessage="Inactive" />,
+      },
+    },
     render: (_, record) => <Tag>{record.active ? 'Active' : 'Inactive'}</Tag>,
   },
   {
@@ -159,7 +166,7 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title, category_id, tag }, sort) => {
+        request={({ pageSize, current, title, active, category_id, tag }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return course({
@@ -168,6 +175,7 @@ const TableList: React.FC = () => {
             current,
             category_id,
             tag,
+            active: active && active,
             order_by: sortArr && sortArr[0], // i like nested ternary
             /* eslint-disable */ order: sortArr
               ? sortArr[1] === 'ascend'
