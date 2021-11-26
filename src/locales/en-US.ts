@@ -127,6 +127,7 @@ export default {
   upload_click_here: 'Click here to add file',
   upload: 'Add file',
   preview: 'Preview',
+  export: 'Export',
   able_to_preview: 'Able to preview',
   loading_content: 'Loading content...',
   preview_content: 'Preview content',

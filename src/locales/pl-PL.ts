@@ -138,6 +138,7 @@ export default {
   upload_click_here: 'Kliknij tutaj żeby dodać',
   upload: 'Dodaj plik',
   preview: 'Podgląd',
+  export: 'Eksport',
   able_to_preview: 'Możliwość podglądu',
   loading_content: 'Ładowanie treści...',
   preview_content: 'Podgląd treści',
