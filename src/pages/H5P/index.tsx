@@ -6,7 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
-import { DeleteOutlined, EditOutlined, BookOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, BookOutlined, ExportOutlined } from '@ant-design/icons';
 import UploadH5P from '@/components/H5P/upload';
 
 const TableList: React.FC = () => {
@@ -113,6 +113,11 @@ const TableList: React.FC = () => {
             <Button icon={<BookOutlined />}></Button>
           </Tooltip>
         </Link>,
+        <a href={`${REACT_APP_API_URL}/api/hh5p/content/${record.id}/export`} download>
+          <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
+            <Button icon={<ExportOutlined />}></Button>
+          </Tooltip>
+        </a>,
       ],
     },
   ];
