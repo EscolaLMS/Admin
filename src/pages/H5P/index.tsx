@@ -36,7 +36,6 @@ const TableList: React.FC = () => {
     },
     [actionRef],
   );
-  console.log(REACT_APP_API_URL);
 
   const columns: ProColumns<API.H5PContentListItem>[] = [
     {
