@@ -1,4 +1,4 @@
-import RouterConfig from '../../config/routes';
+import RouterConfig from '../../../config/routes';
 const { uniq } = require('lodash');
 
 const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 8000}`;

@@ -1,4 +1,4 @@
-import { LoginCypressPageObject } from './loginCypressPageObject';
+import { LoginCypressPageObject } from './LoginCypressPageObject';
 
 describe('Auth', () => {
   it('Basic functionality of login form', () => {
