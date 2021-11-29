@@ -197,6 +197,14 @@
     component: './Settings',
   },
   {
+    name: 'settings',
+    path: '/settings/:tab',
+    icon: 'calculator',
+    access: 'adminPermission',
+    component: './Settings',
+    hideInMenu: true,
+  },
+  {
     name: 'reports',
     icon: 'project',
     access: 'adminPermission',

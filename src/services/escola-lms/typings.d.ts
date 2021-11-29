@@ -550,6 +550,18 @@ declare namespace API {
 
   type SettingsList = DefaultMetaResponse<Setting>;
 
+  type Config = {
+    "rules": string[],
+    "public": boolean,
+    "readonly": boolean,
+    "value": string 
+  }
+
+  type Configs = Record<string, Record<string, Config>>;
+
+  type ConfigsList = DefaultResponse<Configs>;
+
+
   type LinkedType =
     | {
         type: '';
