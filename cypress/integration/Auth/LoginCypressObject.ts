@@ -7,7 +7,7 @@ export const selectors = {
   btnLogin: 'form button',
 };
 
-export class LoginCypressPageObject {
+export class LoginCypressObject {
   navigateToPage() {
     cy.visit(`${BASE_URL}/${hash}user/login`);
     return this;

@@ -16,7 +16,7 @@ export const endpoints = {
   post: '/admin/user-groups',
 };
 
-export class UserGroupPageObject {
+export class UserGroupObject {
   constructor(name?: string) {
     this.objMockName = name;
   }

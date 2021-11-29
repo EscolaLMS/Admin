@@ -1,4 +1,4 @@
-import { UserGroupPageObject } from './UserGroupPageObject';
+import { UserGroupObject } from './UserGroupObject';
 
 describe('User Groups', () => {
   beforeEach(() => {
@@ -6,13 +6,13 @@ describe('User Groups', () => {
     cy.fixture('userGroup/item.json').then((item) => {
       this.group = item;
     });
-    const pageObj = new UserGroupPageObject();
+    const pageObj = new UserGroupObject();
     pageObj.navigateToPage('user_groups').assertTable();
   });
 
   // RENDER
   it('group element is rendering correctly', () => {
-    const pageObj = new UserGroupPageObject();
+    const pageObj = new UserGroupObject();
     pageObj.getList().navigateToPage('user_groups');
     cy.wait('@userGroups').then((interception) => {
       if (!!interception.response.body.data.length) {
@@ -25,13 +25,13 @@ describe('User Groups', () => {
 
   // ADD ELEMENT
   it('add group element', () => {
-    const pageObj = new UserGroupPageObject(this.group.name);
+    const pageObj = new UserGroupObject(this.group.name);
     pageObj.navigateToPage('user_groups/new').createNewGroup().getList().itemShouldExist();
   });
 
   // DELETE ELEMENT
   it('delete group element', () => {
-    const pageObj = new UserGroupPageObject(this.group.name);
+    const pageObj = new UserGroupObject(this.group.name);
     pageObj
       .getList()
       .navigateToPage('user_groups')
