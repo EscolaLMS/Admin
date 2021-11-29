@@ -32,7 +32,12 @@ describe('User Groups', () => {
   // DELETE ELEMENT
   it('delete group element', () => {
     const pageObj = new UserGroupPageObject(this.group.name);
-    pageObj.getList().navigateToPage('user_groups');
-    pageObj.itemShouldExist().clickDeleteButton().confirmDelete().itemShouldNotExist();
+    pageObj
+      .getList()
+      .navigateToPage('user_groups')
+      .itemShouldExist()
+      .clickDeleteButton()
+      .confirmDelete()
+      .itemShouldNotExist();
   });
 });
