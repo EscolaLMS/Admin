@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import 'cypress-localstorage-commands';
-import { LoginCypressPageObject } from '../integration/Auth/Login';
+import { LoginCypressPageObject } from '../integration/Auth';
 
 // const API_URL = process.env.REACT_APP_API_URL || 'https://api-stage.escolalms.com';
 
