@@ -1,4 +1,4 @@
-import { UserGroupPageObject } from '.';
+import { UserGroupPageObject } from './userGroupPageObject';
 
 describe('User Groups', () => {
   beforeEach(() => {
@@ -26,17 +26,13 @@ describe('User Groups', () => {
   // ADD ELEMENT
   it('add group element', () => {
     const pageObj = new UserGroupPageObject(this.group.name);
-    pageObj.navigateToPage('user_groups/new').createNewGroup().getList();
-    cy.wait(1000);
-    pageObj.itemShouldExist();
+    pageObj.navigateToPage('user_groups/new').createNewGroup().getList().itemShouldExist();
   });
 
   // DELETE ELEMENT
   it('delete group element', () => {
     const pageObj = new UserGroupPageObject(this.group.name);
     pageObj.getList().navigateToPage('user_groups');
-    cy.wait(1000);
-    pageObj.itemShouldExist().clickDeleteButton().confirmDelete();
-    pageObj.itemShouldNotExist();
+    pageObj.itemShouldExist().clickDeleteButton().confirmDelete().itemShouldNotExist();
   });
 });
