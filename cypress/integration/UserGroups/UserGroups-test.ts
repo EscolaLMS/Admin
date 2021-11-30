@@ -1,4 +1,4 @@
-import { UserGroupObject } from './UserGroupObject';
+import { UserGroupObject } from '../../objects/UserGroupObject';
 
 describe('User Groups', () => {
   beforeEach(() => {
