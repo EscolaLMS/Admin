@@ -551,16 +551,24 @@ declare namespace API {
   type SettingsList = DefaultMetaResponse<Setting>;
 
   type Config = {
-    "rules": string[],
-    "public": boolean,
-    "readonly": boolean,
-    "value": string 
-  }
+    rules: string[];
+    public: boolean;
+    readonly: boolean;
+    value: string;
+  };
 
   type Configs = Record<string, Record<string, Config>>;
 
   type ConfigsList = DefaultResponse<Configs>;
 
+  type ConfigEntry = {
+    key: keyof API.Configs;
+    full_key: string;
+  } & API.Config;
+
+  type ConfigUpdateRequest = {
+    config: Record<string, string>[];
+  };
 
   type LinkedType =
     | {

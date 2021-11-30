@@ -1,5 +1,5 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { useState, useEffect, useCallback } from 'react';
+import { Spin } from 'antd';
 
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
@@ -20,12 +20,16 @@ export default () => {
 
   const [configs, setConfigs] = useState<API.Configs>();
 
-  useEffect(() => {
+  const refetchConfigs = useCallback(() => {
     fetchConfigs().then((response) => {
       if (response.success) {
         setConfigs(response.data);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    refetchConfigs();
   }, []);
 
   if (!configs) {
@@ -73,7 +77,11 @@ export default () => {
               </span>
             }
           >
-            <PackageForm values={configs} packageName={pkg} />
+            <PackageForm
+              values={configs}
+              packageName={pkg}
+              onValueUpdated={() => refetchConfigs()}
+            />
             {pkg}
           </ProCard.TabPane>
         ))}
