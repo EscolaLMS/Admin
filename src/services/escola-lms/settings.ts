@@ -72,3 +72,35 @@ export async function settingGroups(options?: Record<string, any>) {
     ...(options || {}),
   });
 }
+
+export async function configs(options?: Record<string, any>) {
+  return request<API.ConfigsList>(`/api/admin/config`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
+export async function updateConfig(
+  {
+    key,
+    value,
+  }: {
+    key: string;
+    value: string;
+  },
+  options?: Record<string, any>,
+) {
+  return request<API.ConfigsList>(`/api/admin/config`, {
+    method: 'POST',
+    data: {
+      config: [
+        {
+          key,
+          value,
+        },
+      ],
+    },
+    ...(options || {}),
+  });
+}
