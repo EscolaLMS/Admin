@@ -1,0 +1,133 @@
+.sortableRowWrapper {
+    padding-bottom: 10px;
+}
+
+.sortableRow {
+    border: 1px dashed #ddd;
+    background: #fafafa;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    display: table;
+    :global {
+        .ant-form-item-control {
+            .ant-checkbox-group,
+            .ant-radio-group {
+                width: 100%;
+            }
+            .ant-radio-group .ant-radio-wrapper {
+                margin-right: 0 !important;
+            }
+            .ant-checkbox-group .ant-checkbox + span,
+            .ant-radio-group .ant-radio + span {
+                padding-left: 0 !important;
+            }
+        }
+    }
+}
+
+.sortableRowContent {
+    display: table-cell;
+    width: calc(100% - 50px);
+    padding: 15px 15px 15px 0;
+}
+
+.sortableRowDragHandle {
+    display: table-cell;
+    width: 40px;
+    text-align: center;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.sortableRow:hover .toolbarRemoveBtn,
+.sortableRow:hover .toolbarCopyBtn,
+.sortableRow:hover .toolbarEditBtn {
+    opacity: 1;
+}
+
+.toolbarEditBtn,
+.toolbarCopyBtn,
+.toolbarRemoveBtn {
+    position: absolute;
+    opacity: 0;
+    top: -15px;
+    right: -15px;
+    height: 30px;
+    width: 30px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .2);
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.toolbarEditBtn:focus,
+.toolbarCopyBtn:focus,
+.toolbarRemoveBtn:focus {
+    outline: none;
+}
+
+.toolbarEditBtn {
+    right: 20px;
+}
+
+.toolbarCopyBtn {
+    right: 55px;
+}
+
+.sortableRowInfo {
+    max-height: 23px;
+    overflow: hidden;
+    * {
+        margin: 0;
+        padding: 0;
+        display: inline;
+        font-size: 14px !important;
+        font-family: inherit !important;
+        color: rgba(0, 0, 0, .65) !important;
+        background-color: transparent !important;
+        text-decoration: none !important;
+        font-weight: 400 !important;
+        font-style: normal !important;
+        padding: 0 !important;
+        pointer-events: none;
+    }
+    img, table, br {
+        display: none;
+    }
+}
+
+.sortableRowContentInfo {
+    color: #aaa;
+    i {
+        margin-right: 8px;
+    }
+}
+
+.elementEditor {
+    :global {
+        .ant-radio-wrapper, .ant-checkbox-wrapper {
+            float: left;
+            line-height: 60px;
+        }
+
+        .sortable-row-wrapper {
+            margin-left: 30px;
+            margin-right: 50px;
+
+            .sortable-row-content {
+                padding-left: 15px;
+            }
+        }
+
+        .option-item {
+            clear: both;
+
+            .option-reorder {
+                display: none;
+            }
+        }
+    }
+}
