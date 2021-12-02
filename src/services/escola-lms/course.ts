@@ -253,3 +253,12 @@ export async function deleteResource(
     ...(options || {}),
   });
 }
+
+/**  GET /api/admin/courses/:id/export */
+export async function exportCourse(id: number, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<string>>(`/api/admin/courses/${id}/export`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
