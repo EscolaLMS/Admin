@@ -4,13 +4,13 @@
 declare namespace API {
   enum TopicType {
     Unselected = '',
-    RichText = 'EscolaLms\\Courses\\Models\\TopicContent\\RichText',
-    OEmbed = 'EscolaLms\\Courses\\Models\\TopicContent\\OEmbed',
-    Audio = 'EscolaLms\\Courses\\Models\\TopicContent\\Audio',
-    Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
-    H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
-    Image = 'EscolaLms\\Courses\\Models\\TopicContent\\Image',
-    PDF = 'EscolaLms\\Courses\\Models\\TopicContent\\PDF',
+    RichText = 'EscolaLmsTopicTypesModelsTopicContentRichText',
+    OEmbed = 'EscolaLmsTopicTypesModelsTopicContentOEmbed',
+    Audio = 'EscolaLmsTopicTypesModelsTopicContentAudio',
+    Video = 'EscolaLmsTopicTypesModelsTopicContentVideo',
+    H5P = 'EscolaLmsTopicTypesModelsTopicContentH5P',
+    Image = 'EscolaLmsTopicTypesModelsTopicContentImage',
+    PDF = 'EscolaLmsTopicTypesModelsTopicContentPDF',
   }
 
   type Category = {
