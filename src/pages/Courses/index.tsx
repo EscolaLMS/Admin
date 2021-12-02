@@ -6,10 +6,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-import { course, removeCourse } from '@/services/escola-lms/course';
+import { course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
@@ -146,6 +146,24 @@ const TableList: React.FC = () => {
     [actionRef],
   );
 
+  const handleExport = useCallback(async (id: number) => {
+    setLoading(true);
+    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+    try {
+      const request = await exportCourse(id);
+      const response = await request;
+      if (response.success) {
+        const url: string = response.data;
+        window.open(url, '_blank');
+      }
+    } catch (error) {
+      message.error(<FormattedMessage id="error" defaultMessage="error" />);
+    } finally {
+      hide();
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <PageContainer>
       <ProTable<API.CourseListItem, API.CourseParams>
@@ -220,6 +238,13 @@ const TableList: React.FC = () => {
                   <Button type="primary" icon={<DeleteOutlined />} danger></Button>
                 </Tooltip>
               </Popconfirm>,
+
+              <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
+                <Button
+                  onClick={() => handleExport(Number(record.id))}
+                  icon={<ExportOutlined />}
+                ></Button>
+              </Tooltip>,
             ],
           },
         ]}
