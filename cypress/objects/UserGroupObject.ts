@@ -9,6 +9,8 @@ export const selectors = {
   createNewButton: '.ant-space-item .ant-btn-primary',
   deleteButton: '.ant-space .ant-btn-dangerous',
   popupDeleteConfirm: '.ant-popover-inner .ant-btn-primary',
+  searchInput: '#search',
+  searchButtonQuery: '.ant-form-item-control-input-content .ant-btn-primary',
 };
 
 export const endpoints = {
@@ -36,7 +38,13 @@ export class UserGroupObject {
     return this;
   }
 
-  createNewGroup() {
+  searchAddedItem() {
+    cy.get(selectors.searchInput).clear().type(this.objMockName);
+    cy.get(selectors.searchButtonQuery).click();
+    return this;
+  }
+
+  createNewGroup(addSubGroup?: boolean) {
     cy.get(selectors.newCategoryNameInput).clear().type(this.objMockName);
     cy.get(selectors.registerableSwitch).click();
     cy.intercept('POST', endpoints.post).as('postGroup');
@@ -73,6 +81,7 @@ export class UserGroupObject {
       .within(() => {
         cy.get('td').get(selectors.deleteButton).click();
       });
+
     return this;
   }
 
