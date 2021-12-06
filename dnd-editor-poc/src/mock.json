@@ -1,0 +1,229 @@
+[
+  {
+    "id": 17,
+    "title": "veniam",
+    "lesson_id": 4,
+    "active": true,
+    "preview": true,
+    "topicable_id": 8,
+    "topicable_type": "EscolaLms\\TopicTypes\\Models\\TopicContent\\Image",
+    "topicable": {
+      "id": 8,
+      "value": "courses/2/topic/17/et.jpg",
+      "width": 640,
+      "height": 480,
+      "created_at": "2021-10-14T15:50:29.000000Z",
+      "updated_at": "2021-12-02T09:01:52.000000Z"
+    },
+    "summary": "Nesciunt corrupti est repellat consectetur eos sunt vero.\n=========================================================\n\n* Sed numquam accusamus inventore dignissimos ea et est ut.\n* Dolor odio ipsum deserunt aut consequatur molestias.\n* Optio natus dignissimos autem.\n\n1. Et aliquid fuga cupiditate porro ex cumque.\n2. Eaque vel voluptatem eos quos reiciendis iure odio culpa.\n3. Ea voluptate blanditiis placeat corrupti.\n\nAccusamus occaecati repudiandae eligendi repellat a saepe voluptates.\n=====================================================================\n\nOccaecati cum quis nihil est dolorum voluptatem provident. Accusamus magnam adipisci totam asperiores et maiores. Expedita occaecati rerum voluptas. Velit quis nesciunt quia ut dolor.\n\nEt itaque amet voluptas expedita.\n=================================\n\nIncidunt accusamus facilis qui. Et dolores modi vitae. Facilis incidunt repellendus sed sequi. Est numquam dignissimos suscipit delectus.\n\n>  Nesciunt et occaecati fugiat recusandae. Laboriosam et libero voluptate.\n\n* Voluptatem laborum molestias voluptas id.\n* Consectetur consequatur maiores quod dolorum perferendis officiis quia.\n* Accusamus sit occaecati aspernatur fugit autem enim.",
+    "introduction": null,
+    "description": null,
+    "resources": [
+      {
+        "id": 29,
+        "path": "public/topic/17/resources/",
+        "name": "libero.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/17/resources/libero.pdf",
+        "topic_id": 17
+      }
+    ],
+    "order": 2,
+    "json": null,
+    "can_skip": false
+  },
+  {
+    "id": 19,
+    "title": "iste",
+    "lesson_id": 4,
+    "active": false,
+    "preview": true,
+    "topicable_id": 2,
+    "topicable_type": "EscolaLms\\TopicTypes\\Models\\TopicContent\\OEmbed",
+    "topicable": {
+      "id": 2,
+      "value": "https://youtu.be/mRfSM-lv55I",
+      "created_at": "2021-10-14T15:50:29.000000Z",
+      "updated_at": "2021-10-14T15:50:29.000000Z"
+    },
+    "summary": "Velit sed quo voluptas impedit reiciendis et id.\n================================================\n\n1. Fugiat quia rerum corrupti reprehenderit repudiandae.\n2. Eius aspernatur eum necessitatibus non qui ut.\n3. Odit omnis nisi qui libero eaque temporibus.\n\nQuia rem fuga earum quos.\n=========================\n\nUt reiciendis iusto ut iure. Debitis qui ad est consequuntur cumque sint. Voluptatibus sit neque aut libero. Id rerum quae at dolorem.\n\n>  Ea ipsum ut ea similique odit et sunt. Quod alias ut molestias excepturi voluptas tempora. Sequi earum sit omnis. Tenetur veritatis fugiat quo.\n\n* Expedita nisi neque alias in omnis.\n* Inventore vel voluptatum quis odio.\n* Dicta possimus sapiente et.",
+    "introduction": null,
+    "description": null,
+    "resources": [
+      {
+        "id": 32,
+        "path": "public/topic/19/resources/",
+        "name": "nulla.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/19/resources/nulla.pdf",
+        "topic_id": 19
+      }
+    ],
+    "order": 5,
+    "json": null,
+    "can_skip": false
+  },
+  {
+    "id": 20,
+    "title": "quidem",
+    "lesson_id": 4,
+    "active": false,
+    "preview": true,
+    "topicable_id": 4,
+    "topicable_type": "EscolaLms\\TopicTypes\\Models\\TopicContent\\Video",
+    "topicable": {
+      "id": 4,
+      "value": "courses/2/topic/20/magnam.mp4",
+      "url": "https://api-stage.escolalms.com//storage/courses/2/topic/20/magnam.mp4",
+      "poster": "courses/2/topic/20/magnam.mp4",
+      "poster_url": "https://api-stage.escolalms.com//storage/courses/2/topic/20/magnam.jpg",
+      "width": "courses/2/topic/20/magnam.mp4",
+      "height": "courses/2/topic/20/magnam.mp4",
+      "created_at": "2021-10-14T15:50:29.000000Z",
+      "updated_at": "2021-12-02T09:01:52.000000Z"
+    },
+    "summary": "Maiores provident autem ea aut consectetur saepe dolores.\n=========================================================\n\nMaiores quia et in alias sequi quasi et. Quis placeat qui ipsa maiores quia occaecati sunt architecto. Consequuntur nobis aut non error. Nostrum quae possimus ut est provident voluptatem.\n\n>  Corrupti in iure impedit dicta impedit. Explicabo id ut neque provident vel eos ex. Quasi veniam vero explicabo odio voluptatem harum. Voluptatem repudiandae ab est quidem.\n\n* Iure deleniti amet exercitationem.\n* Incidunt consectetur fuga natus.\n* Sed qui nostrum consequatur doloremque ut.",
+    "introduction": null,
+    "description": null,
+    "resources": [
+      {
+        "id": 33,
+        "path": "public/topic/20/resources/",
+        "name": "sed.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/20/resources/sed.pdf",
+        "topic_id": 20
+      }
+    ],
+    "order": 7,
+    "json": null,
+    "can_skip": false
+  },
+  {
+    "id": 21,
+    "title": "quibusdam",
+    "lesson_id": 4,
+    "active": true,
+    "preview": true,
+    "topicable_id": 9,
+    "topicable_type": "EscolaLms\\TopicTypes\\Models\\TopicContent\\Image",
+    "topicable": {
+      "id": 9,
+      "value": "courses/2/topic/21/impedit.jpg",
+      "width": 640,
+      "height": 480,
+      "created_at": "2021-10-14T15:50:29.000000Z",
+      "updated_at": "2021-12-02T09:01:52.000000Z"
+    },
+    "summary": "Numquam corporis magni iure provident dolores expedita sed doloribus.\n=====================================================================\n\nVoluptas laudantium maiores dignissimos. Vel aliquid hic vitae ut nesciunt consequatur labore. Quia consectetur maxime saepe quod. Et maxime mollitia qui iure.\n\n>  Excepturi vel fugiat voluptas ratione. Quasi tempora quidem autem quas quia. Nesciunt voluptatibus quos debitis porro voluptatem dolores aut. Rem ipsam repudiandae nisi commodi ex est.\n\n* Ut praesentium consequatur ut numquam qui.\n* Vitae qui dolor qui quae.\n* Corporis necessitatibus quibusdam qui qui quia fugiat.\n\n1. Quia nulla nemo at maiores omnis quae dolor quaerat.\n2. Adipisci voluptatem aut dolore et vitae.\n3. Qui aut nisi nobis exercitationem nihil nihil molestiae.",
+    "introduction": null,
+    "description": null,
+    "resources": [
+      {
+        "id": 34,
+        "path": "public/topic/21/resources/",
+        "name": "iste.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/21/resources/iste.pdf",
+        "topic_id": 21
+      },
+      {
+        "id": 35,
+        "path": "public/topic/21/resources/",
+        "name": "sint.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/21/resources/sint.pdf",
+        "topic_id": 21
+      },
+      {
+        "id": 36,
+        "path": "public/topic/21/resources/",
+        "name": "ut.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/21/resources/ut.pdf",
+        "topic_id": 21
+      }
+    ],
+    "order": 8,
+    "json": null,
+    "can_skip": false
+  },
+  {
+    "id": 18,
+    "title": "non",
+    "lesson_id": 4,
+    "active": false,
+    "preview": true,
+    "topicable_id": 1,
+    "topicable_type": "EscolaLms\\TopicTypes\\Models\\TopicContent\\Audio",
+    "topicable": {
+      "id": 1,
+      "value": "courses/2/topic/18/velit.mp3",
+      "length": 1537,
+      "created_at": "2021-10-14T15:50:29.000000Z",
+      "updated_at": "2021-12-02T09:01:52.000000Z"
+    },
+    "summary": "Nemo maiores dolor itaque ullam qui quibusdam.\n==============================================\n\nDignissimos alias deserunt omnis alias dolore molestiae ut. Eligendi aperiam dolores in voluptas sed. Velit enim et illo eum sunt. Labore facere molestias accusamus.\n\n>  Incidunt illo deleniti omnis facilis qui. Omnis aliquid nihil voluptatem in architecto.\n\n* Reprehenderit deserunt non expedita mollitia amet qui ea.\n* Praesentium aspernatur nostrum pariatur.\n* Harum perspiciatis et sint sint labore ut nesciunt.\n\nVelit quaerat a beatae odio incidunt tenetur perferendis aperiam.\n=================================================================\n\n>  Dolorem aliquid vel aperiam eveniet. Optio dolores cupiditate magni. Possimus voluptas debitis accusamus voluptatem aut alias. Corrupti nemo nobis est et ad voluptatem consequatur.\n\n* Velit est repellendus laudantium et incidunt ipsam dolorum.\n* Voluptatem non eveniet et cupiditate aut asperiores.\n* Vitae soluta explicabo temporibus nam.\n\nFugit rerum adipisci vero cumque sed omnis.\n===========================================\n\n>  Repellendus voluptatem harum maxime sed. Rerum sunt quam eos debitis quae accusamus eius tenetur. Rerum illo aut et dignissimos dolores. Accusamus provident voluptatem et maxime ea.\n\n* Harum ut ut est amet vel corporis nulla error.\n* Ratione non ut voluptatem et numquam incidunt vel.\n* Aut voluptatem laborum unde vero.\n\n1. Fugit adipisci sed quibusdam et.\n2. Nesciunt voluptas quo saepe consectetur.\n3. Maxime natus voluptas rerum ut.\n\nAdipisci magnam eaque deserunt illo ducimus voluptatem.\n=======================================================\n\n>  Eum ipsum perferendis consequatur minus molestias veritatis. Soluta similique voluptas et delectus. Et facilis maxime aut tempora et. Inventore quis incidunt officiis optio omnis laboriosam.\n\n* Vitae totam tempore nihil perferendis non error repellendus.\n* Quas officiis molestiae quia sed explicabo deserunt vel.\n* Molestiae iusto quia fugiat ut et.",
+    "introduction": null,
+    "description": null,
+    "resources": [
+      {
+        "id": 30,
+        "path": "public/topic/18/resources/",
+        "name": "provident.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/18/resources/provident.pdf",
+        "topic_id": 18
+      },
+      {
+        "id": 31,
+        "path": "public/topic/18/resources/",
+        "name": "et.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/18/resources/et.pdf",
+        "topic_id": 18
+      }
+    ],
+    "order": 9,
+    "json": null,
+    "can_skip": false
+  },
+  {
+    "id": 16,
+    "title": "inventore",
+    "lesson_id": 4,
+    "active": false,
+    "preview": false,
+    "topicable_id": 7,
+    "topicable_type": "EscolaLms\\TopicTypes\\Models\\TopicContent\\Image",
+    "topicable": {
+      "id": 7,
+      "value": "courses/2/topic/16/blanditiis.jpg",
+      "width": 640,
+      "height": 480,
+      "created_at": "2021-10-14T15:50:29.000000Z",
+      "updated_at": "2021-12-02T09:01:52.000000Z"
+    },
+    "summary": "Doloremque voluptate modi est maiores.\n======================================\n\nQuos officia qui optio assumenda est unde dolorum. Voluptas quam et aut incidunt cupiditate voluptatem. Nihil ipsum porro nulla ut. Non esse sed distinctio.\n\nQuaerat voluptatem mollitia eius iusto non ipsa.\n================================================\n\n>  Maiores doloribus voluptate debitis earum veniam. Voluptatem perferendis sunt nam.\n\n* Inventore necessitatibus quibusdam cumque provident delectus qui.\n* Velit voluptas saepe est ea.\n* Deserunt quia nobis reiciendis debitis et.",
+    "introduction": null,
+    "description": null,
+    "resources": [
+      {
+        "id": 26,
+        "path": "public/topic/16/resources/",
+        "name": "aut.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/16/resources/aut.pdf",
+        "topic_id": 16
+      },
+      {
+        "id": 27,
+        "path": "public/topic/16/resources/",
+        "name": "repellat.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/16/resources/repellat.pdf",
+        "topic_id": 16
+      },
+      {
+        "id": 28,
+        "path": "public/topic/16/resources/",
+        "name": "recusandae.pdf",
+        "url": "https://api-stage.escolalms.com//storage/public/topic/16/resources/recusandae.pdf",
+        "topic_id": 16
+      }
+    ],
+    "order": 9,
+    "json": null,
+    "can_skip": false
+  }
+]
