@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
-import Topic from '@/components/ProgramForm/Topic';
+// import Topic from '@/components/ProgramForm/Topic';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import { Button, Divider, Card, Collapse, Typography, Popconfirm } from 'antd';
+import { Button, Divider, Card, Typography, Popconfirm } from 'antd';
 
 import { PlusOutlined } from '@ant-design/icons';
-import SortingButtons from '@/components/sortingbuttons';
-import TopicHeader from '@/components/ProgramForm/Topic/header';
+// import SortingButtons from '@/components/sortingbuttons';
+// import TopicHeader from '@/components/ProgramForm/Topic/header';
 import { FormattedMessage, useParams } from 'umi';
 
 import LessonForm from './form';
 
-const { Panel } = Collapse;
+// const { Panel } = Collapse;
 
 // DNDEDITOR
 import { Container } from '@/components/ProgramForm/DndEditor/index';
@@ -25,11 +25,10 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
   const [state, setState] = useState<API.Lesson>(lesson);
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
-  const { id, updateLesson, deleteLesson, addNewTopic, sortTopic } = useContext(Context);
+  // sortTopic, id exported context
+  const { updateLesson, deleteLesson, addNewTopic } = useContext(Context);
 
   const params = useParams<{ course?: string; tab?: string }>();
-
-  const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
 
   useEffect(() => {
     setState(lesson);
@@ -71,12 +70,12 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
     return Promise.resolve();
   }, [deleteLesson, state.id]);
 
-  const onSort = useCallback(
-    (topic_id, up) => {
-      return lesson.id && sortTopic && id && sortTopic(lesson.id, topic_id, up);
-    },
-    [id, sortTopic, lesson],
-  );
+  // const onSort = useCallback(
+  //   (topic_id, up) => {
+  //     return lesson.id && sortTopic && id && sortTopic(lesson.id, topic_id, up);
+  //   },
+  //   [id, sortTopic, lesson],
+  // );
 
   return (
     <Card
@@ -121,7 +120,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
 
       {topicList && topicList.length > 0 ? (
         <React.Fragment>
-          <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
+          {/* <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
             {topicList &&
               topicList
                 .sort((topicA, topicB) => (topicA.order || 0) - (topicB.order || 0))
@@ -158,11 +157,13 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
                     />
                   </Panel>
                 ))}
-          </Collapse>
+          </Collapse> */}
           <DndProvider backend={HTML5Backend}>
             <Container
               courseId={lesson.course_id}
               courseLessons={courseLessons}
+              state={state}
+              setState={setState}
               topicList={topicList}
             />
           </DndProvider>

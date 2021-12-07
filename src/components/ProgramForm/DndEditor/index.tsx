@@ -1,11 +1,11 @@
-import { FC, useState, useCallback } from 'react';
+import { FC, useState, useCallback, useEffect } from 'react';
 import update from 'immutability-helper';
 import { Modal } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import { DndCard } from './card';
 import { Dustbin } from './dustbin';
 import { Box, BoxItemProps } from './box';
-import { TopicForm } from './form';
+import Topic from '../Topic/index';
 import { TopicNew, TopicType, TopicNotEmpty } from './types';
 
 const style = {
@@ -24,20 +24,19 @@ export interface ContainerState {
 export const Container: FC<{
   courseId?: number;
   courseLessons: API.Lesson[];
+  state: API.Lesson;
+  setState: (state: API.Lesson) => void;
   topicList: (TopicNew | TopicNotEmpty)[];
 }> = ({ courseId, courseLessons, topicList }) => {
-  const [cards, setCards] = useState<(TopicNew | TopicNotEmpty)[]>(topicList);
+  //   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
+
+  const [cards, setCards] = useState<(TopicNew | TopicNotEmpty)[]>([]);
 
   const [isModalVisible, setIsModalVisible] = useState<TopicNew | TopicNotEmpty>();
 
-  const handleOk = () => {
-    console.log('save topic stuff');
-    setIsModalVisible(undefined);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(undefined);
-  };
+  useEffect(() => {
+    setCards(topicList);
+  }, [topicList]);
 
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
@@ -108,15 +107,18 @@ export const Container: FC<{
         <Box type={TopicType.Image} onEnd={onNewCard} icon={<HomeOutlined />} />
         <Box type={TopicType.PDF} onEnd={onNewCard} icon={<HomeOutlined />} />
       </div>
-      <Modal
-        title="Basic Modal"
-        visible={isModalVisible !== undefined}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        width={1000}
-      >
+      <Modal title="Basic Modal" visible={isModalVisible !== undefined} footer={false} width={1000}>
         {isModalVisible && (
-          <TopicForm courseId={courseId} courseLessons={courseLessons} item={isModalVisible} />
+          <Topic
+            courseId={courseId}
+            courseLessons={courseLessons}
+            key={isModalVisible.id}
+            topic={isModalVisible}
+            onUpload={(uploadedTopic) =>
+              uploadedTopic.id && setActiveKeys(String(uploadedTopic.id))
+            }
+            onClose={() => setIsModalVisible(undefined)}
+          />
         )}
       </Modal>
     </>
