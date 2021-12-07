@@ -4,13 +4,13 @@ import { request } from 'umi';
 
 export enum TopicType {
   Unselected = '',
-  RichText = 'EscolaLms\\Courses\\Models\\TopicContent\\RichText',
-  OEmbed = 'EscolaLms\\Courses\\Models\\TopicContent\\OEmbed',
-  Audio = 'EscolaLms\\Courses\\Models\\TopicContent\\Audio',
-  Video = 'EscolaLms\\Courses\\Models\\TopicContent\\Video',
-  H5P = 'EscolaLms\\Courses\\Models\\TopicContent\\H5P',
-  Image = 'EscolaLms\\Courses\\Models\\TopicContent\\Image',
-  PDF = 'EscolaLms\\Courses\\Models\\TopicContent\\PDF',
+  RichText = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\RichText',
+  OEmbed = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\OEmbed',
+  Audio = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Audio',
+  Video = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Video',
+  H5P = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\H5P',
+  Image = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Image',
+  PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
 }
 
 /**  GET /api/courses */
