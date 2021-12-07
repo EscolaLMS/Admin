@@ -9,7 +9,7 @@
   display: list-item;
 }
 
-.form-wysiwyg-markdown ol li {
+.form-wysiwyg-markdown ol > li {
   list-style: decimal;
 }
 
