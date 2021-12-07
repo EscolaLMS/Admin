@@ -13,6 +13,11 @@ import LessonForm from './form';
 
 const { Panel } = Collapse;
 
+// DNDEDITOR
+import { Container } from '@/components/ProgramForm/DndEditor/index';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] }> = ({
   lesson,
   courseLessons,
@@ -115,42 +120,53 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
       )}
 
       {topicList && topicList.length > 0 ? (
-        <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
-          {topicList &&
-            topicList
-              .sort((topicA, topicB) => (topicA.order || 0) - (topicB.order || 0))
-              .map((topic, index, arr) => (
-                <Panel
-                  header={<TopicHeader topic={topic} />}
-                  key={topic.id || index}
-                  extra={
-                    // eslint-disable-next-line no-nested-ternary
-                    topic.isNew ? (
-                      <React.Fragment />
-                    ) : arr.length > 1 ? (
-                      <SortingButtons
-                        // eslint-disable-next-line no-nested-ternary
-                        mode={index === 0 ? 'first' : index === arr.length - 1 ? 'last' : 'middle'}
-                        onUp={() => onSort(topic.id, true)}
-                        onDown={() => onSort(topic.id, false)}
-                      />
-                    ) : (
-                      <React.Fragment />
-                    )
-                  }
-                >
-                  <Topic
-                    courseId={lesson.course_id}
-                    courseLessons={courseLessons}
-                    key={topic.id}
-                    topic={topic}
-                    onUpload={(uploadedTopic) =>
-                      uploadedTopic.id && setActiveKeys(String(uploadedTopic.id))
+        <React.Fragment>
+          <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
+            {topicList &&
+              topicList
+                .sort((topicA, topicB) => (topicA.order || 0) - (topicB.order || 0))
+                .map((topic, index, arr) => (
+                  <Panel
+                    header={<TopicHeader topic={topic} />}
+                    key={topic.id || index}
+                    extra={
+                      // eslint-disable-next-line no-nested-ternary
+                      topic.isNew ? (
+                        <React.Fragment />
+                      ) : arr.length > 1 ? (
+                        <SortingButtons
+                          // eslint-disable-next-line no-nested-ternary
+                          mode={
+                            index === 0 ? 'first' : index === arr.length - 1 ? 'last' : 'middle'
+                          }
+                          onUp={() => onSort(topic.id, true)}
+                          onDown={() => onSort(topic.id, false)}
+                        />
+                      ) : (
+                        <React.Fragment />
+                      )
                     }
-                  />
-                </Panel>
-              ))}
-        </Collapse>
+                  >
+                    <Topic
+                      courseId={lesson.course_id}
+                      courseLessons={courseLessons}
+                      key={topic.id}
+                      topic={topic}
+                      onUpload={(uploadedTopic) =>
+                        uploadedTopic.id && setActiveKeys(String(uploadedTopic.id))
+                      }
+                    />
+                  </Panel>
+                ))}
+          </Collapse>
+          <DndProvider backend={HTML5Backend}>
+            <Container
+              courseId={lesson.course_id}
+              courseLessons={courseLessons}
+              topicList={topicList}
+            />
+          </DndProvider>
+        </React.Fragment>
       ) : (
         !lesson.isNew && (
           <Typography.Text>

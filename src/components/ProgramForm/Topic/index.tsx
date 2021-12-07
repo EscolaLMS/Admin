@@ -7,7 +7,7 @@ import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import MediaUpload from './media/upload';
 import { Popconfirm } from 'antd';
-import { Radio } from 'antd';
+// import { Radio } from 'antd';
 import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/course';
 import Oembed from './media/oembed';
@@ -52,6 +52,8 @@ export const Topic: React.FC<{
   });
 
   const type = state.topicable_type;
+
+  console.log({ topic }, '->', type, '->', TopicType.RichText);
 
   const [sortOrder /* , setSortOrder */] = useState(state.order);
   const [loading, setLoading] = useState(false);
@@ -163,11 +165,11 @@ export const Topic: React.FC<{
           </React.Fragment>
         )}
 
-        <Divider>
+        {/* <Divider>
           <FormattedMessage id="select_type_topic" />
           ...
-        </Divider>
-        <Radio.Group
+        </Divider> */}
+        {/* <Radio.Group
           name="radiogroup"
           value={type}
           onChange={(e) => updateValue('topicable_type', e.target.value)}
@@ -177,38 +179,37 @@ export const Topic: React.FC<{
               {key}
             </Radio>
           ))}
-        </Radio.Group>
-        <Divider />
+        </Radio.Group> */}
+        {/* <Divider /> */}
         {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
-        {type && type === TopicType.RichText && (
+        {type === TopicType.RichText && (
           <RichTextEditor
             directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
             text={topic.topicable_type === TopicType.RichText ? topic.topicable.value || '' : ''}
             onChange={(value) => updateValue('value', value)}
           />
         )}
-        {type &&
-          (type === TopicType.Video ||
-            type === TopicType.Audio ||
-            type === TopicType.Image ||
-            type === TopicType.PDF) && (
-            <MediaUpload
-              type={type}
-              topic={topic}
-              currentState={state}
-              onChange={() => setLoading(true)}
-              onUpdate={(info) => {
-                if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
-                if (onUpload) onUpload(info.file.response.data);
-                setLoading(false);
-              }}
-              disabled={false}
-            />
-          )}
-        {type && type === TopicType.OEmbed && (
+        {(type === TopicType.Video ||
+          type === TopicType.Audio ||
+          type === TopicType.Image ||
+          type === TopicType.PDF) && (
+          <MediaUpload
+            type={type}
+            topic={topic}
+            currentState={state}
+            onChange={() => setLoading(true)}
+            onUpdate={(info) => {
+              if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
+              if (onUpload) onUpload(info.file.response.data);
+              setLoading(false);
+            }}
+            disabled={false}
+          />
+        )}
+        {type === TopicType.OEmbed && (
           <Oembed text={state.value} onChange={(value) => updateValue('value', value)} />
         )}
-        {type && type === TopicType.H5P && (
+        {type === TopicType.H5P && (
           <H5PForm id={state.value} onChange={(value) => updateValue('value', value)} />
         )}
       </Card>
