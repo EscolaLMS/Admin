@@ -98,7 +98,7 @@
         "react-player": "^2.9.0",
         "react-portal-hook": "^1.0.8",
         "react-tiny-oembed": "^1.0.1",
-        "rich-markdown-editor": "^11.10.0",
+        "rich-markdown-editor": "^11.20.1",
         "start-server-and-test": "^1.12.1",
         "styled-components": "^5.3.0",
         "ts-jest": "^26",

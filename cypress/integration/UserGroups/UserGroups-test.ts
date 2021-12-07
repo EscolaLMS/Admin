@@ -29,6 +29,12 @@ describe('User Groups', () => {
     pageObj.navigateToPage('user_groups/new').createNewGroup().getList().itemShouldExist();
   });
 
+  // SEARCH FOR ADDED ELEMENT
+  it('search added group element', () => {
+    const pageObj = new UserGroupObject(this.group.name);
+    pageObj.navigateToPage('user_groups').searchAddedItem().itemShouldExist();
+  });
+
   // DELETE ELEMENT
   it('delete group element', () => {
     const pageObj = new UserGroupObject(this.group.name);

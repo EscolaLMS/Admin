@@ -5,9 +5,10 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-
+import { format } from 'date-fns';
 import { users, deleteUser } from '@/services/escola-lms/user';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
@@ -19,6 +20,12 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
+    dataIndex: 'created_at',
+    hideInSearch: true,
+    render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
   },
   {
     title: <FormattedMessage id="first_name" defaultMessage="first_name" />,
