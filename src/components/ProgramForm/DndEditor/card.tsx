@@ -12,7 +12,7 @@ import TopicHeader from '../Topic/header';
 
 const style = {
   textAlign: 'left',
-  border: '1px dashed gray',
+
   padding: '0.5rem 1rem',
   marginBottom: '.5rem',
   backgroundColor: 'white',
@@ -26,6 +26,7 @@ export interface CardProps {
   moveCard: (dragIndex: number, hoverIndex: number) => void;
   onEdit: (topic: TopicNotEmpty | TopicNew) => void;
   onDelete: (topic: TopicNotEmpty | TopicNew) => void;
+  onEnd: () => void;
 }
 
 interface DragItem {
@@ -60,8 +61,9 @@ const TopicButtons: React.FC<{ onDelete: () => void; onEdit: () => void; loading
   );
 };
 
-export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onDelete }) => {
+export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onDelete, onEnd }) => {
   const ref = useRef<HTMLDivElement>(null);
+
   const [{ handlerId }, drop] = useDrop({
     accept: ItemTypes.CARD,
     collect(monitor) {
@@ -126,9 +128,13 @@ export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onD
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
+    end() {
+      onEnd();
+    },
   });
 
   const opacity = isDragging ? 0 : 1;
+
   drag(drop(ref));
 
   return (

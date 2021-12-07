@@ -1,5 +1,6 @@
-import { FC, useState, useCallback, useEffect } from 'react';
+import { FC, useState, useCallback, useEffect, useContext } from 'react';
 import update from 'immutability-helper';
+import { Context } from '@/components/ProgramForm/Context';
 import { Modal } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import { DndCard } from './card';
@@ -7,6 +8,7 @@ import { Dustbin } from './dustbin';
 import { Box, BoxItemProps } from './box';
 import Topic from '../Topic/index';
 import { TopicNew, TopicType, TopicNotEmpty } from './types';
+import { FormattedMessage } from 'react-intl';
 
 const style = {
   width: 900,
@@ -27,8 +29,9 @@ export const Container: FC<{
   state: API.Lesson;
   setState: (state: API.Lesson) => void;
   topicList: (TopicNew | TopicNotEmpty)[];
-}> = ({ courseId, courseLessons, topicList }) => {
-  //   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
+  onUpload?: (topic: API.Topic) => void;
+}> = ({ courseId, courseLessons, state, topicList, onUpload }) => {
+  const { id, deleteTopic, sortTopic, updateTopicsOrder } = useContext(Context);
 
   const [cards, setCards] = useState<(TopicNew | TopicNotEmpty)[]>([]);
 
@@ -40,20 +43,31 @@ export const Container: FC<{
 
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
-      console.log('send sorting to backend/content, skip new ones');
-
       const dragCard = cards[dragIndex];
-      setCards(
-        update(cards, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragCard],
-          ],
-        }),
+
+      return (
+        dragCard &&
+        state.id &&
+        sortTopic &&
+        id &&
+        sortTopic(state.id, Number(dragCard.id), hoverIndex > dragIndex ? false : true) &&
+        setCards(
+          update(cards, {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragCard],
+            ],
+          }),
+        )
       );
     },
+
     [cards],
   );
+
+  const updateOrder = useCallback(() => {
+    return updateTopicsOrder && updateTopicsOrder(Number(state.id));
+  }, [cards, state]);
 
   const onNewCard = useCallback((item: BoxItemProps) => {
     const newTopic: TopicNew = {
@@ -68,12 +82,10 @@ export const Container: FC<{
 
   const onDeleteCart = useCallback((item: TopicNew | TopicNotEmpty) => {
     setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));
-    console.log('send delete to backend/content');
-    console.log('onDelete', item);
+    return deleteTopic && item.id && deleteTopic(item.id);
   }, []);
 
   const onEditCart = useCallback((item: TopicNew | TopicNotEmpty) => {
-    console.log('onEditCart', item);
     setIsModalVisible(item);
   }, []);
 
@@ -87,6 +99,7 @@ export const Container: FC<{
         moveCard={moveCard}
         onDelete={onDeleteCart}
         onEdit={onEditCart}
+        onEnd={updateOrder}
       />
     );
   };
@@ -107,16 +120,25 @@ export const Container: FC<{
         <Box type={TopicType.Image} onEnd={onNewCard} icon={<HomeOutlined />} />
         <Box type={TopicType.PDF} onEnd={onNewCard} icon={<HomeOutlined />} />
       </div>
-      <Modal title="Basic Modal" visible={isModalVisible !== undefined} footer={false} width={1000}>
+      <Modal
+        title={
+          <>
+            <FormattedMessage id="topic" />
+            {`: ${isModalVisible && isModalVisible.title}`}
+          </>
+        }
+        visible={isModalVisible !== undefined}
+        onCancel={() => setIsModalVisible(undefined)}
+        footer={false}
+        width={1000}
+      >
         {isModalVisible && (
           <Topic
             courseId={courseId}
             courseLessons={courseLessons}
             key={isModalVisible.id}
             topic={isModalVisible}
-            onUpload={(uploadedTopic) =>
-              uploadedTopic.id && setActiveKeys(String(uploadedTopic.id))
-            }
+            onUpload={onUpload}
             onClose={() => setIsModalVisible(undefined)}
           />
         )}

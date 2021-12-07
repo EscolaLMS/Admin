@@ -31,6 +31,7 @@ type ProgramContext = {
   addNewTopic?: (lesson_id: number) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
+  updateTopicsOrder?: (lesson_id: number) => void;
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
 };
 
@@ -217,7 +218,23 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           : [],
       }));
 
-      const orders = topics
+      // const orders = topics
+      //   ?.filter((topic) => !topic.isNew)
+      //   .map((topic) => [topic.id, topic.order]);
+
+      // sort({ class: 'Topic', orders, course_id: id }).then((response) => {
+      //   if (response.success) {
+      //     message.success(response.message);
+      //   }
+      // });
+    },
+    [state, id],
+  );
+
+  const updateTopicsOrder = useCallback(
+    (lesson_id) => {
+      const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
+      const orders = lesson?.topics
         ?.filter((topic) => !topic.isNew)
         .map((topic) => [topic.id, topic.order]);
 
@@ -575,6 +592,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     addNewTopic,
     deleteTopic,
     sortTopic,
+    updateTopicsOrder,
     onTopicUploaded,
   };
 

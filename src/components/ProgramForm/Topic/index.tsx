@@ -89,7 +89,8 @@ export const Topic: React.FC<{
           .then(() => setLoading(false))
           .catch(() => {
             setLoading(false);
-          });
+          })
+          .finally(() => onClose());
       }
     },
     [state, updateTopic],
@@ -138,12 +139,12 @@ export const Topic: React.FC<{
   return (
     <React.Fragment>
       <Card
-        title={
-          <>
-            <FormattedMessage id="topic" />
-            {`: ${state.title}`}
-          </>
-        }
+        // title={
+        //   <>
+        //     <FormattedMessage id="topic" />
+        //     {`: ${state.title}`}
+        //   </>
+        // }
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
           <Button onClick={onClose} loading={loading}>
@@ -173,7 +174,26 @@ export const Topic: React.FC<{
             <Resources topicId={Number(topic.id)} />
           </React.Fragment>
         )}
-
+        {/* <Radio.Group
+          name="radiogroup"
+          value={type}
+          onChange={(e) => updateValue('topicable_type', e.target.value)}
+        >
+          {Object.keys(TopicType).map((key) => (
+            <Radio key={key} value={TopicType[key]}>
+              {key}
+            </Radio>
+          ))}
+        </Radio.Group>
+        <Divider />
+        {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
+        {type && type === TopicType?.RichText && (
+          <RichTextEditor
+            directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
+            text={topic?.topicable_type === TopicType?.RichText ? topic?.topicable.value || '' : ''}
+            onChange={(value) => updateValue('value', value)}
+          />
+        )} */}
         <Divider>{getTypeName(topic)}</Divider>
         {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
         {type && type === TopicType?.RichText && (
