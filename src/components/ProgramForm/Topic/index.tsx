@@ -40,13 +40,12 @@ const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
 export const Topic: React.FC<{
   topic: API.Topic;
   itemsLength?: number;
-  onUpload?: (topic: API.Topic) => void;
   courseId?: number;
   courseLessons: API.Lesson[];
   onClose: () => void;
-}> = ({ topic, onUpload, courseId, courseLessons, onClose }) => {
+}> = ({ topic, courseId, courseLessons, onClose }) => {
   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
-
+  const [saveIsDisabled, setSaveIsDisabled] = useState(false);
   const [state, setState] = useState<API.Topic>({
     ...topic,
     value: topic.topicable?.value,
@@ -64,6 +63,9 @@ export const Topic: React.FC<{
         value: type === topic.topicable_type ? topic.topicable?.value : '',
       };
     });
+    if (topic.isNew) {
+      setSaveIsDisabled(true);
+    }
   }, [type, topic]);
 
   const updateValue = useCallback((key, value) => {
@@ -71,6 +73,7 @@ export const Topic: React.FC<{
       ...prevState,
       [key]: value,
     }));
+    setSaveIsDisabled(false);
   }, []);
 
   const updateValues = useCallback((values) => {
@@ -106,13 +109,6 @@ export const Topic: React.FC<{
       json: state.json ? JSON.stringify(state.json) : null,
     };
 
-    // when creating a new topic id is neeeded for sorting but we need to delete to not create post id request
-    // if (state.isNew) {
-    //   values.id = undefined;
-    // }
-
-    // console.log({ values });
-
     // it threw a validation error when the user wanted to set the skip topic to true without this code it works fine
     // if (
     //   values.topicable_type &&
@@ -133,29 +129,19 @@ export const Topic: React.FC<{
       return deleteTopic && state.id && deleteTopic(state.id);
     }
     setLoading(true);
+    onClose();
     return deleteTopic && state.id && deleteTopic(state.id);
   }, [state, deleteTopic, topic.isNew]);
 
   return (
     <React.Fragment>
       <Card
-        // title={
-        //   <>
-        //     <FormattedMessage id="topic" />
-        //     {`: ${state.title}`}
-        //   </>
-        // }
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
           <Button onClick={onClose} loading={loading}>
             <FormattedMessage id="Cancel" />
           </Button>,
-          <Button
-            type="primary"
-            onClick={onFormSubmit}
-            disabled={type === TopicType.Unselected}
-            loading={loading}
-          >
+          <Button type="primary" onClick={onFormSubmit} disabled={saveIsDisabled} loading={loading}>
             <FormattedMessage id="save" />
           </Button>,
         ]}
@@ -174,6 +160,7 @@ export const Topic: React.FC<{
             <Resources topicId={Number(topic.id)} />
           </React.Fragment>
         )}
+        {/* TODO: delete this comment section if all works */}
         {/* <Radio.Group
           name="radiogroup"
           value={type}
@@ -199,7 +186,9 @@ export const Topic: React.FC<{
         {type && type === TopicType?.RichText && (
           <RichTextEditor
             directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
-            text={topic?.topicable_type === TopicType?.RichText ? topic?.topicable.value || '' : ''}
+            text={
+              topic?.topicable_type === TopicType?.RichText ? topic?.topicable?.value || '' : ''
+            }
             onChange={(value) => updateValue('value', value)}
           />
         )}
@@ -215,7 +204,7 @@ export const Topic: React.FC<{
               onChange={() => setLoading(true)}
               onUpdate={(info) => {
                 if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
-                if (onUpload) onUpload(info.file.response.data);
+                setSaveIsDisabled(false);
                 setLoading(false);
               }}
               disabled={false}

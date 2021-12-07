@@ -11,7 +11,7 @@ import { TopicNew, TopicType, TopicNotEmpty } from './types';
 import { FormattedMessage } from 'react-intl';
 
 const style = {
-  width: 900,
+  width: 700,
 };
 
 export interface Item {
@@ -29,9 +29,8 @@ export const Container: FC<{
   state: API.Lesson;
   setState: (state: API.Lesson) => void;
   topicList: (TopicNew | TopicNotEmpty)[];
-  onUpload?: (topic: API.Topic) => void;
-}> = ({ courseId, courseLessons, state, topicList, onUpload }) => {
-  const { id, deleteTopic, sortTopic, updateTopicsOrder } = useContext(Context);
+}> = ({ courseId, courseLessons, state, topicList }) => {
+  const { id, deleteTopic, sortTopic, updateTopicsOrder, addNewTopic } = useContext(Context);
 
   const [cards, setCards] = useState<(TopicNew | TopicNotEmpty)[]>([]);
 
@@ -44,13 +43,8 @@ export const Container: FC<{
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       const dragCard = cards[dragIndex];
-
-      return (
-        dragCard &&
-        state.id &&
-        sortTopic &&
-        id &&
-        sortTopic(state.id, Number(dragCard.id), hoverIndex > dragIndex ? false : true) &&
+      if (dragCard && state.id && sortTopic && id) {
+        sortTopic(state.id, Number(dragCard.id), hoverIndex > dragIndex ? false : true);
         setCards(
           update(cards, {
             $splice: [
@@ -58,8 +52,8 @@ export const Container: FC<{
               [hoverIndex, 0, dragCard],
             ],
           }),
-        )
-      );
+        );
+      }
     },
 
     [cards],
@@ -69,25 +63,31 @@ export const Container: FC<{
     return updateTopicsOrder && updateTopicsOrder(Number(state.id));
   }, [cards, state]);
 
-  const onNewCard = useCallback((item: BoxItemProps) => {
-    const newTopic: TopicNew = {
-      id: Math.round(Math.random() * Number.MAX_SAFE_INTEGER),
-      isNew: true,
-      can_skip: false,
-      topicable_type: item.type,
-    };
-    setCards((prevCards) => [...prevCards, newTopic]);
-    setIsModalVisible(newTopic);
-  }, []);
+  const onNewCard = useCallback(
+    (item: BoxItemProps) => {
+      const newTopic = addNewTopic && state.id && addNewTopic(state.id);
+      setCards((prevCards) => [...prevCards, { ...newTopic, topicable_type: item.type }]);
 
-  const onDeleteCart = useCallback((item: TopicNew | TopicNotEmpty) => {
-    setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));
-    return deleteTopic && item.id && deleteTopic(item.id);
-  }, []);
+      setIsModalVisible({ ...newTopic, topicable_type: item.type });
+    },
+    [cards],
+  );
 
-  const onEditCart = useCallback((item: TopicNew | TopicNotEmpty) => {
-    setIsModalVisible(item);
-  }, []);
+  const onDeleteCart = useCallback(
+    (item: TopicNew | TopicNotEmpty) => {
+      console.log({ item });
+      setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));
+      return deleteTopic && item.id && deleteTopic(item.id);
+    },
+    [cards],
+  );
+
+  const onEditCart = useCallback(
+    (item: TopicNew | TopicNotEmpty) => {
+      setIsModalVisible(item);
+    },
+    [cards],
+  );
 
   const renderCard = (card: TopicNew | TopicNotEmpty, index: number) => {
     return (
@@ -130,7 +130,7 @@ export const Container: FC<{
         visible={isModalVisible !== undefined}
         onCancel={() => setIsModalVisible(undefined)}
         footer={false}
-        width={1000}
+        width={1300}
       >
         {isModalVisible && (
           <Topic
@@ -138,7 +138,6 @@ export const Container: FC<{
             courseLessons={courseLessons}
             key={isModalVisible.id}
             topic={isModalVisible}
-            onUpload={onUpload}
             onClose={() => setIsModalVisible(undefined)}
           />
         )}

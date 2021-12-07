@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
-import Topic from '@/components/ProgramForm/Topic';
+// import Topic from '@/components/ProgramForm/Topic';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import { Button, Divider, Card, Typography, Popconfirm, Collapse } from 'antd';
+import { Button, Divider, Card, Popconfirm } from 'antd';
 
-import { PlusOutlined } from '@ant-design/icons';
-import SortingButtons from '@/components/sortingbuttons';
-import TopicHeader from '@/components/ProgramForm/Topic/header';
+// import { PlusOutlined } from '@ant-design/icons';
+// import SortingButtons from '@/components/sortingbuttons';
+// import TopicHeader from '@/components/ProgramForm/Topic/header';
 import { FormattedMessage, useParams } from 'umi';
 
 import LessonForm from './form';
 
-const { Panel } = Collapse;
+// const { Panel } = Collapse;
 
 // DNDEDITOR
 import { Container } from '@/components/ProgramForm/DndEditor/index';
@@ -25,24 +25,23 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
   const [state, setState] = useState<API.Lesson>(lesson);
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
-  // sortTopic, id exported context
-  const { id, updateLesson, deleteLesson, addNewTopic, sortTopic } = useContext(Context);
+  const { updateLesson, deleteLesson } = useContext(Context);
 
   const params = useParams<{ course?: string; tab?: string }>();
 
-  const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
+  // const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
 
   useEffect(() => {
     setState(lesson);
     return lesson.topics && setTopicList(lesson.topics);
   }, [lesson]);
 
-  const onNew = useCallback(() => {
-    const newTopic = addNewTopic && lesson.id && addNewTopic(lesson.id);
-    if (newTopic) {
-      setActiveKeys(String(newTopic.id));
-    }
-  }, [addNewTopic, lesson.id]);
+  // const onNew = useCallback(() => {
+  //   const newTopic = addNewTopic && lesson.id && addNewTopic(lesson.id);
+  //   if (newTopic) {
+  //     setActiveKeys(String(newTopic.id));
+  //   }
+  // }, [addNewTopic, lesson.id]);
 
   const handleSave = useCallback(() => {
     setLoading(true);
@@ -72,12 +71,12 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
     return Promise.resolve();
   }, [deleteLesson, state.id]);
 
-  const onSort = useCallback(
-    (topic_id, up) => {
-      return lesson.id && sortTopic && id && sortTopic(lesson.id, topic_id, up);
-    },
-    [id, sortTopic, lesson],
-  );
+  // const onSort = useCallback(
+  //   (topic_id, up) => {
+  //     return lesson.id && sortTopic && id && sortTopic(lesson.id, topic_id, up);
+  //   },
+  //   [id, sortTopic, lesson],
+  // );
 
   return (
     <Card
@@ -120,9 +119,8 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
         </Divider>
       )}
 
-      {topicList && topicList.length > 0 ? (
-        <React.Fragment>
-          <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
+      <React.Fragment>
+        {/* <Collapse onChange={(key) => setActiveKeys(key)} activeKey={activeKeys}>
             {topicList &&
               topicList
                 .sort((topicA, topicB) => (topicA.order || 0) - (topicB.order || 0))
@@ -159,39 +157,26 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
                     />
                   </Panel>
                 ))}
-          </Collapse>
-          <DndProvider backend={HTML5Backend}>
-            <Container
-              courseId={lesson.course_id}
-              courseLessons={courseLessons}
-              state={state}
-              setState={setState}
-              topicList={topicList}
-              onUpload={(uploadedTopic) =>
-                uploadedTopic.id && setActiveKeys(String(uploadedTopic.id))
-              }
-            />
-          </DndProvider>
-        </React.Fragment>
-      ) : (
-        !lesson.isNew && (
-          <Typography.Text>
-            <FormattedMessage id="no_topics" />{' '}
-            <Button onClick={onNew} type="primary" size="small" icon={<PlusOutlined />}>
-              <FormattedMessage id="add_new_topic" />
-            </Button>
-          </Typography.Text>
-        )
-      )}
+          </Collapse> */}
+        <DndProvider backend={HTML5Backend}>
+          <Container
+            courseId={lesson.course_id}
+            courseLessons={courseLessons}
+            state={state}
+            setState={setState}
+            topicList={topicList}
+          />
+        </DndProvider>
+      </React.Fragment>
 
-      {!lesson.isNew && (
+      {/* {!lesson.isNew && (
         <React.Fragment>
           <Divider />
           <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
             <FormattedMessage id="add_new_topic" />
           </Button>
         </React.Fragment>
-      )}
+      )} */}
     </Card>
   );
 };
