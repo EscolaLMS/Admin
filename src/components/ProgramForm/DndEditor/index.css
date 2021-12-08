@@ -23,8 +23,8 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 1rem;
+  margin-bottom: 5px;
+  padding: 10px 10px;
   text-align: left;
   background-color: white;
   cursor: move;
@@ -50,4 +50,8 @@
 .dnd-editor .dnd-editor-box {
   margin-bottom: 10px;
   text-align: center;
+}
+
+.dnd-editor .dnd-editor-card .dnd-editor-card-options {
+  margin-bottom: -5px;
 }

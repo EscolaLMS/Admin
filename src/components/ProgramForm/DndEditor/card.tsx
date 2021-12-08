@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { ItemTypes } from './itemtypes';
 import { XYCoord } from 'dnd-core';
@@ -31,7 +31,7 @@ const TopicButtons: React.FC<{ onDelete: () => void; onEdit: () => void; loading
   loading,
 }) => {
   return (
-    <div>
+    <div className="dnd-editor-card-options">
       <Button onClick={() => onEdit()} loading={loading} size="small">
         <FormattedMessage id="edit" />
       </Button>
@@ -51,6 +51,7 @@ const TopicButtons: React.FC<{ onDelete: () => void; onEdit: () => void; loading
 };
 
 export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onDelete, onEnd }) => {
+  const [showOptions, setShowOptions] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop({
@@ -128,6 +129,8 @@ export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onD
 
   return (
     <div
+      onMouseOver={() => setShowOptions(true)}
+      onMouseLeave={() => setShowOptions(false)}
       className="dnd-editor-card"
       ref={ref}
       style={{
@@ -136,7 +139,13 @@ export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onD
       data-handler-id={handlerId}
     >
       <TopicHeader topic={topic as API.Topic} />
-      <TopicButtons onDelete={() => onDelete(topic)} onEdit={() => onEdit(topic)} loading={false} />
+      {showOptions && (
+        <TopicButtons
+          onDelete={() => onDelete(topic)}
+          onEdit={() => onEdit(topic)}
+          loading={false}
+        />
+      )}
     </div>
   );
 };
