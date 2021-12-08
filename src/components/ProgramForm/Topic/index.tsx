@@ -186,9 +186,12 @@ export const Topic: React.FC<{
               onChange={() => setLoading(true)}
               onUpdate={(info) => {
                 if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
-                // console.log({ topic });
-                // console.log('infoo', info.file.response.data);
-                setState(info.file.response.data);
+                setState({
+                  ...state,
+                  id: info?.file?.response?.data?.id,
+                  order: info.file.response.data?.order,
+                  value: info?.file?.response.data?.topicable?.value,
+                });
                 setSaveIsDisabled(false);
                 setLoading(false);
               }}

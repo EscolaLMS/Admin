@@ -1,18 +1,7 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { FC } from 'react';
 import { useDrop } from 'react-dnd';
+import { FormattedMessage } from 'react-intl';
 import { ItemTypes } from './itemtypes';
-
-const style: CSSProperties = {
-  minHeight: '12rem',
-  minWidth: '12rem',
-  marginRight: '1.5rem',
-  marginBottom: '1.5rem',
-  padding: '1rem',
-  textAlign: 'center',
-  fontSize: '1rem',
-  lineHeight: 'normal',
-  float: 'left',
-};
 
 export const Dustbin: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -33,8 +22,15 @@ export const Dustbin: FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div ref={drop} role={'Dustbin'} style={{ ...style, backgroundColor }}>
-      <div style={{ marginBottom: '10px' }}>{isActive ? 'Release to drop' : 'Drag a box here'}</div>
+    <div
+      className="dnd-editor-dustbin-container"
+      ref={drop}
+      role={'Dustbin'}
+      style={{ backgroundColor }}
+    >
+      <div className="dnd-editor-box">
+        {isActive ? <FormattedMessage id="relase_drop" /> : <FormattedMessage id="drag_here" />}
+      </div>
       {children}
     </div>
   );

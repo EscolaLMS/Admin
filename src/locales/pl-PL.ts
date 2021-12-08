@@ -194,6 +194,8 @@ export default {
   categories_tags: 'Kategorie i tagi',
   program: 'Program',
   scorm: 'SCORM',
+  relase_drop: 'Zwolnij, aby upuścić',
+  drag_here: 'Przeciągnij tutaj',
   add_new_lesson: 'Dodaj nową lekcję',
   lesson: 'Lekcja',
   topic: 'Temat',

@@ -9,7 +9,6 @@ import {
   updateTopic as apiUpdateTopic,
   removeLesson as apiRemoveLesson,
   removeTopic as apiRemoveTopic,
-  TopicType,
   sort,
 } from '@/services/escola-lms/course';
 
@@ -217,16 +216,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
             })
           : [],
       }));
-
-      // const orders = topics
-      //   ?.filter((topic) => !topic.isNew)
-      //   .map((topic) => [topic.id, topic.order]);
-
-      // sort({ class: 'Topic', orders, course_id: id }).then((response) => {
-      //   if (response.success) {
-      //     message.success(response.message);
-      //   }
-      // });
     },
     [state, id],
   );
@@ -527,10 +516,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   const addNewTopic = useCallback((lesson_id: number) => {
     const newTopic: API.Topic = {
       lesson_id,
-      topicable_type: TopicType.Unselected,
       isNew: true,
       id: getRandomId(),
-      order: 0,
       title: 'Add new title here',
       active: true,
     };

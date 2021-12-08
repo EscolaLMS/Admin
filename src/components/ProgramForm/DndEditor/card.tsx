@@ -9,14 +9,6 @@ import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import TopicHeader from '../Topic/header';
 
-const style = {
-  textAlign: 'left',
-  padding: '0.5rem 1rem',
-  marginBottom: '.5rem',
-  backgroundColor: 'white',
-  cursor: 'move',
-};
-
 export interface CardProps {
   id: any;
   topic: API.TopicNotEmpty | API.TopicNew;
@@ -136,13 +128,10 @@ export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onD
 
   return (
     <div
+      className="dnd-editor-card"
       ref={ref}
       style={{
-        ...style,
         opacity,
-        position: 'relative',
-        display: 'flex',
-        justifyContent: 'space-between',
       }}
       data-handler-id={handlerId}
     >

@@ -1,0 +1,53 @@
+.dnd-editor {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dnd-editor .dnd-editor-dustbin {
+  width: 900px;
+}
+
+.dnd-editor .dnd-editor-topics-wrapper {
+  width: 100%;
+}
+
+.dnd-editor .dnd-editor-topics-types {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dnd-editor .dnd-editor-wrapper .dnd-editor-dustbin .dnd-editor-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  background-color: white;
+  cursor: move;
+}
+
+.dnd-editor .dnd-editor-box {
+  margin-bottom: 5px;
+  text-align: initial;
+}
+
+.dnd-editor .dnd-editor-dustbin-container {
+  float: left;
+  min-width: 12rem;
+  min-height: 12rem;
+  margin-right: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: normal;
+  text-align: center;
+}
+
+.dnd-editor .dnd-editor-box {
+  margin-bottom: 10px;
+  text-align: center;
+}

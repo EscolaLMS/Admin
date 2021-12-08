@@ -23,7 +23,6 @@ export const Box: FC<BoxProps> = function Box({ type, onEnd, icon = null }) {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>();
       if (item && dropResult && onEnd) {
-        console.log(`You dropped ${item.type} into ${dropResult}!`);
         onEnd(item);
       }
     },
@@ -37,10 +36,11 @@ export const Box: FC<BoxProps> = function Box({ type, onEnd, icon = null }) {
 
   return (
     <Button
+      className="dnd-editor-box"
       icon={icon}
       ref={drag}
       role="Box"
-      style={{ opacity, marginBottom: '5px', textAlign: 'initial' }}
+      style={{ opacity }}
       data-testid={`box-${type}`}
     >
       {type.split('\\').pop()}

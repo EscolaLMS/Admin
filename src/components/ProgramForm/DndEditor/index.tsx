@@ -18,9 +18,7 @@ import Topic from '../Topic/index';
 import { FormattedMessage } from 'react-intl';
 import { TopicType } from '../../../services/escola-lms/course';
 
-const style = {
-  width: 900,
-};
+import './index.css';
 
 export interface Item {
   id: number;
@@ -64,7 +62,7 @@ export const DndEditorContainer: FC<{
       }
     },
 
-    [cards],
+    [cards, state.id],
   );
 
   const updateOrder = useCallback(() => {
@@ -79,7 +77,7 @@ export const DndEditorContainer: FC<{
 
       setIsModalVisible({ ...newTopic, topicable_type: item.type });
     },
-    [cards],
+    [cards, state.id],
   );
 
   const onDeleteCart = useCallback(
@@ -87,14 +85,14 @@ export const DndEditorContainer: FC<{
       setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));
       return deleteTopic && item.id && deleteTopic(item.id);
     },
-    [cards],
+    [cards, state.id],
   );
 
   const onEditCart = useCallback(
     (item: API.TopicNew | API.TopicNotEmpty) => {
       setIsModalVisible(item);
     },
-    [cards],
+    [cards, state.id],
   );
 
   const renderCard = (card: API.TopicNew | API.TopicNotEmpty, index: number) => {
@@ -113,30 +111,20 @@ export const DndEditorContainer: FC<{
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-      }}
-    >
-      <div>
+    <div className="dnd-editor">
+      <div className="dnd-editor-wrapper">
         <h3>
           <FormattedMessage id="topic_list" />
         </h3>
         <Dustbin>
-          <div style={style}>{cards.map((card, i) => renderCard(card, i))}</div>
+          <div className="dnd-editor-dustbin">{cards.map((card, i) => renderCard(card, i))}</div>
         </Dustbin>
       </div>
-      <div className="topic-types__wrapper" style={{ width: '100%' }}>
+      <div className="dnd-editor-topics-wrapper">
         <h3>
           <FormattedMessage id="topic_types" />
         </h3>
-        <div
-          className="topic-types__list"
-          style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
-        >
+        <div className="dnd-editor-topics-types">
           <Box type={TopicType.RichText} onEnd={onNewCard} icon={<FileTextOutlined />} />
           <Box type={TopicType.OEmbed} onEnd={onNewCard} icon={<YoutubeOutlined />} />
           <Box type={TopicType.Audio} onEnd={onNewCard} icon={<AudioOutlined />} />

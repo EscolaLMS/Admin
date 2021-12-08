@@ -183,6 +183,8 @@ export default {
   no_topics: 'There are no topics yet on this lesson',
   create: 'Create',
   save: 'Save',
+  relase_drop: 'Release to drop',
+  drag_here: 'Drag a box here',
   sort_element_up: 'Sort this element up',
   sort_element_down: 'Sort this element down',
   'h5p.description.header': 'H5P Info',
