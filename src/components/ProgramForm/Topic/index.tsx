@@ -68,20 +68,26 @@ export const Topic: React.FC<{
     }
   }, [type, topic]);
 
-  const updateValue = useCallback((key, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-    setSaveIsDisabled(false);
-  }, []);
+  const updateValue = useCallback(
+    (key, value) => {
+      setState((prevState) => ({
+        ...prevState,
+        [key]: value,
+      }));
+      setSaveIsDisabled(false);
+    },
+    [topic],
+  );
 
-  const updateValues = useCallback((values) => {
-    setState((prevState) => ({
-      ...prevState,
-      ...values,
-    }));
-  }, []);
+  const updateValues = useCallback(
+    (values) => {
+      setState((prevState) => ({
+        ...prevState,
+        ...values,
+      }));
+    },
+    [topic],
+  );
 
   const handleSave = useCallback(
     (formData) => {
@@ -96,7 +102,7 @@ export const Topic: React.FC<{
           .finally(() => onClose());
       }
     },
-    [state, updateTopic],
+    [state, updateTopic, topic],
   );
 
   const onFormSubmit = useCallback(() => {
@@ -121,7 +127,7 @@ export const Topic: React.FC<{
     setLoading(true);
     onClose();
     return deleteTopic && state.id && deleteTopic(state.id);
-  }, [state, deleteTopic, topic.isNew]);
+  }, [state, deleteTopic, topic]);
 
   return (
     <React.Fragment>
@@ -180,6 +186,9 @@ export const Topic: React.FC<{
               onChange={() => setLoading(true)}
               onUpdate={(info) => {
                 if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
+                // console.log({ topic });
+                // console.log('infoo', info.file.response.data);
+                setState(info.file.response.data);
                 setSaveIsDisabled(false);
                 setLoading(false);
               }}

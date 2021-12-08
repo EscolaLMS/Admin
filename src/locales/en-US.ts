@@ -177,6 +177,8 @@ export default {
   lesson: 'Lesson',
   topic: 'Topic',
   topics: 'Topics',
+  topic_list: 'Topic List',
+  topic_types: 'Topic types',
   add_new_topic: 'Add new topic',
   no_topics: 'There are no topics yet on this lesson',
   create: 'Create',

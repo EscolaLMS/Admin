@@ -16,7 +16,7 @@ import { Dustbin } from './dustbin';
 import { Box, BoxItemProps } from './box';
 import Topic from '../Topic/index';
 import { FormattedMessage } from 'react-intl';
-import { TopicType } from './itemtypes';
+import { TopicType } from '../../../services/escola-lms/course';
 
 const style = {
   width: 900,
@@ -74,11 +74,10 @@ export const DndEditorContainer: FC<{
   const onNewCard = useCallback(
     (item: BoxItemProps) => {
       const newTopic = addNewTopic && state.id && addNewTopic(state.id);
-      const topic = { ...newTopic, topicable_type: item.type };
 
-      setCards((prevCards) => [...prevCards, topic]);
+      setCards((prevCards) => [...prevCards, { ...newTopic, topicable_type: item.type }]);
 
-      setIsModalVisible(topic);
+      setIsModalVisible({ ...newTopic, topicable_type: item.type });
     },
     [cards],
   );
@@ -118,19 +117,26 @@ export const DndEditorContainer: FC<{
       style={{
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'space-between',
       }}
     >
       <div>
-        <h3>Topic List</h3>
+        <h3>
+          <FormattedMessage id="topic_list" />
+        </h3>
         <Dustbin>
           <div style={style}>{cards.map((card, i) => renderCard(card, i))}</div>
         </Dustbin>
       </div>
-      <div style={{ width: '100%' }}>
-        <h3>Topic types</h3>
-        <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div className="topic-types__wrapper" style={{ width: '100%' }}>
+        <h3>
+          <FormattedMessage id="topic_types" />
+        </h3>
+        <div
+          className="topic-types__list"
+          style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+        >
           <Box type={TopicType.RichText} onEnd={onNewCard} icon={<FileTextOutlined />} />
           <Box type={TopicType.OEmbed} onEnd={onNewCard} icon={<YoutubeOutlined />} />
           <Box type={TopicType.Audio} onEnd={onNewCard} icon={<AudioOutlined />} />
@@ -144,8 +150,8 @@ export const DndEditorContainer: FC<{
       <Modal
         title={
           <>
+            {` ${isModalVisible && isModalVisible.title}`}
             <FormattedMessage id="topic" />
-            {`: ${isModalVisible && isModalVisible.title}`}
           </>
         }
         visible={isModalVisible !== undefined}

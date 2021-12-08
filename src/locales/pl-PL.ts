@@ -198,6 +198,8 @@ export default {
   lesson: 'Lekcja',
   topic: 'Temat',
   topics: 'Tematy',
+  topic_list: 'Lista Tematów',
+  topic_types: 'Typy Tematów',
   pages: 'Strony',
   new_page: 'Nowa strona tekstowa',
   edit_page: 'Edycja strony tekstowej',
