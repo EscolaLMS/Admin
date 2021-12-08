@@ -650,4 +650,24 @@ declare namespace API {
   type ResourceList = DefaultResponse<Resource[]>;
 
   type ResourceRow = DefaultResponse<Resource>;
+
+  export type TopicNotEmpty =
+    | TopicRichText
+    | TopicOEmbed
+    | TopicAudio
+    | TopicVideo
+    | TopicH5P
+    | TopicImage
+    | TopicPDF;
+
+  export type TopicNew =
+    | (Partial<TopicRichText> & { isNew: true; topicable_type: TopicType.RichText })
+    | (Partial<TopicOEmbed> & { isNew: true; topicable_type: TopicType.OEmbed })
+    | (Partial<TopicAudio> & { isNew: true; topicable_type: TopicType.Audio })
+    | (Partial<TopicVideo> & { isNew: true; topicable_type: TopicType.Video })
+    | (Partial<TopicH5P> & { isNew: true; topicable_type: TopicType.H5P })
+    | (Partial<TopicImage> & { isNew: true; topicable_type: TopicType.Image })
+    | (Partial<TopicPDF> & { isNew: true; topicable_type: TopicType.PDF });
+
+  export type TopicNewOrNotEmpty = TopicNotEmpty | TopicNew;
 }

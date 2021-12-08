@@ -109,16 +109,6 @@ export const Topic: React.FC<{
       json: state.json ? JSON.stringify(state.json) : null,
     };
 
-    // it threw a validation error when the user wanted to set the skip topic to true without this code it works fine
-    // if (
-    //   values.topicable_type &&
-    //   [TopicType.Audio, TopicType.Image, TopicType.PDF, TopicType.Video].includes(
-    //     values.topicable_type,
-    //   )
-    // ) {
-    //   delete values.value;
-    // }
-
     const formData = getFormData(values);
 
     handleSave(formData);
@@ -136,6 +126,12 @@ export const Topic: React.FC<{
   return (
     <React.Fragment>
       <Card
+        title={
+          <>
+            {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
+            <FormattedMessage id="type" />
+          </>
+        }
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
           <Button onClick={onClose} loading={loading}>
@@ -160,27 +156,7 @@ export const Topic: React.FC<{
             <Resources topicId={Number(topic.id)} />
           </React.Fragment>
         )}
-        {/* TODO: delete this comment section if all works */}
-        {/* <Radio.Group
-          name="radiogroup"
-          value={type}
-          onChange={(e) => updateValue('topicable_type', e.target.value)}
-        >
-          {Object.keys(TopicType).map((key) => (
-            <Radio key={key} value={TopicType[key]}>
-              {key}
-            </Radio>
-          ))}
-        </Radio.Group>
-        <Divider />
-        {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
-        {type && type === TopicType?.RichText && (
-          <RichTextEditor
-            directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
-            text={topic?.topicable_type === TopicType?.RichText ? topic?.topicable.value || '' : ''}
-            onChange={(value) => updateValue('value', value)}
-          />
-        )} */}
+
         <Divider>{getTypeName(topic)}</Divider>
         {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
         {type && type === TopicType?.RichText && (

@@ -2,16 +2,24 @@ import { FC, useState, useCallback, useEffect, useContext } from 'react';
 import update from 'immutability-helper';
 import { Context } from '@/components/ProgramForm/Context';
 import { Modal } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
+import {
+  FileTextOutlined,
+  FilePdfOutlined,
+  FileImageOutlined,
+  VideoCameraAddOutlined,
+  AudioOutlined,
+  YoutubeOutlined,
+  InteractionOutlined,
+} from '@ant-design/icons';
 import { DndCard } from './card';
 import { Dustbin } from './dustbin';
 import { Box, BoxItemProps } from './box';
 import Topic from '../Topic/index';
-import { TopicNew, TopicType, TopicNotEmpty } from './types';
 import { FormattedMessage } from 'react-intl';
+import { TopicType } from './itemtypes';
 
 const style = {
-  width: 700,
+  width: 900,
 };
 
 export interface Item {
@@ -23,18 +31,18 @@ export interface ContainerState {
   cards: Item[];
 }
 
-export const Container: FC<{
+export const DndEditorContainer: FC<{
   courseId?: number;
   courseLessons: API.Lesson[];
   state: API.Lesson;
   setState: (state: API.Lesson) => void;
-  topicList: (TopicNew | TopicNotEmpty)[];
+  topicList: (API.TopicNew | API.TopicNotEmpty)[];
 }> = ({ courseId, courseLessons, state, topicList }) => {
   const { id, deleteTopic, sortTopic, updateTopicsOrder, addNewTopic } = useContext(Context);
 
-  const [cards, setCards] = useState<(TopicNew | TopicNotEmpty)[]>([]);
+  const [cards, setCards] = useState<API.TopicNewOrNotEmpty[]>([]);
 
-  const [isModalVisible, setIsModalVisible] = useState<TopicNew | TopicNotEmpty>();
+  const [isModalVisible, setIsModalVisible] = useState<API.TopicNewOrNotEmpty>();
 
   useEffect(() => {
     setCards(topicList);
@@ -66,16 +74,17 @@ export const Container: FC<{
   const onNewCard = useCallback(
     (item: BoxItemProps) => {
       const newTopic = addNewTopic && state.id && addNewTopic(state.id);
-      setCards((prevCards) => [...prevCards, { ...newTopic, topicable_type: item.type }]);
+      const topic = { ...newTopic, topicable_type: item.type };
 
-      setIsModalVisible({ ...newTopic, topicable_type: item.type });
+      setCards((prevCards) => [...prevCards, topic]);
+
+      setIsModalVisible(topic);
     },
     [cards],
   );
 
   const onDeleteCart = useCallback(
-    (item: TopicNew | TopicNotEmpty) => {
-      console.log({ item });
+    (item: API.TopicNew | API.TopicNotEmpty) => {
       setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));
       return deleteTopic && item.id && deleteTopic(item.id);
     },
@@ -83,13 +92,13 @@ export const Container: FC<{
   );
 
   const onEditCart = useCallback(
-    (item: TopicNew | TopicNotEmpty) => {
+    (item: API.TopicNew | API.TopicNotEmpty) => {
       setIsModalVisible(item);
     },
     [cards],
   );
 
-  const renderCard = (card: TopicNew | TopicNotEmpty, index: number) => {
+  const renderCard = (card: API.TopicNew | API.TopicNotEmpty, index: number) => {
     return (
       <DndCard
         key={card.id}
@@ -105,21 +114,33 @@ export const Container: FC<{
   };
 
   return (
-    <>
-      <div style={{ overflow: 'hidden', clear: 'both', float: 'left' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <div>
+        <h3>Topic List</h3>
         <Dustbin>
           <div style={style}>{cards.map((card, i) => renderCard(card, i))}</div>
         </Dustbin>
       </div>
-      <div style={{ overflow: 'hidden' }}>
-        <Box type={TopicType.RichText} onEnd={onNewCard} icon={<HomeOutlined />} />
-        <Box type={TopicType.OEmbed} onEnd={onNewCard} icon={<HomeOutlined />} />
-        <Box type={TopicType.Audio} onEnd={onNewCard} icon={<HomeOutlined />} />
-        <Box type={TopicType.Video} onEnd={onNewCard} icon={<HomeOutlined />} />
-        <Box type={TopicType.H5P} onEnd={onNewCard} icon={<HomeOutlined />} />
-        <Box type={TopicType.Image} onEnd={onNewCard} icon={<HomeOutlined />} />
-        <Box type={TopicType.PDF} onEnd={onNewCard} icon={<HomeOutlined />} />
+      <div style={{ width: '100%' }}>
+        <h3>Topic types</h3>
+        <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <Box type={TopicType.RichText} onEnd={onNewCard} icon={<FileTextOutlined />} />
+          <Box type={TopicType.OEmbed} onEnd={onNewCard} icon={<YoutubeOutlined />} />
+          <Box type={TopicType.Audio} onEnd={onNewCard} icon={<AudioOutlined />} />
+          <Box type={TopicType.Video} onEnd={onNewCard} icon={<VideoCameraAddOutlined />} />
+          <Box type={TopicType.H5P} onEnd={onNewCard} icon={<InteractionOutlined />} />
+          <Box type={TopicType.Image} onEnd={onNewCard} icon={<FileImageOutlined />} />
+          <Box type={TopicType.PDF} onEnd={onNewCard} icon={<FilePdfOutlined />} />
+        </div>
       </div>
+
       <Modal
         title={
           <>
@@ -137,11 +158,11 @@ export const Container: FC<{
             courseId={courseId}
             courseLessons={courseLessons}
             key={isModalVisible.id}
-            topic={isModalVisible}
+            topic={isModalVisible as API.Topic}
             onClose={() => setIsModalVisible(undefined)}
           />
         )}
       </Modal>
-    </>
+    </div>
   );
 };

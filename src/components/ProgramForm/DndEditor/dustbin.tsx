@@ -25,16 +25,16 @@ export const Dustbin: FC<{ children: React.ReactNode }> = ({ children }) => {
   }));
 
   const isActive = canDrop && isOver;
-  let backgroundColor = '#222';
+  let backgroundColor = '#fafafa';
   if (isActive) {
-    backgroundColor = 'darkgreen';
+    backgroundColor = '#b7eb8f';
   } else if (canDrop) {
-    backgroundColor = 'darkkhaki';
+    backgroundColor = '#f1f1f1';
   }
 
   return (
     <div ref={drop} role={'Dustbin'} style={{ ...style, backgroundColor }}>
-      {isActive ? 'Release to drop' : 'Drag a box here'}
+      <div style={{ marginBottom: '10px' }}>{isActive ? 'Release to drop' : 'Drag a box here'}</div>
       {children}
     </div>
   );

@@ -2,7 +2,6 @@ import React, { FC, useRef } from 'react';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { ItemTypes } from './itemtypes';
 import { XYCoord } from 'dnd-core';
-import { TopicNotEmpty, TopicNew } from './types';
 import { Popconfirm } from 'antd';
 
 import { FormattedMessage } from 'umi';
@@ -12,7 +11,6 @@ import TopicHeader from '../Topic/header';
 
 const style = {
   textAlign: 'left',
-
   padding: '0.5rem 1rem',
   marginBottom: '.5rem',
   backgroundColor: 'white',
@@ -21,11 +19,11 @@ const style = {
 
 export interface CardProps {
   id: any;
-  topic: TopicNotEmpty | TopicNew;
+  topic: API.TopicNotEmpty | API.TopicNew;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
-  onEdit: (topic: TopicNotEmpty | TopicNew) => void;
-  onDelete: (topic: TopicNotEmpty | TopicNew) => void;
+  onEdit: (topic: API.TopicNotEmpty | API.TopicNew) => void;
+  onDelete: (topic: API.TopicNotEmpty | API.TopicNew) => void;
   onEnd: () => void;
 }
 
@@ -42,11 +40,10 @@ const TopicButtons: React.FC<{ onDelete: () => void; onEdit: () => void; loading
 }) => {
   return (
     <div>
-      <Divider type="vertical" />
       <Button onClick={() => onEdit()} loading={loading} size="small">
         <FormattedMessage id="edit" />
       </Button>
-
+      <Divider type="vertical" />
       <Popconfirm
         onConfirm={onDelete}
         title={<FormattedMessage id="deleteQuestion" />}
@@ -149,7 +146,7 @@ export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onD
       }}
       data-handler-id={handlerId}
     >
-      <TopicHeader topic={topic} />
+      <TopicHeader topic={topic as API.Topic} />
       <TopicButtons onDelete={() => onDelete(topic)} onEdit={() => onEdit(topic)} loading={false} />
     </div>
   );
