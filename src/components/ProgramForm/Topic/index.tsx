@@ -16,6 +16,37 @@ import { FormattedMessage } from 'umi';
 import Resources from './resources';
 import { getTypeName } from './media';
 
+import {
+  FileTextOutlined,
+  FilePdfOutlined,
+  FileImageOutlined,
+  VideoCameraAddOutlined,
+  AudioOutlined,
+  YoutubeOutlined,
+  InteractionOutlined,
+} from '@ant-design/icons';
+
+export const getTypeIcon = (type: string | undefined) => {
+  if (type) {
+    switch (type) {
+      case 'PDF':
+        return <FilePdfOutlined />;
+      case 'Audio':
+        return <AudioOutlined />;
+      case 'Image':
+        return <FileImageOutlined />;
+      case 'OEmbed':
+        return <YoutubeOutlined />;
+      case 'H5P':
+        return <InteractionOutlined />;
+      case 'Video':
+        return <VideoCameraAddOutlined />;
+      case 'RichText':
+        return <FileTextOutlined />;
+    }
+  }
+};
+
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
   loading,
@@ -134,6 +165,7 @@ export const Topic: React.FC<{
       <Card
         title={
           <>
+            {getTypeIcon(getTypeName(topic))}{' '}
             {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
             <FormattedMessage id="type" />
           </>

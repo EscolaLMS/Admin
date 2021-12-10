@@ -45,6 +45,15 @@
   font-size: 1rem;
   line-height: normal;
   text-align: center;
+  background-color: #fafafa;
+}
+
+.dnd-editor .dnd-editor-dustbin-container.active {
+  background-color: #b7eb8f;
+}
+
+.dnd-editor .dnd-editor-dustbin-container.drop {
+  background-color: #f1f1f1;
 }
 
 .dnd-editor .dnd-editor-box {

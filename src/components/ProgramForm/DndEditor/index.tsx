@@ -71,15 +71,17 @@ export const DndEditorContainer: FC<{
 
   const onNewCard = useCallback(
     (item: BoxItemProps) => {
-      const newTopic = addNewTopic && state.id && addNewTopic(state.id);
+      const newTopic = addNewTopic && state.id && addNewTopic(state.id, item.type);
 
-      setCards((prevCards) => [...prevCards, { ...newTopic, topicable_type: item.type }]);
+      if (newTopic) {
+        setCards((prevCards) => [...prevCards, { ...newTopic, topicable_type: item.type }]);
 
-      setIsModalVisible({ ...newTopic, topicable_type: item.type });
+        setIsModalVisible({ ...newTopic, topicable_type: item.type });
+      }
     },
     [cards, state.id],
   );
-
+  console.log({ cards });
   const onDeleteCart = useCallback(
     (item: API.TopicNew | API.TopicNotEmpty) => {
       setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));
@@ -108,6 +110,10 @@ export const DndEditorContainer: FC<{
         onEnd={updateOrder}
       />
     );
+  };
+
+  const handleDiscard = () => {
+    setIsModalVisible(undefined);
   };
 
   return (
@@ -143,7 +149,7 @@ export const DndEditorContainer: FC<{
           </>
         }
         visible={isModalVisible !== undefined}
-        onCancel={() => setIsModalVisible(undefined)}
+        onCancel={() => handleDiscard()}
         footer={false}
         width={1300}
       >
@@ -153,7 +159,7 @@ export const DndEditorContainer: FC<{
             courseLessons={courseLessons}
             key={isModalVisible.id}
             topic={isModalVisible as API.Topic}
-            onClose={() => setIsModalVisible(undefined)}
+            onClose={() => handleDiscard()}
           />
         )}
       </Modal>

@@ -14,20 +14,15 @@ export const Dustbin: FC<{ children: React.ReactNode }> = ({ children }) => {
   }));
 
   const isActive = canDrop && isOver;
-  let backgroundColor = '#fafafa';
+  let className;
   if (isActive) {
-    backgroundColor = '#b7eb8f';
+    className = 'active';
   } else if (canDrop) {
-    backgroundColor = '#f1f1f1';
+    className = 'drop';
   }
 
   return (
-    <div
-      className="dnd-editor-dustbin-container"
-      ref={drop}
-      role={'Dustbin'}
-      style={{ backgroundColor }}
-    >
+    <div className={`dnd-editor-dustbin-container ${className}`} ref={drop} role={'Dustbin'}>
       <div className="dnd-editor-box">
         {isActive ? <FormattedMessage id="relase_drop" /> : <FormattedMessage id="drag_here" />}
       </div>

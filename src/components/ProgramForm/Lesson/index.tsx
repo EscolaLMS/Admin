@@ -95,17 +95,15 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
         </Divider>
       )}
 
-      <React.Fragment>
-        <DndProvider backend={HTML5Backend}>
-          <DndEditorContainer
-            courseId={lesson.course_id}
-            courseLessons={courseLessons}
-            state={state}
-            setState={setState}
-            topicList={topicList as (API.TopicNew | API.TopicNotEmpty)[]}
-          />
-        </DndProvider>
-      </React.Fragment>
+      <DndProvider backend={HTML5Backend}>
+        <DndEditorContainer
+          courseId={lesson.course_id}
+          courseLessons={courseLessons}
+          state={state}
+          setState={setState}
+          topicList={topicList as (API.TopicNew | API.TopicNotEmpty)[]}
+        />
+      </DndProvider>
     </Card>
   );
 };

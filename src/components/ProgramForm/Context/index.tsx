@@ -27,7 +27,7 @@ type ProgramContext = {
   deleteLesson?: (lesson_id: number) => void;
   // updateH5P,
   sortLesson?: (lesson_id: number, upDirection?: boolean) => void;
-  addNewTopic?: (lesson_id: number) => API.Topic;
+  addNewTopic?: (lesson_id: number, type: API.TopicType) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
   updateTopicsOrder?: (lesson_id: number) => void;
@@ -513,14 +513,16 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
   */
 
-  const addNewTopic = useCallback((lesson_id: number) => {
+  const addNewTopic = useCallback((lesson_id: number, type: API.TopicType) => {
     const newTopic: API.Topic = {
       lesson_id,
       isNew: true,
       id: getRandomId(),
       title: 'Add new title here',
       active: true,
+      topicable_type: type,
     };
+
     setState((prevState) => ({
       ...prevState,
       lessons: prevState
