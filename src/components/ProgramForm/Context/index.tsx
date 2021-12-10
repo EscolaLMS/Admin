@@ -9,7 +9,6 @@ import {
   updateTopic as apiUpdateTopic,
   removeLesson as apiRemoveLesson,
   removeTopic as apiRemoveTopic,
-  TopicType,
   sort,
 } from '@/services/escola-lms/course';
 
@@ -28,9 +27,10 @@ type ProgramContext = {
   deleteLesson?: (lesson_id: number) => void;
   // updateH5P,
   sortLesson?: (lesson_id: number, upDirection?: boolean) => void;
-  addNewTopic?: (lesson_id: number) => API.Topic;
+  addNewTopic?: (lesson_id: number, type: API.TopicType) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
+  updateTopicsOrder?: (lesson_id: number) => void;
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
 };
 
@@ -216,8 +216,14 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
             })
           : [],
       }));
+    },
+    [state, id],
+  );
 
-      const orders = topics
+  const updateTopicsOrder = useCallback(
+    (lesson_id) => {
+      const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
+      const orders = lesson?.topics
         ?.filter((topic) => !topic.isNew)
         .map((topic) => [topic.id, topic.order]);
 
@@ -507,16 +513,16 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
   */
 
-  const addNewTopic = useCallback((lesson_id: number) => {
+  const addNewTopic = useCallback((lesson_id: number, type: API.TopicType) => {
     const newTopic: API.Topic = {
       lesson_id,
-      topicable_type: TopicType.Unselected,
       isNew: true,
       id: getRandomId(),
-      order: 0,
       title: 'Add new title here',
       active: true,
+      topicable_type: type,
     };
+
     setState((prevState) => ({
       ...prevState,
       lessons: prevState
@@ -575,6 +581,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     addNewTopic,
     deleteTopic,
     sortTopic,
+    updateTopicsOrder,
     onTopicUploaded,
   };
 
