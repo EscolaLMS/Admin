@@ -227,6 +227,12 @@
     component: './Reports',
   },
   {
+    name: 'Notifications',
+    icon: 'alert',
+    path: '/notifications',
+    component: './Notifications',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

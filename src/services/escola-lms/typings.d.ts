@@ -164,6 +164,8 @@ declare namespace API {
 
   type RolesList = DefaultMetaResponse<Role>;
 
+  type NotificationList = DefaultMetaResponse<Notification>;
+
   type PaginationParams = {
     order_by?: string;
     order?: 'ASC' | 'DESC';
@@ -557,6 +559,18 @@ declare namespace API {
     name: string;
 
     assigned?: boolean;
+  };
+
+  type Notification = {
+    id: string;
+    type: string; //'EscolaLms\\Notifications\\Core\\EventNotification';
+    notifiable_type: string; //'App\\Models\\User';
+    notifiable_id: 2;
+    data: [];
+    read_at: null;
+    created_at: Date;
+    updated_at: Date;
+    event: string; //'EscolaLms\\Auth\\Events\\UserLogged';
   };
 
   type Config = {
