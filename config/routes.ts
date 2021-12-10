@@ -212,7 +212,7 @@
     component: './Roles',
   },
   {
-    name: 'Roles',
+    name: 'Permissions',
     path: '/roles/:name',
     icon: 'lock',
     access: 'adminPermission',

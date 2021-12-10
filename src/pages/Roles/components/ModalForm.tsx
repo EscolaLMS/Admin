@@ -23,7 +23,7 @@ export const RolesModalForm: React.FC<{
         id: id ? 'editSetting' : 'newSetting',
         defaultMessage: id ? 'editSetting' : 'newSetting',
       })}
-      width="60vw"
+      width="30vw"
       visible={visible}
       onVisibleChange={onVisibleChange}
       onFinish={onFinish}

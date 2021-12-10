@@ -9,6 +9,8 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { useParams, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
+import './index.css';
+
 export default () => {
   const params = useParams<{ name: string }>();
   const { name } = params;
@@ -38,7 +40,6 @@ export default () => {
             message.success(response.message);
           }
         } catch (error: any) {
-          console.log({ error });
           message.error(error.data.message);
         }
       },
@@ -59,15 +60,14 @@ export default () => {
   }
 
   return (
-    <PageContainer title={<FormattedMessage id="edit_user_group" />}>
+    <PageContainer title={<FormattedMessage id="permissions" />}>
       <ProCard>
         <ProForm {...formProps} form={form}>
           <ProForm.Group>
             {!!data.length && (
               <Checkbox.Group
                 name="checkbox"
-                style={{ width: '100%' }}
-                defaultValue={[...data.filter((item) => item?.assigned).map((item) => item?.name)]}
+                defaultValue={data.filter((item) => item?.assigned).map((item) => item?.name)}
                 onChange={handleChange}
                 options={
                   data &&

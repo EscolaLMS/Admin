@@ -10,18 +10,15 @@ import RolesModalForm from './components/ModalForm';
 
 export const TableColumns: ProColumns<API.Role>[] = [
   {
+    width: '10%',
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
   },
   {
+    width: '80%',
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
-    hideInSearch: true,
-  },
-  {
-    title: <FormattedMessage id="guard_name" defaultMessage="guard_name" />,
-    dataIndex: 'guard_name',
     hideInSearch: true,
   },
 ];
@@ -34,10 +31,10 @@ const RolesPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Role, API.UserGroupsParams>
+      <ProTable<API.Role>
         headerTitle={intl.formatMessage({
-          id: 'user_groups',
-          defaultMessage: 'User Groups',
+          id: 'roles',
+          defaultMessage: 'roles',
         })}
         actionRef={actionRef}
         rowKey="id"
