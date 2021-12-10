@@ -95,6 +95,7 @@ export default {
   search_tooltip_1: 'Will search through first name, last name and email',
   search_tooltip_user_groups: 'Will search through name',
   roles: 'Roles',
+  permissions: 'Permissions',
   verified: 'Verified',
   not_verified: 'Unverified',
   is_email_verified: 'Email verified?',

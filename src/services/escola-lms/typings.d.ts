@@ -160,6 +160,10 @@ declare namespace API {
 
   type TemplateListItem = Template;
 
+  type SettingsList = DefaultMetaResponse<Setting>;
+
+  type RolesList = DefaultMetaResponse<Role>;
+
   type PaginationParams = {
     order_by?: string;
     order?: 'ASC' | 'DESC';
@@ -548,7 +552,12 @@ declare namespace API {
         data: string;
       });
 
-  type SettingsList = DefaultMetaResponse<Setting>;
+  type Role = {
+    id: number;
+    name: string;
+
+    assigned?: boolean;
+  };
 
   type Config = {
     rules: string[];

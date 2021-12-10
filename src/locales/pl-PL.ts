@@ -112,6 +112,7 @@ export default {
   search_tooltip_1: 'Szukanie odbywa się po imieniu, nazwisku oraz emailu',
   search_tooltip_user_groups: 'Szukanie odbywa się po nazwie',
   roles: 'Role',
+  permissions: 'Uprawnienia',
   verified: 'Zweryfikowany',
   not_verified: 'Niezweryfikowany',
   is_email_verified: 'Email zweryfikowany?',
