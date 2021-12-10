@@ -46,8 +46,8 @@ const RolesPage: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>,
         ]}
-        request={({ pageSize, current, search }) => {
-          return roles({ pageSize, current, search }).then((response) => {
+        request={() => {
+          return roles().then((response) => {
             if (response.success) {
               return {
                 data: response.data,

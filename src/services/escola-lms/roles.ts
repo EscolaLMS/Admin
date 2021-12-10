@@ -1,24 +1,10 @@
 import { request } from 'umi';
 
-export async function roles(
-  params: {
-    // query
-    current?: number;
-    pageSize?: number;
-    search?: string;
-    group?: string;
-  },
-  options?: Record<string, any>,
-) {
+export async function roles(options?: Record<string, any>) {
   return request<API.RolesList>(`/api/admin/roles`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      search: params.search ? params.search : undefined,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+
     ...(options || {}),
   });
 }
