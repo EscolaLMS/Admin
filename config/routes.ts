@@ -205,6 +205,21 @@
     hideInMenu: true,
   },
   {
+    name: 'Roles',
+    path: '/roles',
+    icon: 'lock',
+    access: 'adminPermission',
+    component: './Roles',
+  },
+  {
+    name: 'Permissions',
+    path: '/roles/:name',
+    icon: 'lock',
+    access: 'adminPermission',
+    component: './Roles/form',
+    hideInMenu: true,
+  },
+  {
     name: 'reports',
     icon: 'project',
     access: 'adminPermission',
