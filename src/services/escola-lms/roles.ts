@@ -1,5 +1,6 @@
 import { request } from 'umi';
 
+/**  GET /api/admin/roles */
 export async function roles(options?: Record<string, any>) {
   return request<API.RolesList>(`/api/admin/roles`, {
     method: 'GET',
@@ -9,6 +10,7 @@ export async function roles(options?: Record<string, any>) {
   });
 }
 
+/**  POST /api/admin/roles */
 export async function createRole(body?: Partial<API.Role>, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Role>>(`/api/admin/roles`, {
     method: 'POST',
@@ -20,6 +22,7 @@ export async function createRole(body?: Partial<API.Role>, options?: Record<stri
   });
 }
 
+/**  DELETE /api/admin/roles/:id */
 export async function deleteRole(id: string, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Role>>(`/api/admin/roles/${id}`, {
     method: 'DELETE',
@@ -30,6 +33,7 @@ export async function deleteRole(id: string, options?: Record<string, any>) {
   });
 }
 
+/**  GET /api/admin/roles/:name */
 export async function permisions(name: string, options?: Record<string, any>) {
   return request<API.RolesList>(`/api/admin/roles/${name}`, {
     method: 'GET',
@@ -39,6 +43,7 @@ export async function permisions(name: string, options?: Record<string, any>) {
   });
 }
 
+/**  PATCH /api/admin/roles/:name */
 export async function setRolePermisions(name: string, body?: any, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Role>>(`/api/admin/roles/${name}`, {
     method: 'PATCH',

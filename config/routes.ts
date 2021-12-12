@@ -220,18 +220,20 @@
     hideInMenu: true,
   },
   {
+    name: 'Notifications',
+    icon: 'alert',
+    path: '/notifications',
+    component: './Notifications',
+    access: 'adminPermission',
+  },
+  {
     name: 'reports',
     icon: 'project',
     access: 'adminPermission',
     path: '/reports',
     component: './Reports',
   },
-  {
-    name: 'Notifications',
-    icon: 'alert',
-    path: '/notifications',
-    component: './Notifications',
-  },
+
   {
     path: '/',
     redirect: '/welcome',
