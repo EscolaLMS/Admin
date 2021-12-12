@@ -573,7 +573,7 @@ declare namespace API {
     type: string;
     notifiable_type: string;
     notifiable_id: number;
-    data: any;
+    data: [];
     read_at: null;
     created_at: Date;
     updated_at: Date;
