@@ -13,6 +13,11 @@ declare namespace API {
     PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
   }
 
+  enum EventTypes {
+    OrderPaid = 'EscolaLms\\Cart\\Events\\OrderPaid',
+    UserLogged = 'EscolaLms\\Auth\\Events\\UserLogged',
+  }
+
   type Category = {
     id: number;
     name: string;
@@ -163,6 +168,10 @@ declare namespace API {
   type SettingsList = DefaultMetaResponse<Setting>;
 
   type RolesList = DefaultMetaResponse<Role>;
+
+  type NotificationList = DefaultMetaResponse<Notification>;
+
+  type NotificationsEventsList = DefaultResponse<string[]>;
 
   type PaginationParams = {
     order_by?: string;
@@ -557,6 +566,18 @@ declare namespace API {
     name: string;
 
     assigned?: boolean;
+  };
+
+  type Notification = {
+    id: string;
+    type: string;
+    notifiable_type: string;
+    notifiable_id: number;
+    data: [];
+    read_at: null;
+    created_at: Date;
+    updated_at: Date;
+    event: EventTypes;
   };
 
   type Config = {
