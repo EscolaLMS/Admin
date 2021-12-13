@@ -93,5 +93,7 @@ declare namespace API {
     datetime?: string;
     description?: string;
     type?: NoticeIconItemType;
+    event?: string;
+    read_at?: null | Date;
   };
 }

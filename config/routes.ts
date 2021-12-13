@@ -224,6 +224,7 @@
     icon: 'alert',
     path: '/notifications',
     component: './Notifications',
+    access: 'adminPermission',
   },
   {
     name: 'reports',
