@@ -10,7 +10,7 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
 import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
-
+import { roles as getRoles } from '@/services/escola-lms/roles';
 export default () => {
   const intl = useIntl();
   const params = useParams<{ user?: string }>();
@@ -18,6 +18,8 @@ export default () => {
   const isNew = user === 'new';
 
   const [data, setData] = useState<Partial<API.UserItem>>();
+
+  const [roles, setRoles] = useState<API.Role[]>();
 
   const fetchData = useCallback(async () => {
     const response = await fetchUser(Number(user));
@@ -29,6 +31,15 @@ export default () => {
     }
   }, [user]);
 
+  const fetchRoles = useCallback(async () => {
+    const request = await getRoles();
+    const response = await request;
+
+    if (response.success) {
+      setRoles(response.data);
+    }
+  }, [user]);
+
   useEffect(() => {
     if (user === 'new') {
       setData({});
@@ -36,6 +47,7 @@ export default () => {
     }
 
     fetchData();
+    fetchRoles();
   }, [user, fetchData]);
 
   const formProps = useMemo(
@@ -161,13 +173,14 @@ export default () => {
             )}
 
             <ProFormSwitch name="is_active" label={<FormattedMessage id="is_active" />} />
-
-            <ProFormCheckbox.Group
-              name="roles"
-              layout="horizontal"
-              label={<FormattedMessage id="roles" />}
-              options={['student', 'tutor', 'admin']}
-            />
+            {roles && (
+              <ProFormCheckbox.Group
+                name="roles"
+                layout="horizontal"
+                label={<FormattedMessage id="roles" />}
+                options={roles.map((role: API.Role) => role.name)}
+              />
+            )}
           </ProForm.Group>
 
           <ProForm.Item
