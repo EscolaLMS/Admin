@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Form, Button, Space, Typography, Table } from 'antd';
+import { message, Spin, Form, Button, Space, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { user as fetchUser, updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
@@ -190,7 +190,7 @@ export default () => {
           >
             <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
           </ProForm.Item>
-          <ProForm.Item
+          {/* <ProForm.Item
             name="settings"
             label={<FormattedMessage id="settings" />}
             valuePropName="settings"
@@ -206,7 +206,7 @@ export default () => {
                 return [{ setting: 'default' }];
               }}
             />
-          </ProForm.Item>
+          </ProForm.Item> */}
           {user !== 'new' && (
             <ProForm.Group>
               <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
