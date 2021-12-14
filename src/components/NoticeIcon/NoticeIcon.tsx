@@ -7,6 +7,7 @@ import type { NoticeIconTabProps } from './NoticeList';
 import NoticeList from './NoticeList';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { FormattedMessage } from 'umi';
 
 const { TabPane } = Tabs;
 
@@ -55,7 +56,8 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       const { list, title, count, tabKey, showClear, showViewMore } = child.props;
       const len = list && list.length ? list.length : 0;
       const msgCount = count || count === 0 ? count : len;
-      const tabTitle: string = msgCount > 0 ? `${title}` : title;
+      const tabTitle = msgCount > 0 ? <FormattedMessage id={title} /> : title;
+
       panes.push(
         <TabPane tab={tabTitle} key={tabKey}>
           <NoticeList

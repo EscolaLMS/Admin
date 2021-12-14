@@ -1,10 +1,11 @@
-import { List } from 'antd';
+import { List, Avatar } from 'antd';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './NoticeList.less';
 import { getEventType } from '@/pages/Notifications';
 import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { FormattedMessage } from 'umi';
 
 export type NoticeIconTabProps = {
   count?: number;
@@ -12,24 +13,24 @@ export type NoticeIconTabProps = {
   showViewMore?: boolean;
   style?: React.CSSProperties;
   title: string;
-  tabKey: API.NoticeIconItemType;
-  onClick?: (item: API.NoticeIconItem) => void;
+  tabKey: API.Notification;
+  onClick?: (item: API.Notification) => void;
   onClear?: () => void;
   emptyText?: string;
   clearText?: string;
   viewMoreText?: string;
-  list: any;
+  list: API.Notification[];
   onViewMore?: (e: any) => void;
 };
 const NoticeList: React.FC<NoticeIconTabProps> = ({
   list = [],
   onClick,
-  onClear,
-  title,
+  // onClear,
+  // title,
   // onViewMore,
   emptyText,
-  showClear = true,
-  clearText,
+  // showClear = true,
+  // clearText,
   // viewMoreText,
   // showViewMore = false,
   // event,
@@ -55,13 +56,9 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
             [styles.read]: item.read_at,
           });
           // eslint-disable-next-line no-nested-ternary
-          // const leftIcon = item.avatar ? (
-          //   typeof item.avatar === 'string' ? (
-          //     <Avatar className={styles.avatar} src={item.avatar} />
-          //   ) : (
-          //     <span className={styles.iconElement}>{item.avatar}</span>
-          //   )
-          // ) : null;
+          const leftIcon = (
+            <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>!</Avatar>
+          );
 
           return (
             <List.Item
@@ -73,13 +70,14 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
             >
               <List.Item.Meta
                 className={styles.meta}
-                // avatar={leftIcon}
+                avatar={leftIcon}
                 title={
                   <div className={styles.title}>
-                    {item.event && getEventType(item.event)}
-                    {/* {item.title} */}
-                    <div className={styles.extra}>Notify</div>
-                    {/* <div className={styles.extra}>Notify{item.extra}</div> */}
+                    {item.event && (
+                      <FormattedMessage id={`notifications.${getEventType(item.event)}`} />
+                    )}
+
+                    {/* <div className={styles.extra}>Notify</div> */}
                   </div>
                 }
                 description={
@@ -95,13 +93,14 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           );
         }}
       />
-      <div className={styles.bottomBar}>
+      {/* TODO: if you need bottom bar for some action ex: clear all */}
+      {/* <div className={styles.bottomBar}>
         {showClear ? (
           <div onClick={onClear}>
             {clearText} {title}
           </div>
         ) : null}
-        {/* {showViewMore ? (
+        {showViewMore ? (
           <div
             onClick={(e) => {
               if (onViewMore) {
@@ -111,8 +110,8 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           >
             {viewMoreText}
           </div>
-        ) : null} */}
-      </div>
+        ) : null}
+      </div> */}
     </div>
   );
 };

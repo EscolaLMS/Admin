@@ -5,6 +5,7 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import pages from './en-US/pages';
+import notifications from './en-US/notifications';
 
 export default {
   file_resources: 'File resources',
@@ -24,6 +25,7 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...notifications,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
