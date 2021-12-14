@@ -34,3 +34,12 @@ export async function getEventTypes(options?: Record<string, any>) {
     ...(options || {}),
   });
 }
+
+/**  POST /api/notifications/:id/read */
+export async function readNotification(id: string, options?: Record<string, any>) {
+  return request<API.DefaultResponse<API.Notification[]>>(`/api/notifications/${id}/read`, {
+    method: 'POST',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}

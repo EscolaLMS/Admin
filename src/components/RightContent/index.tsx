@@ -1,9 +1,11 @@
 import { Tag, Space } from 'antd';
 import React from 'react';
 import { useModel, SelectLang } from 'umi';
+import NoticeIconView from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
+// import 'ant-design-pro/dist/ant-design-pro.css';
 export type SiderTheme = 'light' | 'dark';
 
 const ENVTagColor = {
@@ -15,6 +17,7 @@ const ENVTagColor = {
 const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
+  // const { currentUser } = initialState || {};
   if (!initialState || !initialState.settings) {
     return null;
   }
@@ -27,6 +30,8 @@ const GlobalHeaderRight: React.FC = () => {
   }
   return (
     <Space className={className}>
+      {/* {!currentUser?.data.roles.includes('admin') && <NoticeIconView />} */}
+      <NoticeIconView />
       <Avatar />
       {REACT_APP_ENV && (
         <span>

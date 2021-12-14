@@ -7,7 +7,7 @@ import { getNotifications, getEventTypes } from '@/services/escola-lms/notificat
 import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
 
-const getEventType = (event: string) => event.split('\\').pop() as String;
+export const getEventType = (event: string) => event.split('\\').pop() as String;
 
 export const TableColumns: ProColumns<API.Notification>[] = [
   {

@@ -182,7 +182,6 @@ export default () => {
               />
             )}
           </ProForm.Group>
-
           <ProForm.Item
             name="bio"
             label={<FormattedMessage id="bio" />}
@@ -191,7 +190,23 @@ export default () => {
           >
             <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
           </ProForm.Item>
-
+          {/* <ProForm.Item
+            name="settings"
+            label={<FormattedMessage id="settings" />}
+            valuePropName="settings"
+          >
+            <Table
+              columns={[
+                {
+                  title: <FormattedMessage id="Name" defaultMessage="Name" />,
+                  dataIndex: 'settings',
+                },
+              ]}
+              request={() => {
+                return [{ setting: 'default' }];
+              }}
+            />
+          </ProForm.Item> */}
           {user !== 'new' && (
             <ProForm.Group>
               <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>

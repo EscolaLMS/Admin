@@ -5,6 +5,7 @@ import pwa from './pl-PL/pwa';
 import settingDrawer from './pl-PL/settingDrawer';
 import settings from './pl-PL/settings';
 import pages from './pl-PL/pages';
+import notifications from './pl-PL/notifications';
 
 export default {
   file_resources: 'Załączniki (pliki)',
@@ -24,6 +25,7 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...notifications,
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',

@@ -33,7 +33,7 @@ export async function user(id: number, options?: { [key: string]: any }, cache?:
     ...(options || {}),
   });
 }
-
+/**  GET /api/profile/me */
 export async function profile(options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/profile/me`, {
     method: 'GET',
@@ -42,6 +42,7 @@ export async function profile(options?: { [key: string]: any }) {
   });
 }
 
+/**  PUT /api/profile/me */
 export async function updateProfile(data: Partial<API.UserItem>, options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/profile/me`, {
     data,
@@ -49,7 +50,7 @@ export async function updateProfile(data: Partial<API.UserItem>, options?: { [ke
     ...(options || {}),
   });
 }
-
+/**  PUT /api/profile/password */
 export async function updateProfilePassword(
   data: Partial<API.UserChangePassword>,
   options?: { [key: string]: any },
@@ -60,7 +61,7 @@ export async function updateProfilePassword(
     ...(options || {}),
   });
 }
-
+/**  PUT /api/admin/users/:id */
 export async function updateUser(
   id: number,
   data: Partial<API.UserItem>,
@@ -72,7 +73,7 @@ export async function updateUser(
     ...(options || {}),
   });
 }
-
+/**  POST /api/admin/users */
 export async function createUser(data: Partial<API.UserItem>, options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/admin/users`, {
     data,
@@ -80,20 +81,29 @@ export async function createUser(data: Partial<API.UserItem>, options?: { [key: 
     ...(options || {}),
   });
 }
-
+/**  DELETE /api/admin/users/:id */
 export async function deleteUser(id: number, options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/admin/users/${id}`, {
     method: 'DELETE',
     ...(options || {}),
   });
 }
-
+/**  POST /api/auth/email/resend */
 export async function resendEmail(email: string, options?: { [key: string]: any }) {
   return request<API.UserRow>(`/api/auth/email/resend`, {
     method: 'POST',
     data: {
       email,
     },
+    ...(options || {}),
+  });
+}
+
+/**  GET /api/admin/users/:id/settings */
+export async function getUserSettings(id: number, options?: { [key: string]: any }) {
+  return request<API.UserRow>(`/api/admin/users/$${id}/settings`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }

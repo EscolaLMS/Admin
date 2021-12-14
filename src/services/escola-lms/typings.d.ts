@@ -574,7 +574,7 @@ declare namespace API {
     notifiable_type: string;
     notifiable_id: number;
     data: [];
-    read_at: null;
+    read_at: null | Date;
     created_at: Date;
     updated_at: Date;
     event: EventTypes;
