@@ -564,7 +564,6 @@ declare namespace API {
   type Role = {
     id: number;
     name: string;
-
     assigned?: boolean;
   };
 
@@ -638,6 +637,8 @@ declare namespace API {
   type Report = ReportItem[];
 
   type ReportList = DefaultResponse<Report>;
+
+  type UserSetting = { [name: string]: string };
 
   type UserGroup = {
     id: number;

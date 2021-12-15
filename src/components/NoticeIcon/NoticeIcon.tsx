@@ -53,10 +53,10 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       if (!child) {
         return;
       }
-      const { list, title, count, tabKey, showClear, showViewMore } = child.props;
-      const len = list && list.length ? list.length : 0;
-      const msgCount = count || count === 0 ? count : len;
-      const tabTitle = msgCount > 0 ? <FormattedMessage id={title} /> : title;
+      const { list, title, tabKey, showClear, showViewMore } = child.props;
+      // const len = list && list.length ? list.length : 0;
+      // const msgCount = count || count === 0 ? count : len;
+      const tabTitle = <FormattedMessage id={title} />;
 
       panes.push(
         <TabPane tab={tabTitle} key={tabKey}>

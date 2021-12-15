@@ -47,11 +47,16 @@
     hideInMenu: true,
   },
   {
-    path: '/users/:user',
-    name: 'Form',
+    path: '/users/new',
+    icon: 'user',
+    component: './Users/User',
+    hideInMenu: true,
+  },
+  {
+    path: '/users/:user/:tab',
     icon: 'user',
     access: 'userDetailsPermission',
-    component: './Users/form',
+    component: './Users/User',
     hideInMenu: true,
   },
   {

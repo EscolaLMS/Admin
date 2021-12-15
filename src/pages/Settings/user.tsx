@@ -2,7 +2,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
 import React, { useState, useRef } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
