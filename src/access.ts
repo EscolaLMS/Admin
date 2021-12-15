@@ -8,30 +8,36 @@ export default function access(initialState: { currentUser: any }) {
   const { currentUser } = initialState;
 
   const havePermissions = isUserHavePermissions(currentUser);
+  const dashboardPermission = havePermissions(PERMISSIONS.CoreDashboardAccess);
+  const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) =>
+    dashboardPermission && havePermissions(...permissions);
 
-  const adminPermission = currentUser && currentUser.data.roles.includes('admin');
+  const adminPermission =
+    dashboardPermission && currentUser && currentUser.data.roles.includes('admin');
+
   const tutorPermission =
+    dashboardPermission &&
     currentUser &&
     (currentUser.data.roles.includes('tutor') || currentUser.data.roles.includes('admin'));
 
   return {
-    dashboardPermission: true,
+    dashboardPermission,
 
-    userProfilePermission: havePermissions(PERMISSIONS.UserReadSelf),
+    userProfilePermission: havePermissionsInDashboard(PERMISSIONS.UserReadSelf),
 
-    userListPermission: havePermissions(PERMISSIONS.UserList),
-    userDetailsPermission: havePermissions(PERMISSIONS.UserRead),
-    userCreatePermission: havePermissions(PERMISSIONS.UserCreate),
+    userListPermission: havePermissionsInDashboard(PERMISSIONS.UserList),
+    userDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserRead),
+    userCreatePermission: havePermissionsInDashboard(PERMISSIONS.UserCreate),
 
-    userGroupListPermission: havePermissions(PERMISSIONS.UserGroupList),
-    userGroupDetailsPermission: havePermissions(PERMISSIONS.UserGroupRead),
+    userGroupListPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupList),
+    userGroupDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupRead),
 
-    orderListPermission: havePermissions(PERMISSIONS.CartOrderList),
+    orderListPermission: havePermissionsInDashboard(PERMISSIONS.CartOrderList),
 
-    paymentListPermission: havePermissions(PERMISSIONS.PaymentList),
+    paymentListPermission: havePermissionsInDashboard(PERMISSIONS.PaymentList),
 
     courseListPermission: tutorPermission, // TODO: this permission not exist in api
-    courseDetailsPermission: havePermissions(PERMISSIONS.CourseRead),
+    courseDetailsPermission: havePermissionsInDashboard(PERMISSIONS.CourseRead),
 
     h5pListPermission: tutorPermission, // TODO: this permission not exist in api
     h5pDetailsPermission: tutorPermission, // TODO: this permission not exist in api
@@ -45,18 +51,18 @@ export default function access(initialState: { currentUser: any }) {
     templateListPermission: adminPermission, // TODO: this permission not exist in api
     templateDetailsPermission: adminPermission, // TODO: this permission not exist in api
 
-    fileListPermission: havePermissions(PERMISSIONS.FileList),
+    fileListPermission: havePermissionsInDashboard(PERMISSIONS.FileList),
 
     categoryListPermission: tutorPermission, // TODO: this permission not exist in api
 
-    settingListPermission: havePermissions(PERMISSIONS.SettingsList),
+    settingListPermission: havePermissionsInDashboard(PERMISSIONS.SettingsList),
 
     roleListPermission: adminPermission, // TODO: this permission not exist in api
-    roleDetailsPermission: havePermissions(PERMISSIONS.PermissionRoleUpdate),
+    roleDetailsPermission: havePermissionsInDashboard(PERMISSIONS.PermissionRoleUpdate),
 
-    notificationListPermission: havePermissions(PERMISSIONS.NotificationListAll), // TODO: or NotificationList?
+    notificationListPermission: havePermissionsInDashboard(PERMISSIONS.NotificationListAll), // TODO: or NotificationList?
 
-    reportListPermission: havePermissions(PERMISSIONS.ReportList),
+    reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
 
     loggedOut: !currentUser,
   };
