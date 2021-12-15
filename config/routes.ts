@@ -44,11 +44,15 @@
     hideInMenu: true,
   },
   {
-    path: '/users/:user',
-    name: 'Form',
+    path: '/users/new',
     icon: 'user',
-    access: 'adminPermission',
-    component: './Users/form',
+    component: './Users/User',
+    hideInMenu: true,
+  },
+  {
+    path: '/users/:user/:tab',
+    icon: 'user',
+    component: './Users/User',
     hideInMenu: true,
   },
   {

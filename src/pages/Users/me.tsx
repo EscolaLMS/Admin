@@ -8,6 +8,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
+import UserSettings from './User/settings';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
@@ -56,7 +57,7 @@ export default () => {
   if (!data) {
     return <Spin />;
   }
-
+  console.log({ data });
   return (
     <PageContainer
       title={<FormattedMessage id="my_profile" />}
@@ -182,6 +183,9 @@ export default () => {
               />
             </ProForm.Group>
           </ProForm>
+        </ProCard.TabPane>
+        <ProCard.TabPane key="user_settings" tab={<FormattedMessage id="user.settings" />}>
+          <UserSettings user={String(data.id)} isProfile />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

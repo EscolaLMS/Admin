@@ -101,8 +101,24 @@ export async function resendEmail(email: string, options?: { [key: string]: any 
 
 /**  GET /api/admin/users/:id/settings */
 export async function getUserSettings(id: number, options?: { [key: string]: any }) {
-  return request<API.UserRow>(`/api/admin/users/$${id}/settings`, {
+  return request<API.DefaultResponse<API.UserSetting>>(`/api/admin/users/${id}/settings`, {
     method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+/**  (PUT/PATCH) /api/admin/users/:id/settings */
+export async function setUserSettings(
+  id: number,
+  method: string,
+  data: API.UserSetting,
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.UserSetting>>(`/api/admin/users/${id}/settings`, {
+    method: method,
+    data: {
+      settings: [data],
+    },
     /* useCache: true */ useCache: false,
     ...(options || {}),
   });
