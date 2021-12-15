@@ -58,6 +58,7 @@ export default {
   'menu.Settings': 'Ustawienia',
   user_settings: 'Ustawienia użytkownika',
   'user.settings': 'Ustawienia użytkownika',
+  'user.settings.overwrite': 'Nadpisz wszystko',
   settings: 'Settings',
   package: 'Pakiet',
   readonly: 'Tylko do odczytu',
