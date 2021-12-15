@@ -50,6 +50,7 @@
     path: '/users/new',
     icon: 'user',
     component: './Users/User',
+    access: 'userCreatePermission',
     hideInMenu: true,
   },
   {

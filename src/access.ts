@@ -21,6 +21,7 @@ export default function access(initialState: { currentUser: any }) {
 
     userListPermission: havePermissions(PERMISSIONS.UserList),
     userDetailsPermission: havePermissions(PERMISSIONS.UserRead),
+    userCreatePermission: havePermissions(PERMISSIONS.UserCreate),
 
     userGroupListPermission: havePermissions(PERMISSIONS.UserGroupList),
     userGroupDetailsPermission: havePermissions(PERMISSIONS.UserGroupRead),
