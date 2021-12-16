@@ -43,7 +43,14 @@ const NotificationsPage: React.FC = () => {
   }, []);
 
   const eventsTypeList = useMemo(
-    () => eventTypes.reduce((a, value) => ({ ...a, [value]: getEventType(value) }), {}),
+    () =>
+      eventTypes.reduce(
+        (a, value) => ({
+          ...a,
+          [value]: <FormattedMessage id={`notifications.${getEventType(value)}`} />,
+        }),
+        {},
+      ),
     [eventTypes],
   );
 
@@ -84,7 +91,9 @@ const NotificationsPage: React.FC = () => {
             title: <FormattedMessage id="event" defaultMessage="event" />,
             dataIndex: 'event',
             hideInSearch: false,
-            render: (_, record) => getEventType(record.event),
+            render: (_, record) => (
+              <FormattedMessage id={`notifications.${getEventType(record.event)}`} />
+            ),
             valueType: 'select',
             valueEnum: eventsTypeList,
           },

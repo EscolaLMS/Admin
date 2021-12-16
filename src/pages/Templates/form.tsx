@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, message } from 'antd';
+import { Alert, Button, Divider, message, Space, Tag, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSelect } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
@@ -12,11 +12,20 @@ import { PageContainer } from '@ant-design/pro-layout';
 
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import TemplateEditor from '@/components/TemplateEditor';
+import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
 
-const objectToKeysDict = (obj: Object): Record<string, string> =>
+const objectToKeysDict = (obj: object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
+
+const createEntries = (data: object) => {
+  return Object.entries(data).map((entry) => {
+    return {
+      key: entry[0],
+      content: entry[1],
+    };
+  });
+};
 
 type PreviewButtonState =
   | {
@@ -34,8 +43,20 @@ type PreviewButtonState =
       state: 'error';
       error: string;
     };
+
+type Tokens = {
+  assignableClass: string | null;
+  class: string;
+  required_variables: string[];
+  variables: string[];
+  sections: {
+    [key: string]: API.TemplateField;
+  };
+};
+
 const PreviewButton: React.FC<{ disabled: boolean; id: number }> = ({ disabled = false, id }) => {
   const [state, setState] = useState<PreviewButtonState>({ state: 'ready' });
+
   const onClick = useCallback(() => {
     setState({ state: 'loading' });
     previewTemplate(id)
@@ -120,9 +141,18 @@ export default () => {
   const fetchData = useCallback(async () => {
     const response = await fetchTemplate(Number(template));
     if (response.success) {
+      const map =
+        response.data.sections &&
+        response.data.sections.map((item) => {
+          return {
+            [item.key]: item.content,
+          };
+        });
+      const obj = Object.assign({}, ...map);
+
       form.setFieldsValue({
         ...response.data,
-        content: response.data.content || '',
+        ...obj,
       });
       setSaved(true);
     }
@@ -134,25 +164,41 @@ export default () => {
     }
 
     fetchData();
-  }, [template, fetchData]);
+  }, [template]);
 
-  const onFormFinish = useCallback(async (values: Partial<API.Template>) => {
-    let response: API.DefaultResponse<API.Template>;
-    const postData: Partial<API.Template> = {
-      ...values,
-    };
+  const onFormFinish = useCallback(
+    async (values: Partial<API.Template>) => {
+      let response: API.DefaultResponse<API.Template>;
 
-    if (template === 'new') {
-      response = await createTemplate(postData);
-      if (response.success) {
-        history.push(`/templates/${response.data.id}`);
+      const notAllowed = ['name', 'event', 'channel'];
+
+      const filtered = Object.keys(values)
+        .filter((key) => !notAllowed.includes(key))
+        .reduce((obj, key) => {
+          obj[key] = values[key];
+          return obj;
+        }, {});
+
+      const postData: Partial<API.Template> = {
+        ...values,
+        // TODO:error in validation? no need this type filed on backend
+        type: values.event,
+        sections: createEntries(filtered),
+      };
+
+      if (template === 'new') {
+        response = await createTemplate(postData);
+        if (response.success) {
+          history.push(`/templates/${response.data.id}`);
+        }
+      } else {
+        response = await updateTemplate(Number(template), postData);
       }
-    } else {
-      response = await updateTemplate(Number(template), postData);
-    }
-    setSaved(true);
-    message.success(response.message);
-  }, []);
+      setSaved(true);
+      message.success(response.message);
+    },
+    [variables, template],
+  );
 
   return (
     <PageContainer
@@ -160,7 +206,7 @@ export default () => {
         isNew ? <FormattedMessage id="new_template" /> : <FormattedMessage id="new_template" />
       }
     >
-      <ProCard>
+      <ProCard size="small">
         <ProForm
           initialValues={{}}
           onFinish={onFormFinish}
@@ -181,7 +227,7 @@ export default () => {
               required
             />
             <ProFormSelect
-              name="type"
+              name="event"
               label={<FormattedMessage id="tpl_type" />}
               tooltip={<FormattedMessage id="tpl_type_tooltip" />}
               valueEnum={variables ? objectToKeysDict(variables) : {}}
@@ -195,11 +241,11 @@ export default () => {
               {(theForm) => {
                 return (
                   <ProFormSelect
-                    name="vars_set"
+                    name="channel"
                     label={<FormattedMessage id="tpl_vars_set" />}
                     tooltip={<FormattedMessage id="tpl_vars_set_tooltip" />}
                     valueEnum={
-                      variables ? objectToKeysDict(variables[theForm.getFieldValue('type')]) : {}
+                      variables ? objectToKeysDict(variables[theForm.getFieldValue('event')]) : {}
                     }
                     placeholder={intl.formatMessage({
                       id: 'tpl_vars_set_placeholder',
@@ -209,6 +255,7 @@ export default () => {
                 );
               }}
             </ProForm.Item>
+
             {!isNew && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton disabled={!saved} id={Number(template)} />
@@ -218,30 +265,46 @@ export default () => {
 
           <ProForm.Item noStyle shouldUpdate>
             {(theForm) => {
+              const tokens: Tokens =
+                variables &&
+                theForm.getFieldValue('event') &&
+                theForm.getFieldValue('channel') &&
+                variables[theForm.getFieldValue('event')][theForm.getFieldValue('channel')];
+
               return (
-                <ProForm.Item
-                  name="content"
-                  label={<FormattedMessage id="content" />}
-                  tooltip={<FormattedMessage id="content_tooltip" />}
-                  valuePropName="value"
-                  required
-                  shouldUpdate
-                >
-                  <TemplateEditor
-                    tokens={
-                      variables &&
-                      theForm.getFieldValue('type') &&
-                      theForm.getFieldValue('vars_set')
-                        ? variables[theForm.getFieldValue('type')][
-                            theForm.getFieldValue('vars_set')
-                          ]
-                        : []
-                    }
-                  />
-                </ProForm.Item>
+                tokens &&
+                tokens.sections &&
+                Object.keys(tokens.sections).map((section, index) => {
+                  console.log(section, index);
+                  const fieldItem = tokens.sections && tokens.sections[section];
+
+                  return (
+                    <React.Fragment>
+                      {index === 0 && (
+                        <React.Fragment>
+                          <Divider>
+                            <FormattedMessage id="tokens" defaultMessage="posibble variables:" />
+                          </Divider>
+                          <Space>
+                            <Typography>
+                              {tokens.variables.map((token) => (
+                                <Tag color="orange" key={token}>
+                                  {token}
+                                </Tag>
+                              ))}
+                            </Typography>
+                          </Space>
+                        </React.Fragment>
+                      )}
+                      <Divider />
+                      <TemplateFields name={section} field={fieldItem} />
+                    </React.Fragment>
+                  );
+                })
               );
             }}
           </ProForm.Item>
+          <Divider />
         </ProForm>
       </ProCard>
     </PageContainer>
