@@ -131,6 +131,7 @@ export default () => {
   const [saved, setSaved] = useState<boolean>(false);
   const [form] = ProForm.useForm();
   const [variables, setVariables] = useState<API.TemplateVariables>();
+  const [tokens, setTokens] = useState<Tokens | undefined>(undefined);
 
   useEffect(() => {
     fetchVariables().then((response) => {
@@ -148,7 +149,7 @@ export default () => {
             [item.key]: item.content,
           };
         });
-      const obj = Object.assign({}, ...map);
+      const obj = map && Object.assign({}, ...map);
 
       form.setFieldsValue({
         ...response.data,
@@ -165,6 +166,25 @@ export default () => {
 
     fetchData();
   }, [template]);
+
+  useEffect(() => {
+    const values = form.getFieldsValue();
+
+    // TODO: REFACTOR;
+    const defaultValues =
+      tokens &&
+      Object.keys(tokens.sections).map((section) => {
+        return {
+          [section]: tokens.sections[section].default_content,
+        };
+      });
+    if (defaultValues && template === 'new') {
+      form.setFieldsValue({
+        ...values,
+        ...Object.assign({}, ...defaultValues),
+      });
+    }
+  }, [tokens]);
 
   const onFormFinish = useCallback(
     async (values: Partial<API.Template>) => {
@@ -212,6 +232,11 @@ export default () => {
           onFinish={onFormFinish}
           form={form}
           onValuesChange={() => {
+            const values = form.getFieldsValue();
+
+            if (values.event && values.channel && variables) {
+              setTokens(variables[values.event][values.channel]);
+            }
             setSaved(false);
           }}
         >
@@ -224,7 +249,7 @@ export default () => {
               placeholder={intl.formatMessage({
                 id: 'name',
               })}
-              required
+              rules={[{ required: true, message: 'Please select your country!' }]}
             />
             <ProFormSelect
               name="event"
@@ -263,47 +288,34 @@ export default () => {
             )}
           </ProForm.Group>
 
-          <ProForm.Item noStyle shouldUpdate>
-            {(theForm) => {
-              const tokens: Tokens =
-                variables &&
-                theForm.getFieldValue('event') &&
-                theForm.getFieldValue('channel') &&
-                variables[theForm.getFieldValue('event')][theForm.getFieldValue('channel')];
+          {tokens &&
+            tokens.sections &&
+            Object.keys(tokens.sections).map((section, index) => {
+              const fieldItem = tokens.sections && tokens.sections[section];
 
               return (
-                tokens &&
-                tokens.sections &&
-                Object.keys(tokens.sections).map((section, index) => {
-                  console.log(section, index);
-                  const fieldItem = tokens.sections && tokens.sections[section];
-
-                  return (
+                <React.Fragment>
+                  {index === 0 && (
                     <React.Fragment>
-                      {index === 0 && (
-                        <React.Fragment>
-                          <Divider>
-                            <FormattedMessage id="tokens" defaultMessage="posibble variables:" />
-                          </Divider>
-                          <Space>
-                            <Typography>
-                              {tokens.variables.map((token) => (
-                                <Tag color="orange" key={token}>
-                                  {token}
-                                </Tag>
-                              ))}
-                            </Typography>
-                          </Space>
-                        </React.Fragment>
-                      )}
-                      <Divider />
-                      <TemplateFields name={section} field={fieldItem} />
+                      <Divider>
+                        <FormattedMessage id="tokens" defaultMessage="posibble variables:" />
+                      </Divider>
+                      <Space>
+                        <Typography>
+                          {tokens.variables.map((token) => (
+                            <Tag color="orange" key={token}>
+                              {token}
+                            </Tag>
+                          ))}
+                        </Typography>
+                      </Space>
                     </React.Fragment>
-                  );
-                })
+                  )}
+                  <Divider />
+                  <TemplateFields name={section} field={fieldItem} />
+                </React.Fragment>
               );
-            }}
-          </ProForm.Item>
+            })}
           <Divider />
         </ProForm>
       </ProCard>

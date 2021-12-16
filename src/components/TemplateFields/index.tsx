@@ -54,7 +54,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               name={name}
               label={<FormattedMessage id={name} />}
               rules={[
-                { required: field.required, message: 'This is required' },
+                { required: field.required, message: `This ${name} is required` },
                 {
                   validator: async (_, value) => {
                     return fieldValidator(value, field.required_variables);
@@ -81,7 +81,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               name={name}
               tooltip={'paste mjml template'}
               rules={[
-                { required: field.required, message: 'This is required' },
+                { required: field.required, message: `This ${name} is required` },
                 {
                   validator: async (_, value) => {
                     return fieldValidator(value, field.required_variables);
