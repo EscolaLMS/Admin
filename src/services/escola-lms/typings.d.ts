@@ -583,7 +583,7 @@ declare namespace API {
     rules: string[];
     public: boolean;
     readonly: boolean;
-    value: string;
+    value: string | string[];
   };
 
   type Configs = Record<string, Record<string, Config>>;
