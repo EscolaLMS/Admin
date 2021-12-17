@@ -14,11 +14,11 @@ import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
 
-const objectToKeysDict = (obj: object): Record<string, string> =>
+const objectToKeysDict = (obj: Object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
 
 // creates sections collections for post template
-const createEntries = (data: object) => {
+const createEntries = (data: Record<string, string>) => {
   return Object.entries(data).map((entry) => {
     return {
       key: entry[0],
@@ -27,7 +27,8 @@ const createEntries = (data: object) => {
   });
 };
 
-const objectFlatten = (data: object[]): Record<string, string> => Object.assign({}, ...data);
+const objectFlatten = (data: Record<string, string>[]): Record<string, string> =>
+  Object.assign({}, ...data);
 
 // helper function that throws away unnecessary keys to create a sections collection
 const filterNotAllowedKeys = (values: object) => {
