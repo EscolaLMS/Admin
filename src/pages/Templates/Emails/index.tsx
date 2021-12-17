@@ -8,67 +8,22 @@ import ProTable from '@ant-design/pro-table';
 
 import { templates, deleteTemplate } from '@/services/escola-lms/templates';
 
-const handleRemove = async (id: number) => {
-  return deleteTemplate(id).then((response) => {
-    if (response.success) {
-      message.success(response.message);
-    }
-    return true;
-  });
-};
-
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
   const columns: ProColumns<API.TemplateListItem>[] = [
     {
+      width: '20%',
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
     },
     {
+      width: '80%',
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
       hideInSearch: true,
-    },
-
-    {
-      hideInSearch: true,
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <Link to={`/templates/${record.id}`} key="edit">
-          <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-            <Button type="primary" icon={<EditOutlined />}></Button>
-          </Tooltip>
-        </Link>,
-        <Popconfirm
-          key="delete"
-          title={
-            <FormattedMessage
-              id="deleteQuestion"
-              defaultMessage="Are you sure to delete this record?"
-            />
-          }
-          onConfirm={async () => {
-            const request = await handleRemove(record.id);
-
-            if (request) {
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          okText={<FormattedMessage id="yes" />}
-          cancelText={<FormattedMessage id="no" />}
-        >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
-          </Tooltip>
-        </Popconfirm>,
-      ],
     },
   ];
 
@@ -89,10 +44,7 @@ const TableList: React.FC = () => {
         </Link>,
       ]}
       request={({ pageSize, current }) => {
-        return templates({
-          pageSize,
-          current,
-        }).then((response) => {
+        return templates({ pageSize, current }).then((response) => {
           if (response.success) {
             return {
               data: response.data,
@@ -103,7 +55,48 @@ const TableList: React.FC = () => {
           return [];
         });
       }}
-      columns={columns}
+      columns={[
+        ...columns,
+        {
+          hideInSearch: true,
+          title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
+          dataIndex: 'option',
+          valueType: 'option',
+          render: (_, record) => [
+            <Link to={`/templates/${record.id}`} key="edit">
+              <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                <Button type="primary" icon={<EditOutlined />}></Button>
+              </Tooltip>
+            </Link>,
+            <Popconfirm
+              key="delete"
+              title={
+                <FormattedMessage
+                  id="deleteQuestion"
+                  defaultMessage="Are you sure to delete this record?"
+                />
+              }
+              onConfirm={async () => {
+                const request = await deleteTemplate(record.id);
+                const response = await request;
+
+                if (response.success) {
+                  message.success(response.message);
+                  if (actionRef.current) {
+                    actionRef.current.reload();
+                  }
+                }
+              }}
+              okText={<FormattedMessage id="yes" />}
+              cancelText={<FormattedMessage id="no" />}
+            >
+              <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+              </Tooltip>
+            </Popconfirm>,
+          ],
+        },
+      ]}
     />
   );
 };

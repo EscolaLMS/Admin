@@ -18,7 +18,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
         return (
           <Space>
             <Typography>
-              Required:{' '}
+              <FormattedMessage id="required_variables" />:{' '}
               {requiredVars.map((token) => (
                 <Tag color={'red'} key={token}>
                   {token}
@@ -29,7 +29,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
         );
       } else return;
     },
-    [field],
+    [field, name],
   );
 
   const fieldValidator = useCallback(
@@ -37,9 +37,9 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
       if (value && requiredFields.every((val) => value.includes(val))) {
         return Promise.resolve();
       }
-      return Promise.reject(new Error('No required variable used'));
+      return Promise.reject(new Error('No required variable  used'));
     },
-    [field],
+    [field, name],
   );
 
   const renderProperFields = useCallback(() => {
@@ -69,7 +69,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
         return (
           <React.Fragment>
             <p>
-              To create template go there{' '}
+              <FormattedMessage id={'to_create_template'} />{' '}
               <a target="_blank" href="https://mjml.io/try-it-live">
                 https://mjml.io/try-it-live
               </a>
@@ -96,7 +96,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
       default:
         return;
     }
-  }, [field]);
+  }, [field, name]);
 
   return <React.Fragment>{renderProperFields()}</React.Fragment>;
 };

@@ -274,9 +274,12 @@ export default {
   search_file: 'Wyszukaj plik',
   tpl_vars_set_placeholder: 'Zestaw zmiennych',
   tpl_type_placeholder: 'Typ szablonu',
-  tokens: 'Tokens',
+  tokens: 'Zmienne',
   tpl_vars_set: 'Zestaw zmiennych',
   tpl_type: 'Typ szablonu',
+  required_variables: 'Wymagane zmienne',
+  to_create_template: 'Aby stworzyć szablon przejdź tutaj',
+  set_as_default_template: 'Ustaw jako domyślny szablon',
   json: 'JSON Metadata',
   json_tooltip:
     'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',

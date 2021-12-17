@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, Divider, message, Space, Tag, Typography } from 'antd';
-import ProForm, { ProFormText, ProFormSelect } from '@ant-design/pro-form';
+import { Divider, message, Space, Tag, Typography } from 'antd';
+import ProForm, { ProFormText, ProFormSelect, ProFormCheckbox } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
   template as fetchTemplate,
   updateTemplate,
   createTemplate,
-  preview as previewTemplate,
 } from '@/services/escola-lms/templates';
 import { PageContainer } from '@ant-design/pro-layout';
-
+import PreviewButton from './components/PreviewButton';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
@@ -18,6 +17,7 @@ import { variables as fetchVariables } from '@/services/escola-lms/templates';
 const objectToKeysDict = (obj: object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
 
+// creates sections collections for post template
 const createEntries = (data: object) => {
   return Object.entries(data).map((entry) => {
     return {
@@ -27,22 +27,18 @@ const createEntries = (data: object) => {
   });
 };
 
-type PreviewButtonState =
-  | {
-      state: 'ready';
-    }
-  | {
-      state: 'loading';
-    }
-  | {
-      state: 'loaded';
-      data: Record<string, string>;
-      message: React.ReactNode;
-    }
-  | {
-      state: 'error';
-      error: string;
-    };
+const objectFlatten = (data: object[]): Record<string, string> => Object.assign({}, ...data);
+
+// helper function that throws away unnecessary keys to create a sections collection
+const filterNotAllowedKeys = (values: object) => {
+  const notAllowedKeys = ['name', 'event', 'channel', 'default'];
+  return Object.keys(values)
+    .filter((key) => !notAllowedKeys.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = values[key];
+      return obj;
+    }, {});
+};
 
 type Tokens = {
   assignableClass: string | null;
@@ -52,74 +48,6 @@ type Tokens = {
   sections: {
     [key: string]: API.TemplateField;
   };
-};
-
-const PreviewButton: React.FC<{ disabled: boolean; id: number }> = ({ disabled = false, id }) => {
-  const [state, setState] = useState<PreviewButtonState>({ state: 'ready' });
-
-  const onClick = useCallback(() => {
-    setState({ state: 'loading' });
-    previewTemplate(id)
-      .then((data) => {
-        if (data.success) {
-          if (data.data.sent && data.data.to) {
-            setState({
-              state: 'loaded',
-              data: data.data,
-              message: `email sent to ${data.data.to}`,
-            });
-          } else if (data.data.url) {
-            setState({
-              state: 'loaded',
-              data: data.data,
-              message: (
-                <React.Fragment>
-                  Download{' '}
-                  <a target="_blank" href={data.data.url}>
-                    {data.data.filename}
-                  </a>
-                </React.Fragment>
-              ),
-            });
-          } else {
-            setState({ state: 'loaded', data: data.data, message: data.message });
-          }
-        } else {
-          setState({ state: 'error', error: data.message });
-        }
-      })
-      .catch(() => {
-        setState({ state: 'error', error: 'error' });
-      });
-  }, [id]);
-  return (
-    <React.Fragment>
-      <Button
-        type="primary"
-        loading={state.state === 'loading'}
-        disabled={disabled}
-        onClick={onClick}
-      >
-        <FormattedMessage id="preview" />
-      </Button>
-      {state.state === 'loaded' && (
-        <Alert
-          message={state.message}
-          type="success"
-          closable
-          onClose={() => setState({ state: 'ready' })}
-        ></Alert>
-      )}
-      {state.state === 'error' && (
-        <Alert
-          message={state.error}
-          type="error"
-          closable
-          onClose={() => setState({ state: 'ready' })}
-        ></Alert>
-      )}
-    </React.Fragment>
-  );
 };
 
 export default () => {
@@ -139,8 +67,39 @@ export default () => {
     });
   }, []);
 
+  useEffect(() => {
+    const values = form.getFieldsValue();
+
+    const defaultValues =
+      tokens &&
+      Object.keys(tokens.sections).map((section) => {
+        return {
+          [section]: tokens.sections[section].default_content,
+        };
+      });
+
+    if (defaultValues && template === 'new') {
+      form.setFieldsValue({
+        ...values,
+        ...objectFlatten(defaultValues),
+      });
+    }
+  }, [tokens]);
+
+  const handleSetTokens = useCallback(
+    (event: string, channel: string) => {
+      if (event && channel) {
+        const _tokens = variables && (variables[event][channel] as unknown);
+
+        setTokens(_tokens as Tokens);
+      }
+    },
+    [variables, template],
+  );
+
   const fetchData = useCallback(async () => {
     const response = await fetchTemplate(Number(template));
+
     if (response.success) {
       const map =
         response.data.sections &&
@@ -149,61 +108,25 @@ export default () => {
             [item.key]: item.content,
           };
         });
-      const obj = map && Object.assign({}, ...map);
+
+      const obj = map && objectFlatten(map);
 
       form.setFieldsValue({
         ...response.data,
         ...obj,
       });
+      handleSetTokens(String(response.data.event), String(response.data.channel));
       setSaved(true);
     }
   }, [template, variables]);
-
-  useEffect(() => {
-    if (template === 'new') {
-      return;
-    }
-
-    fetchData();
-  }, [template]);
-
-  useEffect(() => {
-    const values = form.getFieldsValue();
-
-    // TODO: REFACTOR;
-    const defaultValues =
-      tokens &&
-      Object.keys(tokens.sections).map((section) => {
-        return {
-          [section]: tokens.sections[section].default_content,
-        };
-      });
-    if (defaultValues && template === 'new') {
-      form.setFieldsValue({
-        ...values,
-        ...Object.assign({}, ...defaultValues),
-      });
-    }
-  }, [tokens]);
 
   const onFormFinish = useCallback(
     async (values: Partial<API.Template>) => {
       let response: API.DefaultResponse<API.Template>;
 
-      const notAllowed = ['name', 'event', 'channel'];
-
-      const filtered = Object.keys(values)
-        .filter((key) => !notAllowed.includes(key))
-        .reduce((obj, key) => {
-          obj[key] = values[key];
-          return obj;
-        }, {});
-
       const postData: Partial<API.Template> = {
         ...values,
-        // TODO:error in validation? no need this type filed on backend
-        type: values.event,
-        sections: createEntries(filtered),
+        sections: createEntries(filterNotAllowedKeys(values)),
       };
 
       if (template === 'new') {
@@ -220,6 +143,14 @@ export default () => {
     [variables, template],
   );
 
+  useEffect(() => {
+    if (template === 'new') {
+      return;
+    }
+
+    fetchData();
+  }, [template, variables]);
+
   return (
     <PageContainer
       title={
@@ -233,10 +164,7 @@ export default () => {
           form={form}
           onValuesChange={() => {
             const values = form.getFieldsValue();
-
-            if (values.event && values.channel && variables) {
-              setTokens(variables[values.event][values.channel]);
-            }
+            handleSetTokens(values.event, values.channel);
             setSaved(false);
           }}
         >
@@ -280,7 +208,9 @@ export default () => {
                 );
               }}
             </ProForm.Item>
-
+            <ProForm.Item label={<FormattedMessage id="set as default" />}>
+              <ProFormCheckbox name="default" />
+            </ProForm.Item>
             {!isNew && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton disabled={!saved} id={Number(template)} />
