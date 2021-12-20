@@ -87,7 +87,7 @@ export async function updateConfig(
     value,
   }: {
     key: string;
-    value: string;
+    value: string | string[];
   },
   options?: Record<string, any>,
 ) {

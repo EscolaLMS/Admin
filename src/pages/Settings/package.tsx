@@ -108,7 +108,7 @@ const TableList: React.FC<{
           onFinish={async () => {
             onValueUpdated();
           }}
-        ></PackageModalForm>
+        />
       )}
     </React.Fragment>
   );
