@@ -6,6 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { getNotifications, getEventTypes } from '@/services/escola-lms/notifications';
 import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import UserSelect from '@/components/UserSelect';
 
 export const getEventType = (event: string) => event.split('\\').pop() as String;
 
@@ -20,6 +21,10 @@ export const TableColumns: ProColumns<API.Notification>[] = [
     title: <FormattedMessage id="user_id" defaultMessage="user_id" />,
     dataIndex: 'notifiable_id',
     hideInSearch: false,
+    valueType: 'select',
+    renderFormItem: (item, { type, defaultRender, ...rest }) => {
+      return <UserSelect {...rest} />;
+    },
   },
 ];
 
