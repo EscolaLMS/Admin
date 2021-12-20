@@ -169,21 +169,20 @@
   },
 
   {
-    path: '/templates',
+    path: '/templates/:template',
     name: 'Templates',
     icon: 'highlight',
-    access: 'templateListPermission',
+    access: 'templateDetailsPermission',
     component: './Templates',
   },
   {
-    path: '/templates/:template',
+    path: '/templates/:template/:id',
     name: 'Templates',
     icon: 'highlight',
     access: 'templateDetailsPermission',
     component: './Templates/form',
     hideInMenu: true,
   },
-
   {
     path: '/files',
     name: 'Files',

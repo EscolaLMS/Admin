@@ -72,7 +72,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
         return (
           <React.Fragment>
             <p>
-              <FormattedMessage id={'to_create_template'} />{' '}
+              <FormattedMessage id={'templates.to_create_template'} />{' '}
               <a target="_blank" href="https://mjml.io/try-it-live">
                 https://mjml.io/try-it-live
               </a>

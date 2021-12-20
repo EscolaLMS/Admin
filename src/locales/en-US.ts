@@ -6,6 +6,7 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import pages from './en-US/pages';
 import notifications from './en-US/notifications';
+import templates from './en-US/templates';
 
 export default {
   file_resources: 'File resources',
@@ -26,6 +27,7 @@ export default {
   ...component,
   ...pages,
   ...notifications,
+  ...templates,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
