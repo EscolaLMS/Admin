@@ -10,11 +10,11 @@ export async function templates(
 ) {
   return request<API.TemplateList>(`/api/admin/templates`, {
     method: 'GET',
-    useCache: true,
+    useCache: false,
     params: {
       ...params,
-      per_page: params.pageSize,
-      page: params.current,
+      per_page: params.pageSize && params.pageSize,
+      page: params.current && params.current,
     },
     ...(options || {}),
   });

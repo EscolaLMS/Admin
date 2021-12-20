@@ -463,9 +463,30 @@ declare namespace API {
     id: number;
     name: string;
     type: string;
-    vars_set: string;
     course_id: number;
     content: string;
+    title: string;
+    event?: string;
+    channel?: string;
+    sections?: TemplateSections[];
+    created_at?: Date;
+    default?: boolean;
+  };
+
+  type TemplateSections = {
+    content: string;
+    created_at?: Date;
+    id?: number;
+    key: string;
+    template_id?: number;
+    updated_at?: Date;
+  };
+
+  type TemplateField = {
+    type: string;
+    required_variables: string[];
+    required: boolean;
+    default_content: string;
   };
 
   type TemplateVariable = string;
