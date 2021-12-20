@@ -6,6 +6,7 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import pages from './en-US/pages';
 import notifications from './en-US/notifications';
+import templates from './en-US/templates';
 
 export default {
   file_resources: 'File resources',
@@ -26,6 +27,7 @@ export default {
   ...component,
   ...pages,
   ...notifications,
+  ...templates,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
@@ -256,14 +258,6 @@ export default {
   query: 'Query',
   reset: 'Reset',
   search_file: 'Search file',
-  tpl_vars_set_placeholder: 'Set of variables',
-  tpl_type_placeholder: 'Template type',
-  tokens: 'Tokens',
-  tpl_vars_set: 'Set of variables',
-  tpl_type: 'Template type',
-  required_variables: 'Required variables',
-  to_create_template: 'To create a template go here',
-  set_as_default_template: 'Set as default template',
   json: 'JSON Metadata',
   json_tooltip: 'Additional metadata for rendering course',
   introduction: 'Introduction',

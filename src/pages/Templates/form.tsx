@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, message, Space, Tag, Typography } from 'antd';
+import { Divider, message, Space, Spin, Tag, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSelect, ProFormCheckbox } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
@@ -32,7 +32,7 @@ const objectFlatten = (data: Record<string, string>[]): Record<string, string> =
 
 // helper function that throws away unnecessary keys to create a sections collection
 const filterNotAllowedKeys = (values: object) => {
-  const notAllowedKeys = ['name', 'event', 'channel', 'default'];
+  const notAllowedKeys = ['name', 'event', 'default'];
   return Object.keys(values)
     .filter((key) => !notAllowedKeys.includes(key))
     .reduce((obj, key) => {
@@ -51,11 +51,17 @@ type Tokens = {
   };
 };
 
+const channels = {
+  email: 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
+};
+
 export default () => {
   const intl = useIntl();
-  const params = useParams<{ template?: string }>();
-  const { template } = params;
-  const isNew = template === 'new';
+  const params = useParams<{ template: string; id: string }>();
+
+  const { template, id } = params;
+
+  const isNew = id === 'new';
 
   const [saved, setSaved] = useState<boolean>(false);
   const [form] = ProForm.useForm();
@@ -79,7 +85,7 @@ export default () => {
         };
       });
 
-    if (defaultValues && template === 'new') {
+    if (defaultValues && isNew) {
       form.setFieldsValue({
         ...values,
         ...objectFlatten(defaultValues),
@@ -88,19 +94,18 @@ export default () => {
   }, [tokens]);
 
   const handleSetTokens = useCallback(
-    (event: string, channel: string) => {
-      if (event && channel) {
-        const _tokens = variables && (variables[event][channel] as unknown);
+    (event: string) => {
+      if (event && template) {
+        const _tokens = variables && (variables[event][channels[template]] as unknown);
 
         setTokens(_tokens as Tokens);
       }
     },
-    [variables, template],
+    [variables, id],
   );
 
   const fetchData = useCallback(async () => {
-    const response = await fetchTemplate(Number(template));
-
+    const response = await fetchTemplate(Number(id));
     if (response.success) {
       const map =
         response.data.sections &&
@@ -116,10 +121,10 @@ export default () => {
         ...response.data,
         ...obj,
       });
-      handleSetTokens(String(response.data.event), String(response.data.channel));
+      handleSetTokens(String(response.data.event));
       setSaved(true);
     }
-  }, [template, variables]);
+  }, [id, variables]);
 
   const onFormFinish = useCallback(
     async (values: Partial<API.Template>) => {
@@ -127,30 +132,31 @@ export default () => {
 
       const postData: Partial<API.Template> = {
         ...values,
+        channel: channels[template],
         sections: createEntries(filterNotAllowedKeys(values)),
       };
 
-      if (template === 'new') {
+      if (isNew) {
         response = await createTemplate(postData);
         if (response.success) {
           history.push(`/templates/${response.data.id}`);
         }
       } else {
-        response = await updateTemplate(Number(template), postData);
+        response = await updateTemplate(Number(id), postData);
       }
       setSaved(true);
       message.success(response.message);
     },
-    [variables, template],
+    [variables, id],
   );
 
   useEffect(() => {
-    if (template === 'new') {
+    if (isNew) {
       return;
     }
 
     fetchData();
-  }, [template, variables]);
+  }, [id, variables]);
 
   return (
     <PageContainer
@@ -165,51 +171,32 @@ export default () => {
           form={form}
           onValuesChange={() => {
             const values = form.getFieldsValue();
-            handleSetTokens(values.event, values.channel);
+            handleSetTokens(values.event);
             setSaved(false);
           }}
         >
           <ProForm.Group>
             <ProFormText
-              width="md"
+              width="sm"
               name="name"
               label={<FormattedMessage id="name" />}
-              tooltip={<FormattedMessage id="name_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'name',
               })}
-              rules={[{ required: true, message: 'Please select your country!' }]}
+              rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
             />
             <ProFormSelect
               name="event"
-              label={<FormattedMessage id="tpl_type" />}
-              tooltip={<FormattedMessage id="tpl_type_tooltip" />}
+              width="lg"
+              label={<FormattedMessage id="event" />}
               valueEnum={variables ? objectToKeysDict(variables) : {}}
               placeholder={intl.formatMessage({
-                id: 'tpl_type_placeholder',
+                id: 'event',
               })}
-              rules={[{ required: true, message: 'Please select your country!' }]}
+              rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
             />
 
-            <ProForm.Item noStyle shouldUpdate>
-              {(theForm) => {
-                return (
-                  <ProFormSelect
-                    name="channel"
-                    label={<FormattedMessage id="tpl_vars_set" />}
-                    tooltip={<FormattedMessage id="tpl_vars_set_tooltip" />}
-                    valueEnum={
-                      variables ? objectToKeysDict(variables[theForm.getFieldValue('event')]) : {}
-                    }
-                    placeholder={intl.formatMessage({
-                      id: 'tpl_vars_set_placeholder',
-                    })}
-                    rules={[{ required: true, message: 'Please select your country!' }]}
-                  />
-                );
-              }}
-            </ProForm.Item>
-            <ProForm.Item label={<FormattedMessage id="set as default" />}>
+            <ProForm.Item label={<FormattedMessage id="templates.set_as_default_template" />}>
               <ProFormCheckbox name="default" />
             </ProForm.Item>
             {!isNew && (
@@ -219,7 +206,10 @@ export default () => {
             )}
           </ProForm.Group>
 
-          {tokens &&
+          {!tokens && !isNew ? (
+            <Spin />
+          ) : (
+            tokens &&
             tokens.sections &&
             Object.keys(tokens.sections).map((section, index) => {
               const fieldItem = tokens.sections && tokens.sections[section];
@@ -229,7 +219,7 @@ export default () => {
                   {index === 0 && (
                     <React.Fragment>
                       <Divider>
-                        <FormattedMessage id="tokens" defaultMessage="posibble variables:" />
+                        <FormattedMessage id="templates.tokens" />
                       </Divider>
                       <Space>
                         <Typography>
@@ -246,7 +236,8 @@ export default () => {
                   <TemplateFields name={section} field={fieldItem} />
                 </React.Fragment>
               );
-            })}
+            })
+          )}
           <Divider />
         </ProForm>
       </ProCard>

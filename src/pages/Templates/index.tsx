@@ -6,8 +6,8 @@ import ProCard from '@ant-design/pro-card';
 import Emails from './Emails/index';
 
 const Templates: React.FC = () => {
-  const params = useParams<{ course?: string; tab?: string }>();
-  const { tab = 'email' } = params;
+  const params = useParams<{ tab?: string }>();
+  const { tab } = params;
 
   return (
     <PageContainer>
@@ -19,7 +19,7 @@ const Templates: React.FC = () => {
         }}
       >
         <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
-          <Emails />
+          <Emails templateType={'email'} />
         </ProCard.TabPane>
 
         <ProCard.TabPane

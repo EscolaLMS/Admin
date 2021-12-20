@@ -2,28 +2,45 @@ import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
-
+import { format } from 'date-fns';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
 import { templates, deleteTemplate } from '@/services/escola-lms/templates';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
-const TableList: React.FC = () => {
+const TableList: React.FC<{ templateType: string }> = ({ templateType }) => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
   const columns: ProColumns<API.TemplateListItem>[] = [
     {
-      width: '20%',
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
     },
     {
-      width: '80%',
+      title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
+      dataIndex: 'created_at',
+      hideInSearch: true,
+      render: (_, record) =>
+        record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
+    },
+    {
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
       hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="event" defaultMessage="event" />,
+      dataIndex: 'event',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="templates.is_default" />,
+      dataIndex: 'default',
+      hideInSearch: true,
+      render: (_, record) => record.default && <FormattedMessage id="yes" />,
     },
   ];
 
@@ -37,7 +54,7 @@ const TableList: React.FC = () => {
       rowKey="id"
       search={false}
       toolBarRender={() => [
-        <Link to="/templates/new">
+        <Link to={`/templates/${templateType}/new`}>
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>
@@ -63,7 +80,7 @@ const TableList: React.FC = () => {
           dataIndex: 'option',
           valueType: 'option',
           render: (_, record) => [
-            <Link to={`/templates/${record.id}`} key="edit">
+            <Link to={`/templates/${templateType}/${record.id}`} key="edit">
               <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                 <Button type="primary" icon={<EditOutlined />}></Button>
               </Tooltip>

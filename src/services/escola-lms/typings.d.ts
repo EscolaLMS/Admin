@@ -469,6 +469,8 @@ declare namespace API {
     event?: string;
     channel?: string;
     sections?: TemplateSections[];
+    created_at?: Date;
+    default?: boolean;
   };
 
   type TemplateSections = {

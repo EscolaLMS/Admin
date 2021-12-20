@@ -6,6 +6,7 @@ import settingDrawer from './pl-PL/settingDrawer';
 import settings from './pl-PL/settings';
 import pages from './pl-PL/pages';
 import notifications from './pl-PL/notifications';
+import templates from './pl-PL/templates';
 
 export default {
   file_resources: 'Załączniki (pliki)',
@@ -26,6 +27,7 @@ export default {
   ...component,
   ...pages,
   ...notifications,
+  ...templates,
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',
@@ -272,14 +274,6 @@ export default {
   query: 'Szukaj',
   reset: 'Wyczyść',
   search_file: 'Wyszukaj plik',
-  tpl_vars_set_placeholder: 'Zestaw zmiennych',
-  tpl_type_placeholder: 'Typ szablonu',
-  tokens: 'Zmienne',
-  tpl_vars_set: 'Zestaw zmiennych',
-  tpl_type: 'Typ szablonu',
-  required_variables: 'Wymagane zmienne',
-  to_create_template: 'Aby stworzyć szablon przejdź tutaj',
-  set_as_default_template: 'Ustaw jako domyślny szablon',
   json: 'JSON Metadata',
   json_tooltip:
     'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',

@@ -18,7 +18,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
         return (
           <Space>
             <Typography>
-              <FormattedMessage id="required_variables" />:{' '}
+              <FormattedMessage id="templates.required_variables" />:{' '}
               {requiredVars.map((token) => (
                 <Tag color={'red'} key={token}>
                   {token}
@@ -54,7 +54,10 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               name={name}
               label={<FormattedMessage id={name} />}
               rules={[
-                { required: field.required, message: `This ${name} is required` },
+                {
+                  required: field.required,
+                  message: <FormattedMessage id="templates.this_required" />,
+                },
                 {
                   validator: async (_, value) => {
                     return fieldValidator(value, field.required_variables);
@@ -79,9 +82,12 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               width="lg"
               label={<FormattedMessage id={name} />}
               name={name}
-              tooltip={'paste mjml template'}
+              tooltip={<FormattedMessage id={'templates.mjml_tooltip'} />}
               rules={[
-                { required: field.required, message: `This ${name} is required` },
+                {
+                  required: field.required,
+                  message: <FormattedMessage id="templates.this_required" />,
+                },
                 {
                   validator: async (_, value) => {
                     return fieldValidator(value, field.required_variables);
