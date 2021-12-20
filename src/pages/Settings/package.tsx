@@ -77,9 +77,7 @@ const TableList: React.FC<{
           id: 'menu.settings',
         })}
         rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
+        search={false}
         request={() => Promise.resolve({ data: entries, success: true })}
         columns={[
           ...columns,
@@ -107,9 +105,8 @@ const TableList: React.FC<{
           onVisibleChange={(value) => {
             return value === false && setSelectedEntry(undefined);
           }}
-          onFinish={async (value) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            value && onValueUpdated();
+          onFinish={async () => {
+            onValueUpdated();
           }}
         />
       )}
