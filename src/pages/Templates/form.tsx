@@ -201,7 +201,7 @@ export default () => {
             </ProForm.Item>
             {!isNew && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
-                <PreviewButton disabled={!saved} id={Number(template)} />
+                <PreviewButton disabled={!saved} id={Number(id)} />
               </ProForm.Item>
             )}
           </ProForm.Group>

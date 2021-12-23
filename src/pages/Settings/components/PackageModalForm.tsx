@@ -76,8 +76,12 @@ export const SettingsPackageModalForm: React.FC<{
           key: value.full_key,
           value: formatValue(form.getFieldsValue().value, type),
         });
-        onFinish(result.success === true);
-        return result.success;
+        if (result.success) {
+          onFinish(result.success === true);
+          return result.success;
+        }
+
+        return;
       }}
     >
       <ProForm.Group>

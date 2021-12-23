@@ -80,7 +80,7 @@ const TableList: React.FC<{
         search={{
           labelWidth: 120,
         }}
-        request={() => Promise.resolve({ data: entries, success: true })}
+        dataSource={entries}
         columns={[
           ...columns,
           {

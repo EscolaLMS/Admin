@@ -68,7 +68,8 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
             {renderRequiredVariables(field.required_variables)}
           </React.Fragment>
         );
-      case 'html':
+      // case 'html':
+      case 'mjml':
         return (
           <React.Fragment>
             <p>
