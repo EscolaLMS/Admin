@@ -14,8 +14,24 @@ import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
 
+/*
 const objectToKeysDict = (obj: Object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
+*/
+
+const variablesForChannel = (
+  variables: API.TemplateVariables,
+  channel: string,
+): Record<string, string> => {
+  return variables
+    ? Object.keys(variables).reduce((acc, curr) => {
+        if (variables[curr][channel]) {
+          return { ...acc, [curr]: curr };
+        }
+        return acc;
+      }, {})
+    : {};
+};
 
 // creates sections collections for post template
 const createEntries = (data: Record<string, string>) => {
@@ -53,6 +69,7 @@ type Tokens = {
 
 const channels = {
   email: 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
+  pdf: 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
 };
 
 export default () => {
@@ -161,7 +178,15 @@ export default () => {
   return (
     <PageContainer
       title={
-        isNew ? <FormattedMessage id="new_template" /> : <FormattedMessage id="new_template" />
+        isNew ? (
+          <span>
+            <FormattedMessage id="new" /> {template} <FormattedMessage id="template" />
+          </span>
+        ) : (
+          <span>
+            <FormattedMessage id="edit" /> {template} <FormattedMessage id="template" />
+          </span>
+        )
       }
     >
       <ProCard size="small">
@@ -189,7 +214,7 @@ export default () => {
               name="event"
               width="lg"
               label={<FormattedMessage id="event" />}
-              valueEnum={variables ? objectToKeysDict(variables) : {}}
+              valueEnum={variables ? variablesForChannel(variables, channels[template]) : {}}
               placeholder={intl.formatMessage({
                 id: 'event',
               })}
@@ -215,7 +240,7 @@ export default () => {
               const fieldItem = tokens.sections && tokens.sections[section];
 
               return (
-                <React.Fragment>
+                <React.Fragment key={section}>
                   {index === 0 && (
                     <React.Fragment>
                       <Divider>

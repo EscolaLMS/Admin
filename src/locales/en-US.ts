@@ -263,4 +263,16 @@ export default {
   introduction: 'Introduction',
   introduction_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
+  Push: 'Push',
+  templates: 'Templates',
+  SMS: 'SMS',
+  PDF: 'PDF',
+  'menu.Notifications': 'Notifications',
+  'menu.Roles': 'Roles',
+  'menu.Templates': 'Templates',
+  'menu.Permissions': 'Permissions',
+  new_template: 'new template',
+  template: 'template',
+  contentHtml: 'HTML Content',
+  contentMjml: 'Mjml Content',
 };

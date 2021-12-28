@@ -49,6 +49,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
         return (
           <React.Fragment>
             <ProFormText
+              readonly={field.readonly}
               shouldUpdate
               width="lg"
               name={name}
@@ -71,6 +72,33 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
       case 'html':
         return (
           <React.Fragment>
+            <ProFormTextArea
+              readonly={field.readonly}
+              shouldUpdate
+              width="lg"
+              label={<FormattedMessage id={name} />}
+              name={name}
+              tooltip={<FormattedMessage id={'templates.html_tooltip'} />}
+              rules={[
+                {
+                  required: field.required,
+                  message: <FormattedMessage id="templates.this_required" />,
+                },
+                {
+                  validator: async (_, value) => {
+                    return fieldValidator(value, field.required_variables);
+                  },
+                },
+              ]}
+            />
+
+            {renderRequiredVariables(field.required_variables)}
+          </React.Fragment>
+        );
+
+      case 'mjml':
+        return (
+          <React.Fragment>
             <p>
               <FormattedMessage id={'templates.to_create_template'} />{' '}
               <a target="_blank" href="https://mjml.io/try-it-live">
@@ -78,6 +106,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               </a>
             </p>
             <ProFormTextArea
+              readonly={field.readonly}
               shouldUpdate
               width="lg"
               label={<FormattedMessage id={name} />}
