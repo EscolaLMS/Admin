@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
 import { Space, Typography, Tag } from 'antd';
-import { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
+
 import './index.css';
+import FabricEditor from '../FabricEditor';
 
 interface FormWysiwygProps {
   value?: string;
@@ -67,6 +69,22 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               ]}
             />
             {renderRequiredVariables(field.required_variables)}
+          </React.Fragment>
+        );
+      case 'fabric.js':
+        return (
+          <React.Fragment>
+            <ProForm.Item shouldUpdate>
+              {(form) => {
+                return (
+                  <FabricEditor
+                    initialValue={form.getFieldValue(name)}
+                    onUpdate={(obj) => form.setFieldsValue({ [name]: JSON.stringify(obj) })}
+                  />
+                );
+              }}
+            </ProForm.Item>
+            <ProFormTextArea name={name} shouldUpdate width="lg" hidden />
           </React.Fragment>
         );
       case 'html':
