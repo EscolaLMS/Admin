@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FabricJSCanvas, useFabricJSEditor } from 'fabricjs-react';
 import { fabric } from 'fabric';
 import { debounce } from 'lodash';
+import PreviewPDF from './preview';
 
+import './index.css';
 /*
 
 EITHER Implement this 
@@ -19,10 +21,13 @@ fabric.Image.prototype.toObject = (function (toObject) {
 })(fabric.Image.prototype.toObject);
 */
 
-const FabricEditor: React.FC<{ onUpdate?: (obj: Object) => void; initialValue: any }> = ({
-  onUpdate,
-  initialValue,
-}) => {
+const FabricEditor: React.FC<{
+  onUpdate?: (obj: Object) => void;
+  initialValue: any;
+  width: number;
+  height: number;
+}> = ({ onUpdate, initialValue, width = 842, height = 592 }) => {
+  const [svg, setSvg] = useState<string>();
   const { editor, onReady } = useFabricJSEditor();
   const onAddElement = (element: string) => {
     if (editor && editor[element]) {
@@ -33,6 +38,27 @@ const FabricEditor: React.FC<{ onUpdate?: (obj: Object) => void; initialValue: a
   const onCanvasUpdate = () => {
     const obj = editor?.canvas.toJSON();
     return obj && onUpdate && onUpdate(obj);
+  };
+
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file: File | null = e.target.files && e.target.files[0];
+    // TODO implement max size here !
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        if (reader.result) {
+          fabric.Image.fromURL(reader.result?.toString(), (myImg) => {
+            //i create an extra var for to change some image properties
+            var img1 = myImg.set({ left: 0, top: 0 });
+            editor && editor.canvas.add(img1);
+          });
+        }
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+    }
   };
 
   useEffect(() => {
@@ -65,6 +91,10 @@ const FabricEditor: React.FC<{ onUpdate?: (obj: Object) => void; initialValue: a
     onReady(canvas);
   };
 
+  const onPreview = () => {
+    editor && setSvg(editor.canvas.toSVG());
+  };
+
   return (
     <div>
       <button onClick={() => onAddElement('addCircle')} type="button">
@@ -79,7 +109,14 @@ const FabricEditor: React.FC<{ onUpdate?: (obj: Object) => void; initialValue: a
       <button onClick={() => onAddElement('addText')} type="button">
         Add Text
       </button>
-      <FabricJSCanvas className="sample-canvas" onReady={onCanvasReady} />
+      <input type="file" accept="image/*" onChange={onFile} />
+      <div className="fakeA4" style={{ width, height }}>
+        <FabricJSCanvas className="fakeA4-canvas" onReady={onCanvasReady} />
+      </div>
+      <button onClick={onPreview} type="button">
+        Preview PDF without mock value
+      </button>
+      {svg && <PreviewPDF svgDef={svg} width={width} height={height} />}
     </div>
   );
 };
