@@ -45,6 +45,9 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
   );
 
   const renderProperFields = useCallback(() => {
+    if (field.readonly) {
+      return;
+    }
     switch (field.type) {
       case 'text':
       case 'url':
