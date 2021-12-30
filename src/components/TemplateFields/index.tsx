@@ -56,17 +56,21 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               width="lg"
               name={name}
               label={<FormattedMessage id={name} />}
-              rules={[
-                {
-                  required: field.required,
-                  message: <FormattedMessage id="templates.this_required" />,
-                },
-                {
-                  validator: async (_, value) => {
-                    return fieldValidator(value, field.required_variables);
-                  },
-                },
-              ]}
+              rules={
+                field.readonly
+                  ? undefined
+                  : [
+                      {
+                        required: field.required,
+                        message: <FormattedMessage id="templates.this_required" />,
+                      },
+                      {
+                        validator: async (_, value) => {
+                          return fieldValidator(value, field.required_variables);
+                        },
+                      },
+                    ]
+              }
             />
             {renderRequiredVariables(field.required_variables)}
           </React.Fragment>
@@ -97,17 +101,21 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               label={<FormattedMessage id={name} />}
               name={name}
               tooltip={<FormattedMessage id={'templates.html_tooltip'} />}
-              rules={[
-                {
-                  required: field.required,
-                  message: <FormattedMessage id="templates.this_required" />,
-                },
-                {
-                  validator: async (_, value) => {
-                    return fieldValidator(value, field.required_variables);
-                  },
-                },
-              ]}
+              rules={
+                field.readonly
+                  ? undefined
+                  : [
+                      {
+                        required: field.required,
+                        message: <FormattedMessage id="templates.this_required" />,
+                      },
+                      {
+                        validator: async (_, value) => {
+                          return fieldValidator(value, field.required_variables);
+                        },
+                      },
+                    ]
+              }
             />
 
             {renderRequiredVariables(field.required_variables)}
@@ -130,17 +138,21 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               label={<FormattedMessage id={name} />}
               name={name}
               tooltip={<FormattedMessage id={'templates.mjml_tooltip'} />}
-              rules={[
-                {
-                  required: field.required,
-                  message: <FormattedMessage id="templates.this_required" />,
-                },
-                {
-                  validator: async (_, value) => {
-                    return fieldValidator(value, field.required_variables);
-                  },
-                },
-              ]}
+              rules={
+                field.readonly
+                  ? undefined
+                  : [
+                      {
+                        required: field.required,
+                        message: <FormattedMessage id="templates.this_required" />,
+                      },
+                      {
+                        validator: async (_, value) => {
+                          return fieldValidator(value, field.required_variables);
+                        },
+                      },
+                    ]
+              }
             />
 
             {renderRequiredVariables(field.required_variables)}
