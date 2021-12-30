@@ -13,7 +13,7 @@ import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
-
+import { FabricPreview } from '@/components/FabricEditor/preview';
 /*
 const objectToKeysDict = (obj: Object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
@@ -74,7 +74,7 @@ const channels = {
 
 export default () => {
   const intl = useIntl();
-  const params = useParams<{ template: string; id: string }>();
+  const params = useParams<{ template: 'email' | 'pdf'; id: string }>();
 
   const { template, id } = params;
 
@@ -84,6 +84,7 @@ export default () => {
   const [form] = ProForm.useForm();
   const [variables, setVariables] = useState<API.TemplateVariables>();
   const [tokens, setTokens] = useState<Tokens | undefined>(undefined);
+  const [previewData, setPreviewData] = useState<any>();
 
   useEffect(() => {
     fetchVariables().then((response) => {
@@ -226,7 +227,16 @@ export default () => {
             </ProForm.Item>
             {!isNew && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
-                <PreviewButton disabled={!saved} id={Number(id)} />
+                <PreviewButton
+                  disabled={!saved}
+                  id={Number(id)}
+                  type={template}
+                  onPreviewData={(data) => {
+                    if (data && data.data && data.data.content) {
+                      setPreviewData(data.data.content);
+                    }
+                  }}
+                />
               </ProForm.Item>
             )}
           </ProForm.Group>
@@ -266,6 +276,9 @@ export default () => {
           <Divider />
         </ProForm>
       </ProCard>
+      {previewData && (
+        <FabricPreview initialValue={previewData} onRendered={() => setPreviewData(undefined)} />
+      )}
     </PageContainer>
   );
 };

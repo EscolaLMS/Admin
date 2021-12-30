@@ -6,26 +6,12 @@ import { debounce } from 'lodash';
 import PreviewPDF from './preview';
 
 import './index.css';
-/*
-
-EITHER Implement this 
-
-BUT BETTER is to pass images as urlencoded base64
-
-fabric.Image.prototype.toObject = (function (toObject) {
-  return function () {
-    return fabric.util.object.extend(toObject.call(this), {
-      src: this.toDataURL(),
-    });
-  };
-})(fabric.Image.prototype.toObject);
-*/
 
 const FabricEditor: React.FC<{
   onUpdate?: (obj: Object) => void;
   initialValue: any;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }> = ({ onUpdate, initialValue, width = 842, height = 592 }) => {
   const [svg, setSvg] = useState<string>();
   const { editor, onReady } = useFabricJSEditor();
@@ -50,8 +36,10 @@ const FabricEditor: React.FC<{
         if (reader.result) {
           fabric.Image.fromURL(reader.result?.toString(), (myImg) => {
             //i create an extra var for to change some image properties
-            var img1 = myImg.set({ left: 0, top: 0 });
-            editor && editor.canvas.add(img1);
+            const img1 = myImg.set({ left: 0, top: 0 });
+            if (editor) {
+              editor.canvas.add(img1);
+            }
           });
         }
       };
@@ -92,7 +80,7 @@ const FabricEditor: React.FC<{
   };
 
   const onPreview = () => {
-    editor && setSvg(editor.canvas.toSVG());
+    return editor && setSvg(editor.canvas.toSVG());
   };
 
   return (
