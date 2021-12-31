@@ -13,9 +13,25 @@ import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
-
+import { FabricPreview } from '@/components/FabricEditor/preview';
+/*
 const objectToKeysDict = (obj: Object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
+*/
+
+const variablesForChannel = (
+  variables: API.TemplateVariables,
+  channel: string,
+): Record<string, string> => {
+  return variables
+    ? Object.keys(variables).reduce((acc, curr) => {
+        if (variables[curr][channel]) {
+          return { ...acc, [curr]: curr };
+        }
+        return acc;
+      }, {})
+    : {};
+};
 
 // creates sections collections for post template
 const createEntries = (data: Record<string, string>) => {
@@ -53,11 +69,12 @@ type Tokens = {
 
 const channels = {
   email: 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
+  pdf: 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
 };
 
 export default () => {
   const intl = useIntl();
-  const params = useParams<{ template: string; id: string }>();
+  const params = useParams<{ template: 'email' | 'pdf'; id: string }>();
 
   const { template, id } = params;
 
@@ -67,6 +84,7 @@ export default () => {
   const [form] = ProForm.useForm();
   const [variables, setVariables] = useState<API.TemplateVariables>();
   const [tokens, setTokens] = useState<Tokens | undefined>(undefined);
+  const [previewData, setPreviewData] = useState<any>();
 
   useEffect(() => {
     fetchVariables().then((response) => {
@@ -139,7 +157,7 @@ export default () => {
       if (isNew) {
         response = await createTemplate(postData);
         if (response.success) {
-          history.push(`/templates/${response.data.id}`);
+          history.push(`/templates/${template}/${response.data.id}`);
         }
       } else {
         response = await updateTemplate(Number(id), postData);
@@ -161,7 +179,15 @@ export default () => {
   return (
     <PageContainer
       title={
-        isNew ? <FormattedMessage id="new_template" /> : <FormattedMessage id="new_template" />
+        isNew ? (
+          <span>
+            <FormattedMessage id="new" /> {template} <FormattedMessage id="template" />
+          </span>
+        ) : (
+          <span>
+            <FormattedMessage id="edit" /> {template} <FormattedMessage id="template" />
+          </span>
+        )
       }
     >
       <ProCard size="small">
@@ -189,7 +215,7 @@ export default () => {
               name="event"
               width="lg"
               label={<FormattedMessage id="event" />}
-              valueEnum={variables ? objectToKeysDict(variables) : {}}
+              valueEnum={variables ? variablesForChannel(variables, channels[template]) : {}}
               placeholder={intl.formatMessage({
                 id: 'event',
               })}
@@ -201,7 +227,16 @@ export default () => {
             </ProForm.Item>
             {!isNew && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
-                <PreviewButton disabled={!saved} id={Number(template)} />
+                <PreviewButton
+                  disabled={!saved}
+                  id={Number(id)}
+                  type={template}
+                  onPreviewData={(data) => {
+                    if (data && data.data && data.data.content) {
+                      setPreviewData(data.data.content);
+                    }
+                  }}
+                />
               </ProForm.Item>
             )}
           </ProForm.Group>
@@ -215,7 +250,7 @@ export default () => {
               const fieldItem = tokens.sections && tokens.sections[section];
 
               return (
-                <React.Fragment>
+                <React.Fragment key={section}>
                   {index === 0 && (
                     <React.Fragment>
                       <Divider>
@@ -241,6 +276,9 @@ export default () => {
           <Divider />
         </ProForm>
       </ProCard>
+      {previewData && (
+        <FabricPreview initialValue={previewData} onRendered={() => setPreviewData(undefined)} />
+      )}
     </PageContainer>
   );
 };
