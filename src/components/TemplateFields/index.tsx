@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
 import { Space, Typography, Tag } from 'antd';
-import { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
+
 import './index.css';
+import FabricEditor from '../FabricEditor';
 
 interface FormWysiwygProps {
   value?: string;
@@ -43,32 +45,86 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
   );
 
   const renderProperFields = useCallback(() => {
+    if (field.readonly) {
+      return;
+    }
     switch (field.type) {
       case 'text':
       case 'url':
         return (
           <React.Fragment>
             <ProFormText
+              readonly={field.readonly}
               shouldUpdate
               width="lg"
               name={name}
               label={<FormattedMessage id={name} />}
-              rules={[
-                {
-                  required: field.required,
-                  message: <FormattedMessage id="templates.this_required" />,
-                },
-                {
-                  validator: async (_, value) => {
-                    return fieldValidator(value, field.required_variables);
-                  },
-                },
-              ]}
+              rules={
+                field.readonly
+                  ? undefined
+                  : [
+                      {
+                        required: field.required,
+                        message: <FormattedMessage id="templates.this_required" />,
+                      },
+                      {
+                        validator: async (_, value) => {
+                          return fieldValidator(value, field.required_variables);
+                        },
+                      },
+                    ]
+              }
             />
             {renderRequiredVariables(field.required_variables)}
           </React.Fragment>
         );
-      // case 'html':
+      case 'fabric.js':
+        return (
+          <React.Fragment>
+            <ProForm.Item shouldUpdate>
+              {(form) => {
+                return (
+                  <FabricEditor
+                    initialValue={form.getFieldValue(name)}
+                    onUpdate={(obj) => form.setFieldsValue({ [name]: JSON.stringify(obj) })}
+                  />
+                );
+              }}
+            </ProForm.Item>
+            <ProFormTextArea name={name} shouldUpdate width="lg" hidden />
+          </React.Fragment>
+        );
+      case 'html':
+        return (
+          <React.Fragment>
+            <ProFormTextArea
+              readonly={field.readonly}
+              shouldUpdate
+              width="lg"
+              label={<FormattedMessage id={name} />}
+              name={name}
+              tooltip={<FormattedMessage id={'templates.html_tooltip'} />}
+              rules={
+                field.readonly
+                  ? undefined
+                  : [
+                      {
+                        required: field.required,
+                        message: <FormattedMessage id="templates.this_required" />,
+                      },
+                      {
+                        validator: async (_, value) => {
+                          return fieldValidator(value, field.required_variables);
+                        },
+                      },
+                    ]
+              }
+            />
+
+            {renderRequiredVariables(field.required_variables)}
+          </React.Fragment>
+        );
+
       case 'mjml':
         return (
           <React.Fragment>
@@ -79,22 +135,27 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
               </a>
             </p>
             <ProFormTextArea
+              readonly={field.readonly}
               shouldUpdate
               width="lg"
               label={<FormattedMessage id={name} />}
               name={name}
               tooltip={<FormattedMessage id={'templates.mjml_tooltip'} />}
-              rules={[
-                {
-                  required: field.required,
-                  message: <FormattedMessage id="templates.this_required" />,
-                },
-                {
-                  validator: async (_, value) => {
-                    return fieldValidator(value, field.required_variables);
-                  },
-                },
-              ]}
+              rules={
+                field.readonly
+                  ? undefined
+                  : [
+                      {
+                        required: field.required,
+                        message: <FormattedMessage id="templates.this_required" />,
+                      },
+                      {
+                        validator: async (_, value) => {
+                          return fieldValidator(value, field.required_variables);
+                        },
+                      },
+                    ]
+              }
             />
 
             {renderRequiredVariables(field.required_variables)}

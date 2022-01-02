@@ -4,17 +4,20 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 
 import Emails from './Emails/index';
+import Pdfs from './Pdfs/index';
 
 const Templates: React.FC = () => {
-  const params = useParams<{ tab?: string }>();
-  const { tab } = params;
+  const params = useParams<{ template?: string }>();
+  const { template } = params;
+
+  console.log('tab', template);
 
   return (
     <PageContainer>
       <ProCard
         tabs={{
           type: 'card',
-          activeKey: tab,
+          activeKey: template,
           onChange: (key) => history.push(`/templates/${key}`),
         }}
       >
@@ -22,16 +25,8 @@ const Templates: React.FC = () => {
           <Emails templateType={'email'} />
         </ProCard.TabPane>
 
-        <ProCard.TabPane
-          disabled
-          key={'PDF'}
-          tab={
-            <span>
-              <FormattedMessage id="PDF" />
-            </span>
-          }
-        >
-          PDF
+        <ProCard.TabPane key={'pdf'} tab={<FormattedMessage id="PDF" />}>
+          <Pdfs templateType={'pdf'} />
         </ProCard.TabPane>
         <ProCard.TabPane
           disabled

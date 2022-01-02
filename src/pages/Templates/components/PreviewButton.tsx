@@ -21,7 +21,12 @@ type PreviewButtonState =
       error: string;
     };
 
-const PreviewButton: React.FC<{ disabled: boolean; id: number }> = ({ disabled = false, id }) => {
+const PreviewButton: React.FC<{
+  type: 'email' | 'pdf';
+  disabled: boolean;
+  id: number;
+  onPreviewData?: (data: any) => void;
+}> = ({ disabled = false, id, onPreviewData }) => {
   const [state, setState] = useState<PreviewButtonState>({ state: 'ready' });
 
   const onClick = useCallback(() => {
@@ -29,6 +34,9 @@ const PreviewButton: React.FC<{ disabled: boolean; id: number }> = ({ disabled =
     previewTemplate(id)
       .then((data) => {
         if (data.success) {
+          if (onPreviewData) {
+            onPreviewData(data.data);
+          }
           if (data.data.sent && data.data.to) {
             setState({
               state: 'loaded',

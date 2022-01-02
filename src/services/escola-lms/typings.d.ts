@@ -487,6 +487,7 @@ declare namespace API {
     required_variables: string[];
     required: boolean;
     default_content: string;
+    readonly: boolean;
   };
 
   type TemplateVariable = string;
