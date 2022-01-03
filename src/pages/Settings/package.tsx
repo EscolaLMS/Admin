@@ -77,8 +77,10 @@ const TableList: React.FC<{
           id: 'menu.settings',
         })}
         rowKey="key"
-        search={false}
-        request={() => Promise.resolve({ data: entries, success: true })}
+        search={{
+          labelWidth: 120,
+        }}
+        dataSource={entries}
         columns={[
           ...columns,
           {

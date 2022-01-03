@@ -47,7 +47,7 @@ const objectFlatten = (data: Record<string, string>[]): Record<string, string> =
   Object.assign({}, ...data);
 
 // helper function that throws away unnecessary keys to create a sections collection
-const filterNotAllowedKeys = (values: object) => {
+const filterNotAllowedKeys = (values: Record<string, string>) => {
   const notAllowedKeys = ['name', 'event', 'default'];
   return Object.keys(values)
     .filter((key) => !notAllowedKeys.includes(key))

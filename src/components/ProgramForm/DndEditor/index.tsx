@@ -81,7 +81,7 @@ export const DndEditorContainer: FC<{
     },
     [cards, state.id],
   );
-  console.log({ cards });
+
   const onDeleteCart = useCallback(
     (item: API.TopicNew | API.TopicNotEmpty) => {
       setCards((prevCards) => prevCards.filter((el) => el.id !== item.id));

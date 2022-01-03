@@ -57,7 +57,7 @@ export default () => {
   if (!data) {
     return <Spin />;
   }
-  console.log({ data });
+
   return (
     <PageContainer
       title={<FormattedMessage id="my_profile" />}
