@@ -262,3 +262,25 @@ export async function exportCourse(id: number, options?: { [key: string]: any })
     ...(options || {}),
   });
 }
+
+/**  POST /api/admin/lessons/:id/clone */
+export async function cloneLesson(id: number, options?: { [key: string]: any }) {
+  return request<API.CourseAccessList>(`/api/admin/lessons/${id}/clone`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/admin/topics/:id/clone */
+export async function cloneTopic(id: number, options?: { [key: string]: any }) {
+  return request<API.CourseAccessList>(`/api/admin/topics/${id}/clone`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}

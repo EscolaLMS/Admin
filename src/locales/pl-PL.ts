@@ -219,6 +219,8 @@ export default {
   save: 'Zapisz',
   sort_element_up: 'Sortuj ten element w górę',
   sort_element_down: 'Sortuj ten element w dół',
+  copy_lesson: 'Kopiuj Lekcje',
+  copy_topic: 'Kopiuj Temat',
   'h5p.description.header': 'Informacje dot. H5P',
   'h5p.description.first': 'Aby przypisać interaktywny element HTML5 do tematu lekcji, musisz',
   'h5p.description.second': ' najpierw go utworzyć ',

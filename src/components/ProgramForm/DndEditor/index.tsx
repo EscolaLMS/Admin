@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, useEffect, useContext } from 'react';
+import { useState, useCallback, useEffect, useContext } from 'react';
 import update from 'immutability-helper';
 import { Context } from '@/components/ProgramForm/Context';
 import { Modal } from 'antd';
@@ -29,14 +29,15 @@ export interface ContainerState {
   cards: Item[];
 }
 
-export const DndEditorContainer: FC<{
+export const DndEditorContainer: React.FC<{
   courseId?: number;
   courseLessons: API.Lesson[];
   state: API.Lesson;
   setState: (state: API.Lesson) => void;
   topicList: (API.TopicNew | API.TopicNotEmpty)[];
 }> = ({ courseId, courseLessons, state, topicList }) => {
-  const { id, deleteTopic, sortTopic, updateTopicsOrder, addNewTopic } = useContext(Context);
+  const { id, deleteTopic, sortTopic, updateTopicsOrder, addNewTopic, cloneTopic } =
+    useContext(Context);
 
   const [cards, setCards] = useState<API.TopicNewOrNotEmpty[]>([]);
 
@@ -97,6 +98,13 @@ export const DndEditorContainer: FC<{
     [cards, state.id],
   );
 
+  const onCloneCart = useCallback(
+    (topic: API.TopicNotEmpty | API.TopicNew) => {
+      return topic.id && cloneTopic && cloneTopic(topic.id);
+    },
+    [cards, state.id],
+  );
+
   const renderCard = (card: API.TopicNew | API.TopicNotEmpty, index: number) => {
     return (
       <DndCard
@@ -106,6 +114,7 @@ export const DndEditorContainer: FC<{
         topic={card}
         moveCard={moveCard}
         onDelete={onDeleteCart}
+        onCloneCart={onCloneCart}
         onEdit={onEditCart}
         onEnd={updateOrder}
       />

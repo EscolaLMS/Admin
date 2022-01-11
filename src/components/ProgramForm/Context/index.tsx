@@ -10,6 +10,8 @@ import {
   removeLesson as apiRemoveLesson,
   removeTopic as apiRemoveTopic,
   sort,
+  cloneLesson as apiCloneLesson,
+  cloneTopic as apiCloneTopic,
 } from '@/services/escola-lms/course';
 
 import type { UploadChangeParam } from 'antd/lib/upload';
@@ -32,6 +34,8 @@ type ProgramContext = {
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
   updateTopicsOrder?: (lesson_id: number) => void;
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
+  cloneTopic?: (topic_id: number) => void;
+  cloneLesson?: (lesson_id: number) => void;
 };
 
 export const Context = React.createContext<ProgramContext>({});
@@ -217,7 +221,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           : [],
       }));
     },
-    [state, id],
+    [state],
   );
 
   const updateTopicsOrder = useCallback(
@@ -565,6 +569,47 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     }));
   };
 
+  const cloneTopic = useCallback(
+    (topic_id: number) => {
+      return apiCloneTopic(topic_id).then((response) => {
+        if (response.success) {
+          message.success(response.message);
+          const lesson_id = getLessonIdByTopicId(topic_id);
+
+          setState((prevState) => ({
+            ...prevState,
+            lessons: prevState
+              ? prevState.lessons?.map((lesson) => {
+                  if (lesson.id === lesson_id) {
+                    const topics = lesson.topics || [];
+                    return {
+                      ...lesson,
+                      topics: [...topics, response.data],
+                    };
+                  }
+                  return lesson;
+                })
+              : [],
+          }));
+        }
+      });
+    },
+    [state, getLessonIdByTopicId],
+  );
+
+  const cloneLesson = useCallback((lesson_id: number) => {
+    return apiCloneLesson(lesson_id).then((response) => {
+      if (response.success) {
+        message.success(response.message);
+
+        setState((prevState) => ({
+          ...prevState,
+          lessons: prevState ? [...prevState.lessons, response.data] : [],
+        }));
+      }
+    });
+  }, []);
+
   const value = {
     state,
     h5ps,
@@ -583,6 +628,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     sortTopic,
     updateTopicsOrder,
     onTopicUploaded,
+    cloneTopic,
+    cloneLesson,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

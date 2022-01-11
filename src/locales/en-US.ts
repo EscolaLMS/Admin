@@ -197,6 +197,8 @@ export default {
   drag_here: 'Drag a box here',
   sort_element_up: 'Sort this element up',
   sort_element_down: 'Sort this element down',
+  copy_lesson: 'Copy Lesson',
+  copy_topic: 'Copy Topic',
   'h5p.description.header': 'H5P Info',
   'h5p.description.first': 'To assign Interactive HTML5 element to lesson topic you need to ',
   'h5p.description.second': 'create it first',
