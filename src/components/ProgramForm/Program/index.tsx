@@ -1,15 +1,15 @@
 import React, { useState, useContext, useCallback } from 'react';
-import { Collapse, Button, Divider, Tag, Spin } from 'antd';
+import { Collapse, Button, Divider, Tag, Spin, Tooltip } from 'antd';
 import Lesson from '@/components/ProgramForm/Lesson';
 import { Context } from '@/components/ProgramForm/Context';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, CopyOutlined } from '@ant-design/icons';
 import SortingButtons from '@/components/sortingbuttons';
 import { getLocale, FormattedMessage } from 'umi';
 
 const { Panel } = Collapse;
 
 export const Curriculum = () => {
-  const { state, addNewLesson, sortLesson } = useContext(Context);
+  const { state, addNewLesson, sortLesson, cloneLesson } = useContext(Context);
 
   const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
 
@@ -90,12 +90,27 @@ export const Curriculum = () => {
                     lesson.isNew ? (
                       <React.Fragment />
                     ) : arr.length > 1 ? (
-                      <SortingButtons
-                        // eslint-disable-next-line no-nested-ternary
-                        mode={i === 0 ? 'first' : i === arr.length - 1 ? 'last' : 'middle'}
-                        onUp={() => onSort(lesson, true)}
-                        onDown={() => onSort(lesson, false)}
-                      />
+                      <React.Fragment>
+                        <SortingButtons
+                          // eslint-disable-next-line no-nested-ternary
+                          mode={i === 0 ? 'first' : i === arr.length - 1 ? 'last' : 'middle'}
+                          onUp={() => onSort(lesson, true)}
+                          onDown={() => onSort(lesson, false)}
+                        />
+                        <Divider type="vertical" />
+                        <Tooltip title={<FormattedMessage id="copy_lesson" />}>
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              return lesson.id && cloneLesson && cloneLesson(lesson.id);
+                            }}
+                            size="small"
+                          >
+                            <CopyOutlined />
+                          </Button>
+                        </Tooltip>
+                      </React.Fragment>
                     ) : (
                       <React.Fragment />
                     )

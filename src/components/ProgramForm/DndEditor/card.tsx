@@ -1,12 +1,13 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { ItemTypes } from './itemtypes';
 import { XYCoord } from 'dnd-core';
 import { Popconfirm } from 'antd';
-
+import { CopyOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
+import Tooltip from 'antd/lib/tooltip';
 import TopicHeader from '../Topic/header';
 
 export interface CardProps {
@@ -16,6 +17,7 @@ export interface CardProps {
   moveCard: (dragIndex: number, hoverIndex: number) => void;
   onEdit: (topic: API.TopicNotEmpty | API.TopicNew) => void;
   onDelete: (topic: API.TopicNotEmpty | API.TopicNew) => void;
+  onCloneCart: (topic: API.TopicNotEmpty | API.TopicNew) => void;
   onEnd: () => void;
 }
 
@@ -25,13 +27,21 @@ interface DragItem {
   type: string;
 }
 
-const TopicButtons: React.FC<{ onDelete: () => void; onEdit: () => void; loading: boolean }> = ({
-  onDelete,
-  onEdit,
-  loading,
-}) => {
+const TopicButtons: React.FC<{
+  onDelete: () => void;
+  onCloneCart: () => void;
+  onEdit: () => void;
+  loading: boolean;
+}> = ({ onDelete, onCloneCart, onEdit, loading }) => {
   return (
     <div className="dnd-editor-card-options">
+      <Tooltip title={<FormattedMessage id="copy_topic" />}>
+        <Button onClick={onCloneCart} size="small" loading={loading}>
+          <CopyOutlined />
+        </Button>
+      </Tooltip>
+
+      <Divider type="vertical" />
       <Button onClick={() => onEdit()} loading={loading} size="small">
         <FormattedMessage id="edit" />
       </Button>
@@ -50,7 +60,16 @@ const TopicButtons: React.FC<{ onDelete: () => void; onEdit: () => void; loading
   );
 };
 
-export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onDelete, onEnd }) => {
+export const DndCard: React.FC<CardProps> = ({
+  id,
+  topic,
+  index,
+  moveCard,
+  onEdit,
+  onDelete,
+  onCloneCart,
+  onEnd,
+}) => {
   const [showOptions, setShowOptions] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -141,6 +160,7 @@ export const DndCard: FC<CardProps> = ({ id, topic, index, moveCard, onEdit, onD
       <TopicHeader topic={topic as API.Topic} />
       {showOptions && (
         <TopicButtons
+          onCloneCart={() => onCloneCart(topic)}
           onDelete={() => onDelete(topic)}
           onEdit={() => onEdit(topic)}
           loading={false}
