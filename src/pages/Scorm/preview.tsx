@@ -5,6 +5,7 @@ import { Divider, Row, Col } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
 import './preview.css';
+import ScormPreview from '@/components/Scorm/preview';
 
 const H5PPreviewPage: React.FC = () => {
   const intl = useIntl();
@@ -38,10 +39,7 @@ const H5PPreviewPage: React.FC = () => {
         <Row>
           <Col span={24}>
             <Divider />
-            <iframe
-              className="scorm-preview-player"
-              src={`${REACT_APP_API_URL}/api/scorm/play/${uuid}`}
-            />
+            {uuid && <ScormPreview uuid={uuid} />}
           </Col>
         </Row>
       </ProCard>

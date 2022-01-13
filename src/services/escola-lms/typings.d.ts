@@ -11,6 +11,7 @@ declare namespace API {
     H5P = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\H5P',
     Image = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Image',
     PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
+    SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
   }
 
   enum EventTypes {
@@ -62,11 +63,13 @@ declare namespace API {
     categories?: Category[] | (number | string)[];
     tags?: Tag[] | string[];
     scorm_id?: number;
+    scorm_sco_id?: number;
     active_from?: string;
     active_to?: string;
     hours_to_complete?: number;
     purchasable?: boolean;
     boolean?: boolean;
+    target_group?: string;
   };
 
   type PaginatedList<Model> = {
@@ -332,6 +335,11 @@ declare namespace API {
     topicable: TopicableBase;
   };
 
+  type TopicScorm = TopicBase & {
+    topicable_type: TopicType.SCORM;
+    topicable: TopicableBase;
+  };
+
   type TopicUnselected = TopicBase & {
     topicable_type?: TopicType.Unselected;
     topicable?: never;
@@ -345,7 +353,8 @@ declare namespace API {
     | TopicVideo
     | TopicH5P
     | TopicImage
-    | TopicPDF;
+    | TopicPDF
+    | TopicScorm;
 
   type TopicNotEmpty =
     | TopicRichText
@@ -354,7 +363,8 @@ declare namespace API {
     | TopicVideo
     | TopicH5P
     | TopicImage
-    | TopicPDF;
+    | TopicPDF
+    | TopicScorm;
 
   type CourseProgram = Course & {
     lessons: Lesson[];
@@ -524,22 +534,22 @@ declare namespace API {
     id: number;
     scorm_id: number;
     uuid: string;
-    sco_parent_id: number;
+    sco_parent_id?: number;
     entry_url: string;
     identifier: string;
     title: string;
-    visible: 1 | 0;
+    visible?: 1 | 0;
     sco_parameters: any;
-    launch_data: any;
-    max_time_allowed: number;
-    time_limit_action: number;
-    block: number;
-    score_int: number;
-    score_decimal: number;
-    completion_threshold: number;
-    prerequisites: any;
-    created_at: string;
-    updated_at: string;
+    launch_data?: any;
+    max_time_allowed?: number;
+    time_limit_action?: number;
+    block?: number;
+    score_int?: number;
+    score_decimal?: number;
+    completion_threshold?: number;
+    prerequisites?: any;
+    created_at?: string;
+    updated_at?: string;
   };
 
   type SCORMUPloaded = {
@@ -547,6 +557,8 @@ declare namespace API {
   };
 
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
+
+  type ScormScosList = DefaultResponse<SCORM_SCO>;
 
   type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
   type SettingBase = {

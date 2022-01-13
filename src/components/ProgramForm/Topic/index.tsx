@@ -17,6 +17,7 @@ import Resources from './resources';
 import { getTypeName } from './media';
 
 import {
+  FundOutlined,
   FileTextOutlined,
   FilePdfOutlined,
   FileImageOutlined,
@@ -25,10 +26,13 @@ import {
   YoutubeOutlined,
   InteractionOutlined,
 } from '@ant-design/icons';
+import ScormSelector from '@/components/Scorm';
 
 export const getTypeIcon = (type: string | undefined) => {
   if (type) {
     switch (type) {
+      case 'ScormSco':
+        return <FundOutlined />;
       case 'PDF':
         return <FilePdfOutlined />;
       case 'Audio':
@@ -235,6 +239,9 @@ export const Topic: React.FC<{
         )}
         {type && type === TopicType.H5P && (
           <H5PForm id={state.value} onChange={(value) => updateValue('value', value)} />
+        )}
+        {type && type === TopicType.SCORM && (
+          <ScormSelector onChange={(value) => updateValue('value', value)} />
         )}
       </Card>
     </React.Fragment>

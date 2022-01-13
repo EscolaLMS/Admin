@@ -167,6 +167,7 @@ export default {
   hours_to_complete: 'Hours to complete',
   purchasable: 'Purchasable',
   findable: 'Findable',
+  target_group: 'Target group',
   author_tutor: 'Author / Tutor',
   summary: 'Summary',
   summary_tooltip:

@@ -11,6 +11,7 @@ export enum TopicType {
   H5P = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\H5P',
   Image = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Image',
   PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
+  SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
 }
 
 /**  GET /api/courses */
