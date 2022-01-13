@@ -1,0 +1,13 @@
+.input-color {}
+
+.input-color__container {
+  max-width: 100px;
+}
+
+.input-color__opacity,
+.input-color__color {
+  width: 100%;
+}
+
+.input-color__color {}
+.input-color__opacity {}

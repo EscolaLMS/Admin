@@ -268,7 +268,7 @@ export default () => {
                     </React.Fragment>
                   )}
                   <Divider />
-                  <TemplateFields name={section} field={fieldItem} />
+                  <TemplateFields name={section} field={fieldItem} variables={tokens.variables} />
                 </React.Fragment>
               );
             })

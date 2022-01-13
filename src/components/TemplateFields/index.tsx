@@ -11,9 +11,10 @@ interface FormWysiwygProps {
   onChange?: (value: string) => void;
   name: string;
   field: API.TemplateField;
+  variables?: string[];
 }
 
-export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
+export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variables = [] }) => {
   const renderRequiredVariables = useCallback(
     (requiredVars: string[]) => {
       if (!!requiredVars.length) {
@@ -86,6 +87,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field }) => {
                 return (
                   <FabricEditor
                     initialValue={form.getFieldValue(name)}
+                    variables={variables}
                     onUpdate={(obj) => form.setFieldsValue({ [name]: JSON.stringify(obj) })}
                   />
                 );
