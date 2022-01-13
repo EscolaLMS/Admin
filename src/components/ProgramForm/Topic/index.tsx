@@ -241,7 +241,10 @@ export const Topic: React.FC<{
           <H5PForm id={state.value} onChange={(value) => updateValue('value', value)} />
         )}
         {type && type === TopicType.SCORM && (
-          <ScormSelector onChange={(value) => updateValue('value', value)} />
+          <ScormSelector
+            value={Number(state.value)}
+            onChange={(value) => updateValue('value', value)}
+          />
         )}
       </Card>
     </React.Fragment>
