@@ -1,4 +1,5 @@
-import { isString } from 'lodash';
+import { isNaN, isString } from 'lodash';
+import type { fabric } from 'fabric';
 
 const RGB_PATTERN =
   /^rgb\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){2}|((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s)){2})((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]))|((((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){2}|((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){2})(([1-9]?\d(\.\d+)?)|100|(\.\d+))%))\)$/i;
@@ -33,7 +34,7 @@ export function rgbToHex(rgb: unknown): string | unknown {
     // @ts-ignore
     const converted =
       color.indexOf('%') > -1
-        ? Math.round((color.substr(0, color.length - 1) / 100) * 255).toString(16)
+        ? Math.round((+color.substr(0, color.length - 1) / 100) * 255).toString(16)
         : (+color).toString(16);
     return converted.length === 1 ? '0' + converted : converted;
   };
@@ -84,3 +85,28 @@ export function rgbOrRgbaToHex(color: unknown = ''): string | unknown {
   if (isRgba(color)) return rgbaToHexa(color);
   return color;
 }
+
+export const hasEditableSelection = (
+  fabricObject: any,
+): fabricObject is fabric.IText | fabric.Textbox => {
+  return !!fabricObject.getSelectionStyles && !!fabricObject.isEditing;
+};
+
+export const toBoolean = (value: unknown): boolean => {
+  if (isString(value)) {
+    if (value === 'false') return false;
+    if (value === 'true') return true;
+    if (!isNaN(value)) return !!+value;
+  }
+  return !!value;
+};
+
+export const getColor = (color: unknown, defaultValue: string = '#ffffff00'): string => {
+  const value = rgbOrRgbaToHex(color);
+  if (!isString(value)) return defaultValue;
+  return value === '' ? defaultValue : value;
+};
+
+export const isTextType = (type?: string): boolean => {
+  return type === 'text' || type === 'i-text' || type === 'textbox';
+};

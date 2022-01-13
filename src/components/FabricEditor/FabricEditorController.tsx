@@ -1,65 +1,15 @@
 import type { FabricJSEditor } from 'fabricjs-react';
 import { fabric } from 'fabric';
 import { isNaN, isNumber, isString } from 'lodash';
-import { rgbOrRgbaToHex } from '@/components/FabricEditor/utils';
-
-// type FabricObject = fabric.Object
-export type FabricObjectKey = keyof fabric.Object;
-
-// function capitalize(string: string) {
-//   return string.charAt(0).toUpperCase() + string.slice(1);
-// }
-
-const hasEditableSelection = (fabricObject: any): fabricObject is fabric.IText | fabric.Textbox => {
-  return !!fabricObject.getSelectionStyles && !!fabricObject.isEditing;
-};
-
-const toBoolean = (value: unknown): boolean => {
-  if (isString(value)) {
-    if (value === 'false') return false;
-    if (value === 'true') return true;
-    if (!isNaN(value)) return !!+value;
-  }
-  return !!value;
-};
-
-const getColor = (color: unknown, defaultValue: string = '#ffffff00'): string => {
-  const value = rgbOrRgbaToHex(color);
-  if (!isString(value)) return defaultValue;
-  return value === '' ? defaultValue : value;
-};
-
-const isTextType = (type?: string): boolean => {
-  return type === 'text' || type === 'i-text' || type === 'textbox';
-};
-
-const propsAllowedInSelections = [
-  // 'opacity',
-  // 'fill',
-  // 'stroke',
-  // 'strokeWidth',
-  // 'fontSize',
-  // 'lineHeight',
-  'charSpacing',
-
-  'fontFamily',
-  'fontSize',
-  'lineHeight',
-  'textAlign',
-  'bold',
-  'fontWeight',
-  'italic',
-  'fontStyle',
-  'underline',
-  'linethrough',
-  'overline',
-  'fill',
-  'textBackgroundColor',
-  'backgroundColor',
-  'opacity',
-  'stroke',
-  'strokeWidth',
-];
+import {
+  isTextType,
+  rgbOrRgbaToHex,
+  hasEditableSelection,
+  toBoolean,
+  getColor,
+} from '@/components/FabricEditor/utils';
+import { PROPS_ALLOWED_IN_SELECTIONS } from '@/components/FabricEditor/consts';
+import type { ActiveElementFieldName } from '@/components/FabricEditor/types';
 
 export default class FabricEditorController {
   editor: FabricJSEditor;
@@ -78,13 +28,11 @@ export default class FabricEditorController {
 
   addIText(text: string = 'sample itext') {
     const object = new fabric.IText(text);
-    // object.set({ text })
     this.canvas.add(object);
   }
 
   addTextbox(text: string = 'sample itextbox') {
     const object = new fabric.Textbox(text);
-    // object.set({ text })
     this.canvas.add(object);
   }
 
@@ -94,7 +42,7 @@ export default class FabricEditorController {
       isTextType(this.activeObject.type) &&
       hasEditableSelection(this.activeObject)
     ) {
-      const text = this.getForActive('text');
+      const text = this.getForActive('text') as string;
       const index = (this.activeObject as fabric.IText).selectionEnd || text.length - 1;
       this.setForActive('text', `${text.substring(0, index)} ${variable} ${text.substring(index)}`);
       return;
@@ -156,7 +104,7 @@ export default class FabricEditorController {
     this.canvas.requestRenderAll();
   }
 
-  getForActive(propName: FabricObjectKey | string) {
+  getForActive(propName: ActiveElementFieldName) {
     switch (propName) {
       case 'opacity':
         return this.getOpacity();
@@ -180,15 +128,13 @@ export default class FabricEditorController {
       case 'strokeWidth':
       case 'fontSize':
       case 'lineHeight':
-      case 'charSpacing':
-      case 'text':
-      case 'splitByGrapheme':
+        return this.getProp(propName) as number;
       default:
-        return this.getProp(propName);
+        return this.getProp(propName) as never;
     }
   }
 
-  setForActive(propName: FabricObjectKey | string, value: unknown) {
+  setForActive(propName: ActiveElementFieldName, value: unknown) {
     switch (propName) {
       case 'opacity':
         return this.setOpacity(value);
@@ -213,38 +159,33 @@ export default class FabricEditorController {
       case 'linethrough':
       case 'overline':
         return this.setBoolean(propName, value);
-      case 'charSpacing':
-      case 'text':
-      case 'splitByGrapheme':
       default:
         return this.setProp(propName, value);
     }
   }
 
-  // TODO: description
-  private getProp(styleName: string, object = this.activeObject) {
+  private getProp(styleName: string, object = this.activeObject): string | number | boolean {
     if (!object) return '';
     if (
-      !propsAllowedInSelections.includes(styleName) ||
+      !PROPS_ALLOWED_IN_SELECTIONS.includes(styleName) ||
       !hasEditableSelection(object) ||
       !object.getSelectionStyles().length
     )
       return object[styleName] ?? '';
 
-    return object.getSelectionStyles()?.[0]?.[styleName] ?? object[styleName] ?? '';
+    return object.getSelectionStyles()?.[0]?.[styleName] ?? object[styleName] ?? ''; // get from selected text
   }
 
-  // TODO: description
   private setProp(styleName: string, value: unknown, object = this.activeObject) {
     if (!object) return;
     if (
-      !propsAllowedInSelections.includes(styleName) ||
+      !PROPS_ALLOWED_IN_SELECTIONS.includes(styleName) ||
       !hasEditableSelection(object) ||
       !object.getSelectionStyles().length
     ) {
-      object.set(styleName as FabricObjectKey, value);
+      object.set(styleName as keyof fabric.Object, value);
     } else {
-      object.setSelectionStyles({ [styleName]: value });
+      object.setSelectionStyles({ [styleName]: value }); // set from selected text
     }
 
     this.canvas.requestRenderAll();
@@ -279,7 +220,7 @@ export default class FabricEditorController {
     console.error(`${value} is not ${propName} value`);
   }
 
-  private getColorProp(propName: string, defaultValue?: string) {
+  private getColorProp(propName: string, defaultValue?: string): string {
     return getColor(this.getProp(propName), defaultValue);
   }
 
@@ -287,8 +228,8 @@ export default class FabricEditorController {
     return this.setProp(propName, rgbOrRgbaToHex(value));
   }
 
-  private getOpacity() {
-    return this.getProp('opacity') * 100;
+  private getOpacity(): number {
+    return +this.getProp('opacity') * 100;
   }
 
   private setOpacity(value: unknown = '100') {
@@ -298,13 +239,13 @@ export default class FabricEditorController {
     console.error(`${value} is not opacity value`);
   }
 
-  private getTextAlign() {
-    const ta = this.getProp('textAlign').toLowerCase();
+  private getTextAlign(): string {
+    const ta = (this.getProp('textAlign') as string).toLowerCase();
     return ta === '' ? 'left' : ta;
   }
 
-  private getFontFamily() {
-    return this.getProp('fontFamily').toLowerCase();
+  private getFontFamily(): string {
+    return (this.getProp('fontFamily') as string).toLowerCase();
   }
 
   private getBold(): boolean {

@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
+import { Button, Col, Row } from 'antd';
 import { FabricJSCanvas, useFabricJSEditor } from 'fabricjs-react';
 import type { fabric } from 'fabric';
 import { debounce } from 'lodash';
 import PreviewPDF from './preview';
 
 import FabricEditorController from '@/components/FabricEditor/FabricEditorController';
-import FabricEditorForm from '@/components/FabricEditor/FabricEditorForm';
+import FabricEditorActiveElementForm from '@/components/FabricEditor/forms/FabricEditorActiveElementForm';
+import FabricEditorBasicForm from '@/components/FabricEditor/forms/FabricEditorBasicForm';
+
 import './index.css';
 
 const FabricEditor: React.FC<{
@@ -25,7 +27,6 @@ const FabricEditor: React.FC<{
   );
 
   const onCanvasUpdate = () => {
-    console.log('onCanvasUpdate');
     const obj = editor?.canvas.toJSON();
     return obj && onUpdate && onUpdate(obj);
   };
@@ -35,37 +36,14 @@ const FabricEditor: React.FC<{
 
     if (editor && editor.canvas) {
       editor.canvas.on('after:render', onUpdateDebounced);
-      //
-      // editor.canvas.on('object:added', onUpdateDebounced);
-      // editor.canvas.on('object:removed', onUpdateDebounced);
-      // editor.canvas.on('object:modified', onUpdateDebounced);
-      // editor.canvas.on('path:created', onUpdateDebounced);
-      // editor.canvas.on('selection:updated', onUpdateDebounced);
-      // editor.canvas.on('selection:cleared', onUpdateDebounced);
-
-      // editor.canvas.on('event:changed', eventChanged);
-      // editor.canvas.on('selection:changed', eventChanged);
-      // editor.canvas.on('editing:entered', eventChanged);
-      // editor.canvas.on('editing:exited', eventChanged);
     }
 
     return () => {
       if (editor && editor.canvas) {
         editor.canvas.off('after:render', onUpdateDebounced);
-
-        // editor.canvas.off('object:added', onUpdateDebounced);
-        // editor.canvas.off('object:removed', onUpdateDebounced);
-        // editor.canvas.off('object:modified', onUpdateDebounced);
-        // editor.canvas.off('path:created', onUpdateDebounced);
-        // editor.canvas.off('selection:updated', onUpdateDebounced);
-        // editor.canvas.off('selection:cleared', onUpdateDebounced);
-
-        // editor.canvas.off('event:changed', eventChanged);
-        // editor.canvas.off('selection:changed', eventChanged);
-        // editor.canvas.off('editing:entered', eventChanged);
-        // editor.canvas.off('editing:exited', eventChanged);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor]);
 
   const onCanvasReady = (canvas: fabric.Canvas) => {
@@ -85,30 +63,36 @@ const FabricEditor: React.FC<{
   };
 
   return (
-    <>
-      <div>
-        <div style={{ display: 'flex' }}>
-          <div className="fakeA4" style={{ width, height }}>
-            <FabricJSCanvas className="fakeA4-canvas" onReady={onCanvasReady} />
-          </div>
-
+    <div className="fabric-editor">
+      <Row className="fabric-editor__top" gutter={50} justify="space-between">
+        <Col>
           {editorController?.canvas && (
-            <div style={{ maxWidth: '40%' }}>
-              <FabricEditorForm
-                editorController={editorController}
-                activeObject={editorController.activeObject}
-                variables={variables}
-              />
-            </div>
+            <FabricEditorBasicForm editorController={editorController} variables={variables} />
           )}
-        </div>
+        </Col>
 
-        <button onClick={onPreview} type="button">
-          Preview PDF without mock value
-        </button>
-        {svg && <PreviewPDF svgDef={svg} width={width} height={height} />}
+        <Col>
+          <Button onClick={onPreview} htmlType="button">
+            Preview PDF without mock value
+          </Button>
+        </Col>
+      </Row>
+
+      <div className="fabric-editor__canvas fakeA4" style={{ width, height }}>
+        <FabricJSCanvas className="fakeA4-canvas" onReady={onCanvasReady} />
       </div>
-    </>
+
+      <div className="fabric-editor__bottom">
+        {editorController?.canvas && (
+          <FabricEditorActiveElementForm
+            editorController={editorController}
+            activeObject={editorController.activeObject}
+          />
+        )}
+      </div>
+
+      {svg && <PreviewPDF svgDef={svg} width={width} height={height} />}
+    </div>
   );
 };
 
