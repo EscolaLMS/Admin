@@ -182,6 +182,7 @@ export default {
   hours_to_complete: 'Godziny do ukończenia',
   purchasable: 'Do kupienia',
   findable: 'Możliwy do wyszukania',
+  target_group: 'Grupa docelowa',
   author_tutor: 'Autor / Nauczyciel',
   summary: 'Podsumowanie',
   summary_tooltip:

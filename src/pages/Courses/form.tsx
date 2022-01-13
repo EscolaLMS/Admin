@@ -63,7 +63,7 @@ export default () => {
       onFinish: async (values: API.Course) => {
         const postData = {
           ...values,
-          scorm_id: values.scorm_id ? values.scorm_id : null,
+          scorm_sco_id: values.scorm_sco_id ? values.scorm_sco_id : null,
         };
         let response: API.DefaultResponse<API.Course>;
         if (course === 'new') {
@@ -279,6 +279,19 @@ export default () => {
                 })}
               />
             </ProForm.Group>
+
+            <ProForm.Group>
+              <ProFormText
+                width="sm"
+                name="target_group"
+                label={<FormattedMessage id="target_group" />}
+                tooltip={<FormattedMessage id="target_group" />}
+                placeholder={intl.formatMessage({
+                  id: 'target_group',
+                  defaultMessage: 'target_group',
+                })}
+              />
+            </ProForm.Group>
             <ProForm.Item
               name="summary"
               label={<FormattedMessage id="summary" />}
@@ -366,7 +379,7 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="scorm" tab={<FormattedMessage id="scorm" />}>
             <ProForm {...formProps}>
-              <ProForm.Item label="Scorm" name="scorm_id" valuePropName="value">
+              <ProForm.Item label="Scorm" name="scorm_sco_id" valuePropName="value">
                 <ScormSelector />
               </ProForm.Item>
             </ProForm>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 import { FormattedMessage, Link } from 'umi';
-import { scorms as fetchScorms } from '@/services/escola-lms/scorm';
+import { scormssco as fetchScormsSco } from '@/services/escola-lms/scorm';
 import { useCallback } from 'react';
 
 export const ScormSelect: React.FC<{
@@ -11,7 +11,7 @@ export const ScormSelect: React.FC<{
   value?: number;
   onChange?: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [scorms, setScorms] = useState<API.SCORM[]>([]);
+  const [scorms, setScorms] = useState<API.SCORM_SCO[]>([]);
   const [fetching, setFetching] = useState(false);
 
   const abortController = useRef<AbortController>();
@@ -23,10 +23,10 @@ export const ScormSelect: React.FC<{
     }
 
     abortController.current = new AbortController();
-    fetchScorms({ search }, { signal: abortController.current.signal })
+    fetchScormsSco({ search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setScorms(response.data.data);
+          return Array.isArray(response.data) && setScorms(response.data);
         }
         setFetching(false);
       })
@@ -59,19 +59,17 @@ export const ScormSelect: React.FC<{
       }
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {scorms.map((scorm) => (
-        <Select.Option key={scorm.id} value={scorm.id.toString()}>
+      {scorms.map((sco) => (
+        <Select.Option key={sco.id} value={sco.id.toString()}>
           <React.Fragment>
-            {scorm.id}:{' '}
-            {scorm.scos.map((sco) => (
-              <React.Fragment>
-                {sco.title}
-                {'  '}
-                <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
-                  <FormattedMessage id="preview" />
-                </Link>
-              </React.Fragment>
-            ))}
+            {sco.id}:{' '}
+            <React.Fragment>
+              {sco.title}
+              {'  '}
+              <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
+                <FormattedMessage id="preview" />
+              </Link>
+            </React.Fragment>
           </React.Fragment>
         </Select.Option>
       ))}

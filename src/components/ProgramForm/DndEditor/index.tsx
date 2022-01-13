@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import { Context } from '@/components/ProgramForm/Context';
 import { Modal } from 'antd';
 import {
+  FundOutlined,
   FileTextOutlined,
   FilePdfOutlined,
   FileImageOutlined,
@@ -147,6 +148,7 @@ export const DndEditorContainer: React.FC<{
           <Box type={TopicType.H5P} onEnd={onNewCard} icon={<InteractionOutlined />} />
           <Box type={TopicType.Image} onEnd={onNewCard} icon={<FileImageOutlined />} />
           <Box type={TopicType.PDF} onEnd={onNewCard} icon={<FilePdfOutlined />} />
+          <Box type={TopicType.SCORM} onEnd={onNewCard} icon={<FundOutlined />} />
         </div>
       </div>
 
