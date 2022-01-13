@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 import { FormattedMessage, Link } from 'umi';
-import { scormssco as fetchScormsSco } from '@/services/escola-lms/scorm';
+import { scorms as fetchScorms } from '@/services/escola-lms/scorm';
 import { useCallback } from 'react';
 
 export const ScormSelect: React.FC<{
@@ -11,9 +11,9 @@ export const ScormSelect: React.FC<{
   value?: number;
   onChange?: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [scorms, setScorms] = useState<API.SCORM_SCO[]>([]);
+  const [scorms, setScorms] = useState<API.SCORM[]>([]);
   const [fetching, setFetching] = useState(false);
-
+  const [currSco, setCurrSco] = useState<API.SCORM_SCO | undefined>();
   const abortController = useRef<AbortController>();
 
   const fetch = useCallback((search?: string) => {
@@ -23,10 +23,10 @@ export const ScormSelect: React.FC<{
     }
 
     abortController.current = new AbortController();
-    fetchScormsSco({ search }, { signal: abortController.current.signal })
+    fetchScorms({ search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          return Array.isArray(response.data) && setScorms(response.data);
+          return Array.isArray(response.data.data) && setScorms(response.data.data);
         }
         setFetching(false);
       })
@@ -44,12 +44,18 @@ export const ScormSelect: React.FC<{
     fetch();
   }, [value]);
 
+  useEffect(() => {
+    setCurrSco(scorms.map((scorm) => scorm.scos.filter((sco) => sco.id === value)).flat()[0]);
+  }, [scorms]);
+
   return (
     <Select
       allowClear
-      style={{ width: '100%' }}
-      value={value?.toString()}
-      onChange={onChange}
+      style={{ width: '100%', minWidth: '300px' }}
+      value={currSco ? `${currSco?.id}: ${currSco?.title}` : undefined}
+      onChange={(changeValue: string) =>
+        onChange && onChange(changeValue ? changeValue.split(':')[0] : changeValue)
+      }
       showSearch
       onSearch={onSearch}
       placeholder={<FormattedMessage id="select_scorm_package" />}
@@ -59,19 +65,20 @@ export const ScormSelect: React.FC<{
       }
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {scorms.map((sco) => (
-        <Select.Option key={sco.id} value={sco.id.toString()}>
+      {scorms.map((scorm) => (
+        <Select.OptGroup key={scorm.id} label={`${scorm.id}: ${scorm.version}`}>
           <React.Fragment>
-            {sco.id}:{' '}
-            <React.Fragment>
-              {sco.title}
-              {'  '}
-              <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
-                <FormattedMessage id="preview" />
-              </Link>
-            </React.Fragment>
+            {scorm.scos.map((sco) => (
+              <Select.Option key={sco.id} value={`${sco.id}: ${sco.title}`}>
+                {sco.title}
+                {'  '}
+                <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
+                  <FormattedMessage id="preview" />
+                </Link>
+              </Select.Option>
+            ))}
           </React.Fragment>
-        </Select.Option>
+        </Select.OptGroup>
       ))}
     </Select>
   );
