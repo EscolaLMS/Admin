@@ -8,8 +8,10 @@ import Footer from '@/components/Footer';
 import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
-import '@/services/ybug';
 import RestrictedPage from './pages/403';
+import '@/services/ybug';
+
+const authpaths = ['/user/login', '/user/reset-password'];
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -36,7 +38,7 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  if (!authpaths.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -58,8 +60,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      //  login
-      if (!initialState?.currentUser && location.pathname !== '/user/login') {
+      // login;
+
+      if (!initialState?.currentUser && !authpaths.includes(location.pathname)) {
         history.push('/user/login');
       }
     },
