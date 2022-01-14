@@ -216,7 +216,9 @@ declare namespace API {
     email: string;
   };
 
-  export type ResetPasswordResponse = DefaultResponse<{ todo: '// TODO' }> | DefaultResponseError;
+  export type ResetPasswordResponse =
+    | DefaultResponse<{ message: string; success: boolean }>
+    | DefaultResponseError;
 
   type User = {
     data: UserItem;
