@@ -96,29 +96,6 @@ const Reset: React.FC = () => {
                 ]}
               />
             </>
-
-            <div
-              style={{
-                marginBottom: 24,
-              }}
-            >
-              {/* {!isPasswordReset && (
-                <a
-                  style={{
-                    float: 'right',
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsPasswordReset(true);
-                  }}
-                >
-                  <FormattedMessage
-                    id="pages.login.forgotPassword"
-                    defaultMessage="forgotPassword"
-                  />
-                </a>
-              )} */}
-            </div>
           </ProForm>
         </div>
       </div>
