@@ -1,12 +1,13 @@
 import { LockOutlined } from '@ant-design/icons';
-import { message, Divider } from 'antd';
+import { message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { useIntl, Link, history, FormattedMessage, SelectLang } from 'umi';
-import Footer from '@/components/Footer';
+import { useIntl, history, FormattedMessage } from 'umi';
+
 import { reset as passwordReset } from '@/services/escola-lms/login';
 
-import styles from '../login/index.less';
+import styles from '../components/index.less';
+import AuthLayout from '../components/AuthLayout';
 
 const Reset: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -34,73 +35,54 @@ const Reset: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
-      <div className={styles.content}>
-        <div className={styles.top}>
-          <div className={styles.header}>
-            <Link to="/">
-              <img alt="logo" className={styles.logo} src="/logo.svg" />
-            </Link>
-          </div>
-        </div>
-
-        <Divider />
-
-        <div className={styles.main}>
-          <ProForm
-            initialValues={{
-              autoLogin: true,
+    <AuthLayout>
+      <ProForm
+        initialValues={{
+          autoLogin: true,
+        }}
+        submitter={{
+          searchConfig: {
+            submitText: intl.formatMessage({
+              id: 'reset_password',
+              defaultMessage: 'reset_password',
+            }),
+          },
+          render: (_, dom) => dom.pop(),
+          submitButtonProps: {
+            loading: submitting,
+            size: 'large',
+            style: {
+              width: '100%',
+            },
+          },
+        }}
+        onFinish={async (values) => {
+          handleSubmit({ ...values, token, email } as API.ResetPasswordRequest);
+        }}
+      >
+        <>
+          <ProFormText.Password
+            name="password"
+            fieldProps={{
+              size: 'large',
+              prefix: <LockOutlined className={styles.prefixIcon} />,
             }}
-            submitter={{
-              searchConfig: {
-                submitText: intl.formatMessage({
-                  id: 'reset_password',
-                  defaultMessage: 'reset_password',
-                }),
+            placeholder={intl.formatMessage({
+              id: 'pages.login.password.placeholder',
+              defaultMessage: ' ant.design',
+            })}
+            rules={[
+              {
+                required: true,
+                message: (
+                  <FormattedMessage id="pages.login.password.required" defaultMessage="required" />
+                ),
               },
-              render: (_, dom) => dom.pop(),
-              submitButtonProps: {
-                loading: submitting,
-                size: 'large',
-                style: {
-                  width: '100%',
-                },
-              },
-            }}
-            onFinish={async (values) => {
-              handleSubmit({ ...values, token, email } as API.ResetPasswordRequest);
-            }}
-          >
-            <>
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: ' ant.design',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="required"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-          </ProForm>
-        </div>
-      </div>
-      <Footer />
-    </div>
+            ]}
+          />
+        </>
+      </ProForm>
+    </AuthLayout>
   );
 };
 
