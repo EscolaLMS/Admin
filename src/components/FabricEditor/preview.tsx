@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf';
 
 import 'svg2pdf.js';
 import { FabricJSCanvas, useFabricJSEditor } from 'fabricjs-react';
-import { fabric } from 'fabric';
+import type { fabric } from 'fabric';
 
 const PreviewPDF: React.FC<{ svgDef: string; width: number; height: number }> = ({
   svgDef,
@@ -15,6 +15,15 @@ const PreviewPDF: React.FC<{ svgDef: string; width: number; height: number }> = 
 
     const parser = new DOMParser();
     const element = parser.parseFromString(svgDef, 'image/svg+xml');
+
+    const bg = element.documentElement.querySelector('rect');
+
+    // hack for background
+    // svg2pdf.js don't support % units (for now)
+    if (bg) {
+      bg.setAttribute('width', width + 'px');
+      bg.setAttribute('height', height + 'px');
+    }
 
     doc.svg(element.documentElement).then(() => {
       // save the created pdf
