@@ -111,7 +111,7 @@ const TableList: React.FC = () => {
       hideInForm: true,
       hideInSearch: true,
       valueEnum: {
-        true: {
+        false: {
           text: (
             <Tag color="error">
               <FormattedMessage id="Inactive" defaultMessage="Inactive" />
@@ -119,7 +119,7 @@ const TableList: React.FC = () => {
           ),
           status: 'Inactive',
         },
-        false: {
+        true: {
           text: (
             <Tag color="success">
               <FormattedMessage id="Active" defaultMessage="Active" />
