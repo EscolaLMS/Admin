@@ -70,8 +70,6 @@ const TableList: React.FC<{
     return arr;
   }, [values, packageName]);
 
-  console.log({ entries }, values[packageName]);
-
   return (
     <React.Fragment>
       <ProTable<API.ConfigEntry>
