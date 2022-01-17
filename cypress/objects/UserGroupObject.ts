@@ -3,7 +3,7 @@ const hash = Cypress.env('router') === 'hash' ? '#/' : '';
 
 export const selectors = {
   tableWrapper: '.ant-table-content',
-  tableBody: 'table > tbody',
+  tableBody: 'table > .ant-table-tbody',
   newCategoryNameInput: 'input[id="name"]',
   registerableSwitch: '#registerable',
   createNewButton: '.ant-space-item .ant-btn-primary',

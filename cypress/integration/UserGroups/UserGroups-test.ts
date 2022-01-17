@@ -26,7 +26,12 @@ describe('User Groups', () => {
   // ADD ELEMENT
   it('add group element', () => {
     const pageObj = new UserGroupObject(this.group.name);
-    pageObj.navigateToPage('user_groups/new').createNewGroup().getList().itemShouldExist();
+    pageObj
+      .navigateToPage('user_groups/new')
+      .createNewGroup()
+      .getList()
+      .navigateToPage('user_groups')
+      .itemShouldExist();
   });
 
   // SEARCH FOR ADDED ELEMENT
