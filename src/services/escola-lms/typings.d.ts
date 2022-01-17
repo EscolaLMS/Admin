@@ -201,6 +201,25 @@ declare namespace API {
 
   type LogoutResponse = DefaultResponse;
 
+  export type ForgotRequest = {
+    email: string;
+    return_url: string;
+  };
+
+  export type ForgotResponse =
+    | DefaultResponse<{ message: string; success: boolean }>
+    | DefaultResponseError;
+
+  export type ResetPasswordRequest = {
+    token: string;
+    password: string;
+    email: string;
+  };
+
+  export type ResetPasswordResponse =
+    | DefaultResponse<{ message: string; success: boolean }>
+    | DefaultResponseError;
+
   type User = {
     data: UserItem;
   };
@@ -599,6 +618,7 @@ declare namespace API {
     id: number;
     name: string;
     assigned?: boolean;
+    guard_name?: string;
   };
 
   type Notification = {

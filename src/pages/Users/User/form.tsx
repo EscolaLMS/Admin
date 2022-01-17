@@ -172,7 +172,9 @@ export default ({ isNew }: { isNew: boolean }) => {
             name="roles"
             layout="horizontal"
             label={<FormattedMessage id="roles" />}
-            options={roles.map((role: API.Role) => role.name)}
+            options={roles
+              .filter((role: API.Role) => role.guard_name !== 'web')
+              .map((role: API.Role) => role.name)}
           />
         )}
       </ProForm.Group>

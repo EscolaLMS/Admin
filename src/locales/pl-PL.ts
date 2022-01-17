@@ -242,7 +242,9 @@ export default {
     'Zacznij wpisywać tekst, aby zobaczyć funkcje edytora. Zacznij od „/”, aby otworzyć opcje formatowania lub kliknij przycisk „+”',
   edit_user: 'Edycja użytkownika',
   new_user: 'Nowy użytkownik',
+  send: 'Wyślij',
   resend: 'Wyślij jeszcze raz',
+  back: 'Wróć',
   back_home: 'Wróć do strony głównej',
   '403_subtitle': 'Nie masz dostępu do tej strony.',
   '404_subtitle': 'Przepraszamy, ta strona nie istnieje.',
@@ -276,6 +278,7 @@ export default {
   certificates: 'Certyfikaty',
   query: 'Szukaj',
   reset: 'Wyczyść',
+  reset_password: 'Resetuj hasło',
   search_file: 'Wyszukaj plik',
   json: 'JSON Metadata',
   json_tooltip:

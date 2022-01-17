@@ -12,6 +12,12 @@
             access: 'loggedOut',
             component: './User/login',
           },
+          {
+            name: 'reset',
+            path: '/user/reset-password',
+            access: 'loggedOut',
+            component: './User/reset',
+          },
         ],
       },
     ],
