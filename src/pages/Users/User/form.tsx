@@ -9,6 +9,7 @@ import { useParams, history } from 'umi';
 import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
+import { configs as getConfig } from '@/services/escola-lms/settings';
 
 export default ({ isNew }: { isNew: boolean }) => {
   const intl = useIntl();
@@ -18,6 +19,7 @@ export default ({ isNew }: { isNew: boolean }) => {
   const [data, setData] = useState<Partial<API.UserItem>>();
 
   const [roles, setRoles] = useState<API.Role[]>();
+  const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
 
   const fetchData = useCallback(async () => {
     const response = await fetchUser(Number(user));
@@ -38,14 +40,24 @@ export default ({ isNew }: { isNew: boolean }) => {
     }
   }, [user]);
 
+  const fetchFields = useCallback(async () => {
+    const request = await getConfig();
+    if (request.success) {
+      setAdditionalRequiredFields(
+        request.data.escola_auth.additional_fields_required.value as string[],
+      );
+    }
+  }, []);
+
   useEffect(() => {
+    fetchRoles();
+    fetchFields();
     if (isNew) {
       setData({});
       return;
     }
 
     fetchData();
-    fetchRoles();
   }, [user, fetchData]);
 
   const formProps = useMemo(
@@ -136,6 +148,7 @@ export default ({ isNew }: { isNew: boolean }) => {
             {/* if he is an admin, do not display the switch */}
             {!data.roles?.includes('admin') && (
               <ProFormSwitch
+                initialValue={data.is_active}
                 name="email_verified"
                 label={<FormattedMessage id="is_email_verified" />}
               />
@@ -167,6 +180,7 @@ export default ({ isNew }: { isNew: boolean }) => {
         )}
 
         <ProFormSwitch name="is_active" label={<FormattedMessage id="is_active" />} />
+
         {roles && (
           <ProFormCheckbox.Group
             name="roles"
@@ -177,6 +191,22 @@ export default ({ isNew }: { isNew: boolean }) => {
               .map((role: API.Role) => role.name)}
           />
         )}
+      </ProForm.Group>
+      <ProForm.Group>
+        {/* TODO: how to translate these fields  ? */}
+        {additionalRequiredFields &&
+          additionalRequiredFields.map((field) => (
+            <ProFormText
+              width="md"
+              name={field}
+              label={<FormattedMessage id={field} />}
+              tooltip={<FormattedMessage id={field} />}
+              placeholder={intl.formatMessage({
+                id: field,
+              })}
+              required
+            />
+          ))}
       </ProForm.Group>
       <ProForm.Item
         name="bio"
