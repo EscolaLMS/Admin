@@ -80,14 +80,7 @@ const TableList: React.FC<{
   const entries = useMemo(() => {
     const data: Record<string, API.Config> = values[packageName];
 
-    const nestedConfig = findNestedFields(data, 'rules') || [];
-
-    const arr: API.ConfigEntry[] = nestedConfig.map((entry: any) => {
-      return {
-        ...entry,
-      };
-    });
-    return arr;
+    return findNestedFields(data, 'rules');
   }, [values, packageName]);
 
   return (
@@ -100,7 +93,7 @@ const TableList: React.FC<{
         search={{
           labelWidth: 120,
         }}
-        dataSource={entries}
+        dataSource={entries as API.ConfigEntry[]}
         columns={[
           ...columns,
           {
