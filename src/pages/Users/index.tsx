@@ -67,8 +67,8 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     dataIndex: 'email_verified',
     hideInSearch: true,
     render: (_, record) => [
-      <Tag color={record.is_active ? 'green' : 'red'}>
-        {record.is_active ? (
+      <Tag color={record.email_verified ? 'green' : 'red'}>
+        {record.email_verified ? (
           <FormattedMessage id="verified" />
         ) : (
           <FormattedMessage id="unverified" />
