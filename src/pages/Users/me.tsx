@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
@@ -9,6 +9,7 @@ import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
 import UserSettings from './User/settings';
+import { configs as getConfig } from '@/services/escola-lms/settings';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
@@ -16,6 +17,18 @@ export default () => {
   const { tab = 'general' } = params;
 
   const [data, setData] = useState<API.UserItem>();
+  const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
+  const [additionalFields, setAdditionalFields] = useState<string[]>([]);
+
+  const fetchFields = useCallback(async () => {
+    const request = await getConfig();
+    if (request.success) {
+      setAdditionalRequiredFields(
+        request.data.escola_auth.additional_fields_required.value as string[],
+      );
+      setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
+    }
+  }, []);
 
   useEffect(() => {
     const fetch = async () => {
@@ -27,6 +40,7 @@ export default () => {
         });
       }
     };
+    fetchFields();
     fetch();
   }, []);
 
@@ -117,7 +131,33 @@ export default () => {
                 required
               />
             </ProForm.Group>
-
+            <ProForm.Group>
+              {additionalRequiredFields &&
+                additionalRequiredFields.map((field) => (
+                  <ProFormText
+                    width="md"
+                    name={field}
+                    label={<FormattedMessage id={field} />}
+                    tooltip={<FormattedMessage id={field} />}
+                    placeholder={intl.formatMessage({
+                      id: field,
+                    })}
+                    required
+                  />
+                ))}
+              {additionalFields &&
+                additionalFields.map((field) => (
+                  <ProFormText
+                    width="md"
+                    name={field}
+                    label={<FormattedMessage id={field} />}
+                    tooltip={<FormattedMessage id={field} />}
+                    placeholder={intl.formatMessage({
+                      id: field,
+                    })}
+                  />
+                ))}
+            </ProForm.Group>
             <ProForm.Item
               name="bio"
               label={<FormattedMessage id="bio" />}

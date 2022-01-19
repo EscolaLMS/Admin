@@ -20,6 +20,7 @@ export default ({ isNew }: { isNew: boolean }) => {
 
   const [roles, setRoles] = useState<API.Role[]>();
   const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
+  const [additionalFields, setAdditionalFields] = useState<string[]>([]);
 
   const fetchData = useCallback(async () => {
     const response = await fetchUser(Number(user));
@@ -46,6 +47,7 @@ export default ({ isNew }: { isNew: boolean }) => {
       setAdditionalRequiredFields(
         request.data.escola_auth.additional_fields_required.value as string[],
       );
+      setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
     }
   }, []);
 
@@ -193,7 +195,6 @@ export default ({ isNew }: { isNew: boolean }) => {
         )}
       </ProForm.Group>
       <ProForm.Group>
-        {/* TODO: how to translate these fields  ? */}
         {additionalRequiredFields &&
           additionalRequiredFields.map((field) => (
             <ProFormText
@@ -205,6 +206,18 @@ export default ({ isNew }: { isNew: boolean }) => {
                 id: field,
               })}
               required
+            />
+          ))}
+        {additionalFields &&
+          additionalFields.map((field) => (
+            <ProFormText
+              width="md"
+              name={field}
+              label={<FormattedMessage id={field} />}
+              tooltip={<FormattedMessage id={field} />}
+              placeholder={intl.formatMessage({
+                id: field,
+              })}
             />
           ))}
       </ProForm.Group>
