@@ -51,6 +51,24 @@ const columns: ProColumns<API.ConfigEntry>[] = [
   },
 ];
 
+const findNestedFields = (obj: object, searchKey: string, results: object[] = []) => {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  } else {
+    Object.keys(obj).forEach((key) => {
+      const value = obj[key];
+
+      if (key === searchKey) {
+        results.push(obj);
+      } else if (typeof value === 'object') {
+        findNestedFields(value, searchKey, results);
+      }
+    });
+  }
+
+  return results;
+};
+
 const TableList: React.FC<{
   packageName: keyof API.Configs;
   values: API.Configs;
@@ -62,12 +80,7 @@ const TableList: React.FC<{
   const entries = useMemo(() => {
     const data: Record<string, API.Config> = values[packageName];
 
-    const arr: API.ConfigEntry[] = Object.entries(data).map((entry) => ({
-      key: entry[0],
-      full_key: `${packageName}.${entry[0]}`,
-      ...entry[1],
-    }));
-    return arr;
+    return findNestedFields(data, 'rules');
   }, [values, packageName]);
 
   return (
@@ -80,7 +93,7 @@ const TableList: React.FC<{
         search={{
           labelWidth: 120,
         }}
-        dataSource={entries}
+        dataSource={entries as API.ConfigEntry[]}
         columns={[
           ...columns,
           {
