@@ -23,20 +23,6 @@ export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
     <EditorContextProvider url={`${REACT_APP_API_URL}/api/admin/hh5p`}>
       <Divider />
       <H5Player id={Number(id)} />
-      {/* TODO: remove this comment if it works ↑ */}
-      {/* <Player id={id} onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])} />
-
-      <div style={{ overflow: 'auto', maxHeight: '300px' }}>
-        <List
-          dataSource={XAPIEvents}
-          header="XAPI Events"
-          renderItem={() => (
-            <List.Item>
-              <ReactJson src={XAPIEvents} />
-            </List.Item>
-          )}
-        ></List>
-      </div> */}
     </EditorContextProvider>
   );
 };
