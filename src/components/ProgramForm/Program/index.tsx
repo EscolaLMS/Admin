@@ -112,7 +112,20 @@ export const Curriculum = () => {
                         </Tooltip>
                       </React.Fragment>
                     ) : (
-                      <React.Fragment />
+                      <React.Fragment>
+                        <Tooltip title={<FormattedMessage id="copy_lesson" />}>
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              return lesson.id && cloneLesson && cloneLesson(lesson.id);
+                            }}
+                            size="small"
+                          >
+                            <CopyOutlined />
+                          </Button>
+                        </Tooltip>
+                      </React.Fragment>
                     )
                   }
                 >
