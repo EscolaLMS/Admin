@@ -12,7 +12,7 @@ export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new'
   onData,
   id,
 }) => (
-  <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+  <EditorContextProvider url={`${REACT_APP_API_URL}/api/admin/hh5p`}>
     <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
   </EditorContextProvider>
 );
@@ -20,7 +20,7 @@ export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new'
 export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
   const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
   return (
-    <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+    <EditorContextProvider url={`${REACT_APP_API_URL}/api/admin/hh5p`}>
       <Divider />
       <Player id={id} onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])} />
 
