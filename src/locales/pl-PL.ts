@@ -141,6 +141,7 @@ export default {
   select_course: 'Wybierz kurs',
   select_type_topic: 'Wybierz rodzaj tematu żeby kontynuować',
   select_scorm_package: 'Wybierz pakiet SCORM',
+  select_certificate_package: 'Wybierz szablon certyfikatu',
   billable: 'Rachunek do',
   payable: 'Płatne do',
   newH5P: 'Nowy plik H5P',

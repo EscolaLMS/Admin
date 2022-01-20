@@ -534,6 +534,29 @@ declare namespace API {
 
   type FileUpload = DefaultResponse<File[]>;
 
+  type CERTIFICATE = {
+    id: number;
+    name: string;
+    event: string;
+    default: boolean;
+    assignables: CERTIFICATE_ASSIGNABLES[];
+    channel: number;
+    selection: CERTIFICATE_SELECTION[];
+    created_at: string;
+    updated_at: string;
+  };
+
+  type CERTIFICATE_SELECTION = {
+    id: number;
+    key: string;
+    template_id: number;
+    content: string;
+    created_at: string;
+    updated_at: string;
+  };
+
+  type CERTIFICATE_ASSIGNABLES = {};
+
   type SCORM = {
     id: number;
     resource_type: null;

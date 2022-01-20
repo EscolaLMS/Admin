@@ -21,6 +21,7 @@ import ProgramForm from '@/components/ProgramForm';
 import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
+import CourseCertificateForm from './components/CourseCertificateForm';
 // import TemplateEditor from '@/components/TemplateFields';
 import CourseStatistics from '@/components/CourseStatistics';
 
@@ -395,6 +396,7 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
             {/* <TemplateEditor /> */}
+            <CourseCertificateForm />
           </ProCard.TabPane>
         )}
 

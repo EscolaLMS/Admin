@@ -126,6 +126,7 @@ export default {
   select_course: 'Select a course',
   select_type_topic: 'Select type of topic to continue',
   select_scorm_package: 'Select SCORM package',
+  select_certificate_package: 'Select certificate template',
   billable: 'Billable to',
   payable: 'Payable to',
   newH5P: 'New file H5P',
