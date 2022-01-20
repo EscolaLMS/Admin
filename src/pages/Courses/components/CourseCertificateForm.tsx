@@ -8,32 +8,26 @@ import CertificatSelector from '@/components/Certificate';
 import { unassign as unassignCertificate } from '@/services/escola-lms/certificate';
 
 export const CourseCertificateForm: React.FC<{
-  id?: number | string;
-}> = () => {
+  id: number | string;
+}> = ({ id }) => {
   const [templateId, setTemplateId] = useState(null);
 
-  const updateValue = useCallback(
-    (value) => {
-      setTemplateId(value);
-    },
-    [templateId],
-  );
+  const updateValue = useCallback((value) => {
+    setTemplateId(value);
+  }, []);
 
-  const onUnassign = useCallback(
-    (id: number | null) => {
-      unassignCertificate(Number(id)).then((response) => {
-        if (response.success) {
-          message.success(response.message);
-        }
-      });
-    },
-    [templateId],
-  );
+  const onUnassign = useCallback((value: number | null) => {
+    unassignCertificate(Number(value), { assignable_id: id }).then((response) => {
+      if (response.success) {
+        message.success(response.message);
+      }
+    });
+  }, []);
 
   return (
     <ProForm
-      onFinish={async (values: API.CourseAccess) => {
-        postSetTemplate(Number(templateId), values).then((response) => {
+      onFinish={async () => {
+        postSetTemplate(Number(templateId), { assignable_id: id }).then((response) => {
           if (response.success) {
             message.success(response.message);
           }
