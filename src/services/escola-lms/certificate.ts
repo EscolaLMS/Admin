@@ -43,3 +43,13 @@ export async function unassign(
     ...(options || {}),
   });
 }
+
+/**  GET /api/admin/templates/assigned */
+export async function template(params: API.TemplateItem, options?: { [key: string]: any }) {
+  return request<API.TemplateList>(`/api/admin/templates/assigned`, {
+    params,
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}

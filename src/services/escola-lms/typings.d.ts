@@ -557,6 +557,10 @@ declare namespace API {
 
   type CERTIFICATE_ASSIGNABLES = {};
 
+  type Template = CERTIFICATE[];
+
+  type TemplateList = DefaultResponse<Template>;
+
   type SCORM = {
     id: number;
     resource_type: null;
@@ -601,6 +605,11 @@ declare namespace API {
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
 
   type ScormScosList = DefaultResponse<SCORM_SCO>;
+
+  type TemplateItem = {
+    assignable_class: string;
+    assignable_id: number;
+  };
 
   type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
   type SettingBase = {
@@ -778,4 +787,9 @@ declare namespace API {
     | (Partial<TopicPDF> & { isNew: true; topicable_type: TopicType.PDF });
 
   export type TopicNewOrNotEmpty = TopicNotEmpty | TopicNew;
+
+  type CourseAccess = {
+    users: UserItem[] | number[];
+    groups: UserGroup[] | number[];
+  };
 }

@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
-import { FormattedMessage } from 'umi';
 import { certificates as fetchCertificates } from '@/services/escola-lms/certificate';
+import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 export const CertificatSelector: React.FC<{
-  value?: number;
+  state?: {
+    type: number;
+  };
+  value?: API.CERTIFICATE;
   onChange?: (value: number) => void;
 }> = ({ value, onChange }) => {
-  const [certificates, setCertificates] = useState<API.CERTIFICATE[]>([]);
+  // const [template, setTemplate] = useState<API.CERTIFICATE[]>([]);
   const [fetching, setFetching] = useState(false);
-  const [currCertificate, setCurrCertificate] = useState<API.CERTIFICATE[]>([]);
+  const [certificates, setCertificate] = useState<API.CERTIFICATE[]>([]);
+  const [currCertificate, setCurrCertificate] = useState<API.CERTIFICATE[]>();
+
   const abortController = useRef<AbortController>();
 
   const fetch = useCallback((search?: string) => {
@@ -23,7 +28,7 @@ export const CertificatSelector: React.FC<{
     fetchCertificates({ search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          return Array.isArray(response.data) && setCertificates(response.data);
+          return Array.isArray(response.data) && setCertificate(response.data);
         }
         setFetching(false);
       })
@@ -38,23 +43,25 @@ export const CertificatSelector: React.FC<{
   );
 
   useEffect(() => {
-    fetch();
+    console.log('aaa', value);
+    if (Array.isArray(value)) {
+      setCurrCertificate(value.flat()[0]);
+    } else {
+      setCurrCertificate(certificates.filter((certificate) => certificate.id === value).flat()[0]);
+    }
   }, [value]);
-
-  useEffect(() => {
-    console.log('test', certificates, value);
-    setCurrCertificate(certificates.filter((certificate) => certificate.id === value).flat()[0]);
-  }, [certificates]);
 
   return (
     <Select
+      onFocus={() => fetch()}
       allowClear
-      style={{ width: '100%', minWidth: '300px' }}
+      style={{ width: '100%' }}
       value={currCertificate ? `${currCertificate?.name}` : undefined}
+      // onChange={onChange}
       onChange={(changeValue: string) => onChange && onChange(changeValue)}
       showSearch
       onSearch={onSearch}
-      placeholder={<FormattedMessage id="select_certificate_package" />}
+      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
