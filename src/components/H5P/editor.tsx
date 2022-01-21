@@ -37,6 +37,8 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
 
   const { state, getEditorConfig, submitContent } = useContext(EditorContext);
 
+  console.log(state);
+
   useEffect(() => {
     /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
     getEditorConfig && getEditorConfig(id);
@@ -100,7 +102,7 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
 
     let params;
     window.addEventListener('message', (event) => {
-        if (event.data.editorParams) {
+        if (event.data.hasOwnProperty('editorParams')) {
             params = event.data.editorParams;
             H5P.jQuery(document).ready(ns.init);
         }        
