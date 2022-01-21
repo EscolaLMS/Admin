@@ -13,7 +13,7 @@ import {
 export const CourseCertificateForm: React.FC<{
   id: number | string;
 }> = ({ id }) => {
-  const [templateId, setTemplateId] = useState(null);
+  const [templateId, setTemplateId] = useState<number | null>(null);
 
   const updateValue = useCallback(
     (value) => {
@@ -27,6 +27,7 @@ export const CourseCertificateForm: React.FC<{
       unassignCertificate(Number(value), { assignable_id: id }).then((response) => {
         if (response.success) {
           message.success(response.message);
+          updateValue(null);
         }
       });
     },
@@ -53,7 +54,7 @@ export const CourseCertificateForm: React.FC<{
             };
           }
           return {
-            template: {},
+            template: [],
           };
         });
       }}
@@ -63,7 +64,7 @@ export const CourseCertificateForm: React.FC<{
         name="template"
         label={<FormattedMessage id="template" defaultMessage="Users" />}
       >
-        <CertificatSelector onChange={(value) => updateValue(value)} />
+        <CertificatSelector value={templateId} onChange={(value) => updateValue(value)} />
       </ProForm.Item>
       <ProForm.Item name="template" valuePropName="value">
         <Space size="large" align="start">

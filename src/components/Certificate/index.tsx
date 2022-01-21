@@ -5,16 +5,12 @@ import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 export const CertificatSelector: React.FC<{
-  state?: {
-    type: number;
-  };
-  value?: API.CERTIFICATE;
-  onChange?: (value: number) => void;
+  value?: number;
+  onChange: (value: number) => void;
 }> = ({ value, onChange }) => {
-  // const [template, setTemplate] = useState<API.CERTIFICATE[]>([]);
   const [fetching, setFetching] = useState(false);
-  const [certificates, setCertificate] = useState<API.CERTIFICATE[]>([]);
-  const [currCertificate, setCurrCertificate] = useState<API.CERTIFICATE[]>();
+  const [certificates, setCertificates] = useState<API.CERTIFICATE[]>([]);
+  const [currCertificate, setCurrCertificate] = useState<API.CERTIFICATE>();
 
   const abortController = useRef<AbortController>();
 
@@ -28,7 +24,7 @@ export const CertificatSelector: React.FC<{
     fetchCertificates({ search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          return Array.isArray(response.data) && setCertificate(response.data);
+          setCertificates(response.data);
         }
         setFetching(false);
       })
@@ -43,12 +39,19 @@ export const CertificatSelector: React.FC<{
   );
 
   useEffect(() => {
-    console.log('aaa', value);
-    if (Array.isArray(value)) {
-      setCurrCertificate(value.flat()[0]);
-    } else {
-      setCurrCertificate(certificates.filter((certificate) => certificate.id === value).flat()[0]);
+    const controller = new AbortController();
+    if (value) {
+      if (Array.isArray(value)) {
+        setCurrCertificate(value.flat()[0]);
+      } else {
+        setCurrCertificate(
+          certificates.filter((certificate) => certificate.id === value).flat()[0],
+        );
+      }
     }
+    return () => {
+      controller.abort();
+    };
   }, [value]);
 
   return (
@@ -56,12 +59,17 @@ export const CertificatSelector: React.FC<{
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}
-      value={currCertificate ? `${currCertificate?.name}` : undefined}
-      // onChange={onChange}
-      onChange={(changeValue: string) => onChange && onChange(changeValue)}
+      // value={value}
+      value={currCertificate ? `${currCertificate?.name}` : ''}
+      onChange={onChange}
       showSearch
       onSearch={onSearch}
-      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
+      placeholder={
+        <FormattedMessage
+          id="select_certificate_package"
+          defaultMessage="Select certificate template"
+        />
+      }
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
