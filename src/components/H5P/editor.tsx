@@ -100,7 +100,7 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
 
     let params;
     window.addEventListener('message', (event) => {
-        if (event.data.editorParams) {
+        if (event.data.hasOwnProperty('editorParams')) {
             params = event.data.editorParams;
             H5P.jQuery(document).ready(ns.init);
         }        
