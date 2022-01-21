@@ -123,9 +123,9 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/Courses-Import-Export -------- */
 
-  CourseExport = 'courses-import-export_export',
-  CourseImport = 'courses-import-export_import',
-  CourseExportAuthored = 'courses-import-export_export_authored',
+  CourseExport = 'course-import-export_export',
+  CourseImport = 'course-import-export_import',
+  CourseExportAuthored = 'course-import-export_export_authored',
 
   /* -------- EscolaLMS/Permissions -------- */
 
