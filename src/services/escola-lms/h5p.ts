@@ -25,7 +25,7 @@ export async function h5p(
 
 /**  GET /api/courses/:id */
 export async function getH5p(id: number, options?: { [key: string]: any }) {
-  return request<API.DefaultResponse<API.H5PContent>>(`/api/admin/hh5p/content/${id}`, {
+  return request<API.DefaultResponse<API.H5PObject>>(`/api/admin/hh5p/content/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
