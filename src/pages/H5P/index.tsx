@@ -113,7 +113,7 @@ const TableList: React.FC = () => {
             <Button icon={<BookOutlined />}></Button>
           </Tooltip>
         </Link>,
-        <a href={`${REACT_APP_API_URL}/api/hh5p/content/${record.id}/export`} download>
+        <a href={`${REACT_APP_API_URL}/api/admin/hh5p/content/${record.id}/export`} download>
           <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
             <Button icon={<ExportOutlined />}></Button>
           </Tooltip>
@@ -124,7 +124,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.H5PContentListItem, API.H5PContentParams>
+      <ProTable<API.H5PContentListItem, API.PageParams>
         loading={loading}
         headerTitle={intl.formatMessage({
           id: 'H5Ps',
@@ -147,9 +147,16 @@ const TableList: React.FC = () => {
           return h5p({
             pageSize,
             current,
-          }).then((data) => {
+          }).then((response) => {
             setLoading(false);
-            return data || [];
+            if (response.success) {
+              return {
+                data: response.data,
+                total: response.meta.total,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={columns}

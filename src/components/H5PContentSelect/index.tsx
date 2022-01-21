@@ -17,13 +17,13 @@ export const H5PContentSelect: React.FC<{
   const [contents, setContents] = useState<API.H5PContentListItem[]>([]);
 
   useEffect(() => {
-    allContent().then((response) => setContents(response));
+    allContent().then((response) => setContents(response.data));
   }, []);
 
   useEffect(() => {
     if (contents.length) {
       if (!contents.find((content) => Number(content.id) === Number(value))) {
-        allContent().then((response) => setContents(response));
+        allContent().then((response) => setContents(response.data));
       }
     }
   }, [value]);
