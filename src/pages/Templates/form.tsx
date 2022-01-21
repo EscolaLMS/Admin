@@ -114,8 +114,9 @@ export default () => {
   const handleSetTokens = useCallback(
     (event: string) => {
       if (event && template) {
+        console.log(variables, event);
         const _tokens = variables && (variables[event][channels[template]] as unknown);
-
+        console.log({ _tokens });
         setTokens(_tokens as Tokens);
       }
     },

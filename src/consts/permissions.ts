@@ -44,7 +44,7 @@ enum PERMISSIONS {
   SettingsRead = 'settings_read',
   SettingsUpdate = 'settings_update',
   SettingsDelete = 'settings_delete',
-  SettingsList = 'settings list any',
+  SettingsList = 'settings_list',
 
   // is to edit Laravel settings that are loaded from /config files via the api in the Settings package
   SettingsConfigList = 'settings_config_list',
@@ -53,7 +53,7 @@ enum PERMISSIONS {
   /* -------- EscolaLMS/Cart -------- */
 
   CartOrderList = 'cart_order_list',
-  CartOrderListCourseOwned = 'cart_order_list-owned', // order listings for courses of which you are the author (for tutor)
+  CartOrderListCourseOwned = 'cart_order_list_course-authored', // order listings for courses of which you are the author (for tutor)
 
   /* -------- EscolaLMS/Files -------- */
 
@@ -66,12 +66,12 @@ enum PERMISSIONS {
 
   CourseList = 'course_list',
   CourseCreate = 'course_create',
-  CourseRead = 'course_attend', // <- course_read
+  CourseRead = 'course_read',
   CourseUpdate = 'course_update',
   CourseDelete = 'course_delete',
   CourseUpdateAuthored = 'course_update_authored',
   CourseDeleteAuthored = 'course_delete_authored',
-  CourseReadAuthored = 'course_attend_authored', // <- course_read_authored
+  CourseReadAuthored = 'course_read_authored',
 
   /* -------- EscolaLMS/H5P -------- */
 
@@ -88,8 +88,8 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/payments -------- */
 
-  PaymentRead = 'payment_read', // TODO: unused in api
-  PaymentList = 'payment_list', // TODO: unused in api
+  PaymentRead = 'payment_read',
+  PaymentList = 'payment_list',
 
   /* -------- EscolaLMS/Categories -------- */
 
@@ -101,11 +101,11 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/pages -------- */
 
-  PageList = 'pages_list',
+  PageList = 'page_list',
   PageRead = 'page_read',
-  PageCreate = 'pages_create',
-  PageUpdate = 'pages_update',
-  PageDelete = 'pages_delete',
+  PageCreate = 'page_create',
+  PageUpdate = 'page_update',
+  PageDelete = 'page_delete',
 
   /* -------- EscolaLMS/Scorm -------- */
 
@@ -114,40 +114,40 @@ enum PERMISSIONS {
   ScormCreate = 'scorm_create',
   ScormUpdate = 'scorm_update',
   ScormDelete = 'scorm_delete',
-  ScormGetTrack = 'scorm_get_track',
-  ScormSetTrack = 'scorm_set_track',
+  ScormGetTrack = 'scorm_track-read',
+  ScormSetTrack = 'scorm_track-update',
 
   /* -------- EscolaLMS/Reports -------- */
 
-  ReportList = 'reports_list',
+  ReportList = 'report_list',
 
   /* -------- EscolaLMS/Courses-Import-Export -------- */
 
-  CourseExport = 'courses-import-export_export', // TODO: unused in api
-  CourseImport = 'courses-import-export_import', // TODO: unused in api
+  CourseExport = 'courses-import-export_export',
+  CourseImport = 'courses-import-export_import',
   CourseExportAuthored = 'courses-import-export_export_authored',
 
   /* -------- EscolaLMS/Permissions -------- */
 
-  PermissionRoleManage = 'permissions_role_manage',
-  PermisionRoleList = 'permissions_role_list',
-  PermissionRoleCreate = 'permissions_role_create',
-  PermissionRoleDelete = 'permissions_role_delete',
-  PermissionRoleRead = 'permissions_role_read',
-  PermissionRoleUpdate = 'permissions_role_update', // access to edit permissions
+  PermissionRoleManage = 'permission_role_manage',
+  PermisionRoleList = 'permission_role_list',
+  PermissionRoleCreate = 'permission_role_create',
+  PermissionRoleDelete = 'permission_role_delete',
+  PermissionRoleRead = 'permission_role_read',
+  PermissionRoleUpdate = 'permission_role_update', // access to edit permissions
 
   /* -------- EscolaLMS/Templates -------- */
 
-  TemplateList = 'templates_list',
-  TemplateRead = 'templates_read',
-  TemplateCreate = 'templates_create',
-  TemplateDelete = 'templates_delete',
-  TemplateUpdate = 'templates_update',
+  TemplateList = 'template_list',
+  TemplateRead = 'template_read',
+  TemplateCreate = 'template_create',
+  TemplateDelete = 'template_delete',
+  TemplateUpdate = 'template_update',
 
   /* -------- EscolaLMS/Notifications -------- */
 
   NotificationListAll = 'dashboard-app_notification-list_access', // ability to read all notifications (including those not belonging to you)
-  NotificationList = 'dashboard-app_notification-event-list_access',
+  NotificationList = 'dashboard-app_notification-event-list_access_self',
 }
 
 export default PERMISSIONS;
