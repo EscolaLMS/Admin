@@ -147,7 +147,7 @@ enum PERMISSIONS {
   /* -------- EscolaLMS/Notifications -------- */
 
   NotificationListAll = 'dashboard-app_notification-list_access', // ability to read all notifications (including those not belonging to you)
-  NotificationList = 'dashboard-app_notification-event-list_access_self',
+  NotificationList = 'dashboard-app_notification-list_access_self',
 }
 
 export default PERMISSIONS;
