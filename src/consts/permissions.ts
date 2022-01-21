@@ -6,55 +6,54 @@ enum PERMISSIONS {
   /* -------- EscolaLMS/Auth -------- */
 
   // USER
-  UserManage = 'user manage', // pozwala na cofnięcie `soft delete` lub na `twarde usunięcie` użytkownika
+  UserManage = 'user_manage', // pozwala na cofnięcie `soft delete` lub na `twarde usunięcie` użytkownika
 
-  UserCreate = 'user create',
-  UserRead = 'user read',
-  UserReadSelf = 'user read self', // user's own details
-  UserReadCourseOwned = 'user read owned', // reading user details in courses for which you are the author
-  UserUpdate = 'user update',
-  UserUpdateSelf = 'user update self', // edit own user
-  UserDelete = 'user delete',
-  UserDeleteSelf = 'user delete self', // remove own user (TODO: hard or soft?)
-  UserList = 'user list any',
-  UserListCourseOwned = 'user list owned', // listing users in courses of which you are the author
+  UserCreate = 'user_create',
+  UserRead = 'user_read',
+  UserReadSelf = 'user_read_self', // user's own details
+  UserReadCourseOwned = 'user_read_owned', // reading user details in courses for which you are the author
+  UserUpdate = 'user_update',
+  UserUpdateSelf = 'user_update_self', // edit own user
+  UserDelete = 'user_delete',
+  UserDeleteSelf = 'user_delete_self', // remove own user (TODO: hard or soft?)
+  UserList = 'user_list',
+  UserListCourseOwned = 'user_list_owned', // listing users in courses of which you are the author
 
   // USER GROUP
-  UserGroupCreate = 'user group create',
-  UserGroupRead = 'user group read',
-  UserGroupReadSelf = 'user group read self', // details of the group you belong to (for tutors)
-  UserGroupUpdate = 'user group update',
-  UserGroupDelete = 'user group delete',
-  UserGroupMemberAdd = 'user group member add',
-  UserGroupMemberRemove = 'user group member remove',
-  UserGroupList = 'user group list',
-  UserGroupListSelf = 'user group list self', // TODO: unused in api
+  UserGroupCreate = 'user-group_create',
+  UserGroupRead = 'user-group_read',
+  UserGroupReadSelf = 'user-group_read_self', // details of the group you belong to (for tutors)
+  UserGroupUpdate = 'user-group_update',
+  UserGroupDelete = 'user-group_delete',
+  UserGroupMemberAdd = 'user-group_member-add',
+  UserGroupMemberRemove = 'user-group_member-remove',
+  UserGroupList = 'user-group_list',
+  UserGroupListSelf = 'user-group_list_self', // TODO: unused in api
 
-  UserInterestUpdate = 'user interest update', // this is used to indicate which courses (or categories?) the user is interested in // TODO: unused in api
-  UserInterestUpdateSelf = 'user interest update self', // TODO: unused in api
+  UserInterestUpdate = 'user-interest_update', // this is used to indicate which courses (or categories?) the user is interested in // TODO: unused in api
+  UserInterestUpdateSelf = 'user-interest_update_self', // TODO: unused in api
 
   // these permissions are for arbitrary metadata assigned to a user
-  UserSettingUpdate = 'user setting update',
-  UserSettingUpdateSelf = 'user setting update self',
+  UserSettingUpdate = 'user-setting_update',
+  UserSettingUpdateSelf = 'user-setting_update_self',
 
   /* -------- EscolaLMS/settings -------- */
 
-  SettingsManage = 'settings manage', // TODO: unused in api
-
-  SettingsCreate = 'settings create',
-  SettingsRead = 'settings read',
-  SettingsUpdate = 'settings update',
-  SettingsDelete = 'settings delete',
+  SettingsManage = 'settings_manage', // TODO: unused in api
+  SettingsCreate = 'settings_create',
+  SettingsRead = 'settings_read',
+  SettingsUpdate = 'settings_update',
+  SettingsDelete = 'settings_delete',
   SettingsList = 'settings list any',
 
   // is to edit Laravel settings that are loaded from /config files via the api in the Settings package
-  SettingsConfigList = 'config list',
-  SettingsConfigUpdate = 'config update',
+  SettingsConfigList = 'settings_config_list',
+  SettingsConfigUpdate = 'settings_config_update',
 
   /* -------- EscolaLMS/Cart -------- */
 
-  CartOrderList = 'list orders',
-  CartOrderListCourseOwned = 'list authored orders', // order listings for courses of which you are the author (for tutor)
+  CartOrderList = 'cart_order_list',
+  CartOrderListCourseOwned = 'cart_order_list-owned', // order listings for courses of which you are the author (for tutor)
 
   /* -------- EscolaLMS/Files -------- */
 
@@ -65,51 +64,90 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/Courses -------- */
 
-  CourseCreate = 'create course',
-  CourseRead = 'attend course',
-  CourseUpdate = 'update course',
-  CourseDelete = 'delete course',
+  CourseList = 'course_list',
+  CourseCreate = 'course_create',
+  CourseRead = 'course_attend', // <- course_read
+  CourseUpdate = 'course_update',
+  CourseDelete = 'course_delete',
+  CourseUpdateAuthored = 'course_update_authored',
+  CourseDeleteAuthored = 'course_delete_authored',
+  CourseReadAuthored = 'course_attend_authored', // <- course_read_authored
+
+  /* -------- EscolaLMS/H5P -------- */
+
+  H5PList = 'h5p_list',
+  H5PRead = 'h5p_read',
+  H5PCreate = 'h5p_create',
+  H5PDelete = 'h5p_delete',
+  H5PUpdate = 'h5p-update',
+  H5PLibraryList = 'h5p_library_list',
+  H5PLibraryRead = 'h5p_library_read',
+  H5PLibraryCreate = 'h5p_library_create',
+  H5PLibraryDelete = 'h5p_library_delete',
+  H5PLibraryUpdate = 'h5p_library_update',
 
   /* -------- EscolaLMS/payments -------- */
 
-  PaymentRead = 'view payment', // TODO: unused in api
-  PaymentList = 'search all payments', // TODO: unused in api
+  PaymentRead = 'payment_read', // TODO: unused in api
+  PaymentList = 'payment_list', // TODO: unused in api
 
   /* -------- EscolaLMS/Categories -------- */
 
-  CategoryCreate = 'create category',
-  CategoryUpdate = 'update category',
-  CategoryDelete = 'delete category',
+  CategoryList = 'category_list',
+  CategoryRead = 'category_read',
+  CategoryCreate = 'category_create',
+  CategoryUpdate = 'category_update',
+  CategoryDelete = 'category_delete',
 
   /* -------- EscolaLMS/pages -------- */
 
-  PageCreate = 'create pages',
-  PageUpdate = 'update pages',
-  PageDelete = 'delete pages',
+  PageList = 'pages_list',
+  PageRead = 'page_read',
+  PageCreate = 'pages_create',
+  PageUpdate = 'pages_update',
+  PageDelete = 'pages_delete',
 
   /* -------- EscolaLMS/Scorm -------- */
 
-  ScormCreate = 'create Scorm',
-  ScormUpdate = 'update Scorm',
-  ScormDelete = 'delete Scorm',
+  ScormList = 'scorm_list',
+  ScormRead = 'scorm_read',
+  ScormCreate = 'scorm_create',
+  ScormUpdate = 'scorm_update',
+  ScormDelete = 'scorm_delete',
+  ScormGetTrack = 'scorm_get_track',
+  ScormSetTrack = 'scorm_set_track',
 
   /* -------- EscolaLMS/Reports -------- */
 
-  ReportList = 'display reports',
+  ReportList = 'reports_list',
 
   /* -------- EscolaLMS/Courses-Import-Export -------- */
 
-  CourseExport = 'export course', // TODO: unused in api
-  CourseImport = 'import course', // TODO: unused in api
+  CourseExport = 'courses-import-export_export', // TODO: unused in api
+  CourseImport = 'courses-import-export_import', // TODO: unused in api
+  CourseExportAuthored = 'courses-import-export_export_authored',
 
   /* -------- EscolaLMS/Permissions -------- */
 
-  PermissionRoleUpdate = 'administrate roles', // access to edit permissions
+  PermissionRoleManage = 'permissions_role_manage',
+  PermisionRoleList = 'permissions_role_list',
+  PermissionRoleCreate = 'permissions_role_create',
+  PermissionRoleDelete = 'permissions_role_delete',
+  PermissionRoleRead = 'permissions_role_read',
+  PermissionRoleUpdate = 'permissions_role_update', // access to edit permissions
+
+  /* -------- EscolaLMS/Templates -------- */
+
+  TemplateList = 'templates_list',
+  TemplateRead = 'templates_read',
+  TemplateCreate = 'templates_create',
+  TemplateDelete = 'templates_delete',
+  TemplateUpdate = 'templates_update',
 
   /* -------- EscolaLMS/Notifications -------- */
 
-  NotificationListAll = 'read all notifications', // ability to read all notifications (including those not belonging to you)
-  NotificationList = 'read notifications events list',
+  NotificationListAll = 'dashboard-app_notification-list_access', // ability to read all notifications (including those not belonging to you)
+  NotificationList = 'dashboard-app_notification-event-list_access',
 }
 
 export default PERMISSIONS;
