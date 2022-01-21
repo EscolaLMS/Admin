@@ -17,7 +17,7 @@ enum PERMISSIONS {
   UserDelete = 'user_delete',
   UserDeleteSelf = 'user_delete_self', // remove own user (TODO: hard or soft?)
   UserList = 'user_list',
-  UserListCourseOwned = 'user_list_owned', // listing users in courses of which you are the author
+  UserListCourseOwned = 'user_list_authored', // listing users in courses of which you are the author
 
   // USER GROUP
   UserGroupCreate = 'user-group_create',
