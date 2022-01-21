@@ -37,8 +37,6 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
 
   const { state, getEditorConfig, submitContent } = useContext(EditorContext);
 
-  console.log(state);
-
   useEffect(() => {
     /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
     getEditorConfig && getEditorConfig(id);
