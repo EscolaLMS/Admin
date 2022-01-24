@@ -76,7 +76,10 @@ globstar while`,a,R,u,K,H),this.matchOne(a.slice(R),u.slice(K),v))return this.de
           };
           ns.getAjaxUrl = function (action, parameters) {
               var url = H5PIntegration.editor.ajaxPath + action;
-              url += action === "files" ? "/`).concat(vt.nonce,`" : "";
+              if (action === "files" && `).concat(vt.filesAjaxPath?1:0,`) {
+                url = "`).concat(vt.filesAjaxPath,`";
+              }
+              // url += action === "files" ? "/`).concat(vt.nonce,`" : "";
               if (parameters !== undefined) {
                   var separator = url.indexOf("?") === -1 ? "?" : "&";
                   for (var property in parameters) {
