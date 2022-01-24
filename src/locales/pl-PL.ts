@@ -266,6 +266,7 @@ export default {
   TutorsPopularityMetric: 'Wskaźnik popularności nauczycieli',
   AverageTimePerTopic: 'Średni czas spędzony na temacie',
   MoneyEarned: 'Zarobione pieniądze',
+  CertificateTemplates: 'Szablony certyfikatów',
   AverageTime: 'Całkowity spędzony czas na tematach',
   People: 'Ludzie',
   PeopleBought: 'Ilość osób, która kupiła kurs',

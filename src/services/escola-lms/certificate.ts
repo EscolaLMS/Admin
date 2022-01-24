@@ -3,18 +3,15 @@
 import { request } from 'umi';
 
 /**  GET /api/admin/templates */
-export async function certificates(params: {}, options?: { [key: string]: any }) {
-  return request<API.ScormList>('/api/admin/templates', {
-    params: {
-      ...params,
-    },
+export async function certificates(options?: { [key: string]: any }) {
+  return request<API.DefaultMetaResponse<API.CERTIFICATE[]>>('/api/admin/templates/assignable', {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
   });
 }
 
-export async function setTemplate(
+export async function assign(
   id: number,
   body?: { [key: string]: any },
   options?: { [key: string]: any },
@@ -46,7 +43,7 @@ export async function unassign(
 
 /**  GET /api/admin/templates/assigned */
 export async function template(params: API.TemplateItem, options?: { [key: string]: any }) {
-  return request<API.TemplateList>(`/api/admin/templates/assigned`, {
+  return request<API.DefaultMetaResponse<API.CERTIFICATE[]>>(`/api/admin/templates/assigned`, {
     params,
     method: 'GET',
     /* useCache: true */ useCache: false,

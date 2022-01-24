@@ -1,80 +1,53 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
-import ProForm from '@ant-design/pro-form';
-import { message, Button, Space } from 'antd';
+import { AppContext } from '@/components/ProgramForm/Context';
+import CertificatSelector from '@/components/Certificat';
+import { template as fetchTemplate } from '@/services/escola-lms/certificate';
+import { Typography } from 'antd';
 import { FormattedMessage } from 'umi';
-import CertificatSelector from '@/components/Certificate';
-import {
-  unassign as unassignCertificate,
-  setTemplate as postSetTemplate,
-  template as fetchTemplate,
-} from '@/services/escola-lms/certificate';
 
-export const CourseCertificateForm: React.FC<{
+export const ProgramForm: React.FC<{
   id: number | string;
 }> = ({ id }) => {
-  const [templateId, setTemplateId] = useState<number | null>(null);
+  const { Text } = Typography;
+  const [templates, setTemplates] = useState<API.CERTIFICATE[]>([]);
+  const [templatesAssigned, seTemplatesAssigned] = useState<API.CERTIFICATE[]>([]);
 
   const updateValue = useCallback(
     (value) => {
-      setTemplateId(value);
+      seTemplatesAssigned(value);
     },
-    [templateId],
+    [templatesAssigned],
   );
 
-  const onUnassign = useCallback(
-    (value: number | null) => {
-      unassignCertificate(Number(value), { assignable_id: id }).then((response) => {
-        if (response.success) {
-          message.success(response.message);
-          updateValue(null);
-        }
-      });
-    },
-    [templateId],
-  );
+  useEffect(() => {
+    return fetchTemplate({
+      assignable_class: 'EscolaLms\\Courses\\Models\\Course',
+      assignable_id: Number(id),
+    }).then((response) => {
+      if (response.success) {
+        setTemplates(response.data);
+        seTemplatesAssigned(
+          response.data.map((template) => (typeof template === 'object' ? template.id : template)),
+        );
+      }
+    });
+  }, []);
 
   return (
-    <ProForm
-      onFinish={async () => {
-        postSetTemplate(Number(templateId), { assignable_id: id }).then((response) => {
-          if (response.success) {
-            message.success(response.message);
-          }
-        });
-      }}
-      request={() => {
-        return fetchTemplate({
-          assignable_class: 'EscolaLms\\Courses\\Models\\Course',
-          assignable_id: Number(id),
-        }).then((response) => {
-          if (response.success) {
-            return {
-              template: response.data,
-            };
-          }
-          return {
-            template: [],
-          };
-        });
-      }}
-    >
-      <ProForm.Item
-        valuePropName="value"
-        name="template"
-        label={<FormattedMessage id="template" defaultMessage="Users" />}
-      >
-        <CertificatSelector value={templateId} onChange={(value) => updateValue(value)} />
-      </ProForm.Item>
-      <ProForm.Item name="template" valuePropName="value">
-        <Space size="large" align="start">
-          <Button onClick={() => onUnassign(templateId)}>
-            <FormattedMessage id="clear_selection" />
-          </Button>
-        </Space>
-      </ProForm.Item>
-    </ProForm>
+    <AppContext id={Number(id)}>
+      <Text>
+        <FormattedMessage id="CertificateTemplates" defaultMessage="Users" />
+      </Text>
+      <CertificatSelector
+        multiple
+        courseId={id}
+        allTemplates={templates}
+        value={templatesAssigned}
+        onChange={(value) => updateValue(value)}
+      />
+    </AppContext>
   );
 };
 
-export default CourseCertificateForm;
+export default ProgramForm;

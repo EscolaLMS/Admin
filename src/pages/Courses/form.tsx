@@ -17,7 +17,7 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import TagsInput from '@/components/TagsInput';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProgramForm from '@/components/ProgramForm';
+import ProgramForm from '@/components/ProgramForm/';
 import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
@@ -396,7 +396,7 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
             {/* <TemplateEditor /> */}
-            <CourseCertificateForm id={course} />
+            {course && <CourseCertificateForm id={course} />}
           </ProCard.TabPane>
         )}
 

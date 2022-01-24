@@ -243,6 +243,7 @@ export default {
   TutorsPopularityMetric: 'Tutors popularity metric',
   AverageTimePerTopic: 'Average time per topic',
   MoneyEarned: 'Money earned',
+  CertificateTemplates: 'Certificate templates',
   AverageTime: 'Total time',
   People: 'People',
   PeopleBought: 'People who bought this course',
