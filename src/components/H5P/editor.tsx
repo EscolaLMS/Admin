@@ -136,7 +136,10 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
           };
           ns.getAjaxUrl = function (action, parameters) {
               var url = H5PIntegration.editor.ajaxPath + action;
-              url += action === "files" ? "/${settings.nonce}" : "";
+              if (action === "files" && ${settings.filesAjaxPath ? 1 : 0}) {
+                url = "${settings.filesAjaxPath}";
+              }
+              // url += action === "files" ? "/${settings.nonce}" : "";
               if (parameters !== undefined) {
                   var separator = url.indexOf("?") === -1 ? "?" : "&";
                   for (var property in parameters) {
