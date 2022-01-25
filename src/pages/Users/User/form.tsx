@@ -251,8 +251,7 @@ export default ({ isNew }: { isNew: boolean }) => {
                 onChange={(info) => {
                   if (info.file.status === 'done') {
                     if (info.file.response.success) {
-                      fetchData();
-                      // setData(info.file.response.data);
+                      setData(info.file.response.data);
                     }
                   }
                 }}
