@@ -109,7 +109,9 @@ const TableList: React.FC = () => {
             <Button type="primary" icon={<EditOutlined />}></Button>
           </Tooltip>
         </Link>,
+
         <Popconfirm
+          disabled={record.count_h5p !== 0}
           title={
             <FormattedMessage
               id="deleteQuestion"
@@ -121,7 +123,12 @@ const TableList: React.FC = () => {
           cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+            <Button
+              disabled={record.count_h5p !== 0}
+              type="primary"
+              icon={<DeleteOutlined />}
+              danger
+            ></Button>
           </Tooltip>
         </Popconfirm>,
         <Link to={`/h5ps/preview/${record.id}`}>
