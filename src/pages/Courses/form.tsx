@@ -22,7 +22,6 @@ import ScormSelector from '@/components/Scorm';
 import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
-// import TemplateEditor from '@/components/TemplateFields';
 import CourseStatistics from '@/components/CourseStatistics';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
