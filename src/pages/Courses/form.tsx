@@ -3,9 +3,9 @@ import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
-  ProFormSwitch,
   ProFormDatePicker,
   ProFormCheckbox,
+  ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
@@ -36,6 +36,12 @@ export default () => {
   const isNew = course === 'new';
 
   const [data, setData] = useState<Partial<API.Course>>();
+
+  enum StatusEnum {
+    draft = 'draft',
+    published = 'published',
+    archived = 'archived',
+  }
 
   useEffect(() => {
     if (course === 'new') {
@@ -180,7 +186,16 @@ export default () => {
                   defaultMessage: 'language',
                 })}
               />
-              <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+              <ProFormSelect
+                name="status"
+                width="xs"
+                label={<FormattedMessage id="status" />}
+                valueEnum={StatusEnum}
+                placeholder={intl.formatMessage({
+                  id: 'status',
+                })}
+                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+              />
             </ProForm.Group>
 
             <ProForm.Group>
