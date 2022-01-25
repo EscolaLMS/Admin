@@ -37,12 +37,6 @@ export default () => {
 
   const [data, setData] = useState<Partial<API.Course>>();
 
-  enum StatusEnum {
-    draft = 'draft',
-    published = 'published',
-    archived = 'archived',
-  }
-
   useEffect(() => {
     if (course === 'new') {
       setData({
@@ -190,7 +184,7 @@ export default () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={StatusEnum}
+                valueEnum={API.CourseStatus}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}

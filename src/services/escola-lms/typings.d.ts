@@ -19,6 +19,12 @@ declare namespace API {
     UserLogged = 'EscolaLms\\Auth\\Events\\UserLogged',
   }
 
+  enum CourseStatus {
+    draft = 'draft',
+    published = 'published',
+    archived = 'archived',
+  }
+
   type Category = {
     id: number;
     name: string;
