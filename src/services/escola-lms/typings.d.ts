@@ -540,6 +540,33 @@ declare namespace API {
 
   type FileUpload = DefaultResponse<File[]>;
 
+  type CERTIFICATE = {
+    id: number;
+    name: string;
+    event: string;
+    default: boolean;
+    assignables: CERTIFICATE_ASSIGNABLES[];
+    channel: number;
+    selection: CERTIFICATE_SELECTION[];
+    created_at: string;
+    updated_at: string;
+  };
+
+  type CERTIFICATE_SELECTION = {
+    id: number;
+    key: string;
+    template_id: number;
+    content: string;
+    created_at: string;
+    updated_at: string;
+  };
+
+  type CERTIFICATE_ASSIGNABLES = {};
+
+  type Template = CERTIFICATE[];
+
+  type TemplateList = DefaultResponse<Template>;
+
   type SCORM = {
     id: number;
     resource_type: null;
@@ -584,6 +611,11 @@ declare namespace API {
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
 
   type ScormScosList = DefaultResponse<SCORM_SCO>;
+
+  type TemplateItem = {
+    assignable_class: string;
+    assignable_id: number;
+  };
 
   type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
   type SettingBase = {
