@@ -128,6 +128,7 @@ export default {
   created_at: 'Utworzono',
   create_new: 'Utwórz nowy',
   count_h5p: 'Ilość h5p',
+  library_id: 'ID biblioteki',
   updated_at: 'Zaktualizowano',
   currency: 'Waluta',
   subtotal: 'Suma częściowa',

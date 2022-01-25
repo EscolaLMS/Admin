@@ -195,6 +195,7 @@ declare namespace API {
   type H5PListParams = PageParams &
     PaginationParams & {
       title?: string;
+      library_id?: number;
     };
 
   type LoginRequest = {

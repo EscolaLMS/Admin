@@ -231,6 +231,7 @@ export default {
   order_id: 'Order ID: ',
   course_id: 'Course ID: ',
   count_h5p: 'H5P count',
+  library_id: 'Library ID',
   new_payment: 'new',
   paid: 'paid',
   cancelled: 'cancelled',
