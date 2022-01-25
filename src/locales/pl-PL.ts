@@ -139,6 +139,7 @@ export default {
   select_tags: 'Wybierz tagi',
   select_person: 'Wybierz osobę',
   select_course: 'Wybierz kurs',
+  select_templates: 'Wybierz szablony',
   select_type_topic: 'Wybierz rodzaj tematu żeby kontynuować',
   select_scorm_package: 'Wybierz pakiet SCORM',
   select_certificate_package: 'Wybierz szablon certyfikatu',

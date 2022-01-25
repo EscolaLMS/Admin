@@ -148,7 +148,7 @@ export const UserSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
+      placeholder={<FormattedMessage id="select_templates" defaultMessage="Select a templates" />}
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

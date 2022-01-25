@@ -124,6 +124,7 @@ export default {
   select_tags: 'Select tags',
   select_person: 'Select a person',
   select_course: 'Select a course',
+  select_templates: 'Select a templates',
   select_type_topic: 'Select type of topic to continue',
   select_scorm_package: 'Select SCORM package',
   select_certificate_package: 'Select certificate template',

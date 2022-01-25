@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { AppContext } from '@/components/ProgramForm/Context';
-import CertificatSelector from '@/components/Certificat';
+import CertificatSelector from '@/components/Certificate';
 import { template as fetchTemplate } from '@/services/escola-lms/certificate';
 import { Typography } from 'antd';
 import { FormattedMessage } from 'umi';
