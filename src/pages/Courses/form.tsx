@@ -9,7 +9,7 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
-import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
+import { getCourse, updateCourse, createCourse, CourseStatus } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
 import UserSelect from '@/components/UserSelect';
@@ -184,7 +184,7 @@ export default () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={API.CourseStatus}
+                valueEnum={CourseStatus}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
