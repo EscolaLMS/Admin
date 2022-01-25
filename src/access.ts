@@ -12,13 +12,13 @@ export default function access(initialState: { currentUser: any }) {
   const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) =>
     dashboardPermission && havePermissions(...permissions);
 
-  const adminPermission =
-    dashboardPermission && currentUser && currentUser.data.roles.includes('admin');
+  // const adminPermission =
+  //   dashboardPermission && currentUser && currentUser.data.roles.includes('admin');
 
-  const tutorPermission =
-    dashboardPermission &&
-    currentUser &&
-    (currentUser.data.roles.includes('tutor') || currentUser.data.roles.includes('admin'));
+  // const tutorPermission =
+  //   dashboardPermission &&
+  //   currentUser &&
+  //   (currentUser.data.roles.includes('tutor') || currentUser.data.roles.includes('admin'));
 
   return {
     dashboardPermission,
@@ -36,31 +36,31 @@ export default function access(initialState: { currentUser: any }) {
 
     paymentListPermission: havePermissionsInDashboard(PERMISSIONS.PaymentList),
 
-    courseListPermission: tutorPermission, // TODO: this permission not exist in api
+    courseListPermission: havePermissionsInDashboard(PERMISSIONS.CourseList),
     courseDetailsPermission: havePermissionsInDashboard(PERMISSIONS.CourseRead),
 
-    h5pListPermission: tutorPermission, // TODO: this permission not exist in api
-    h5pDetailsPermission: tutorPermission, // TODO: this permission not exist in api
+    h5pListPermission: havePermissionsInDashboard(PERMISSIONS.H5PList),
+    h5pDetailsPermission: havePermissionsInDashboard(PERMISSIONS.H5PRead),
 
-    scormListPermission: tutorPermission, // TODO: this permission not exist in api
-    scormDetailsPermission: tutorPermission, // TODO: this permission not exist in api
+    scormListPermission: havePermissionsInDashboard(PERMISSIONS.ScormList),
+    scormDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ScormRead),
 
-    pageListPermission: adminPermission, // TODO: this permission not exist in api
-    pageDetailsPermission: adminPermission, // TODO: this permission not exist in api
+    pageListPermission: havePermissionsInDashboard(PERMISSIONS.PageList),
+    pageDetailsPermission: havePermissionsInDashboard(PERMISSIONS.PageRead),
 
-    templateListPermission: adminPermission, // TODO: this permission not exist in api
-    templateDetailsPermission: adminPermission, // TODO: this permission not exist in api
+    templateListPermission: havePermissionsInDashboard(PERMISSIONS.TemplateList),
+    templateDetailsPermission: havePermissionsInDashboard(PERMISSIONS.TemplateRead),
 
     fileListPermission: havePermissionsInDashboard(PERMISSIONS.FileList),
 
-    categoryListPermission: tutorPermission, // TODO: this permission not exist in api
+    categoryListPermission: havePermissionsInDashboard(PERMISSIONS.CategoryList),
 
     settingListPermission: havePermissionsInDashboard(PERMISSIONS.SettingsList),
 
-    roleListPermission: adminPermission, // TODO: this permission not exist in api
+    roleListPermission: havePermissionsInDashboard(PERMISSIONS.PermisionRoleList),
     roleDetailsPermission: havePermissionsInDashboard(PERMISSIONS.PermissionRoleUpdate),
 
-    notificationListPermission: havePermissionsInDashboard(PERMISSIONS.NotificationListAll), // TODO: or NotificationList?
+    notificationListPermission: havePermissionsInDashboard(PERMISSIONS.NotificationListAll),
 
     reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
 

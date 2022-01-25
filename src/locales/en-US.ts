@@ -285,4 +285,5 @@ export default {
   contentHtml: 'HTML Content',
   contentMjml: 'Mjml Content',
   html_tooltip: 'HTML content',
+  H5P: 'H5P',
 };

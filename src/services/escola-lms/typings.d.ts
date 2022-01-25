@@ -788,8 +788,62 @@ declare namespace API {
 
   export type TopicNewOrNotEmpty = TopicNotEmpty | TopicNew;
 
-  type CourseAccess = {
-    users: UserItem[] | number[];
-    groups: UserGroup[] | number[];
+  type Dict = {
+    [key: string]: string | Dict;
+  };
+
+  export type H5PObject = {
+    baseUrl: string;
+    url: string;
+    postUserStatistics: boolean;
+    ajax: { setFinished: string; contentUserData: string };
+    saveFreq: boolean;
+    siteUrl: string;
+    l10n: Dict;
+    hubIsEnabled: boolean;
+    loadedJs: string[];
+    loadedCss: string[];
+    core: {
+      styles: string[];
+      scripts: string[];
+    };
+    editor?: {
+      filesPath: string;
+      fileIcon: { path: string; width: number; height: number };
+      ajaxPath: string;
+      libraryUrl: string;
+      copyrightSemantics: Dict;
+      metadataSemantics: Dict[];
+
+      assets: {
+        css: string[];
+        js: string[];
+      };
+      deleteMessage: string;
+      apiVersion: { majorVersion: number; minorVersion: number };
+    };
+    nonce: string;
+    contents?: Record<
+      string,
+      {
+        library: string;
+        jsonContent: string;
+        fullScreen: boolean;
+        title: string;
+        content: {
+          id: number;
+          library: {
+            id: number;
+            embedTypes: string;
+            name: string;
+          };
+        };
+        contentUserData: [
+          {
+            state: object;
+          },
+        ];
+      }
+    >;
   };
 }

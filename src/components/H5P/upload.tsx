@@ -7,7 +7,7 @@ export const UploadH5P: React.FC<{
 }> = ({ onSuccess, onError }) => {
   return (
     <SecureUpload
-      url="/api/hh5p/content/upload"
+      url="/api/admin/hh5p/content/upload"
       name="h5p_file"
       accept=".h5p"
       onChange={(info) => {
