@@ -127,6 +127,7 @@ export default {
   dateRange: 'Zakres dat',
   created_at: 'Utworzono',
   create_new: 'Utwórz nowy',
+  count_h5p: 'Ilość h5p',
   updated_at: 'Zaktualizowano',
   currency: 'Waluta',
   subtotal: 'Suma częściowa',

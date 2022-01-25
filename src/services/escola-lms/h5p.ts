@@ -4,7 +4,7 @@ import { request } from 'umi';
 
 /**  GET /api/courses */
 export async function h5p(
-  params: API.PaginationParams & {
+  params: API.H5PListParams & {
     // query
     current?: number;
     pageSize?: number;

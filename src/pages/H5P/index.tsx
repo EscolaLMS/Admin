@@ -69,7 +69,6 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
       sorter: false,
-      search: false,
       render: (dom, entity) => {
         return entity.title;
       },
@@ -81,6 +80,15 @@ const TableList: React.FC = () => {
       search: false,
       render: (dom, entity) => {
         return entity.library.title;
+      },
+    },
+    {
+      title: <FormattedMessage id="count_h5p" defaultMessage="count_h5p" />,
+      dataIndex: 'count_h5p',
+      sorter: false,
+      search: false,
+      render: (dom, entity) => {
+        return entity.count_h5p;
       },
     },
     {
@@ -124,7 +132,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.H5PContentListItem, API.PageParams>
+      <ProTable<API.H5PContentListItem, API.H5PListParams>
         loading={loading}
         headerTitle={intl.formatMessage({
           id: 'H5Ps',
@@ -142,9 +150,11 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current }) => {
+        request={({ pageSize, current, title }) => {
           setLoading(true);
+
           return h5p({
+            title,
             pageSize,
             current,
           }).then((response) => {
