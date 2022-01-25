@@ -192,6 +192,12 @@ declare namespace API {
       active?: boolean;
     };
 
+  type H5PListParams = PageParams &
+    PaginationParams & {
+      title?: string;
+      library_id?: number;
+    };
+
   type LoginRequest = {
     email: string;
     password: string;
@@ -428,6 +434,7 @@ declare namespace API {
     metadata: object;
     library: H5PLibrary;
     nonce: string;
+    count_h5p: number;
   };
 
   type H5PContentList = PaginatedList<H5PContent>;

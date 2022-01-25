@@ -10,6 +10,7 @@ import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
 import '@/services/ybug';
+import '@/services/sentry.ts';
 
 const authpaths = ['/user/login', '/user/reset-password'];
 
