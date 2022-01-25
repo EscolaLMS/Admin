@@ -19,6 +19,12 @@ declare namespace API {
     UserLogged = 'EscolaLms\\Auth\\Events\\UserLogged',
   }
 
+  enum CourseStatus {
+    draft = 'draft',
+    published = 'published',
+    archived = 'archived',
+  }
+
   type Category = {
     id: number;
     name: string;
@@ -47,7 +53,6 @@ declare namespace API {
 
   // TODO: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
   type Course = {
-    active: boolean;
     id?: number;
     created_at?: string;
     updated_at?: string;
@@ -64,6 +69,7 @@ declare namespace API {
     tags?: Tag[] | string[];
     scorm_id?: number;
     scorm_sco_id?: number;
+    status: string;
     active_from?: string;
     active_to?: string;
     hours_to_complete?: number;

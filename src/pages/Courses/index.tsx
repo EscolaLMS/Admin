@@ -24,17 +24,35 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     sorter: true,
   },
   {
-    title: <FormattedMessage id="Active" defaultMessage="active" />,
-    dataIndex: 'active',
+    title: <FormattedMessage id="status" defaultMessage="status" />,
+    dataIndex: 'status',
     sorter: false,
-
     valueEnum: {
-      true: { text: <FormattedMessage id="Active" defaultMessage="active" /> },
-      false: {
-        text: <FormattedMessage id="Inactive" defaultMessage="Inactive" />,
+      draft: {
+        text: (
+          <Tag>
+            <FormattedMessage id="draft" defaultMessage="draft" />
+          </Tag>
+        ),
+        status: 'draft',
+      },
+      archived: {
+        text: (
+          <Tag color="error">
+            <FormattedMessage id="archived" defaultMessage="archived" />
+          </Tag>
+        ),
+        status: 'archived',
+      },
+      published: {
+        text: (
+          <Tag color="success">
+            <FormattedMessage id="published" defaultMessage="published" />
+          </Tag>
+        ),
+        status: 'published',
       },
     },
-    render: (_, record) => <Tag>{record.active ? 'Active' : 'Inactive'}</Tag>,
   },
   {
     title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
