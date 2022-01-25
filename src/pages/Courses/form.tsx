@@ -395,7 +395,6 @@ export default () => {
 
         {!isNew && (
           <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
-            {/* <TemplateEditor /> */}
             {course && <CourseCertificateForm id={course} />}
           </ProCard.TabPane>
         )}
