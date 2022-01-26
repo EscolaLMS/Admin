@@ -218,7 +218,7 @@ export default () => {
               />
 
               <ProFormText
-                width="sm"
+                width="xs"
                 name="level"
                 label={<FormattedMessage id="level" />}
                 tooltip={<FormattedMessage id="level" />}
@@ -229,11 +229,11 @@ export default () => {
               />
 
               <ProForm.Item
-                name="author_id"
+                name="authors"
                 label={<FormattedMessage id="author_tutor" />}
                 valuePropName="value"
               >
-                <UserSelect />
+                <UserSelect multiple />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>

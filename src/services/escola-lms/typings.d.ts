@@ -63,6 +63,7 @@ declare namespace API {
     base_price?: string;
     duration?: string;
     author_id?: number;
+    authors: string[];
     image_url?: string;
     video_url?: string;
     categories?: Category[] | (number | string)[];
