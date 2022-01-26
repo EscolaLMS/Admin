@@ -55,6 +55,13 @@ export async function getInitialState(): Promise<{
 
 // https://umijs.org/zh-CN/plugins/plugin-layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+  if (initialState.currentUser) {
+    history.push('/');
+  }
+  if (!initialState?.currentUser && !authpaths.includes(history.location.pathname)) {
+    history.push('/user/login');
+  }
+
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,

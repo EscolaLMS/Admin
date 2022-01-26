@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useParams, history } from 'umi';
 import { EditorContextProvider } from '@escolalms/h5p-react';
 
