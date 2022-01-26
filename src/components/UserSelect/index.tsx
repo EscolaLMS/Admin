@@ -15,6 +15,7 @@ export const UserSelect: React.FC<{
 }> = ({ value, onChange, multiple = false }) => {
   const [users, setUsers] = useState<API.UserItem[]>([]);
   const [fetching, setFetching] = useState(false);
+  const [currUsers, setCurrUsers] = useState<API.UserItem>([]);
 
   const cache = useRef<API.UserItem[]>();
   const abortController = useRef<AbortController>();
@@ -58,8 +59,9 @@ export const UserSelect: React.FC<{
   useEffect(() => {
     const controller = new AbortController();
     if (value) {
-      const values = Array.isArray(value) ? value : [value];
-
+      const val = Array.isArray(value) ? value : [value];
+      const values = val.map((user) => (typeof user === 'object' ? user.id : user));
+      setCurrUsers(values);
       values
         .filter((id) => !cache.current?.find((user) => user.id === id))
         .forEach((v) => {
@@ -80,7 +82,7 @@ export const UserSelect: React.FC<{
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}
-      value={value}
+      value={currUsers}
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
