@@ -38,7 +38,7 @@ export async function createH5P(
   options?: { [key: string]: any },
 ) {
   return request<API.DefaultResponse<API.H5PObject>>(
-    typeof id === 'number' ? `/api/admin/hh5p/content/${id}` : `/api/admin/hh5p/content`,
+    id ? `/api/admin/hh5p/content/${id}` : `/api/admin/hh5p/content`,
     {
       method: 'POST',
       headers: {

@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { useIntl, history, FormattedMessage, useModel } from 'umi';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 
 import { forgot, login } from '@/services/escola-lms/login';
 
@@ -22,16 +22,6 @@ const LoginMessage: React.FC<{
   />
 );
 
-/**  redirect  */
-const goto = () => {
-  if (!history) return;
-  setTimeout(() => {
-    const { query } = history.location;
-    const { redirect } = query as { redirect: string };
-    history.push(redirect || '/');
-  }, 10);
-};
-
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResponse>();
@@ -41,7 +31,7 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
+    if (userInfo.success) {
       setInitialState({
         ...initialState,
         currentUser: userInfo,
@@ -54,9 +44,8 @@ const Login: React.FC = () => {
       const msg = await login({ ...values });
       if (msg.success) {
         localStorage.setItem('TOKEN', msg.data.token);
-        message.success('success');
         await fetchUserInfo();
-        goto();
+        message.success(msg.message);
         return;
       }
       setUserLoginState(msg);
