@@ -9,6 +9,8 @@ import ProTable from '@ant-design/pro-table';
 import { templates, deleteTemplate } from '@/services/escola-lms/templates';
 import { DATETIME_FORMAT } from '@/consts/dates';
 
+const channelType = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel';
+
 const TableList: React.FC<{ templateType: string }> = ({ templateType }) => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
@@ -64,7 +66,7 @@ const TableList: React.FC<{ templateType: string }> = ({ templateType }) => {
         return templates({ pageSize, current }).then((response) => {
           if (response.success) {
             return {
-              data: response.data,
+              data: response.data.filter((item) => item.channel === channelType),
               total: response.meta.total,
               success: true,
             };
