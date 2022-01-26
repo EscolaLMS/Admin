@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { message, Spin, Row, Col, Form } from 'antd';
+import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -34,7 +34,7 @@ export default () => {
   const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
-  const [form] = Form.useForm();
+
   const [data, setData] = useState<Partial<API.Course>>();
 
   useEffect(() => {
@@ -156,7 +156,6 @@ export default () => {
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           <ProForm
-            form={form}
             {...formProps}
             onValuesChange={(values) => {
               return values.title && setData({ title: values.title });
@@ -339,7 +338,7 @@ export default () => {
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <Row>
-                <Col offset={1}>
+                <Col>
                   <ProFormImageUpload
                     action={`/api/admin/courses/${course}`}
                     src_name="image_url"
@@ -353,7 +352,7 @@ export default () => {
                     }
                   />
                 </Col>
-                <Col offset={1}>
+                <Col>
                   <ProFormVideoUpload
                     action={`/api/admin/courses/${course}`}
                     src_name="video_url"
@@ -367,7 +366,7 @@ export default () => {
                     }
                   />
                 </Col>
-                <Col offset={1}>
+                <Col>
                   <ProFormImageUpload
                     action={`/api/admin/courses/${course}`}
                     src_name="poster_url"
