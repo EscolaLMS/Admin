@@ -73,25 +73,6 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
             .catch((err) => {
               setEditorState({ state: 'error', error: err.toString() });
             });
-
-          // return (
-          //   submitContent &&
-          //   submitContent(
-          //     {
-          //       ...status.data,
-          //       nonce: state.settings.nonce
-          //     },
-          //     id,
-          //   )
-          //     .then((data) => {
-          //       /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
-          //       onSubmit && data && onSubmit(data);
-          //       setEditorState({ state: 'loaded' });
-          //     })
-          //     .catch((err) => {
-          //       setEditorState({ state: 'error', error: err.toString() });
-          //     })
-          // );
         }
         /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
         status.h5pEditorStatus === 'error' && console.log(status.error);
