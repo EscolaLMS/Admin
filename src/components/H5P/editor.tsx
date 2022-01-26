@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { unescape } from 'html-escaper';
 import { EditorContext } from '@escolalms/h5p-react';
 import type { H5PEditorStatus, EditorProps } from '@escolalms/h5p-react';
+import { createH5P } from '@/services/escola-lms/h5p';
 
 const prepareMarkupForPassing = (markup: string) => {
   return unescape(markup);
@@ -54,24 +55,43 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
         const status: H5PEditorStatus = event.data;
         if (status.h5pEditorStatus === 'success' && state.value === 'loaded') {
           setEditorState({ state: 'loading' });
-          return (
-            submitContent &&
-            submitContent(
-              {
-                ...status.data,
-                nonce: state.settings.nonce,
-              },
-              id,
-            )
-              .then((data) => {
-                /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
-                onSubmit && data && onSubmit(data);
-                setEditorState({ state: 'loaded' });
-              })
-              .catch((err) => {
-                setEditorState({ state: 'error', error: err.toString() });
-              })
-          );
+
+          return createH5P(
+            {
+              ...status.data,
+              nonce: state.settings.nonce,
+            },
+            id,
+          )
+            .then((response) => {
+              if (onSubmit && response) {
+                onSubmit(response.data);
+              }
+
+              setEditorState({ state: 'loaded' });
+            })
+            .catch((err) => {
+              setEditorState({ state: 'error', error: err.toString() });
+            });
+
+          // return (
+          //   submitContent &&
+          //   submitContent(
+          //     {
+          //       ...status.data,
+          //       nonce: state.settings.nonce
+          //     },
+          //     id,
+          //   )
+          //     .then((data) => {
+          //       /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
+          //       onSubmit && data && onSubmit(data);
+          //       setEditorState({ state: 'loaded' });
+          //     })
+          //     .catch((err) => {
+          //       setEditorState({ state: 'error', error: err.toString() });
+          //     })
+          // );
         }
         /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
         status.h5pEditorStatus === 'error' && console.log(status.error);

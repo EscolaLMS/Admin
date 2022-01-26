@@ -32,6 +32,25 @@ export async function getH5p(id: number, options?: { [key: string]: any }) {
   });
 }
 
+export async function createH5P(
+  body: any,
+  id?: number | string | undefined,
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultResponse<API.H5PObject>>(
+    typeof id === 'number' ? `/api/admin/hh5p/content/${id}` : `/api/admin/hh5p/content`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      /* useCache: true */ useCache: false,
+      ...(options || {}),
+    },
+  );
+}
+
 /**  DELETE /api/rule */
 export async function removeH5P(id: number) {
   return request<API.DefaultResponse<{}>>(`/api/admin/hh5p/content/${id}`, {
