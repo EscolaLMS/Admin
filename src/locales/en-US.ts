@@ -184,6 +184,7 @@ export default {
   new_course: 'New course',
   media: 'Media',
   image: 'Image',
+  poster: 'Poster',
   video: 'Video',
   audio: 'Audio',
   categories_tags: 'Categories & Tags',

@@ -340,6 +340,7 @@ export default () => {
               <Row>
                 <Col>
                   <ProFormImageUpload
+                    title="image"
                     action={`/api/admin/courses/${course}`}
                     src_name="image_url"
                     form_name="image"
@@ -368,6 +369,7 @@ export default () => {
                 </Col>
                 <Col>
                   <ProFormImageUpload
+                    title="poster"
                     action={`/api/admin/courses/${course}`}
                     src_name="poster_url"
                     form_name="poster"
