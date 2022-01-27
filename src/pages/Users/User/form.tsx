@@ -21,6 +21,7 @@ export default ({ isNew }: { isNew: boolean }) => {
   const [roles, setRoles] = useState<API.Role[]>();
   const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
   const [additionalFields, setAdditionalFields] = useState<string[]>([]);
+  const [bioFieldName, setBioFieldName] = useState<string>();
 
   const fetchData = useCallback(async () => {
     const response = await fetchUser(Number(user));
@@ -47,6 +48,8 @@ export default ({ isNew }: { isNew: boolean }) => {
       setAdditionalRequiredFields(
         request.data.escola_auth.additional_fields_required.value as string[],
       );
+
+      setBioFieldName(request.data.escolalms_courses.tutor_bio_field.value as string);
       setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
     }
   }, []);
@@ -195,40 +198,35 @@ export default ({ isNew }: { isNew: boolean }) => {
         )}
       </ProForm.Group>
       <ProForm.Group>
-        {additionalRequiredFields &&
-          additionalRequiredFields.map((field) => (
-            <ProFormText
-              width="md"
-              name={field}
-              label={<FormattedMessage id={field} />}
-              tooltip={<FormattedMessage id={field} />}
-              placeholder={intl.formatMessage({
-                id: field,
-              })}
-              required
-            />
-          ))}
         {additionalFields &&
-          additionalFields.map((field) => (
-            <ProFormText
-              width="md"
-              name={field}
-              label={<FormattedMessage id={field} />}
-              tooltip={<FormattedMessage id={field} />}
-              placeholder={intl.formatMessage({
-                id: field,
-              })}
-            />
-          ))}
+          additionalFields
+            .filter((field) => field !== bioFieldName)
+            .map((field) => {
+              return (
+                <ProFormText
+                  required={additionalRequiredFields.includes(field)}
+                  width="md"
+                  name={field}
+                  label={<FormattedMessage id={field} />}
+                  tooltip={<FormattedMessage id={field} />}
+                  placeholder={intl.formatMessage({
+                    id: field,
+                  })}
+                />
+              );
+            })}
       </ProForm.Group>
-      <ProForm.Item
-        name="bio"
-        label={<FormattedMessage id="bio" />}
-        tooltip={<FormattedMessage id="bio_tooltip" />}
-        valuePropName="value"
-      >
-        <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
-      </ProForm.Item>
+
+      {bioFieldName && additionalFields.includes(bioFieldName) && (
+        <ProForm.Item
+          name={bioFieldName}
+          label={<FormattedMessage id={bioFieldName} />}
+          tooltip={<FormattedMessage id={`{bioFieldName}_tooltip`} />}
+          valuePropName="value"
+        >
+          <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
+        </ProForm.Item>
+      )}
 
       {!isNew && (
         <ProForm.Group>
