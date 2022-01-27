@@ -5,13 +5,14 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { format } from 'date-fns';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-
 import { templates, deleteTemplate } from '@/services/escola-lms/templates';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { channelType } from '..';
 
-const channelType = 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel';
-
-const TableList: React.FC<{ templateType: string }> = ({ templateType }) => {
+const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
+  templateType,
+  channel,
+}) => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
@@ -66,7 +67,7 @@ const TableList: React.FC<{ templateType: string }> = ({ templateType }) => {
         return templates({ pageSize, current }).then((response) => {
           if (response.success) {
             return {
-              data: response.data.filter((item) => item.channel === channelType),
+              data: response.data.filter((item) => item.channel === channel),
               total: response.meta.total,
               success: true,
             };
