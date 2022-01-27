@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+
 import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
@@ -132,22 +132,10 @@ export default () => {
               />
             </ProForm.Group>
             <ProForm.Group>
-              {additionalRequiredFields &&
-                additionalRequiredFields.map((field) => (
-                  <ProFormText
-                    width="md"
-                    name={field}
-                    label={<FormattedMessage id={field} />}
-                    tooltip={<FormattedMessage id={field} />}
-                    placeholder={intl.formatMessage({
-                      id: field,
-                    })}
-                    required
-                  />
-                ))}
               {additionalFields &&
                 additionalFields.map((field) => (
                   <ProFormText
+                    required={additionalRequiredFields.includes(field)}
                     width="md"
                     name={field}
                     label={<FormattedMessage id={field} />}
@@ -158,14 +146,6 @@ export default () => {
                   />
                 ))}
             </ProForm.Group>
-            <ProForm.Item
-              name="bio"
-              label={<FormattedMessage id="bio" />}
-              tooltip={<FormattedMessage id="bio_tooltip" />}
-              valuePropName="value"
-            >
-              <WysiwygMarkdown directory={`users/wysiwyg`} />
-            </ProForm.Item>
 
             <ProForm.Group>
               <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
