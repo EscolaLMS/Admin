@@ -16,7 +16,7 @@ const config = {
 
     content: function content(_ref: Record<string, any>) {
       const percent = _ref.percent as number;
-      return percent > 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
+      return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
     },
     style: {
       fontSize: 14,
