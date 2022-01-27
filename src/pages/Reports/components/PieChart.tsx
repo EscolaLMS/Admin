@@ -16,7 +16,7 @@ const config = {
 
     content: function content(_ref: Record<string, any>) {
       const percent = _ref.percent as number;
-      return ''.concat((percent * 100).toFixed(0), '%');
+      return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
     },
     style: {
       fontSize: 14,
@@ -60,7 +60,9 @@ const PieChart: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
 
   return (
     <ProCard
-      title={<FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />}
+      title={
+        <FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />
+      }
       headerBordered
     >
       {state.mode === 'loading' && <Spin />}
