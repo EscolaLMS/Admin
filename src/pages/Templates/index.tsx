@@ -3,14 +3,16 @@ import { FormattedMessage, useParams, history } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 
-import Emails from './Emails/index';
-import Pdfs from './Pdfs/index';
+import ConfigList from './ConfigList/index';
+
+export enum channelType {
+  email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
+  pdf = 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
+}
 
 const Templates: React.FC = () => {
   const params = useParams<{ template?: string }>();
   const { template } = params;
-
-  console.log('tab', template);
 
   return (
     <PageContainer>
@@ -22,11 +24,11 @@ const Templates: React.FC = () => {
         }}
       >
         <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
-          <Emails templateType={'email'} />
+          <ConfigList templateType={'email'} channel={channelType.email} />
         </ProCard.TabPane>
 
         <ProCard.TabPane key={'pdf'} tab={<FormattedMessage id="PDF" />}>
-          <Pdfs templateType={'pdf'} />
+          <ConfigList templateType={'pdf'} channel={channelType.pdf} />
         </ProCard.TabPane>
         <ProCard.TabPane
           disabled
