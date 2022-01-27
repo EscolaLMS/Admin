@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'antd';
+import { Button, Image } from 'antd';
 
 import ProForm from '@ant-design/pro-form';
 import SecureUpload from '@/components/SecureUpload';
@@ -11,14 +11,31 @@ export const ProFormImageUpload: React.FC<{
   form_name: string;
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
-}> = ({ action, form_name, src_name, getUploadedSrcField }) => {
+  setPath: (state: object) => void;
+}> = ({ action, form_name, src_name, getUploadedSrcField, setPath }) => {
   return (
     <ProForm.Group title={<FormattedMessage id="image" />}>
       <ProForm.Item shouldUpdate>
         {(form) => {
-          return <Image width={200} src={form.getFieldValue(src_name)} />;
+          return (
+            <React.Fragment>
+              <Image width={200} src={form.getFieldValue(src_name)} />{' '}
+              <Button
+                onClick={() => [
+                  setPath({
+                    [`${form_name}_url`]: '',
+                    [`${form_name}_path`]: '',
+                  }),
+                  form.setFieldsValue({ [src_name]: '' }),
+                ]}
+              >
+                <FormattedMessage id="delete" />
+              </Button>
+            </React.Fragment>
+          );
         }}
       </ProForm.Item>
+
       <ProForm.Item shouldUpdate>
         {(form) => {
           return (
@@ -29,6 +46,11 @@ export const ProFormImageUpload: React.FC<{
               onChange={(info) => {
                 if (info.file.status === 'done') {
                   form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
+                  console.log({ info });
+                  setPath({
+                    [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                    [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
+                  });
                 }
               }}
             />

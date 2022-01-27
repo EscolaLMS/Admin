@@ -1,5 +1,5 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { message, Spin, Row, Col, Form } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -34,7 +34,7 @@ export default () => {
   const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
-
+  const [form] = Form.useForm();
   const [data, setData] = useState<Partial<API.Course>>();
 
   useEffect(() => {
@@ -58,12 +58,25 @@ export default () => {
     fetch();
   }, [course]);
 
+  const splitPath = useCallback(
+    (path: string) => {
+      return path?.split('storage')[1];
+    },
+    [data],
+  );
+
   const formProps = useMemo(
     () => ({
       onFinish: async (values: API.Course) => {
         const postData = {
           ...values,
           scorm_sco_id: values.scorm_sco_id ? values.scorm_sco_id : null,
+          image_url: data && data.image_url,
+          image_path: data && data.image_url && splitPath(data.image_url),
+          video_url: data && data.video_url,
+          video_path: data && data.video_url && splitPath(data.video_url),
+          poster_url: data && data.poster_url,
+          poster_path: data && data.poster_url && splitPath(data.poster_url),
         };
         let response: API.DefaultResponse<API.Course>;
         if (course === 'new') {
@@ -143,6 +156,7 @@ export default () => {
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           <ProForm
+            form={form}
             {...formProps}
             onValuesChange={(values) => {
               return values.title && setData({ title: values.title });
@@ -320,6 +334,7 @@ export default () => {
             </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
+
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
@@ -330,6 +345,12 @@ export default () => {
                     src_name="image_url"
                     form_name="image"
                     getUploadedSrcField={(info) => info.file.response.data.image_url}
+                    setPath={(removedPath) =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        ...removedPath,
+                      }))
+                    }
                   />
                 </Col>
                 <Col offset={1}>
@@ -338,6 +359,12 @@ export default () => {
                     src_name="video_url"
                     form_name="video"
                     getUploadedSrcField={(info) => info.file.response.data.video_url}
+                    setPath={(removedPath) =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        ...removedPath,
+                      }))
+                    }
                   />
                 </Col>
                 <Col offset={1}>
@@ -346,6 +373,12 @@ export default () => {
                     src_name="poster_url"
                     form_name="poster"
                     getUploadedSrcField={(info) => info.file.response.data.poster_url}
+                    setPath={(removedPath) =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        ...removedPath,
+                      }))
+                    }
                   />
                 </Col>
               </Row>
