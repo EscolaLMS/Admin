@@ -4,18 +4,35 @@ import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import ReactPlayer from 'react-player';
 import { FormattedMessage } from 'umi';
+import { Button } from 'antd';
 
 export const ProFormVideoUpload: React.FC<{
   action: string;
   form_name: string;
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
-}> = ({ action, form_name, src_name, getUploadedSrcField }) => {
+  setPath: (state: object) => void;
+}> = ({ action, form_name, src_name, getUploadedSrcField, setPath }) => {
   return (
     <ProForm.Group title={<FormattedMessage id="video" />}>
       <ProForm.Item shouldUpdate>
         {(form) => {
-          return <ReactPlayer url={form.getFieldValue(src_name)} controls />;
+          return (
+            <React.Fragment>
+              <ReactPlayer url={form.getFieldValue(src_name)} controls />
+              <Button
+                onClick={() => [
+                  setPath({
+                    [`${form_name}_url`]: '',
+                    [`${form_name}_path`]: '',
+                  }),
+                  form.setFieldsValue({ [src_name]: '' }),
+                ]}
+              >
+                <FormattedMessage id="delete" />
+              </Button>
+            </React.Fragment>
+          );
         }}
       </ProForm.Item>
       <ProForm.Item shouldUpdate>

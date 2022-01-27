@@ -35,7 +35,6 @@ export const ProFormImageUpload: React.FC<{
           );
         }}
       </ProForm.Item>
-
       <ProForm.Item shouldUpdate>
         {(form) => {
           return (
