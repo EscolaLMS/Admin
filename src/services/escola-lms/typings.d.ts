@@ -65,6 +65,7 @@ declare namespace API {
     author_id?: number;
     authors: string[];
     image_url?: string;
+    poster_url?: string;
     video_url?: string;
     categories?: Category[] | (number | string)[];
     tags?: Tag[] | string[];

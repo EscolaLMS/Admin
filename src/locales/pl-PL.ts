@@ -205,6 +205,7 @@ export default {
   new_course: 'Nowy kurs',
   media: 'Media',
   image: 'Zdjęcie',
+  poster: 'Plakat',
   video: 'Wideo',
   audio: 'Dźwięk',
   categories_tags: 'Kategorie i tagi',
