@@ -21,7 +21,6 @@ export default ({ isNew }: { isNew: boolean }) => {
   const [roles, setRoles] = useState<API.Role[]>();
   const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
   const [additionalFields, setAdditionalFields] = useState<string[]>([]);
-  const [bioFieldName, setBioFieldName] = useState<string>();
 
   const fetchData = useCallback(async () => {
     const response = await fetchUser(Number(user));
@@ -49,7 +48,6 @@ export default ({ isNew }: { isNew: boolean }) => {
         request.data.escola_auth.additional_fields_required.value as string[],
       );
 
-      setBioFieldName(request.data.escolalms_courses.tutor_bio_field.value as string);
       setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
     }
   }, []);
@@ -200,7 +198,7 @@ export default ({ isNew }: { isNew: boolean }) => {
       <ProForm.Group>
         {additionalFields &&
           additionalFields
-            .filter((field) => field !== bioFieldName)
+            .filter((field) => field !== 'bio')
             .map((field) => {
               return (
                 <ProFormText
@@ -217,11 +215,11 @@ export default ({ isNew }: { isNew: boolean }) => {
             })}
       </ProForm.Group>
 
-      {bioFieldName && additionalFields.includes(bioFieldName) && (
+      {additionalFields.includes('bio') && (
         <ProForm.Item
-          name={bioFieldName}
-          label={<FormattedMessage id={bioFieldName} />}
-          tooltip={<FormattedMessage id={`{bioFieldName}_tooltip`} />}
+          name={'bio'}
+          label={<FormattedMessage id={'bio'} />}
+          tooltip={<FormattedMessage id={`bio_tooltip`} />}
           valuePropName="value"
         >
           <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
