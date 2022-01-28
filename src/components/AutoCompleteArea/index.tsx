@@ -1,0 +1,66 @@
+import React from 'react';
+import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
+// https://github.com/webscopeio/react-textarea-autocomplete
+import { FormattedMessage } from 'umi';
+import '@webscopeio/react-textarea-autocomplete/style.css';
+import './index.css';
+
+type ItemProps = {
+  selected: boolean;
+  entity: Variable;
+};
+
+type Variable = {
+  name: string;
+  required: boolean;
+};
+
+const Item = (props: ItemProps) => {
+  return (
+    <div className={`${props.entity.required && 'required'}`}>
+      @{`${props.entity.name}`}
+      {props.entity.required && ' - required'}
+    </div>
+  );
+};
+
+const AutoCompleteArea: React.FC<{
+  requiredVariables: string[];
+  variables: string[];
+  onChange: (value: string) => void;
+  value: string;
+  error: string[];
+}> = ({ requiredVariables, variables, onChange, value, error }) => {
+  const varsObject = variables.map((v: string) => ({
+    name: v.substring(1),
+    required: requiredVariables.includes(v),
+  }));
+
+  return (
+    <React.Fragment>
+      <ReactTextareaAutocomplete
+        className={`ant-input pro-field pro-field-lg rta__textarea_wide ${error.length && 'error'}`}
+        onChange={(e) => onChange(e.target.value)}
+        loadingComponent={() => <FormattedMessage id="loading" />}
+        minChar={0}
+        value={value}
+        trigger={{
+          '@': {
+            dataProvider: (token) => {
+              return varsObject.filter((v) => v.name.startsWith(token));
+            },
+            component: Item,
+            output: (item, trigger) => {
+              return `${trigger}${item.name}`;
+            },
+          },
+        }}
+      />
+      <div role="alert" className="ant-form-item-explain-error">
+        {error}
+      </div>
+    </React.Fragment>
+  );
+};
+
+export default AutoCompleteArea;
