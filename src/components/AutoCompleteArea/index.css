@@ -20,7 +20,7 @@
   background-color: #e6f7ff;
 }
 
-/* .rta__autocomplete .rta__list .rta__item .rta__entity--selected:has(div.required) {
-  color: #ff4d4f;
-  background-color: red;
-} */
+.rta__autocomplete .rta__list .rta__item .rta__entity--selected .required {
+  color: #ff4d4f !important;
+  background-color: #fff1f0 !important;
+}

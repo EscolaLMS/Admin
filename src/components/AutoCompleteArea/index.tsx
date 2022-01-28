@@ -16,12 +16,7 @@ type Variable = {
 };
 
 const Item = (props: ItemProps) => {
-  return (
-    <div className={`${props.entity.required && 'required'}`}>
-      @{`${props.entity.name}`}
-      {props.entity.required && ' - required'}
-    </div>
-  );
+  return <div className={`${props.entity.required && 'required'}`}>@{`${props.entity.name}`}</div>;
 };
 
 const AutoCompleteArea: React.FC<{
@@ -44,6 +39,7 @@ const AutoCompleteArea: React.FC<{
         loadingComponent={() => <FormattedMessage id="loading" />}
         minChar={0}
         value={value}
+        itemStyle={{ fontSize: '16px' }}
         trigger={{
           '@': {
             dataProvider: (token) => {
