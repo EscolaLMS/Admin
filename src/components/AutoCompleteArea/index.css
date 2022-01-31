@@ -1,0 +1,26 @@
+.rta__textarea_wide {
+  width: 100% !important;
+  height: 40vh !important;
+}
+
+.rta__textarea_wide.error {
+  border-color: #ff4d4f;
+}
+
+.rta__autocomplete {
+  z-index: 999;
+}
+
+.rta__autocomplete .rta__list {
+  background-color: white;
+}
+
+.rta__autocomplete .rta__list .rta__item .rta__entity--selected {
+  color: #1890ff;
+  background-color: #e6f7ff;
+}
+
+.rta__autocomplete .rta__list .rta__item .rta__entity--selected .required {
+  color: #ff4d4f !important;
+  background-color: #fff1f0 !important;
+}

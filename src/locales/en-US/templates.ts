@@ -10,4 +10,5 @@ export default {
   'templates.this_required': 'This field is required',
   'templates.mjml_tooltip': 'Paste mjml template',
   'templates.is_default': 'Is default',
+  'code.snippet': 'Try input @ for autocomplete',
 };

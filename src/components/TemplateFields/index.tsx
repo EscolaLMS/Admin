@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import { Space, Typography, Tag } from 'antd';
 import ProForm, { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
-
-import './index.css';
 import FabricEditor from '../FabricEditor';
+import AutoCompleteArea from '../AutoCompleteArea';
+import './index.css';
 
 interface FormWysiwygProps {
   value?: string;
@@ -36,11 +36,11 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
   );
 
   const fieldValidator = useCallback(
-    (value: string, requiredFields: string[]) => {
-      if (value && requiredFields.every((val) => value.includes(val))) {
+    (value: string, requiredVars: string[]) => {
+      if (value && requiredVars.every((val) => value.includes(val))) {
         return Promise.resolve();
       }
-      return Promise.reject(new Error('No required variable  used'));
+      return Promise.reject(new Error('No required variable used'));
     },
     [field, name],
   );
@@ -132,17 +132,30 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
           <React.Fragment>
             <p>
               <FormattedMessage id={'templates.to_create_template'} />{' '}
-              <a target="_blank" href="https://mjml.io/try-it-live">
+              <a target="_blank" rel="noreferrer" href="https://mjml.io/try-it-live">
                 https://mjml.io/try-it-live
               </a>
             </p>
+            <code>
+              <FormattedMessage id={'code.snippet'} />
+            </code>
+            <ProForm.Item shouldUpdate>
+              {(form) => {
+                return (
+                  <AutoCompleteArea
+                    requiredVariables={field.required_variables}
+                    variables={variables}
+                    value={form.getFieldValue(name)}
+                    onChange={(value: string) => form.setFieldsValue({ [name]: value })}
+                    error={form.getFieldError(name)}
+                  />
+                );
+              }}
+            </ProForm.Item>
             <ProFormTextArea
-              readonly={field.readonly}
-              shouldUpdate
-              width="lg"
-              label={<FormattedMessage id={name} />}
               name={name}
-              tooltip={<FormattedMessage id={'templates.mjml_tooltip'} />}
+              shouldUpdate
+              hidden
               rules={
                 field.readonly
                   ? undefined
@@ -166,7 +179,7 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
       default:
         return;
     }
-  }, [field, name]);
+  }, [field, name, variables]);
 
   return <React.Fragment>{renderProperFields()}</React.Fragment>;
 };

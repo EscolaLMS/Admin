@@ -10,4 +10,5 @@ export default {
   'templates.this_required': 'Te pole jest wymagane',
   'templates.mjml_tooltip': 'Wklej szablon mjml',
   'templates.is_default': 'Jest domyślny',
+  'code.snippet': 'Spróbuj wprowadzić @ dla autocomplete',
 };
