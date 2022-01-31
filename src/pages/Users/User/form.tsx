@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Form, Button, Space, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import { user as fetchUser, updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
@@ -47,6 +46,7 @@ export default ({ isNew }: { isNew: boolean }) => {
       setAdditionalRequiredFields(
         request.data.escola_auth.additional_fields_required.value as string[],
       );
+
       setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
     }
   }, []);
@@ -195,40 +195,22 @@ export default ({ isNew }: { isNew: boolean }) => {
         )}
       </ProForm.Group>
       <ProForm.Group>
-        {additionalRequiredFields &&
-          additionalRequiredFields.map((field) => (
-            <ProFormText
-              width="md"
-              name={field}
-              label={<FormattedMessage id={field} />}
-              tooltip={<FormattedMessage id={field} />}
-              placeholder={intl.formatMessage({
-                id: field,
-              })}
-              required
-            />
-          ))}
         {additionalFields &&
-          additionalFields.map((field) => (
-            <ProFormText
-              width="md"
-              name={field}
-              label={<FormattedMessage id={field} />}
-              tooltip={<FormattedMessage id={field} />}
-              placeholder={intl.formatMessage({
-                id: field,
-              })}
-            />
-          ))}
+          additionalFields.map((field) => {
+            return (
+              <ProFormText
+                required={additionalRequiredFields.includes(field)}
+                width="md"
+                name={field}
+                label={<FormattedMessage id={field} />}
+                tooltip={<FormattedMessage id={field} />}
+                placeholder={intl.formatMessage({
+                  id: field,
+                })}
+              />
+            );
+          })}
       </ProForm.Group>
-      <ProForm.Item
-        name="bio"
-        label={<FormattedMessage id="bio" />}
-        tooltip={<FormattedMessage id="bio_tooltip" />}
-        valuePropName="value"
-      >
-        <WysiwygMarkdown directory={`users/${user}/wysiwyg`} />
-      </ProForm.Item>
 
       {!isNew && (
         <ProForm.Group>
