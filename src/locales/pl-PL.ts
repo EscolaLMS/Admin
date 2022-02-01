@@ -205,6 +205,7 @@ export default {
   new_course: 'Nowy kurs',
   media: 'Media',
   image: 'Zdjęcie',
+  import_users: 'Import użytkowników',
   poster: 'Plakat',
   video: 'Wideo',
   audio: 'Dźwięk',

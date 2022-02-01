@@ -13,7 +13,8 @@ export const SecureUpload: React.FC<{
   accept?: string;
   data?: Record<string, any>;
   wrapInForm?: boolean;
-}> = ({ onChange, url, name, extra, accept, data, wrapInForm = true }) => {
+  title?: string;
+}> = ({ onChange, url, name, extra, accept, data, wrapInForm = true, title }) => {
   const intl = useIntl();
 
   if (data && data[name]) {
@@ -27,7 +28,7 @@ export const SecureUpload: React.FC<{
       wrap={(children: JSX.Element) => <Form>{children}</Form>}
     >
       <ProFormUploadButton
-        title={<FormattedMessage id="upload_click_here" />}
+        title={title ? title : <FormattedMessage id="upload_click_here" />}
         placeholder={intl.formatMessage({
           id: 'upload_click_here',
         })}

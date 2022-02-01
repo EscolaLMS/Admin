@@ -1,14 +1,17 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag } from 'antd';
-import React, { useRef } from 'react';
+import { PlusOutlined, ExportOutlined } from '@ant-design/icons';
+import { Button, Tooltip, Popconfirm, Tag, message } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { format } from 'date-fns';
 import { users, deleteUser } from '@/services/escola-lms/user';
+import { usersCsvExport } from '@/services/escola-lms/csv';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import SecureUpload from '@/components/SecureUpload';
+import './index.css';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
@@ -89,11 +92,9 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     key: 'role',
     valueType: 'select',
     dataIndex: 'role',
-    initialValue: ['all'],
     width: 100,
     hideInTable: true,
     valueEnum: {
-      all: { text: 'All' },
       admin: { text: 'Admin' },
       tutor: { text: 'Tutor' },
       student: { text: 'Student' },
@@ -104,6 +105,29 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+  const [params, setParams] = useState({});
+  const [loadingExport, setLoadingExport] = useState(false);
+
+  const handleDownload = useCallback(async () => {
+    setLoadingExport(true);
+    try {
+      const request = await usersCsvExport(params);
+
+      if (request) {
+        const uri = 'data:text/csv;charset=utf-8,' + request;
+        const downloadLink = document.createElement('a');
+        downloadLink.href = uri;
+        downloadLink.download = 'users.csv';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingExport(false);
+    }
+  }, [params]);
 
   return (
     <PageContainer>
@@ -118,6 +142,37 @@ const TableList: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
+          <SecureUpload
+            title={intl.formatMessage({
+              id: 'import_users',
+            })}
+            url="/api/admin/csv/users"
+            name="file"
+            accept=".csv"
+            data={{
+              return_url: `${window.location.origin}/#/user/reset-password`,
+            }}
+            onChange={(info) => {
+              if (info.file.status === 'done') {
+                if (info.file.response.success) {
+                  message.success(info.file.response.message);
+                }
+              }
+              if (info.file.status === 'error') {
+                message.error(info.file.response.message);
+                console.error(info.file.response);
+              }
+            }}
+          />,
+          <Button
+            loading={loadingExport}
+            type="primary"
+            key="primary"
+            onClick={() => handleDownload()}
+          >
+            <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
+          </Button>,
+
           <Link to="/users/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
@@ -125,6 +180,7 @@ const TableList: React.FC = () => {
           </Link>,
         ]}
         request={({ pageSize, current, search, role }) => {
+          setParams({ pageSize, current, search, role });
           const requestRole = role && role.toString() === 'all' ? undefined : role;
 
           return users({ pageSize, current, search, role: requestRole }).then((response) => {
