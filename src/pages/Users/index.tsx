@@ -28,7 +28,8 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
     dataIndex: 'created_at',
     hideInSearch: true,
-    render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
+    render: (_, record) =>
+      record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
   },
   {
     title: <FormattedMessage id="first_name" defaultMessage="first_name" />,
