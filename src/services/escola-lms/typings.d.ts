@@ -184,6 +184,8 @@ declare namespace API {
 
   type NotificationsEventsList = DefaultResponse<string[]>;
 
+  type DeleteResponse = DefaultResponse;
+
   type PaginationParams = {
     order_by?: string;
     order?: 'ASC' | 'DESC';

@@ -9,6 +9,7 @@ import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
 import { configs as getConfig } from '@/services/escola-lms/settings';
+import { deleteUserAvatar } from '@/services/escola-lms/user';
 
 export default ({ isNew }: { isNew: boolean }) => {
   const intl = useIntl();
@@ -50,6 +51,23 @@ export default ({ isNew }: { isNew: boolean }) => {
       setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
     }
   }, []);
+
+  const onDeleteAvatar = () => {
+    deleteUserAvatar(Number(user))
+      .then((response) => {
+        if (response.success) {
+          message.success(response.message);
+          setData((prevState) => ({
+            ...prevState,
+            avatar: '',
+            path_avatar: '',
+          }));
+        }
+      })
+      .catch((error: any) => {
+        message.error(error.data.message);
+      });
+  };
 
   useEffect(() => {
     fetchRoles();
@@ -225,19 +243,24 @@ export default ({ isNew }: { isNew: boolean }) => {
           </ProForm.Item>
           <Form.Item noStyle shouldUpdate>
             {() => (
-              <SecureUpload
-                wrapInForm={false}
-                url={`/api/admin/users/${user}/avatar`}
-                name="avatar"
-                accept="image/*"
-                onChange={(info) => {
-                  if (info.file.status === 'done') {
-                    if (info.file.response.success) {
-                      setData(info.file.response.data);
+              <>
+                <SecureUpload
+                  wrapInForm={false}
+                  url={`/api/admin/users/${user}/avatar`}
+                  name="avatar"
+                  accept="image/*"
+                  onChange={(info) => {
+                    if (info.file.status === 'done') {
+                      if (info.file.response.success) {
+                        setData(info.file.response.data);
+                      }
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+                <Button danger onClick={onDeleteAvatar}>
+                  <FormattedMessage id="delete" />
+                </Button>
+              </>
             )}
           </Form.Item>
         </ProForm.Group>

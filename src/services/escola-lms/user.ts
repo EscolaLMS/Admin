@@ -123,3 +123,10 @@ export async function setUserSettings(
     ...(options || {}),
   });
 }
+/**  DELETE /api/admin/users/:id/avatar */
+export async function deleteUserAvatar(id: number, options?: { [key: string]: any }) {
+  return request<API.DeleteResponse>(`/api/admin/users/${id}/avatar`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
