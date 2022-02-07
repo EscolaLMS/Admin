@@ -4,7 +4,7 @@ import { request } from 'umi';
 
 /**  GET /api/currentUser */
 export async function categoryTree(options?: { [key: string]: any }) {
-  return request<API.DataResponseSuccess<API.Category[]>>('/api/categories/tree', {
+  return request<API.DataResponseSuccess<API.Category[]>>('/api/admin/categories/tree', {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
@@ -12,7 +12,7 @@ export async function categoryTree(options?: { [key: string]: any }) {
 }
 
 export async function categories(options?: { [key: string]: any }) {
-  return request<API.CategoryList>('/api/categories', {
+  return request<API.CategoryList>('/api/admin/categories', {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
@@ -20,7 +20,7 @@ export async function categories(options?: { [key: string]: any }) {
 }
 
 export async function category(id: number, options?: { [key: string]: any }) {
-  return request<API.DataResponseSuccess<API.Category>>(`/api/categories/${id}`, {
+  return request<API.DataResponseSuccess<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
@@ -31,7 +31,7 @@ export async function createCategory(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Category>>(`/api/categories`, {
+  return request<API.DefaultResponse<API.Category>>(`/api/admin/categories`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export async function updateCategory(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Category>>(`/api/categories/${id}`, {
+  return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export async function deleteCategory(
   body?: { [key: string]: any },
   options?: { [key: string]: any },
 ) {
-  return request<API.DefaultResponse<API.Category>>(`/api/categories/${id}`, {
+  return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
