@@ -27,10 +27,10 @@ export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
   );
 };
 
-export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }> = ({
-  id,
-  onChange,
-}) => {
+export const H5PForm: React.FC<{
+  id: string;
+  onChange: (value: string) => void;
+}> = ({ id, onChange }) => {
   const intl = useIntl();
   const [previewId, setPreviewId] = useState<number>();
   const [editId, setEditId] = useState<number | 'new'>();
@@ -80,7 +80,7 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
         <Col span={12}>
           <UploadH5P
             onSuccess={(data) => {
-              if (data.id) {
+              if (data.data.id) {
                 onChange(String(data.id));
               }
             }}
