@@ -81,7 +81,7 @@ export const H5PForm: React.FC<{
           <UploadH5P
             onSuccess={(data) => {
               if (data.data.id) {
-                onChange(String(data.id));
+                onChange(String(data.data.id));
               }
             }}
             onError={() =>
