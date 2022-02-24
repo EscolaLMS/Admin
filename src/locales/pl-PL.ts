@@ -75,6 +75,7 @@ export default {
   active: 'Aktywny',
   Inactive: 'Nieaktywny',
   inactive: 'Nieaktywny',
+  address: 'Adres',
   draft: 'Roboczy',
   published: 'Opublikowany',
   archived: 'Zarchiwizowany',
@@ -122,6 +123,8 @@ export default {
   search_tooltip_1: 'Szukanie odbywa się po imieniu, nazwisku oraz emailu',
   search_tooltip_user_groups: 'Szukanie odbywa się po nazwie',
   roles: 'Role',
+  rodo: 'Polityka prywatności',
+  regulations: 'Regulamin serwisu',
   permissions: 'Uprawnienia',
   verified: 'Zweryfikowany',
   not_verified: 'Niezweryfikowany',
@@ -198,6 +201,8 @@ export default {
   description_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
   content: 'Treść',
+  contact: 'Kontakt',
+  country: 'Kraj',
   slug_tooltip: 'SLUG to część adresu URL pod jakim dostępna będzie strona',
   content_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',

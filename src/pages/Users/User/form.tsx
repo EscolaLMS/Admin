@@ -10,6 +10,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
 import { configs as getConfig } from '@/services/escola-lms/settings';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
+import AdditionalFields from './components/AdditionalFields';
 
 export default ({ isNew }: { isNew: boolean }) => {
   const intl = useIntl();
@@ -27,7 +28,6 @@ export default ({ isNew }: { isNew: boolean }) => {
     if (response.success) {
       setData({
         ...response.data,
-        bio: response.data.bio || '',
       });
     }
   }, [user]);
@@ -85,9 +85,9 @@ export default ({ isNew }: { isNew: boolean }) => {
       // @ts-ignore
       onFinish: async (values) => {
         let response: API.DefaultResponse<API.UserItem>;
+
         const postData: Partial<API.UserItem> = {
           ...values,
-          bio: values.bio ? values.bio : undefined,
         };
 
         if (isNew) {
@@ -212,23 +212,11 @@ export default ({ isNew }: { isNew: boolean }) => {
           />
         )}
       </ProForm.Group>
-      <ProForm.Group>
-        {additionalFields &&
-          additionalFields.map((field) => {
-            return (
-              <ProFormText
-                required={additionalRequiredFields.includes(field)}
-                width="md"
-                name={field}
-                label={<FormattedMessage id={field} />}
-                tooltip={<FormattedMessage id={field} />}
-                placeholder={intl.formatMessage({
-                  id: field,
-                })}
-              />
-            );
-          })}
-      </ProForm.Group>
+      <AdditionalFields
+        additionalFields={additionalFields}
+        requiredFields={additionalRequiredFields}
+        id={data.id}
+      />
 
       {!isNew && (
         <ProForm.Group>
