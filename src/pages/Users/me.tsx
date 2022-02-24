@@ -10,6 +10,7 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
 import UserSettings from './User/settings';
 import { configs as getConfig } from '@/services/escola-lms/settings';
+import AdditionalFields from './User/components/AdditionalFields';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
@@ -131,21 +132,11 @@ export default () => {
                 required
               />
             </ProForm.Group>
-            <ProForm.Group>
-              {additionalFields &&
-                additionalFields.map((field) => (
-                  <ProFormText
-                    required={additionalRequiredFields.includes(field)}
-                    width="md"
-                    name={field}
-                    label={<FormattedMessage id={field} />}
-                    tooltip={<FormattedMessage id={field} />}
-                    placeholder={intl.formatMessage({
-                      id: field,
-                    })}
-                  />
-                ))}
-            </ProForm.Group>
+            <AdditionalFields
+              additionalFields={additionalFields}
+              requiredFields={additionalRequiredFields}
+              id={data.id}
+            />
 
             <ProForm.Group>
               <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>

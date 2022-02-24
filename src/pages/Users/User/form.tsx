@@ -10,16 +10,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
 import { configs as getConfig } from '@/services/escola-lms/settings';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
-
-enum fieldTypes {
-  text = 'text',
-  option = 'option',
-  richtext = 'richtext',
-}
-
-export const getFieldName = (field: string) => field.split('_')[1];
-export const getFieldType = (field: string) => field.split('_')[0];
+import AdditionalFields from './components/AdditionalFields';
 
 export default ({ isNew }: { isNew: boolean }) => {
   const intl = useIntl();
@@ -221,52 +212,11 @@ export default ({ isNew }: { isNew: boolean }) => {
           />
         )}
       </ProForm.Group>
-      <ProForm.Group>
-        {additionalFields &&
-          additionalFields
-            .filter((field: string) => getFieldType(field) === fieldTypes.text)
-            .map((field) => {
-              return (
-                <ProFormText
-                  required={additionalRequiredFields.includes(field)}
-                  width="md"
-                  name={field}
-                  label={<FormattedMessage id={getFieldName(field)} />}
-                  tooltip={<FormattedMessage id={getFieldName(field)} />}
-                  placeholder={intl.formatMessage({
-                    id: field,
-                  })}
-                />
-              );
-            })}
-        {additionalFields &&
-          additionalFields
-            .filter((field: string) => getFieldType(field) === fieldTypes.option)
-            .map((field) => {
-              return (
-                <ProFormCheckbox name={field}>
-                  <FormattedMessage id={getFieldName(field)} />
-                </ProFormCheckbox>
-              );
-            })}
-      </ProForm.Group>
-      <ProForm.Group>
-        {additionalFields &&
-          additionalFields
-            .filter((field: string) => getFieldType(field) === fieldTypes.richtext)
-            .map((field) => {
-              return (
-                <ProForm.Item
-                  name={field}
-                  label={getFieldName(field)}
-                  tooltip="The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown."
-                  valuePropName="value"
-                >
-                  <WysiwygMarkdown directory={`users/${data.id}/wysiwyg`} />
-                </ProForm.Item>
-              );
-            })}
-      </ProForm.Group>
+      <AdditionalFields
+        additionalFields={additionalFields}
+        requiredFields={additionalRequiredFields}
+        id={data.id}
+      />
 
       {!isNew && (
         <ProForm.Group>
