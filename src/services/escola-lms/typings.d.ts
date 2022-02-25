@@ -180,6 +180,8 @@ declare namespace API {
 
   type RolesList = DefaultMetaResponse<Role>;
 
+  type QuestionnaireList = DefaultMetaResponse<Questionnaire>;
+
   type NotificationList = DefaultMetaResponse<Notification>;
 
   type NotificationsEventsList = DefaultResponse<string[]>;
@@ -671,7 +673,7 @@ declare namespace API {
   };
 
   type Questionnaire = {
-    id: number;
+    id?: number;
     title: string;
     questions?: Question[];
     active: boolean;

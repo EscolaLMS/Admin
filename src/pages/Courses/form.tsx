@@ -23,6 +23,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
+import AssignQuestionnaire from '@/components/AssignQuestionnaire';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -333,7 +334,6 @@ export default () => {
             </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
-
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
@@ -428,16 +428,20 @@ export default () => {
             </ProForm>
           </ProCard.TabPane>
         )}
-
         {!isNew && (
           <ProCard.TabPane key="access" tab={<FormattedMessage id="access" />}>
             {course && <CourseAccess id={course} />}
           </ProCard.TabPane>
         )}
-
         {!isNew && (
           <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
             {course && <CourseCertificateForm id={course} />}
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="questionnaires" tab={<FormattedMessage id="questionnaires" />}>
+            {course && <AssignQuestionnaire model="course" />}
           </ProCard.TabPane>
         )}
 

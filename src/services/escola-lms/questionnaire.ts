@@ -2,7 +2,7 @@ import { request } from 'umi';
 
 /**  GET /api/admin/questionnaire */
 export async function questionnaire(options?: Record<string, any>) {
-  return request<API.DefaultMetaResponse<API.Questionnaire[]>>(`/api/admin/questionnaire`, {
+  return request<API.QuestionnaireList>(`/api/admin/questionnaire`, {
     method: 'GET',
 
     /* useCache: true */ useCache: false,
@@ -28,6 +28,22 @@ export async function createQuestionnaire(
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  PATCH /api/admin/questionnaire */
+export async function updateQuestionare(
+  id: number,
+  body?: { [key: string]: any },
+  options?: Record<string, any>,
+) {
+  return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/${id}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },

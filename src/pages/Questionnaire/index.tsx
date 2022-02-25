@@ -4,7 +4,6 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { questionnaire, deleteQuestionnaire } from '@/services/escola-lms/questionnaire';
-
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
@@ -29,14 +28,20 @@ const Questionnaire: React.FC = () => {
 
   const handleRemove = useCallback(
     async (id: number) => {
+      const hide = message.loading(
+        intl.formatMessage({
+          id: 'loading',
+        }),
+      );
       try {
         await deleteQuestionnaire(id);
-
+        hide();
         message.success(<FormattedMessage id="success" defaultMessage="success" />);
 
         actionRef.current?.reload();
         return true;
       } catch (error) {
+        hide();
         message.error(<FormattedMessage id="error" defaultMessage="error" />);
 
         return false;
@@ -47,7 +52,7 @@ const Questionnaire: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<any>
+      <ProTable<API.Questionnaire>
         headerTitle={intl.formatMessage({
           id: 'questionnaires',
           defaultMessage: 'questionnaires',
@@ -76,8 +81,7 @@ const Questionnaire: React.FC = () => {
         columns={[
           ...TableColumns,
           {
-            hideInSearch: true,
-            title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
+            title: <FormattedMessage id="options" defaultMessage="options" />,
             dataIndex: 'option',
             valueType: 'option',
 

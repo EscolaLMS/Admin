@@ -13,6 +13,7 @@ import {
   Button,
   Tooltip,
   Popconfirm,
+  Form,
 } from 'antd';
 import { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
@@ -20,6 +21,7 @@ import {
   questionnaireById,
   addQuestion,
   deleteQuestion,
+  updateQuestionare,
 } from '@/services/escola-lms/questionnaire';
 import ProForm from '@ant-design/pro-form';
 import { createQuestionnaire } from '@/services/escola-lms/questionnaire';
@@ -32,7 +34,7 @@ export const QuestionareForm = () => {
   const { questionnaireId } = params;
   const intl = useIntl();
   const isNew = questionnaireId === 'new';
-
+  const [form] = Form.useForm();
   const [data, setData] = useState<Partial<API.Questionnaire>>();
 
   const fetchData = useCallback(async () => {
@@ -66,7 +68,11 @@ export const QuestionareForm = () => {
             }
             message.success(<FormattedMessage id="success" defaultMessage="success" />);
           } else {
-            return;
+            const request = await updateQuestionare(Number(data?.id), values);
+            if (request.success) {
+              fetchData();
+            }
+            message.success(<FormattedMessage id="success" defaultMessage="success" />);
           }
         } catch (error) {
           message.error(<FormattedMessage id="error" defaultMessage="error" />);
@@ -90,6 +96,7 @@ export const QuestionareForm = () => {
 
           if (request.success) {
             fetchData();
+            form.resetFields();
             message.success(<FormattedMessage id="success" defaultMessage="success" />);
           }
         } catch (error) {
@@ -112,8 +119,6 @@ export const QuestionareForm = () => {
       title={
         <>
           <FormattedMessage id={data?.title ? 'questionnaire' : 'new_questionnaire'} />
-          {', '}
-          <FormattedMessage id={questionnaireId} />
         </>
       }
       header={{
@@ -144,7 +149,9 @@ export const QuestionareForm = () => {
       <ProCard style={{ paddingBottom: '100px' }}>
         <Row gutter={24}>
           <Col span={24}>
-            <Title level={3}>Questionnaire</Title>{' '}
+            <Title level={3}>
+              <FormattedMessage id="questionnaire" defaultMessage="questionnaire" />
+            </Title>{' '}
             <ProForm {...formProps}>
               <ProFormText
                 label={<FormattedMessage id="title" defaultMessage="title" />}
@@ -167,11 +174,15 @@ export const QuestionareForm = () => {
           <Divider />
           {!isNew && (
             <Col span={24}>
-              <Title level={3}>Questions</Title>{' '}
+              <Title level={3}>
+                <FormattedMessage id="questions" defaultMessage="questions" />
+              </Title>{' '}
               <Row gutter={24}>
                 <Col span={12}>
-                  <Title level={5}>Add question</Title>{' '}
-                  <ProForm {...questionProps}>
+                  <Title level={5}>
+                    <FormattedMessage id="question_add" defaultMessage="question_add" />
+                  </Title>{' '}
+                  <ProForm {...questionProps} form={form}>
                     <ProFormText
                       width="lg"
                       name="title"
@@ -193,7 +204,9 @@ export const QuestionareForm = () => {
                   </ProForm>
                 </Col>
                 <Col span={12}>
-                  <Title level={5}>Question list</Title>
+                  <Title level={5}>
+                    <FormattedMessage id="question_list" defaultMessage="question_list" />
+                  </Title>
                   <Row gutter={24}>
                     <Col span={24}>
                       <Collapse>
@@ -213,7 +226,7 @@ export const QuestionareForm = () => {
                                   onConfirm={async () => {
                                     try {
                                       const request = await deleteQuestion(question.id);
-                                      console.log(request);
+
                                       if (request.success) {
                                         message.success(
                                           <FormattedMessage
