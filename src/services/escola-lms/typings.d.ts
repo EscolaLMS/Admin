@@ -670,6 +670,23 @@ declare namespace API {
     guard_name?: string;
   };
 
+  type Questionnaire = {
+    id: number;
+    title: string;
+    questions?: Question[];
+    active: boolean;
+  };
+
+  type Question = {
+    id: number;
+    title: string;
+    questionnaire_id: id;
+    description: string;
+    position: number;
+    active: boolean;
+    type: string;
+  };
+
   type Notification = {
     id: string;
     type: string;
