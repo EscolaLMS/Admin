@@ -189,6 +189,7 @@ export default {
   new_questionnaire: 'New Questionnaire',
   questionnaires: 'Questionnaires',
   questionnaire: 'Questionnaire',
+  'questionnaire.submit': 'Submit',
   questions: 'Questionnaire qustions',
   question_list: 'Questions list',
   question_add: 'Add question',

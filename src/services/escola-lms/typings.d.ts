@@ -676,7 +676,16 @@ declare namespace API {
     id?: number;
     title: string;
     questions?: Question[];
+    models?: QuestionnaireModel[];
     active: boolean;
+  };
+
+  type QuestionnaireModel = {
+    id: number;
+    model_class: string;
+    title: string;
+    model_id?: number;
+    model_type_id?: number;
   };
 
   type Question = {

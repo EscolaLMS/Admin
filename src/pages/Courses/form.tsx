@@ -23,7 +23,6 @@ import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
-import AssignQuestionnaire from '@/components/AssignQuestionnaire';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
@@ -441,7 +440,7 @@ export default () => {
 
         {!isNew && (
           <ProCard.TabPane key="questionnaires" tab={<FormattedMessage id="questionnaires" />}>
-            {course && <AssignQuestionnaire model="course" />}
+            {course && <div>assign</div>}
           </ProCard.TabPane>
         )}
 

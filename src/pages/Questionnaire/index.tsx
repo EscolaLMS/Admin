@@ -1,11 +1,12 @@
-import React, { useCallback, useRef } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
+import React, { useCallback, useRef, useState } from 'react';
+import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { questionnaire, deleteQuestionnaire } from '@/services/escola-lms/questionnaire';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Modal } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import QuestionnaireModalForm from './components/ModalForm';
 
 const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
@@ -23,7 +24,7 @@ const TableColumns: ProColumns<API.Questionnaire>[] = [
 
 const Questionnaire: React.FC = () => {
   const actionRef = useRef<ActionType>();
-
+  const [modalVisible, setModalVisible] = useState<number | false>(false);
   const intl = useIntl();
 
   const handleRemove = useCallback(
@@ -47,7 +48,7 @@ const Questionnaire: React.FC = () => {
         return false;
       }
     },
-    [actionRef],
+    [actionRef, intl],
   );
 
   return (
@@ -61,11 +62,21 @@ const Questionnaire: React.FC = () => {
         rowKey="id"
         search={false}
         toolBarRender={() => [
-          <Link to="/questionnaire/new">
-            <Button type="primary" key="primary">
-              <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
-            </Button>
-          </Link>,
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              setModalVisible(-1);
+            }}
+          >
+            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
+          </Button>,
+
+          // <Link to="/questionnaire/new">
+          //   <Button type="primary" key="primary">
+          //     <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+          //   </Button>
+          // </Link>,
         ]}
         request={() => {
           return questionnaire().then((response) => {
@@ -86,10 +97,15 @@ const Questionnaire: React.FC = () => {
             valueType: 'option',
 
             render: (_, record) => [
-              <Link to={`/questionnaire/${record.id}`} key="new">
-                <Button type="primary" icon={<EditOutlined />}></Button>
-              </Link>,
+              <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  onClick={() => setModalVisible(Number(record.id))}
+                />
+              </Tooltip>,
               <Popconfirm
+                key="delete"
                 title={
                   <FormattedMessage
                     id="deleteQuestion"
@@ -108,6 +124,24 @@ const Questionnaire: React.FC = () => {
           },
         ]}
       />
+      <Modal
+        title="Questionnaire form"
+        width={'900px'}
+        visible={Number.isInteger(modalVisible)}
+        onCancel={() => {
+          setModalVisible(false);
+          return actionRef.current && actionRef.current.reload();
+        }}
+        okButtonProps={{ style: { display: 'none' } }}
+      >
+        <QuestionnaireModalForm
+          id={modalVisible}
+          close={() => {
+            setModalVisible(false);
+            return actionRef.current && actionRef.current.reload();
+          }}
+        />
+      </Modal>
     </PageContainer>
   );
 };

@@ -83,3 +83,13 @@ export async function deleteQuestion(id: number, options?: Record<string, any>) 
     ...(options || {}),
   });
 }
+
+/**  GET /api/admin/questionnaire-models */
+export async function getQuestionnaireModels(options?: Record<string, any>) {
+  return request<API.DefaultResponse<API.QuestionnaireModel>>(`/api/admin/questionnaire-models`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+
+    ...(options || {}),
+  });
+}

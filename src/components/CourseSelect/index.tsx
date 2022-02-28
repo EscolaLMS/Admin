@@ -11,7 +11,8 @@ export const CourseSelect: React.FC<{
   multiple?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  defaultValue?: number[];
+}> = ({ value, onChange, multiple = false, defaultValue }) => {
   const [courses, setCourses] = useState<API.Course[]>([]);
   const [fetching, setFetching] = useState(false);
 
@@ -27,7 +28,7 @@ export const CourseSelect: React.FC<{
     getCourses({ title: search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setCourses((prevUsers) => [...prevUsers, ...response.data.data]);
+          setCourses((prevCourses) => [...prevCourses, ...response.data]);
           // TODO: don't reset just add new. unique table
         }
         setFetching(false);
@@ -59,6 +60,7 @@ export const CourseSelect: React.FC<{
 
   return (
     <Select
+      defaultValue={defaultValue && defaultValue}
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}

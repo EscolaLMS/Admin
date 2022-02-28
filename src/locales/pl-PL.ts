@@ -212,6 +212,7 @@ export default {
   new_questionnaire: 'Nowa Ankieta',
   questionnaires: 'Ankiety',
   questionnaire: 'Ankieta',
+  'questionnaire.submit': 'Zatwierdź',
   questions: 'Pytania ankiety',
   question_list: 'Lista pytań',
   question_add: 'Dodaj pytanie',
