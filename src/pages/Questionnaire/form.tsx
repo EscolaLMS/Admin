@@ -1,43 +1,22 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { Typography, message, Spin, Button, Tooltip, Popconfirm, Form } from 'antd';
+import { Typography, message, Spin, Button, Form } from 'antd';
 import { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import {
   questionnaireById,
-  addQuestion,
-  deleteQuestion,
   updateQuestionare,
   createQuestionnaire,
   getQuestionnaireModels,
 } from '@/services/escola-lms/questionnaire';
 import ProForm from '@ant-design/pro-form';
-import { DeleteOutlined } from '@ant-design/icons';
 import CourseSelect from '@/components/CourseSelect';
-import ProTable from '@ant-design/pro-table';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import QuestionForm from './components/QuestionForm';
+// import QuestionnaireChart from './components/QuestionnaireChart';
 import './style.css';
 
 const { Title } = Typography;
-
-const TableColumns: ProColumns<API.Questionnaire>[] = [
-  {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
-    dataIndex: 'id',
-    hideInSearch: true,
-  },
-  {
-    title: <FormattedMessage id="title" defaultMessage="title" />,
-    dataIndex: 'title',
-    hideInSearch: true,
-  },
-  {
-    title: <FormattedMessage id="description" defaultMessage="description" />,
-    dataIndex: 'description',
-    hideInSearch: true,
-  },
-];
 
 export enum ModelTypes {
   course = 1,
@@ -49,11 +28,10 @@ export const QuestionareForm = () => {
   const params = useParams<{ questionnaireId?: string }>();
   const { questionnaireId } = params;
   const intl = useIntl();
-  const actionRef = useRef<ActionType>();
 
   const isNew = questionnaireId === 'new';
   const [formQuestionnaire] = Form.useForm();
-  const [form] = Form.useForm();
+
   const [data, setData] = useState<Partial<API.Questionnaire>>();
   const [tab, setTab] = useState('questionnaire');
   const [listOfModels, setListOfModels] = useState<API.QuestionnaireModel[]>();
@@ -142,55 +120,6 @@ export const QuestionareForm = () => {
     [data, models, fetchData, formatData, isNew],
   );
 
-  const questionProps = useMemo(
-    () => ({
-      onFinish: async (values: API.Question) => {
-        try {
-          const request = await addQuestion({
-            ...values,
-            questionnaire_id: data?.id,
-            active: true,
-            position: 0,
-          });
-
-          if (request.success) {
-            fetchData();
-            form.resetFields();
-            message.success(<FormattedMessage id="success" defaultMessage="success" />);
-          }
-        } catch (error) {
-          console.log(error);
-          message.error(<FormattedMessage id="error" defaultMessage="error" />);
-        }
-      },
-
-      initialValues: {},
-    }),
-    [data, fetchData, form],
-  );
-
-  const handleRemoveQuestion = useCallback(
-    async (questionId: number) => {
-      const hide = message.loading(
-        intl.formatMessage({
-          id: 'loading',
-        }),
-      );
-      try {
-        await deleteQuestion(questionId);
-        hide();
-        fetchData();
-        actionRef.current?.reload();
-        return true;
-      } catch (error) {
-        hide();
-        message.error(<FormattedMessage id="error" defaultMessage="error" />);
-        return false;
-      }
-    },
-    [actionRef, fetchData, intl],
-  );
-
   if (!data) {
     return <Spin />;
   }
@@ -265,70 +194,19 @@ export const QuestionareForm = () => {
           tab={<FormattedMessage id="questions" defaultMessage="questions" />}
           disabled={isNew}
         >
-          <ProForm {...questionProps} form={form}>
-            <ProFormText
-              width="lg"
-              name="title"
-              label={<FormattedMessage id="title" />}
-              tooltip={<FormattedMessage id="title" />}
-              placeholder={intl.formatMessage({
-                id: 'title',
-              })}
-            />
-            <ProFormText
-              width="lg"
-              name="description"
-              label={<FormattedMessage id="description" />}
-              tooltip={<FormattedMessage id="description" />}
-              placeholder={intl.formatMessage({
-                id: 'description',
-              })}
-            />
-          </ProForm>
-          <div className="table-wrapper">
-            <Title level={5}>
-              <FormattedMessage id="question_list" defaultMessage="question_list" />
-            </Title>
-            <ProTable
-              headerTitle={intl.formatMessage({
-                id: 'question',
-                defaultMessage: 'question',
-              })}
-              actionRef={actionRef}
-              rowKey="id"
-              search={false}
-              toolBarRender={false}
-              dataSource={data.questions && data.questions}
-              columns={[
-                ...TableColumns,
-                {
-                  title: <FormattedMessage id="options" defaultMessage="options" />,
-                  dataIndex: 'option',
-                  valueType: 'option',
-
-                  render: (_, record) => [
-                    <Popconfirm
-                      key="delete"
-                      title={
-                        <FormattedMessage
-                          id="deleteQuestion"
-                          defaultMessage="Are you sure to delete this record?"
-                        />
-                      }
-                      onConfirm={() => record.id && handleRemoveQuestion(record.id)}
-                      okText={<FormattedMessage id="yes" />}
-                      cancelText={<FormattedMessage id="no" />}
-                    >
-                      <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                        <Button type="primary" icon={<DeleteOutlined />} danger />
-                      </Tooltip>
-                    </Popconfirm>,
-                  ],
-                },
-              ]}
-            />
-          </div>
+          <QuestionForm
+            questionnaireId={Number(questionnaireId)}
+            questions={data.questions}
+            fetchData={fetchData}
+          />
         </ProCard.TabPane>
+        {/* TODO: raports not working */}
+        {/* <ProCard.TabPane
+          key="raport"
+          tab={<FormattedMessage id="raport" defaultMessage="raport" />}
+        >
+          <QuestionnaireChart id={Number(questionnaireId)} />
+        </ProCard.TabPane> */}
         {listOfModels &&
           listOfModels.map((model: API.QuestionnaireModel) => (
             <ProCard.TabPane

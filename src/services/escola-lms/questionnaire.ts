@@ -23,7 +23,7 @@ export async function questionnaireById(id: number, options?: Record<string, any
 
 /**  POST /api/admin/questionnaire */
 export async function createQuestionnaire(
-  body?: { [key: string]: any },
+  body?: Record<string, any>,
   options?: Record<string, any>,
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire`, {
@@ -39,7 +39,7 @@ export async function createQuestionnaire(
 /**  PATCH /api/admin/questionnaire */
 export async function updateQuestionare(
   id: number,
-  body?: { [key: string]: any },
+  body?: Record<string, any>,
   options?: Record<string, any>,
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/${id}`, {
@@ -63,7 +63,7 @@ export async function deleteQuestionnaire(id: number, options?: Record<string, a
 }
 
 /**  POST /api/admin/question */
-export async function addQuestion(body?: { [key: string]: any }, options?: Record<string, any>) {
+export async function addQuestion(body?: Record<string, any>, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Question>>(`/api/admin/question`, {
     method: 'POST',
     headers: {
@@ -87,6 +87,16 @@ export async function deleteQuestion(id: number, options?: Record<string, any>) 
 /**  GET /api/admin/questionnaire-models */
 export async function getQuestionnaireModels(options?: Record<string, any>) {
   return request<API.DefaultResponse<API.QuestionnaireModel>>(`/api/admin/questionnaire-models`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+
+    ...(options || {}),
+  });
+}
+
+/**  GET /api/admin/questionnaire/report/:id */
+export async function questionnaireReport(id: number, options?: Record<string, any>) {
+  return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/report/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
 
