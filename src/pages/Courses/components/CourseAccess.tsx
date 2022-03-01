@@ -13,6 +13,7 @@ export const CourseAccessForm: React.FC<{
   return (
     <ProForm
       onFinish={async (values: API.CourseAccess) => {
+        console.log({ values });
         postSetAccess(Number(id), values).then((response) => {
           if (response.success) {
             message.success(response.message);

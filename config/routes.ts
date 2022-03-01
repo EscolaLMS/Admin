@@ -256,6 +256,13 @@
     component: './Questionnaire',
   },
   {
+    path: '/questionnaire/:questionnaireId',
+    name: 'Questionnaire Form',
+    access: 'questionnaireDetailPermission',
+    component: './Questionnaire/form',
+    hideInMenu: true,
+  },
+  {
     name: 'reports',
     icon: 'project',
     path: '/reports',

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Form, message, Tooltip, Popconfirm, Spin, Typography } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
+import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { Typography, message, Spin, Button, Tooltip, Popconfirm, Form } from 'antd';
+import { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import {
   questionnaireById,
   addQuestion,
@@ -11,19 +12,14 @@ import {
   createQuestionnaire,
   getQuestionnaireModels,
 } from '@/services/escola-lms/questionnaire';
+import ProForm from '@ant-design/pro-form';
 import { DeleteOutlined } from '@ant-design/icons';
 import CourseSelect from '@/components/CourseSelect';
 import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-// import './style.css';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import './style.css';
 
 const { Title } = Typography;
-
-export enum ModelTypes {
-  course = 1,
-  programs = 2,
-  events = 5,
-}
 
 const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
@@ -43,27 +39,25 @@ const TableColumns: ProColumns<API.Questionnaire>[] = [
   },
 ];
 
-export const QuestionnaireModalForm: React.FC<{
-  id?: number | false;
-  close: () => void;
-}> = ({ id, close }) => {
+export enum ModelTypes {
+  course = 1,
+  programs = 2,
+  events = 5,
+}
+
+export const QuestionareForm = () => {
+  const params = useParams<{ questionnaireId?: string }>();
+  const { questionnaireId } = params;
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
-  const [loading, setLoading] = useState(false);
-  const [currentId, setCurrentId] = useState<number | false>(-1);
-  const [tab, setTab] = useState('questionnaire');
-  const [questions, setQuestions] = useState<API.Question[]>([]);
-  const [listOfModels, setListOfModels] = useState<API.QuestionnaireModel[]>();
-  const [models, setModels] = useState({});
 
+  const isNew = questionnaireId === 'new';
   const [formQuestionnaire] = Form.useForm();
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    if (id) setCurrentId(id);
-
-    setTab('questionnaire');
-  }, [id]);
+  const [data, setData] = useState<Partial<API.Questionnaire>>();
+  const [tab, setTab] = useState('questionnaire');
+  const [listOfModels, setListOfModels] = useState<API.QuestionnaireModel[]>();
+  const [models, setModels] = useState({});
 
   const fetchModels = useCallback(async () => {
     const response = await getQuestionnaireModels();
@@ -79,40 +73,28 @@ export const QuestionnaireModalForm: React.FC<{
     }, {});
   }, []);
 
-  const fetchData = useCallback(
-    async (noSpinerReload) => {
-      if (noSpinerReload) {
-        setLoading(true);
-      }
-
-      try {
-        const response = await questionnaireById(Number(currentId));
-
-        if (response.success) {
-          formQuestionnaire.setFieldsValue(response.data);
-          setQuestions(response.data?.questions || []);
-          setModels(parseData(response.data.models, 'model_type_id'));
-        }
-        setLoading(false);
-      } catch (error) {
-        message.error(<FormattedMessage id="error" defaultMessage="error" />);
-        close();
-      }
-    },
-    [currentId, formQuestionnaire, close, parseData],
-  );
+  const fetchData = useCallback(async () => {
+    const response = await questionnaireById(Number(questionnaireId));
+    if (response.success) {
+      setData({
+        ...response.data,
+      });
+      setModels(parseData(response.data.models, 'model_type_id'));
+    }
+  }, [questionnaireId, parseData]);
 
   useEffect(() => {
     fetchModels();
-    setQuestions([]);
-    setModels({});
 
-    if (typeof currentId === 'number' && currentId > 0) {
-      fetchData(true);
-    } else {
-      formQuestionnaire.resetFields();
+    if (isNew) {
+      setData({
+        title: 'new',
+      });
+      return;
     }
-  }, [currentId, fetchData, fetchModels, formQuestionnaire]);
+
+    fetchData();
+  }, [questionnaireId, fetchData, fetchModels, isNew]);
 
   const handleModelChange = useCallback((modelids, selectedModel: ModelTypes) => {
     setModels((prevState) => ({
@@ -121,15 +103,71 @@ export const QuestionnaireModalForm: React.FC<{
     }));
   }, []);
 
-  const formatData = useCallback((data) => {
+  const formatData = useCallback((items) => {
     const mappedData: Record<string, number>[] = [];
-    Object.keys(data).map((key) => {
+    Object.keys(items).map((key) => {
       mappedData.push(
-        ...data[key].map((item: number) => ({ model_id: item, model_type_id: Number(key) })),
+        ...items[key].map((item: number) => ({ model_id: item, model_type_id: Number(key) })),
       );
     });
     return mappedData;
   }, []);
+
+  const formProps = useMemo(
+    () => ({
+      onFinish: async (values: API.Questionnaire) => {
+        try {
+          if (isNew) {
+            const request = await createQuestionnaire({ ...values, models: formatData(models) });
+            if (request.success) {
+              history.push(`/questionnaire/${request.data.id}`);
+            }
+            message.success(<FormattedMessage id="success" defaultMessage="success" />);
+          } else {
+            const request = await updateQuestionare(Number(data?.id), {
+              ...values,
+              models: formatData(models),
+            });
+            if (request.success) {
+              fetchData();
+            }
+            message.success(<FormattedMessage id="success" defaultMessage="success" />);
+          }
+        } catch (error) {
+          message.error(<FormattedMessage id="error" defaultMessage="error" />);
+        }
+      },
+      initialValues: data,
+    }),
+    [data, models, fetchData, formatData, isNew],
+  );
+
+  const questionProps = useMemo(
+    () => ({
+      onFinish: async (values: API.Question) => {
+        try {
+          const request = await addQuestion({
+            ...values,
+            questionnaire_id: data?.id,
+            active: true,
+            position: 0,
+          });
+
+          if (request.success) {
+            fetchData();
+            form.resetFields();
+            message.success(<FormattedMessage id="success" defaultMessage="success" />);
+          }
+        } catch (error) {
+          console.log(error);
+          message.error(<FormattedMessage id="error" defaultMessage="error" />);
+        }
+      },
+
+      initialValues: {},
+    }),
+    [data, fetchData, form],
+  );
 
   const handleRemoveQuestion = useCallback(
     async (questionId: number) => {
@@ -141,7 +179,7 @@ export const QuestionnaireModalForm: React.FC<{
       try {
         await deleteQuestion(questionId);
         hide();
-        fetchData(false);
+        fetchData();
         actionRef.current?.reload();
         return true;
       } catch (error) {
@@ -153,68 +191,42 @@ export const QuestionnaireModalForm: React.FC<{
     [actionRef, fetchData, intl],
   );
 
-  const formProps = useMemo(
-    () => ({
-      onFinish: async (values: API.Questionnaire) => {
-        try {
-          if (typeof currentId === 'number' && currentId < 0) {
-            const request = await createQuestionnaire({ ...values, models: formatData(models) });
-            if (request.success) {
-              formQuestionnaire.setFieldsValue(request.data);
-              if (request.data.id) setCurrentId(request.data.id);
-            }
-            message.success(<FormattedMessage id="success" defaultMessage="success" />);
-          } else {
-            const request = await updateQuestionare(Number(currentId), {
-              ...values,
-              models: formatData(models),
-            });
-            if (request.success) {
-              formQuestionnaire.setFieldsValue(request.data);
-              close();
-            }
-            message.success(<FormattedMessage id="success" defaultMessage="success" />);
-          }
-        } catch (error) {
-          console.log(error);
-          message.error(<FormattedMessage id="error" defaultMessage="error" />);
-        }
-      },
-    }),
-    [currentId, models, close, formQuestionnaire, formatData],
-  );
-
-  const questionProps = useMemo(
-    () => ({
-      onFinish: async (values: API.Question) => {
-        try {
-          const request = await addQuestion({
-            ...values,
-            questionnaire_id: currentId,
-            active: true,
-            position: 0,
-          });
-
-          if (request.success) {
-            fetchData(false);
-            form.resetFields();
-            message.success(<FormattedMessage id="success" defaultMessage="success" />);
-          }
-        } catch (error) {
-          console.log(error);
-          message.error(<FormattedMessage id="error" defaultMessage="error" />);
-        }
-      },
-    }),
-    [currentId, fetchData, form],
-  );
-
-  if (loading) {
+  if (!data) {
     return <Spin />;
   }
 
   return (
-    <div className="modal-questionnaire-form">
+    <PageContainer
+      title={
+        <>
+          <FormattedMessage id={data?.title ? 'questionnaire' : 'new_questionnaire'} />
+        </>
+      }
+      header={{
+        breadcrumb: {
+          routes: [
+            {
+              path: 'questionnaire',
+              breadcrumbName: intl.formatMessage({
+                id: 'menu.Questionnaire',
+              }),
+            },
+            {
+              path: String(questionnaireId),
+              breadcrumbName: intl.formatMessage({
+                id: 'form',
+              }),
+            },
+            {
+              path: '/',
+              breadcrumbName: intl.formatMessage({
+                id: String(data?.title),
+              }),
+            },
+          ],
+        },
+      }}
+    >
       <ProCard
         tabs={{
           type: 'card',
@@ -227,6 +239,9 @@ export const QuestionnaireModalForm: React.FC<{
           key="questionnaire"
           tab={<FormattedMessage id="questionnaire" defaultMessage="questionnaire" />}
         >
+          <Title level={3}>
+            <FormattedMessage id="questionnaire" defaultMessage="questionnaire" />
+          </Title>{' '}
           <ProForm {...formProps} form={formQuestionnaire}>
             <ProFormText
               label={<FormattedMessage id="title" defaultMessage="title" />}
@@ -239,7 +254,6 @@ export const QuestionnaireModalForm: React.FC<{
               name="title"
             />
             <ProFormSwitch
-              disabled
               initialValue={true}
               name="active"
               label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
@@ -249,7 +263,7 @@ export const QuestionnaireModalForm: React.FC<{
         <ProCard.TabPane
           key="questions"
           tab={<FormattedMessage id="questions" defaultMessage="questions" />}
-          disabled={typeof currentId === 'number' && currentId < 0}
+          disabled={isNew}
         >
           <ProForm {...questionProps} form={form}>
             <ProFormText
@@ -284,7 +298,7 @@ export const QuestionnaireModalForm: React.FC<{
               rowKey="id"
               search={false}
               toolBarRender={false}
-              dataSource={questions && questions}
+              dataSource={data.questions && data.questions}
               columns={[
                 ...TableColumns,
                 {
@@ -306,9 +320,7 @@ export const QuestionnaireModalForm: React.FC<{
                       cancelText={<FormattedMessage id="no" />}
                     >
                       <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                        <Button type="primary" danger>
-                          <DeleteOutlined />
-                        </Button>
+                        <Button type="primary" icon={<DeleteOutlined />} danger />
                       </Tooltip>
                     </Popconfirm>,
                   ],
@@ -321,9 +333,10 @@ export const QuestionnaireModalForm: React.FC<{
           listOfModels.map((model: API.QuestionnaireModel) => (
             <ProCard.TabPane
               key={String(model.id)}
-              tab={model.title}
-              disabled={typeof currentId === 'number' && currentId < 0}
+              tab={`Assign to ${model.title}`}
+              disabled={isNew}
             >
+              {/* TODO: universal select for list of models or switch  */}
               <CourseSelect
                 defaultValue={models && models[model.id]?.map((item) => item)}
                 multiple
@@ -338,45 +351,9 @@ export const QuestionnaireModalForm: React.FC<{
               </Button>
             </ProCard.TabPane>
           ))}
-        {/* <ProCard.TabPane
-          key={String(2)}
-          tab={'Programs'}
-          disabled={typeof currentId === 'number' && currentId < 0}
-        >
-          <CourseSelect
-            defaultValue={(models && models[ModelTypes.programs].map((item) => item)) || []}
-            multiple
-            onChange={(values) => handleModelChange(values, ModelTypes.programs)}
-          />
-          <Button
-            style={{ marginTop: '20px' }}
-            type="primary"
-            onClick={() => formQuestionnaire.submit()}
-          >
-            <FormattedMessage id="questionnaire.submit" defaultMessage="questionnaire.submit" />
-          </Button>
-        </ProCard.TabPane>
-        <ProCard.TabPane
-          key={String(5)}
-          tab={'Programs'}
-          disabled={typeof currentId === 'number' && currentId < 0}
-        >
-          <CourseSelect
-            defaultValue={(models && models[ModelTypes.events].map((item) => item)) || []}
-            multiple
-            onChange={(values) => handleModelChange(values, ModelTypes.events)}
-          />
-          <Button
-            style={{ marginTop: '20px' }}
-            type="primary"
-            onClick={() => formQuestionnaire.submit()}
-          >
-            <FormattedMessage id="questionnaire.submit" defaultMessage="questionnaire.submit" />
-          </Button>
-        </ProCard.TabPane> */}
       </ProCard>
-    </div>
+    </PageContainer>
   );
 };
 
-export default QuestionnaireModalForm;
+export default QuestionareForm;
