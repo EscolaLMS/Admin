@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { message, Spin, Row, Col, Calendar } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -22,6 +22,7 @@ import {
   updateConsultation,
 } from '@/services/escola-lms/consultations';
 import MultipleDatePicker from '@/components/MultipleDatePicker';
+import './index.css';
 
 const ConsultationForm = () => {
   const intl = useIntl();
@@ -75,6 +76,10 @@ const ConsultationForm = () => {
     }),
     [data, consultation],
   );
+
+  const onPanelChange = (value: any, mode: any) => {
+    console.log(value.format('YYYY-MM-DD'), mode);
+  };
 
   if (!data) {
     return <Spin />;
@@ -187,6 +192,7 @@ const ConsultationForm = () => {
             </ProForm.Group>
             <ProForm.Group>
               <ProForm.Item
+                valuePropName="value"
                 name="proposed_terms"
                 label={<FormattedMessage id="consultations.proposed_terms" />}
               >
@@ -213,8 +219,8 @@ const ConsultationForm = () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="calendar" tab={<FormattedMessage id="calendar" />}>
-            calendar
+          <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
+            <Calendar onPanelChange={onPanelChange} />
           </ProCard.TabPane>
         )}
       </ProCard>
