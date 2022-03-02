@@ -202,6 +202,13 @@ declare namespace API {
       active?: boolean;
     };
 
+  type ConsultationsParams = PageParams & {
+    name?: string;
+    category_id?: number;
+    status?: string;
+    dateRange?: [string, string];
+  };
+
   type H5PListParams = PageParams &
     PaginationParams & {
       title?: string;
@@ -622,6 +629,22 @@ declare namespace API {
   type ScormList = DefaultResponse<PaginatedList<SCORM>>;
 
   type ScormScosList = DefaultResponse<SCORM_SCO>;
+
+  type Consultation = {
+    id: number;
+    name: string;
+    status: string;
+    description: string;
+    duration: string;
+    author_id: number;
+    base_price: number;
+    active_to: string;
+    active_from: string;
+    created_at: string;
+    updated_at: string;
+    categories: Category[] | (number | string)[];
+    proposed_terms: any;
+  };
 
   type TemplateItem = {
     assignable_class: string;
