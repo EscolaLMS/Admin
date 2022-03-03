@@ -156,6 +156,14 @@ enum PERMISSIONS {
   WebinarUpdate = 'webinar_update',
   WebinarDelete = 'webinar_delete',
   WebinarRead = 'webinar_read',
+
+  /* -------- EscolaLMS/Consultations -------- */
+
+  ConsultationList = 'consultation_list',
+  ConsultationCreate = 'consultation_create',
+  ConsultationUpdate = 'consultation_update',
+  ConstulatationDelete = 'consultation_delete',
+  ConsultationRead = 'consultation_read',
 }
 
 export default PERMISSIONS;

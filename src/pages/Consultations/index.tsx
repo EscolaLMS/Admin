@@ -3,14 +3,14 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
-
+import { consultations, deleteConsultation } from '@/services/escola-lms/consultations';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag, Select, message } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Tag, Select } from 'antd';
+import CategoryTree from '@/components/CategoryTree';
 import { format } from 'date-fns/esm';
-import { deleteWebinar, webinars } from '@/services/escola-lms/webinars';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 
-export const TableColumns: ProColumns<API.Webinar>[] = [
+export const TableColumns: ProColumns<API.Consultation>[] = [
   {
     title: <FormattedMessage id="id" defaultMessage="id" />,
     dataIndex: 'id',
@@ -109,9 +109,40 @@ export const TableColumns: ProColumns<API.Webinar>[] = [
     hideInSearch: true,
     render: (_, record) => format(new Date(record.active_to), DAY_FORMAT),
   },
+  {
+    title: <FormattedMessage id="categories" defaultMessage="Categories" />,
+    dataIndex: 'category_id',
+    key: 'category_id',
+    sorter: false,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <CategoryTree
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => (
+      <React.Fragment>
+        {record.categories?.map((category) =>
+          typeof category === 'object' ? (
+            <Tag key={category.name}>{category.name}</Tag>
+          ) : (
+            <Tag key={category}>{category}</Tag>
+          ),
+        )}
+      </React.Fragment>
+    ),
+  },
 ];
 
-const Webinars: React.FC = () => {
+const Consultations: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
@@ -121,7 +152,7 @@ const Webinars: React.FC = () => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {
-        await deleteWebinar(id).then((response) => {
+        await deleteConsultation(id).then((response) => {
           setLoading(false);
           if (response.success) {
             message.success(response.message);
@@ -143,10 +174,10 @@ const Webinars: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Webinar, Partial<API.ConsultationsParams>>
+      <ProTable<API.Consultation, API.ConsultationsParams>
         headerTitle={intl.formatMessage({
-          id: 'Webinars',
-          defaultMessage: 'Webinars',
+          id: 'Consultations',
+          defaultMessage: 'Consultations',
         })}
         loading={loading}
         actionRef={actionRef}
@@ -155,21 +186,22 @@ const Webinars: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Link key="addnew" to="/webinars/new">
+          <Link key="addnew" to="/consultations/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
           </Link>,
         ]}
-        request={({ name, status, dateRange, pageSize, current }) => {
+        request={({ name, status, dateRange, category_id, pageSize, current }) => {
           setLoading(true);
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
             dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
 
-          return webinars({
+          return consultations({
             name,
+            category_id,
             pageSize,
             current,
             date_from,
@@ -195,7 +227,7 @@ const Webinars: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/webinars/${record.id}`}>
+              <Link key="edit" to={`/consultations/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>
@@ -224,4 +256,4 @@ const Webinars: React.FC = () => {
   );
 };
 
-export default Webinars;
+export default Consultations;

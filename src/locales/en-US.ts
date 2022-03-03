@@ -7,6 +7,7 @@ import settings from './en-US/settings';
 import pages from './en-US/pages';
 import notifications from './en-US/notifications';
 import templates from './en-US/templates';
+import consultations from './en-US/consultations';
 
 export default {
   file_resources: 'File resources',
@@ -28,6 +29,7 @@ export default {
   ...pages,
   ...notifications,
   ...templates,
+  ...consultations,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
@@ -57,6 +59,7 @@ export default {
   'menu.reports': 'Reports',
   'menu.Webinars': 'Webinars',
   'menu.User Groups': 'User Groups',
+  'menu.Consultations': 'Consultations',
   user_groups: 'User Groups',
   new_user_group: 'New User Group',
   edit_user_group: 'Edit User Group',
@@ -200,6 +203,8 @@ export default {
   topics: 'Topics',
   topic_list: 'Topic List',
   topic_types: 'Topic types',
+  tutor: 'Tutor',
+  tutors: 'Tutors',
   add_new_topic: 'Add new topic',
   no_topics: 'There are no topics yet on this lesson',
   create: 'Create',
@@ -299,4 +304,5 @@ export default {
   contentMjml: 'Mjml Content',
   html_tooltip: 'HTML content',
   H5P: 'H5P',
+  'webinar.edit': 'Webinar Edit',
 };
