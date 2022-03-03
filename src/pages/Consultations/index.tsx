@@ -5,7 +5,7 @@ import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { consultations, deleteConsultation } from '@/services/escola-lms/consultations';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Tag } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Tag, Select } from 'antd';
 import CategoryTree from '@/components/CategoryTree';
 import { format } from 'date-fns/esm';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
@@ -35,7 +35,31 @@ export const TableColumns: ProColumns<API.Consultation>[] = [
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
     hideInSearch: true,
-    // TODO: search working as a array we need to fix this
+    renderFormItem: ({ type }) => {
+      if (type === 'form') {
+        return null;
+      }
+      return (
+        <Select mode="multiple">
+          <Select.Option value="draft">
+            <Tag>
+              <FormattedMessage id="draft" defaultMessage="draft" />
+            </Tag>
+          </Select.Option>
+          <Select.Option value="archived">
+            <Tag color="error">
+              <FormattedMessage id="archived" defaultMessage="archived" />
+            </Tag>
+          </Select.Option>
+          <Select.Option value="published">
+            <Tag color="success">
+              <FormattedMessage id="published" defaultMessage="published" />
+            </Tag>
+          </Select.Option>
+        </Select>
+      );
+    },
+
     valueEnum: {
       draft: {
         text: (
@@ -174,14 +198,15 @@ const Consultations: React.FC = () => {
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
             dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
+
           return consultations({
             name,
-            status,
             category_id,
             pageSize,
             current,
             date_from,
             date_to,
+            status,
           }).then((response) => {
             setLoading(false);
             if (response.success) {

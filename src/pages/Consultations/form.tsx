@@ -22,6 +22,7 @@ import {
   updateConsultation,
 } from '@/services/escola-lms/consultations';
 import MultipleDatePicker from '@/components/MultipleDatePicker';
+import { categoriesArrToIds } from '@/utils/utils';
 import './index.css';
 
 const ConsultationForm = () => {
@@ -30,7 +31,7 @@ const ConsultationForm = () => {
   const { consultation, tab = 'attributes' } = params;
   const isNew = consultation === 'new';
 
-  const [data, setData] = useState<Partial<API.Page>>();
+  const [data, setData] = useState<Partial<API.Consultation>>();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
@@ -38,6 +39,7 @@ const ConsultationForm = () => {
     if (response.success) {
       setData({
         ...response.data,
+        categories: response.data.categories?.map(categoriesArrToIds),
       });
     }
   }, [consultation]);
@@ -45,7 +47,7 @@ const ConsultationForm = () => {
   useEffect(() => {
     if (isNew) {
       setData({
-        active: false,
+        name: 'new',
       });
       return;
     }
@@ -74,12 +76,12 @@ const ConsultationForm = () => {
       },
       initialValues: data,
     }),
-    [data, consultation],
+    [data, consultation, tab],
   );
 
-  const onPanelChange = (value: any, mode: any) => {
-    console.log(value.format('YYYY-MM-DD'), mode);
-  };
+  // const onPanelChange = (value: any, mode: any) => {
+  //   console.log(value.format('YYYY-MM-DD'), mode);
+  // };
 
   if (!data) {
     return <Spin />;
@@ -220,7 +222,7 @@ const ConsultationForm = () => {
         )}
         {!isNew && (
           <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
-            <Calendar onPanelChange={onPanelChange} />
+            <Calendar />
           </ProCard.TabPane>
         )}
       </ProCard>

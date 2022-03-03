@@ -205,7 +205,7 @@ declare namespace API {
   type ConsultationsParams = PageParams & {
     name?: string;
     category_id?: number;
-    status?: string;
+    status?: string | string[];
     dateRange?: [string, string];
   };
 
@@ -642,7 +642,7 @@ declare namespace API {
     active_from: string;
     created_at: string;
     updated_at: string;
-    categories: Category[] | (number | string)[];
+    categories?: Category[] | (number | string)[];
     proposed_terms: any;
   };
 
