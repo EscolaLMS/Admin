@@ -863,4 +863,17 @@ declare namespace API {
       }
     >;
   };
+
+  export type Webinar = {
+    id: number;
+    name: string;
+    status: string;
+    description: string;
+    duration: string;
+    base_price: number;
+    active_to: string;
+    active_from: string;
+    created_at: string;
+    updated_at: string;
+  };
 }

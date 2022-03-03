@@ -64,6 +64,8 @@ export default function access(initialState: { currentUser: any }) {
 
     reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
 
+    webinarListPermission: havePermissionsInDashboard(PERMISSIONS.WebinarList),
+    webinarDetailsPermission: havePermissionsInDashboard(PERMISSIONS.WebinarRead),
     loggedOut: !currentUser,
   };
 }

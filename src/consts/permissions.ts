@@ -148,6 +148,14 @@ enum PERMISSIONS {
 
   NotificationListAll = 'dashboard-app_notification-list_access', // ability to read all notifications (including those not belonging to you)
   NotificationList = 'dashboard-app_notification-list_access_self',
+
+  /* -------- EscolaLMS/Webinar -------- */
+
+  WebinarList = 'webinar_list',
+  WebinarCreate = 'webinar_create',
+  WebinarUpdate = 'webinar_update',
+  WebinarDelete = 'webinar_delete',
+  WebinarRead = 'webinar_read',
 }
 
 export default PERMISSIONS;

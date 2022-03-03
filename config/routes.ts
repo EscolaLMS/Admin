@@ -241,6 +241,13 @@
     component: './Roles/form',
     hideInMenu: true,
   },
+  // {
+  //   name: 'Webinars',
+  //   icon: 'alert',
+  //   path: '/webinars',
+  //   access: 'webinarListPermission',
+  //   component: './Webinars',
+  // },
   {
     name: 'Notifications',
     icon: 'alert',
