@@ -159,6 +159,25 @@
     hideInMenu: true,
   },
   {
+    name: 'Consultations',
+    icon: 'line',
+    path: '/consultations',
+    access: 'consultationListPermission',
+    component: './Consultations',
+  },
+  {
+    path: '/consultations/:consultation',
+    access: 'consultationDetailsPermission',
+    component: './Consultations/form',
+    hideInMenu: true,
+  },
+  {
+    path: '/consultations/:consultation/:tab',
+    access: 'consultationDetailsPermission',
+    component: './Consultations/form',
+    hideInMenu: true,
+  },
+  {
     path: '/pages',
     name: 'Pages',
     icon: 'read',
@@ -248,6 +267,7 @@
     access: 'notificationListPermission',
     component: './Notifications',
   },
+
   {
     name: 'reports',
     icon: 'project',

@@ -23,11 +23,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
-
-const categoriesArrToIds = (category: API.Category | string | number) =>
-  typeof category === 'object' ? category.id : category;
-
-const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
+import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();

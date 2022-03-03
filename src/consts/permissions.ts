@@ -148,6 +148,14 @@ enum PERMISSIONS {
 
   NotificationListAll = 'dashboard-app_notification-list_access', // ability to read all notifications (including those not belonging to you)
   NotificationList = 'dashboard-app_notification-list_access_self',
+
+  /* -------- EscolaLMS/Consultations -------- */
+
+  ConsultationList = 'consultation_list',
+  ConsultationCreate = 'consultation_create',
+  ConsultationUpdate = 'consultation_update',
+  ConstulatationDelete = 'consultation_delete',
+  ConsultationRead = 'consultation_read',
 }
 
 export default PERMISSIONS;

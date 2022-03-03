@@ -7,6 +7,7 @@ import settings from './pl-PL/settings';
 import pages from './pl-PL/pages';
 import notifications from './pl-PL/notifications';
 import templates from './pl-PL/templates';
+import consultations from './pl-PL/consultations';
 
 export default {
   file_resources: 'Załączniki (pliki)',
@@ -28,6 +29,7 @@ export default {
   ...pages,
   ...notifications,
   ...templates,
+  ...consultations,
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',
@@ -58,6 +60,7 @@ export default {
   'menu.User Groups': 'Grupy',
   'menu.Templates': 'Szablony',
   'menu.Settings': 'Ustawienia',
+  'menu.Consultations': 'Konsultacje',
   user_settings: 'Ustawienia użytkownika',
   'user.settings': 'Ustawienia użytkownika',
   'user.settings.overwrite': 'Nadpisz wszystko',

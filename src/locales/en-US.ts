@@ -7,6 +7,7 @@ import settings from './en-US/settings';
 import pages from './en-US/pages';
 import notifications from './en-US/notifications';
 import templates from './en-US/templates';
+import consultations from './en-US/consultations';
 
 export default {
   file_resources: 'File resources',
@@ -28,6 +29,7 @@ export default {
   ...pages,
   ...notifications,
   ...templates,
+  ...consultations,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
@@ -56,6 +58,7 @@ export default {
   'menu.settings': 'Settings',
   'menu.reports': 'Reports',
   'menu.User Groups': 'User Groups',
+  'menu.Consultations': 'Consultations',
   user_groups: 'User Groups',
   new_user_group: 'New User Group',
   edit_user_group: 'Edit User Group',
