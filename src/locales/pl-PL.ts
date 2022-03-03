@@ -55,6 +55,7 @@ export default {
   'menu.SCORMs': 'SCORMy',
   'menu.settings': 'Opcje',
   'menu.reports': 'Raporty',
+  'menu.Webinars': 'Webinary',
   'menu.User Groups': 'Grupy',
   'menu.Templates': 'Szablony',
   'menu.Settings': 'Ustawienia',

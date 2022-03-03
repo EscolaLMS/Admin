@@ -55,6 +55,7 @@ export default {
   'menu.SCORMs': 'SCORMs',
   'menu.settings': 'Settings',
   'menu.reports': 'Reports',
+  'menu.Webinars': 'Webinars',
   'menu.User Groups': 'User Groups',
   user_groups: 'User Groups',
   new_user_group: 'New User Group',
