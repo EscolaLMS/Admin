@@ -14,7 +14,7 @@ export async function consultations(
   },
   options?: Record<string, any>,
 ) {
-  return request<API.RolesList>(`/api/admin/consultations`, {
+  return request<API.DefaultMetaResponse<API.Consultation>>(`/api/admin/consultations`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
     params: {

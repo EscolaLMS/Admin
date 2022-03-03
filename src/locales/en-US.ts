@@ -58,6 +58,7 @@ export default {
   'menu.settings': 'Settings',
   'menu.reports': 'Reports',
   'menu.User Groups': 'User Groups',
+  'menu.Consultations': 'Consultations',
   user_groups: 'User Groups',
   new_user_group: 'New User Group',
   edit_user_group: 'Edit User Group',

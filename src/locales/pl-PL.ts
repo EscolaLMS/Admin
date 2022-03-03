@@ -60,6 +60,7 @@ export default {
   'menu.User Groups': 'Grupy',
   'menu.Templates': 'Szablony',
   'menu.Settings': 'Ustawienia',
+  'menu.Consultations': 'Konsultacje',
   user_settings: 'Ustawienia użytkownika',
   'user.settings': 'Ustawienia użytkownika',
   'user.settings.overwrite': 'Nadpisz wszystko',
