@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Tag, DatePicker, Select } from 'antd';
 import moment from 'moment';
+
 import './index.css';
 
 const getTimestamp = (value: moment.Moment) => {
@@ -99,7 +100,9 @@ const MultipleDatePicker: React.FC<{
         return (
           <DatePicker
             disabledDate={(current: moment.Moment) => {
-              return current && current.valueOf() < Date.now();
+              const date = new Date();
+
+              return current && current.valueOf() <= date.setDate(date.getDate() - 1);
             }}
             showTime={{ format: 'HH:mm' }}
             onChange={(date: moment.Moment | null) => date && onValueChange(date)}
