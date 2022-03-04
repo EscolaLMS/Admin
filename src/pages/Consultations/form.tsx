@@ -59,18 +59,19 @@ const ConsultationForm = () => {
   const formProps = useMemo(
     () => ({
       onFinish: async (values: Partial<API.Consultation>) => {
+        const postData = {
+          ...values,
+          image_url: data && data.image_url,
+          image_path: data && data.image_url && splitImagePath(data.image_url),
+        };
         let response: API.DefaultResponse<API.Consultation>;
         if (isNew) {
-          response = await createConsultation(values);
+          response = await createConsultation(postData);
           if (response.success) {
             history.push(`/consultations/${response.data.id}`);
           }
         } else {
-          response = await updateConsultation(Number(consultation), {
-            ...values,
-            image_url: data && data.image_url,
-            image_path: data && data.image_url && splitImagePath(data.image_url),
-          });
+          response = await updateConsultation(Number(consultation), postData);
           if (response.success) {
             history.push(`/consultations/${response.data.id}/${tab}`);
           }

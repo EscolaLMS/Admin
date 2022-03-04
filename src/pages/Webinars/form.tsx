@@ -53,18 +53,19 @@ const WebinarForm = () => {
   const formProps = useMemo(
     () => ({
       onFinish: async (values: Partial<API.Webinar>) => {
+        const postData = {
+          ...values,
+          image_url: data && data.image_url,
+          image_path: data && data.image_url && splitImagePath(data.image_url),
+        };
         let response: API.DefaultResponse<API.Webinar>;
         if (isNew) {
-          response = await createWebinar(values);
+          response = await createWebinar(postData);
           if (response.success) {
             history.push(`/webinars/${response.data.id}`);
           }
         } else {
-          response = await updateWebinar(Number(webinar), {
-            ...values,
-            image_url: data && data.image_url,
-            image_path: data && data.image_url && splitImagePath(data.image_url),
-          });
+          response = await updateWebinar(Number(webinar), postData);
           if (response.success) {
             history.push(`/webinars/${response.data.id}/${tab}`);
           }
