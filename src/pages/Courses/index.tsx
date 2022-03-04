@@ -202,11 +202,12 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title, active, category_id, tag }, sort) => {
+        request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return course({
             title,
+            status,
             pageSize,
             current,
             category_id,

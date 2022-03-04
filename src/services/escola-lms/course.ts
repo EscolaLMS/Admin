@@ -27,6 +27,7 @@ export async function course(
     current?: number;
     pageSize?: number;
     title?: string;
+    status?: string;
   },
   options?: { [key: string]: any },
 ) {

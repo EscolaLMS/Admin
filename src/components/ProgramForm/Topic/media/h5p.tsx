@@ -62,7 +62,7 @@ export const H5PForm: React.FC<{
             <FormattedMessage id="preview" />
           </Button>
 
-          <Button type="primary" onClick={() => setEditId(Number(id))}>
+          <Button type="primary" disabled={!id} onClick={() => setEditId(Number(id))}>
             <FormattedMessage id="edit" />
           </Button>
         </Col>

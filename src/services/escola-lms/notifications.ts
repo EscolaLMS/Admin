@@ -6,6 +6,8 @@ export async function getNotifications(
     current?: number;
     pageSize?: number;
     event?: string;
+    date_from?: string;
+    date_to?: string;
   },
   id?: number,
   options?: Record<string, any>,
