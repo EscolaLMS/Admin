@@ -58,6 +58,7 @@ export default {
   'menu.SCORMs': 'SCORMs',
   'menu.settings': 'Settings',
   'menu.reports': 'Reports',
+  'menu.Webinars': 'Webinars',
   'menu.User Groups': 'User Groups',
   'menu.Consultations': 'Consultations',
   user_groups: 'User Groups',
@@ -203,6 +204,8 @@ export default {
   topics: 'Topics',
   topic_list: 'Topic List',
   topic_types: 'Topic types',
+  tutor: 'Tutor',
+  tutors: 'Tutors',
   add_new_topic: 'Add new topic',
   no_topics: 'There are no topics yet on this lesson',
   create: 'Create',
@@ -302,4 +305,5 @@ export default {
   contentMjml: 'Mjml Content',
   html_tooltip: 'HTML content',
   H5P: 'H5P',
+  'webinar.edit': 'Webinar Edit',
 };

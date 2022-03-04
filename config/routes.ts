@@ -160,7 +160,7 @@
   },
   {
     name: 'Consultations',
-    icon: 'line',
+    icon: 'interaction',
     path: '/consultations',
     access: 'consultationListPermission',
     component: './Consultations',
@@ -175,6 +175,25 @@
     path: '/consultations/:consultation/:tab',
     access: 'consultationDetailsPermission',
     component: './Consultations/form',
+    hideInMenu: true,
+  },
+  {
+    name: 'Webinars',
+    icon: 'CustomerServiceOutlined',
+    path: '/webinars',
+    access: 'webinarListPermission',
+    component: './Webinars',
+  },
+  {
+    path: '/webinars/:webinar',
+    access: 'consultationDetailsPermission',
+    component: './Webinars/form',
+    hideInMenu: true,
+  },
+  {
+    path: '/webinars/:webinar/:tab',
+    access: 'consultationDetailsPermission',
+    component: './Webinars/form',
     hideInMenu: true,
   },
   {
@@ -260,6 +279,7 @@
     component: './Roles/form',
     hideInMenu: true,
   },
+
   {
     name: 'Notifications',
     icon: 'alert',

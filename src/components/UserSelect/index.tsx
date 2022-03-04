@@ -81,7 +81,7 @@ export const UserSelect: React.FC<{
     <Select
       onFocus={() => fetch()}
       allowClear
-      style={{ width: '100%' }}
+      style={{ width: '100%', minWidth: '150px' }}
       value={currUsers}
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
