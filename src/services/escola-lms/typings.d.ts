@@ -643,7 +643,9 @@ declare namespace API {
     created_at: string;
     updated_at: string;
     categories?: Category[] | (number | string)[];
-    proposed_terms: any;
+    proposed_terms: (number | string)[];
+    image_path?: string;
+    image_url?: string;
   };
 
   type TemplateItem = {
@@ -885,5 +887,21 @@ declare namespace API {
         ];
       }
     >;
+  };
+
+  export type Webinar = {
+    id: number;
+    name: string;
+    status: string;
+    description: string;
+    duration: string;
+    base_price: number;
+    active_to: string;
+    active_from: string;
+    created_at: string;
+    updated_at: string;
+    image_path?: string;
+    image_url?: string;
+    tags?: Tag[] | string[];
   };
 }

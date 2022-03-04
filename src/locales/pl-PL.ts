@@ -57,6 +57,7 @@ export default {
   'menu.SCORMs': 'SCORMy',
   'menu.settings': 'Opcje',
   'menu.reports': 'Raporty',
+  'menu.Webinars': 'Webinary',
   'menu.User Groups': 'Grupy',
   'menu.Templates': 'Szablony',
   'menu.Settings': 'Ustawienia',
@@ -228,6 +229,8 @@ export default {
   topics: 'Tematy',
   topic_list: 'Lista Tematów',
   topic_types: 'Typy Tematów',
+  tutor: 'Trener',
+  tutors: 'Trenerzy',
   pages: 'Strony',
   new_page: 'Nowa strona tekstowa',
   edit_page: 'Edycja strony tekstowej',
@@ -305,4 +308,5 @@ export default {
   introduction: 'Wprowadzenie',
   introduction_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
+  'webinar.edit': 'Edycja Webinaru',
 };

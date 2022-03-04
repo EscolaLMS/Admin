@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Calendar } from 'antd';
+import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -7,43 +7,38 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
-
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import UserSelect from '@/components/UserSelect';
-import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import {
-  ConsultationStatus,
-  createConsultation,
-  getConsultation,
-  updateConsultation,
-} from '@/services/escola-lms/consultations';
-import MultipleDatePicker from '@/components/MultipleDatePicker';
-import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
+  createWebinar,
+  getWebinar,
+  updateWebinar,
+  WebinarStatus,
+} from '@/services/escola-lms/webinars';
+import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
-import './index.css';
+import { splitImagePath } from '@/utils/utils';
+import TagsInput from '@/components/TagsInput';
 
-const ConsultationForm = () => {
+const WebinarForm = () => {
   const intl = useIntl();
-  const params = useParams<{ consultation?: string; tab?: string }>();
-  const { consultation, tab = 'attributes' } = params;
-  const isNew = consultation === 'new';
+  const params = useParams<{ webinar?: string; tab?: string }>();
+  const { webinar, tab = 'attributes' } = params;
+  const isNew = webinar === 'new';
 
-  const [data, setData] = useState<Partial<API.Consultation>>();
+  const [data, setData] = useState<Partial<API.Webinar>>();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
-    const response = await getConsultation(Number(consultation));
+    const response = await getWebinar(Number(webinar));
     if (response.success) {
       setData({
         ...response.data,
-        categories: response.data.categories?.map(categoriesArrToIds),
       });
     }
-  }, [consultation]);
+  }, [webinar]);
 
   useEffect(() => {
     if (isNew) {
@@ -54,38 +49,34 @@ const ConsultationForm = () => {
     }
 
     fetchData();
-  }, [consultation]);
+  }, [webinar]);
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<API.Consultation>) => {
+      onFinish: async (values: Partial<API.Webinar>) => {
         const postData = {
           ...values,
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
         };
-        let response: API.DefaultResponse<API.Consultation>;
+        let response: API.DefaultResponse<API.Webinar>;
         if (isNew) {
-          response = await createConsultation(postData);
+          response = await createWebinar(postData);
           if (response.success) {
-            history.push(`/consultations/${response.data.id}`);
+            history.push(`/webinars/${response.data.id}`);
           }
         } else {
-          response = await updateConsultation(Number(consultation), postData);
+          response = await updateWebinar(Number(webinar), postData);
           if (response.success) {
-            history.push(`/consultations/${response.data.id}/${tab}`);
+            history.push(`/webinars/${response.data.id}/${tab}`);
           }
         }
         message.success(response.message);
       },
       initialValues: data,
     }),
-    [data, consultation, tab],
+    [data, webinar, tab],
   );
-
-  // const onPanelChange = (value: any, mode: any) => {
-  //   console.log(value.format('YYYY-MM-DD'), mode);
-  // };
 
   if (!data) {
     return <Spin />;
@@ -94,23 +85,19 @@ const ConsultationForm = () => {
   return (
     <PageContainer
       title={
-        isNew ? (
-          <FormattedMessage id="consultation" />
-        ) : (
-          <FormattedMessage id="consultations.edit" />
-        )
+        isNew ? <FormattedMessage id="menu.webinars" /> : <FormattedMessage id="webinar.edit" />
       }
       header={{
         breadcrumb: {
           routes: [
             {
-              path: 'consultations',
+              path: 'webinars',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.Consultations',
+                id: 'menu.Webinars',
               }),
             },
             {
-              path: String(consultation),
+              path: String(webinar),
               breadcrumbName: intl.formatMessage({
                 id: 'form',
               }),
@@ -135,7 +122,7 @@ const ConsultationForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/consultations/${consultation}/${key}`),
+          onChange: (key) => history.push(`/webinars/${webinar}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
@@ -180,7 +167,7 @@ const ConsultationForm = () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={ConsultationStatus}
+                valueEnum={WebinarStatus}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
@@ -209,11 +196,11 @@ const ConsultationForm = () => {
                 })}
               />
               <ProForm.Item
-                name="author_id"
+                name="authors"
                 label={<FormattedMessage id="tutor" />}
                 valuePropName="value"
               >
-                <UserSelect />
+                <UserSelect multiple />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>
@@ -223,26 +210,17 @@ const ConsultationForm = () => {
                 tooltip={<FormattedMessage id="description_tooltip" />}
                 valuePropName="value"
               >
-                <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />
-              </ProForm.Item>
-            </ProForm.Group>
-            <ProForm.Group>
-              <ProForm.Item
-                valuePropName="value"
-                name="proposed_terms"
-                label={<FormattedMessage id="consultations.proposed_terms" />}
-              >
-                <MultipleDatePicker />
+                <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
               </ProForm.Item>
             </ProForm.Group>
           </ProForm>
-        </ProCard.TabPane>{' '}
+        </ProCard.TabPane>
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <ProFormImageUpload
                 title="image"
-                action={`/api/admin/consultations/${consultation}`}
+                action={`/api/admin/webinars/${webinar}`}
                 src_name="image_url"
                 form_name="image"
                 getUploadedSrcField={(info) => info.file.response.data.image_url}
@@ -257,25 +235,20 @@ const ConsultationForm = () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories" />}>
+          <ProCard.TabPane key="tags" tab={<FormattedMessage id="tags" />}>
             <Row>
               <Col span={12}>
                 <ProForm {...formProps}>
                   <ProForm.Item
-                    label={<FormattedMessage id="categories" />}
-                    name="categories"
+                    label={<FormattedMessage id="tags" />}
+                    name="tags"
                     valuePropName="value"
                   >
-                    <CategoryCheckboxTree />
+                    <TagsInput />
                   </ProForm.Item>
                 </ProForm>
               </Col>
             </Row>
-          </ProCard.TabPane>
-        )}
-        {!isNew && (
-          <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
-            <Calendar />
           </ProCard.TabPane>
         )}
       </ProCard>
@@ -283,4 +256,4 @@ const ConsultationForm = () => {
   );
 };
 
-export default ConsultationForm;
+export default WebinarForm;

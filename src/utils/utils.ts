@@ -26,3 +26,7 @@ export const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
 
 export const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
+
+export const splitImagePath = (path: string) => {
+  return path?.split('storage')[1];
+};
