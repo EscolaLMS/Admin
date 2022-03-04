@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin } from 'antd';
+import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -20,6 +20,7 @@ import {
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import { splitImagePath } from '@/utils/utils';
+import TagsInput from '@/components/TagsInput';
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -231,6 +232,23 @@ const WebinarForm = () => {
                 }
               />
             </ProForm>
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane key="tags" tab={<FormattedMessage id="tags" />}>
+            <Row>
+              <Col span={12}>
+                <ProForm {...formProps}>
+                  <ProForm.Item
+                    label={<FormattedMessage id="tags" />}
+                    name="tags"
+                    valuePropName="value"
+                  >
+                    <TagsInput />
+                  </ProForm.Item>
+                </ProForm>
+              </Col>
+            </Row>
           </ProCard.TabPane>
         )}
       </ProCard>

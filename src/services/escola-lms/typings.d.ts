@@ -902,5 +902,6 @@ declare namespace API {
     updated_at: string;
     image_path?: string;
     image_url?: string;
+    tags?: Tag[] | string[];
   };
 }

@@ -9,6 +9,7 @@ import { Button, Tooltip, Popconfirm, Tag, Select, message } from 'antd';
 import { format } from 'date-fns/esm';
 import { deleteWebinar, webinars } from '@/services/escola-lms/webinars';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
+import Tags from '@/components/Tags';
 
 export const TableColumns: ProColumns<API.Webinar>[] = [
   {
@@ -108,6 +109,37 @@ export const TableColumns: ProColumns<API.Webinar>[] = [
     dataIndex: 'active_to',
     hideInSearch: true,
     render: (_, record) => format(new Date(record.active_to), DAY_FORMAT),
+  },
+  {
+    title: <FormattedMessage id="tags" defaultMessage="Tags" />,
+    dataIndex: 'tag',
+    key: 'tag',
+    sorter: false,
+    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <Tags
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => (
+      <React.Fragment>
+        {record.tags?.map((tag) =>
+          typeof tag === 'object' ? (
+            <Tag key={tag.title}>{tag.title}</Tag>
+          ) : (
+            <Tag key={tag}>{tag}</Tag>
+          ),
+        )}
+      </React.Fragment>
+    ),
   },
 ];
 
