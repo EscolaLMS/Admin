@@ -1,6 +1,6 @@
 import { PlusOutlined, ExportOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, Tag, message } from 'antd';
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -12,7 +12,6 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import SecureUpload from '@/components/SecureUpload';
 import UserRoleSelect from '../../components/UserRoleSelect';
-import { roles as getRoles } from '@/services/escola-lms/roles';
 import './index.css';
 
 const handleRemove = async (id: number) => {
@@ -126,21 +125,6 @@ const TableList: React.FC = () => {
     }
   }, [params]);
 
-  const [roles, setRoles] = useState<API.Role[]>();
-
-  const fetchRoles = useCallback(async () => {
-    const request = await getRoles();
-    const response = await request;
-
-    if (response.success) {
-      setRoles(response.data);
-    }
-  }, [roles]);
-
-  useEffect(() => {
-    fetchRoles();
-  }, []);
-
   return (
     <PageContainer>
       <ProTable<API.UserListItem, API.PageParams & { search: string; role: string }>
@@ -194,8 +178,7 @@ const TableList: React.FC = () => {
         request={({ pageSize, current, search, role }) => {
           setParams({ pageSize, current, search, role });
           const requestRole = role && role.toString() === 'all' ? undefined : role;
-          const selectedRole = roles && roles.find((_role) => _role?.id === requestRole)?.name;
-          return users({ pageSize, current, search, role: selectedRole }).then((response) => {
+          return users({ pageSize, current, search, role: requestRole }).then((response) => {
             if (response.success) {
               return {
                 data: response.data,

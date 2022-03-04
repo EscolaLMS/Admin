@@ -306,4 +306,5 @@ export default {
   html_tooltip: 'HTML content',
   H5P: 'H5P',
   'webinar.edit': 'Webinar Edit',
+  role: 'Role',
 };

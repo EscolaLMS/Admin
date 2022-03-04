@@ -73,7 +73,7 @@ export const UserRoleSelect: React.FC<{
     >
       {roles &&
         roles.map((role) => (
-          <Select.Option key={role.id} value={role.id}>
+          <Select.Option key={role.id} value={role.name}>
             {role.name}
           </Select.Option>
         ))}

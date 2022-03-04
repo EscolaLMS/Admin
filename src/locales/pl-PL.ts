@@ -310,4 +310,5 @@ export default {
   introduction_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
   'webinar.edit': 'Edycja Webinaru',
+  role: 'Rola',
 };
