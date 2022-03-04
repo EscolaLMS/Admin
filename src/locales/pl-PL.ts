@@ -11,6 +11,7 @@ import consultations from './pl-PL/consultations';
 
 export default {
   file_resources: 'Załączniki (pliki)',
+  select_user_role: 'Wybierz rolę',
   select_user_group: 'Wybierz Grupę',
   groups: 'Grupy',
   'navBar.lang': 'Języki',

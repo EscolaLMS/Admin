@@ -11,6 +11,8 @@ import { usersCsvExport } from '@/services/escola-lms/csv';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import SecureUpload from '@/components/SecureUpload';
+import UserRoleSelect from '../../components/UserRoleSelect';
+import TypeButtonDrawer from '../../components/TypeButtonDrawer';
 import './index.css';
 
 const handleRemove = async (id: number) => {
@@ -87,18 +89,27 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     hideInSearch: true,
     render: (_, record) => record.roles.map((role) => <Tag key={role}>{role}</Tag>),
   },
-
   {
+    hideInSearch: false,
     title: <FormattedMessage id="roles" defaultMessage="roles" />,
-    key: 'role',
-    valueType: 'select',
     dataIndex: 'role',
-    width: 100,
-    hideInTable: true,
-    valueEnum: {
-      admin: { text: 'Admin' },
-      tutor: { text: 'Tutor' },
-      student: { text: 'Student' },
+    renderFormItem: (item, { type, defaultRender, ...rest }) => {
+      return <UserRoleSelect {...rest} />;
+    },
+    render: (_, record) => {
+      if (record.parent_id) {
+        return (
+          <TypeButtonDrawer
+            type={'EscolaLms\\Auth\\Models\\UserGroup'}
+            type_id={record.parent_id}
+          />
+        );
+      }
+      return (
+        <React.Fragment>
+          <FormattedMessage id="none" />
+        </React.Fragment>
+      );
     },
   },
 ];
