@@ -19,6 +19,8 @@ export async function webinars(
     /* useCache: true */ useCache: false,
     params: {
       ...params,
+      per_page: params.pageSize,
+      page: params.current,
     },
     ...(options || {}),
   });
