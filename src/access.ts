@@ -70,6 +70,9 @@ export default function access(initialState: { currentUser: any }) {
     consultationListPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationList),
     consultationDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationRead),
 
+    stationaryEventsListPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsList),
+    stationaryEventsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsRead),
+
     loggedOut: !currentUser,
   };
 }

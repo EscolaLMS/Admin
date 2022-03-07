@@ -35,7 +35,8 @@
     ".stylelintrc.js",
     ".prettierrc.js",
     "jest.config.js",
-    "mock/*"
+    "mock/*",
+    "node_modules/@escolalms/ts-types"
   ],
   "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"],
   "parser": "@typescript-eslint/parser",

@@ -171,6 +171,20 @@
     component: './Consultations/form',
     hideInMenu: true,
   },
+
+  {
+    name: 'StationaryEvents',
+    icon: 'global',
+    path: '/stationary-events',
+    access: 'stationaryEventsListPermission',
+    component: './StationaryEvents',
+  },
+  {
+    path: '/stationary-events/:id',
+    access: 'stationaryEventsDetailsPermission',
+    component: './StationaryEvents/form',
+    hideInMenu: true,
+  },
   {
     path: '/consultations/:consultation/:tab',
     access: 'consultationDetailsPermission',

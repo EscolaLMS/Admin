@@ -21,6 +21,12 @@ export const initialStateConfig = {
   loading: <PageLoading />,
 };
 
+const user: App.Models.User = {
+  whatever: 123,
+};
+
+console.log(user);
+
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */

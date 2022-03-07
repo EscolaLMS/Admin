@@ -164,6 +164,14 @@ enum PERMISSIONS {
   ConsultationUpdate = 'consultation_update',
   ConstulatationDelete = 'consultation_delete',
   ConsultationRead = 'consultation_read',
+
+  /* -------- EscolaLMS/Stationary-Events -------- */
+
+  StationaryEventsList = 'stationary-event_list',
+  StationaryEventsCreate = 'stationary-event_create',
+  StationaryEventsUpdate = 'stationary-event_update',
+  StationaryEventsRead = 'stationary-event_read',
+  StationaryEventsDelete = 'stationary-event_delete',
 }
 
 export default PERMISSIONS;
