@@ -723,6 +723,14 @@ declare namespace API {
     type: string;
   };
 
+  type QuestionnaireReport = {
+    avg_rate: string;
+    count_answers: number;
+    question_id: number;
+    sum_rate: number;
+    title: string;
+  };
+
   type Notification = {
     id: string;
     type: string;
