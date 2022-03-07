@@ -74,10 +74,15 @@ export default () => {
         if (course === 'new') {
           response = await createCourse(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/courses/${response.data.id}/attributes`);
           }
         } else {
           response = await updateCourse(Number(course), postData);
+          if (response.success) {
+            setUnsavedChanges(false);
+            history.push(`/courses/${response.data.id}/attributes`);
+          }
         }
         message.success(response.message);
       },

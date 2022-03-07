@@ -69,11 +69,13 @@ const ConsultationForm = () => {
         if (isNew) {
           response = await createConsultation(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/consultations/${response.data.id}`);
           }
         } else {
           response = await updateConsultation(Number(consultation), postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/consultations/${response.data.id}/${tab}`);
           }
         }

@@ -59,16 +59,21 @@ const WebinarForm = () => {
           ...values,
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
+          authors:
+            values.authors &&
+            values.authors.map((author) => (typeof author === 'object' ? author.id : author)),
         };
         let response: API.DefaultResponse<API.Webinar>;
         if (isNew) {
           response = await createWebinar(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/webinars/${response.data.id}`);
           }
         } else {
           response = await updateWebinar(Number(webinar), postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/webinars/${response.data.id}/${tab}`);
           }
         }
