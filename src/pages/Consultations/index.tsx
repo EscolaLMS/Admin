@@ -1,32 +1,65 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tag, Tooltip, Popconfirm, message } from 'antd';
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-
-import { course, exportCourse, removeCourse } from '@/services/escola-lms/course';
+import { PageContainer } from '@ant-design/pro-layout';
+import { consultations, deleteConsultation } from '@/services/escola-lms/consultations';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Tooltip, Popconfirm, message, Tag, Select } from 'antd';
 import CategoryTree from '@/components/CategoryTree';
-import Tags from '@/components/Tags';
-import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
+import { format } from 'date-fns/esm';
+import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 
-export const TableColumns: ProColumns<API.CourseListItem>[] = [
+export const TableColumns: ProColumns<API.Consultation>[] = [
   {
-    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    title: <FormattedMessage id="id" defaultMessage="id" />,
     dataIndex: 'id',
-    sorter: true,
-    search: false,
+    hideInSearch: true,
   },
   {
-    title: <FormattedMessage id="title" defaultMessage="title" />,
-    dataIndex: 'title',
-    sorter: true,
+    title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
+    dataIndex: 'dateRange',
+    hideInSearch: false,
+    hideInForm: true,
+    hideInTable: true,
+    valueType: 'dateRange',
+    fieldProps: {
+      allowEmpty: [true, true],
+    },
+  },
+  {
+    title: <FormattedMessage id="name" defaultMessage="name" />,
+    dataIndex: 'name',
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
-    sorter: false,
+    hideInSearch: true,
+    renderFormItem: ({ type }) => {
+      if (type === 'form') {
+        return null;
+      }
+      return (
+        <Select mode="multiple">
+          <Select.Option value="draft">
+            <Tag>
+              <FormattedMessage id="draft" defaultMessage="draft" />
+            </Tag>
+          </Select.Option>
+          <Select.Option value="archived">
+            <Tag color="error">
+              <FormattedMessage id="archived" defaultMessage="archived" />
+            </Tag>
+          </Select.Option>
+          <Select.Option value="published">
+            <Tag color="success">
+              <FormattedMessage id="published" defaultMessage="published" />
+            </Tag>
+          </Select.Option>
+        </Select>
+      );
+    },
+
     valueEnum: {
       draft: {
         text: (
@@ -57,16 +90,24 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
     title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
     dataIndex: 'base_price',
-    sorter: true,
-    valueType: 'textarea',
-    search: false,
+    hideInSearch: true,
   },
   {
-    title: <FormattedMessage id="duration" defaultMessage="Duration" />,
+    title: <FormattedMessage id="duration" defaultMessage="duration" />,
     dataIndex: 'duration',
-    sorter: true,
-    valueType: 'textarea',
-    search: false,
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="active_from" defaultMessage="active_from" />,
+    dataIndex: 'active_from',
+    hideInSearch: true,
+    render: (_, record) => format(new Date(record.active_from), DAY_FORMAT),
+  },
+  {
+    title: <FormattedMessage id="active_to" defaultMessage="active_to" />,
+    dataIndex: 'active_to',
+    hideInSearch: true,
+    render: (_, record) => format(new Date(record.active_to), DAY_FORMAT),
   },
   {
     title: <FormattedMessage id="categories" defaultMessage="Categories" />,
@@ -99,44 +140,11 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
       </React.Fragment>
     ),
   },
-  {
-    title: <FormattedMessage id="tags" defaultMessage="Tags" />,
-    dataIndex: 'tag',
-    key: 'tag',
-    sorter: false,
-    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-      if (type === 'form') {
-        return null;
-      }
-      const stateType = form.getFieldValue('state');
-      return (
-        <Tags
-          {...rest}
-          state={{
-            type: stateType,
-          }}
-        />
-      );
-    },
-    render: (_, record) => (
-      <React.Fragment>
-        {record.tags?.map((tag) =>
-          typeof tag === 'object' ? (
-            <Tag key={tag.title}>{tag.title}</Tag>
-          ) : (
-            <Tag key={tag}>{tag}</Tag>
-          ),
-        )}
-      </React.Fragment>
-    ),
-  },
 ];
 
-const TableList: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-
+const Consultations: React.FC = () => {
   const actionRef = useRef<ActionType>();
-
+  const [loading, setLoading] = useState(false);
   const intl = useIntl();
 
   const handleRemove = useCallback(
@@ -144,7 +152,7 @@ const TableList: React.FC = () => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {
-        await removeCourse(id).then((response) => {
+        await deleteConsultation(id).then((response) => {
           setLoading(false);
           if (response.success) {
             message.success(response.message);
@@ -164,66 +172,47 @@ const TableList: React.FC = () => {
     [actionRef],
   );
 
-  const handleExport = useCallback(async (id: number) => {
-    setLoading(true);
-    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
-    try {
-      const request = await exportCourse(id);
-      const response = await request;
-      if (response.success) {
-        const url: string = response.data;
-        window.open(url, '_blank');
-      }
-    } catch (error) {
-      message.error(<FormattedMessage id="error" defaultMessage="error" />);
-    } finally {
-      hide();
-      setLoading(false);
-    }
-  }, []);
-
   return (
     <PageContainer>
-      <ProTable<API.CourseListItem, API.CourseParams>
-        loading={loading}
+      <ProTable<API.Consultation, API.ConsultationsParams>
         headerTitle={intl.formatMessage({
-          id: 'menu.Courses',
-          defaultMessage: 'Courses List',
+          id: 'Consultations',
+          defaultMessage: 'Consultations',
         })}
+        loading={loading}
         actionRef={actionRef}
         rowKey="id"
         search={{
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Link to="/courses/new">
+          <Link key="addnew" to="/consultations/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
+        request={({ name, status, dateRange, category_id, pageSize, current }) => {
           setLoading(true);
-          return course({
-            title,
-            status,
+          const date_from =
+            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
+          const date_to =
+            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
+
+          return consultations({
+            name,
+            category_id,
             pageSize,
             current,
-            category_id,
-            tag,
-            active: active && active,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            date_from,
+            date_to,
+            status,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
               return {
                 data: response.data,
+                total: response.meta.total,
                 success: true,
               };
             }
@@ -236,13 +225,15 @@ const TableList: React.FC = () => {
             title: <FormattedMessage id="options" defaultMessage="options" />,
             dataIndex: 'option',
             valueType: 'option',
+            width: '10%',
             render: (_, record) => [
-              <Link to={`/courses/${record.id}`}>
+              <Link key="edit" to={`/consultations/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                  <Button type="primary" icon={<EditOutlined />}></Button>
+                  <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>
               </Link>,
               <Popconfirm
+                key="delete"
                 title={
                   <FormattedMessage
                     id="deleteQuestion"
@@ -254,16 +245,9 @@ const TableList: React.FC = () => {
                 cancelText={<FormattedMessage id="no" defaultMessage="No" />}
               >
                 <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                  <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                  <Button type="primary" icon={<DeleteOutlined />} danger />
                 </Tooltip>
               </Popconfirm>,
-
-              <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
-                <Button
-                  onClick={() => handleExport(Number(record.id))}
-                  icon={<ExportOutlined />}
-                ></Button>
-              </Tooltip>,
             ],
           },
         ]}
@@ -272,4 +256,4 @@ const TableList: React.FC = () => {
   );
 };
 
-export default TableList;
+export default Consultations;

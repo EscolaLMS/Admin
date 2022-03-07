@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
@@ -23,12 +23,8 @@ import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
+import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
-
-const categoriesArrToIds = (category: API.Category | string | number) =>
-  typeof category === 'object' ? category.id : category;
-
-const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -41,7 +37,7 @@ export default () => {
   useEffect(() => {
     if (course === 'new') {
       setData({
-        active: true,
+        title: 'new',
       });
       return;
     }
@@ -59,13 +55,6 @@ export default () => {
     fetch();
   }, [course]);
 
-  const splitPath = useCallback(
-    (path: string) => {
-      return path?.split('storage')[1];
-    },
-    [data],
-  );
-
   const formProps = useMemo(
     () => ({
       onFinish: async (values: API.Course) => {
@@ -73,11 +62,11 @@ export default () => {
           ...values,
           scorm_sco_id: values.scorm_sco_id ? values.scorm_sco_id : null,
           image_url: data && data.image_url,
-          image_path: data && data.image_url && splitPath(data.image_url),
+          image_path: data && data.image_url && splitImagePath(data.image_url),
           video_url: data && data.video_url,
-          video_path: data && data.video_url && splitPath(data.video_url),
+          video_path: data && data.video_url && splitImagePath(data.video_url),
           poster_url: data && data.poster_url,
-          poster_path: data && data.poster_url && splitPath(data.poster_url),
+          poster_path: data && data.poster_url && splitImagePath(data.poster_url),
         };
         let response: API.DefaultResponse<API.Course>;
         if (course === 'new') {
@@ -91,15 +80,6 @@ export default () => {
         message.success(response.message);
       },
       initialValues: data,
-      /*
-      request: async () => {
-        const response = await getCourse(Number(course));
-        if (response.success) {
-          return response.data;
-        }
-        return {};
-      },
-      */
     }),
     [course, data],
   );

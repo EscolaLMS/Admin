@@ -204,6 +204,13 @@ declare namespace API {
       active?: boolean;
     };
 
+  type ConsultationsParams = PageParams & {
+    name?: string;
+    category_id?: number;
+    status?: string | string[];
+    dateRange?: [string, string];
+  };
+
   type H5PListParams = PageParams &
     PaginationParams & {
       title?: string;
@@ -625,6 +632,24 @@ declare namespace API {
 
   type ScormScosList = DefaultResponse<SCORM_SCO>;
 
+  type Consultation = {
+    id: number;
+    name: string;
+    status: string;
+    description: string;
+    duration: string;
+    author_id: number;
+    base_price: number;
+    active_to: string;
+    active_from: string;
+    created_at: string;
+    updated_at: string;
+    categories?: Category[] | (number | string)[];
+    proposed_terms: (number | string)[];
+    image_path?: string;
+    image_url?: string;
+  };
+
   type TemplateItem = {
     assignable_class: string;
     assignable_id: number;
@@ -890,5 +915,21 @@ declare namespace API {
         ];
       }
     >;
+  };
+
+  export type Webinar = {
+    id: number;
+    name: string;
+    status: string;
+    description: string;
+    duration: string;
+    base_price: number;
+    active_to: string;
+    active_from: string;
+    created_at: string;
+    updated_at: string;
+    image_path?: string;
+    image_url?: string;
+    tags?: Tag[] | string[];
   };
 }

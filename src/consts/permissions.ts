@@ -162,6 +162,22 @@ enum PERMISSIONS {
   QuestionCreate = 'question_create',
   QuestionDelete = 'question_delete',
   QuestionUpdate = 'question_update',
+
+  /* -------- EscolaLMS/Webinar -------- */
+
+  WebinarList = 'webinar_list',
+  WebinarCreate = 'webinar_create',
+  WebinarUpdate = 'webinar_update',
+  WebinarDelete = 'webinar_delete',
+  WebinarRead = 'webinar_read',
+
+  /* -------- EscolaLMS/Consultations -------- */
+
+  ConsultationList = 'consultation_list',
+  ConsultationCreate = 'consultation_create',
+  ConsultationUpdate = 'consultation_update',
+  ConstulatationDelete = 'consultation_delete',
+  ConsultationRead = 'consultation_read',
 }
 
 export default PERMISSIONS;

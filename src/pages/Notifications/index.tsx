@@ -26,6 +26,17 @@ export const TableColumns: ProColumns<API.Notification>[] = [
       return <UserSelect {...rest} />;
     },
   },
+  {
+    title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
+    dataIndex: 'dateRange',
+    hideInSearch: false,
+    hideInForm: true,
+    hideInTable: true,
+    valueType: 'dateRange',
+    fieldProps: {
+      allowEmpty: [true, true],
+    },
+  },
 ];
 
 const NotificationsPage: React.FC = () => {
@@ -71,12 +82,19 @@ const NotificationsPage: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={({ pageSize, current, event, notifiable_id }) => {
+        request={({ pageSize, current, event, notifiable_id, dateRange }) => {
+          const date_from =
+            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
+          const date_to =
+            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
+
           return getNotifications(
             {
               pageSize,
               current,
               event,
+              date_from,
+              date_to,
             },
             notifiable_id,
           ).then((response) => {

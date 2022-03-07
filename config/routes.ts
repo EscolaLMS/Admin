@@ -159,6 +159,44 @@
     hideInMenu: true,
   },
   {
+    name: 'Consultations',
+    icon: 'interaction',
+    path: '/consultations',
+    access: 'consultationListPermission',
+    component: './Consultations',
+  },
+  {
+    path: '/consultations/:consultation',
+    access: 'consultationDetailsPermission',
+    component: './Consultations/form',
+    hideInMenu: true,
+  },
+  {
+    path: '/consultations/:consultation/:tab',
+    access: 'consultationDetailsPermission',
+    component: './Consultations/form',
+    hideInMenu: true,
+  },
+  {
+    name: 'Webinars',
+    icon: 'CustomerServiceOutlined',
+    path: '/webinars',
+    access: 'webinarListPermission',
+    component: './Webinars',
+  },
+  {
+    path: '/webinars/:webinar',
+    access: 'consultationDetailsPermission',
+    component: './Webinars/form',
+    hideInMenu: true,
+  },
+  {
+    path: '/webinars/:webinar/:tab',
+    access: 'consultationDetailsPermission',
+    component: './Webinars/form',
+    hideInMenu: true,
+  },
+  {
     path: '/pages',
     name: 'Pages',
     icon: 'read',
@@ -241,6 +279,7 @@
     component: './Roles/form',
     hideInMenu: true,
   },
+
   {
     name: 'Notifications',
     icon: 'alert',
@@ -248,6 +287,7 @@
     access: 'notificationListPermission',
     component: './Notifications',
   },
+
   {
     name: 'Questionnaire',
     icon: 'question',
