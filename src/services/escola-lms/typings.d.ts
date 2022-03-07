@@ -180,6 +180,8 @@ declare namespace API {
 
   type RolesList = DefaultMetaResponse<Role>;
 
+  type QuestionnaireList = DefaultMetaResponse<Questionnaire>;
+
   type NotificationList = DefaultMetaResponse<Notification>;
 
   type NotificationsEventsList = DefaultResponse<string[]>;
@@ -693,6 +695,40 @@ declare namespace API {
     name: string;
     assigned?: boolean;
     guard_name?: string;
+  };
+
+  type Questionnaire = {
+    id?: number;
+    title: string;
+    questions?: Question[];
+    models?: QuestionnaireModel[];
+    active: boolean;
+  };
+
+  type QuestionnaireModel = {
+    id: number;
+    model_class: string;
+    title: string;
+    model_id?: number;
+    model_type_id?: number;
+  };
+
+  type Question = {
+    id: number;
+    title: string;
+    questionnaire_id: id;
+    description: string;
+    position: number;
+    active: boolean;
+    type: string;
+  };
+
+  type QuestionnaireReport = {
+    avg_rate: string;
+    count_answers: number;
+    question_id: number;
+    sum_rate: number;
+    title: string;
   };
 
   type Notification = {
