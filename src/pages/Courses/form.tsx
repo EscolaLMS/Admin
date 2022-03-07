@@ -24,6 +24,7 @@ import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
 import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
+import AssignQuestionnary from '@/components/AssignQuestionnary';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -313,7 +314,6 @@ export default () => {
             </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
-
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
@@ -408,16 +408,20 @@ export default () => {
             </ProForm>
           </ProCard.TabPane>
         )}
-
         {!isNew && (
           <ProCard.TabPane key="access" tab={<FormattedMessage id="access" />}>
             {course && <CourseAccess id={course} />}
           </ProCard.TabPane>
         )}
-
         {!isNew && (
           <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
             {course && <CourseCertificateForm id={course} />}
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="questionnaires" tab={<FormattedMessage id="questionnaires" />}>
+            {course && <AssignQuestionnary modelType={ModelTypes.course} id={Number(course)} />}
           </ProCard.TabPane>
         )}
 
