@@ -124,6 +124,7 @@ export default {
   created_at: 'Created at',
   create_new: 'Create new',
   updated_at: 'Updated at',
+  unsaved_changes: 'Changes you made may not be saved.',
   currency: 'Currency',
   subtotal: 'Subtotal',
   tax: 'Tax',

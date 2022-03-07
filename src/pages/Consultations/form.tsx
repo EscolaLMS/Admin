@@ -25,13 +25,14 @@ import MultipleDatePicker from '@/components/MultipleDatePicker';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import './index.css';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
 
 const ConsultationForm = () => {
   const intl = useIntl();
   const params = useParams<{ consultation?: string; tab?: string }>();
   const { consultation, tab = 'attributes' } = params;
   const isNew = consultation === 'new';
-
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<API.Consultation>>();
   const [form] = ProForm.useForm();
 
@@ -68,11 +69,13 @@ const ConsultationForm = () => {
         if (isNew) {
           response = await createConsultation(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/consultations/${response.data.id}`);
           }
         } else {
           response = await updateConsultation(Number(consultation), postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/consultations/${response.data.id}/${tab}`);
           }
         }
@@ -139,7 +142,14 @@ const ConsultationForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
-          <ProForm {...formProps} form={form}>
+          <UnsavedPrompt show={unsavedChanges} />
+          <ProForm
+            {...formProps}
+            form={form}
+            onValuesChange={() => {
+              setUnsavedChanges(true);
+            }}
+          >
             <ProForm.Group>
               <ProFormText
                 width="md"
