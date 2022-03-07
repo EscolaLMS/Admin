@@ -8,7 +8,7 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history } from 'umi';
+import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { getCourse, updateCourse, createCourse, CourseStatus } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -19,11 +19,11 @@ import TagsInput from '@/components/TagsInput';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProgramForm from '@/components/ProgramForm/';
 import ScormSelector from '@/components/Scorm';
-import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
 import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -32,6 +32,7 @@ export default () => {
   const isNew = course === 'new';
 
   const [data, setData] = useState<Partial<API.Course>>();
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (course === 'new') {
@@ -135,9 +136,11 @@ export default () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+          <UnsavedPrompt show={unsavedChanges} />
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
+              setUnsavedChanges(true);
               return values.title && setData({ title: values.title });
             }}
           >

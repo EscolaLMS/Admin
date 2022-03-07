@@ -21,13 +21,14 @@ import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import { splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
 
 const WebinarForm = () => {
   const intl = useIntl();
   const params = useParams<{ webinar?: string; tab?: string }>();
   const { webinar, tab = 'attributes' } = params;
   const isNew = webinar === 'new';
-
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<API.Webinar>>();
   const [form] = ProForm.useForm();
 
@@ -126,7 +127,14 @@ const WebinarForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
-          <ProForm {...formProps} form={form}>
+          <UnsavedPrompt show={unsavedChanges} />
+          <ProForm
+            {...formProps}
+            form={form}
+            onValuesChange={() => {
+              setUnsavedChanges(true);
+            }}
+          >
             <ProForm.Group>
               <ProFormText
                 width="md"

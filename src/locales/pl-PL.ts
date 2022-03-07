@@ -140,6 +140,7 @@ export default {
   count_h5p: 'Ilość h5p',
   library_id: 'ID biblioteki',
   updated_at: 'Zaktualizowano',
+  unsaved_changes: 'Wprowadzone zmiany mogą nie zostać zapisane.',
   currency: 'Waluta',
   subtotal: 'Suma częściowa',
   tax: 'Podatek',
