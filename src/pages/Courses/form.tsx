@@ -24,7 +24,6 @@ import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
-import { ModelTypes } from '../Questionnaire/components/ModalForm';
 
 const categoriesArrToIds = (category: API.Category | string | number) =>
   typeof category === 'object' ? category.id : category;
