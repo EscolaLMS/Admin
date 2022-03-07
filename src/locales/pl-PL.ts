@@ -230,6 +230,8 @@ export default {
   program: 'Program',
   scorm: 'SCORM',
   relase_drop: 'Zwolnij, aby upuścić',
+  sum_rate: 'Ranking',
+  count_answers: 'Ilość odpowiedzi',
   drag_here: 'Przeciągnij tutaj',
   add_new_lesson: 'Dodaj nową lekcję',
   lesson: 'Lekcja',

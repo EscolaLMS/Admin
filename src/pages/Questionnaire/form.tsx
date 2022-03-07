@@ -13,7 +13,7 @@ import {
 import ProForm from '@ant-design/pro-form';
 import CourseSelect from '@/components/CourseSelect';
 import QuestionForm from './components/QuestionForm';
-// import QuestionnaireChart from './components/QuestionnaireChart';
+import QuestionnaireChart from './components/QuestionnaireChart';
 import './style.css';
 
 const { Title } = Typography;
@@ -200,13 +200,6 @@ export const QuestionareForm = () => {
             fetchData={fetchData}
           />
         </ProCard.TabPane>
-        {/* TODO: raports not working */}
-        {/* <ProCard.TabPane
-          key="raport"
-          tab={<FormattedMessage id="raport" defaultMessage="raport" />}
-        >
-          <QuestionnaireChart id={Number(questionnaireId)} />
-        </ProCard.TabPane> */}
         {listOfModels &&
           listOfModels.map((model: API.QuestionnaireModel) => (
             <ProCard.TabPane
@@ -216,7 +209,7 @@ export const QuestionareForm = () => {
             >
               {/* TODO: universal select for list of models or switch  */}
               <CourseSelect
-                defaultValue={models && models[model.id]?.map((item) => item)}
+                defaultValue={models && models[model.id]?.map((item: number) => item)}
                 multiple
                 onChange={(values) => handleModelChange(values, model.id)}
               />
@@ -229,6 +222,19 @@ export const QuestionareForm = () => {
               </Button>
             </ProCard.TabPane>
           ))}
+        <ProCard.TabPane
+          key="raport"
+          tab={<FormattedMessage id="menu.reports" defaultMessage="menu.reports" />}
+        >
+          <ProCard split="vertical">
+            <ProCard colSpan={12} layout="center">
+              <QuestionnaireChart id={Number(questionnaireId)} type="count_answers" />
+            </ProCard>
+            <ProCard colSpan={12} layout="center">
+              <QuestionnaireChart id={Number(questionnaireId)} type="sum_rate" />
+            </ProCard>
+          </ProCard>
+        </ProCard.TabPane>
       </ProCard>
     </PageContainer>
   );

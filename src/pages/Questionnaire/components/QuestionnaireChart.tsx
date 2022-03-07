@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pie } from '@ant-design/charts';
 import { Spin, Alert } from 'antd';
-// import { FormattedMessage } from 'umi';
+import { FormattedMessage } from 'umi';
 import ProCard from '@ant-design/pro-card';
 import { questionnaireReport } from '@/services/escola-lms/questionnaire';
 
@@ -42,7 +42,7 @@ type State =
       value: any;
     };
 
-const QuestionnaireChart: React.FC<{ id: number }> = ({ id }) => {
+const QuestionnaireChart: React.FC<{ id: number; type: string }> = ({ id, type }) => {
   const [state, setState] = useState<State>({ mode: 'init' });
 
   useEffect(() => {
@@ -50,21 +50,22 @@ const QuestionnaireChart: React.FC<{ id: number }> = ({ id }) => {
     questionnaireReport(id)
       .then((response) => {
         if (response.success) {
-          setState({ mode: 'loaded', value: response.data });
+          setState({
+            mode: 'loaded',
+            value: response.data.map((val) => ({
+              label: val.title,
+              value: val[type],
+            })),
+          });
         } else {
           setState({ mode: 'error', error: response.message });
         }
       })
       .catch((err) => setState({ mode: 'error', error: err.toString() }));
-  }, [id]);
+  }, [id, type]);
 
   return (
-    <ProCard
-      //   title={
-      //     <FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />
-      //   }
-      headerBordered
-    >
+    <ProCard title={<FormattedMessage id={type} />} headerBordered style={{ height: '500px' }}>
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && <Pie {...config} data={state.value} />}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}

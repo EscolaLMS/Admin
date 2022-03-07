@@ -279,6 +279,8 @@ export default {
   contact: 'Contact',
   country: 'Country',
   slug_tooltip: 'SLUG is part of Pages URL ',
+  sum_rate: 'Ranking',
+  count_answers: 'Answers count',
   content_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
   pages: 'Pages',

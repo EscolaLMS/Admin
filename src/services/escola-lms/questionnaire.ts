@@ -86,7 +86,7 @@ export async function deleteQuestion(id: number, options?: Record<string, any>) 
 
 /**  GET /api/admin/questionnaire-models */
 export async function getQuestionnaireModels(options?: Record<string, any>) {
-  return request<API.DefaultResponse<API.QuestionnaireModel>>(`/api/admin/questionnaire-models`, {
+  return request<API.DefaultResponse<API.QuestionnaireModel[]>>(`/api/admin/questionnaire-models`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
 
@@ -96,10 +96,13 @@ export async function getQuestionnaireModels(options?: Record<string, any>) {
 
 /**  GET /api/admin/questionnaire/report/:id */
 export async function questionnaireReport(id: number, options?: Record<string, any>) {
-  return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/report/${id}`, {
-    method: 'GET',
-    /* useCache: true */ useCache: false,
+  return request<API.DefaultResponse<API.Questionnaire[]>>(
+    `/api/admin/questionnaire/report/${id}`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
 
-    ...(options || {}),
-  });
+      ...(options || {}),
+    },
+  );
 }
