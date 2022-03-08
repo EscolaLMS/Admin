@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Modal } from 'antd';
+import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -26,8 +26,9 @@ import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils'
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
 import { ModelTypes } from '../Questionnaire/form';
-import { isPast } from 'date-fns';
 import { ModelStatus } from '@/consts/status';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import EditValidateModal from '@/components/EditValidateModal';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -37,23 +38,7 @@ export default () => {
 
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [manageCourseEdit, setManageCourseEdit] = useState({
-    showModal: false,
-    disableEdit: false,
-  });
-
-  const validateCourseEdit = (courseData: API.Course) => {
-    if (
-      courseData?.status === 'published' &&
-      courseData?.active_from &&
-      isPast(new Date(courseData?.active_from))
-    ) {
-      setManageCourseEdit({
-        showModal: false,
-        disableEdit: true,
-      });
-    }
-  };
+  const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
 
   useEffect(() => {
     if (course === 'new') {
@@ -178,37 +163,8 @@ export default () => {
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           <UnsavedPrompt show={unsavedChanges} />
-          <Modal
-            width={'600px'}
-            title={
-              <FormattedMessage
-                id="course.validate_edit.header"
-                defaultMessage="course.validate_edit.header"
-              />
-            }
-            visible={manageCourseEdit.showModal}
-            onOk={() =>
-              setManageCourseEdit({
-                showModal: false,
-                disableEdit: false,
-              })
-            }
-            onCancel={() =>
-              setManageCourseEdit({
-                showModal: false,
-                disableEdit: true,
-              })
-            }
-            okText="OK"
-            cancelText="Cancel"
-          >
-            <p>
-              <FormattedMessage
-                id="course.validate_edit.content"
-                defaultMessage="course.validate_edit.content"
-              />
-            </p>
-          </Modal>
+          <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
+
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
