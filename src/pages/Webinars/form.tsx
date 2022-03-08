@@ -11,17 +11,15 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import {
-  createWebinar,
-  getWebinar,
-  updateWebinar,
-  WebinarStatus,
-} from '@/services/escola-lms/webinars';
+import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import { splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
+import { ModelStatus } from '@/consts/status';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import EditValidateModal from '@/components/EditValidateModal';
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -30,11 +28,14 @@ const WebinarForm = () => {
   const isNew = webinar === 'new';
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<API.Webinar>>();
+  const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
+
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
     const response = await getWebinar(Number(webinar));
     if (response.success) {
+      validateCourseEdit(response.data);
       setData({
         ...response.data,
       });
@@ -55,6 +56,14 @@ const WebinarForm = () => {
   const formProps = useMemo(
     () => ({
       onFinish: async (values: Partial<API.Webinar>) => {
+        if (manageCourseEdit.disableEdit) {
+          setManageCourseEdit({
+            showModal: true,
+            disableEdit: true,
+          });
+          return;
+        }
+
         const postData = {
           ...values,
           image_url: data && data.image_url,
@@ -74,6 +83,7 @@ const WebinarForm = () => {
           response = await updateWebinar(Number(webinar), postData);
           if (response.success) {
             setUnsavedChanges(false);
+            validateCourseEdit(response.data);
             history.push(`/webinars/${response.data.id}/${tab}`);
           }
         }
@@ -81,7 +91,7 @@ const WebinarForm = () => {
       },
       initialValues: data,
     }),
-    [data, webinar, tab],
+    [data, webinar, tab, manageCourseEdit],
   );
 
   if (!data) {
@@ -133,6 +143,7 @@ const WebinarForm = () => {
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           <UnsavedPrompt show={unsavedChanges} />
+          <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
           <ProForm
             {...formProps}
             form={form}
@@ -151,6 +162,7 @@ const WebinarForm = () => {
                   defaultMessage: 'name',
                 })}
                 required
+                disabled={manageCourseEdit.disableEdit}
               />
 
               <ProFormDigit
@@ -165,6 +177,7 @@ const WebinarForm = () => {
                 min={0}
                 max={9999}
                 fieldProps={{ step: 1 }}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormText
                 width="sm"
@@ -175,16 +188,19 @@ const WebinarForm = () => {
                   id: 'duration',
                   defaultMessage: 'duration',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormSelect
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={WebinarStatus}
+                valueEnum={ModelStatus}
+                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
                 rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                disabled={manageCourseEdit.disableEdit}
               />
             </ProForm.Group>
             <ProForm.Group>
@@ -197,6 +213,7 @@ const WebinarForm = () => {
                   id: 'active_from',
                   defaultMessage: 'active_from',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormDatePicker
                 width="sm"
@@ -207,6 +224,7 @@ const WebinarForm = () => {
                   id: 'active_to',
                   defaultMessage: 'active_to',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProForm.Item
                 name="authors"
@@ -229,7 +247,11 @@ const WebinarForm = () => {
           </ProForm>
         </ProCard.TabPane>
         {!isNew && (
-          <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
+          <ProCard.TabPane
+            key="media"
+            tab={<FormattedMessage id="media" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <ProForm {...formProps}>
               <ProFormImageUpload
                 title="image"
@@ -248,7 +270,11 @@ const WebinarForm = () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="tags" tab={<FormattedMessage id="tags" />}>
+          <ProCard.TabPane
+            key="tags"
+            tab={<FormattedMessage id="tags" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <Row>
               <Col span={12}>
                 <ProForm {...formProps}>

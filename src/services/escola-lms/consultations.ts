@@ -1,11 +1,5 @@
 import { request } from 'umi';
 
-export enum ConsultationStatus {
-  draft = 'draft',
-  published = 'published',
-  archived = 'archived',
-}
-
 /**  GET /api/admin/consultations */
 export async function consultations(
   params: API.ConsultationsParams & {
@@ -19,6 +13,8 @@ export async function consultations(
     /* useCache: true */ useCache: false,
     params: {
       ...params,
+      per_page: params.pageSize,
+      page: params.current,
     },
     ...(options || {}),
   });

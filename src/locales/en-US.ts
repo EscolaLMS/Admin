@@ -316,4 +316,8 @@ export default {
   html_tooltip: 'HTML content',
   H5P: 'H5P',
   'webinar.edit': 'Webinar Edit',
+  'course.validate_edit.header':
+    'This course is already underway! Are you sure you want to edit it?',
+  'course.validate_edit.content':
+    'You should not edit this course as it is already in progress. Clicking ok will allow you to edit, but you do so at your own risk.',
 };

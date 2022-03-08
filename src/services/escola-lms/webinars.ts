@@ -1,11 +1,5 @@
 import { request } from 'umi';
 
-export enum WebinarStatus {
-  draft = 'draft',
-  published = 'published',
-  archived = 'archived',
-}
-
 /**  GET /api/admin/webinars */
 export async function webinars(
   params: API.ConsultationsParams & {
@@ -19,6 +13,8 @@ export async function webinars(
     /* useCache: true */ useCache: false,
     params: {
       ...params,
+      per_page: params.pageSize,
+      page: params.current,
     },
     ...(options || {}),
   });

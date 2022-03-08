@@ -63,7 +63,7 @@ declare namespace API {
     base_price?: string;
     duration?: string;
     author_id?: number;
-    authors: string[];
+    authors: UserItem[] | number[];
     image_url?: string;
     poster_url?: string;
     video_url?: string;
@@ -72,7 +72,7 @@ declare namespace API {
     scorm_id?: number;
     scorm_sco_id?: number;
     status: string;
-    active_from?: string;
+    active_from?: Date;
     active_to?: string;
     hours_to_complete?: number;
     purchasable?: boolean;
