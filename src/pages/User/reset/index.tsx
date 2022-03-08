@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { useIntl, history, FormattedMessage } from 'umi';
 
-import { reset as passwordReset } from '@/services/escola-lms/login';
+import { reset as passwordReset } from '@/services/escola-lms/auth';
 
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';

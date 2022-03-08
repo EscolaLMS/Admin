@@ -3,8 +3,7 @@ import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage, useModel } from 'umi';
-
-import { forgot, login } from '@/services/escola-lms/login';
+import { forgot, login } from '@/services/escola-lms/auth';
 
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
@@ -177,7 +176,7 @@ const Login: React.FC = () => {
           }}
         >
           {!isPasswordReset ? (
-            <ProFormCheckbox noStyle name="autoLogin">
+            <ProFormCheckbox noStyle name="remember_me">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="rememberMe" />
             </ProFormCheckbox>
           ) : (
