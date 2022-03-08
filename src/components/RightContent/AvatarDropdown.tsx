@@ -4,7 +4,7 @@ import { Menu, Spin, message } from 'antd';
 import { history, useModel, FormattedMessage } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { logout } from '@/services/escola-lms/login';
+import { logout } from '@/services/escola-lms/auth';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;

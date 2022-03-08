@@ -220,6 +220,7 @@ declare namespace API {
   type LoginRequest = {
     email: string;
     password: string;
+    remember_me: boolean;
   };
 
   type LoginResponse = DefaultResponse<{ token: string }>;

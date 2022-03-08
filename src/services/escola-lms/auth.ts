@@ -45,3 +45,12 @@ export async function reset(body: API.ResetPasswordRequest, options?: { [key: st
     ...(options || {}),
   });
 }
+
+export async function refreshToken() {
+  return request<API.DefaultResponse<{ token: string; expires_at: string }>>('/api/auth/refresh', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+}
