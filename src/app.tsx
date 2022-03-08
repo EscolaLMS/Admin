@@ -3,7 +3,7 @@ import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
-// request as requestUmi
+
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError, RequestOptionsInit } from 'umi-request';
@@ -11,13 +11,11 @@ import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
 import Reqs from 'umi-request';
-// import merge from 'lodash/merge';
-// import cloneDeep from 'lodash/cloneDeep';
+import { refreshToken } from './services/escola-lms/auth';
 import jwt_decode from 'jwt-decode';
 import { differenceInMinutes } from 'date-fns';
 import '@/services/ybug';
 import '@/services/sentry.ts';
-import { refreshToken } from './services/escola-lms/auth';
 
 const authpaths = ['/user/login', '/user/reset-password'];
 
@@ -201,30 +199,42 @@ const responseInterceptor = async (response: Response, options: RequestOptionsIn
   if (token) {
     const decode = token && jwt_decode(token);
     console.log(new Date(decode.exp * 1000), differenceInMinutes(new Date(decode.exp * 1000), now));
+
     const accessTokenExpired = differenceInMinutes(new Date(decode.exp * 1000), now);
+
     if (accessTokenExpired <= 1) {
       try {
         if (!refreshTokenRequest) {
           refreshTokenRequest = refreshToken();
         }
-        // multiple requests but "await"ing for only 1 refreshTokenRequest, because of closure
-        const res = await refreshTokenRequest;
-        if (!res) throw new Error();
-        if (res.success) {
-          localStorage.setItem('TOKEN', res.data.token);
-          return {
-            url: response.url,
-            options: { ...options, headers: { Authorization: `Bearer ${res.data.token}` } },
-          };
-          // return requestUmi(
-          //   response.url,
-          //   merge(cloneDeep(options), {
-          //     headers: { Authorization: `Bearer ${res.data.token}` },
-          //   }),
-          // );
-        }
-        // if (res.refresh) jwt.saveRefresh(res.refresh); // for ROTATE REFRESH TOKENS
+
+        refreshTokenRequest
+          .then((res) => {
+            if (res.success) {
+              localStorage.setItem('TOKEN', res.data.token);
+
+              return {
+                url: `${REACT_APP_API_URL}${response.url}`,
+                options: {
+                  ...options,
+                  interceptors: true,
+                  headers: token
+                    ? {
+                        ...options.headers,
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${res.data.token}`,
+                      }
+                    : options.headers,
+                },
+              };
+            }
+          })
+          .catch(() => {
+            history.push('/user/login');
+            localStorage.removeItem('TOKEN');
+          });
       } catch (err) {
+        history.push('/user/login');
         localStorage.removeItem('TOKEN');
         cancel();
         throw err;
