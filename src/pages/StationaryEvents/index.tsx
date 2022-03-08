@@ -31,118 +31,24 @@ export const TableColumns: ProColumns<EscolaLms.StationaryEvents.Models.Stationa
   {
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
+    sorter: true,
   },
-  /*
-  {
-    title: <FormattedMessage id="status" defaultMessage="status" />,
-    dataIndex: 'status',
-    hideInSearch: true,
-    renderFormItem: ({ type }) => {
-      if (type === 'form') {
-        return null;
-      }
-      return (
-        <Select mode="multiple">
-          <Select.Option value="draft">
-            <Tag>
-              <FormattedMessage id="draft" defaultMessage="draft" />
-            </Tag>
-          </Select.Option>
-          <Select.Option value="archived">
-            <Tag color="error">
-              <FormattedMessage id="archived" defaultMessage="archived" />
-            </Tag>
-          </Select.Option>
-          <Select.Option value="published">
-            <Tag color="success">
-              <FormattedMessage id="published" defaultMessage="published" />
-            </Tag>
-          </Select.Option>
-        </Select>
-      );
-    },
 
-    valueEnum: {
-      draft: {
-        text: (
-          <Tag>
-            <FormattedMessage id="draft" defaultMessage="draft" />
-          </Tag>
-        ),
-        status: 'draft',
-      },
-      archived: {
-        text: (
-          <Tag color="error">
-            <FormattedMessage id="archived" defaultMessage="archived" />
-          </Tag>
-        ),
-        status: 'archived',
-      },
-      published: {
-        text: (
-          <Tag color="success">
-            <FormattedMessage id="published" defaultMessage="published" />
-          </Tag>
-        ),
-        status: 'published',
-      },
-    },
-  },
   {
-    title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
-    dataIndex: 'base_price',
+    title: <FormattedMessage id="started_at" defaultMessage="started at" />,
+    dataIndex: 'started_at',
     hideInSearch: true,
+    hideInForm: true,
+    sorter: true,
   },
+
   {
-    title: <FormattedMessage id="duration" defaultMessage="duration" />,
-    dataIndex: 'duration',
+    title: <FormattedMessage id="finished_at" defaultMessage="started at" />,
+    dataIndex: 'finished_at',
     hideInSearch: true,
+    hideInForm: true,
+    sorter: true,
   },
-  {
-    title: <FormattedMessage id="active_from" defaultMessage="active_from" />,
-    dataIndex: 'active_from',
-    hideInSearch: true,
-    render: (_, record) => format(new Date(record.active_from), DAY_FORMAT),
-  },
-  {
-    title: <FormattedMessage id="active_to" defaultMessage="active_to" />,
-    dataIndex: 'active_to',
-    hideInSearch: true,
-    render: (_, record) => format(new Date(record.active_to), DAY_FORMAT),
-  },
-  {
-    title: <FormattedMessage id="categories" defaultMessage="Categories" />,
-    dataIndex: 'category_id',
-    key: 'category_id',
-    sorter: false,
-    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-      if (type === 'form') {
-        return null;
-      }
-      const stateType = form.getFieldValue('state');
-      return (
-        <CategoryTree
-          {...rest}
-          state={{
-            type: stateType,
-          }}
-        />
-      );
-    },
-    render: (_, record) => (
-      <React.Fragment>
-        {record.categories?.map((category) =>
-          typeof category === 'object' ? (
-            <Tag key={category.name}>{category.name}</Tag>
-          ) : (
-            <Tag key={category}>{category}</Tag>
-          ),
-        )}
-      </React.Fragment>
-    ),
-  },
-  */
 ];
 
 const StationaryEvents: React.FC = () => {
@@ -198,13 +104,20 @@ const StationaryEvents: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ name, pageSize, current }) => {
+        request={({ name, pageSize, current }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
 
           return stationaryEvents({
             pageSize,
             current,
             name,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
@@ -225,7 +138,7 @@ const StationaryEvents: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/consultations/${record.id}`}>
+              <Link key="edit" to={`/stationary-events/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>
