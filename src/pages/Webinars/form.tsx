@@ -11,17 +11,13 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import {
-  createWebinar,
-  getWebinar,
-  updateWebinar,
-  WebinarStatus,
-} from '@/services/escola-lms/webinars';
+import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import { splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
+import { ModelStatus } from '@/consts/status';
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -180,7 +176,8 @@ const WebinarForm = () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={WebinarStatus}
+                valueEnum={ModelStatus}
+                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}

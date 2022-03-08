@@ -14,12 +14,6 @@ export enum TopicType {
   SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
 }
 
-export enum CourseStatus {
-  draft = 'draft',
-  published = 'published',
-  archived = 'archived',
-}
-
 /**  GET /api/courses */
 export async function course(
   params: API.CourseParams & {

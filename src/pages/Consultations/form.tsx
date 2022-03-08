@@ -16,7 +16,6 @@ import { useCallback } from 'react';
 import UserSelect from '@/components/UserSelect';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import {
-  ConsultationStatus,
   createConsultation,
   getConsultation,
   updateConsultation,
@@ -26,6 +25,7 @@ import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import './index.css';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
+import { ModelStatus } from '@/consts/status';
 
 const ConsultationForm = () => {
   const intl = useIntl();
@@ -190,7 +190,8 @@ const ConsultationForm = () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={ConsultationStatus}
+                valueEnum={ModelStatus}
+                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}

@@ -9,7 +9,7 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { getCourse, updateCourse, createCourse, CourseStatus } from '@/services/escola-lms/course';
+import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
 import UserSelect from '@/components/UserSelect';
@@ -27,6 +27,7 @@ import UnsavedPrompt from '@/components/UnsavedPrompt';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
 import { ModelTypes } from '../Questionnaire/form';
 import { isPast } from 'date-fns';
+import { ModelStatus } from '@/consts/status';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -254,7 +255,8 @@ export default () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={CourseStatus}
+                valueEnum={ModelStatus}
+                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}

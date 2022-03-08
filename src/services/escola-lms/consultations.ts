@@ -1,11 +1,5 @@
 import { request } from 'umi';
 
-export enum ConsultationStatus {
-  draft = 'draft',
-  published = 'published',
-  archived = 'archived',
-}
-
 /**  GET /api/admin/consultations */
 export async function consultations(
   params: API.ConsultationsParams & {
