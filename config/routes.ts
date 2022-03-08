@@ -171,6 +171,12 @@
     component: './Consultations/form',
     hideInMenu: true,
   },
+  {
+    path: '/consultations/:consultation/:tab',
+    access: 'consultationDetailsPermission',
+    component: './Consultations/form',
+    hideInMenu: true,
+  },
 
   {
     name: 'StationaryEvents',
@@ -185,12 +191,14 @@
     component: './StationaryEvents/form',
     hideInMenu: true,
   },
+
   {
-    path: '/consultations/:consultation/:tab',
-    access: 'consultationDetailsPermission',
-    component: './Consultations/form',
+    path: '/stationary-events/:id/:tab',
+    access: 'stationaryEventsDetailsPermission',
+    component: './StationaryEvents/form',
     hideInMenu: true,
   },
+
   {
     name: 'Webinars',
     icon: 'CustomerServiceOutlined',

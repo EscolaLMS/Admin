@@ -3,8 +3,7 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
-import { deleteConsultation } from '@/services/escola-lms/consultations';
-import { stationaryEvents } from '@/services/escola-lms/stationary_events';
+import { stationaryEvents, deleteStationaryEvent } from '@/services/escola-lms/stationary_events';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 
@@ -15,19 +14,6 @@ export const TableColumns: ProColumns<EscolaLms.StationaryEvents.Models.Stationa
     hideInSearch: true,
   },
 
-  /*
-  {
-    title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
-    dataIndex: 'dateRange',
-    hideInSearch: false,
-    hideInForm: true,
-    hideInTable: true,
-    valueType: 'dateRange',
-    fieldProps: {
-      allowEmpty: [true, true],
-    },
-  },
-  */
   {
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
@@ -61,7 +47,7 @@ const StationaryEvents: React.FC = () => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {
-        await deleteConsultation(id).then((response) => {
+        await deleteStationaryEvent(id).then((response) => {
           setLoading(false);
           if (response.success) {
             message.success(response.message);

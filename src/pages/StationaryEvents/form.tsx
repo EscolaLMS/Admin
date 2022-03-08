@@ -1,11 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Calendar } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormDigit,
-  ProFormDatePicker,
-  ProFormSelect,
-} from '@ant-design/pro-form';
+import { message, Spin, Row, Col } from 'antd';
+import ProForm, { ProFormText, ProFormDigit, ProFormDatePicker } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -14,78 +9,76 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import UserSelect from '@/components/UserSelect';
-import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
+
 import {
-  ConsultationStatus,
-  createConsultation,
-  getConsultation,
-  updateConsultation,
-} from '@/services/escola-lms/consultations';
-import MultipleDatePicker from '@/components/MultipleDatePicker';
-import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
+  getStationaryEvent,
+  createStationaryEvent,
+  updateStationaryEvent,
+} from '@/services/escola-lms/stationary_events';
+
 import ProFormImageUpload from '@/components/ProFormImageUpload';
+
+import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
+
 import './index.css';
 
-const ConsultationForm = () => {
+const StationaryEventForm = () => {
   const intl = useIntl();
-  const params = useParams<{ consultation?: string; tab?: string }>();
-  const { consultation, tab = 'attributes' } = params;
-  const isNew = consultation === 'new';
+  const params = useParams<{ id?: string; tab?: string }>();
+  const { id, tab = 'attributes' } = params;
+  const isNew = id === 'new';
 
-  const [data, setData] = useState<Partial<API.Consultation>>();
+  const [data, setData] = useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>>();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
-    const response = await getConsultation(Number(consultation));
+    const response = await getStationaryEvent(Number(id));
     if (response.success) {
       setData({
         ...response.data,
-        categories: response.data.categories?.map(categoriesArrToIds),
       });
     }
-  }, [consultation]);
+  }, [id]);
 
   useEffect(() => {
     if (isNew) {
       setData({
-        name: 'new',
+        name: '...',
       });
       return;
     }
 
     fetchData();
-  }, [consultation]);
+  }, [id]);
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<API.Consultation>) => {
+      onFinish: async (values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>) => {
         const postData = {
           ...values,
+          /*
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
+          */
         };
-        let response: API.DefaultResponse<API.Consultation>;
+        let response: API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>;
         if (isNew) {
-          response = await createConsultation(postData);
+          response = await createStationaryEvent(postData);
           if (response.success) {
-            history.push(`/consultations/${response.data.id}`);
+            history.push(`/stationary-events/${response.data.id}`);
           }
         } else {
-          response = await updateConsultation(Number(consultation), postData);
+          response = await updateStationaryEvent(Number(id), postData);
           if (response.success) {
-            history.push(`/consultations/${response.data.id}/${tab}`);
+            history.push(`/stationary-events/${response.data.id}/${tab}`);
           }
         }
         message.success(response.message);
       },
       initialValues: data,
     }),
-    [data, consultation, tab],
+    [data, id, tab],
   );
-
-  // const onPanelChange = (value: any, mode: any) => {
-  //   console.log(value.format('YYYY-MM-DD'), mode);
-  // };
 
   if (!data) {
     return <Spin />;
@@ -95,22 +88,22 @@ const ConsultationForm = () => {
     <PageContainer
       title={
         isNew ? (
-          <FormattedMessage id="consultation" />
+          <FormattedMessage id="stationary_event" />
         ) : (
-          <FormattedMessage id="consultations.edit" />
+          <FormattedMessage id="stationary_event.edit" />
         )
       }
       header={{
         breadcrumb: {
           routes: [
             {
-              path: 'consultations',
+              path: 'stationary-events',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.Consultations',
+                id: 'menu.StationaryEvents',
               }),
             },
             {
-              path: String(consultation),
+              path: String(id),
               breadcrumbName: intl.formatMessage({
                 id: 'form',
               }),
@@ -118,7 +111,7 @@ const ConsultationForm = () => {
             {
               path: '/',
               breadcrumbName: intl.formatMessage({
-                id: String(data.name),
+                id: id === 'new' ? 'new' : 'edit',
               }),
             },
             {
@@ -135,7 +128,7 @@ const ConsultationForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/consultations/${consultation}/${key}`),
+          onChange: (key) => history.push(`/stationary-events/${id}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
@@ -145,104 +138,94 @@ const ConsultationForm = () => {
                 width="md"
                 name="name"
                 label={<FormattedMessage id="name" />}
-                tooltip={<FormattedMessage id="name" />}
+                tooltip={<FormattedMessage id="name_tooltip" />}
                 placeholder={intl.formatMessage({
                   id: 'name',
                   defaultMessage: 'name',
                 })}
                 required
               />
-
-              <ProFormDigit
+              <ProFormText
                 width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
+                name="place"
+                label={<FormattedMessage id="place" />}
+                tooltip={<FormattedMessage id="place_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
+                  id: 'place',
+                  defaultMessage: 'place',
+                })}
+                required
+              />
+              <ProForm.Item
+                name="authors"
+                label={<FormattedMessage id="tutor" />}
+                valuePropName="value"
+              >
+                <UserSelect multiple role="tutor" />
+              </ProForm.Item>
+              <ProFormDigit
+                width="xs"
+                name="max_participants"
+                label={<FormattedMessage id="max_participants" />}
+                tooltip={<FormattedMessage id="max_participants_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'max_participants',
+                  defaultMessage: 'max_participants',
                 })}
                 min={0}
                 max={9999}
                 fieldProps={{ step: 1 }}
               />
-              <ProFormText
-                width="sm"
-                name="duration"
-                label={<FormattedMessage id="duration" />}
-                tooltip={<FormattedMessage id="duration" />}
-                placeholder={intl.formatMessage({
-                  id: 'duration',
-                  defaultMessage: 'duration',
-                })}
-              />
-              <ProFormSelect
-                name="status"
-                width="xs"
-                label={<FormattedMessage id="status" />}
-                valueEnum={ConsultationStatus}
-                placeholder={intl.formatMessage({
-                  id: 'status',
-                })}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
-              />
             </ProForm.Group>
+
             <ProForm.Group>
               <ProFormDatePicker
                 width="sm"
-                name="active_from"
-                label={<FormattedMessage id="active_from" />}
-                tooltip={<FormattedMessage id="active_from" />}
+                name="started_at"
+                label={<FormattedMessage id="started_at" />}
+                tooltip={<FormattedMessage id="started_at_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'active_from',
-                  defaultMessage: 'active_from',
+                  id: 'started_at',
+                  defaultMessage: 'started_at',
                 })}
               />
               <ProFormDatePicker
                 width="sm"
-                name="active_to"
-                label={<FormattedMessage id="active_to" />}
-                tooltip={<FormattedMessage id="active_to" />}
+                name="finished_at"
+                label={<FormattedMessage id="finished_at" />}
+                tooltip={<FormattedMessage id="finished_att_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'active_to',
-                  defaultMessage: 'active_to',
+                  id: 'finished_at',
+                  defaultMessage: 'finished_at',
                 })}
               />
-              <ProForm.Item
-                name="author_id"
-                label={<FormattedMessage id="tutor" />}
-                valuePropName="value"
-              >
-                <UserSelect />
-              </ProForm.Item>
             </ProForm.Group>
-            <ProForm.Group>
-              <ProForm.Item
-                name="description"
-                label={<FormattedMessage id="description" />}
-                tooltip={<FormattedMessage id="description_tooltip" />}
-                valuePropName="value"
-              >
-                <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />
-              </ProForm.Item>
-            </ProForm.Group>
-            <ProForm.Group>
-              <ProForm.Item
-                valuePropName="value"
-                name="proposed_terms"
-                label={<FormattedMessage id="consultations.proposed_terms" />}
-              >
-                <MultipleDatePicker />
-              </ProForm.Item>
-            </ProForm.Group>
+
+            <ProForm.Item
+              name="program"
+              label={<FormattedMessage id="program" />}
+              tooltip={<FormattedMessage id="program_tooltip" />}
+              valuePropName="value"
+            >
+              <WysiwygMarkdown directory={`stationary_events/${id}/wysiwyg`} />
+            </ProForm.Item>
+
+            <ProForm.Item
+              name="description"
+              label={<FormattedMessage id="description" />}
+              tooltip={<FormattedMessage id="description_tooltip" />}
+              valuePropName="value"
+            >
+              <WysiwygMarkdown directory={`stationary_events/${id}/wysiwyg`} />
+            </ProForm.Item>
           </ProForm>
-        </ProCard.TabPane>{' '}
+        </ProCard.TabPane>
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <ProFormImageUpload
                 title="image"
-                action={`/api/admin/consultations/${consultation}`}
+                action={`/api/admin/stationary-events/${id}/?_method=PUT`}
                 src_name="image_url"
                 form_name="image"
                 getUploadedSrcField={(info) => info.file.response.data.image_url}
@@ -273,14 +256,9 @@ const ConsultationForm = () => {
             </Row>
           </ProCard.TabPane>
         )}
-        {!isNew && (
-          <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
-            <Calendar />
-          </ProCard.TabPane>
-        )}
       </ProCard>
     </PageContainer>
   );
 };
 
-export default ConsultationForm;
+export default StationaryEventForm;
