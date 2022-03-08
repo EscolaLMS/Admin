@@ -178,7 +178,13 @@ export default () => {
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           <UnsavedPrompt show={unsavedChanges} />
           <Modal
-            title="Ten kurs już trwa! Czy na pewno chcesz go edytować?"
+            width={'600px'}
+            title={
+              <FormattedMessage
+                id="course.validate_edit.header"
+                defaultMessage="course.validate_edit.header"
+              />
+            }
             visible={manageCourseEdit.showModal}
             onOk={() =>
               setManageCourseEdit({
@@ -195,8 +201,12 @@ export default () => {
             okText="OK"
             cancelText="Cancel"
           >
-            <p>Nie powinno sie edytować tego kursu bo kurs już trwa.</p>
-            <p>Klikająć ok edycja bedzie możliwa ale robisz to na własną odpowiedzialność</p>
+            <p>
+              <FormattedMessage
+                id="course.validate_edit.content"
+                defaultMessage="course.validate_edit.content"
+              />
+            </p>
           </Modal>
           <ProForm
             {...formProps}
