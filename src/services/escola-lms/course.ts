@@ -14,12 +14,6 @@ export enum TopicType {
   SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
 }
 
-export enum CourseStatus {
-  draft = 'draft',
-  published = 'published',
-  archived = 'archived',
-}
-
 /**  GET /api/courses */
 export async function course(
   params: API.CourseParams & {
@@ -44,10 +38,10 @@ export async function course(
 }
 
 /**  GET /api/courses/:id */
-export async function getCourse(id: number, options?: { [key: string]: any }) {
+export async function getCourse(id: number, options?: { [key: string]: any }, cache?: boolean) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'GET',
-    /* useCache: true */ useCache: false,
+    /* useCache: true */ useCache: cache !== undefined ? cache : true,
     ...(options || {}),
   });
 }

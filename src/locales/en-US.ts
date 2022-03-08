@@ -59,6 +59,7 @@ export default {
   'menu.reports': 'Reports',
   'menu.Webinars': 'Webinars',
   'menu.User Groups': 'User Groups',
+  'menu.Questionnaire': 'Questionnaires',
   'menu.Consultations': 'Consultations',
   'menu.StationaryEvents': 'Stationary Events',
   StationaryEvents: 'Stationary Events',
@@ -127,6 +128,7 @@ export default {
   created_at: 'Created at',
   create_new: 'Create new',
   updated_at: 'Updated at',
+  unsaved_changes: 'Changes you made may not be saved.',
   currency: 'Currency',
   subtotal: 'Subtotal',
   tax: 'Tax',
@@ -193,6 +195,13 @@ export default {
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
   attributes: 'Attributes',
   new_course: 'New course',
+  new_questionnaire: 'New Questionnaire',
+  questionnaires: 'Questionnaires',
+  questionnaire: 'Questionnaire',
+  'questionnaire.submit': 'Submit',
+  questions: 'Questionnaire qustions',
+  question_list: 'Questions list',
+  question_add: 'Add question',
   media: 'Media',
   image: 'Image',
   poster: 'Poster',
@@ -275,6 +284,8 @@ export default {
   contact: 'Contact',
   country: 'Country',
   slug_tooltip: 'SLUG is part of Pages URL ',
+  sum_rate: 'Ranking',
+  count_answers: 'Answers count',
   content_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
   pages: 'Pages',
@@ -309,4 +320,8 @@ export default {
   html_tooltip: 'HTML content',
   H5P: 'H5P',
   'webinar.edit': 'Webinar Edit',
+  'course.validate_edit.header':
+    'This course is already underway! Are you sure you want to edit it?',
+  'course.validate_edit.content':
+    'You should not edit this course as it is already in progress. Clicking ok will allow you to edit, but you do so at your own risk.',
 };

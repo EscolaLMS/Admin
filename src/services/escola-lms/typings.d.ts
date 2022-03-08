@@ -63,7 +63,7 @@ declare namespace API {
     base_price?: string;
     duration?: string;
     author_id?: number;
-    authors: string[];
+    authors: UserItem[] | number[];
     image_url?: string;
     poster_url?: string;
     video_url?: string;
@@ -72,7 +72,7 @@ declare namespace API {
     scorm_id?: number;
     scorm_sco_id?: number;
     status: string;
-    active_from?: string;
+    active_from?: Date;
     active_to?: string;
     hours_to_complete?: number;
     purchasable?: boolean;
@@ -179,6 +179,8 @@ declare namespace API {
   type SettingsList = DefaultMetaResponse<Setting>;
 
   type RolesList = DefaultMetaResponse<Role>;
+
+  type QuestionnaireList = DefaultMetaResponse<Questionnaire>;
 
   type NotificationList = DefaultMetaResponse<Notification>;
 
@@ -695,6 +697,40 @@ declare namespace API {
     guard_name?: string;
   };
 
+  type Questionnaire = {
+    id?: number;
+    title: string;
+    questions?: Question[];
+    models?: QuestionnaireModel[];
+    active: boolean;
+  };
+
+  type QuestionnaireModel = {
+    id: number;
+    model_class: string;
+    title: string;
+    model_id?: number;
+    model_type_id?: number;
+  };
+
+  type Question = {
+    id: number;
+    title: string;
+    questionnaire_id: id;
+    description: string;
+    position: number;
+    active: boolean;
+    type: string;
+  };
+
+  type QuestionnaireReport = {
+    avg_rate: string;
+    count_answers: number;
+    question_id: number;
+    sum_rate: number;
+    title: string;
+  };
+
   type Notification = {
     id: string;
     type: string;
@@ -900,6 +936,7 @@ declare namespace API {
     active_from: string;
     created_at: string;
     updated_at: string;
+    authors: UserItem[] | number[];
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
