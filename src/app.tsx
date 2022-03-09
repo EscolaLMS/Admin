@@ -17,6 +17,10 @@ import { differenceInMinutes } from 'date-fns';
 import '@/services/ybug';
 import '@/services/sentry.ts';
 
+type Token = {
+  exp: number;
+};
+
 const authpaths = ['/user/login', '/user/reset-password'];
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -194,53 +198,47 @@ const { cancel } = Reqs.CancelToken.source();
 let refreshTokenRequest: Promise<API.DefaultResponse<{ token: string }>> | null = null;
 const responseInterceptor = async (response: Response, options: RequestOptionsInit) => {
   const token = localStorage.getItem('TOKEN');
-  console.log(token);
   const now = new Date();
+  const tokenRefreshTime = 2;
+
   if (token) {
-    const decode = token && jwt_decode(token);
-    console.log(new Date(decode.exp * 1000), differenceInMinutes(new Date(decode.exp * 1000), now));
+    const decode = jwt_decode<Token>(token);
 
     const accessTokenExpired = differenceInMinutes(new Date(decode.exp * 1000), now);
 
-    if (accessTokenExpired <= 1) {
-      try {
-        if (!refreshTokenRequest) {
-          refreshTokenRequest = refreshToken();
-        }
-
-        refreshTokenRequest
-          .then((res) => {
-            if (res.success) {
-              localStorage.setItem('TOKEN', res.data.token);
-
-              return {
-                url: `${REACT_APP_API_URL}${response.url}`,
-                options: {
-                  ...options,
-                  interceptors: true,
-                  headers: token
-                    ? {
-                        ...options.headers,
-                        Accept: 'application/json',
-                        Authorization: `Bearer ${res.data.token}`,
-                      }
-                    : options.headers,
-                },
-              };
-            }
-          })
-          .catch(() => {
-            history.push('/user/login');
-            localStorage.removeItem('TOKEN');
-          });
-      } catch (err) {
-        history.push('/user/login');
-        localStorage.removeItem('TOKEN');
-        cancel();
-        throw err;
-      } finally {
-        refreshTokenRequest = null;
+    if (accessTokenExpired <= tokenRefreshTime) {
+      if (!refreshTokenRequest) {
+        refreshTokenRequest = refreshToken();
       }
+
+      refreshTokenRequest
+        .then((res) => {
+          if (res.success) {
+            localStorage.setItem('TOKEN', res.data.token);
+            refreshTokenRequest = null;
+            return {
+              url: `${REACT_APP_API_URL}${response.url}`,
+              options: {
+                ...options,
+                interceptors: true,
+                headers: token
+                  ? {
+                      ...options.headers,
+                      Accept: 'application/json',
+                      Authorization: `Bearer ${res.data.token}`,
+                    }
+                  : options.headers,
+              },
+            };
+          }
+        })
+        .catch(() => {
+          refreshTokenRequest = null;
+          window.location.reload();
+          localStorage.removeItem('TOKEN');
+          cancel();
+          return;
+        });
     }
   }
 
