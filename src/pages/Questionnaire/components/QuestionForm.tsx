@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
-import { message, Button, Tooltip, Popconfirm, Form } from 'antd';
+import { message, Button, Tooltip, Popconfirm, Form, Modal } from 'antd';
 import { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { addQuestion, deleteQuestion } from '@/services/escola-lms/questionnaire';
 import ProForm from '@ant-design/pro-form';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 
@@ -27,6 +27,29 @@ const TableColumns: ProColumns<API.Questionnaire>[] = [
   },
 ];
 
+const AnswersColumns: ProColumns<API.QuestionAnswer>[] = [
+  {
+    title: <FormattedMessage id="id" defaultMessage="id" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="user_id" defaultMessage="user_id" />,
+    dataIndex: 'user_id',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="note" defaultMessage="note" />,
+    dataIndex: 'note',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="sum_rate" defaultMessage="sum_rate" />,
+    dataIndex: 'rate',
+    hideInSearch: true,
+  },
+];
+
 const QuestionForm: React.FC<{
   questionnaireId: number | undefined;
   questions?: API.Question[];
@@ -34,6 +57,11 @@ const QuestionForm: React.FC<{
 }> = ({ questionnaireId, questions, fetchData }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [answers, setAnswers] = useState<{ title: string | null; answers: any }>({
+    title: null,
+    answers: [],
+  });
   const actionRef = useRef<ActionType>();
 
   const questionProps = useMemo(
@@ -130,6 +158,19 @@ const QuestionForm: React.FC<{
               valueType: 'option',
 
               render: (_, record) => [
+                <Button
+                  key={'show answers'}
+                  disabled={record.answers?.length === 0}
+                  type="primary"
+                  icon={<EyeOutlined />}
+                  onClick={() => {
+                    setAnswers({
+                      title: record.title,
+                      answers: record.answers,
+                    });
+                    setShowAnswers(true);
+                  }}
+                />,
                 <Popconfirm
                   key="delete"
                   title={
@@ -150,6 +191,26 @@ const QuestionForm: React.FC<{
             },
           ]}
         />
+
+        <Modal
+          width={'800px'}
+          visible={showAnswers}
+          title={answers.title}
+          onOk={() => setShowAnswers(false)}
+          onCancel={() => setShowAnswers(false)}
+        >
+          <ProTable
+            headerTitle={intl.formatMessage({
+              id: 'answers',
+              defaultMessage: 'answers',
+            })}
+            actionRef={actionRef}
+            rowKey="id"
+            search={false}
+            dataSource={answers.answers}
+            columns={[...AnswersColumns]}
+          />
+        </Modal>
       </div>
     </>
   );

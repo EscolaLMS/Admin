@@ -66,6 +66,7 @@ export default function access(initialState: { currentUser: any }) {
 
     questionnaireListPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireList),
     questionnaireDetailPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireRead),
+
     webinarListPermission: havePermissionsInDashboard(PERMISSIONS.WebinarList),
     webinarDetailsPermission: havePermissionsInDashboard(PERMISSIONS.WebinarRead),
 
