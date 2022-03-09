@@ -14,6 +14,7 @@ export const TypeButtonDrawer: React.FC<{
   type: PossibleType;
   type_id: number;
 }> = ({ type, type_id }) => {
+  console.log(type, type_id);
   const [currentRow, setCurrentRow] = useState<API.LinkedType>({ type: '', value: null });
   return (
     <React.Fragment>

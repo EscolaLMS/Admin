@@ -698,12 +698,22 @@ declare namespace API {
     guard_name?: string;
   };
 
+  type QuestionAnswer = {
+    id: number;
+    note: string;
+    question_id: number;
+    questionnaire_model_id: number;
+    rate: number;
+    user_id: number;
+  };
+
   type Questionnaire = {
     id?: number;
     title: string;
     questions?: Question[];
     models?: QuestionnaireModel[];
     active: boolean;
+    answers?: QuestionAnswer[];
   };
 
   type QuestionnaireModel = {
