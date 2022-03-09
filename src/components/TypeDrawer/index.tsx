@@ -8,6 +8,7 @@ import { TableColumns as UserTableColumns } from '@/pages/Users/index';
 import { TableColumns as OrderTableColumns } from '@/pages/Orders/index';
 import { TableColumns as CourseTableColumns } from '@/pages/Courses/index';
 import { TableColumns as UserGroupTableColumns } from '@/pages/UserGroups/index';
+import { TableColumns as QuestionnaireTableColumns } from '@/pages/Questionnaire/index';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -57,6 +58,14 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
           {...descrProps}
           title={<FormattedMessage id="user_group" />}
           columns={UserGroupTableColumns as ProDescriptionsItemProps<API.UserGroup>[]}
+        />
+      )}
+
+      {data.type === 'Questionnaire' && (
+        <ProDescriptions<API.Questionnaire>
+          {...descrProps}
+          title={<FormattedMessage id="questionnaire" />}
+          columns={QuestionnaireTableColumns as ProDescriptionsItemProps<API.Questionnaire>[]}
         />
       )}
     </Drawer>

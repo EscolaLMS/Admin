@@ -561,19 +561,19 @@ declare namespace API {
 
   type FileUpload = DefaultResponse<File[]>;
 
-  type CERTIFICATE = {
+  type Certificate = {
     id: number;
     name: string;
     event: string;
     default: boolean;
-    assignables: CERTIFICATE_ASSIGNABLES[];
+    assignables: CertificateAssignables[];
     channel: number;
-    selection: CERTIFICATE_SELECTION[];
+    selection: CertificateSelection[];
     created_at: string;
     updated_at: string;
   };
 
-  type CERTIFICATE_SELECTION = {
+  type CertificateSelection = {
     id: number;
     key: string;
     template_id: number;
@@ -582,9 +582,9 @@ declare namespace API {
     updated_at: string;
   };
 
-  type CERTIFICATE_ASSIGNABLES = {};
+  type CertificateAssignables = {};
 
-  type Template = CERTIFICATE[];
+  type Template = Certificate[];
 
   type TemplateList = DefaultResponse<Template>;
 
@@ -794,6 +794,10 @@ declare namespace API {
     | {
         type: 'EscolaLms\\Auth\\Models\\UserGroup';
         value: API.UserGroup;
+      }
+    | {
+        type: 'Questionnaire';
+        value: API.Questionnaire;
       };
 
   type ReportType =
