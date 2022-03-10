@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Button } from 'antd';
-import { FormattedMessage } from 'umi';
+import { Button, message } from 'antd';
+import { FormattedMessage, useIntl } from 'umi';
 import { questionnaireById } from '@/services/escola-lms/questionnaire';
 
 export const QuestionnaireRow: React.FC<{
@@ -8,22 +8,33 @@ export const QuestionnaireRow: React.FC<{
   onLoaded: (questionnaire: API.Questionnaire) => void;
 }> = ({ id, onLoaded }) => {
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
 
   const fetch = useCallback(() => {
     setLoading(true);
+    const hide = message.loading(
+      intl.formatMessage({
+        id: 'loading',
+      }),
+    );
     const controller = new AbortController();
 
-    questionnaireById(id, { signal: controller.signal })
+    questionnaireById(id)
       .then((response) => {
         setLoading(false);
         if (response.success) {
           onLoaded(response.data);
+          hide();
         }
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setLoading(false);
+        hide();
+      });
 
     return () => {
       controller.abort();
+      hide();
     };
   }, [id, onLoaded]);
 

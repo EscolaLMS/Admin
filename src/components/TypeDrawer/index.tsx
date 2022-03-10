@@ -1,4 +1,4 @@
-import { Drawer } from 'antd';
+import { Drawer, List, Typography } from 'antd';
 import React from 'react';
 
 import ProDescriptions from '@ant-design/pro-descriptions';
@@ -28,7 +28,7 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
     },
   };
   return (
-    <Drawer width={600} visible={visible} onClose={onClose} closable={false}>
+    <Drawer width={600} visible={visible} onClose={onClose} closable={true}>
       {(data.type === 'App\\Models\\User' || data.type === 'EscolaLms\\Core\\Models\\User') && (
         <ProDescriptions<API.UserItem>
           {...descrProps}
@@ -65,7 +65,40 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
         <ProDescriptions<API.Questionnaire>
           {...descrProps}
           title={<FormattedMessage id="questionnaire" />}
-          columns={QuestionnaireTableColumns as ProDescriptionsItemProps<API.Questionnaire>[]}
+          columns={
+            [
+              ...QuestionnaireTableColumns,
+              {
+                title: <FormattedMessage id="question_list" defaultMessage="question_list" />,
+                dataIndex: 'questions',
+                hideInSearch: true,
+                width: '100%',
+                render: (_, record) => {
+                  return (
+                    <List
+                      grid={{
+                        gutter: 16,
+                        xs: 1,
+                        sm: 2,
+                        md: 4,
+                        lg: 4,
+                        xl: 6,
+                        xxl: 3,
+                      }}
+                      dataSource={record.questions}
+                      renderItem={(item) => (
+                        <List.Item>
+                          <Typography.Text mark>{item.id}</Typography.Text>{' '}
+                          <Typography.Text>{item.title}</Typography.Text>
+                          <Typography.Text> {item.description}</Typography.Text>
+                        </List.Item>
+                      )}
+                    />
+                  );
+                },
+              },
+            ] as ProDescriptionsItemProps<API.Questionnaire>[]
+          }
         />
       )}
     </Drawer>

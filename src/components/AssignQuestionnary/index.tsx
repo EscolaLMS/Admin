@@ -11,6 +11,10 @@ import {
 import { message, Switch } from 'antd';
 import TypeButtonDrawer from '../TypeButtonDrawer';
 
+const ModelNames = {
+  1: 'Course',
+};
+
 const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
     title: <FormattedMessage id="id" defaultMessage="id" />,
@@ -41,8 +45,8 @@ const AssignQuestionnary: React.FC<{ modelType: ModelTypes; id: number }> = ({ m
 
       try {
         const request = value
-          ? await assignQuestionnaire('Course', id, qId)
-          : await unassignQuestionnaire('Course', id, qId);
+          ? await assignQuestionnaire(ModelNames[modelType], id, qId)
+          : await unassignQuestionnaire(ModelNames[modelType], id, qId);
         if (request.success) {
           hide();
           message.success(request.message);
