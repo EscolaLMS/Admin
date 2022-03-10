@@ -19,7 +19,7 @@ export const QuestionModalForm: React.FC<{
   useEffect(() => {
     if (typeof id === 'number' && id > 0) {
       getQuestion(id).then((response) => {
-        form.setFieldsValue(response.data);
+        if (response.success) form.setFieldsValue(response.data);
       });
     } else {
       form.resetFields();
@@ -30,8 +30,8 @@ export const QuestionModalForm: React.FC<{
     <ModalForm
       form={form}
       title={intl.formatMessage({
-        id: typeof id === 'number' && id > 0 ? 'editCategory' : 'question_add',
-        defaultMessage: typeof id === 'number' && id > 0 ? 'editCategory' : 'question_add',
+        id: typeof id === 'number' && id > 0 ? 'question_edit' : 'question_add',
+        defaultMessage: typeof id === 'number' && id > 0 ? 'question_edit' : 'question_add',
       })}
       width="400px"
       visible={visible}

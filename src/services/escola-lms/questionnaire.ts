@@ -121,9 +121,16 @@ export async function getQuestionnaireModels(options?: Record<string, any>) {
 }
 
 /**  GET /api/admin/questionnaire/report/:id */
-export async function questionnaireReport(id: number, options?: Record<string, any>) {
+export async function questionnaireReport(
+  id: number,
+  model_class?: number,
+  model_id?: number,
+  options?: Record<string, any>,
+) {
   return request<API.DefaultResponse<API.QuestionnaireReport[]>>(
-    `/api/admin/questionnaire/report/${id}`,
+    model_class
+      ? `/api/admin/questionnaire/report/${id}/${model_class}/${model_id}`
+      : `/api/admin/questionnaire/report/${id}`,
     {
       method: 'GET',
       /* useCache: true */ useCache: false,

@@ -13,8 +13,8 @@ import {
 import ProForm from '@ant-design/pro-form';
 import CourseSelect from '@/components/CourseSelect';
 import QuestionForm from './components/Questions';
-import QuestionnaireChart from './components/QuestionnaireChart';
 import QuestionAnswers from './components/Answers';
+import QuestionnaireRaports from './components/Raports';
 import './style.css';
 
 const { Title } = Typography;
@@ -237,16 +237,11 @@ export const QuestionareForm = () => {
         <ProCard.TabPane
           key="raport"
           tab={<FormattedMessage id="menu.reports" defaultMessage="menu.reports" />}
-          disabled={isNew}
+          disabled={isNew || data.models?.length === 0}
         >
-          <ProCard split="vertical">
-            <ProCard colSpan={12} layout="center">
-              <QuestionnaireChart id={Number(questionnaireId)} type="count_answers" />
-            </ProCard>
-            <ProCard colSpan={12} layout="center">
-              <QuestionnaireChart id={Number(questionnaireId)} type="sum_rate" />
-            </ProCard>
-          </ProCard>
+          {data?.models && data?.models?.length > 0 && (
+            <QuestionnaireRaports questionnaireId={Number(questionnaireId)} models={data.models} />
+          )}
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>
