@@ -20,8 +20,6 @@ const { Title } = Typography;
 
 export enum ModelTypes {
   course = 1,
-  programs = 2,
-  events = 5,
 }
 
 export const QuestionareForm = () => {

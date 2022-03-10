@@ -4,7 +4,7 @@ import { request } from 'umi';
 
 /**  GET /api/admin/templates */
 export async function certificates(options?: { [key: string]: any }) {
-  return request<API.DefaultMetaResponse<API.CERTIFICATE[]>>('/api/admin/templates/assignable', {
+  return request<API.DefaultMetaResponse<API.Certificate[]>>('/api/admin/templates/assignable', {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
@@ -43,7 +43,7 @@ export async function unassign(
 
 /**  GET /api/admin/templates/assigned */
 export async function template(params: API.TemplateItem, options?: { [key: string]: any }) {
-  return request<API.DefaultMetaResponse<API.CERTIFICATE[]>>(`/api/admin/templates/assigned`, {
+  return request<API.DefaultMetaResponse<API.Certificate[]>>(`/api/admin/templates/assigned`, {
     params,
     method: 'GET',
     /* useCache: true */ useCache: false,

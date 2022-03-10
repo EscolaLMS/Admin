@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { Button, message } from 'antd';
 import { FormattedMessage, useIntl } from 'umi';
-import { user as fetchUser } from '@/services/escola-lms/user';
+import { questionnaireById } from '@/services/escola-lms/questionnaire';
 
-export const UserRow: React.FC<{
+export const QuestionnaireRow: React.FC<{
   id: number;
-  onLoaded: (user: API.UserItem) => void;
+  onLoaded: (questionnaire: API.Questionnaire) => void;
 }> = ({ id, onLoaded }) => {
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
@@ -19,7 +19,7 @@ export const UserRow: React.FC<{
     );
     const controller = new AbortController();
 
-    fetchUser(id, { signal: controller.signal })
+    questionnaireById(id)
       .then((response) => {
         setLoading(false);
         if (response.success) {
@@ -28,8 +28,8 @@ export const UserRow: React.FC<{
         }
       })
       .catch(() => {
-        hide();
         setLoading(false);
+        hide();
       });
 
     return () => {
@@ -40,10 +40,10 @@ export const UserRow: React.FC<{
 
   return (
     <Button loading={loading} onClick={fetch} size="small">
-      <FormattedMessage id="user_id" />
+      <FormattedMessage id="questionnaire" />
       {id}
     </Button>
   );
 };
 
-export default UserRow;
+export default QuestionnaireRow;

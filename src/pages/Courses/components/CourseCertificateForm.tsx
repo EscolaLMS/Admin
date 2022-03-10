@@ -10,8 +10,8 @@ export const ProgramForm: React.FC<{
   id: number | string;
 }> = ({ id }) => {
   const { Text } = Typography;
-  const [templates, setTemplates] = useState<API.CERTIFICATE[]>([]);
-  const [templatesAssigned, seTemplatesAssigned] = useState<API.CERTIFICATE[]>([]);
+  const [templates, setTemplates] = useState<API.Certificate[]>([]);
+  const [templatesAssigned, seTemplatesAssigned] = useState<API.Certificate[]>([]);
 
   const updateValue = useCallback(
     (value) => {

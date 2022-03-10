@@ -3,13 +3,15 @@ import UserRow from '@/components/UserRow';
 import OrderRow from '@/components/OrderRow';
 import CourseRow from '@/components/CourseRow';
 import UserGroupRow from '../UserGroupRow';
+import QuestionnaireRow from '../QuestionnaireRow';
 
 type PossibleType =
   | 'App\\Models\\User'
   | 'EscolaLms\\Core\\Models\\User'
   | 'EscolaLms\\Cart\\Models\\Order'
   | 'EscolaLms\\Cart\\Models\\Course'
-  | 'EscolaLms\\Auth\\Models\\UserGroup';
+  | 'EscolaLms\\Auth\\Models\\UserGroup'
+  | 'Questionnaire';
 type DataProps = API.LinkedType;
 
 export const TypeButton: React.FC<{
@@ -28,6 +30,13 @@ export const TypeButton: React.FC<{
     case 'EscolaLms\\Auth\\Models\\UserGroup':
       return (
         <UserGroupRow id={type_id} onLoaded={(userGroup) => onData({ type, value: userGroup })} />
+      );
+    case 'Questionnaire':
+      return (
+        <QuestionnaireRow
+          id={type_id}
+          onLoaded={(questionnaire) => onData({ type, value: questionnaire })}
+        />
       );
     default:
       return type && type_id ? (
