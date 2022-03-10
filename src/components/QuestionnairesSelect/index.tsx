@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Select, Spin } from 'antd';
 
 import { FormattedMessage } from 'umi';
-import { questionnaire, questionnaireById } from '@/services/escola-lms/questionnaire';
+import { questionnaire, getQuestionnaire } from '@/services/escola-lms/questionnaire';
 
 export const QuestionnaireSelect: React.FC<{
   state?: {
@@ -46,7 +46,7 @@ export const QuestionnaireSelect: React.FC<{
     const controller = new AbortController();
 
     if (value) {
-      questionnaireById(Number(value), { signal: controller.signal }).then(
+      getQuestionnaire(Number(value), { signal: controller.signal }).then(
         (response) =>
           response.success && setQuestionnaires((prevCourses) => [...prevCourses, response.data]),
         // TODO don't reset. unique table

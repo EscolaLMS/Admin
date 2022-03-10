@@ -217,6 +217,7 @@ export default {
   audio: 'Audio',
   categories_tags: 'Categories & Tags',
   program: 'Program',
+  position: 'Position',
   scorm: 'SCORM',
   add_new_lesson: 'Add new lesson',
   lesson: 'Lesson',

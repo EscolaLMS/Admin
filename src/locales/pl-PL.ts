@@ -242,6 +242,7 @@ export default {
   image: 'Zdjęcie',
   import_users: 'Import użytkowników',
   poster: 'Plakat',
+  position: 'Pozycja',
   video: 'Wideo',
   audio: 'Dźwięk',
   categories_tags: 'Kategorie i tagi',

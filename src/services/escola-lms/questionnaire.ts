@@ -12,7 +12,7 @@ export async function questionnaire(options?: Record<string, any>) {
 }
 
 /**  GET /api/admin/questionnaire/:id */
-export async function questionnaireById(id: number, options?: Record<string, any>) {
+export async function getQuestionnaire(id: number, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -70,6 +70,32 @@ export async function addQuestion(body?: Record<string, any>, options?: Record<s
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/**  PATCH /api/admin/question */
+export async function editQuestion(
+  id: number,
+  body?: Record<string, any>,
+  options?: Record<string, any>,
+) {
+  return request<API.DefaultResponse<API.Question>>(`/api/admin/question/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  GET /api/admin/question/:id */
+export async function getQuestion(id: number, options?: Record<string, any>) {
+  return request<API.DefaultResponse<API.Question>>(`/api/admin/question/${id}`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+
     ...(options || {}),
   });
 }
