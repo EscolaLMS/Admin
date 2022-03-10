@@ -12,6 +12,8 @@ declare module '*.bmp';
 declare module '*.tiff';
 declare module 'omit.js';
 
+import '@escolalms/ts-models';
+
 // google analytics interface
 type GAFieldsObject = {
   eventCategory: string;

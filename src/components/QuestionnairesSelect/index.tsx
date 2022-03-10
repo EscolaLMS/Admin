@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Select, Spin } from 'antd';
 
-import { course as getCourses, getCourse } from '@/services/escola-lms/course';
 import { FormattedMessage } from 'umi';
+import { questionnaire, questionnaireById } from '@/services/escola-lms/questionnaire';
 
-export const CourseSelect: React.FC<{
+export const QuestionnaireSelect: React.FC<{
   state?: {
     type: number;
   };
@@ -13,23 +13,22 @@ export const CourseSelect: React.FC<{
   onChange?: (value: string) => void;
   defaultValue?: number[];
 }> = ({ value, onChange, multiple = false, defaultValue }) => {
-  const [courses, setCourses] = useState<API.Course[]>([]);
+  const [questionnaires, setQuestionnaires] = useState<API.Questionnaire[]>([]);
   const [fetching, setFetching] = useState(false);
 
   const abortController = useRef<AbortController>();
 
-  const fetch = useCallback((search?: string) => {
+  const fetch = useCallback(() => {
     setFetching(true);
     if (abortController.current) {
       abortController.current.abort();
     }
 
     abortController.current = new AbortController();
-    getCourses({ title: search }, { signal: abortController.current.signal })
+    questionnaire({ signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setCourses((prevCourses) => [...prevCourses, ...response.data]);
-          // TODO: don't reset just add new. unique table
+          setQuestionnaires(response.data);
         }
         setFetching(false);
       })
@@ -47,9 +46,9 @@ export const CourseSelect: React.FC<{
     const controller = new AbortController();
 
     if (value) {
-      getCourse(Number(value), { signal: controller.signal }).then(
+      questionnaireById(Number(value), { signal: controller.signal }).then(
         (response) =>
-          response.success && setCourses((prevCourses) => [...prevCourses, response.data]),
+          response.success && setQuestionnaires((prevCourses) => [...prevCourses, response.data]),
         // TODO don't reset. unique table
       );
     }
@@ -69,20 +68,22 @@ export const CourseSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder={<FormattedMessage id="select_course" defaultMessage="Select a course" />}
+      placeholder={
+        <FormattedMessage id="select_questionnaire" defaultMessage="Select a questionnaire" />
+      }
       optionFilterProp="children"
       filterOption={(input, option) =>
         option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {courses.map((course) => (
-        <Select.Option key={course.id} value={course.id}>
-          {course.title}
+      {questionnaires.map((questionaire) => (
+        <Select.Option key={questionaire.id} value={questionaire.id}>
+          {questionaire.title}
         </Select.Option>
       ))}
     </Select>
   );
 };
 
-export default CourseSelect;
+export default QuestionnaireSelect;

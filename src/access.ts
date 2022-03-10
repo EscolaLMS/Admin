@@ -64,11 +64,17 @@ export default function access(initialState: { currentUser: any }) {
 
     reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
 
+    questionnaireListPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireList),
+    questionnaireDetailPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireRead),
+
     webinarListPermission: havePermissionsInDashboard(PERMISSIONS.WebinarList),
     webinarDetailsPermission: havePermissionsInDashboard(PERMISSIONS.WebinarRead),
 
     consultationListPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationList),
     consultationDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationRead),
+
+    stationaryEventsListPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsList),
+    stationaryEventsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsRead),
 
     loggedOut: !currentUser,
   };

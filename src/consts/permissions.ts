@@ -149,6 +149,20 @@ enum PERMISSIONS {
   NotificationListAll = 'dashboard-app_notification-list_access', // ability to read all notifications (including those not belonging to you)
   NotificationList = 'dashboard-app_notification-list_access_self',
 
+  /* -------- EscolaLMS/Questionnaire -------- */
+
+  QuestionnaireList = 'questionnaire_list',
+  QuestionnaireRead = 'questionnaire_read',
+  QuestionnaireCreate = 'questionnaire_create',
+  QuestionnaireDelete = 'questionnaire_delete',
+  QuestionnaireUpdate = 'questionnaire_update',
+
+  QuestionList = 'question_list',
+  QuestionRead = 'question_read',
+  QuestionCreate = 'question_create',
+  QuestionDelete = 'question_delete',
+  QuestionUpdate = 'question_update',
+
   /* -------- EscolaLMS/Webinar -------- */
 
   WebinarList = 'webinar_list',
@@ -164,6 +178,14 @@ enum PERMISSIONS {
   ConsultationUpdate = 'consultation_update',
   ConstulatationDelete = 'consultation_delete',
   ConsultationRead = 'consultation_read',
+
+  /* -------- EscolaLMS/Stationary-Events -------- */
+
+  StationaryEventsList = 'stationary-event_list',
+  StationaryEventsCreate = 'stationary-event_create',
+  StationaryEventsUpdate = 'stationary-event_update',
+  StationaryEventsRead = 'stationary-event_read',
+  StationaryEventsDelete = 'stationary-event_delete',
 }
 
 export default PERMISSIONS;

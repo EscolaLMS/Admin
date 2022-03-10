@@ -177,6 +177,28 @@
     component: './Consultations/form',
     hideInMenu: true,
   },
+
+  {
+    name: 'StationaryEvents',
+    icon: 'global',
+    path: '/stationary-events',
+    access: 'stationaryEventsListPermission',
+    component: './StationaryEvents',
+  },
+  {
+    path: '/stationary-events/:id',
+    access: 'stationaryEventsDetailsPermission',
+    component: './StationaryEvents/form',
+    hideInMenu: true,
+  },
+
+  {
+    path: '/stationary-events/:id/:tab',
+    access: 'stationaryEventsDetailsPermission',
+    component: './StationaryEvents/form',
+    hideInMenu: true,
+  },
+
   {
     name: 'Webinars',
     icon: 'CustomerServiceOutlined',
@@ -288,6 +310,20 @@
     component: './Notifications',
   },
 
+  {
+    name: 'Questionnaire',
+    icon: 'question',
+    path: '/questionnaire',
+    access: 'questionnaireListPermission',
+    component: './Questionnaire',
+  },
+  {
+    path: '/questionnaire/:questionnaireId',
+    name: 'Questionnaire Form',
+    access: 'questionnaireDetailPermission',
+    component: './Questionnaire/form',
+    hideInMenu: true,
+  },
   {
     name: 'reports',
     icon: 'project',

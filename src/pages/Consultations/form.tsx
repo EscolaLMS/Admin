@@ -16,7 +16,6 @@ import { useCallback } from 'react';
 import UserSelect from '@/components/UserSelect';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import {
-  ConsultationStatus,
   createConsultation,
   getConsultation,
   updateConsultation,
@@ -24,6 +23,10 @@ import {
 import MultipleDatePicker from '@/components/MultipleDatePicker';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
+import { ModelStatus } from '@/consts/status';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import EditValidateModal from '@/components/EditValidateModal';
 import './index.css';
 
 const ConsultationForm = () => {
@@ -31,13 +34,15 @@ const ConsultationForm = () => {
   const params = useParams<{ consultation?: string; tab?: string }>();
   const { consultation, tab = 'attributes' } = params;
   const isNew = consultation === 'new';
-
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<API.Consultation>>();
+  const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
     const response = await getConsultation(Number(consultation));
     if (response.success) {
+      validateCourseEdit(response.data);
       setData({
         ...response.data,
         categories: response.data.categories?.map(categoriesArrToIds),
@@ -59,6 +64,14 @@ const ConsultationForm = () => {
   const formProps = useMemo(
     () => ({
       onFinish: async (values: Partial<API.Consultation>) => {
+        if (manageCourseEdit.disableEdit) {
+          setManageCourseEdit({
+            showModal: true,
+            disableEdit: true,
+          });
+          return;
+        }
+
         const postData = {
           ...values,
           image_url: data && data.image_url,
@@ -68,11 +81,14 @@ const ConsultationForm = () => {
         if (isNew) {
           response = await createConsultation(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/consultations/${response.data.id}`);
           }
         } else {
           response = await updateConsultation(Number(consultation), postData);
           if (response.success) {
+            setUnsavedChanges(false);
+            validateCourseEdit(response.data);
             history.push(`/consultations/${response.data.id}/${tab}`);
           }
         }
@@ -80,7 +96,7 @@ const ConsultationForm = () => {
       },
       initialValues: data,
     }),
-    [data, consultation, tab],
+    [data, consultation, tab, manageCourseEdit],
   );
 
   // const onPanelChange = (value: any, mode: any) => {
@@ -139,7 +155,15 @@ const ConsultationForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
-          <ProForm {...formProps} form={form}>
+          <UnsavedPrompt show={unsavedChanges} />{' '}
+          <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
+          <ProForm
+            {...formProps}
+            form={form}
+            onValuesChange={() => {
+              setUnsavedChanges(true);
+            }}
+          >
             <ProForm.Group>
               <ProFormText
                 width="md"
@@ -151,6 +175,7 @@ const ConsultationForm = () => {
                   defaultMessage: 'name',
                 })}
                 required
+                disabled={manageCourseEdit.disableEdit}
               />
 
               <ProFormDigit
@@ -165,6 +190,7 @@ const ConsultationForm = () => {
                 min={0}
                 max={9999}
                 fieldProps={{ step: 1 }}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormText
                 width="sm"
@@ -175,16 +201,19 @@ const ConsultationForm = () => {
                   id: 'duration',
                   defaultMessage: 'duration',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormSelect
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={ConsultationStatus}
+                valueEnum={ModelStatus}
+                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
                 rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                disabled={manageCourseEdit.disableEdit}
               />
             </ProForm.Group>
             <ProForm.Group>
@@ -197,6 +226,7 @@ const ConsultationForm = () => {
                   id: 'active_from',
                   defaultMessage: 'active_from',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormDatePicker
                 width="sm"
@@ -207,6 +237,7 @@ const ConsultationForm = () => {
                   id: 'active_to',
                   defaultMessage: 'active_to',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProForm.Item
                 name="author_id"
@@ -238,7 +269,11 @@ const ConsultationForm = () => {
           </ProForm>
         </ProCard.TabPane>{' '}
         {!isNew && (
-          <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
+          <ProCard.TabPane
+            key="media"
+            tab={<FormattedMessage id="media" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <ProForm {...formProps}>
               <ProFormImageUpload
                 title="image"
@@ -257,7 +292,11 @@ const ConsultationForm = () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories" />}>
+          <ProCard.TabPane
+            key="categories"
+            tab={<FormattedMessage id="categories" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <Row>
               <Col span={12}>
                 <ProForm {...formProps}>
