@@ -132,3 +132,45 @@ export async function questionnaireReport(id: number, options?: Record<string, a
     },
   );
 }
+
+/**  PATCH /api/admin/questionnaire */
+export async function assignQuestionnaire(
+  model: string,
+  model_id: number,
+  id: number,
+  body?: Record<string, any>,
+  options?: Record<string, any>,
+) {
+  return request<API.DefaultResponse<API.Questionnaire>>(
+    `/api/admin/questionnaire/assign/${model}/${model_id}/${id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  );
+}
+
+/**  DELETE /api/admin/questionnaire */
+export async function unassignQuestionnaire(
+  model: string,
+  model_id: number,
+  id: number,
+  body?: Record<string, any>,
+  options?: Record<string, any>,
+) {
+  return request<API.DefaultResponse<API.Questionnaire>>(
+    `/api/admin/questionnaire/unassign/${model}/${model_id}/${id}`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  );
+}
