@@ -723,6 +723,7 @@ declare namespace API {
     model_id?: number;
     model_type_id?: number;
     model_type_title?: string;
+    model_title?: string;
   };
 
   type Question = {

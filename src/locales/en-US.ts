@@ -209,7 +209,7 @@ export default {
   questionnaire: 'Questionnaire',
   'questionnaire.submit': 'Submit',
   'questionnaire.raports.filter': 'Filter by assigned models',
-  questions: 'Questionnaire qustions',
+  questions: 'Questions',
   question_list: 'Questions list',
   question_add: 'Add question',
   question_edit: 'Edit question',

@@ -181,3 +181,22 @@ export async function unassignQuestionnaire(
     },
   );
 }
+
+/**  GET /api/admin/question-answers/:id */
+export async function getQuestionAnswers(
+  id: number,
+  params: API.PageParams & { question_id?: number },
+  options?: Record<string, any>,
+) {
+  return request<API.DefaultMetaResponse<API.QuestionAnswer>>(`/api/admin/question-answers/${id}`, {
+    params: {
+      ...params,
+      per_page: params.pageSize,
+      page: params.current,
+    },
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+
+    ...(options || {}),
+  });
+}

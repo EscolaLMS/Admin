@@ -210,7 +210,7 @@ export const QuestionareForm = () => {
           tab={<FormattedMessage id="answers" defaultMessage="answers" />}
           disabled={isNew}
         >
-          <QuestionAnswers />
+          <QuestionAnswers questionnaireId={Number(questionnaireId)} questions={data.questions} />
         </ProCard.TabPane>
         {listOfModels &&
           listOfModels.map((model: API.QuestionnaireModel) => (

@@ -65,10 +65,11 @@ const QuestionnaireRaports: React.FC<{
           defaultMessage="questionnaire.raports.filter"
         />
       </Typography.Title>
-      <Select allowClear style={{ minWidth: '200px' }} onChange={(v) => setSelectedRaport(v)}>
+      <Select allowClear style={{ minWidth: '400px' }} onChange={(v) => setSelectedRaport(v)}>
         {models.map((model) => (
           <Select.Option value={`${model.model_type_id}/${model.model_id}`} key={model.id}>
-            {model.model_type_title} {model.model_id}
+            <FormattedMessage id={model.model_type_title} defaultMessage={model.model_type_title} />{' '}
+            - {model.model_title}
           </Select.Option>
         ))}
       </Select>

@@ -237,7 +237,7 @@ export default {
   questionnaire: 'Ankieta',
   'questionnaire.submit': 'Zatwierdź',
   'questionnaire.raports.filter': 'Filtruj po przypisanych modelach',
-  questions: 'Pytania ankiety',
+  questions: 'Pytania',
   question_list: 'Lista pytań',
   question_add: 'Dodaj pytanie',
   question_edit: 'Edytuj pytanie',
