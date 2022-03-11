@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Button, message } from 'antd';
 import { FormattedMessage, useIntl } from 'umi';
-import { questionnaireById } from '@/services/escola-lms/questionnaire';
+import { getQuestionnaire } from '@/services/escola-lms/questionnaire';
 
 export const QuestionnaireRow: React.FC<{
   id: number;
@@ -19,7 +19,7 @@ export const QuestionnaireRow: React.FC<{
     );
     const controller = new AbortController();
 
-    questionnaireById(id)
+    getQuestionnaire(id)
       .then((response) => {
         setLoading(false);
         if (response.success) {

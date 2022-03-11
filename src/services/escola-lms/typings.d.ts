@@ -722,6 +722,8 @@ declare namespace API {
     title: string;
     model_id?: number;
     model_type_id?: number;
+    model_type_title?: string;
+    model_title?: string;
   };
 
   type Question = {

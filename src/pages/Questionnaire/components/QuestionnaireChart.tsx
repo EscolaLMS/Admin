@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Pie } from '@ant-design/charts';
 import { Spin, Alert } from 'antd';
 import { FormattedMessage } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { questionnaireReport } from '@/services/escola-lms/questionnaire';
+import type { QuestionnaireRaportState } from './Raports';
 
 const config = {
   appendPadding: 10,
@@ -26,49 +26,29 @@ const config = {
   interactions: [{ type: 'element-active' }],
 };
 
-type State =
-  | {
-      mode: 'init';
-    }
-  | {
-      mode: 'loading';
-    }
-  | {
-      mode: 'error';
-      error: string;
-    }
-  | {
-      mode: 'loaded';
-      value: any;
-    };
-
-const QuestionnaireChart: React.FC<{ id: number; type: string }> = ({ id, type }) => {
-  const [state, setState] = useState<State>({ mode: 'init' });
-
-  useEffect(() => {
-    setState({ mode: 'loading' });
-    questionnaireReport(id)
-      .then((response) => {
-        if (response.success) {
-          setState({
-            mode: 'loaded',
-            value: response.data.map((val) => ({
-              label: val.title,
-              value: val[type],
-            })),
-          });
-        } else {
-          setState({ mode: 'error', error: response.message });
-        }
-      })
-      .catch((err) => setState({ mode: 'error', error: err.toString() }));
-  }, [id, type]);
-
+const QuestionnaireChart: React.FC<{ state: QuestionnaireRaportState; type: string }> = ({
+  state,
+  type,
+}) => {
   return (
     <ProCard title={<FormattedMessage id={type} />} headerBordered style={{ height: '500px' }}>
       {state.mode === 'loading' && <Spin />}
-      {state.mode === 'loaded' && <Pie {...config} data={state.value} />}
-      {state.mode === 'error' && <Alert message={state.error} type="error" />}
+      {state.mode === 'loaded' && state.value.length > 0 ? (
+        <Pie
+          {...config}
+          data={state.value.map((val: Record<string, number | string>) => ({
+            label: val.title,
+            value: val[type],
+          }))}
+        />
+      ) : (
+        state.mode !== 'loading' && (
+          <p>
+            <FormattedMessage id="no_data" defaultMessage="no_data" />
+          </p>
+        )
+      )}
+      {state.mode === 'error' && <Alert message={state.error.data.message} type="error" />}
     </ProCard>
   );
 };
