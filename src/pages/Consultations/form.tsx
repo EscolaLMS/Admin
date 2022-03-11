@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Calendar } from 'antd';
+import { message, Spin, Row, Col } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -27,6 +27,7 @@ import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
+import ConsultationCalendar from './components/Calendar';
 import './index.css';
 
 const ConsultationForm = () => {
@@ -314,7 +315,7 @@ const ConsultationForm = () => {
         )}
         {!isNew && (
           <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
-            <Calendar />
+            <ConsultationCalendar consultation={Number(consultation)} />
           </ProCard.TabPane>
         )}
       </ProCard>
