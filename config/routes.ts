@@ -199,6 +199,31 @@
     hideInMenu: true,
   },
 
+  //
+
+  {
+    name: 'Products',
+    icon: 'shopping-cart',
+    path: '/products',
+    access: 'productsListPermission',
+    component: './Products',
+  },
+  {
+    path: '/products/:id',
+    access: 'productsDetailsPermission',
+    component: './Products/form',
+    hideInMenu: true,
+  },
+
+  {
+    path: '/products/:id/:tab',
+    access: 'productsDetailsPermission',
+    component: './Products/form',
+    hideInMenu: true,
+  },
+
+  //
+
   {
     name: 'Webinars',
     icon: 'CustomerServiceOutlined',

@@ -958,4 +958,17 @@ declare namespace API {
     image_url?: string;
     tags?: Tag[] | string[];
   };
+
+  type ProductableListItem = {
+    productable_id: number;
+    name: string;
+    productable_type: string;
+  };
+
+  type ProductableResourceListItem = {
+    class: string;
+    description: string;
+    id: number;
+    name: string;
+  };
 }

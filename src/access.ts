@@ -76,6 +76,9 @@ export default function access(initialState: { currentUser: any }) {
     stationaryEventsListPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsList),
     stationaryEventsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsRead),
 
+    productsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ProductsList),
+    productsListPermission: havePermissionsInDashboard(PERMISSIONS.ProductsManage),
+
     loggedOut: !currentUser,
   };
 }
