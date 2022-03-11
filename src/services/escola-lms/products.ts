@@ -1,9 +1,10 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
-/**  GET /api/admin/webinars */
+/**  GET /api/admin/products */
 export async function products(
   params: API.PageParams & API.PaginationParams & EscolaLms.Cart.Http.Requests.ProductSearchRequest,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products`, {
     method: 'GET',
@@ -16,62 +17,54 @@ export async function products(
   });
 }
 
-/**  POST /api/webinars */
-export async function createStationaryEvent(
-  body?: Record<string, any>,
-  options?: Record<string, any>,
+/**  POST /api/admin/products */
+export async function createProduct(
+  body: EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest,
+  options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
-    `/api/admin/stationary-events`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: body,
-      ...(options || {}),
-    },
-  );
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
 }
 
 /**  GET /api/admin/webinars/:id */
-export async function getStationaryEvent(id: number, options?: Record<string, any>) {
-  return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
-    `/api/admin/stationary-events/${id}`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
+export async function getProduct(id: number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
 }
 
-/**  PUT /api/admin/webinars/:id */
-export async function updateStationaryEvent(
+/**  PUT/POST /api/admin/products/:id */
+export async function updateProduct(
   id: number,
-  body?: Record<string, any>,
-  options?: Record<string, any>,
+  body: EscolaLms.Cart.Http.Requests.Admin.ProductUpdateRequest,
+  options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
-    `/api/admin/stationary-events/${id}?_method=PUT`,
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(
+    `/api/admin/products/${id}?_method=PUT`,
     {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       data: body,
       ...(options || {}),
     },
   );
 }
 
-/**  GET /api/admin/webinars/:id */
-export async function deleteStationaryEvent(id: number, options?: Record<string, any>) {
-  return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
-    `/api/admin/stationary-events/${id}`,
-    {
-      method: 'DELETE',
-      /* useCache: true */ useCache: false,
-      ...(options || {}),
-    },
-  );
+/**  DELETE /api/admin/products/:id */
+export async function deleteProduct(id: number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
+
+/**  GET /api/admin/products */
+export async function productables(options?: RequestOptionsInit) {
+  return request<API.DefaultMetaResponse<API.ProductableListItem>>(`/api/admin/productables`, {
+    method: 'GET',
+    ...(options || {}),
+  });
 }

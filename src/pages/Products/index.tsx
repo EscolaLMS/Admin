@@ -3,11 +3,10 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
-import { stationaryEvents, deleteStationaryEvent } from '@/services/escola-lms/stationary_events';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 
-import { products } from '@/services/escola-lms/products';
+import { products, deleteProduct } from '@/services/escola-lms/products';
 
 export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   {
@@ -51,24 +50,6 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     dataIndex: 'free',
     hideInSearch: false,
   },
-
-  /*
-  {
-    title: <FormattedMessage id="started_at" defaultMessage="started at" />,
-    dataIndex: 'started_at',
-    hideInSearch: true,
-    hideInForm: true,
-    sorter: true,
-  },
-
-  {
-    title: <FormattedMessage id="finished_at" defaultMessage="started at" />,
-    dataIndex: 'finished_at',
-    hideInSearch: true,
-    hideInForm: true,
-    sorter: true,
-  },
-  */
 ];
 
 const Products: React.FC = () => {
@@ -81,7 +62,7 @@ const Products: React.FC = () => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {
-        await deleteStationaryEvent(id).then((response) => {
+        await deleteProduct(id).then((response) => {
           setLoading(false);
           if (response.success) {
             message.success(response.message);

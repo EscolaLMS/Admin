@@ -1,42 +1,63 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
-import ProForm, { ProFormText, ProFormDigit, ProFormDatePicker } from '@ant-design/pro-form';
+import { message, Spin, Row, Col, Input } from 'antd';
+import ProForm, {
+  ProFormText,
+  ProFormDigit,
+  ProFormRadio,
+  ProFormSwitch,
+} from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
-
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import UserSelect from '@/components/UserSelect';
-
-import {
-  getStationaryEvent,
-  createStationaryEvent,
-  updateStationaryEvent,
-} from '@/services/escola-lms/stationary_events';
-
+import ProductSelect from '@/components/ProductSelect';
+import { getProduct, createProduct, updateProduct } from '@/services/escola-lms/products';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
-
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 
 import './index.css';
 
-const StationaryEventForm = () => {
+const getProductables = (
+  values: string[] | string | API.ProductableResourceListItem[],
+): {
+  id: number;
+  class: string;
+}[] => {
+  const valuesArr: string[] | API.ProductableResourceListItem[] = Array.isArray(values)
+    ? values
+    : [values];
+
+  const result = valuesArr.map((item) => {
+    if (typeof item === 'object') {
+      return item;
+    }
+    return {
+      id: parseInt(item.split(':')[1]),
+      class: item.split(':')[0],
+    };
+  });
+
+  return result;
+};
+
+const ProductsForm = () => {
   const intl = useIntl();
   const params = useParams<{ id?: string; tab?: string }>();
   const { id, tab = 'attributes' } = params;
   const isNew = id === 'new';
 
-  const [data, setData] = useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>>();
+  const [data, setData] = useState<Partial<EscolaLms.Cart.Models.Product>>();
   const [form] = ProForm.useForm();
 
+  const [multiple, setMultiple] = useState<boolean>(false);
+
   const fetchData = useCallback(async () => {
-    const response = await getStationaryEvent(Number(id));
+    const response = await getProduct(Number(id));
     if (response.success) {
       setData({
         ...response.data,
       });
+      setMultiple(response.data.type === 'bundle');
     }
   }, [id]);
 
@@ -53,26 +74,43 @@ const StationaryEventForm = () => {
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>) => {
+      onValuesChange: (
+        values: EscolaLms.Cart.Http.Requests.Admin.ProductUpdateRequest &
+          EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest & {
+            productables: string[] | string;
+            type: 'bundle' | 'single';
+          },
+      ) => {
+        if (values.type) {
+          setMultiple(values.type === 'bundle');
+        }
+      },
+
+      onFinish: async (
+        values: EscolaLms.Cart.Http.Requests.Admin.ProductUpdateRequest &
+          EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest & {
+            productables: string[] | string;
+          },
+      ) => {
+        console.log('on finish', values.productables);
+
         const postData = {
           ...values,
-          /*
-          image_url: data && data.image_url,
-          image_path: data && data.image_url && splitImagePath(data.image_url),
-          */
+          productables: values.productables ? getProductables(values.productables) : undefined,
         };
-        let response: API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>;
+        let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;
         if (isNew) {
-          response = await createStationaryEvent(postData);
+          response = await createProduct(postData);
           if (response.success) {
-            history.push(`/stationary-events/${response.data.id}`);
+            history.push(`/products/${response.data.id}`);
           }
         } else {
-          response = await updateStationaryEvent(Number(id), postData);
+          response = await updateProduct(Number(id), postData);
           if (response.success) {
-            history.push(`/stationary-events/${response.data.id}/${tab}`);
+            history.push(`/products/${response.data.id}/${tab}`);
           }
         }
+
         message.success(response.message);
       },
       initialValues: data,
@@ -86,20 +124,14 @@ const StationaryEventForm = () => {
 
   return (
     <PageContainer
-      title={
-        isNew ? (
-          <FormattedMessage id="stationary_event" />
-        ) : (
-          <FormattedMessage id="stationary_event.edit" />
-        )
-      }
+      title={isNew ? <FormattedMessage id="product" /> : <FormattedMessage id="product.edit" />}
       header={{
         breadcrumb: {
           routes: [
             {
-              path: 'stationary-events',
+              path: 'products',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.StationaryEvents',
+                id: 'menu.Products',
               }),
             },
             {
@@ -128,7 +160,7 @@ const StationaryEventForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/stationary-events/${id}/${key}`),
+          onChange: (key) => history.push(`/products/${id}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
@@ -145,79 +177,200 @@ const StationaryEventForm = () => {
                 })}
                 required
               />
+            </ProForm.Group>
+
+            <ProForm.Item
+              name="productables"
+              label={<FormattedMessage id="productables" />}
+              valuePropName="value"
+            >
+              <ProductSelect multiple={multiple} />
+            </ProForm.Item>
+
+            <ProForm.Group>
+              <ProFormRadio.Group
+                name="type"
+                label={<FormattedMessage id="type" />}
+                options={[
+                  {
+                    label: intl.formatMessage({
+                      id: 'single',
+                      defaultMessage: 'single',
+                    }),
+                    value: 'single',
+                  },
+                  {
+                    label: intl.formatMessage({
+                      id: 'bundle',
+                      defaultMessage: 'bundle',
+                    }),
+                    value: 'bundle',
+                  },
+                ]}
+              />
+              <ProFormSwitch name="purchasable" label={<FormattedMessage id="purchasable" />} />
+
               <ProFormText
                 width="md"
-                name="place"
-                label={<FormattedMessage id="place" />}
-                tooltip={<FormattedMessage id="place_tooltip" />}
+                name="teaser_url"
+                label={<FormattedMessage id="teaser_url" />}
+                tooltip={<FormattedMessage id="teaser_url_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'place',
-                  defaultMessage: 'place',
+                  id: 'teaser_url',
+                  defaultMessage: 'teaser_url',
                 })}
-                required
+              />
+            </ProForm.Group>
+
+            <ProForm.Group>
+              <ProFormDigit
+                width="xs"
+                name="price"
+                label={<FormattedMessage id="price" />}
+                tooltip={<FormattedMessage id="price_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'price',
+                  defaultMessage: 'price',
+                })}
+                min={0}
+                max={99999}
+                fieldProps={{ step: 1 }}
+              />
+
+              <ProFormDigit
+                width="xs"
+                name="tax_rate"
+                label={<FormattedMessage id="tax_rate" />}
+                tooltip={<FormattedMessage id="tax_rate_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'tax_rate',
+                  defaultMessage: 'tax_rate',
+                })}
+                initialValue={isNew ? 23 : undefined}
+                min={0}
+                max={100}
+                fieldProps={{
+                  step: 1,
+                  formatter: (value) => `${value}%`,
+                  parser: (value) => (value ? value.replace('%', '') : ''),
+                }}
               />
               <ProForm.Item
-                name="authors"
-                label={<FormattedMessage id="tutor" />}
-                valuePropName="value"
+                shouldUpdate
+                label={<FormattedMessage id="price_brutto" />}
+                tooltip={<FormattedMessage id="price_brutto_tooltip" />}
+                style={{ width: 104 }}
               >
-                <UserSelect multiple role="tutor" />
+                {(formRef) => {
+                  return (
+                    <Input
+                      disabled
+                      readOnly
+                      value={
+                        formRef.getFieldValue('price')
+                          ? Math.round(
+                              parseInt(formRef.getFieldValue('price')) *
+                                (1 + parseInt(formRef.getFieldValue('tax_rate')) / 100),
+                            )
+                          : undefined
+                      }
+                    />
+                  );
+                }}
+              </ProForm.Item>
+              <ProForm.Item
+                shouldUpdate
+                label={<FormattedMessage id="tax_value" />}
+                tooltip={<FormattedMessage id="tax_value_tooltip" />}
+                style={{ width: 104 }}
+              >
+                {(formRef) => {
+                  return (
+                    <Input
+                      disabled
+                      readOnly
+                      value={
+                        formRef.getFieldValue('price')
+                          ? Math.round(
+                              parseInt(formRef.getFieldValue('price')) *
+                                (parseInt(formRef.getFieldValue('tax_rate')) / 100),
+                            )
+                          : undefined
+                      }
+                    />
+                  );
+                }}
               </ProForm.Item>
               <ProFormDigit
                 width="xs"
-                name="max_participants"
-                label={<FormattedMessage id="max_participants" />}
-                tooltip={<FormattedMessage id="max_participants_tooltip" />}
+                name="price_old"
+                label={<FormattedMessage id="price_old" />}
+                tooltip={<FormattedMessage id="price_old_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'max_participants',
-                  defaultMessage: 'max_participants',
+                  id: 'price',
+                  defaultMessage: 'price',
                 })}
                 min={0}
-                max={9999}
+                max={99999}
+                fieldProps={{ step: 1 }}
+              />
+
+              <ProFormDigit
+                initialValue={isNew ? null : undefined}
+                width="xs"
+                name="extra_fees"
+                label={<FormattedMessage id="extra_fees" />}
+                tooltip={<FormattedMessage id="extra_fees_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'extra_fees',
+                  defaultMessage: 'extra_fees',
+                })}
+                min={0}
+                max={99999}
                 fieldProps={{ step: 1 }}
               />
             </ProForm.Group>
 
             <ProForm.Group>
-              <ProFormDatePicker
-                width="sm"
-                name="started_at"
-                label={<FormattedMessage id="started_at" />}
-                tooltip={<FormattedMessage id="started_at_tooltip" />}
+              <ProFormText
+                width="md"
+                name="duration"
+                label={<FormattedMessage id="duration" />}
+                tooltip={<FormattedMessage id="duration_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'started_at',
-                  defaultMessage: 'started_at',
+                  id: 'duration',
+                  defaultMessage: 'duration',
                 })}
               />
-              <ProFormDatePicker
-                width="sm"
-                name="finished_at"
-                label={<FormattedMessage id="finished_at" />}
-                tooltip={<FormattedMessage id="finished_att_tooltip" />}
+              <ProFormDigit
+                initialValue={isNew ? null : undefined}
+                width="xs"
+                name="limit_per_user"
+                label={<FormattedMessage id="limit_per_user" />}
+                tooltip={<FormattedMessage id="limit_per_user_tooltip" />}
                 placeholder={intl.formatMessage({
-                  id: 'finished_at',
-                  defaultMessage: 'finished_at',
+                  id: 'limit_per_user',
+                  defaultMessage: 'limit_per_user',
                 })}
+                min={0}
+                max={99999}
+                fieldProps={{ step: 1 }}
+              />
+              <ProFormDigit
+                initialValue={isNew ? null : undefined}
+                width="xs"
+                name="limit_total"
+                label={<FormattedMessage id="limit_total" />}
+                tooltip={<FormattedMessage id="limit_total_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'limit_total',
+                  defaultMessage: 'limit_total',
+                })}
+                min={0}
+                max={99999}
+                fieldProps={{ step: 1 }}
               />
             </ProForm.Group>
-
-            <ProForm.Item
-              name="program"
-              label={<FormattedMessage id="program" />}
-              tooltip={<FormattedMessage id="program_tooltip" />}
-              valuePropName="value"
-            >
-              <WysiwygMarkdown directory={`stationary_events/${id}/wysiwyg`} />
-            </ProForm.Item>
-
-            <ProForm.Item
-              name="description"
-              label={<FormattedMessage id="description" />}
-              tooltip={<FormattedMessage id="description_tooltip" />}
-              valuePropName="value"
-            >
-              <WysiwygMarkdown directory={`stationary_events/${id}/wysiwyg`} />
-            </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
         {!isNew && (
@@ -225,9 +378,9 @@ const StationaryEventForm = () => {
             <ProForm {...formProps}>
               <ProFormImageUpload
                 title="image"
-                action={`/api/admin/stationary-events/${id}/?_method=PUT`}
-                src_name="image_url"
-                form_name="image"
+                action={`/api/admin/products/${id}/?_method=PUT`}
+                src_name="poster_url"
+                form_name="poster"
                 getUploadedSrcField={(info) => info.file.response.data.image_url}
                 setPath={(removedPath) =>
                   setData((prevState) => ({
@@ -261,4 +414,4 @@ const StationaryEventForm = () => {
   );
 };
 
-export default StationaryEventForm;
+export default ProductsForm;
