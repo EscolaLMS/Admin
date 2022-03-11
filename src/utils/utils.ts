@@ -22,8 +22,9 @@ export const searchSubstring = (string: string = '', substring: string = '') => 
   return string.toLowerCase().includes(substring.toLowerCase());
 };
 
-export const categoriesArrToIds = (category: API.Category | string | number) =>
-  typeof category === 'object' ? category.id : category;
+export const categoriesArrToIds = (
+  category: API.Category | EscolaLms.Categories.Models.Category | string | number,
+) => (typeof category === 'object' ? category.id : category);
 
 export const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
 
