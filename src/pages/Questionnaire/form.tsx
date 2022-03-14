@@ -201,7 +201,7 @@ export const QuestionareForm = () => {
         >
           <QuestionForm
             questionnaireId={Number(questionnaireId)}
-            questions={data.questions}
+            questions={data.questions || []}
             fetchData={fetchData}
           />
         </ProCard.TabPane>
@@ -210,7 +210,10 @@ export const QuestionareForm = () => {
           tab={<FormattedMessage id="answers" defaultMessage="answers" />}
           disabled={isNew}
         >
-          <QuestionAnswers questionnaireId={Number(questionnaireId)} questions={data.questions} />
+          <QuestionAnswers
+            questionnaireId={Number(questionnaireId)}
+            questions={data.questions || []}
+          />
         </ProCard.TabPane>
         {listOfModels &&
           listOfModels.map((model: API.QuestionnaireModel) => (
