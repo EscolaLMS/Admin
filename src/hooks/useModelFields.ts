@@ -20,7 +20,6 @@ type ModelFieldsState =
 
 const useModelFields = (class_type: string): ModelFieldsState => {
   const [state, setState] = useState<ModelFieldsState>({ state: 'initial' });
-  console.log({ state });
 
   useEffect(() => {
     setState({ state: 'loading' });

@@ -19,15 +19,13 @@ export default ({
 }: {
   isNew: boolean;
   data: Partial<API.UserItem> | undefined;
-  setData: (data: any) => void;
+  setData: (data: Partial<API.UserItem>) => void;
 }) => {
   const intl = useIntl();
   const params = useParams<{ user?: string }>();
   const { user } = params;
   const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
   const [roles, setRoles] = useState<API.Role[]>();
-
-  console.log(additionalFields);
 
   const fetchRoles = useCallback(async () => {
     const request = await getRoles();
@@ -43,7 +41,8 @@ export default ({
       .then((response) => {
         if (response.success) {
           message.success(response.message);
-          setData((prevState: Partial<API.UserItem>) => ({
+          // @ts-ignore
+          setData((prevState) => ({
             ...prevState,
             avatar: '',
             path_avatar: '',
