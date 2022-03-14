@@ -59,6 +59,14 @@
     access: 'userCreatePermission',
     hideInMenu: true,
   },
+
+  {
+    path: '/users/fields',
+    icon: 'user',
+    access: 'userDetailsPermission',
+    component: './Users/Fields',
+    hideInMenu: true,
+  },
   {
     path: '/users/:user/:tab',
     icon: 'user',
