@@ -8,13 +8,15 @@ type PossibleType =
   | 'EscolaLms\\Core\\Models\\User'
   | 'EscolaLms\\Cart\\Models\\Order'
   | 'EscolaLms\\Cart\\Models\\Course'
-  | 'EscolaLms\\Auth\\Models\\UserGroup';
+  | 'EscolaLms\\Auth\\Models\\UserGroup'
+  | 'Questionnaire';
 
 export const TypeButtonDrawer: React.FC<{
   type: PossibleType;
   type_id: number;
 }> = ({ type, type_id }) => {
   const [currentRow, setCurrentRow] = useState<API.LinkedType>({ type: '', value: null });
+
   return (
     <React.Fragment>
       <TypeButton type={type} type_id={type_id} onData={(data) => setCurrentRow(data)} />

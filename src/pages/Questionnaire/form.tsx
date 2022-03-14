@@ -2,26 +2,25 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { Typography, message, Spin, Button, Form } from 'antd';
+import { Typography, message, Spin, Button, Form, Row, Col } from 'antd';
 import { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import {
-  questionnaireById,
+  getQuestionnaire,
   updateQuestionare,
   createQuestionnaire,
   getQuestionnaireModels,
 } from '@/services/escola-lms/questionnaire';
 import ProForm from '@ant-design/pro-form';
 import CourseSelect from '@/components/CourseSelect';
-import QuestionForm from './components/QuestionForm';
-import QuestionnaireChart from './components/QuestionnaireChart';
+import QuestionForm from './components/Questions';
+import QuestionAnswers from './components/Answers';
+import QuestionnaireRaports from './components/Raports';
 import './style.css';
 
 const { Title } = Typography;
 
 export enum ModelTypes {
   course = 1,
-  programs = 2,
-  events = 5,
 }
 
 export const QuestionareForm = () => {
@@ -52,7 +51,7 @@ export const QuestionareForm = () => {
   }, []);
 
   const fetchData = useCallback(async () => {
-    const response = await questionnaireById(Number(questionnaireId));
+    const response = await getQuestionnaire(Number(questionnaireId));
     if (response.success) {
       setData({
         ...response.data,
@@ -172,21 +171,27 @@ export const QuestionareForm = () => {
             <FormattedMessage id="questionnaire" defaultMessage="questionnaire" />
           </Title>{' '}
           <ProForm {...formProps} form={formQuestionnaire}>
-            <ProFormText
-              label={<FormattedMessage id="title" defaultMessage="title" />}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              width="md"
-              name="title"
-            />
-            <ProFormSwitch
-              initialValue={true}
-              name="active"
-              label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
-            />
+            <Row>
+              <Col span={6}>
+                <ProFormText
+                  label={<FormattedMessage id="title" defaultMessage="title" />}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  width="md"
+                  name="title"
+                />
+              </Col>
+              <Col>
+                <ProFormSwitch
+                  initialValue={true}
+                  name="active"
+                  label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
+                />
+              </Col>
+            </Row>
           </ProForm>
         </ProCard.TabPane>
         <ProCard.TabPane
@@ -199,6 +204,13 @@ export const QuestionareForm = () => {
             questions={data.questions}
             fetchData={fetchData}
           />
+        </ProCard.TabPane>
+        <ProCard.TabPane
+          key="answers"
+          tab={<FormattedMessage id="answers" defaultMessage="answers" />}
+          disabled={isNew}
+        >
+          <QuestionAnswers questionnaireId={Number(questionnaireId)} questions={data.questions} />
         </ProCard.TabPane>
         {listOfModels &&
           listOfModels.map((model: API.QuestionnaireModel) => (
@@ -225,15 +237,11 @@ export const QuestionareForm = () => {
         <ProCard.TabPane
           key="raport"
           tab={<FormattedMessage id="menu.reports" defaultMessage="menu.reports" />}
+          disabled={isNew || data.models?.length === 0}
         >
-          <ProCard split="vertical">
-            <ProCard colSpan={12} layout="center">
-              <QuestionnaireChart id={Number(questionnaireId)} type="count_answers" />
-            </ProCard>
-            <ProCard colSpan={12} layout="center">
-              <QuestionnaireChart id={Number(questionnaireId)} type="sum_rate" />
-            </ProCard>
-          </ProCard>
+          {data?.models && data?.models?.length > 0 && (
+            <QuestionnaireRaports questionnaireId={Number(questionnaireId)} models={data.models} />
+          )}
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

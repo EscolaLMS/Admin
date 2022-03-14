@@ -20,14 +20,14 @@ export const UserSelect: React.FC<{
   value?: string | string[] | number | number[];
   onChange?: (value: string | string[] | number | number[]) => void;
 }> = ({ value, onChange, multiple = false, allTemplates, courseId }) => {
-  const [templates, setTemplates] = useState<API.CERTIFICATE[]>([]);
+  const [templates, setTemplates] = useState<API.Certificate[]>([]);
   const [fetching, setFetching] = useState(false);
 
   const cacheValues = useRef<number[]>();
-  const cache = useRef<API.CERTIFICATE[]>();
+  const cache = useRef<API.Certificate[]>();
   const abortController = useRef<AbortController>();
 
-  const setUsersFromResponse = useCallback((responseUsers: API.CERTIFICATE[]) => {
+  const setUsersFromResponse = useCallback((responseUsers: API.Certificate[]) => {
     setTemplates((prevUsers) =>
       [...prevUsers, ...responseUsers].filter(
         (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
