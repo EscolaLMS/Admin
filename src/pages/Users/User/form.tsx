@@ -1,11 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Form, Button, Space, Typography } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormSwitch,
-  ProFormCheckbox,
-  ProFormDigit,
-} from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
@@ -15,6 +10,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
 import useModelFields from '@/hooks/useModelFields';
+import AdditionalFields from './components/AdditionalFields';
 
 export default ({
   isNew,
@@ -92,47 +88,6 @@ export default ({
     return <Spin />;
   }
 
-  const getProperField = (f) => {
-    switch (f.type) {
-      case 'number':
-        return (
-          <ProFormDigit
-            width="md"
-            name={f.name}
-            label={<FormattedMessage id={f.name} />}
-            tooltip={<FormattedMessage id={f.name} />}
-            placeholder={intl.formatMessage({
-              id: f.name,
-              defaultMessage: f.name,
-            })}
-            min={1}
-            max={1024}
-            fieldProps={{ step: 1 }}
-          />
-        );
-      case 'boolean':
-        return (
-          <ProFormCheckbox name={f.name}>
-            <FormattedMessage id={f.name} />
-          </ProFormCheckbox>
-        );
-
-      case 'text':
-        return (
-          <ProFormText
-            width="md"
-            name={f.name}
-            label={<FormattedMessage id={f.name} />}
-            tooltip={<FormattedMessage id={f.name} />}
-            placeholder={intl.formatMessage({
-              id: f.name,
-            })}
-            required
-          />
-        );
-    }
-  };
-
   return (
     <ProForm {...formProps}>
       <ProForm.Group>
@@ -177,7 +132,7 @@ export default ({
           required={isNew}
         />
         {additionalFields.state === 'loaded' &&
-          additionalFields.list.map((field) => getProperField(field))}
+          additionalFields.list.map((field) => <AdditionalFields field={field} />)}
       </ProForm.Group>
       <ProForm.Group>
         {!isNew && (

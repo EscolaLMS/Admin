@@ -365,7 +365,7 @@ export default {
   ModelFields: 'Model Fields',
   list: 'List',
   newModelField: 'New Model Field',
-
+  notPowerOfTwo: 'This is not a power 2',
   rules: 'Rules',
   visibility: 'Visibility',
   name_tooltip: 'name of field',

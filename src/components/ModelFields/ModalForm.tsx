@@ -38,7 +38,7 @@ export const ModelFieldsModalForm: React.FC<{
       });
       return false;
     },
-    [],
+    [form],
   );
 
   useEffect(() => {
@@ -127,8 +127,7 @@ export const ModelFieldsModalForm: React.FC<{
         <JsonEditor />
       </ProForm.Item>
 
-      {/**
- * TODO: validation 
+      {/** 
  * this int must be power of 2 
  * example :// 
     const PUBLIC        = 1 << 0; // 1
@@ -148,6 +147,22 @@ export const ModelFieldsModalForm: React.FC<{
         min={1}
         max={1024}
         fieldProps={{ step: 1 }}
+        rules={[
+          {
+            validator: async (_, value) => {
+              if (Math.pow(2, Math.ceil(Math.log2(value))) - value) {
+                return Promise.reject(
+                  new Error(
+                    intl.formatMessage({
+                      id: 'notPowerOfTwo',
+                      defaultMessage: 'notPowerOfTwo',
+                    }),
+                  ),
+                );
+              }
+            },
+          },
+        ]}
       />
 
       <ProForm.Item

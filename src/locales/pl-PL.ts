@@ -373,7 +373,7 @@ export default {
   ModelFields: 'Dodatkowe Attrybuty',
   list: 'Lista',
   newModelField: 'Nowy Dodatkowy Attrybut',
-
+  notPowerOfTwo: 'To nie jest potęga 2',
   rules: 'Zasady walidacji',
   visibility: 'Widoczność pola',
   name_tooltip: 'nazwa',
