@@ -130,3 +130,16 @@ export async function deleteUserAvatar(id: number, options?: { [key: string]: an
     ...(options || {}),
   });
 }
+
+/**  PUT /api/admin/users/:id/interests */
+export async function updateUserInterests(
+  id: number,
+  data: Partial<API.UserItem>,
+  options?: { [key: string]: any },
+) {
+  return request<API.UserRow>(`/api/admin/users/${id}/interests`, {
+    data,
+    method: 'PUT',
+    ...(options || {}),
+  });
+}

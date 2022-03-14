@@ -20,10 +20,15 @@ type ModelFieldsState =
 
 const useModelFields = (class_type: string): ModelFieldsState => {
   const [state, setState] = useState<ModelFieldsState>({ state: 'initial' });
+  console.log({ state });
 
   useEffect(() => {
     setState({ state: 'loading' });
-    fetchFields({ class_type }).then((data) => console.log(data));
+    fetchFields({ class_type }).then((data) => {
+      if (data.success) {
+        setState({ state: 'loaded', list: data.data });
+      }
+    });
   }, [class_type]);
 
   return state;

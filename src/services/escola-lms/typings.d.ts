@@ -261,7 +261,7 @@ declare namespace API {
     created_at: string;
     onboarding_completed: boolean;
     email_verified: boolean;
-    interests: string[];
+    interests: any;
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];

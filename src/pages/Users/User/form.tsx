@@ -1,7 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Form, Button, Space, Typography } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
-import { user as fetchUser, updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
+import ProForm, {
+  ProFormText,
+  ProFormSwitch,
+  ProFormCheckbox,
+  ProFormDigit,
+} from '@ant-design/pro-form';
+import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
@@ -9,24 +14,24 @@ import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
+import useModelFields from '@/hooks/useModelFields';
 
-export default ({ isNew }: { isNew: boolean }) => {
+export default ({
+  isNew,
+  data,
+  setData,
+}: {
+  isNew: boolean;
+  data: Partial<API.UserItem> | undefined;
+  setData: (data: any) => void;
+}) => {
   const intl = useIntl();
   const params = useParams<{ user?: string }>();
   const { user } = params;
-
-  const [data, setData] = useState<Partial<API.UserItem>>();
-
+  const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
   const [roles, setRoles] = useState<API.Role[]>();
 
-  const fetchData = useCallback(async () => {
-    const response = await fetchUser(Number(user));
-    if (response.success) {
-      setData({
-        ...response.data,
-      });
-    }
-  }, [user]);
+  console.log(additionalFields);
 
   const fetchRoles = useCallback(async () => {
     const request = await getRoles();
@@ -42,7 +47,7 @@ export default ({ isNew }: { isNew: boolean }) => {
       .then((response) => {
         if (response.success) {
           message.success(response.message);
-          setData((prevState) => ({
+          setData((prevState: Partial<API.UserItem>) => ({
             ...prevState,
             avatar: '',
             path_avatar: '',
@@ -56,18 +61,11 @@ export default ({ isNew }: { isNew: boolean }) => {
 
   useEffect(() => {
     fetchRoles();
-    if (isNew) {
-      setData({});
-      return;
-    }
-
-    fetchData();
-  }, [user, fetchData]);
+  }, [user]);
 
   const formProps = useMemo(
     () => ({
-      // @ts-ignore
-      onFinish: async (values) => {
+      onFinish: async (values: Partial<API.UserItem>) => {
         let response: API.DefaultResponse<API.UserItem>;
 
         const postData: Partial<API.UserItem> = {
@@ -86,15 +84,6 @@ export default ({ isNew }: { isNew: boolean }) => {
         message.success(response.message);
       },
       initialValues: data,
-      /*
-      request: async () => {
-        const response = await getCourse(Number(course));
-        if (response.success) {
-          return response.data;
-        }
-        return {};
-      },
-      */
     }),
     [data, user],
   );
@@ -102,6 +91,47 @@ export default ({ isNew }: { isNew: boolean }) => {
   if (!data) {
     return <Spin />;
   }
+
+  const getProperField = (f) => {
+    switch (f.type) {
+      case 'number':
+        return (
+          <ProFormDigit
+            width="md"
+            name={f.name}
+            label={<FormattedMessage id={f.name} />}
+            tooltip={<FormattedMessage id={f.name} />}
+            placeholder={intl.formatMessage({
+              id: f.name,
+              defaultMessage: f.name,
+            })}
+            min={1}
+            max={1024}
+            fieldProps={{ step: 1 }}
+          />
+        );
+      case 'boolean':
+        return (
+          <ProFormCheckbox name={f.name}>
+            <FormattedMessage id={f.name} />
+          </ProFormCheckbox>
+        );
+
+      case 'text':
+        return (
+          <ProFormText
+            width="md"
+            name={f.name}
+            label={<FormattedMessage id={f.name} />}
+            tooltip={<FormattedMessage id={f.name} />}
+            placeholder={intl.formatMessage({
+              id: f.name,
+            })}
+            required
+          />
+        );
+    }
+  };
 
   return (
     <ProForm {...formProps}>
@@ -146,7 +176,10 @@ export default ({ isNew }: { isNew: boolean }) => {
           })}
           required={isNew}
         />
-
+        {additionalFields.state === 'loaded' &&
+          additionalFields.list.map((field) => getProperField(field))}
+      </ProForm.Group>
+      <ProForm.Group>
         {!isNew && (
           <Space direction="vertical">
             {/* if he is an admin, do not display the switch */}
