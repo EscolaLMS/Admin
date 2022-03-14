@@ -29,7 +29,7 @@ export async function createProduct(
   });
 }
 
-/**  GET /api/admin/webinars/:id */
+/**  GET /api/admin/products/:id */
 export async function getProduct(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
     method: 'GET',
@@ -65,6 +65,18 @@ export async function deleteProduct(id: number, options?: RequestOptionsInit) {
 export async function productables(options?: RequestOptionsInit) {
   return request<API.DefaultMetaResponse<API.ProductableListItem>>(`/api/admin/productables`, {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/**  GET /api/admin/productables/product */
+export async function productForModel(
+  params: EscolaLms.Cart.Http.Requests.Admin.ProductSearchRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/productables/product`, {
+    method: 'GET',
+    params,
     ...(options || {}),
   });
 }

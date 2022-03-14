@@ -376,4 +376,7 @@ export default {
   visibility_tooltip:
     'visibility of field. Must be power of 2. Use  1 to Public access, 2 for Authorized, 4 for Admin, and rest is up to you',
   'available-validation-rules': 'available validation rules',
+  Products: 'Products',
+  free: 'free',
+  prices: 'prices',
 };
