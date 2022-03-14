@@ -138,7 +138,7 @@ export const ModelFields: React.FC<{
                   />
                 }
                 onConfirm={() =>
-                  record.id && handleRemove({ class_type_to_remove: class_type, name: record.name })
+                  record.name && handleRemove({ class_type_to_remove: class_type, name: record.name })
                 }
                 okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
                 cancelText={<FormattedMessage id="no" defaultMessage="No" />}
