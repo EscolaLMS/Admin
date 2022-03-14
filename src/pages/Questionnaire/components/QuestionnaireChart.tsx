@@ -3,7 +3,7 @@ import { Pie } from '@ant-design/charts';
 import { Spin, Alert } from 'antd';
 import { FormattedMessage } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import type { QuestionnaireRaportState } from './Raports';
+import { QuestionnaireRaportState } from './Raports';
 
 const config = {
   appendPadding: 10,

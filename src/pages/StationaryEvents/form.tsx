@@ -19,7 +19,7 @@ import {
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
-
+import { categoriesArrToIds } from '@/utils/utils';
 import './index.css';
 
 const StationaryEventForm = () => {
@@ -36,6 +36,7 @@ const StationaryEventForm = () => {
     if (response.success) {
       setData({
         ...response.data,
+        categories: response?.data?.categories.map(categoriesArrToIds),
       });
     }
   }, [id]);
@@ -56,6 +57,11 @@ const StationaryEventForm = () => {
       onFinish: async (values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>) => {
         const postData = {
           ...values,
+          categories:
+            values.categories &&
+            values.categories.map((category) =>
+              typeof category !== 'number' ? category.id : category,
+            ),
           /*
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),

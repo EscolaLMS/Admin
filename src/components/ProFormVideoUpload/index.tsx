@@ -28,6 +28,10 @@ export const ProFormVideoUpload: React.FC<{
                     onChange={(info) => {
                       if (info.file.status === 'done') {
                         form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
+                        setPath({
+                          [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                          [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
+                        });
                       }
                     }}
                   />
