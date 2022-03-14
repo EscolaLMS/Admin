@@ -8,9 +8,7 @@ import { useParams, history } from 'umi';
 import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
-import { configs as getConfig } from '@/services/escola-lms/settings';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
-import AdditionalFields from './components/AdditionalFields';
 
 export default ({ isNew }: { isNew: boolean }) => {
   const intl = useIntl();
@@ -20,8 +18,6 @@ export default ({ isNew }: { isNew: boolean }) => {
   const [data, setData] = useState<Partial<API.UserItem>>();
 
   const [roles, setRoles] = useState<API.Role[]>();
-  const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
-  const [additionalFields, setAdditionalFields] = useState<string[]>([]);
 
   const fetchData = useCallback(async () => {
     const response = await fetchUser(Number(user));
@@ -40,17 +36,6 @@ export default ({ isNew }: { isNew: boolean }) => {
       setRoles(response.data);
     }
   }, [user]);
-
-  const fetchFields = useCallback(async () => {
-    const request = await getConfig();
-    if (request.success) {
-      setAdditionalRequiredFields(
-        request.data.escola_auth.additional_fields_required.value as string[],
-      );
-
-      setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
-    }
-  }, []);
 
   const onDeleteAvatar = () => {
     deleteUserAvatar(Number(user))
@@ -71,7 +56,6 @@ export default ({ isNew }: { isNew: boolean }) => {
 
   useEffect(() => {
     fetchRoles();
-    fetchFields();
     if (isNew) {
       setData({});
       return;
@@ -212,11 +196,6 @@ export default ({ isNew }: { isNew: boolean }) => {
           />
         )}
       </ProForm.Group>
-      <AdditionalFields
-        additionalFields={additionalFields}
-        requiredFields={additionalRequiredFields}
-        id={data.id}
-      />
 
       {!isNew && (
         <ProForm.Group>
