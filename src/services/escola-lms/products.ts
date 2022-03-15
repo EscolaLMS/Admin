@@ -29,7 +29,7 @@ export async function createProduct(
   });
 }
 
-/**  GET /api/admin/webinars/:id */
+/**  GET /api/admin/products/:id */
 export async function getProduct(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
     method: 'GET',
@@ -65,6 +65,47 @@ export async function deleteProduct(id: number, options?: RequestOptionsInit) {
 export async function productables(options?: RequestOptionsInit) {
   return request<API.DefaultMetaResponse<API.ProductableListItem>>(`/api/admin/productables`, {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/**  GET /api/admin/productables/product */
+export async function productForModel(
+  params: EscolaLms.Cart.Http.Requests.Admin.ProductSearchRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(
+    `/api/admin/productables/product`,
+    {
+      method: 'GET',
+      params,
+      ...(options || {}),
+    },
+  );
+}
+
+/**  POST /api/admin/products/{id}/attach */
+export async function productAttachToUser(
+  id: number,
+  body: EscolaLms.Cart.Http.Requests.Admin.ProductAttachRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/products/${id}/attach`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/admin/products/{id}/detach */
+export async function productDetachToUser(
+  id: number,
+  body: EscolaLms.Cart.Http.Requests.Admin.ProductDetachRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/products/${id}/detach`, {
+    method: 'POST',
+    data: body,
     ...(options || {}),
   });
 }

@@ -384,4 +384,10 @@ export default {
   visibility_tooltip:
     'Widoczność pola w API. Musi być potęgą 2. Use  1 to Public access, 2 for Authorized, 4 for Admin, and rest is up to you',
   'available-validation-rules': 'dostępne metody walidacji',
+  Products: 'Produkty',
+  free: 'darmowy',
+  prices: 'Ceny',
+  additional_fields: 'Dodatkowe pola',
+  purchasable_tooltip: 'Mozliwość zakupu, albo tylko ręczne przypisanie',
+  user_to_add: 'Przypisz uzytkownika do produktu',
 };

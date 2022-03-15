@@ -16,7 +16,8 @@ export const ProductSelect: React.FC<{
   multiple?: boolean;
   value?: API.ProductableResourceListItem[];
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  disabled?: boolean;
+}> = ({ value, onChange, multiple = false, disabled = false }) => {
   const [productables, setProductables] = useState<API.ProductableListItem[]>([]);
   const [fetching, setFetching] = useState(false);
   const [currProductables, setCurrProductables] = useState<string[]>([]);
@@ -78,6 +79,7 @@ export const ProductSelect: React.FC<{
 
   return (
     <Select
+      disabled={disabled}
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
       value={currProductables}

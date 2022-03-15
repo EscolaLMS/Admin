@@ -939,6 +939,9 @@ declare namespace API {
     productable_id: number;
     name: string;
     productable_type: string;
+    id: number;
+    morph_class: string;
+    description: string;
   };
 
   type ProductableResourceListItem = {
@@ -946,5 +949,11 @@ declare namespace API {
     description: string;
     id: number;
     name: string;
+  };
+
+  type ProductProductable = EscolaLms.Cart.Models.ProductProductable & {
+    morph_class: string;
+    name: string;
+    description: string;
   };
 }
