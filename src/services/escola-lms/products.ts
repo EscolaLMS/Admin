@@ -74,9 +74,38 @@ export async function productForModel(
   params: EscolaLms.Cart.Http.Requests.Admin.ProductSearchRequest,
   options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/productables/product`, {
-    method: 'GET',
-    params,
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(
+    `/api/admin/productables/product`,
+    {
+      method: 'GET',
+      params,
+      ...(options || {}),
+    },
+  );
+}
+
+/**  POST /api/admin/products/{id}/attach */
+export async function productAttachToUser(
+  id: number,
+  body: EscolaLms.Cart.Http.Requests.Admin.ProductAttachRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/products/${id}/attach`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/admin/products/{id}/detach */
+export async function productDetachToUser(
+  id: number,
+  body: EscolaLms.Cart.Http.Requests.Admin.ProductDetachRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/products/${id}/detach`, {
+    method: 'POST',
+    data: body,
     ...(options || {}),
   });
 }

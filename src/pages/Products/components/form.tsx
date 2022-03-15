@@ -19,6 +19,20 @@ import ProFormImageUpload from '@/components/ProFormImageUpload';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 
 import './index.css';
+import UserAccess from './UserAccess';
+
+type MinimumProductProductable = {
+  class: string;
+  id: number;
+};
+
+const transformProductablesFromAPI = (
+  input: API.ProductableListItem[],
+): MinimumProductProductable[] =>
+  input.map((row) => ({
+    class: row.productable_type,
+    id: Number(row.id),
+  }));
 
 const getProductables = (
   values: string[] | string | API.ProductableResourceListItem[],
@@ -55,14 +69,12 @@ const ProductsForm: React.FC<{
   onProductSaved?: (model: EscolaLms.Cart.Models.Product) => void;
 }> = ({ tab = 'attributes', onTabChange, id, productable, onProductSaved }) => {
   const intl = useIntl();
-  //const params = useParams<{ id?: string; tab?: string }>();
-  //const { id, tab = 'attributes' } = params;
 
   const [productId, setProductId] = useState<string | number | undefined>(id);
 
-  const isNew = productId === 'new';
+  const isNew = useMemo(() => productId === 'new', [productId]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [data, setData] = useState<Partial<EscolaLms.Cart.Models.Product>>();
   const [form] = ProForm.useForm();
 
   const [multiple, setMultiple] = useState<boolean>(false);
@@ -73,8 +85,10 @@ const ProductsForm: React.FC<{
         productable_id: Number(productable.class_id),
         productable_type: productable.class_type,
       })
-        .then((pproductable) => {
-          console.log('fetch here TOTOD -> ', pproductable);
+        .then((response) => {
+          if (response.success) {
+            setProductId(response.data.id);
+          }
         })
         .catch(() => {
           // err id 404 this is new model
@@ -94,20 +108,25 @@ const ProductsForm: React.FC<{
   }, [productable]);
 
   const fetchData = useCallback(async () => {
-    const response = await getProduct(Number(productId));
-    if (response.success) {
-      setData({
-        ...response.data,
-      });
-      setMultiple(response.data.type === 'bundle');
+    if (productId && productId !== 'new') {
+      const response = await getProduct(Number(productId));
+      if (response.success) {
+        const newData = {
+          ...response.data,
+          productables: response.data.productables
+            ? transformProductablesFromAPI(response.data.productables as API.ProductProductable[])
+            : [],
+        };
+
+        form.setFieldsValue(newData);
+
+        setMultiple(response.data.type === 'bundle');
+      }
     }
+    setLoading(false);
   }, [productId]);
 
   useEffect(() => {
-    if (isNew) {
-      setData({});
-    }
-
     if (productId) {
       fetchData();
     }
@@ -144,7 +163,8 @@ const ProductsForm: React.FC<{
             if (onProductSaved) {
               onProductSaved(response.data);
             }
-            // history.push(`/products/${response.data.id}`);
+            setProductId(response.data.id);
+            form.setFieldsValue(response.data);
           }
         } else {
           response = await updateProduct(Number(productId), postData);
@@ -152,18 +172,16 @@ const ProductsForm: React.FC<{
             if (onProductSaved) {
               onProductSaved(response.data);
             }
-            // history.push(`/products/${response.data.id}/${tab}`);
           }
         }
 
         message.success(response.message);
       },
-      initialValues: data,
     }),
-    [data, productId, onProductSaved],
+    [productId, onProductSaved],
   );
 
-  if (!data) {
+  if (loading) {
     return <Spin />;
   }
 
@@ -190,9 +208,6 @@ const ProductsForm: React.FC<{
               })}
               required
             />
-          </ProForm.Group>
-
-          <ProForm.Group>
             <ProForm.Item
               name="productables"
               label={<FormattedMessage id="productables" />}
@@ -204,6 +219,8 @@ const ProductsForm: React.FC<{
 
           <ProForm.Group>
             <ProFormRadio.Group
+              disabled={productable !== undefined}
+              initialValue={productId && productId !== 'new' ? undefined : 'single'}
               rules={[
                 {
                   required: true,
@@ -228,21 +245,14 @@ const ProductsForm: React.FC<{
                 },
               ]}
             />
-            <ProFormSwitch name="purchasable" label={<FormattedMessage id="purchasable" />} />
-
-            <ProFormText
-              width="md"
-              name="teaser_url"
-              label={<FormattedMessage id="teaser_url" />}
-              tooltip={<FormattedMessage id="teaser_url_tooltip" />}
-              placeholder={intl.formatMessage({
-                id: 'teaser_url',
-                defaultMessage: 'teaser_url',
-              })}
+            <ProFormSwitch
+              name="purchasable"
+              label={<FormattedMessage id="purchasable" />}
+              tooltip={<FormattedMessage id="purchasable_tooltip" />}
             />
           </ProForm.Group>
 
-          <ProForm.Group>
+          <ProForm.Group title={<FormattedMessage id="prices" />}>
             <ProFormDigit
               rules={[
                 {
@@ -312,7 +322,6 @@ const ProductsForm: React.FC<{
               shouldUpdate
               label={<FormattedMessage id="tax_value" />}
               tooltip={<FormattedMessage id="tax_value_tooltip" />}
-              style={{ width: 104 }}
             >
               {(formRef) => {
                 return (
@@ -361,7 +370,7 @@ const ProductsForm: React.FC<{
             />
           </ProForm.Group>
 
-          <ProForm.Group>
+          <ProForm.Group title={<FormattedMessage id="additional_fields" />}>
             <ProFormText
               width="md"
               name="duration"
@@ -400,6 +409,16 @@ const ProductsForm: React.FC<{
               max={99999}
               fieldProps={{ step: 1 }}
             />
+            <ProFormText
+              width="md"
+              name="teaser_url"
+              label={<FormattedMessage id="teaser_url" />}
+              tooltip={<FormattedMessage id="teaser_url_tooltip" />}
+              placeholder={intl.formatMessage({
+                id: 'teaser_url',
+                defaultMessage: 'teaser_url',
+              })}
+            />
           </ProForm.Group>
         </ProForm>
       </ProCard.TabPane>
@@ -412,12 +431,9 @@ const ProductsForm: React.FC<{
               src_name="poster_url"
               form_name="poster"
               getUploadedSrcField={(info) => info.file.response.data.image_url}
-              setPath={(removedPath) =>
-                setData((prevState) => ({
-                  ...prevState,
-                  ...removedPath,
-                }))
-              }
+              setPath={(removedPath) => {
+                console.log('TODO ProFormImageUpload setPath', removedPath);
+              }}
             />
           </ProForm>
         </ProCard.TabPane>
@@ -436,6 +452,14 @@ const ProductsForm: React.FC<{
                 </ProForm.Item>
               </ProForm>
             </Col>
+          </Row>
+        </ProCard.TabPane>
+      )}
+
+      {!isNew && (
+        <ProCard.TabPane key="users" tab={<FormattedMessage id="users" />}>
+          <Row>
+            <Col span={12}>{productId && <UserAccess id={productId} />}</Col>
           </Row>
         </ProCard.TabPane>
       )}

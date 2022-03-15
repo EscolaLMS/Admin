@@ -373,10 +373,13 @@ export default {
   rules_tooltip: 'a json list of string rules used on create/update model',
   extra_tooltip: 'a json extra description',
   default_tooltip: 'default value, if model has no value this will be served',
+  purchasable_tooltip: 'Can user buy this product or is available only by manual assignment',
   visibility_tooltip:
     'visibility of field. Must be power of 2. Use  1 to Public access, 2 for Authorized, 4 for Admin, and rest is up to you',
   'available-validation-rules': 'available validation rules',
   Products: 'Products',
   free: 'free',
   prices: 'prices',
+  additional_fields: 'Additional Fields',
+  user_to_add: 'Attach user to product',
 };
