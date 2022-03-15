@@ -64,7 +64,7 @@
     path: '/users/fields',
     icon: 'user',
     access: 'userDetailsPermission',
-    component: './Users/Fields',
+    component: './Users/fields',
     hideInMenu: true,
   },
   {
