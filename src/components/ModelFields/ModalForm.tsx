@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { Form } from 'antd';
-import { ProFormText, ModalForm, ProFormRadio, ProFormDigit } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ModalForm, ProFormRadio, ProFormDigit } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 
 import { createOrUpdateField } from '@/services/escola-lms/fields';
+import JsonEditor from '../JsonEditor';
 
 enum ModelFieldType {
   BOOLEAN = 'boolean',
@@ -37,7 +38,7 @@ export const ModelFieldsModalForm: React.FC<{
       });
       return false;
     },
-    [],
+    [form],
   );
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export const ModelFieldsModalForm: React.FC<{
         id: name === 'new' ? 'newModelField' : 'editModelField',
         defaultMessage: name === 'new' ? 'new Model Field' : 'edit Model Field',
       })}
-      width="400px"
+      width="800px"
       visible={visible}
       onVisibleChange={onVisibleChange}
       onFinish={onFinish}
@@ -103,11 +104,7 @@ export const ModelFieldsModalForm: React.FC<{
         })}
       />
 
-      {/**
-       * TODO: this field is JSON
-       */}
-      <ProFormText
-        width="md"
+      <ProForm.Item
         name="rules"
         label={
           <span>
@@ -124,14 +121,13 @@ export const ModelFieldsModalForm: React.FC<{
             </a>
           </span>
         }
-        tooltip={<FormattedMessage id="rules_tooltip" defaultMessage="rules_tooltip" />}
-        placeholder={intl.formatMessage({
-          id: 'rules',
-        })}
-      />
+        tooltip={<FormattedMessage id="available-validation-rules" />}
+        valuePropName="value"
+      >
+        <JsonEditor />
+      </ProForm.Item>
 
-      {/**
- * TODO: validation 
+      {/** 
  * this int must be power of 2 
  * example :// 
     const PUBLIC        = 1 << 0; // 1
@@ -151,7 +147,32 @@ export const ModelFieldsModalForm: React.FC<{
         min={1}
         max={1024}
         fieldProps={{ step: 1 }}
+        rules={[
+          {
+            validator: async (_, value) => {
+              if (Math.pow(2, Math.ceil(Math.log2(value))) - value) {
+                return Promise.reject(
+                  new Error(
+                    intl.formatMessage({
+                      id: 'notPowerOfTwo',
+                      defaultMessage: 'notPowerOfTwo',
+                    }),
+                  ),
+                );
+              }
+            },
+          },
+        ]}
       />
+
+      <ProForm.Item
+        name="extra"
+        label={<FormattedMessage id="extra" />}
+        tooltip={<FormattedMessage id="extra" />}
+        valuePropName="value"
+      >
+        <JsonEditor />
+      </ProForm.Item>
     </ModalForm>
   );
 };
