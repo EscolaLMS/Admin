@@ -14,7 +14,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
   const [appointments, setAppointments] = useState<API.ConsultationAppointment[]>([]);
 
   useEffect(() => {
-    const fetch = () => {
+    const fetchAppointments = () => {
       getSchedule(consultation)
         .then((response) => {
           if (response.success) {
@@ -26,7 +26,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
         });
     };
 
-    fetch();
+    fetchAppointments();
   }, [consultation]);
 
   const dateCellRender = useCallback(
