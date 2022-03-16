@@ -32,6 +32,7 @@ export const ModelFieldsModalForm: React.FC<{
         ...data,
         class_type,
         rules: JSON.stringify(data.rules),
+        extra: JSON.stringify(data.extra),
       }).then((response) => {
         if (response.success) {
           onResponse(response.data);
