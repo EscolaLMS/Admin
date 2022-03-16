@@ -71,9 +71,12 @@ export async function deleteConsultation(id: number, options?: Record<string, an
 
 /**  GET /api/admin/consultations/:id/schedule */
 export async function getSchedule(id: number, options?: Record<string, any>) {
-  return request<API.DefaultResponse<API.Consultation>>(`/api/admin/consultations/${id}/schedule`, {
-    method: 'GET',
-    /* useCache: true */ useCache: false,
-    ...(options || {}),
-  });
+  return request<API.DefaultResponse<API.ConsultationAppointment[]>>(
+    `/api/admin/consultations/${id}/schedule`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
+      ...(options || {}),
+    },
+  );
 }
