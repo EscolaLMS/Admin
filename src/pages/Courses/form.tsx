@@ -29,6 +29,7 @@ import { ModelTypes } from '../Questionnaire/form';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
+import ProductWidget from '@/components/ProductWidget';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -140,15 +141,11 @@ export default () => {
             },
             {
               path: '/',
-              breadcrumbName: intl.formatMessage({
-                id: String(data.title),
-              }),
+              breadcrumbName: String(data.title),
             },
             {
               path: String(tab),
-              breadcrumbName: intl.formatMessage({
-                id: String(tab),
-              }),
+              breadcrumbName: String(tab),
             },
           ],
         },
@@ -357,6 +354,23 @@ export default () => {
             </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
+        {!isNew && (
+          <ProCard.TabPane
+            key="prices"
+            tab={<FormattedMessage id="prices" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {course && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Course',
+                  class_id: course,
+                  name: String(data.title),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane
             key="media"

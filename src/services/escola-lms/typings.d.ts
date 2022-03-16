@@ -261,7 +261,7 @@ declare namespace API {
     created_at: string;
     onboarding_completed: boolean;
     email_verified: boolean;
-    interests: string[];
+    interests: any;
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];
@@ -698,43 +698,19 @@ declare namespace API {
     guard_name?: string;
   };
 
-  type QuestionAnswer = {
-    id: number;
-    note: string;
-    question_id: number;
-    questionnaire_model_id: number;
-    rate: number;
-    user_id: number;
-  };
+  type QuestionAnswer = EscolaLms.Questionnaire.Models.QuestionAnswer;
 
-  type Questionnaire = {
-    id?: number;
-    title: string;
-    questions?: Question[];
+  type Questionnaire = EscolaLms.Questionnaire.Models.Questionnaire & {
     models?: QuestionnaireModel[];
-    active: boolean;
-    answers?: QuestionAnswer[];
   };
 
-  type QuestionnaireModel = {
-    id: number;
-    model_class: string;
-    title: string;
-    model_id?: number;
-    model_type_id?: number;
+  type QuestionnaireModel = EscolaLms.Questionnaire.Models.QuestionnaireModel & {
     model_type_title?: string;
-    model_title?: string;
+    title?: string;
+    model_title: string;
   };
 
-  type Question = {
-    id: number;
-    title: string;
-    questionnaire_id: id;
-    description: string;
-    position: number;
-    active: boolean;
-    type: string;
-  };
+  type Question = EscolaLms.Questionnaire.Models.Question;
 
   type QuestionnaireReport = {
     avg_rate: string;
@@ -957,5 +933,27 @@ declare namespace API {
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
+  };
+
+  type ProductableListItem = {
+    productable_id: number;
+    name: string;
+    productable_type: string;
+    id: number;
+    morph_class: string;
+    description: string;
+  };
+
+  type ProductableResourceListItem = {
+    class: string;
+    description: string;
+    id: number;
+    name: string;
+  };
+
+  type ProductProductable = EscolaLms.Cart.Models.ProductProductable & {
+    morph_class: string;
+    name: string;
+    description: string;
   };
 }

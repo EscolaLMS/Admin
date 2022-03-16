@@ -286,3 +286,14 @@ export async function cloneTopic(id: number, options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+/**  POST /api/admin/courses/:id/clone */
+export async function cloneCourse(id: number, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}/clone`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}

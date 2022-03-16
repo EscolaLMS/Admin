@@ -59,6 +59,14 @@
     access: 'userCreatePermission',
     hideInMenu: true,
   },
+
+  {
+    path: '/users/fields',
+    icon: 'user',
+    access: 'userDetailsPermission',
+    component: './Users/fields',
+    hideInMenu: true,
+  },
   {
     path: '/users/:user/:tab',
     icon: 'user',
@@ -198,6 +206,31 @@
     component: './StationaryEvents/form',
     hideInMenu: true,
   },
+
+  //
+
+  {
+    name: 'Products',
+    icon: 'shopping-cart',
+    path: '/products',
+    access: 'productsListPermission',
+    component: './Products',
+  },
+  {
+    path: '/products/:id',
+    access: 'productsDetailsPermission',
+    component: './Products/form',
+    hideInMenu: true,
+  },
+
+  {
+    path: '/products/:id/:tab',
+    access: 'productsDetailsPermission',
+    component: './Products/form',
+    hideInMenu: true,
+  },
+
+  //
 
   {
     name: 'Webinars',

@@ -52,6 +52,11 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/Cart -------- */
 
+  ProductsList = 'products_list',
+  ProductsManage = 'products_manage',
+  ProductsListPurchasable = 'products_list_purchasable',
+  ProductsBuy = 'products_buy',
+
   CartOrderList = 'cart_order_list',
   CartOrderListCourseOwned = 'cart_order_list_course-authored', // order listings for courses of which you are the author (for tutor)
 
