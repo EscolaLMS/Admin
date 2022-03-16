@@ -31,6 +31,7 @@ export const ModelFieldsModalForm: React.FC<{
       await createOrUpdateField({
         ...data,
         class_type,
+        rules: JSON.stringify(data.rules),
       }).then((response) => {
         if (response.success) {
           onResponse(response.data);

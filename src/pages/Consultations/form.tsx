@@ -28,6 +28,7 @@ import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import './index.css';
+import ProductWidget from '@/components/ProductWidget';
 
 const ConsultationForm = () => {
   const intl = useIntl();
@@ -267,7 +268,24 @@ const ConsultationForm = () => {
               </ProForm.Item>
             </ProForm.Group>
           </ProForm>
-        </ProCard.TabPane>{' '}
+        </ProCard.TabPane>
+        {!isNew && (
+          <ProCard.TabPane
+            key="prices"
+            tab={<FormattedMessage id="prices" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {consultation && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Consultation',
+                  class_id: consultation,
+                  name: String(data.name),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane
             key="media"
