@@ -30,6 +30,7 @@ import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -517,6 +518,19 @@ export default () => {
             disabled={manageCourseEdit.disableEdit}
           >
             {course && <CourseStatistics courseId={course} />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
+              </Col>
+            </Row>
           </ProCard.TabPane>
         )}
       </ProCard>

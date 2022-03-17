@@ -21,6 +21,7 @@ import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -304,6 +305,19 @@ const WebinarForm = () => {
                     <TagsInput />
                   </ProForm.Item>
                 </ProForm>
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        )}{' '}
+        {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {webinar && <UserSubmissions id={Number(webinar)} type="App\Models\Webinar" />}
               </Col>
             </Row>
           </ProCard.TabPane>

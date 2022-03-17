@@ -23,6 +23,7 @@ import { categoriesArrToIds } from '@/utils/utils';
 import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 const StationaryEventForm = () => {
   const intl = useIntl();
@@ -282,6 +283,15 @@ const StationaryEventForm = () => {
                     <CategoryCheckboxTree multiple={false} />
                   </ProForm.Item>
                 </ProForm>
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane key="user_submission" tab={<FormattedMessage id="user_submission" />}>
+            <Row>
+              <Col span={12}>
+                {id && <UserSubmissions id={Number(id)} type="App\Models\StationaryEvent" />}
               </Col>
             </Row>
           </ProCard.TabPane>

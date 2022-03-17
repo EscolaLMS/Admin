@@ -30,6 +30,7 @@ import EditValidateModal from '@/components/EditValidateModal';
 import ConsultationCalendar from './components/Calendar';
 import './index.css';
 import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 const ConsultationForm = () => {
   const intl = useIntl();
@@ -327,6 +328,21 @@ const ConsultationForm = () => {
                     <CategoryCheckboxTree />
                   </ProForm.Item>
                 </ProForm>
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {consultation && (
+                  <UserSubmissions id={Number(consultation)} type="App\Models\Consultation" />
+                )}
               </Col>
             </Row>
           </ProCard.TabPane>

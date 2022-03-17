@@ -20,6 +20,7 @@ import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 
 import './index.css';
 import UserAccess from './UserAccess';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 type MinimumProductProductable = {
   class: string;
@@ -455,11 +456,21 @@ const ProductsForm: React.FC<{
           </Row>
         </ProCard.TabPane>
       )}
-
       {!isNew && (
         <ProCard.TabPane key="users" tab={<FormattedMessage id="users" />}>
           <Row>
             <Col span={12}>{productId && <UserAccess id={productId} />}</Col>
+          </Row>
+        </ProCard.TabPane>
+      )}{' '}
+      {!isNew && (
+        <ProCard.TabPane key="user_submission" tab={<FormattedMessage id="user_submission" />}>
+          <Row>
+            <Col span={12}>
+              {productId && (
+                <UserSubmissions id={Number(productId)} type="EscolaLms\Cart\Models\Product" />
+              )}
+            </Col>
           </Row>
         </ProCard.TabPane>
       )}
