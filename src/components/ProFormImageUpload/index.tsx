@@ -57,7 +57,6 @@ export const ProFormImageUpload: React.FC<{
         <Col span={24}>
           <ProForm.Item shouldUpdate>
             {(form) => {
-              console.log(src_name, form.getFieldValue(src_name));
               return <Image width={200} src={form.getFieldValue(src_name)} />;
             }}
           </ProForm.Item>
