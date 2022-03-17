@@ -7,19 +7,24 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+import { getLocale } from 'umi';
 
-const AdditionalFields: React.FC<{ field: EscolaLms.ModelFields.Models.Metadata }> = ({
-  field,
-}) => {
+const AdditionalFields: React.FC<{
+  field: EscolaLms.ModelFields.Models.Metadata & { extra: Record<string, any> };
+}> = ({ field }) => {
   const intl = useIntl();
-  const getProperField = (f: EscolaLms.ModelFields.Models.Metadata) => {
+  const getProperField = (
+    f: EscolaLms.ModelFields.Models.Metadata & { extra: Record<string, any> },
+  ) => {
+    const gl = f && f.extra && f.extra.find((item: Record<string, string>) => item[getLocale()]);
+
     switch (f.type) {
       case 'number':
         return (
           <ProFormDigit
             width="md"
             name={f.name}
-            label={<FormattedMessage id={f.name} />}
+            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -33,7 +38,7 @@ const AdditionalFields: React.FC<{ field: EscolaLms.ModelFields.Models.Metadata 
       case 'boolean':
         return (
           <ProFormCheckbox name={f.name}>
-            <FormattedMessage id={f.name} />
+            {gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
           </ProFormCheckbox>
         );
 
@@ -42,7 +47,7 @@ const AdditionalFields: React.FC<{ field: EscolaLms.ModelFields.Models.Metadata 
           <ProFormText
             width="md"
             name={f.name}
-            label={<FormattedMessage id={f.name} />}
+            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -56,7 +61,7 @@ const AdditionalFields: React.FC<{ field: EscolaLms.ModelFields.Models.Metadata 
           <ProFormTextArea
             width="md"
             name={f.name}
-            label={<FormattedMessage id={f.name} />}
+            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -68,7 +73,7 @@ const AdditionalFields: React.FC<{ field: EscolaLms.ModelFields.Models.Metadata 
         return (
           <ProForm.Item
             name={f.name}
-            label={<FormattedMessage id={f.name} />}
+            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             valuePropName="value"
           >
