@@ -390,4 +390,5 @@ export default {
   additional_fields: 'Dodatkowe pola',
   purchasable_tooltip: 'Mozliwość zakupu, albo tylko ręczne przypisanie',
   user_to_add: 'Przypisz uzytkownika do produktu',
+  Webinar: 'Webinar',
 };

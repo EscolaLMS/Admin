@@ -209,6 +209,7 @@ const ProductsForm: React.FC<{
               required
             />
             <ProForm.Item
+              style={{ minWidth: 104 * 3 }}
               name="productables"
               label={<FormattedMessage id="productables" />}
               valuePropName="value"
