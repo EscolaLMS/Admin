@@ -199,7 +199,6 @@ const Products: React.FC = () => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
 
-          console.log(productable);
 
           return products({
             pageSize,
