@@ -73,11 +73,13 @@ const StationaryEventForm = () => {
         if (isNew) {
           response = await createStationaryEvent(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/stationary-events/${response.data.id}`);
           }
         } else {
           response = await updateStationaryEvent(Number(id), postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/stationary-events/${response.data.id}/${tab}`);
           }
         }
@@ -277,7 +279,7 @@ const StationaryEventForm = () => {
                     name="categories"
                     valuePropName="value"
                   >
-                    <CategoryCheckboxTree />
+                    <CategoryCheckboxTree multiple={false} />
                   </ProForm.Item>
                 </ProForm>
               </Col>
