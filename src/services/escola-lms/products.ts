@@ -3,13 +3,22 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/products */
 export async function products(
-  params: API.PageParams & API.PaginationParams & EscolaLms.Cart.Http.Requests.ProductSearchRequest,
+  params: API.PageParams &
+    API.PaginationParams &
+    EscolaLms.Cart.Http.Requests.ProductSearchRequest & {
+      type?: 'single' | 'bundle';
+      purchasable?: boolean | 0 | 1;
+      free?: boolean | 0 | 1;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products`, {
     method: 'GET',
     params: {
       ...params,
+      purchasable: params.purchasable ? (params.purchasable === true ? 1 : 0) : undefined,
+
+      free: params.free ? (params.free === true ? 1 : 0) : undefined,
       per_page: params.pageSize,
       page: params.current,
     },

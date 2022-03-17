@@ -9,6 +9,9 @@ import { TableColumns as OrderTableColumns } from '@/pages/Orders/index';
 import { TableColumns as CourseTableColumns } from '@/pages/Courses/index';
 import { TableColumns as UserGroupTableColumns } from '@/pages/UserGroups/index';
 import { TableColumns as QuestionnaireTableColumns } from '@/pages/Questionnaire/index';
+import { TableColumns as ConsultationsTableColumns } from '@/pages/Consultations/index';
+import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
+import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -37,6 +40,35 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
         />
       )}
 
+      {(data.type === 'App\\Models\\Consultation' ||
+        data.type === 'EscolaLms\\Consultations\\Models\\Consultation') && (
+        <ProDescriptions<API.Consultation>
+          {...descrProps}
+          title={<FormattedMessage id="Consultation" />}
+          columns={ConsultationsTableColumns as ProDescriptionsItemProps<API.Consultation>[]}
+        />
+      )}
+
+      {(data.type === 'App\\Models\\StationaryEvent' ||
+        data.type === 'EscolaLms\\StationaryEvents\\Models\\StationaryEvent') && (
+        <ProDescriptions<EscolaLms.StationaryEvents.Models.StationaryEvent>
+          {...descrProps}
+          title={<FormattedMessage id="StationaryEvent" />}
+          columns={
+            StationaryEventsColumns as ProDescriptionsItemProps<EscolaLms.StationaryEvents.Models.StationaryEvent>[]
+          }
+        />
+      )}
+
+      {(data.type === 'App\\Models\\Webinar' ||
+        data.type === 'EscolaLms\\Webinars\\Models\\Webinar') && (
+        <ProDescriptions<API.Webinar>
+          {...descrProps}
+          title={<FormattedMessage id="Webinar" />}
+          columns={WebinarsTableColumns as ProDescriptionsItemProps<API.Webinar>[]}
+        />
+      )}
+
       {data.type === 'EscolaLms\\Cart\\Models\\Order' && (
         <ProDescriptions<API.Order>
           {...descrProps}
@@ -45,7 +77,7 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
         />
       )}
 
-      {data.type === 'EscolaLms\\Cart\\Models\\Course' && (
+      {(data.type === 'EscolaLms\\Cart\\Models\\Course' || data.type === 'App\\Models\\Course') && (
         <ProDescriptions<API.Course>
           {...descrProps}
           title={<FormattedMessage id="course" />}

@@ -269,6 +269,9 @@ export default {
   user_id: 'User ID: ',
   order_id: 'Order ID: ',
   course_id: 'Course ID: ',
+  consultation_id: 'Consultation ID: ',
+  webinar_id: 'Webinar ID: ',
+  stationary_event_id: 'Stationary Event ID: ',
   count_h5p: 'H5P count',
   library_id: 'Library ID',
   new_payment: 'new',
@@ -383,4 +386,6 @@ export default {
   additional_fields: 'Additional Fields',
   user_to_add: 'Attach user to product',
   Webinar: 'Webinar',
+  productable: 'Entity',
+  all: 'All',
 };

@@ -3,11 +3,15 @@ import React, { useState } from 'react';
 import TypeButton from '@/components/TypeButton';
 import TypeDrawer from '@/components/TypeDrawer';
 
-type PossibleType =
+export type PossibleType =
   | 'App\\Models\\User'
+  | 'App\\Models\\Course'
+  | 'App\\Models\\Webinar'
+  | 'EscolaLms\\Webinars\\Models\\Webinar'
   | 'EscolaLms\\Core\\Models\\User'
   | 'EscolaLms\\Cart\\Models\\Order'
   | 'EscolaLms\\Cart\\Models\\Course'
+  | 'EscolaLms\\Webinars\\Models\\Webinar'
   | 'EscolaLms\\Auth\\Models\\UserGroup'
   | 'Questionnaire';
 
