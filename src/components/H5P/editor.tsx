@@ -206,6 +206,14 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
       iFrameRef.current.contentWindow.postMessage({ editorParams: params }, window.location.origin);
   };
 
+  const src64 = useMemo(() => {
+    return window.URL.createObjectURL(
+      new Blob([src], {
+        type: 'text/html',
+      }),
+    );
+  }, [src]);
+
   return (
     <div className="h5p-editor" style={{ height: height, position: 'relative' }}>
       {editorState.state === 'loading' && <Loader />}
@@ -219,8 +227,8 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
           onLoad={postParams}
           ref={iFrameRef}
           title="editor"
-          src="about:blank"
-          srcDoc={src}
+          src={src64}
+          //srcDoc={src} // ME SO SAD. this doesn't work with CKEditor
           style={{
             width: '100%',
             height: '100%',
