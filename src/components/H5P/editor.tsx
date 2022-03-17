@@ -219,7 +219,7 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
           onLoad={postParams}
           ref={iFrameRef}
           title="editor"
-          src=""
+          src="about:blank"
           srcDoc={src}
           style={{
             width: '100%',

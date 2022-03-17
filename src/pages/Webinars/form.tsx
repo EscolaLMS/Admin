@@ -20,6 +20,7 @@ import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
+import ProductWidget from '@/components/ProductWidget';
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -245,7 +246,24 @@ const WebinarForm = () => {
               </ProForm.Item>
             </ProForm.Group>
           </ProForm>
-        </ProCard.TabPane>
+        </ProCard.TabPane>{' '}
+        {!isNew && (
+          <ProCard.TabPane
+            key="prices"
+            tab={<FormattedMessage id="prices" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {webinar && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Webinar',
+                  class_id: webinar,
+                  name: String(data.name),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane
             key="media"

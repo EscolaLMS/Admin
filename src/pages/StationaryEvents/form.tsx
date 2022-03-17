@@ -21,13 +21,15 @@ import ProFormImageUpload from '@/components/ProFormImageUpload';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import { categoriesArrToIds } from '@/utils/utils';
 import './index.css';
+import ProductWidget from '@/components/ProductWidget';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
 
 const StationaryEventForm = () => {
   const intl = useIntl();
   const params = useParams<{ id?: string; tab?: string }>();
   const { id, tab = 'attributes' } = params;
   const isNew = id === 'new';
-
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>>();
   const [form] = ProForm.useForm();
 
@@ -71,11 +73,13 @@ const StationaryEventForm = () => {
         if (isNew) {
           response = await createStationaryEvent(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/stationary-events/${response.data.id}`);
           }
         } else {
           response = await updateStationaryEvent(Number(id), postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/stationary-events/${response.data.id}/${tab}`);
           }
         }
@@ -138,7 +142,14 @@ const StationaryEventForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
-          <ProForm {...formProps} form={form}>
+          <UnsavedPrompt show={unsavedChanges} />{' '}
+          <ProForm
+            {...formProps}
+            form={form}
+            onValuesChange={() => {
+              setUnsavedChanges(true);
+            }}
+          >
             <ProForm.Group>
               <ProFormText
                 width="md"
@@ -225,7 +236,20 @@ const StationaryEventForm = () => {
               <WysiwygMarkdown directory={`stationary_events/${id}/wysiwyg`} />
             </ProForm.Item>
           </ProForm>
-        </ProCard.TabPane>
+        </ProCard.TabPane>{' '}
+        {!isNew && (
+          <ProCard.TabPane key="prices" tab={<FormattedMessage id="prices" />}>
+            {id && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\StationaryEvent',
+                  class_id: id,
+                  name: String(data.name),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
@@ -255,7 +279,7 @@ const StationaryEventForm = () => {
                     name="categories"
                     valuePropName="value"
                   >
-                    <CategoryCheckboxTree />
+                    <CategoryCheckboxTree multiple={false} />
                   </ProForm.Item>
                 </ProForm>
               </Col>

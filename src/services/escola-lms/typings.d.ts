@@ -651,6 +651,12 @@ declare namespace API {
     image_url?: string;
   };
 
+  type ConsultationAppointment = {
+    date: Date;
+    author: UserItem;
+    status: string;
+  };
+
   type TemplateItem = {
     assignable_class: string;
     assignable_id: number;
