@@ -24,20 +24,6 @@ export const ProductSelect: React.FC<{
 
   const abortController = useRef<AbortController>();
 
-  const setProductablesFromResponse = useCallback(
-    (responseProductables: API.ProductableListItem[]) => {
-      setProductables((prevProductables) =>
-        [...prevProductables, ...responseProductables].filter(
-          (productable, index, arr) =>
-            arr.findIndex(
-              (fproductable) => fproductable.productable_id === productable.productable_id,
-            ) === index,
-        ),
-      );
-    },
-    [],
-  );
-
   const fetch = useCallback(() => {
     setFetching(true);
     if (abortController.current) {
@@ -48,7 +34,7 @@ export const ProductSelect: React.FC<{
     fetchProductables({ signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setProductablesFromResponse(response.data);
+          setProductables(response.data);
         }
         setFetching(false);
       })
@@ -101,20 +87,20 @@ export const ProductSelect: React.FC<{
       }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {productables.map((productable) => (
-        <Select.Option
-          key={productable.productable_id}
-          value={transformListItemToValueKey(productable)}
-        >
-          <Tag>
-            <FormattedMessage
-              id={productable.productable_type.split('\\').pop()}
-              defaultMessage={productable.productable_type.split('\\').pop()}
-            />
-          </Tag>{' '}
-          {productable.name} <small>id:{productable.productable_id}</small>
-        </Select.Option>
-      ))}
+      {productables.map((productable) => {
+        const key = transformListItemToValueKey(productable);
+        return (
+          <Select.Option key={key} value={key}>
+            <Tag>
+              <FormattedMessage
+                id={productable.productable_type.split('\\').pop()}
+                defaultMessage={productable.productable_type.split('\\').pop()}
+              />
+            </Tag>{' '}
+            {productable.name} <small>id:{productable.productable_id}</small>
+          </Select.Option>
+        );
+      })}
     </Select>
   );
 };

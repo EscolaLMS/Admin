@@ -383,4 +383,5 @@ export default {
   additional_fields: 'Additional Fields',
   user_to_add: 'Attach user to product',
   user_submission: 'User submission',
+  Webinar: 'Webinar',
 };

@@ -391,4 +391,5 @@ export default {
   purchasable_tooltip: 'Mozliwość zakupu, albo tylko ręczne przypisanie',
   user_to_add: 'Przypisz użytkownika do produktu',
   user_submission: 'Zgłoszenie użytkownika',
+  Webinar: 'Webinar',
 };
