@@ -10,7 +10,7 @@ type Tag = {
 };
 
 export const Tags: React.FC<{
-  state: {
+  state?: {
     type: number;
   };
   value?: string;
@@ -35,7 +35,9 @@ export const Tags: React.FC<{
       value={value}
     >
       {tags.map((tag) => (
-        <Option value={tag.title}>{tag.title}</Option>
+        <Option value={tag.title} key={tag.title}>
+          {tag.title}
+        </Option>
       ))}
     </Select>
   );
