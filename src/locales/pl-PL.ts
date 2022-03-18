@@ -396,6 +396,7 @@ export default {
   purchasable_tooltip: 'Mozliwość zakupu, albo tylko ręczne przypisanie',
   user_to_add: 'Przypisz użytkownika do produktu',
   user_submission: 'Zgłoszenie użytkownika',
+  email_to_add: 'Dodaj użytkownika po adresie email',
   Webinar: 'Webinar',
   productable: 'Encja',
   all: 'Wszystkie',
