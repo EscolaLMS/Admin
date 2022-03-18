@@ -13,7 +13,7 @@ export const ProFormImageUpload: React.FC<{
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
   setPath: (state: object) => void;
-  wrapInForm: boolean;
+  wrapInForm?: boolean;
 }> = ({ title, action, form_name, src_name, getUploadedSrcField, setPath, wrapInForm = true }) => {
   return (
     <ProForm.Group title={<FormattedMessage id={title} />}>

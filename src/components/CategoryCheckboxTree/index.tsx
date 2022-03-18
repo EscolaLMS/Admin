@@ -44,8 +44,6 @@ export const CategoryCheckboxTree: React.FC<{
     return <Spin />;
   }
 
-  console.log(value);
-
   return (
     <Tree
       multiple={multiple}
