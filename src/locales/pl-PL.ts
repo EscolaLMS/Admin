@@ -8,6 +8,7 @@ import pages from './pl-PL/pages';
 import notifications from './pl-PL/notifications';
 import templates from './pl-PL/templates';
 import consultations from './pl-PL/consultations';
+import fabric from './pl-PL/fabric';
 
 export default {
   file_resources: 'Załączniki (pliki)',
@@ -30,6 +31,7 @@ export default {
   ...notifications,
   ...templates,
   ...consultations,
+  ...fabric,
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',

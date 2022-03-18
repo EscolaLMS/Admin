@@ -4,11 +4,13 @@ import type FabricEditorController from '@/components/FabricEditor/FabricEditorC
 import { Button, Col, Dropdown, Menu, Popconfirm, Row, Upload } from 'antd';
 import { DownOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import './index.css';
+import { FormattedMessage, useIntl } from 'umi';
 
 const FabricEditorBasicForm: React.FC<{
   editorController: FabricEditorController;
   variables: string[];
 }> = ({ editorController, variables = [] }) => {
+  const intl = useIntl();
   const [editorState, setEditorState] = useState({
     backgroundColor: editorController.getEditorBackgroundColor(),
   });
@@ -75,7 +77,7 @@ const FabricEditorBasicForm: React.FC<{
           onClick={() => editorController?.addCircle()}
           htmlType="button"
         >
-          Add Circle
+          <FormattedMessage id="fabric.add_circle" />
         </Button>
       </Menu.Item>
 
@@ -86,13 +88,13 @@ const FabricEditorBasicForm: React.FC<{
           onClick={() => editorController?.addRectangle()}
           htmlType="button"
         >
-          Add Rectangle
+          <FormattedMessage id="fabric.add_rectangle" />
         </Button>
       </Menu.Item>
 
       <Menu.Item key="3">
         <Button type="primary" block onClick={() => editorController?.addLine()} htmlType="button">
-          Add Line
+          <FormattedMessage id="fabric.add_line" />
         </Button>
       </Menu.Item>
 
@@ -104,7 +106,7 @@ const FabricEditorBasicForm: React.FC<{
           className={'input-upload'}
         >
           <Button type="primary" block>
-            Add Image
+            <FormattedMessage id="fabric.add_image" />
           </Button>
         </Upload>
       </Menu.Item>
@@ -121,7 +123,7 @@ const FabricEditorBasicForm: React.FC<{
             onClick={() => editorController?.addTextbox()}
             htmlType="button"
           >
-            Add Textbox
+            <FormattedMessage id="fabric.add_textbox" />
           </Button>
         </Menu.Item>
 
@@ -132,7 +134,7 @@ const FabricEditorBasicForm: React.FC<{
             onClick={() => editorController?.addIText()}
             htmlType="button"
           >
-            Add Text
+            <FormattedMessage id="fabric.add_text" />
           </Button>
         </Menu.Item>
       </Menu.ItemGroup>
@@ -146,7 +148,7 @@ const FabricEditorBasicForm: React.FC<{
               onClick={() => editorController?.addVariable(token)}
               htmlType="button"
             >
-              {`Add ${token}`}
+              <FormattedMessage id="fabric.add" /> {` ${token}`}
             </Button>
           </Menu.Item>
         ))}
@@ -156,14 +158,16 @@ const FabricEditorBasicForm: React.FC<{
 
   return (
     <div className="fabric-editor__form fabric-editor__form--basic">
-      <h3 className="fabric-editor__form-title">Editor options</h3>
+      <h3 className="fabric-editor__form-title">
+        <FormattedMessage id="fabric.editor_options" />
+      </h3>
 
       <Row align="middle">
         <Col>
           <InputColor
             value={editorState.backgroundColor}
             onChange={onChangeBackgroundColor}
-            label="Editor Background Color"
+            label={intl.formatMessage({ id: 'fabric.editor_background_color' })}
             name="backgroundColor"
             style={{ marginTop: '13px' }}
           />
@@ -171,13 +175,13 @@ const FabricEditorBasicForm: React.FC<{
         <Col>
           <Dropdown overlay={menuAddObject}>
             <Button>
-              Add Object <DownOutlined />
+              <FormattedMessage id="fabric.add_object" /> <DownOutlined />
             </Button>
           </Dropdown>
 
           <Dropdown overlay={menuAddText}>
             <Button>
-              Add Text <DownOutlined />
+              <FormattedMessage id="fabric.add_text" /> <DownOutlined />
             </Button>
           </Dropdown>
 
@@ -187,7 +191,7 @@ const FabricEditorBasicForm: React.FC<{
             onConfirm={() => editorController?.deleteAll()}
           >
             <Button type="primary" danger htmlType="button">
-              Clear editor
+              <FormattedMessage id="fabric.clear" />
             </Button>
           </Popconfirm>
         </Col>

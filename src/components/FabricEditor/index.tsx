@@ -10,6 +10,7 @@ import FabricEditorActiveElementForm from '@/components/FabricEditor/forms/Fabri
 import FabricEditorBasicForm from '@/components/FabricEditor/forms/FabricEditorBasicForm';
 
 import './index.css';
+import { FormattedMessage } from 'umi';
 
 const FabricEditor: React.FC<{
   onUpdate?: (obj: Object) => void;
@@ -73,7 +74,7 @@ const FabricEditor: React.FC<{
 
         <Col>
           <Button onClick={onPreview} htmlType="button">
-            Preview PDF without mock value
+            <FormattedMessage id="fabric.preview" defaultMessage="fabric.preview" />
           </Button>
         </Col>
       </Row>
