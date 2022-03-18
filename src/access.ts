@@ -79,6 +79,9 @@ export default function access(initialState: { currentUser: any }) {
     productsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ProductsList),
     productsListPermission: havePermissionsInDashboard(PERMISSIONS.ProductsManage),
 
+    voucherListPermission: havePermissionsInDashboard(PERMISSIONS.VoucherList),
+    voucherDetailPermission: havePermissionsInDashboard(PERMISSIONS.VoucherRead),
+
     loggedOut: !currentUser,
   };
 }

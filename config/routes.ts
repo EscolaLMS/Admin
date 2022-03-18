@@ -358,6 +358,14 @@
     hideInMenu: true,
   },
   {
+    name: 'Vouchers',
+    icon: 'percentage',
+    path: '/vouchers',
+    // TODO: voucher list permision is not working
+    access: 'questionnaireListPermission',
+    component: './Vouchers',
+  },
+  {
     name: 'reports',
     icon: 'project',
     path: '/reports',
