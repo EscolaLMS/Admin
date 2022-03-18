@@ -21,6 +21,9 @@ import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import './index.css';
 import UserAccess from './UserAccess';
 import UserSubmissions from '@/components/UsersSubmissions';
+import TagsInput from '@/components/TagsInput';
+import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
+import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 
 type MinimumProductProductable = {
   class: string;
@@ -114,6 +117,8 @@ const ProductsForm: React.FC<{
       if (response.success) {
         const newData = {
           ...response.data,
+          categories: response.data.categories?.map(categoriesArrToIds),
+          tags: response.data.tags?.map((tag) => tagsArrToIds(tag as API.Tag)),
           productables: response.data.productables
             ? transformProductablesFromAPI(response.data.productables as API.ProductProductable[])
             : [],
@@ -422,27 +427,39 @@ const ProductsForm: React.FC<{
               })}
             />
           </ProForm.Group>
+          {!isNew && (
+            <ProForm.Item
+              style={{ width: '100%' }}
+              name="description"
+              label={<FormattedMessage id="description" />}
+              tooltip={<FormattedMessage id="description_tooltip" />}
+              valuePropName="value"
+            >
+              <WysiwygMarkdown directory={`products/${productId}/wysiwyg`} />
+            </ProForm.Item>
+          )}
         </ProForm>
       </ProCard.TabPane>
       {!isNew && (
         <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
-          <ProForm {...formProps}>
+          <ProForm {...formProps} form={form}>
             <ProFormImageUpload
+              wrapInForm={false}
               title="image"
               action={`/api/admin/products/${productId}/?_method=PUT`}
               src_name="poster_url"
               form_name="poster"
               getUploadedSrcField={(info) => info.file.response.data.poster_url}
-              // setPath={(removedPath) => console.log('removedPath')}
+              setPath={(removed) => form.setFieldsValue(removed)}
             />
           </ProForm>
         </ProCard.TabPane>
       )}
       {!isNew && (
-        <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories" />}>
-          <Row>
-            <Col span={12}>
-              <ProForm {...formProps}>
+        <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories_and_tags" />}>
+          <ProForm {...formProps} form={form}>
+            <Row>
+              <Col span={12}>
                 <ProForm.Item
                   label={<FormattedMessage id="categories" />}
                   name="categories"
@@ -450,9 +467,18 @@ const ProductsForm: React.FC<{
                 >
                   <CategoryCheckboxTree />
                 </ProForm.Item>
-              </ProForm>
-            </Col>
-          </Row>
+              </Col>
+              <Col span={12}>
+                <ProForm.Item
+                  label={<FormattedMessage id="tags" />}
+                  name="tags"
+                  valuePropName="value"
+                >
+                  <TagsInput />
+                </ProForm.Item>
+              </Col>
+            </Row>
+          </ProForm>
         </ProCard.TabPane>
       )}
       {!isNew && (

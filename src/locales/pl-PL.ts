@@ -399,4 +399,5 @@ export default {
   Webinar: 'Webinar',
   productable: 'Encja',
   all: 'Wszystkie',
+  categories_and_tags: 'Kategorie i Tagi',
 };
