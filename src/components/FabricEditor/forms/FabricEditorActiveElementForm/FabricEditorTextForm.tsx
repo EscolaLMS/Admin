@@ -11,14 +11,18 @@ import {
   TEXT_STROKE_WIDTH as STROKE_WIDTH,
   TEXT_ALIGN,
 } from '@/components/FabricEditor/consts';
+import { FormattedMessage, useIntl } from 'umi';
 
 const FabricEditorTextForm: React.FC<{
   values: ActiveElementState;
   onChange: (propName: ActiveElementFieldName) => (value: number | string | boolean) => void;
 }> = ({ values, onChange }) => {
+  const intl = useIntl();
   return (
     <div className="fabric-editor__form fabric-editor__form--active-element">
-      <h3 className="fabric-editor__form-title">Text options</h3>
+      <h3 className="fabric-editor__form-title">
+        <FormattedMessage id="fabric.text_options" />
+      </h3>
 
       <Row gutter={5}>
         <Col>
@@ -28,7 +32,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricSelect
                   value={values.fontFamily}
                   onChange={onChange('fontFamily')}
-                  label={'Font Family'}
+                  label={intl.formatMessage({ id: 'fabric.font_family' })}
                   name={'fontFamily'}
                   options={FONT_FAMILY.map((f) => ({ value: f.toLowerCase(), label: f }))}
                   style={{ minWidth: '180px' }}
@@ -37,7 +41,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricSelect
                   value={values.fontSize}
                   onChange={onChange('fontSize')}
-                  label={'Font Size'}
+                  label={intl.formatMessage({ id: 'fabric.font_size' })}
                   name={'fontSize'}
                   options={FONT_SIZE.map((f) => ({ value: f, label: '' + f }))}
                   style={{ minWidth: '75px' }}
@@ -50,7 +54,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricSelect
                   value={values.textAlign}
                   onChange={onChange('textAlign')}
-                  label={'Text align'}
+                  label={intl.formatMessage({ id: 'fabric.text_align' })}
                   name={'textAlign'}
                   options={TEXT_ALIGN.map((f) => ({ value: f.toLowerCase(), label: f }))}
                   style={{ minWidth: '180px' }}
@@ -59,7 +63,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricInput
                   value={values.lineHeight}
                   onChange={onChange('lineHeight')}
-                  label={'Line height'}
+                  label={intl.formatMessage({ id: 'fabric.line_height' })}
                   name={'lineHeight'}
                   type="number"
                   // @ts-ignore
@@ -78,7 +82,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricCheckbox
                   value={values.bold}
                   onChange={onChange('bold')}
-                  label={'Bold'}
+                  label={intl.formatMessage({ id: 'fabric.bold' })}
                   name={'bold'}
                 />
               </Col>
@@ -86,7 +90,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricCheckbox
                   value={values.italic}
                   onChange={onChange('italic')}
-                  label={'Italic'}
+                  label={intl.formatMessage({ id: 'fabric.italic' })}
                   name={'italic'}
                 />
               </Col>
@@ -94,7 +98,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricCheckbox
                   value={values.underline}
                   onChange={onChange('underline')}
-                  label="Underline"
+                  label={intl.formatMessage({ id: 'fabric.underline' })}
                   name="underline"
                 />
               </Col>
@@ -102,7 +106,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricCheckbox
                   value={values.linethrough}
                   onChange={onChange('linethrough')}
-                  label={'Linethrough'}
+                  label={intl.formatMessage({ id: 'fabric.linethrough' })}
                   name={'linethrough'}
                 />
               </Col>
@@ -110,7 +114,7 @@ const FabricEditorTextForm: React.FC<{
                 <FabricCheckbox
                   value={values.overline}
                   onChange={onChange('overline')}
-                  label={'Overline'}
+                  label={intl.formatMessage({ id: 'fabric.overline' })}
                   name={'overline'}
                 />
               </Col>
@@ -125,7 +129,7 @@ const FabricEditorTextForm: React.FC<{
                 <InputColor
                   value={values.fill}
                   onChange={onChange('fill')}
-                  label={'Text Color'}
+                  label={intl.formatMessage({ id: 'fabric.text_color' })}
                   name={'fill'}
                 />
               </Col>
@@ -133,7 +137,7 @@ const FabricEditorTextForm: React.FC<{
                 <InputColor
                   value={values.textBackgroundColor}
                   onChange={onChange('textBackgroundColor')}
-                  label={'Background text color'}
+                  label={intl.formatMessage({ id: 'fabric.text_background' })}
                   name={'textBackgroundColor'}
                 />
               </Col>
@@ -141,7 +145,7 @@ const FabricEditorTextForm: React.FC<{
                 <InputColor
                   value={values.backgroundColor}
                   onChange={onChange('backgroundColor')}
-                  label={'Background color'}
+                  label={intl.formatMessage({ id: 'fabric.background_color' })}
                   name={'backgroundColor'}
                 />
               </Col>
@@ -154,14 +158,14 @@ const FabricEditorTextForm: React.FC<{
                 <InputColor
                   value={values.stroke}
                   onChange={onChange('stroke')}
-                  label={'Stroke color'}
+                  label={intl.formatMessage({ id: 'fabric.stroke_color' })}
                   name={'stroke'}
                 />
 
                 <FabricSelect
                   value={values.strokeWidth}
                   onChange={onChange('strokeWidth')}
-                  label={'Stroke width'}
+                  label={intl.formatMessage({ id: 'fabric.stroke_width' })}
                   name={'strokeWidth'}
                   options={STROKE_WIDTH.map((f) => ({ value: f, label: '' + f }))}
                   style={{ minWidth: '65px' }}

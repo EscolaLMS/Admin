@@ -8,6 +8,7 @@ import pages from './en-US/pages';
 import notifications from './en-US/notifications';
 import templates from './en-US/templates';
 import consultations from './en-US/consultations';
+import fabric from './en-US/fabric';
 
 export default {
   file_resources: 'File resources',
@@ -30,6 +31,7 @@ export default {
   ...notifications,
   ...templates,
   ...consultations,
+  ...fabric,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
