@@ -768,20 +768,34 @@ declare namespace API {
         value: API.UserItem;
       }
     | {
-        type: 'EscolaLms\\Cart\\Models\\Order';
+        type: 'App\\Models\\Order' | 'EscolaLms\\Cart\\Models\\Order';
         value: API.Order;
       }
     | {
-        type: 'EscolaLms\\Cart\\Models\\Course';
+        type: 'App\\Models\\Course' | 'EscolaLms\\Cart\\Models\\Course';
         value: API.Course;
       }
     | {
-        type: 'EscolaLms\\Auth\\Models\\UserGroup';
+        type: 'App\\Models\\Webinar' | 'EscolaLms\\Webinars\\Models\\Webinar';
+        value: API.Webinar;
+      }
+    | {
+        type: 'App\\Models\\User' | 'EscolaLms\\Auth\\Models\\UserGroup';
         value: API.UserGroup;
+      }
+    | {
+        type:
+          | 'App\\Models\\StationaryEvent'
+          | 'EscolaLms\\StationaryEvents\\Models\\StationaryEvent';
+        value: EscolaLms.StationaryEvents.Models.StationaryEvent;
       }
     | {
         type: 'Questionnaire';
         value: API.Questionnaire;
+      }
+    | {
+        type: 'App\\Models\\Consultation' | 'EscolaLms\\Consultations\\Models\\Consultation';
+        value: API.Consultation;
       };
 
   type ReportType =

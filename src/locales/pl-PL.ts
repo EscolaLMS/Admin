@@ -303,7 +303,10 @@ export default {
   '404_subtitle': 'Przepraszamy, ta strona nie istnieje.',
   user_id: 'ID Użytkownika: ',
   order_id: 'ID Zamówienia: ',
+  webinar_id: 'ID Webinaru: ',
+  stationary_event_id: 'ID Wydarzenia Stacjonarnego: ',
   course_id: 'ID Kursu: ',
+  consultation_id: 'ID Konsultacji: ',
   new_payment: 'nowe',
   paid: 'opłacone',
   cancelled: 'anulowane',
@@ -392,4 +395,6 @@ export default {
   user_to_add: 'Przypisz użytkownika do produktu',
   user_submission: 'Zgłoszenie użytkownika',
   Webinar: 'Webinar',
+  productable: 'Encja',
+  all: 'Wszystkie',
 };

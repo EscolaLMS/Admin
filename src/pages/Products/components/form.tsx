@@ -432,10 +432,8 @@ const ProductsForm: React.FC<{
               action={`/api/admin/products/${productId}/?_method=PUT`}
               src_name="poster_url"
               form_name="poster"
-              getUploadedSrcField={(info) => info.file.response.data.image_url}
-              setPath={(removedPath) => {
-                console.log('TODO ProFormImageUpload setPath', removedPath);
-              }}
+              getUploadedSrcField={(info) => info.file.response.data.poster_url}
+              // setPath={(removedPath) => console.log('removedPath')}
             />
           </ProForm>
         </ProCard.TabPane>

@@ -4,9 +4,26 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Space, Typography, Tag } from 'antd';
+
+import TypeButtonDrawer, { PossibleType } from '@/components/TypeButtonDrawer';
 
 import { products, deleteProduct } from '@/services/escola-lms/products';
+import ProductSelect from '@/components/ProductSelect';
+
+const ProductableItems: React.FC<{ items: API.ProductProductable[] }> = ({ items }) => {
+  return (
+    <Space>
+      {items.map((item) => (
+        <TypeButtonDrawer
+          key={`${item.productable_type}:${item.productable_id}`}
+          type={item.productable_type as PossibleType}
+          type_id={item.productable_id}
+        />
+      ))}
+    </Space>
+  );
+};
 
 export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   {
@@ -28,6 +45,21 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   },
 
   {
+    title: <FormattedMessage id="productable" defaultMessage="productable" />,
+    dataIndex: 'productable',
+    key: 'productable',
+    sorter: false,
+    hideInSearch: false,
+    hideInTable: true,
+    hideInDescriptions: true,
+    renderFormItem: (item, { type }) => {
+      if (type === 'form') {
+        return null;
+      }
+      return <ProductSelect />;
+    },
+  },
+  {
     title: <FormattedMessage id="price_old" defaultMessage="price_old" />,
     dataIndex: 'price_old',
     hideInSearch: true,
@@ -43,12 +75,66 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     title: <FormattedMessage id="type" defaultMessage="type" />,
     dataIndex: 'type',
     hideInSearch: false,
+    valueType: 'select',
+    initialValue: 'all',
+    valueEnum: {
+      all: { text: <FormattedMessage id="all" defaultMessage="all" /> },
+      single: { text: <FormattedMessage id="single" defaultMessage="single" /> },
+      bundle: { text: <FormattedMessage id="bundle" defaultMessage="bundle" /> },
+    },
+    render: (_, record) => (
+      <Tag>
+        <FormattedMessage id={record.type} defaultMessage={record.type} />
+      </Tag>
+    ),
+  },
+
+  {
+    title: <FormattedMessage id="purchasable" defaultMessage="purchasable" />,
+    dataIndex: 'purchasable',
+    hideInSearch: false,
+    valueType: 'select',
+    initialValue: 'all',
+    valueEnum: {
+      all: { text: <FormattedMessage id="all" defaultMessage="all" /> },
+      true: { text: <FormattedMessage id="true" defaultMessage="true" /> },
+      false: { text: <FormattedMessage id="false" defaultMessage="false" /> },
+    },
+    render: (_, record) => (
+      <Tag color={record.purchasable ? 'success' : 'error'}>
+        <FormattedMessage
+          id={record.purchasable ? 'true' : 'false'}
+          defaultMessage={record.purchasable ? 'true' : 'false'}
+        />
+      </Tag>
+    ),
   },
 
   {
     title: <FormattedMessage id="free" defaultMessage="free" />,
     dataIndex: 'free',
     hideInSearch: false,
+    hideInTable: true,
+    hideInDescriptions: true,
+    valueType: 'select',
+    initialValue: 'all',
+    valueEnum: {
+      all: { text: <FormattedMessage id="all" defaultMessage="all" /> },
+      true: { text: <FormattedMessage id="true" defaultMessage="true" /> },
+      false: { text: <FormattedMessage id="false" defaultMessage="false" /> },
+    },
+  },
+  {
+    title: <FormattedMessage id="items" defaultMessage="items" />,
+    dataIndex: 'items',
+    hideInSearch: true,
+    render: (_, record) => {
+      return record.productables ? (
+        <ProductableItems items={record.productables as API.ProductProductable[]} />
+      ) : (
+        <Typography>...</Typography>
+      );
+    },
   },
 ];
 
@@ -86,7 +172,14 @@ const Products: React.FC = () => {
     <PageContainer>
       <ProTable<
         EscolaLms.Cart.Models.Product,
-        API.PageParams & API.PaginationParams & EscolaLms.Cart.Http.Requests.ProductSearchRequest
+        API.PageParams &
+          API.PaginationParams &
+          EscolaLms.Cart.Http.Requests.ProductSearchRequest & {
+            productable: string;
+            type: 'bundle' | 'single' | 'all';
+            purchasable: string;
+            free: string;
+          }
       >
         headerTitle={intl.formatMessage({
           id: 'Products',
@@ -95,9 +188,6 @@ const Products: React.FC = () => {
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
         toolBarRender={() => [
           <Link key="addnew" to="/products/new">
             <Button type="primary" key="primary">
@@ -105,9 +195,10 @@ const Products: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ name, pageSize, current }, sort) => {
+        request={({ name, pageSize, current, productable, type, purchasable, free }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
+
 
           return products({
             pageSize,
@@ -119,6 +210,11 @@ const Products: React.FC = () => {
                 ? 'ASC'
                 : 'DESC'
               : undefined,
+            productable_id: productable ? Number((productable as string).split(':')[1]) : undefined,
+            productable_type: productable ? (productable as string).split(':')[0] : undefined,
+            type: type && type !== 'all' ? type : undefined,
+            purchasable: purchasable && purchasable !== 'all' ? purchasable === 'true' : undefined,
+            free: free && free !== 'all' ? free === 'true' : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
