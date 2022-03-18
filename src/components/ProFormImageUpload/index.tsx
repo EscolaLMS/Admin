@@ -13,7 +13,8 @@ export const ProFormImageUpload: React.FC<{
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
   setPath: (state: object) => void;
-}> = ({ title, action, form_name, src_name, getUploadedSrcField, setPath }) => {
+  wrapInForm: boolean;
+}> = ({ title, action, form_name, src_name, getUploadedSrcField, setPath, wrapInForm = true }) => {
   return (
     <ProForm.Group title={<FormattedMessage id={title} />}>
       <Row>
@@ -23,6 +24,7 @@ export const ProFormImageUpload: React.FC<{
               return (
                 <React.Fragment>
                   <SecureUpload
+                    wrapInForm={wrapInForm}
                     accept="image/*"
                     name={form_name}
                     url={action}

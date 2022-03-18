@@ -391,4 +391,5 @@ export default {
   Webinar: 'Webinar',
   productable: 'Entity',
   all: 'All',
+  categories_and_tags: 'Categories & Tags',
 };
