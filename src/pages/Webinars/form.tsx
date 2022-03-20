@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { message, Spin, Row, Col, Alert } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -144,6 +144,19 @@ const WebinarForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+          {manageCourseEdit.disableEdit && (
+            <Alert
+              closable
+              style={{ marginBottom: '20px' }}
+              type="warning"
+              message={
+                <FormattedMessage
+                  id="course_edit_warning_message"
+                  defaultMessage="course_edit_warning_message"
+                />
+              }
+            />
+          )}
           <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
           <ProForm

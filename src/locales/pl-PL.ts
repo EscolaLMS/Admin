@@ -401,4 +401,6 @@ export default {
   productable: 'Encja',
   all: 'Wszystkie',
   categories_and_tags: 'Kategorie i Tagi',
+  course_edit_warning_message:
+    'Ten rekord już trwa, jeśli chcesz edytować kliknij zatwierdź. Edytujesz na własną odpowiedzialność',
 };
