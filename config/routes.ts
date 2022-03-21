@@ -366,6 +366,13 @@
     component: './Vouchers',
   },
   {
+    path: '/vouchers/:voucherId/',
+    access: 'questionnaireListPermission',
+    component: './Vouchers/form',
+    hideInMenu: true,
+  },
+
+  {
     name: 'reports',
     icon: 'project',
     path: '/reports',

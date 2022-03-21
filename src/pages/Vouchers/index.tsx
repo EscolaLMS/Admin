@@ -7,14 +7,59 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 
-import { deleteWebinar } from '@/services/escola-lms/webinars';
+import { deleteVoucher } from '@/services/escola-lms/vouchers';
 
 import { vouchers } from '@/services/escola-lms/vouchers';
 
-export const TableColumns: ProColumns<API.Webinar>[] = [
+export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
   {
     title: <FormattedMessage id="id" defaultMessage="id" />,
     dataIndex: 'id',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="name" defaultMessage="name" />,
+    dataIndex: 'name',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="code" defaultMessage="code" />,
+    dataIndex: 'code',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="amount" defaultMessage="amount" />,
+    dataIndex: 'amount',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="limit_per_user" defaultMessage="limit_per_user" />,
+    dataIndex: 'limit_per_user',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="limit_usage" defaultMessage="limit_usage" />,
+    dataIndex: 'limit_usage',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="max_cart_price" defaultMessage="max_cart_price" />,
+    dataIndex: 'max_cart_price',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="min_cart_price" defaultMessage="min_cart_price" />,
+    dataIndex: 'min_cart_price',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="active_from" defaultMessage="active_from" />,
+    dataIndex: 'active_from',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="active_to" defaultMessage="active_to" />,
+    dataIndex: 'active_to',
     hideInSearch: true,
   },
 ];
@@ -29,7 +74,7 @@ const Vouchers: React.FC = () => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {
-        await deleteWebinar(id).then((response) => {
+        await deleteVoucher(id).then((response) => {
           setLoading(false);
           if (response.success) {
             message.success(response.message);
@@ -51,7 +96,7 @@ const Vouchers: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Webinar, Partial<API.ConsultationsParams>>
+      <ProTable<EscolaLms.Vouchers.Models.Coupon, Partial<API.PageParams>>
         headerTitle={intl.formatMessage({
           id: 'Vouchers',
           defaultMessage: 'Vouchers',
@@ -92,7 +137,7 @@ const Vouchers: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/webinars/${record.id}`}>
+              <Link key="edit" to={`/vouchers/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>

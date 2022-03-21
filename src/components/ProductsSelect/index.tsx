@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Select, Spin, Tag } from 'antd';
+import { Select, Spin } from 'antd';
 
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
-import { productables as fetchProductables } from '@/services/escola-lms/products';
-
-const transformListItemToValueKey = (input: API.ProductableListItem): string =>
-  `${input.productable_type}:${input.productable_id}`;
-
-const transformInputItemToValueKey = (input: API.ProductableResourceListItem): string =>
-  `${input.class}:${input.id}`;
+import { products as fetchProducts } from '@/services/escola-lms/products';
 
 export const ProductSelect: React.FC<{
   multiple?: boolean;
@@ -18,9 +12,9 @@ export const ProductSelect: React.FC<{
   onChange?: (value: string | string[] | number | number[]) => void;
   disabled?: boolean;
 }> = ({ value, onChange, multiple = false, disabled = false }) => {
-  const [productables, setProductables] = useState<API.ProductableListItem[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [fetching, setFetching] = useState(false);
-  const [currProductables, setCurrProductables] = useState<string[]>([]);
+  const [currProducts, setCurrProducts] = useState<number[]>([]);
 
   const abortController = useRef<AbortController>();
 
@@ -31,10 +25,10 @@ export const ProductSelect: React.FC<{
     }
 
     abortController.current = new AbortController();
-    fetchProductables({ signal: abortController.current.signal })
+    fetchProducts({}, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setProductables(response.data);
+          setProducts(response.data);
         }
         setFetching(false);
       })
@@ -49,14 +43,14 @@ export const ProductSelect: React.FC<{
     const controller = new AbortController();
     if (value) {
       const val = Array.isArray(value) ? value : [value];
-      const values: string[] = val.map((productable) => {
-        if (typeof productable === 'object') {
-          return transformInputItemToValueKey(productable as API.ProductableResourceListItem);
+      const values: number[] = val.map((product) => {
+        if (typeof product === 'object') {
+          return product.id;
         }
-        return String(productable);
+        return Number(product);
       });
 
-      setCurrProductables(values);
+      setCurrProducts(values);
     }
     return () => {
       controller.abort();
@@ -68,7 +62,7 @@ export const ProductSelect: React.FC<{
       disabled={disabled}
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
-      value={currProductables}
+      value={currProducts}
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
@@ -87,17 +81,10 @@ export const ProductSelect: React.FC<{
       }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {productables.map((productable) => {
-        const key = transformListItemToValueKey(productable);
+      {products.map((product) => {
         return (
-          <Select.Option key={key} value={key}>
-            <Tag>
-              <FormattedMessage
-                id={productable.productable_type.split('\\').pop()}
-                defaultMessage={productable.productable_type.split('\\').pop()}
-              />
-            </Tag>{' '}
-            {productable.name} <small>id:{productable.productable_id}</small>
+          <Select.Option key={product.id} value={product.id}>
+            {product.name}
           </Select.Option>
         );
       })}

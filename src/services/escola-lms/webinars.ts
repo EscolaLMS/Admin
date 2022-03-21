@@ -21,7 +21,7 @@ export async function webinars(
 }
 
 /**  POST /api/webinars */
-export async function createWebinar(body?: Record<string, any>, options?: Record<string, any>) {
+export async function createWebinar(body?: Partial<API.Webinar>, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars`, {
     method: 'POST',
     headers: {
@@ -57,7 +57,7 @@ export async function updateWebinar(
   });
 }
 
-/**  GET /api/admin/webinars/:id */
+/**  DELETE /api/admin/webinars/:id */
 export async function deleteWebinar(id: number, options?: Record<string, any>) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}`, {
     method: 'DELETE',
