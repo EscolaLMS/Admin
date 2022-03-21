@@ -393,4 +393,6 @@ export default {
   productable: 'Entity',
   all: 'All',
   categories_and_tags: 'Categories & Tags',
+  course_edit_warning_message:
+    'This record is already in progress, if you wish to edit click confirm. You edit at your own risk',
 };

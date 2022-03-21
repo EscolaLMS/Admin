@@ -189,8 +189,9 @@ const TableList: React.FC = () => {
       const request = await cloneCourse(id);
       if (request.success) {
         message.success(request.message);
-        actionRef.current?.reload();
         hide();
+        setLoading(false);
+        actionRef.current?.reload();
       }
       return true;
     } catch (error) {
