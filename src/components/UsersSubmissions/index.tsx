@@ -1,17 +1,19 @@
 import React, { Fragment, useCallback, useRef, useState } from 'react';
-import ProForm, { ProFormText } from '@ant-design/pro-form';
+import ProForm from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 
 import { Button, message, Popconfirm, Tooltip } from 'antd';
 
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   assignUserSubmission,
   deleteUserSubmission,
   userSubmissions,
 } from '@/services/escola-lms/users_submissions';
+import AddUserSubmission from './form';
+import './index.css';
 
 export const TableColumns: ProColumns<EscolaLms.AssignWithoutAccount.Models.UserSubmission>[] = [
   {
@@ -24,6 +26,7 @@ export const TableColumns: ProColumns<EscolaLms.AssignWithoutAccount.Models.User
     title: <FormattedMessage id="email" defaultMessage="email" />,
     dataIndex: 'email',
     hideInSearch: false,
+    width: '70%',
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
@@ -40,28 +43,7 @@ export const UserSubmissions: React.FC<{
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [form] = ProForm.useForm();
-
-  const onFinish = useCallback(
-    async (values) => {
-      setLoading(true);
-      try {
-        const req = await assignUserSubmission({
-          ...values,
-          morphable_id: id,
-          morphable_type: type,
-        });
-        if (req.success) {
-          form.resetFields();
-          actionRef.current?.reload();
-          setLoading(false);
-        }
-      } catch (error) {
-        message.error(<FormattedMessage id="error" defaultMessage="error" />);
-        setLoading(false);
-      }
-    },
-    [id, type],
-  );
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onDetachUser = useCallback(
     async (user_id) => {
@@ -74,22 +56,6 @@ export const UserSubmissions: React.FC<{
   );
   return (
     <Fragment>
-      <ProForm layout="inline" onFinish={onFinish} form={form}>
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="email"
-            label={<FormattedMessage id="email" />}
-            tooltip={<FormattedMessage id="email_tooltip" />}
-            placeholder={intl.formatMessage({
-              id: 'email',
-              defaultMessage: 'email',
-            })}
-            required
-          />
-        </ProForm.Group>
-      </ProForm>
-
       <ProTable<
         EscolaLms.AssignWithoutAccount.Models.UserSubmission,
         API.PageParams & { email?: string; morphable_id?: number; morphable_type?: string }
@@ -100,10 +66,15 @@ export const UserSubmissions: React.FC<{
           labelWidth: 120,
         }}
         headerTitle={intl.formatMessage({
-          id: 'email',
-          defaultMessage: 'Email',
+          id: 'user_submission',
+          defaultMessage: 'user_submission',
         })}
         actionRef={actionRef}
+        toolBarRender={() => [
+          <Button type="primary" key="primary" onClick={() => setModalVisible(true)}>
+            <PlusOutlined /> <FormattedMessage id="email_to_add" defaultMessage="email_to_add" />
+          </Button>,
+        ]}
         rowKey="id"
         request={async ({ email, pageSize, current }) => {
           setLoading(true);
@@ -159,6 +130,32 @@ export const UserSubmissions: React.FC<{
             ],
           },
         ]}
+      />{' '}
+      <AddUserSubmission
+        visible={modalVisible}
+        onVisibleChange={(value) => {
+          return value === false && setModalVisible(false);
+        }}
+        onFinish={async (values) => {
+          setLoading(true);
+          try {
+            const req = await assignUserSubmission({
+              ...values,
+              morphable_id: id,
+              morphable_type: type,
+            });
+            if (req.success) {
+              form.resetFields();
+              actionRef.current?.reload();
+              setLoading(false);
+              setModalVisible(false);
+            }
+          } catch (error) {
+            setModalVisible(false);
+            message.error(<FormattedMessage id="error" defaultMessage="error" />);
+            setLoading(false);
+          }
+        }}
       />
     </Fragment>
   );

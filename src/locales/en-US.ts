@@ -388,7 +388,9 @@ export default {
   additional_fields: 'Additional Fields',
   user_to_add: 'Attach user to product',
   user_submission: 'User submission',
+  email_to_add: 'Add user by email address',
   Webinar: 'Webinar',
   productable: 'Entity',
   all: 'All',
+  categories_and_tags: 'Categories & Tags',
 };
