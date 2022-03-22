@@ -13,7 +13,8 @@ import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/
 import UserSelect from '@/components/UserSelect';
 import CategoryTree from '@/components/CategoryTree';
 import ProductSelect from '@/components/ProductsSelect';
-import { categoriesArrToIds } from '@/utils/utils';
+
+const mapper = (item) => (typeof item === 'object' ? item.id : item);
 
 const VoucherForm = () => {
   const intl = useIntl();
@@ -31,9 +32,12 @@ const VoucherForm = () => {
     if (response.success) {
       setData({
         ...response.data,
-        excluded_categories: response.data.excluded_categories?.map(categoriesArrToIds),
-        included_products: response.data.included_products?.map(categoriesArrToIds),
+        included_categories: response.data.included_categories?.map(mapper),
+        excluded_categories: response.data.excluded_categories?.map(mapper),
+        included_products: response.data.included_products?.map(mapper),
+        excluded_products: response.data.excluded_products?.map(mapper),
       });
+      setVoucherType(response.data.type);
     }
   }, [voucherId]);
 
@@ -50,23 +54,32 @@ const VoucherForm = () => {
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<any>) => {
+      onFinish: async (values: Partial<EscolaLms.Vouchers.Models.Coupon>) => {
         const postData = {
           ...values,
         };
-        let response: API.DefaultResponse<any>;
+        let response: API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>;
         if (isNew) {
-          response = await createVoucher(postData);
-          if (response.success) {
-            history.push(`/vouchers/${response.data.id}`);
+          try {
+            response = await createVoucher(postData);
+            if (response.success) {
+              history.push(`/vouchers/${response.data.id}`);
+              message.success(<FormattedMessage id="success" defaultMessage="success" />);
+            }
+          } catch (error) {
+            message.error(<FormattedMessage id="error" defaultMessage="error" />);
           }
         } else {
-          response = await updateVoucher(Number(voucherId), postData);
-          if (response.success) {
-            history.push(`/vouchers/${response.data.id}`);
+          try {
+            response = await updateVoucher(Number(voucherId), postData);
+            if (response.success) {
+              history.push(`/vouchers/${response.data.id}`);
+              message.success(<FormattedMessage id="success" defaultMessage="success" />);
+            }
+          } catch (error) {
+            message.error(<FormattedMessage id="error" defaultMessage="error" />);
           }
         }
-        message.success(response.message);
       },
       initialValues: data,
     }),
@@ -106,11 +119,11 @@ const VoucherForm = () => {
             <ProFormText
               width="md"
               name="code"
-              label={<FormattedMessage id="code" />}
-              tooltip={<FormattedMessage id="code" />}
+              label={<FormattedMessage id="vouchers.code" />}
+              tooltip={<FormattedMessage id="vouchers.code" />}
               placeholder={intl.formatMessage({
-                id: 'code',
-                defaultMessage: 'code',
+                id: 'vouchers.code',
+                defaultMessage: 'vouchers.code',
               })}
               required
             />
@@ -119,22 +132,22 @@ const VoucherForm = () => {
             <ProFormRadio.Group
               shouldUpdate
               name="type"
-              label={<FormattedMessage id="type" />}
+              label={<FormattedMessage id="vouchers.type" />}
               options={[
                 {
-                  label: 'cart_fixed',
+                  label: <FormattedMessage id="vouchers.cart_fixed" />,
                   value: 'cart_fixed',
                 },
                 {
-                  label: 'cart_percent',
+                  label: <FormattedMessage id="vouchers.cart_percent" />,
                   value: 'cart_percent',
                 },
                 {
-                  label: 'product_fixed',
+                  label: <FormattedMessage id="vouchers.product_fixed" />,
                   value: 'product_fixed',
                 },
                 {
-                  label: 'product_percent',
+                  label: <FormattedMessage id="vouchers.product_percent" />,
                   value: 'product_percent',
                 },
               ]}
@@ -151,6 +164,7 @@ const VoucherForm = () => {
                 defaultMessage: 'active_from',
               })}
               disabled={!voucherType}
+              required
             />
             <ProFormDatePicker
               width="sm"
@@ -162,15 +176,16 @@ const VoucherForm = () => {
                 defaultMessage: 'active_to',
               })}
               disabled={!voucherType}
+              required
             />
             <ProFormDigit
               width="md"
               name="limit_usage"
-              label={<FormattedMessage id="limit_usage" />}
-              tooltip={<FormattedMessage id="limit_usage" />}
+              label={<FormattedMessage id="vouchers.limit_usage" />}
+              tooltip={<FormattedMessage id="vouchers.limit_usage" />}
               placeholder={intl.formatMessage({
-                id: 'limit_usage',
-                defaultMessage: 'limit_usage',
+                id: 'vouchers.limit_usage',
+                defaultMessage: 'vouchers.limit_usage',
               })}
               required
               disabled={!voucherType}
@@ -187,29 +202,31 @@ const VoucherForm = () => {
               required
               disabled={!voucherType}
             />
+          </ProForm.Group>
+          <ProForm.Group>
             <ProFormDigit
               width="md"
               name="min_cart_price"
-              label={<FormattedMessage id="min_cart_price" />}
-              tooltip={<FormattedMessage id="min_cart_price" />}
+              label={<FormattedMessage id="vouchers.min_cart_price" />}
+              tooltip={<FormattedMessage id="vouchers.min_cart_price" />}
               placeholder={intl.formatMessage({
-                id: 'min_cart_price',
-                defaultMessage: 'min_cart_price',
+                id: 'vouchers.min_cart_price',
+                defaultMessage: 'vouchers.min_cart_price',
               })}
-              required
               disabled={!voucherType}
+              required
             />
             <ProFormDigit
               width="md"
               name="max_cart_price"
-              label={<FormattedMessage id="max_cart_price" />}
-              tooltip={<FormattedMessage id="max_cart_price" />}
+              label={<FormattedMessage id="vouchers.max_cart_price" />}
+              tooltip={<FormattedMessage id="vouchers.max_cart_price" />}
               placeholder={intl.formatMessage({
-                id: 'max_cart_price',
-                defaultMessage: 'max_cart_price',
+                id: 'vouchers.max_cart_price',
+                defaultMessage: 'vouchers.max_cart_price',
               })}
-              required
               disabled={!voucherType}
+              required
             />
             <ProFormDigit
               width="md"
@@ -239,8 +256,8 @@ const VoucherForm = () => {
                     <FormattedMessage
                       id={
                         voucherType === 'product_fixed' || voucherType === 'product_percent'
-                          ? 'included_products'
-                          : 'excluded_products'
+                          ? 'vouchers.included_products'
+                          : 'vouchers.excluded_products'
                       }
                     />
                   }

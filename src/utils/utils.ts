@@ -23,7 +23,13 @@ export const searchSubstring = (string: string = '', substring: string = '') => 
 };
 
 export const categoriesArrToIds = (
-  category: API.Category | EscolaLms.Categories.Models.Category | string | number,
+  category:
+    | API.Category
+    | EscolaLms.Categories.Models.Category
+    | EscolaLms.Vouchers.Models.Category
+    | EscolaLms.Vouchers.Models.Product
+    | string
+    | number,
 ) => (typeof category === 'object' ? category.id : category);
 
 export const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);

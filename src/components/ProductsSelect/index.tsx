@@ -1,22 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 
+import {
+  products as fetchProducts,
+  getProduct as fetchProduct,
+} from '@/services/escola-lms/products';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
-import { products as fetchProducts } from '@/services/escola-lms/products';
-
-export const ProductSelect: React.FC<{
+export const UserSelect: React.FC<{
+  state?: {
+    type: number;
+  };
   multiple?: boolean;
-  value?: API.ProductableResourceListItem[];
+  value?: string | string[] | number | number[] | EscolaLms.Cart.Models.Product[];
   onChange?: (value: string | string[] | number | number[]) => void;
-  disabled?: boolean;
-}> = ({ value, onChange, multiple = false, disabled = false }) => {
-  const [products, setProducts] = useState<any[]>([]);
+}> = ({ value, onChange, multiple = false }) => {
+  const [products, setProducts] = useState<EscolaLms.Cart.Models.Product[]>([]);
   const [fetching, setFetching] = useState(false);
-  const [currProducts, setCurrProducts] = useState<number[]>([]);
+  const [currUsers, setCurrUsers] = useState<number[]>([]);
 
+  const cache = useRef<EscolaLms.Cart.Models.Product[]>();
   const abortController = useRef<AbortController>();
+
+  const setProductsFromResponse = useCallback((responseUsers: EscolaLms.Cart.Models.Product[]) => {
+    setProducts((prevUsers) =>
+      [...prevUsers, ...responseUsers].filter(
+        (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
+      ),
+    );
+  }, []);
+
+  useEffect(() => {
+    cache.current = products;
+  }, [products]);
 
   const fetch = useCallback(() => {
     setFetching(true);
@@ -28,29 +45,39 @@ export const ProductSelect: React.FC<{
     fetchProducts({}, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setProducts(response.data);
+          setProductsFromResponse(response.data);
         }
         setFetching(false);
       })
       .catch(() => setFetching(false));
   }, []);
 
-  useEffect(() => {
+  const onSearch = useCallback(() => {
     fetch();
-  }, []);
+  }, [fetch]);
 
   useEffect(() => {
     const controller = new AbortController();
     if (value) {
       const val = Array.isArray(value) ? value : [value];
-      const values: number[] = val.map((product) => {
-        if (typeof product === 'object') {
-          return product.id;
+      const values: number[] = val.map((user) => {
+        if (typeof user === 'object') {
+          return Number((user as EscolaLms.Cart.Models.Product).id);
         }
-        return Number(product);
+        return Number(user);
       });
 
-      setCurrProducts(values);
+      setCurrUsers(values);
+
+      values
+        .filter((id) => !cache.current?.find((user) => user.id === id))
+        .forEach((v) => {
+          fetchProduct(Number(v), { signal: controller.signal }).then((response) => {
+            if (response && response.success) {
+              setProductsFromResponse([response.data]);
+            }
+          });
+        });
     }
     return () => {
       controller.abort();
@@ -59,14 +86,15 @@ export const ProductSelect: React.FC<{
 
   return (
     <Select
-      disabled={disabled}
+      onFocus={() => fetch()}
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
-      value={currProducts}
+      value={currUsers}
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
-      placeholder={<FormattedMessage id="select_product" defaultMessage="Select a product" />}
+      onSearch={onSearch}
+      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
       optionFilterProp="children"
       filterOption={(input, option) => {
         if (option && option.children) {
@@ -81,15 +109,13 @@ export const ProductSelect: React.FC<{
       }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {products.map((product) => {
-        return (
-          <Select.Option key={product.id} value={product.id}>
-            {product.name}
-          </Select.Option>
-        );
-      })}
+      {products.map((product) => (
+        <Select.Option key={product.id} value={product.id}>
+          {product.name}
+        </Select.Option>
+      ))}
     </Select>
   );
 };
 
-export default ProductSelect;
+export default UserSelect;

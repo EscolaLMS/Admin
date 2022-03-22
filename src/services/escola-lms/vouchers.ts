@@ -1,8 +1,8 @@
 import { request } from 'umi';
 
 /**  GET /api/admin/vouchers */
-export async function vouchers(params?: any, options?: Record<string, any>) {
-  return request<API.DefaultMetaResponse<any>>(`/api/admin/vouchers`, {
+export async function vouchers(params?: API.PageParams, options?: Record<string, any>) {
+  return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
     params: {
@@ -16,7 +16,7 @@ export async function vouchers(params?: any, options?: Record<string, any>) {
 
 /**  POST /api/admin/vouchers */
 export async function createVoucher(body?: Record<string, any>, options?: Record<string, any>) {
-  return request<API.DefaultResponse<any>>(`/api/admin/vouchers`, {
+  return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -44,14 +44,17 @@ export async function updateVoucher(
   body?: Record<string, any>,
   options?: Record<string, any>,
 ) {
-  return request<API.DefaultResponse<any>>(`/api/admin/vouchers/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(
+    `/api/admin/vouchers/${id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
     },
-    data: body,
-    ...(options || {}),
-  });
+  );
 }
 
 /**  DELETE /api/admin/vouchers/:id */

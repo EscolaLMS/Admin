@@ -361,13 +361,12 @@
     name: 'Vouchers',
     icon: 'percentage',
     path: '/vouchers',
-    // TODO: voucher list permision is not working
-    access: 'questionnaireListPermission',
+    access: 'voucherListPermission',
     component: './Vouchers',
   },
   {
     path: '/vouchers/:voucherId/',
-    access: 'questionnaireListPermission',
+    access: 'voucherDetailPermission',
     component: './Vouchers/form',
     hideInMenu: true,
   },
