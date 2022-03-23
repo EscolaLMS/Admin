@@ -14,18 +14,6 @@ export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
     dataIndex: 'id',
     hideInSearch: true,
   },
-  //   {
-  //     title: <FormattedMessage id="active_from" defaultMessage="active_from" />,
-  //     dataIndex: 'active_from',
-  //     hideInSearch: true,
-  //     // render: (_, record) => format(new Date(record.active_from), DAY_FORMAT),
-  //   },
-  //   {
-  //     title: <FormattedMessage id="active_to" defaultMessage="active_to" />,
-  //     dataIndex: 'active_to',
-  //     hideInSearch: true,
-  //     // render: (_, record) => format(new Date(record.active_to), DAY_FORMAT),
-  //   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
     dataIndex: 'dateRange',
