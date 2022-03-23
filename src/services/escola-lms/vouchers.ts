@@ -1,7 +1,11 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/vouchers */
-export async function vouchers(params?: API.PageParams, options?: Record<string, any>) {
+export async function vouchers(
+  params?: API.PageParams & Partial<EscolaLms.Vouchers.Http.Requests.ListCouponsRequest>,
+  options?: RequestOptionsInit,
+) {
   return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Http.Requests.ListCouponsRequest>>(
     `/api/admin/vouchers`,
     {
@@ -18,7 +22,7 @@ export async function vouchers(params?: API.PageParams, options?: Record<string,
 }
 
 /**  POST /api/admin/vouchers */
-export async function createVoucher(body?: Record<string, any>, options?: Record<string, any>) {
+export async function createVoucher(body?: Record<string, any>, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
     method: 'POST',
     headers: {
@@ -30,7 +34,7 @@ export async function createVoucher(body?: Record<string, any>, options?: Record
 }
 
 /**  GET /api/admin/vouchers/:id */
-export async function getVoucher(id: number, options?: Record<string, any>) {
+export async function getVoucher(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(
     `/api/admin/vouchers/${id}`,
     {
@@ -44,8 +48,8 @@ export async function getVoucher(id: number, options?: Record<string, any>) {
 /**  PATCH /api/admin/vouchers */
 export async function updateVoucher(
   id: number,
-  body?: Record<string, any>,
-  options?: Record<string, any>,
+  body?: EscolaLms.Vouchers.Http.Requests.UpdateCouponRequest,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(
     `/api/admin/vouchers/${id}`,
@@ -61,7 +65,7 @@ export async function updateVoucher(
 }
 
 /**  DELETE /api/admin/vouchers/:id */
-export async function deleteVoucher(id: number, options?: Record<string, any>) {
+export async function deleteVoucher(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Http.Requests.DeleteCouponRequest>>(
     `/api/admin/vouchers/${id}`,
     {

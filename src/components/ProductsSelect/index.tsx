@@ -5,7 +5,7 @@ import { products as fetchProducts } from '@/services/escola-lms/products';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
-export const UserSelect: React.FC<{
+export const ProductsSelect: React.FC<{
   state?: {
     type: number;
   };
@@ -87,4 +87,4 @@ export const UserSelect: React.FC<{
   );
 };
 
-export default UserSelect;
+export default ProductsSelect;

@@ -73,7 +73,7 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
 
 const Vouchers: React.FC = () => {
   const actionRef = useRef<ActionType>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const intl = useIntl();
 
   const handleRemove = useCallback(
