@@ -8,6 +8,7 @@ import UserCategories from './components/Categories';
 import { useCallback, useEffect, useState } from 'react';
 import { user as fetchUser } from '@/services/escola-lms/user';
 import { categoriesArrToIds } from '@/utils/utils';
+import LogsWidget from '@/components/LogsWidget';
 
 export default () => {
   const params = useParams<{ user?: string; tab?: string }>();
@@ -91,6 +92,18 @@ export default () => {
             }
           >
             {user && <Settings user={user} isProfile={false} />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
+            key={'logs'}
+            tab={
+              <span>
+                <FormattedMessage id="user_logs" />
+              </span>
+            }
+          >
+            {user && <LogsWidget useAsWidget userID={Number(user)} />}
           </ProCard.TabPane>
         )}
       </ProCard>

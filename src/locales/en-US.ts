@@ -65,6 +65,7 @@ export default {
   'menu.Questionnaire': 'Questionnaires',
   'menu.Consultations': 'Consultations',
   'menu.StationaryEvents': 'Stationary Events',
+  'menu.Logs': 'Logs',
   'stationary_event.edit': 'Stationary Event Edit Form',
   stationary_event: 'Stationary Event',
   finished_at: 'Finished at Date',
@@ -201,6 +202,7 @@ export default {
   summary: 'Summary',
   summary_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
+  short_description: 'Short description',
   description: 'Description',
   description_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
@@ -395,4 +397,7 @@ export default {
   categories_and_tags: 'Categories & Tags',
   course_edit_warning_message:
     'This record is already in progress, if you wish to edit click confirm. You edit at your own risk',
+  user_logs: 'User logs',
+  http_method: 'HTTP method',
+  path: 'Path',
 };

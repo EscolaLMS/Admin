@@ -1,6 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col } from 'antd';
-import ProForm, { ProFormText, ProFormDigit, ProFormDatePicker } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormText,
+  ProFormDigit,
+  ProFormDatePicker,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -19,7 +24,7 @@ import {
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
-import { categoriesArrToIds } from '@/utils/utils';
+import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
@@ -31,7 +36,8 @@ const StationaryEventForm = () => {
   const { id, tab = 'attributes' } = params;
   const isNew = id === 'new';
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [data, setData] = useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>>();
+  const [data, setData] =
+    useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent & { image_url: string }>>();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
@@ -57,18 +63,15 @@ const StationaryEventForm = () => {
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>) => {
+      onFinish: async (
+        values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent & { image_url: string }>,
+      ) => {
         const postData = {
           ...values,
-          categories:
-            values.categories &&
-            values.categories.map((category) =>
-              typeof category !== 'number' ? category.id : category,
-            ),
-          /*
+          authors: values.authors && values.authors.map(categoriesArrToIds),
+          categories: values.categories && values.categories.map(categoriesArrToIds),
           image_url: data && data.image_url,
-          image_path: data && data.image_url && splitImagePath(data.image_url),
-          */
+          image_path: data && data.image_path && splitImagePath(data.image_path),
         };
         let response: API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>;
         if (isNew) {
@@ -218,7 +221,14 @@ const StationaryEventForm = () => {
                 })}
               />
             </ProForm.Group>
-
+            <ProForm.Group>
+              <ProFormTextArea
+                width="lg"
+                name="short_desc"
+                label={<FormattedMessage id="short_description" />}
+                tooltip={<FormattedMessage id="short_description" />}
+              />
+            </ProForm.Group>
             <ProForm.Item
               name="program"
               label={<FormattedMessage id="program" />}

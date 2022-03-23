@@ -47,8 +47,8 @@ export async function updateWebinar(
   body?: Record<string, any>,
   options?: Record<string, any>,
 ) {
-  return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}`, {
-    method: 'PUT',
+  return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}?method=PUT`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },

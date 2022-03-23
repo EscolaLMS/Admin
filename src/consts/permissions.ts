@@ -191,6 +191,10 @@ enum PERMISSIONS {
   StationaryEventsUpdate = 'stationary-event_update',
   StationaryEventsRead = 'stationary-event_read',
   StationaryEventsDelete = 'stationary-event_delete',
+
+  /* -------- EscolaLMS/Tracker -------- */
+
+  TrackerList = 'tracker_route-list',
 }
 
 export default PERMISSIONS;

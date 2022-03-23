@@ -364,7 +364,13 @@
     access: 'reportListPermission',
     component: './Reports',
   },
-
+  {
+    name: 'Logs',
+    icon: 'history',
+    path: '/logs',
+    access: 'trackerListPermission',
+    component: './Logs',
+  },
   {
     path: '/',
     redirect: '/welcome',

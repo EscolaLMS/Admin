@@ -949,7 +949,7 @@ declare namespace API {
     active_from: string;
     created_at: string;
     updated_at: string;
-    authors: UserItem[] | number[];
+    trainers: UserItem[] | number[];
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
