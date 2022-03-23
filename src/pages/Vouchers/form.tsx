@@ -23,7 +23,7 @@ const VoucherForm = () => {
   const isNew = voucherId === 'new';
 
   const [data, setData] = useState<Partial<EscolaLms.Vouchers.Models.Coupon>>();
-  const [voucherType, setVoucherType] = useState('');
+  const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
 
   const [form] = ProForm.useForm();
 
@@ -37,14 +37,17 @@ const VoucherForm = () => {
         included_products: response.data.included_products?.map(mapper),
         excluded_products: response.data.excluded_products?.map(mapper),
       });
-      setVoucherType(response.data.type);
+      setVoucherType(response.data.type as API.VouchersTypes);
     }
   }, [voucherId]);
 
   useEffect(() => {
     if (isNew) {
       setData({
-        name: 'new',
+        name: intl.formatMessage({
+          id: 'new',
+          defaultMessage: 'new',
+        }),
       });
       return;
     }
@@ -54,7 +57,7 @@ const VoucherForm = () => {
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<EscolaLms.Vouchers.Models.Coupon>) => {
+      onFinish: async (values: EscolaLms.Vouchers.Http.Requests.CreateCouponRequest) => {
         const postData = {
           ...values,
         };

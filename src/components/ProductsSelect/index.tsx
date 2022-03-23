@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 
-import {
-  products as fetchProducts,
-  getProduct as fetchProduct,
-} from '@/services/escola-lms/products';
+import { products as fetchProducts } from '@/services/escola-lms/products';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
@@ -18,22 +15,9 @@ export const UserSelect: React.FC<{
 }> = ({ value, onChange, multiple = false }) => {
   const [products, setProducts] = useState<EscolaLms.Cart.Models.Product[]>([]);
   const [fetching, setFetching] = useState(false);
-  const [currUsers, setCurrUsers] = useState<number[]>([]);
+  const [currProducts, setCurrProducts] = useState<number[]>([]);
 
-  const cache = useRef<EscolaLms.Cart.Models.Product[]>();
   const abortController = useRef<AbortController>();
-
-  const setProductsFromResponse = useCallback((responseUsers: EscolaLms.Cart.Models.Product[]) => {
-    setProducts((prevUsers) =>
-      [...prevUsers, ...responseUsers].filter(
-        (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
-      ),
-    );
-  }, []);
-
-  useEffect(() => {
-    cache.current = products;
-  }, [products]);
 
   const fetch = useCallback(() => {
     setFetching(true);
@@ -45,39 +29,25 @@ export const UserSelect: React.FC<{
     fetchProducts({}, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setProductsFromResponse(response.data);
+          setProducts(response.data);
         }
         setFetching(false);
       })
       .catch(() => setFetching(false));
   }, []);
 
-  const onSearch = useCallback(() => {
-    fetch();
-  }, [fetch]);
-
   useEffect(() => {
     const controller = new AbortController();
     if (value) {
       const val = Array.isArray(value) ? value : [value];
-      const values: number[] = val.map((user) => {
-        if (typeof user === 'object') {
-          return Number((user as EscolaLms.Cart.Models.Product).id);
+      const values: number[] = val.map((product) => {
+        if (typeof product === 'object') {
+          return Number((product as EscolaLms.Cart.Models.Product).id);
         }
-        return Number(user);
+        return Number(product);
       });
 
-      setCurrUsers(values);
-
-      values
-        .filter((id) => !cache.current?.find((user) => user.id === id))
-        .forEach((v) => {
-          fetchProduct(Number(v), { signal: controller.signal }).then((response) => {
-            if (response && response.success) {
-              setProductsFromResponse([response.data]);
-            }
-          });
-        });
+      setCurrProducts(values);
     }
     return () => {
       controller.abort();
@@ -89,12 +59,11 @@ export const UserSelect: React.FC<{
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
-      value={currUsers}
+      value={currProducts}
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
-      onSearch={onSearch}
-      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
+      placeholder={<FormattedMessage id="select_product" defaultMessage="Select a product" />}
       optionFilterProp="children"
       filterOption={(input, option) => {
         if (option && option.children) {

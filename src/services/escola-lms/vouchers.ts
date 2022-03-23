@@ -2,16 +2,19 @@ import { request } from 'umi';
 
 /**  GET /api/admin/vouchers */
 export async function vouchers(params?: API.PageParams, options?: Record<string, any>) {
-  return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
-    method: 'GET',
-    /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
+  return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Http.Requests.ListCouponsRequest>>(
+    `/api/admin/vouchers`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
+      params: {
+        ...params,
+        per_page: params && params.pageSize,
+        page: params && params.current,
+      },
+      ...(options || {}),
     },
-    ...(options || {}),
-  });
+  );
 }
 
 /**  POST /api/admin/vouchers */
@@ -59,7 +62,7 @@ export async function updateVoucher(
 
 /**  DELETE /api/admin/vouchers/:id */
 export async function deleteVoucher(id: number, options?: Record<string, any>) {
-  return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(
+  return request<API.DefaultResponse<EscolaLms.Vouchers.Http.Requests.DeleteCouponRequest>>(
     `/api/admin/vouchers/${id}`,
     {
       method: 'DELETE',

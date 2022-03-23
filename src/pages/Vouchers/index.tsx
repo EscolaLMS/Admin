@@ -103,7 +103,10 @@ const Vouchers: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<EscolaLms.Vouchers.Models.Coupon, Partial<API.PageParams>>
+      <ProTable<
+        EscolaLms.Vouchers.Models.Coupon,
+        EscolaLms.Vouchers.Http.Requests.ListCouponsRequest
+      >
         headerTitle={intl.formatMessage({
           id: 'Vouchers',
           defaultMessage: 'Vouchers',
