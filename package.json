@@ -61,7 +61,7 @@
         "@ant-design/pro-layout": "6.33.1",
         "@ant-design/pro-table": "2.65.0",
         "@escolalms/h5p-react": "0.1.31",
-        "@escolalms/ts-models": "^0.0.22",
+        "@escolalms/ts-models": "^0.0.24",
         "@sentry/react": "^6.15.0",
         "@sentry/tracing": "^6.15.0",
         "@testing-library/jest-dom": "^5.11.9",

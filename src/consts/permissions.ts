@@ -192,6 +192,10 @@ enum PERMISSIONS {
   StationaryEventsRead = 'stationary-event_read',
   StationaryEventsDelete = 'stationary-event_delete',
 
+  /* -------- EscolaLMS/Tracker -------- */
+
+  TrackerList = 'tracker_route-list',
+  
   /* -------- EscolaLMS/Vouchers -------- */
 
   VoucherList = 'coupon_list',

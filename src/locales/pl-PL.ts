@@ -67,6 +67,10 @@ export default {
   'menu.Settings': 'Ustawienia',
   'menu.Questionnaire': 'Ankiety',
   'menu.Consultations': 'Konsultacje',
+  'menu.Logs': 'Logi',
+  user_settings: 'Ustawienia użytkownika',
+  'user.settings': 'Ustawienia użytkownika',
+  'user.settings.overwrite': 'Nadpisz wszystko',
   'menu.Vouchers': 'Vouchery',
   'menu.StationaryEvents': 'Wydarzenia Stacjonarne',
   'menu.Questionnaire Form': 'Ankiety',
@@ -223,6 +227,7 @@ export default {
   findable: 'Możliwy do wyszukania',
   target_group: 'Grupa docelowa',
   author_tutor: 'Autor / Nauczyciel',
+  short_description: 'Krótki opis',
   summary: 'Podsumowanie',
   summary_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
@@ -406,4 +411,7 @@ export default {
   categories_and_tags: 'Kategorie i Tagi',
   course_edit_warning_message:
     'Ten rekord już trwa, jeśli chcesz edytować kliknij zatwierdź. Edytujesz na własną odpowiedzialność',
+  user_logs: 'Logi użytkownika',
+  http_method: 'Metoda HTTP',
+  path: 'Ścieżka',
 };
