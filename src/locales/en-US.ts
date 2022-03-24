@@ -9,6 +9,7 @@ import notifications from './en-US/notifications';
 import templates from './en-US/templates';
 import consultations from './en-US/consultations';
 import fabric from './en-US/fabric';
+import vouchers from './en-US/vouchers';
 
 export default {
   file_resources: 'File resources',
@@ -32,6 +33,7 @@ export default {
   ...templates,
   ...consultations,
   ...fabric,
+  ...vouchers,
   title: 'Title',
   options: 'Options',
   base_price: 'Base price [¢]',
@@ -65,6 +67,7 @@ export default {
   'menu.Questionnaire': 'Questionnaires',
   'menu.Consultations': 'Consultations',
   'menu.StationaryEvents': 'Stationary Events',
+  'menu.Vouchers': 'Vouchers',
   'stationary_event.edit': 'Stationary Event Edit Form',
   stationary_event: 'Stationary Event',
   finished_at: 'Finished at Date',
