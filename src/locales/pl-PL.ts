@@ -9,6 +9,7 @@ import notifications from './pl-PL/notifications';
 import templates from './pl-PL/templates';
 import consultations from './pl-PL/consultations';
 import fabric from './pl-PL/fabric';
+import vouchers from './pl-PL/vouchers';
 
 export default {
   file_resources: 'Załączniki (pliki)',
@@ -32,6 +33,7 @@ export default {
   ...templates,
   ...consultations,
   ...fabric,
+  ...vouchers,
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',
@@ -69,10 +71,14 @@ export default {
   user_settings: 'Ustawienia użytkownika',
   'user.settings': 'Ustawienia użytkownika',
   'user.settings.overwrite': 'Nadpisz wszystko',
+  'menu.Vouchers': 'Vouchery',
   'menu.StationaryEvents': 'Wydarzenia Stacjonarne',
-  'stationary_event.edit': 'Formularz Wydarzenia Stacjonarne',
   'menu.Questionnaire Form': 'Ankiety',
+  'stationary_event.edit': 'Formularz Wydarzenia Stacjonarne',
   stationary_event: 'Wydarzenie Stacjonarne',
+  user_settings: 'Ustawienia użytkownika',
+  'user.settings': 'Ustawienia użytkownika',
+  'user.settings.overwrite': 'Nadpisz wszystko',
   'menu.reset': 'reset',
   finished_at: 'Data zakończenia',
   max_participants: 'Max ilość uczestników',

@@ -976,4 +976,11 @@ declare namespace API {
     name: string;
     description: string;
   };
+
+  enum VouchersTypes {
+    cart_fixed = 'cart_fixed',
+    cart_percent = 'cart_percent',
+    product_fixed = 'product_fixed',
+    product_percent = 'product_percent',
+  }
 }

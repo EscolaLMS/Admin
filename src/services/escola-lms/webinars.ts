@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/webinars */
 export async function webinars(
@@ -6,7 +7,7 @@ export async function webinars(
     date_from?: string;
     date_to?: string;
   },
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<API.Webinar>>(`/api/admin/webinars`, {
     method: 'GET',
@@ -21,7 +22,7 @@ export async function webinars(
 }
 
 /**  POST /api/webinars */
-export async function createWebinar(body?: Record<string, any>, options?: Record<string, any>) {
+export async function createWebinar(body?: Partial<API.Webinar>, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars`, {
     method: 'POST',
     headers: {
@@ -33,7 +34,7 @@ export async function createWebinar(body?: Record<string, any>, options?: Record
 }
 
 /**  GET /api/admin/webinars/:id */
-export async function getWebinar(id: number, options?: Record<string, any>) {
+export async function getWebinar(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -45,7 +46,7 @@ export async function getWebinar(id: number, options?: Record<string, any>) {
 export async function updateWebinar(
   id: number,
   body?: Record<string, any>,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}?method=PUT`, {
     method: 'POST',
@@ -57,8 +58,8 @@ export async function updateWebinar(
   });
 }
 
-/**  GET /api/admin/webinars/:id */
-export async function deleteWebinar(id: number, options?: Record<string, any>) {
+/**  DELETE /api/admin/webinars/:id */
+export async function deleteWebinar(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}`, {
     method: 'DELETE',
     /* useCache: true */ useCache: false,

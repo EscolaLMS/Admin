@@ -81,6 +81,9 @@ export default function access(initialState: { currentUser: any }) {
 
     trackerListPermission: havePermissionsInDashboard(PERMISSIONS.TrackerList),
 
+    voucherListPermission: havePermissionsInDashboard(PERMISSIONS.VoucherList),
+    voucherDetailPermission: havePermissionsInDashboard(PERMISSIONS.VoucherRead),
+
     loggedOut: !currentUser,
   };
 }

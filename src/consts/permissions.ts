@@ -195,6 +195,15 @@ enum PERMISSIONS {
   /* -------- EscolaLMS/Tracker -------- */
 
   TrackerList = 'tracker_route-list',
+  
+  /* -------- EscolaLMS/Vouchers -------- */
+
+  VoucherList = 'coupon_list',
+  VoucherCreate = 'coupon_create',
+  VoucherRead = 'coupon_read',
+  VoucherUpdate = 'coupon_update',
+  VoucherDelete = 'coupon_delete',
+  VoucherUse = 'coupon_use',
 }
 
 export default PERMISSIONS;
