@@ -75,11 +75,8 @@ const QuestionnaireRaports: React.FC<{
       </Select>
 
       <ProCard split="vertical">
-        <ProCard colSpan={12} layout="center">
-          <QuestionnaireChart state={state} type="count_answers" />
-        </ProCard>
-        <ProCard colSpan={12} layout="center">
-          <QuestionnaireChart state={state} type="sum_rate" />
+        <ProCard colSpan={24} layout="center">
+          <QuestionnaireChart state={state} />
         </ProCard>
       </ProCard>
     </>
