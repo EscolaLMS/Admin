@@ -8,7 +8,7 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
-import ProductSelect from '@/components/ProductSelect';
+import ProductSelect from '@/components/ProductablesSelect';
 import {
   getProduct,
   createProduct,

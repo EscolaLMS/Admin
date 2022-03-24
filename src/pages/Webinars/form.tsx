@@ -5,6 +5,7 @@ import ProForm, {
   ProFormDigit,
   ProFormDatePicker,
   ProFormSelect,
+  ProFormTextArea,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -70,9 +71,9 @@ const WebinarForm = () => {
           ...values,
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
-          authors:
-            values.authors &&
-            values.authors.map((author) => (typeof author === 'object' ? author.id : author)),
+          trainers:
+            values.trainers &&
+            values.trainers.map((author) => (typeof author === 'object' ? author.id : author)),
         };
         let response: API.DefaultResponse<API.Webinar>;
         if (isNew) {
@@ -242,11 +243,29 @@ const WebinarForm = () => {
                 disabled={manageCourseEdit.disableEdit}
               />
               <ProForm.Item
-                name="authors"
+                name="trainers"
                 label={<FormattedMessage id="tutor" />}
                 valuePropName="value"
               >
                 <UserSelect multiple />
+              </ProForm.Item>
+            </ProForm.Group>
+            <ProForm.Group>
+              <ProFormTextArea
+                width="lg"
+                name="short_desc"
+                label={<FormattedMessage id="short_description" />}
+                tooltip={<FormattedMessage id="short_description" />}
+              />
+            </ProForm.Group>
+            <ProForm.Group>
+              <ProForm.Item
+                name="agenda"
+                label={<FormattedMessage id="program" />}
+                tooltip={<FormattedMessage id="program" />}
+                valuePropName="value"
+              >
+                <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>

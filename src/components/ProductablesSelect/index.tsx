@@ -12,7 +12,7 @@ const transformListItemToValueKey = (input: API.ProductableListItem): string =>
 const transformInputItemToValueKey = (input: API.ProductableResourceListItem): string =>
   `${input.class}:${input.id}`;
 
-export const ProductSelect: React.FC<{
+export const ProductablesSelect: React.FC<{
   multiple?: boolean;
   value?: API.ProductableResourceListItem[];
   onChange?: (value: string | string[] | number | number[]) => void;
@@ -105,4 +105,4 @@ export const ProductSelect: React.FC<{
   );
 };
 
-export default ProductSelect;
+export default ProductablesSelect;

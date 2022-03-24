@@ -949,7 +949,7 @@ declare namespace API {
     active_from: string;
     created_at: string;
     updated_at: string;
-    authors: UserItem[] | number[];
+    trainers: UserItem[] | number[];
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
@@ -978,4 +978,11 @@ declare namespace API {
   };
   // I need to overwrite extra key by any, cause it could be any right now
   type ModelField = EscolaLms.ModelFields.Models.Metadata & { extra?: any };
+
+  enum VouchersTypes {
+    cart_fixed = 'cart_fixed',
+    cart_percent = 'cart_percent',
+    product_fixed = 'product_fixed',
+    product_percent = 'product_percent',
+  }
 }

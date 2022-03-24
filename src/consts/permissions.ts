@@ -191,6 +191,19 @@ enum PERMISSIONS {
   StationaryEventsUpdate = 'stationary-event_update',
   StationaryEventsRead = 'stationary-event_read',
   StationaryEventsDelete = 'stationary-event_delete',
+
+  /* -------- EscolaLMS/Tracker -------- */
+
+  TrackerList = 'tracker_route-list',
+
+  /* -------- EscolaLMS/Vouchers -------- */
+
+  VoucherList = 'coupon_list',
+  VoucherCreate = 'coupon_create',
+  VoucherRead = 'coupon_read',
+  VoucherUpdate = 'coupon_update',
+  VoucherDelete = 'coupon_delete',
+  VoucherUse = 'coupon_use',
 }
 
 export default PERMISSIONS;

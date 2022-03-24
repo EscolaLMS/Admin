@@ -9,7 +9,7 @@ import { Button, Tooltip, Popconfirm, message, Space, Typography, Tag } from 'an
 import TypeButtonDrawer, { PossibleType } from '@/components/TypeButtonDrawer';
 
 import { products, deleteProduct } from '@/services/escola-lms/products';
-import ProductSelect from '@/components/ProductSelect';
+import ProductSelect from '@/components/ProductablesSelect';
 
 const ProductableItems: React.FC<{ items: API.ProductProductable[] }> = ({ items }) => {
   return (

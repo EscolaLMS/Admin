@@ -13,7 +13,8 @@ export const UserSelect: React.FC<{
   multiple?: boolean;
   value?: string | string[] | number | number[] | API.UserItem[];
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false, role }) => {
+  showEmail?: boolean;
+}> = ({ value, onChange, multiple = false, role, showEmail }) => {
   const [users, setUsers] = useState<API.UserItem[]>([]);
   const [fetching, setFetching] = useState(false);
   const [currUsers, setCurrUsers] = useState<number[]>([]);
@@ -24,7 +25,10 @@ export const UserSelect: React.FC<{
   const setUsersFromResponse = useCallback((responseUsers: API.UserItem[]) => {
     setUsers((prevUsers) =>
       [...prevUsers, ...responseUsers].filter(
-        (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
+        (user, index, arr) =>
+          arr.findIndex((fuser) =>
+            showEmail ? fuser.email === user.email : fuser.id === user.id,
+          ) === index,
       ),
     );
   }, []);
@@ -112,7 +116,7 @@ export const UserSelect: React.FC<{
     >
       {users.map((user) => (
         <Select.Option key={user.id} value={user.id}>
-          {user.name}
+          {user.name} {showEmail && ` - ${user.email}`}
         </Select.Option>
       ))}
     </Select>

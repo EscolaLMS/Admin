@@ -46,7 +46,7 @@ export const CategoryTree: React.FC<{
       loading={categories.length === 0}
       multiple={multiple}
       showSearch
-      style={{ width: '100%' }}
+      style={{ width: '100%', minWidth: '310px' }}
       value={value}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
       placeholder={<FormattedMessage id="select" defaultMessage="Please select" />}

@@ -358,13 +358,33 @@
     hideInMenu: true,
   },
   {
+    name: 'Vouchers',
+    icon: 'percentage',
+    path: '/vouchers',
+    access: 'voucherListPermission',
+    component: './Vouchers',
+  },
+  {
+    path: '/vouchers/:voucherId/',
+    access: 'voucherDetailPermission',
+    component: './Vouchers/form',
+    hideInMenu: true,
+  },
+
+  {
     name: 'reports',
     icon: 'project',
     path: '/reports',
     access: 'reportListPermission',
     component: './Reports',
   },
-
+  {
+    name: 'Logs',
+    icon: 'history',
+    path: '/logs',
+    access: 'trackerListPermission',
+    component: './Logs',
+  },
   {
     path: '/',
     redirect: '/welcome',
