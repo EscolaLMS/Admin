@@ -131,11 +131,9 @@ export default ({
           required={isNew}
         />
         {additionalFields.state === 'loaded' &&
-          additionalFields.list.map(
-            (field: EscolaLms.ModelFields.Models.Metadata & { extra?: Record<string, any> }) => (
-              <AdditionalFields key={field.id} field={field} />
-            ),
-          )}
+          additionalFields.list.map((field: API.ModelField) => (
+            <AdditionalFields key={field.id} field={field} />
+          ))}
       </ProForm.Group>
       <ProForm.Group>
         {!isNew && (
