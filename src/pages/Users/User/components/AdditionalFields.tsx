@@ -10,12 +10,10 @@ import { FormattedMessage, useIntl } from 'umi';
 import { getLocale } from 'umi';
 
 const AdditionalFields: React.FC<{
-  field: EscolaLms.ModelFields.Models.Metadata & { extra: Record<string, any> };
+  field: API.ModelField;
 }> = ({ field }) => {
   const intl = useIntl();
-  const getProperField = (
-    f: EscolaLms.ModelFields.Models.Metadata & { extra: Record<string, any> },
-  ) => {
+  const getProperField = (f: API.ModelField) => {
     const gl = f && f.extra && f.extra.find((item: Record<string, string>) => item[getLocale()]);
 
     switch (f.type) {

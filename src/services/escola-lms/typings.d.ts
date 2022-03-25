@@ -976,6 +976,8 @@ declare namespace API {
     name: string;
     description: string;
   };
+  // I need to overwrite extra key by any, cause it could be any right now
+  type ModelField = EscolaLms.ModelFields.Models.Metadata & { extra?: any };
 
   enum VouchersTypes {
     cart_fixed = 'cart_fixed',

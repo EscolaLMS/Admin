@@ -1,35 +1,22 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
-
+import useModelFields from '@/hooks/useModelFields';
 import { PageContainer } from '@ant-design/pro-layout';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
 import UserSettings from './User/settings';
-import { configs as getConfig } from '@/services/escola-lms/settings';
 import AdditionalFields from './User/components/AdditionalFields';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
   const intl = useIntl();
   const { tab = 'general' } = params;
-
+  const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
   const [data, setData] = useState<API.UserItem>();
-  const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
-  const [additionalFields, setAdditionalFields] = useState<string[]>([]);
-
-  const fetchFields = useCallback(async () => {
-    const request = await getConfig();
-    if (request.success) {
-      setAdditionalRequiredFields(
-        request.data.escola_auth.additional_fields_required.value as string[],
-      );
-      setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
-    }
-  }, []);
 
   useEffect(() => {
     const fetch = async () => {
@@ -41,7 +28,7 @@ export default () => {
         });
       }
     };
-    fetchFields();
+
     fetch();
   }, []);
 
@@ -132,11 +119,10 @@ export default () => {
                 required
               />
             </ProForm.Group>
-            <AdditionalFields
-              additionalFields={additionalFields}
-              requiredFields={additionalRequiredFields}
-              id={data.id}
-            />
+            <ProForm.Group>
+              {additionalFields.state === 'loaded' &&
+                additionalFields.list.map((field) => <AdditionalFields field={field} />)}
+            </ProForm.Group>
 
             <ProForm.Group>
               <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>

@@ -11,7 +11,7 @@ type ModelFieldsState =
     }
   | {
       state: 'loaded';
-      list: EscolaLms.ModelFields.Models.Metadata;
+      list: EscolaLms.ModelFields.Models.Metadata[];
     }
   | {
       state: 'error';
