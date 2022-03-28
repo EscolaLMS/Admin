@@ -35,7 +35,7 @@ const transformProductablesFromAPI = (
 ): MinimumProductProductable[] =>
   input.map((row) => ({
     class: row.productable_type,
-    id: Number(row.id),
+    id: Number(row.productable_id),
   }));
 
 const getProductables = (

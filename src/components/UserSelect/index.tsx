@@ -46,10 +46,10 @@ export const UserSelect: React.FC<{
     abortController.current = new AbortController();
     fetchUsers({ search, role }, { signal: abortController.current.signal })
       .then((response) => {
-        if (response.success) {
+        if (response && response.success) {
           setUsersFromResponse(response.data);
+          setFetching(false);
         }
-        setFetching(false);
       })
       .catch(() => setFetching(false));
   }, []);
@@ -104,18 +104,17 @@ export const UserSelect: React.FC<{
       filterOption={(input, option) => {
         if (option && option.children) {
           return (
-            option?.children
-              ?.toString()
+            String(`${option.user.name} ${option.user.email}`)
               .toLowerCase()
               .indexOf((input && input.toLowerCase()) || '') >= 0
           );
         }
-        return false;
+        return true;
       }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
       {users.map((user) => (
-        <Select.Option key={user.id} value={user.id}>
+        <Select.Option key={user.id} value={user.id} user={user}>
           {user.name} {showEmail && ` - ${user.email}`}
         </Select.Option>
       ))}
