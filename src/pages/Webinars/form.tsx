@@ -168,7 +168,10 @@ const WebinarForm = () => {
                   }
                   type="primary"
                 >
-                  Zatwierdź
+                  <FormattedMessage
+                    id="questionnaire.submit"
+                    defaultMessage="questionnaire.submit"
+                  />
                 </Button>
               }
             />
