@@ -1,19 +1,22 @@
 // @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
 
-/**  GET /api/admin/templates */
-export async function certificates(options?: { [key: string]: any }) {
-  return request<API.DefaultMetaResponse<API.Certificate[]>>('/api/admin/templates/assignable', {
+/**  GET /api/admin/templates/assignable */
+export async function assignable(
+  params?: EscolaLms.Templates.Http.Requests.TemplateListAssignableRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.DefaultMetaResponse<API.Certificate>>('/api/admin/templates/assignable', {
     method: 'GET',
     /* useCache: true */ useCache: false,
+    params,
     ...(options || {}),
   });
 }
 
 export async function assign(
   id: number,
-  body?: { [key: string]: any },
+  body: { assignable_id: number },
   options?: { [key: string]: any },
 ) {
   return request<API.CourseAccessList>(`/api/admin/templates/${id}/assign`, {
@@ -28,7 +31,7 @@ export async function assign(
 
 export async function unassign(
   id: number,
-  body?: { [key: string]: any },
+  body: { assignable_id: number },
   options?: { [key: string]: any },
 ) {
   return request<API.CourseAccessList>(`/api/admin/templates/${id}/unassign`, {
@@ -42,8 +45,8 @@ export async function unassign(
 }
 
 /**  GET /api/admin/templates/assigned */
-export async function template(params: API.TemplateItem, options?: { [key: string]: any }) {
-  return request<API.DefaultMetaResponse<API.Certificate[]>>(`/api/admin/templates/assigned`, {
+export async function assigned(params: API.TemplateItem, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<API.Certificate[]>>(`/api/admin/templates/assigned`, {
     params,
     method: 'GET',
     /* useCache: true */ useCache: false,

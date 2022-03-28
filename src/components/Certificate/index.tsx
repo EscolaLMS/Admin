@@ -2,166 +2,176 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
 
 import {
-  certificates as fetchCertificates,
-  unassign as unassignCertificate,
-  assign as postSetTemplate,
+  assignable as fetchGetAssignables,
+  assigned as fetchGetAssigned,
+  unassign as postUnassign,
+  assign as postAssign,
 } from '@/services/escola-lms/certificate';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import { message } from 'antd';
 
-export const UserSelect: React.FC<{
+export const AssignTemplateSelect: React.FC<{
   state?: {
     type: number;
   };
+  assignable_class: string;
+  assignable_id: string | number;
   multiple?: boolean;
-  allTemplates?: number[];
-  courseId: number | string;
-  value?: string | string[] | number | number[];
+  onAssign?: (assignIds: number[]) => void;
+  onUnassign?: (assignIds: number[]) => void;
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false, allTemplates, courseId }) => {
+}> = ({ onChange, multiple = false, assignable_class, assignable_id, onAssign, onUnassign }) => {
   const [templates, setTemplates] = useState<API.Certificate[]>([]);
+  const [currentTemplates, setCurrentTemplates] = useState<number[]>([]);
+
   const [fetching, setFetching] = useState(false);
 
-  const cacheValues = useRef<number[]>();
-  const cache = useRef<API.Certificate[]>();
   const abortController = useRef<AbortController>();
 
-  const setUsersFromResponse = useCallback((responseUsers: API.Certificate[]) => {
-    setTemplates((prevUsers) =>
-      [...prevUsers, ...responseUsers].filter(
-        (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
-      ),
-    );
+  const setTemplatesFromResponse = useCallback((responseTemplates: API.Certificate[]) => {
+    setTemplates(responseTemplates);
   }, []);
 
-  useEffect(() => {
-    cache.current = templates;
-  }, [templates]);
+  const fetchAssiged = useCallback(() => {
+    fetchGetAssigned({
+      assignable_class,
+      assignable_id: Number(assignable_id),
+    }).then((response) => {
+      if (response.success) {
+        setCurrentTemplates(response.data.map((item) => item.id));
+      }
+    });
+  }, [assignable_class, assignable_id]);
 
-  const fetch = useCallback((search?: string) => {
+  const fetchAssignales = useCallback(() => {
     setFetching(true);
     if (abortController.current) {
       abortController.current.abort();
     }
 
     abortController.current = new AbortController();
-    fetchCertificates({ search }, { signal: abortController.current.signal })
+    fetchGetAssignables(
+      {
+        assignable_class,
+      },
+      { signal: abortController.current.signal },
+    )
       .then((response) => {
-        if (response.success) {
-          setUsersFromResponse(response.data);
+        if (response && response.success) {
+          setTemplatesFromResponse(response.data);
         }
         setFetching(false);
       })
       .catch(() => setFetching(false));
+
+    return () => {
+      if (abortController.current) {
+        abortController.current.abort();
+      }
+    };
+  }, [assignable_class, assignable_id]);
+
+  const removeIdFromCurrentTemplates = useCallback((id: number) => {
+    setCurrentTemplates((prevTemplates) => prevTemplates.filter((item) => item != id));
   }, []);
 
-  const onSearch = useCallback(
-    (search) => {
-      fetch(search);
+  const addIdFromCurrentTemplates = useCallback((id: number) => {
+    setCurrentTemplates((prevTemplates) =>
+      prevTemplates.includes(id) ? prevTemplates : [...prevTemplates, id],
+    );
+  }, []);
+
+  const handleChange = useCallback(
+    (value: number | number[]) => {
+      const values = Array.isArray(value) ? value : [value];
+      const valuesToAssign = values.filter((item) => !currentTemplates.includes(item));
+      const valuesToUnassign = currentTemplates.filter((item) => !values.includes(item));
+
+      if (onChange) {
+        onChange(value);
+      }
+
+      valuesToAssign.forEach((item) => {
+        postAssign(item, {
+          assignable_id: Number(assignable_id),
+        })
+          .then((response) => {
+            if (response.success) {
+              message.success(response.message);
+              // TODO: there can be only one chanel:event assign to model, so if event for this channel is in currentTemplates it replace it so should be removed from list
+            }
+            if (!response.success) {
+              message.error(response.message);
+              removeIdFromCurrentTemplates(item);
+            }
+          })
+          .catch((err) => {
+            message.error(err.toString());
+            removeIdFromCurrentTemplates(item);
+          });
+      });
+
+      valuesToUnassign.forEach((item) => {
+        postUnassign(item, {
+          assignable_id: Number(assignable_id),
+        })
+          .then((response) => {
+            if (response.success) {
+              message.success(response.message);
+            }
+            if (!response.success) {
+              message.error(response.message);
+              addIdFromCurrentTemplates(item);
+            }
+          })
+          .catch((err) => {
+            message.error(err.toString());
+            addIdFromCurrentTemplates(item);
+          });
+      });
+
+      if (valuesToAssign.length != 0 && onAssign) {
+        onAssign(valuesToAssign);
+      }
+      if (valuesToUnassign.length != 0 && onUnassign) {
+        onUnassign(valuesToUnassign);
+      }
+
+      setCurrentTemplates(values);
     },
-    [fetch],
+    [currentTemplates, assignable_id, onChange, onAssign, onUnassign],
   );
 
-  const onAssign = (val?: number | null) => {
-    postSetTemplate(Number(val), { assignable_id: courseId })
-      .then((response) => {
-        if (response.success) {
-          message.success(response.message);
-        }
-      })
-      .catch((error: any) => {
-        message.error(error.data.message);
-        const values = value.filter((v) => v !== val);
-        onChange(values);
-      });
-  };
-
-  const onUnassign = (val?: number | null) => {
-    unassignCertificate(Number(val), { assignable_id: courseId })
-      .then((response) => {
-        if (response.success) {
-          message.success(response.message);
-          const values = value.filter((v) => v !== val);
-          onChange(values);
-        }
-      })
-      .catch((error: any) => {
-        message.error(error.data.message);
-        const values = value.filter((v) => v !== val);
-        onChange(values);
-      });
-  };
-
-  function handleAssigment(arr: number[]) {
-    if (cacheValues.current && arr) {
-      const cacheArray = cacheValues.current;
-      const newArray = arr;
-
-      const unassigned = cacheArray.filter((x) => !newArray.includes(x));
-      const assigned = newArray.filter((x) => !cacheArray.includes(x));
-
-      if (unassigned) {
-        unassigned.map((item) => {
-          onUnassign(item);
-        });
-      }
-
-      if (assigned) {
-        assigned.map((item) => {
-          onAssign(item);
-        });
-      }
-    }
-  }
-
-  function handleChange(value_) {
-    onChange(value_);
-    const values = Array.isArray(value_) ? value_ : [value_];
-    handleAssigment(values);
-  }
-
   useEffect(() => {
-    const controller = new AbortController();
-    if (value) {
-      const values = Array.isArray(value) ? value : [value];
-      cacheValues.current = values;
-
-      values
-        .filter((id) => !cache.current?.find((user) => user.id === id))
-        .forEach((v) => {
-          const filtered = allTemplates.find((tamplate) => tamplate.id === v);
-          if (filtered) setUsersFromResponse([filtered]);
-        });
-    }
-    return () => {
-      controller.abort();
-    };
-  }, [value]);
+    fetchAssignales();
+    fetchAssiged();
+  }, [assignable_class, assignable_id]);
 
   return (
     <Select
-      onFocus={() => fetch()}
       style={{ width: '100%' }}
-      value={value}
+      value={currentTemplates}
       onChange={handleChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
-      onSearch={onSearch}
       placeholder={<FormattedMessage id="select_templates" defaultMessage="Select a templates" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return option?.children?.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {templates.map((user) => (
-        <Select.Option key={user.id} value={user.id}>
-          {user.name}
+      {templates.map((template) => (
+        <Select.Option key={template.id} value={template.id}>
+          {template.name}
         </Select.Option>
       ))}
     </Select>
   );
 };
 
-export default UserSelect;
+export default AssignTemplateSelect;
