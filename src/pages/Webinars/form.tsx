@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Alert } from 'antd';
+import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -63,6 +63,7 @@ const WebinarForm = () => {
           setManageCourseEdit({
             showModal: true,
             disableEdit: true,
+            clicked: false,
           });
           return;
         }
@@ -155,6 +156,23 @@ const WebinarForm = () => {
                   id="course_edit_warning_message"
                   defaultMessage="course_edit_warning_message"
                 />
+              }
+              action={
+                <Button
+                  onClick={() =>
+                    setManageCourseEdit({
+                      showModal: true,
+                      disableEdit: true,
+                      clicked: true,
+                    })
+                  }
+                  type="primary"
+                >
+                  <FormattedMessage
+                    id="questionnaire.submit"
+                    defaultMessage="questionnaire.submit"
+                  />
+                </Button>
               }
             />
           )}
