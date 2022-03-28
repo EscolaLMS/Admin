@@ -50,7 +50,6 @@ const AdditionalFields: React.FC<{
             placeholder={intl.formatMessage({
               id: f.name,
             })}
-            required
           />
         );
 
@@ -64,7 +63,6 @@ const AdditionalFields: React.FC<{
             placeholder={intl.formatMessage({
               id: f.name,
             })}
-            required
           />
         );
       case 'json':

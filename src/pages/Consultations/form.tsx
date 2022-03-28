@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Alert } from 'antd';
+import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -71,6 +71,7 @@ const ConsultationForm = () => {
           setManageCourseEdit({
             showModal: true,
             disableEdit: true,
+            clicked: false,
           });
           return;
         }
@@ -160,7 +161,7 @@ const ConsultationForm = () => {
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           {manageCourseEdit.disableEdit && (
             <Alert
-              closable
+              closable={true}
               style={{ marginBottom: '20px' }}
               type="warning"
               message={
@@ -168,6 +169,20 @@ const ConsultationForm = () => {
                   id="course_edit_warning_message"
                   defaultMessage="course_edit_warning_message"
                 />
+              }
+              action={
+                <Button
+                  onClick={() =>
+                    setManageCourseEdit({
+                      showModal: true,
+                      disableEdit: true,
+                      clicked: true,
+                    })
+                  }
+                  type="primary"
+                >
+                  Zatwierdź
+                </Button>
               }
             />
           )}
