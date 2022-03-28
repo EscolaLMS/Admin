@@ -161,7 +161,7 @@ const ConsultationForm = () => {
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
           {manageCourseEdit.disableEdit && (
             <Alert
-              closable={true}
+              closable
               style={{ marginBottom: '20px' }}
               type="warning"
               message={
