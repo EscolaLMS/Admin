@@ -4,6 +4,7 @@ import { FormattedMessage } from 'umi';
 type Data = {
   showModal: boolean;
   disableEdit: boolean;
+  clicked: boolean;
 };
 
 const EditValidateModal: React.FC<{
@@ -24,12 +25,14 @@ const EditValidateModal: React.FC<{
         setManage({
           showModal: false,
           disableEdit: false,
+          clicked: true,
         })
       }
       onCancel={() =>
         setManage({
           showModal: false,
           disableEdit: true,
+          clicked: false,
         })
       }
       okText="OK"
