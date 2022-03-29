@@ -8,7 +8,7 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { useParams, history, useIntl, FormattedMessage, useAccess } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -37,7 +37,7 @@ export default () => {
   const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
-
+  const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
@@ -500,7 +500,7 @@ export default () => {
             {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {!isNew && access.scormListPermission && (
           <ProCard.TabPane
             key="scorm"
             tab={<FormattedMessage id="scorm" />}
