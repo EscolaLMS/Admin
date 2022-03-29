@@ -25,7 +25,7 @@ const AutoCompleteArea: React.FC<{
   onChange: (value: string) => void;
   value: string;
   error: string[];
-  styles?: Record<string, string>;
+  styles?: React.CSSProperties;
 }> = ({ requiredVariables, variables, onChange, value, error, styles }) => {
   const varsObject = variables.map((v: string) => ({
     name: v.substring(1),
