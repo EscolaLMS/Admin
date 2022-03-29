@@ -26,11 +26,11 @@ const Templates: React.FC = () => {
         <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
           <ConfigList templateType={'email'} channel={channelType.email} />
         </ProCard.TabPane>
-
         <ProCard.TabPane key={'pdf'} tab={<FormattedMessage id="PDF" />}>
           <ConfigList templateType={'pdf'} channel={channelType.pdf} />
         </ProCard.TabPane>
-        <ProCard.TabPane
+        {/* // NOTE:for demo only */}
+        {/* <ProCard.TabPane
           disabled
           key={'Push'}
           tab={
@@ -40,7 +40,7 @@ const Templates: React.FC = () => {
           }
         >
           Push
-        </ProCard.TabPane>
+        </ProCard.TabPane> */}
         <ProCard.TabPane
           disabled
           key={'SMS'}

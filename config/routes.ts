@@ -80,6 +80,8 @@
     icon: 'team',
     access: 'userGroupListPermission',
     component: './UserGroups',
+    // NOTE:for demo only
+    hideInMenu: true,
   },
 
   {
@@ -157,6 +159,8 @@
     icon: 'experiment',
     access: 'scormListPermission',
     component: './Scorm',
+    // NOTE:for demo only
+    hideInMenu: true,
   },
   {
     path: '/scorms/preview/:uuid',
