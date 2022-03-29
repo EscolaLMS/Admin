@@ -20,8 +20,17 @@ export const AssignTemplateSelect: React.FC<{
   multiple?: boolean;
   onAssign?: (assignIds: number[]) => void;
   onUnassign?: (assignIds: number[]) => void;
-  onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ onChange, multiple = false, assignable_class, assignable_id, onAssign, onUnassign }) => {
+  onChange?: (value: number[]) => void;
+  onTemplates?: (templates: API.Certificate[]) => void;
+}> = ({
+  onChange,
+  multiple = false,
+  assignable_class,
+  assignable_id,
+  onAssign,
+  onUnassign,
+  onTemplates,
+}) => {
   const [templates, setTemplates] = useState<API.Certificate[]>([]);
   const [currentTemplates, setCurrentTemplates] = useState<number[]>([]);
 
@@ -29,9 +38,15 @@ export const AssignTemplateSelect: React.FC<{
 
   const abortController = useRef<AbortController>();
 
-  const setTemplatesFromResponse = useCallback((responseTemplates: API.Certificate[]) => {
-    setTemplates(responseTemplates);
-  }, []);
+  const setTemplatesFromResponse = useCallback(
+    (responseTemplates: API.Certificate[]) => {
+      setTemplates(responseTemplates);
+      if (onTemplates) {
+        onTemplates(responseTemplates);
+      }
+    },
+    [onTemplates],
+  );
 
   const fetchAssiged = useCallback(() => {
     fetchGetAssigned({
@@ -88,10 +103,6 @@ export const AssignTemplateSelect: React.FC<{
       const valuesToAssign = values.filter((item) => !currentTemplates.includes(item));
       const valuesToUnassign = currentTemplates.filter((item) => !values.includes(item));
 
-      if (onChange) {
-        onChange(value);
-      }
-
       valuesToAssign.forEach((item) => {
         postAssign(item, {
           assignable_id: Number(assignable_id),
@@ -140,13 +151,19 @@ export const AssignTemplateSelect: React.FC<{
 
       setCurrentTemplates(values);
     },
-    [currentTemplates, assignable_id, onChange, onAssign, onUnassign],
+    [currentTemplates, assignable_id, onAssign, onUnassign],
   );
 
   useEffect(() => {
     fetchAssignales();
     fetchAssiged();
   }, [assignable_class, assignable_id]);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(currentTemplates);
+    }
+  }, [currentTemplates, onChange]);
 
   return (
     <Select

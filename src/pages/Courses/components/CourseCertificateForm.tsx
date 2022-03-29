@@ -1,26 +1,46 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
-import { AppContext } from '@/components/ProgramForm/Context';
 import CertificateSelector from '@/components/Certificate';
-import { Typography } from 'antd';
+import { Col, Row, Typography } from 'antd';
 import { FormattedMessage } from 'umi';
+
+import PdfList from '@/components/PdfList';
 
 export const ProgramForm: React.FC<{
   id: number | string;
 }> = ({ id }) => {
   const { Text } = Typography;
+  const [templates, setTemplates] = useState<API.Certificate[]>([]);
+  const [currTemplates, setCurrTemplates] = useState<number[]>([]);
+
+  const pdfTemplates = useMemo(() => {
+    return currTemplates
+      .map((tplId) => templates.find((tpl) => tpl.id === tplId))
+      .filter((tpl) => tpl !== undefined)
+      .filter((tpl) => tpl && tpl.channel === 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel');
+  }, [templates, currTemplates]);
 
   return (
-    <AppContext id={Number(id)}>
-      <Text>
-        <FormattedMessage id="CertificateTemplates" defaultMessage="Users" />
-      </Text>
-      <CertificateSelector
-        assignable_class="EscolaLms\Courses\Models\Course"
-        assignable_id={Number(id)}
-        multiple
-      />
-    </AppContext>
+    <div>
+      <Row align="middle">
+        <Col span={3}>
+          <Text>
+            <FormattedMessage id="CertificateTemplates" defaultMessage="Users" />
+          </Text>
+        </Col>
+        <Col span={12}>
+          <CertificateSelector
+            onTemplates={(responseTemplates) => setTemplates(responseTemplates)}
+            assignable_class="EscolaLms\Courses\Models\Course"
+            assignable_id={Number(id)}
+            multiple
+            onChange={(values) => setCurrTemplates(values)}
+          />
+        </Col>
+      </Row>
+
+      {pdfTemplates.map((tpl) => tpl && <PdfList template_id={tpl.id} />)}
+    </div>
   );
 };
 
