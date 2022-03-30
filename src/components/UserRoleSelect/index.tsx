@@ -66,9 +66,12 @@ export const UserRoleSelect: React.FC<{
       onSearch={onSearch}
       placeholder={<FormattedMessage id="select_user_role" defaultMessage="Select role" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return option?.children?.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
       {roles &&
