@@ -25,7 +25,8 @@ const AutoCompleteArea: React.FC<{
   onChange: (value: string) => void;
   value: string;
   error: string[];
-}> = ({ requiredVariables, variables, onChange, value, error }) => {
+  styles?: React.CSSProperties;
+}> = ({ requiredVariables, variables, onChange, value, error, styles }) => {
   const varsObject = variables.map((v: string) => ({
     name: v.substring(1),
     required: requiredVariables.includes(v),
@@ -34,6 +35,7 @@ const AutoCompleteArea: React.FC<{
   return (
     <React.Fragment>
       <ReactTextareaAutocomplete
+        style={styles}
         className={`ant-input pro-field pro-field-lg rta__textarea_wide ${error.length && 'error'}`}
         onChange={(e) => onChange(e.target.value)}
         loadingComponent={() => <FormattedMessage id="loading" />}
@@ -44,9 +46,10 @@ const AutoCompleteArea: React.FC<{
           '@': {
             dataProvider: (token) => {
               return varsObject.filter((v) => v.name.startsWith(token));
-            },
+            }, // @ts-ignore
             component: Item,
             output: (item, trigger) => {
+              // @ts-ignore
               return `${trigger}${item.name}`;
             },
           },

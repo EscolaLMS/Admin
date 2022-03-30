@@ -1,6 +1,5 @@
 .rta__textarea_wide {
-  width: 100% !important;
-  height: 40vh !important;
+  width: 100%;
 }
 
 .rta__textarea_wide.error {
