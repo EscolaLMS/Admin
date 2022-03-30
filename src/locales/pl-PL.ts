@@ -148,7 +148,7 @@ export default {
   new_password: 'Nowe hasło',
   new_confirm_password: 'Potwierdź nowe hasło',
   note: 'Notatka',
-
+  to: 'do',
   notifications: 'Powiadomienia',
   change_password: 'Zmień hasło',
   search: 'Wyszukaj',
@@ -414,4 +414,5 @@ export default {
   user_logs: 'Logi użytkownika',
   http_method: 'Metoda HTTP',
   path: 'Ścieżka',
+  select_content: 'Wybierz kontent',
 };
