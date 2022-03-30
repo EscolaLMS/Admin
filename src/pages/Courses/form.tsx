@@ -52,8 +52,12 @@ export default () => {
 
     const fetch = async () => {
       const response = await getCourse(Number(course));
+
       if (response.success) {
-        validateCourseEdit(response.data);
+        if (tab === 'attributes') {
+          validateCourseEdit(response.data);
+        }
+
         setData({
           ...response.data,
           categories: response.data.categories?.map(categoriesArrToIds),
