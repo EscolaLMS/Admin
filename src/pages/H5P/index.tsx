@@ -68,7 +68,7 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
-      sorter: false,
+      sorter: (a, b) => a.title.length - b.title.length,
       render: (dom, entity) => {
         return entity.title;
       },
@@ -76,7 +76,7 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="library" defaultMessage="library" />,
       dataIndex: 'library',
-      sorter: false,
+      sorter: (a, b) => a.library.title.length - b.library.title.length,
       search: false,
       render: (dom, entity) => {
         return entity.library.title;
@@ -85,7 +85,7 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="library_id" defaultMessage="library_id" />,
       dataIndex: 'library_id',
-      sorter: false,
+      sorter: (a, b) => a.library.id - b.library.id,
       render: (dom, entity) => {
         return entity.library.id;
       },
@@ -93,7 +93,7 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="count_h5p" defaultMessage="count_h5p" />,
       dataIndex: 'count_h5p',
-      sorter: false,
+      sorter: (a, b) => a.count_h5p - b.count_h5p,
       search: false,
       render: (dom, entity) => {
         return entity.count_h5p;

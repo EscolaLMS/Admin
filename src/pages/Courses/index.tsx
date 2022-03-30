@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { CopyOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip, Popconfirm, message } from 'antd';
 import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
@@ -6,7 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-import { course, exportCourse, removeCourse } from '@/services/escola-lms/course';
+import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
 import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
@@ -182,6 +182,25 @@ const TableList: React.FC = () => {
     }
   }, []);
 
+  const handleClone = useCallback(async (id: number) => {
+    setLoading(true);
+    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+    try {
+      const request = await cloneCourse(id);
+      if (request.success) {
+        message.success(request.message);
+        hide();
+        setLoading(false);
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error) {
+      hide();
+      setLoading(false);
+      return false;
+    }
+  }, []);
+
   return (
     <PageContainer>
       <ProTable<API.CourseListItem, API.CourseParams>
@@ -262,6 +281,12 @@ const TableList: React.FC = () => {
                 <Button
                   onClick={() => handleExport(Number(record.id))}
                   icon={<ExportOutlined />}
+                ></Button>
+              </Tooltip>,
+              <Tooltip title={<FormattedMessage id="clone" defaultMessage="clone" />}>
+                <Button
+                  onClick={() => record.id && handleClone(record.id)}
+                  icon={<CopyOutlined />}
                 ></Button>
               </Tooltip>,
             ],

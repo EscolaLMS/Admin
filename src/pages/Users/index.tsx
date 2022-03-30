@@ -1,7 +1,8 @@
 import { PlusOutlined, ExportOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, Tag, message } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
+import { useIntl, FormattedMessage, Link, history } from 'umi';
+
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -12,6 +13,8 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import SecureUpload from '@/components/SecureUpload';
 import UserRoleSelect from '../../components/UserRoleSelect';
+import ProCard from '@ant-design/pro-card';
+
 import './index.css';
 
 const handleRemove = async (id: number) => {
@@ -127,108 +130,132 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.UserListItem, API.PageParams & { search: string; role: string }>
-        headerTitle={intl.formatMessage({
-          id: 'users',
-          defaultMessage: 'users',
-        })}
-        actionRef={actionRef}
-        rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
-        toolBarRender={() => [
-          <SecureUpload
-            title={intl.formatMessage({
-              id: 'import_users',
-            })}
-            url="/api/admin/csv/users"
-            name="file"
-            accept=".csv"
-            data={{
-              return_url: `${window.location.origin}/#/user/reset-password`,
-            }}
-            onChange={(info) => {
-              if (info.file.status === 'done') {
-                if (info.file.response.success) {
-                  message.success(info.file.response.message);
-                }
-              }
-              if (info.file.status === 'error') {
-                message.error(info.file.response.message);
-                console.error(info.file.response);
-              }
-            }}
-          />,
-          <Button
-            loading={loadingExport}
-            type="primary"
-            key="primary"
-            onClick={() => handleDownload()}
-          >
-            <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
-          </Button>,
-
-          <Link to="/users/new">
-            <Button type="primary" key="primary">
-              <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
-            </Button>
-          </Link>,
-        ]}
-        request={({ pageSize, current, search, role }) => {
-          setParams({ pageSize, current, search, role });
-          const requestRole = role && role.toString() === 'all' ? undefined : role;
-          return users({ pageSize, current, search, role: requestRole }).then((response) => {
-            if (response.success) {
-              return {
-                data: response.data,
-                total: response.meta.total,
-                success: true,
-              };
+      <ProCard
+        tabs={{
+          type: 'card',
+          activeKey: 'list',
+          onChange: (key) => {
+            switch (key) {
+              case 'list':
+                return history.push(`/users`);
+              case 'fields':
+                return history.push(`/users/fields`);
+              default:
+                return history.push(`/users/${key}`);
+                break;
             }
-            return [];
-          });
+          },
         }}
-        columns={[
-          ...TableColumns,
-          {
-            hideInSearch: true,
-            title: <FormattedMessage id="pages.searchTable.titleOption" />,
-            dataIndex: 'option',
-            valueType: 'option',
-            render: (_, record) => [
-              <Link to={`/users/${record.id}/user_info`} key="edit">
-                <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                  <Button type="primary" icon={<EditOutlined />}></Button>
-                </Tooltip>
-              </Link>,
-              <Popconfirm
-                key="delete"
-                title={
-                  <FormattedMessage
-                    id="deleteQuestion"
-                    defaultMessage="Are you sure to delete this record?"
-                  />
-                }
-                onConfirm={async () => {
-                  const success = await handleRemove(record.id);
-                  if (success) {
-                    if (actionRef.current) {
-                      actionRef.current.reload();
+      >
+        <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}>
+          <ProTable<API.UserListItem, API.PageParams & { search: string; role: string }>
+            headerTitle={intl.formatMessage({
+              id: 'users',
+              defaultMessage: 'users',
+            })}
+            actionRef={actionRef}
+            rowKey="key"
+            search={{
+              labelWidth: 120,
+            }}
+            toolBarRender={() => [
+              <SecureUpload
+                title={intl.formatMessage({
+                  id: 'import_users',
+                })}
+                url="/api/admin/csv/users"
+                name="file"
+                accept=".csv"
+                data={{
+                  return_url: `${window.location.origin}/#/user/reset-password`,
+                }}
+                onChange={(info) => {
+                  if (info.file.status === 'done') {
+                    if (info.file.response.success) {
+                      message.success(info.file.response.message);
                     }
                   }
+                  if (info.file.status === 'error') {
+                    message.error(info.file.response.message);
+                    console.error(info.file.response);
+                  }
                 }}
-                okText={<FormattedMessage id="yes" />}
-                cancelText={<FormattedMessage id="no" />}
+              />,
+              <Button
+                loading={loadingExport}
+                type="primary"
+                key="primary"
+                onClick={() => handleDownload()}
               >
-                <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                  <Button type="primary" icon={<DeleteOutlined />} danger></Button>
-                </Tooltip>
-              </Popconfirm>,
-            ],
-          },
-        ]}
-      />
+                <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
+              </Button>,
+
+              <Link to="/users/new">
+                <Button type="primary" key="primary">
+                  <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+                </Button>
+              </Link>,
+            ]}
+            request={({ pageSize, current, search, role }) => {
+              setParams({ pageSize, current, search, role });
+              const requestRole = role && role.toString() === 'all' ? undefined : role;
+              return users({ pageSize, current, search, role: requestRole }).then((response) => {
+                if (response.success) {
+                  return {
+                    data: response.data,
+                    total: response.meta.total,
+                    success: true,
+                  };
+                }
+                return [];
+              });
+            }}
+            columns={[
+              ...TableColumns,
+              {
+                hideInSearch: true,
+                title: <FormattedMessage id="pages.searchTable.titleOption" />,
+                dataIndex: 'option',
+                valueType: 'option',
+                render: (_, record) => [
+                  <Link to={`/users/${record.id}/user_info`} key="edit">
+                    <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                      <Button type="primary" icon={<EditOutlined />}></Button>
+                    </Tooltip>
+                  </Link>,
+                  <Popconfirm
+                    key="delete"
+                    title={
+                      <FormattedMessage
+                        id="deleteQuestion"
+                        defaultMessage="Are you sure to delete this record?"
+                      />
+                    }
+                    onConfirm={async () => {
+                      const success = await handleRemove(record.id);
+                      if (success) {
+                        if (actionRef.current) {
+                          actionRef.current.reload();
+                        }
+                      }
+                    }}
+                    okText={<FormattedMessage id="yes" />}
+                    cancelText={<FormattedMessage id="no" />}
+                  >
+                    <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                      <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                    </Tooltip>
+                  </Popconfirm>,
+                ],
+              },
+            ]}
+          />
+        </ProCard.TabPane>
+        <ProCard.TabPane
+          key={'fields'}
+          tab={<FormattedMessage id="ModelFields" />}
+        ></ProCard.TabPane>
+      </ProCard>
     </PageContainer>
   );
 };

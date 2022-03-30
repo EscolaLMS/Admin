@@ -1,6 +1,6 @@
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { format } from 'date-fns';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -15,6 +15,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
 }) => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+  const [loading, setLoading] = useState(false);
 
   const columns: ProColumns<API.TemplateListItem>[] = [
     {
@@ -47,12 +48,38 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
     },
   ];
 
+  const handleRemove = useCallback(
+    async (id: number) => {
+      setLoading(true);
+      const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+      try {
+        await deleteTemplate(id).then((response) => {
+          setLoading(false);
+          if (response.success) {
+            message.success(response.message);
+          }
+        });
+        hide();
+        setLoading(false);
+        actionRef.current?.reload();
+        return true;
+      } catch (error) {
+        hide();
+        message.error(<FormattedMessage id="error" defaultMessage="error" />);
+        setLoading(false);
+        return false;
+      }
+    },
+    [actionRef],
+  );
+
   return (
     <ProTable<API.TemplateListItem, API.PageParams>
       headerTitle={intl.formatMessage({
         id: 'templates',
         defaultMessage: 'templates',
       })}
+      loading={loading}
       actionRef={actionRef}
       rowKey="id"
       search={false}
@@ -64,8 +91,10 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
         </Link>,
       ]}
       request={({ pageSize, current }) => {
+        setLoading(true);
         return templates({ pageSize, current }).then((response) => {
           if (response.success) {
+            setLoading(false);
             return {
               data: response.data.filter((item) => item.channel === channel),
               total: response.meta.total,
@@ -96,17 +125,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
                   defaultMessage="Are you sure to delete this record?"
                 />
               }
-              onConfirm={async () => {
-                const request = await deleteTemplate(record.id);
-                const response = await request;
-
-                if (response.success) {
-                  message.success(response.message);
-                  if (actionRef.current) {
-                    actionRef.current.reload();
-                  }
-                }
-              }}
+              onConfirm={() => handleRemove(record.id)}
               okText={<FormattedMessage id="yes" />}
               cancelText={<FormattedMessage id="no" />}
             >

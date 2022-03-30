@@ -261,7 +261,7 @@ declare namespace API {
     created_at: string;
     onboarding_completed: boolean;
     email_verified: boolean;
-    interests: string[];
+    interests: any;
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];
@@ -523,7 +523,7 @@ declare namespace API {
     content: string;
     title: string;
     event?: string;
-    channel?: string;
+    channel?: TemplateChannel;
     sections?: TemplateSections[];
     created_at?: Date;
     default?: boolean;
@@ -561,19 +561,19 @@ declare namespace API {
 
   type FileUpload = DefaultResponse<File[]>;
 
-  type CERTIFICATE = {
+  type Certificate = {
     id: number;
     name: string;
     event: string;
     default: boolean;
-    assignables: CERTIFICATE_ASSIGNABLES[];
-    channel: number;
-    selection: CERTIFICATE_SELECTION[];
+    assignables: CertificateAssignables[];
+    channel: TemplateChannel;
+    selection: CertificateSelection[];
     created_at: string;
     updated_at: string;
   };
 
-  type CERTIFICATE_SELECTION = {
+  type CertificateSelection = {
     id: number;
     key: string;
     template_id: number;
@@ -582,11 +582,16 @@ declare namespace API {
     updated_at: string;
   };
 
-  type CERTIFICATE_ASSIGNABLES = {};
+  type CertificateAssignables = {};
 
-  type Template = CERTIFICATE[];
+  type Template = Certificate[];
 
   type TemplateList = DefaultResponse<Template>;
+
+  type TemplateChannel =
+    | 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel'
+    | 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel'
+    | 'EscolaLms\\TemplatesSms\\Core\\SmsChannel';
 
   type SCORM = {
     id: number;
@@ -651,6 +656,12 @@ declare namespace API {
     image_url?: string;
   };
 
+  type ConsultationAppointment = {
+    date: Date;
+    author: UserItem;
+    status: string;
+  };
+
   type TemplateItem = {
     assignable_class: string;
     assignable_id: number;
@@ -698,41 +709,19 @@ declare namespace API {
     guard_name?: string;
   };
 
-  type QuestionAnswer = {
-    id: number;
-    note: string;
-    question_id: number;
-    questionnaire_model_id: number;
-    rate: number;
-    user_id: number;
-  };
+  type QuestionAnswer = EscolaLms.Questionnaire.Models.QuestionAnswer;
 
-  type Questionnaire = {
-    id?: number;
-    title: string;
-    questions?: Question[];
+  type Questionnaire = EscolaLms.Questionnaire.Models.Questionnaire & {
     models?: QuestionnaireModel[];
-    active: boolean;
-    answers?: QuestionAnswer[];
   };
 
-  type QuestionnaireModel = {
-    id: number;
-    model_class: string;
-    title: string;
-    model_id?: number;
-    model_type_id?: number;
+  type QuestionnaireModel = EscolaLms.Questionnaire.Models.QuestionnaireModel & {
+    model_type_title?: string;
+    title?: string;
+    model_title: string;
   };
 
-  type Question = {
-    id: number;
-    title: string;
-    questionnaire_id: id;
-    description: string;
-    position: number;
-    active: boolean;
-    type: string;
-  };
+  type Question = EscolaLms.Questionnaire.Models.Question;
 
   type QuestionnaireReport = {
     avg_rate: string;
@@ -784,16 +773,34 @@ declare namespace API {
         value: API.UserItem;
       }
     | {
-        type: 'EscolaLms\\Cart\\Models\\Order';
+        type: 'App\\Models\\Order' | 'EscolaLms\\Cart\\Models\\Order';
         value: API.Order;
       }
     | {
-        type: 'EscolaLms\\Cart\\Models\\Course';
+        type: 'App\\Models\\Course' | 'EscolaLms\\Cart\\Models\\Course';
         value: API.Course;
       }
     | {
-        type: 'EscolaLms\\Auth\\Models\\UserGroup';
+        type: 'App\\Models\\Webinar' | 'EscolaLms\\Webinars\\Models\\Webinar';
+        value: API.Webinar;
+      }
+    | {
+        type: 'App\\Models\\User' | 'EscolaLms\\Auth\\Models\\UserGroup';
         value: API.UserGroup;
+      }
+    | {
+        type:
+          | 'App\\Models\\StationaryEvent'
+          | 'EscolaLms\\StationaryEvents\\Models\\StationaryEvent';
+        value: EscolaLms.StationaryEvents.Models.StationaryEvent;
+      }
+    | {
+        type: 'Questionnaire';
+        value: API.Questionnaire;
+      }
+    | {
+        type: 'App\\Models\\Consultation' | 'EscolaLms\\Consultations\\Models\\Consultation';
+        value: API.Consultation;
       };
 
   type ReportType =
@@ -947,9 +954,40 @@ declare namespace API {
     active_from: string;
     created_at: string;
     updated_at: string;
-    authors: UserItem[] | number[];
+    trainers: UserItem[] | number[];
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
   };
+
+  type ProductableListItem = {
+    productable_id: number;
+    name: string;
+    productable_type: string;
+    id: number;
+    morph_class: string;
+    description: string;
+  };
+
+  type ProductableResourceListItem = {
+    class: string;
+    description: string;
+    id: number;
+    name: string;
+  };
+
+  type ProductProductable = EscolaLms.Cart.Models.ProductProductable & {
+    morph_class: string;
+    name: string;
+    description: string;
+  };
+  // I need to overwrite extra key by any, cause it could be any right now
+  type ModelField = EscolaLms.ModelFields.Models.Metadata & { extra?: any };
+
+  enum VouchersTypes {
+    cart_fixed = 'cart_fixed',
+    cart_percent = 'cart_percent',
+    product_fixed = 'product_fixed',
+    product_percent = 'product_percent',
+  }
 }

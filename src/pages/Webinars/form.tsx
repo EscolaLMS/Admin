@@ -1,10 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
   ProFormDatePicker,
   ProFormSelect,
+  ProFormTextArea,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -20,6 +21,8 @@ import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
+import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -60,6 +63,7 @@ const WebinarForm = () => {
           setManageCourseEdit({
             showModal: true,
             disableEdit: true,
+            clicked: false,
           });
           return;
         }
@@ -68,9 +72,9 @@ const WebinarForm = () => {
           ...values,
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
-          authors:
-            values.authors &&
-            values.authors.map((author) => (typeof author === 'object' ? author.id : author)),
+          trainers:
+            values.trainers &&
+            values.trainers.map((author) => (typeof author === 'object' ? author.id : author)),
         };
         let response: API.DefaultResponse<API.Webinar>;
         if (isNew) {
@@ -142,6 +146,36 @@ const WebinarForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+          {manageCourseEdit.disableEdit && (
+            <Alert
+              closable
+              style={{ marginBottom: '20px' }}
+              type="warning"
+              message={
+                <FormattedMessage
+                  id="course_edit_warning_message"
+                  defaultMessage="course_edit_warning_message"
+                />
+              }
+              action={
+                <Button
+                  onClick={() =>
+                    setManageCourseEdit({
+                      showModal: true,
+                      disableEdit: true,
+                      clicked: true,
+                    })
+                  }
+                  type="primary"
+                >
+                  <FormattedMessage
+                    id="questionnaire.submit"
+                    defaultMessage="questionnaire.submit"
+                  />
+                </Button>
+              }
+            />
+          )}
           <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
           <ProForm
@@ -227,11 +261,29 @@ const WebinarForm = () => {
                 disabled={manageCourseEdit.disableEdit}
               />
               <ProForm.Item
-                name="authors"
+                name="trainers"
                 label={<FormattedMessage id="tutor" />}
                 valuePropName="value"
               >
                 <UserSelect multiple />
+              </ProForm.Item>
+            </ProForm.Group>
+            <ProForm.Group>
+              <ProFormTextArea
+                width="lg"
+                name="short_desc"
+                label={<FormattedMessage id="short_description" />}
+                tooltip={<FormattedMessage id="short_description" />}
+              />
+            </ProForm.Group>
+            <ProForm.Group>
+              <ProForm.Item
+                name="agenda"
+                label={<FormattedMessage id="program" />}
+                tooltip={<FormattedMessage id="program" />}
+                valuePropName="value"
+              >
+                <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>
@@ -245,7 +297,24 @@ const WebinarForm = () => {
               </ProForm.Item>
             </ProForm.Group>
           </ProForm>
-        </ProCard.TabPane>
+        </ProCard.TabPane>{' '}
+        {!isNew && (
+          <ProCard.TabPane
+            key="prices"
+            tab={<FormattedMessage id="prices" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {webinar && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Webinar',
+                  class_id: webinar,
+                  name: String(data.name),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane
             key="media"
@@ -286,6 +355,19 @@ const WebinarForm = () => {
                     <TagsInput />
                   </ProForm.Item>
                 </ProForm>
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        )}{' '}
+        {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {webinar && <UserSubmissions id={Number(webinar)} type="App\Models\Webinar" />}
               </Col>
             </Row>
           </ProCard.TabPane>

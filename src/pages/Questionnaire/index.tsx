@@ -7,7 +7,7 @@ import { questionnaire, deleteQuestionnaire } from '@/services/escola-lms/questi
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
-const TableColumns: ProColumns<API.Questionnaire>[] = [
+export const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
     title: <FormattedMessage id="id" defaultMessage="id" />,
     dataIndex: 'id',

@@ -1,74 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Pie } from '@ant-design/charts';
+import React from 'react';
+import { Column } from '@ant-design/charts';
+
 import { Spin, Alert } from 'antd';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { questionnaireReport } from '@/services/escola-lms/questionnaire';
+import { QuestionnaireRaportState } from './Raports';
 
 const config = {
-  appendPadding: 10,
-  angleField: 'value',
-  colorField: 'label',
-  radius: 0.9,
-  label: {
-    type: 'inner',
-    offset: '-30%',
-
-    content: function content(_ref: Record<string, any>) {
-      const percent = _ref.percent as number;
-      return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
-    },
-    style: {
-      fontSize: 14,
-      textAlign: 'center',
-    },
-  },
-  interactions: [{ type: 'element-active' }],
+  isGroup: true,
+  xField: 'label',
+  yField: 'value',
+  seriesField: 'type',
+  marginRatio: 0,
 };
 
-type State =
-  | {
-      mode: 'init';
-    }
-  | {
-      mode: 'loading';
-    }
-  | {
-      mode: 'error';
-      error: string;
-    }
-  | {
-      mode: 'loaded';
-      value: any;
-    };
-
-const QuestionnaireChart: React.FC<{ id: number; type: string }> = ({ id, type }) => {
-  const [state, setState] = useState<State>({ mode: 'init' });
-
-  useEffect(() => {
-    setState({ mode: 'loading' });
-    questionnaireReport(id)
-      .then((response) => {
-        if (response.success) {
-          setState({
-            mode: 'loaded',
-            value: response.data.map((val) => ({
-              label: val.title,
-              value: val[type],
-            })),
-          });
-        } else {
-          setState({ mode: 'error', error: response.message });
-        }
-      })
-      .catch((err) => setState({ mode: 'error', error: err.toString() }));
-  }, [id, type]);
-
+const QuestionnaireChart: React.FC<{ state: QuestionnaireRaportState }> = ({ state }) => {
+  const intl = useIntl();
   return (
-    <ProCard title={<FormattedMessage id={type} />} headerBordered style={{ height: '500px' }}>
+    <ProCard headerBordered style={{ height: '500px' }}>
       {state.mode === 'loading' && <Spin />}
-      {state.mode === 'loaded' && <Pie {...config} data={state.value} />}
-      {state.mode === 'error' && <Alert message={state.error} type="error" />}
+      {state.mode === 'loaded' && state.value.length > 0 ? (
+        <Column
+          {...config}
+          data={[...state.value, ...state.value].map(
+            (val: Record<string, number | string>, index: number) => ({
+              label: val.title,
+              value: index > state.value.length - 1 ? val.count_answers : Number(val.avg_rate),
+              type:
+                index > state.value.length - 1 ? intl.formatMessage({ id: 'answers' }) : 'Rating',
+            }),
+          )}
+        />
+      ) : (
+        state.mode !== 'loading' && (
+          <p>
+            <FormattedMessage id="no_data" defaultMessage="no_data" />
+          </p>
+        )
+      )}
+      {state.mode === 'error' && <Alert message={state.error.data.message} type="error" />}
     </ProCard>
   );
 };

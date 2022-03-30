@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from 'umi';
+import { RequestOptionsInit } from 'umi-request';
 
 export enum TopicType {
   Unselected = '',
@@ -23,7 +24,7 @@ export async function course(
     title?: string;
     status?: string;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
@@ -38,7 +39,7 @@ export async function course(
 }
 
 /**  GET /api/courses/:id */
-export async function getCourse(id: number, options?: { [key: string]: any }, cache?: boolean) {
+export async function getCourse(id: number, options?: RequestOptionsInit, cache?: boolean) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: cache !== undefined ? cache : true,
@@ -280,6 +281,17 @@ export async function cloneLesson(id: number, options?: { [key: string]: any }) 
 export async function cloneTopic(id: number, options?: { [key: string]: any }) {
   return request<API.CourseAccessList>(`/api/admin/topics/${id}/clone`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/admin/courses/:id/clone */
+export async function cloneCourse(id: number, options?: { [key: string]: any }) {
+  return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}/clone`, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },

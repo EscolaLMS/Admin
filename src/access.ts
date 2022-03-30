@@ -76,6 +76,14 @@ export default function access(initialState: { currentUser: any }) {
     stationaryEventsListPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsList),
     stationaryEventsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsRead),
 
+    productsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ProductsList),
+    productsListPermission: havePermissionsInDashboard(PERMISSIONS.ProductsManage),
+
+    trackerListPermission: havePermissionsInDashboard(PERMISSIONS.TrackerList),
+
+    voucherListPermission: havePermissionsInDashboard(PERMISSIONS.VoucherList),
+    voucherDetailPermission: havePermissionsInDashboard(PERMISSIONS.VoucherRead),
+
     loggedOut: !currentUser,
   };
 }

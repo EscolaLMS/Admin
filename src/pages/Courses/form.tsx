@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -8,7 +8,7 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { useParams, history, useIntl, FormattedMessage, useAccess } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -29,13 +29,15 @@ import { ModelTypes } from '../Questionnaire/form';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
+import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
   const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
-
+  const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
@@ -70,6 +72,7 @@ export default () => {
           setManageCourseEdit({
             showModal: true,
             disableEdit: true,
+            clicked: false,
           });
           return;
         }
@@ -140,15 +143,11 @@ export default () => {
             },
             {
               path: '/',
-              breadcrumbName: intl.formatMessage({
-                id: String(data.title),
-              }),
+              breadcrumbName: String(data.title),
             },
             {
               path: String(tab),
-              breadcrumbName: intl.formatMessage({
-                id: String(tab),
-              }),
+              breadcrumbName: String(tab),
             },
           ],
         },
@@ -162,6 +161,36 @@ export default () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+          {manageCourseEdit.disableEdit && (
+            <Alert
+              closable
+              style={{ marginBottom: '20px' }}
+              type="warning"
+              message={
+                <FormattedMessage
+                  id="course_edit_warning_message"
+                  defaultMessage="course_edit_warning_message"
+                />
+              }
+              action={
+                <Button
+                  onClick={() =>
+                    setManageCourseEdit({
+                      showModal: true,
+                      disableEdit: true,
+                      clicked: true,
+                    })
+                  }
+                  type="primary"
+                >
+                  <FormattedMessage
+                    id="questionnaire.submit"
+                    defaultMessage="questionnaire.submit"
+                  />
+                </Button>
+              }
+            />
+          )}
           <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
 
@@ -359,6 +388,23 @@ export default () => {
         </ProCard.TabPane>
         {!isNew && (
           <ProCard.TabPane
+            key="prices"
+            tab={<FormattedMessage id="prices" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {course && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Course',
+                  class_id: course,
+                  name: String(data.title),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
             key="media"
             tab={<FormattedMessage id="media" />}
             disabled={manageCourseEdit.disableEdit}
@@ -454,7 +500,7 @@ export default () => {
             {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {!isNew && access.scormListPermission && (
           <ProCard.TabPane
             key="scorm"
             tab={<FormattedMessage id="scorm" />}
@@ -503,6 +549,19 @@ export default () => {
             disabled={manageCourseEdit.disableEdit}
           >
             {course && <CourseStatistics courseId={course} />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
+              </Col>
+            </Row>
           </ProCard.TabPane>
         )}
       </ProCard>

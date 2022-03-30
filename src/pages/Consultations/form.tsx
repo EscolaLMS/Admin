@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Calendar } from 'antd';
+import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -27,7 +27,10 @@ import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
+import ConsultationCalendar from './components/Calendar';
 import './index.css';
+import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 const ConsultationForm = () => {
   const intl = useIntl();
@@ -68,6 +71,7 @@ const ConsultationForm = () => {
           setManageCourseEdit({
             showModal: true,
             disableEdit: true,
+            clicked: false,
           });
           return;
         }
@@ -155,6 +159,36 @@ const ConsultationForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+          {manageCourseEdit.disableEdit && (
+            <Alert
+              closable
+              style={{ marginBottom: '20px' }}
+              type="warning"
+              message={
+                <FormattedMessage
+                  id="course_edit_warning_message"
+                  defaultMessage="course_edit_warning_message"
+                />
+              }
+              action={
+                <Button
+                  onClick={() =>
+                    setManageCourseEdit({
+                      showModal: true,
+                      disableEdit: true,
+                      clicked: true,
+                    })
+                  }
+                  type="primary"
+                >
+                  <FormattedMessage
+                    id="questionnaire.submit"
+                    defaultMessage="questionnaire.submit"
+                  />
+                </Button>
+              }
+            />
+          )}
           <UnsavedPrompt show={unsavedChanges} />{' '}
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
           <ProForm
@@ -267,7 +301,24 @@ const ConsultationForm = () => {
               </ProForm.Item>
             </ProForm.Group>
           </ProForm>
-        </ProCard.TabPane>{' '}
+        </ProCard.TabPane>
+        {!isNew && (
+          <ProCard.TabPane
+            key="prices"
+            tab={<FormattedMessage id="prices" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {consultation && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Consultation',
+                  class_id: consultation,
+                  name: String(data.name),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane
             key="media"
@@ -313,8 +364,23 @@ const ConsultationForm = () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {consultation && (
+                  <UserSubmissions id={Number(consultation)} type="App\Models\Consultation" />
+                )}
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
           <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
-            <Calendar />
+            <ConsultationCalendar consultation={Number(consultation)} />
           </ProCard.TabPane>
         )}
       </ProCard>

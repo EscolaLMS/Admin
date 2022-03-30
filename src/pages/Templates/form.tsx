@@ -34,7 +34,7 @@ const variablesForChannel = (
 };
 
 // creates sections collections for post template
-const createEntries = (data: Record<string, string>) => {
+const createEntries = (data: Record<string, string>): API.TemplateSections[] => {
   return Object.entries(data).map((entry) => {
     return {
       key: entry[0],
@@ -47,7 +47,8 @@ const objectFlatten = (data: Record<string, string>[]): Record<string, string> =
   Object.assign({}, ...data);
 
 // helper function that throws away unnecessary keys to create a sections collection
-const filterNotAllowedKeys = (values: Record<string, string>) => {
+
+const filterNotAllowedKeys = (values: Partial<API.Template>) => {
   const notAllowedKeys = ['name', 'event', 'default'];
   return Object.keys(values)
     .filter((key) => !notAllowedKeys.includes(key))
@@ -67,14 +68,16 @@ type Tokens = {
   };
 };
 
+// TODO change this to union string type
 const channels = {
   email: 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
   pdf: 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
+  sms: 'EscolaLms\\TemplatesSms\\Core\\SmsChannel',
 };
 
 export default () => {
   const intl = useIntl();
-  const params = useParams<{ template: 'email' | 'pdf'; id: string }>();
+  const params = useParams<{ template: 'email' | 'pdf' | 'sms'; id: string }>();
 
   const { template, id } = params;
 
@@ -150,7 +153,7 @@ export default () => {
 
       const postData: Partial<API.Template> = {
         ...values,
-        channel: channels[template],
+        channel: channels[template] as API.Template['channel'],
         sections: createEntries(filterNotAllowedKeys(values)),
       };
 
@@ -225,7 +228,7 @@ export default () => {
             <ProForm.Item label={<FormattedMessage id="templates.set_as_default_template" />}>
               <ProFormCheckbox name="default" />
             </ProForm.Item>
-            {!isNew && (
+            {!isNew && template !== 'sms' && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton
                   disabled={!saved}

@@ -1,0 +1,16 @@
+export default {
+  vouchers: 'Vouchers',
+  voucher: 'Voucher',
+  'vouchers.code': 'Voucher code',
+  'vouchers.limit_usage': 'Limit usage',
+  'vouchers.max_cart_price': 'Max cart price',
+  'vouchers.min_cart_price': 'Min. cart price',
+  'vouchers.type': 'Vocher type',
+  'vouchers.included_products': 'Included products',
+  'vouchers.excluded_products': 'Excluded products',
+  'vouchers.cart_fixed': 'Cart fixed',
+  'vouchers.cart_percent': 'Cart percentage',
+  'vouchers.product_fixed': 'Product fixed',
+  'vouchers.product_percent': 'Product percentage',
+  'voucher.edit': 'Edit voucher',
+};

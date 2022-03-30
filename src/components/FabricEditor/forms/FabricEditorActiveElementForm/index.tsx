@@ -10,6 +10,7 @@ import FabricEditorImageForm from '@/components/FabricEditor/forms/FabricEditorA
 import FabricEditorLineForm from '@/components/FabricEditor/forms/FabricEditorActiveElementForm/FabricEditorLineForm';
 import { ACTIVE_ELEMENT_FIELD_NAMES } from '@/components/FabricEditor/consts';
 import type { ActiveElementFieldName, ActiveElementState } from '@/components/FabricEditor/types';
+import { FormattedMessage } from 'umi';
 
 const FabricEditorActiveElementForm: React.FC<{
   editorController: FabricEditorController;
@@ -97,7 +98,7 @@ const FabricEditorActiveElementForm: React.FC<{
             onConfirm={() => editorController?.deleteSelected()}
           >
             <Button type="primary" danger htmlType="button">
-              Remove object
+              <FormattedMessage id="fabric.remove" />
             </Button>
           </Popconfirm>
         </>

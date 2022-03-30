@@ -1,36 +1,31 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Form, Button, Space, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
-import { user as fetchUser, updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
+import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
 import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
 import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
-import { configs as getConfig } from '@/services/escola-lms/settings';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
+import useModelFields from '@/hooks/useModelFields';
 import AdditionalFields from './components/AdditionalFields';
 
-export default ({ isNew }: { isNew: boolean }) => {
+export default ({
+  isNew,
+  data,
+  setData,
+}: {
+  isNew: boolean;
+  data: Partial<API.UserItem> | undefined;
+  setData: (data: Partial<API.UserItem>) => void;
+}) => {
   const intl = useIntl();
   const params = useParams<{ user?: string }>();
   const { user } = params;
-
-  const [data, setData] = useState<Partial<API.UserItem>>();
-
+  const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
   const [roles, setRoles] = useState<API.Role[]>();
-  const [additionalRequiredFields, setAdditionalRequiredFields] = useState<string[]>([]);
-  const [additionalFields, setAdditionalFields] = useState<string[]>([]);
-
-  const fetchData = useCallback(async () => {
-    const response = await fetchUser(Number(user));
-    if (response.success) {
-      setData({
-        ...response.data,
-      });
-    }
-  }, [user]);
 
   const fetchRoles = useCallback(async () => {
     const request = await getRoles();
@@ -41,22 +36,12 @@ export default ({ isNew }: { isNew: boolean }) => {
     }
   }, [user]);
 
-  const fetchFields = useCallback(async () => {
-    const request = await getConfig();
-    if (request.success) {
-      setAdditionalRequiredFields(
-        request.data.escola_auth.additional_fields_required.value as string[],
-      );
-
-      setAdditionalFields(request.data.escola_auth.additional_fields.value as string[]);
-    }
-  }, []);
-
   const onDeleteAvatar = () => {
     deleteUserAvatar(Number(user))
       .then((response) => {
         if (response.success) {
           message.success(response.message);
+          // @ts-ignore
           setData((prevState) => ({
             ...prevState,
             avatar: '',
@@ -71,19 +56,11 @@ export default ({ isNew }: { isNew: boolean }) => {
 
   useEffect(() => {
     fetchRoles();
-    fetchFields();
-    if (isNew) {
-      setData({});
-      return;
-    }
-
-    fetchData();
-  }, [user, fetchData]);
+  }, [user]);
 
   const formProps = useMemo(
     () => ({
-      // @ts-ignore
-      onFinish: async (values) => {
+      onFinish: async (values: Partial<API.UserItem>) => {
         let response: API.DefaultResponse<API.UserItem>;
 
         const postData: Partial<API.UserItem> = {
@@ -102,15 +79,6 @@ export default ({ isNew }: { isNew: boolean }) => {
         message.success(response.message);
       },
       initialValues: data,
-      /*
-      request: async () => {
-        const response = await getCourse(Number(course));
-        if (response.success) {
-          return response.data;
-        }
-        return {};
-      },
-      */
     }),
     [data, user],
   );
@@ -162,7 +130,12 @@ export default ({ isNew }: { isNew: boolean }) => {
           })}
           required={isNew}
         />
-
+        {additionalFields.state === 'loaded' &&
+          additionalFields.list.map((field: API.ModelField) => (
+            <AdditionalFields key={field.id} field={field} />
+          ))}
+      </ProForm.Group>
+      <ProForm.Group>
         {!isNew && (
           <Space direction="vertical">
             {/* if he is an admin, do not display the switch */}
@@ -212,11 +185,6 @@ export default ({ isNew }: { isNew: boolean }) => {
           />
         )}
       </ProForm.Group>
-      <AdditionalFields
-        additionalFields={additionalFields}
-        requiredFields={additionalRequiredFields}
-        id={data.id}
-      />
 
       {!isNew && (
         <ProForm.Group>

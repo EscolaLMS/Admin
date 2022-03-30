@@ -1,6 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col } from 'antd';
-import ProForm, { ProFormText, ProFormDigit, ProFormDatePicker } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormText,
+  ProFormDigit,
+  ProFormDatePicker,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -19,16 +24,20 @@ import {
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
-
+import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import './index.css';
+import ProductWidget from '@/components/ProductWidget';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 const StationaryEventForm = () => {
   const intl = useIntl();
   const params = useParams<{ id?: string; tab?: string }>();
   const { id, tab = 'attributes' } = params;
   const isNew = id === 'new';
-
-  const [data, setData] = useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>>();
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [data, setData] =
+    useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent & { image_url: string }>>();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
@@ -36,6 +45,7 @@ const StationaryEventForm = () => {
     if (response.success) {
       setData({
         ...response.data,
+        categories: response?.data?.categories.map(categoriesArrToIds),
       });
     }
   }, [id]);
@@ -53,23 +63,27 @@ const StationaryEventForm = () => {
 
   const formProps = useMemo(
     () => ({
-      onFinish: async (values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent>) => {
+      onFinish: async (
+        values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent & { image_url: string }>,
+      ) => {
         const postData = {
           ...values,
-          /*
+          authors: values.authors && values.authors.map(categoriesArrToIds),
+          categories: values.categories && values.categories.map(categoriesArrToIds),
           image_url: data && data.image_url,
-          image_path: data && data.image_url && splitImagePath(data.image_url),
-          */
+          image_path: data && data.image_path && splitImagePath(data.image_path),
         };
         let response: API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>;
         if (isNew) {
           response = await createStationaryEvent(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/stationary-events/${response.data.id}`);
           }
         } else {
           response = await updateStationaryEvent(Number(id), postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/stationary-events/${response.data.id}/${tab}`);
           }
         }
@@ -132,7 +146,14 @@ const StationaryEventForm = () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
-          <ProForm {...formProps} form={form}>
+          <UnsavedPrompt show={unsavedChanges} />{' '}
+          <ProForm
+            {...formProps}
+            form={form}
+            onValuesChange={() => {
+              setUnsavedChanges(true);
+            }}
+          >
             <ProForm.Group>
               <ProFormText
                 width="md"
@@ -200,7 +221,14 @@ const StationaryEventForm = () => {
                 })}
               />
             </ProForm.Group>
-
+            <ProForm.Group>
+              <ProFormTextArea
+                width="lg"
+                name="short_desc"
+                label={<FormattedMessage id="short_description" />}
+                tooltip={<FormattedMessage id="short_description" />}
+              />
+            </ProForm.Group>
             <ProForm.Item
               name="program"
               label={<FormattedMessage id="program" />}
@@ -219,7 +247,20 @@ const StationaryEventForm = () => {
               <WysiwygMarkdown directory={`stationary_events/${id}/wysiwyg`} />
             </ProForm.Item>
           </ProForm>
-        </ProCard.TabPane>
+        </ProCard.TabPane>{' '}
+        {!isNew && (
+          <ProCard.TabPane key="prices" tab={<FormattedMessage id="prices" />}>
+            {id && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\StationaryEvent',
+                  class_id: id,
+                  name: String(data.name),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
@@ -249,9 +290,18 @@ const StationaryEventForm = () => {
                     name="categories"
                     valuePropName="value"
                   >
-                    <CategoryCheckboxTree />
+                    <CategoryCheckboxTree multiple={false} />
                   </ProForm.Item>
                 </ProForm>
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane key="user_submission" tab={<FormattedMessage id="user_submission" />}>
+            <Row>
+              <Col span={12}>
+                {id && <UserSubmissions id={Number(id)} type="App\Models\StationaryEvent" />}
               </Col>
             </Row>
           </ProCard.TabPane>

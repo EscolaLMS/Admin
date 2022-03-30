@@ -3,7 +3,7 @@ import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { Select } from 'antd';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { useIntl, FormattedMessage } from 'umi';
-import JsonEditor from './jsoneditor';
+import JsonEditor from '@/components/JsonEditor';
 
 export const TopicForm: React.FC<{
   onValuesChange: (changedValues: any, values: Record<string, string>) => void;
