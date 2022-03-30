@@ -12,6 +12,7 @@ import { usersCsvExport } from '@/services/escola-lms/csv';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import SecureUpload from '@/components/SecureUpload';
+import UserRoleSelect from '../../components/UserRoleSelect';
 import ProCard from '@ant-design/pro-card';
 
 import './index.css';
@@ -90,18 +91,12 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     hideInSearch: true,
     render: (_, record) => record.roles.map((role) => <Tag key={role}>{role}</Tag>),
   },
-
   {
-    title: <FormattedMessage id="roles" defaultMessage="roles" />,
-    key: 'role',
-    valueType: 'select',
+    hideInSearch: false,
+    title: <FormattedMessage id="role" defaultMessage="role" />,
     dataIndex: 'role',
-    width: 100,
-    hideInTable: true,
-    valueEnum: {
-      admin: { text: 'Admin' },
-      tutor: { text: 'Tutor' },
-      student: { text: 'Student' },
+    renderFormItem: (item, { type, defaultRender, ...rest }) => {
+      return <UserRoleSelect {...rest} />;
     },
   },
 ];
@@ -195,7 +190,7 @@ const TableList: React.FC = () => {
                 <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
               </Button>,
 
-              <Link to="/users/new" key={'new'}>
+              <Link to="/users/new">
                 <Button type="primary" key="primary">
                   <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
                 </Button>
@@ -204,7 +199,6 @@ const TableList: React.FC = () => {
             request={({ pageSize, current, search, role }) => {
               setParams({ pageSize, current, search, role });
               const requestRole = role && role.toString() === 'all' ? undefined : role;
-
               return users({ pageSize, current, search, role: requestRole }).then((response) => {
                 if (response.success) {
                   return {
