@@ -44,7 +44,7 @@ export const FabricPreview: React.FC<{
   const onCanvasReady = (canvas: fabric.Canvas) => {
     if (initialValue) {
       try {
-        const data = JSON.parse(initialValue);
+        const data = typeof initialValue === 'string' ? JSON.parse(initialValue) : initialValue;
         canvas.loadFromJSON(data, () => {
           const svgDef = canvas.toSVG();
           const doc = new jsPDF('l', 'px', [width, height]);
@@ -56,6 +56,7 @@ export const FabricPreview: React.FC<{
           });
         });
       } catch (err) {
+        console.log(err);
         // this is not a json
       }
     }
