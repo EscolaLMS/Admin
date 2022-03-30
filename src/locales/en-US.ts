@@ -151,6 +151,7 @@ export default {
   course: 'Course',
   select: 'Please select',
   select_tags: 'Select tags',
+  to: 'to',
   select_person: 'Select a person',
   select_course: 'Select a course',
   select_templates: 'Select a templates',
@@ -403,4 +404,5 @@ export default {
   user_logs: 'User logs',
   http_method: 'HTTP method',
   path: 'Path',
+  select_content: 'Select content',
 };
