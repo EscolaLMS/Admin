@@ -1,16 +1,19 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Spin, List, Alert, Button } from 'antd';
+import { Spin, List, Alert, Button, Typography, Divider } from 'antd';
 
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import { FabricPreview } from '@/components/FabricEditor/preview';
 
 import { pdfs, pdf } from '@/services/escola-lms/pdfs';
+import PdfZipList from '@/components/Pdf/ziplist';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { DownloadOutlined } from '@ant-design/icons';
 
 type Request = EscolaLms.TemplatesPdf.Http.Requests.PdfListingAdminRequest & {
   template_id?: number;
+  title?: string;
 };
 type Model = EscolaLms.TemplatesPdf.Models.FabricPDF;
 
@@ -42,10 +45,11 @@ type PreviewState =
       data: any;
     };
 
-export const PdfList: React.FC<Request> = ({ user_id, template_id }) => {
+export const PdfList: React.FC<Request> = ({ user_id, template_id, title }) => {
   const [state, setState] = useState<ModelState>({ state: 'initial' });
 
   const [previewState, setPreviewState] = useState<PreviewState>({ state: 'initial' });
+  const [generateAll, setGenerateAll] = useState<boolean>(false);
 
   useEffect(() => {
     setState({ state: 'loading' });
@@ -86,15 +90,39 @@ export const PdfList: React.FC<Request> = ({ user_id, template_id }) => {
 
   return (
     <Fragment>
+      <Divider />
+      {generateAll && (
+        <PdfZipList
+          pdfIds={state.list.map((item) => item.id)}
+          onFinished={() => setGenerateAll(false)}
+        />
+      )}
       <List
         size="small"
         itemLayout="horizontal"
         dataSource={state.list}
-        header={<FormattedMessage id="generated_pdfs" defaultMessage="Generated PDFs" />}
+        header={
+          <div>
+            <FormattedMessage id="template" />{' '}
+            {title && <Typography.Text strong>{title}</Typography.Text>}
+            {'. '}
+            <FormattedMessage id="generated_pdfs" defaultMessage="Generated PDFs" />{' '}
+            <Button
+              loading={generateAll}
+              type="primary"
+              onClick={() => setGenerateAll(true)}
+              icon={<DownloadOutlined />}
+              size="small"
+            >
+              <FormattedMessage id="download_all" defaultMessage="Download all PDFs" />
+            </Button>
+          </div>
+        }
         renderItem={(item) => (
           <List.Item
             actions={[
               <Button
+                icon={<DownloadOutlined />}
                 type="primary"
                 onClick={() => getPdf(item.id)}
                 loading={previewState.state === 'loading'}
