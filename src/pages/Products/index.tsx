@@ -212,8 +212,9 @@ const Products: React.FC = () => {
             productable_id: productable ? Number((productable as string).split(':')[1]) : undefined,
             productable_type: productable ? (productable as string).split(':')[0] : undefined,
             type: type && type !== 'all' ? type : undefined,
-            purchasable: purchasable && purchasable !== 'all' ? purchasable : undefined,
-            free: free && free !== 'all' ? free : undefined,
+            purchasable:
+              purchasable && purchasable !== 'all' ? (purchasable === 'true' ? 1 : 0) : undefined,
+            free: free && free !== 'all' ? (free === 'true' ? true : false) : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
