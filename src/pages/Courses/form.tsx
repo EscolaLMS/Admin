@@ -4,7 +4,6 @@ import ProForm, {
   ProFormText,
   ProFormDigit,
   ProFormDatePicker,
-  ProFormCheckbox,
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
@@ -330,7 +329,8 @@ export default () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
-              <ProFormCheckbox
+              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* <ProFormCheckbox
                 width="sm"
                 name="purchasable"
                 label={<FormattedMessage id="purchasable" />}
@@ -340,8 +340,9 @@ export default () => {
                   defaultMessage: 'purchasable',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-              />
-              <ProFormCheckbox
+              /> */}
+              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* <ProFormCheckbox
                 width="sm"
                 name="findable"
                 label={<FormattedMessage id="findable" />}
@@ -351,7 +352,7 @@ export default () => {
                   defaultMessage: 'findable',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-              />
+              /> */}
             </ProForm.Group>
 
             <ProForm.Group>
