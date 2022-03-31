@@ -7,8 +7,8 @@ export async function products(
     API.PaginationParams &
     EscolaLms.Cart.Http.Requests.ProductSearchRequest & {
       type?: 'single' | 'bundle';
-      purchasable?: boolean | 0 | 1;
-      free?: boolean | 0 | 1;
+      purchasable?: string;
+      free?: string;
     },
   options?: RequestOptionsInit,
 ) {
@@ -16,9 +16,9 @@ export async function products(
     method: 'GET',
     params: {
       ...params,
-      purchasable: params.purchasable ? (params.purchasable === true ? 1 : 0) : undefined,
+      purchasable: params.purchasable ? (params.purchasable === 'true' ? 1 : 0) : undefined,
 
-      free: params.free ? (params.free === true ? 1 : 0) : undefined,
+      free: params.free ? (params.free === 'true' ? 1 : 0) : undefined,
       per_page: params.pageSize,
       page: params.current,
     },
