@@ -33,7 +33,7 @@
         "start:pre": "cross-env REACT_APP_ENV=pre UMI_ENV=dev umi dev",
         "start:test": "cross-env REACT_APP_ENV=test MOCK=none UMI_ENV=dev umi dev",
         "test:component": "umi test ./src/components",
-        "tsc": "tsc --noEmit",
+        "tsc:noemit": "tsc --noEmit",
         "cypress": "cypress open",
         "cypress-run": "cypress run",
         "cypress-test": "start-server-and-test start:mock http://localhost:8000 cypress-run",
