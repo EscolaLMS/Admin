@@ -407,4 +407,5 @@ export default {
   http_method: 'HTTP method',
   path: 'Path',
   select_content: 'Select content',
+  exclude_promotions: 'Can it be combined with other promotions',
 };

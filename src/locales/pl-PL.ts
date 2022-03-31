@@ -417,4 +417,5 @@ export default {
   http_method: 'Metoda HTTP',
   path: 'Ścieżka',
   select_content: 'Wybierz kontent',
+  exclude_promotions: 'Czy łaczy sie z innymi promocjami',
 };
