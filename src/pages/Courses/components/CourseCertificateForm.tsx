@@ -4,9 +4,9 @@ import CertificateSelector from '@/components/Certificate';
 import { Col, Row, Typography } from 'antd';
 import { FormattedMessage } from 'umi';
 
-import PdfList from '@/components/PdfList';
+import PdfList from '@/components/Pdf/list';
 
-export const ProgramForm: React.FC<{
+export const CourseCertificateForm: React.FC<{
   id: number | string;
 }> = ({ id }) => {
   const { Text } = Typography;
@@ -39,9 +39,11 @@ export const ProgramForm: React.FC<{
         </Col>
       </Row>
 
-      {pdfTemplates.map((tpl) => tpl && <PdfList template_id={tpl.id} />)}
+      {pdfTemplates.map(
+        (tpl) => tpl && <PdfList key={tpl.id} template_id={tpl.id} title={tpl.name} />,
+      )}
     </div>
   );
 };
 
-export default ProgramForm;
+export default CourseCertificateForm;

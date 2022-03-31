@@ -406,6 +406,9 @@ export default {
   user_logs: 'User logs',
   http_method: 'HTTP method',
   path: 'Path',
+  generated_pdfs: 'Generated PDFs',
+  download_all: 'Download all',
+  download_pdf: 'Download PDF',
   select_content: 'Select content',
   exclude_promotions: 'Can it be combined with other promotions',
 };

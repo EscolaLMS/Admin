@@ -115,6 +115,7 @@ export default {
   preview_pdf: 'Podgląd PDF',
   vars_set: 'Typ zmiennych',
   vars_set_tooltip: 'Typ zmiennych to np Certyfikaty, email o nowym koncie, itp',
+  template: 'Szablon',
   templates: 'Szablony',
   full_name: 'Pełna nazwa',
   slug: 'Slug',
@@ -416,6 +417,9 @@ export default {
   user_logs: 'Logi użytkownika',
   http_method: 'Metoda HTTP',
   path: 'Ścieżka',
+  generated_pdfs: 'Wygenerowane PDFy',
+  download_all: 'Pobierz wszystkie',
+  download_pdf: 'Pobierz PDF',
   select_content: 'Wybierz kontent',
   exclude_promotions: 'Czy łaczy sie z innymi promocjami',
 };
