@@ -147,9 +147,7 @@ export const QuestionareForm = () => {
             },
             {
               path: '/',
-              breadcrumbName: intl.formatMessage({
-                id: String(data?.title),
-              }),
+              breadcrumbName: String(data?.title),
             },
           ],
         },
@@ -219,14 +217,18 @@ export const QuestionareForm = () => {
           listOfModels.map((model: API.QuestionnaireModel) => (
             <ProCard.TabPane
               key={String(model.id)}
-              tab={`Assign to ${model.title}`}
+              tab={`${intl.formatMessage({ id: 'assign' })} ${intl.formatMessage({
+                id: 'to',
+              })} ${intl.formatMessage({
+                id: model.title,
+              })}`}
               disabled={isNew}
             >
-              {/* TODO: universal select for list of models or switch  */}
               <CourseSelect
                 defaultValue={models && models[model.id]?.map((item: number) => item)}
                 multiple
                 onChange={(values) => handleModelChange(values, model.id)}
+                modelType={model.title?.toUpperCase()}
               />
               <Button
                 className="submit-btn"

@@ -58,7 +58,9 @@ export const FabricPreview: React.FC<{
           });
         });
       } catch (err) {
-        onError(err);
+        if (onError) {
+          onError(err);
+        }
       }
     }
     onReady(canvas);

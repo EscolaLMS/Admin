@@ -2,7 +2,7 @@ import { request } from 'umi';
 
 /**  GET /api/admin/consultations */
 export async function consultations(
-  params: API.ConsultationsParams & {
+  params?: API.ConsultationsParams & {
     date_from?: string;
     date_to?: string;
   },
@@ -13,8 +13,8 @@ export async function consultations(
     /* useCache: true */ useCache: false,
     params: {
       ...params,
-      per_page: params.pageSize,
-      page: params.current,
+      per_page: params && params.pageSize,
+      page: params && params.current,
     },
     ...(options || {}),
   });

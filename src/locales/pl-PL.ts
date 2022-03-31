@@ -13,6 +13,7 @@ import vouchers from './pl-PL/vouchers';
 
 export default {
   file_resources: 'Załączniki (pliki)',
+  select_user_role: 'Wybierz rolę',
   select_user_group: 'Wybierz Grupę',
   groups: 'Grupy',
   'navBar.lang': 'Języki',
@@ -149,7 +150,7 @@ export default {
   new_password: 'Nowe hasło',
   new_confirm_password: 'Potwierdź nowe hasło',
   note: 'Notatka',
-
+  to: 'do',
   notifications: 'Powiadomienia',
   change_password: 'Zmień hasło',
   search: 'Wyszukaj',
@@ -359,6 +360,7 @@ export default {
   introduction_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
   'webinar.edit': 'Edycja Webinaru',
+  role: 'Rola',
   'course.validate_edit.header': 'Ten kurs już trwa! Czy na pewno chcesz go edytować?',
   'course.validate_edit.content':
     'Nie powinno sie edytować tego kursu bo kurs już trwa. Klikająć ok edycja bedzie możliwa ale robisz to na własną odpowiedzialność',
@@ -418,4 +420,5 @@ export default {
   generated_pdfs: 'Wygenerowane PDFy',
   download_all: 'Pobierz wszystkie',
   download_pdf: 'Pobierz PDF',
+  select_content: 'Wybierz kontent',
 };

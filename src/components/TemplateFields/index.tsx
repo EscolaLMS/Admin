@@ -54,12 +54,31 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
       case 'url':
         return (
           <React.Fragment>
+            <label>
+              <FormattedMessage id={name} />
+            </label>
+
+            <ProForm.Item shouldUpdate>
+              {(form) => {
+                return (
+                  <AutoCompleteArea
+                    requiredVariables={field.required_variables}
+                    variables={variables}
+                    value={form.getFieldValue(name)}
+                    onChange={(value: string) => form.setFieldsValue({ [name]: value })}
+                    error={form.getFieldError(name)}
+                    styles={{
+                      width: '100%',
+                      height: '100px',
+                    }}
+                  />
+                );
+              }}
+            </ProForm.Item>
             <ProFormText
-              readonly={field.readonly}
-              shouldUpdate
-              width="lg"
               name={name}
-              label={<FormattedMessage id={name} />}
+              shouldUpdate
+              hidden
               rules={
                 field.readonly
                   ? undefined
@@ -148,6 +167,10 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
                     value={form.getFieldValue(name)}
                     onChange={(value: string) => form.setFieldsValue({ [name]: value })}
                     error={form.getFieldError(name)}
+                    styles={{
+                      width: '100%',
+                      height: '40vh',
+                    }}
                   />
                 );
               }}

@@ -13,6 +13,7 @@ import vouchers from './en-US/vouchers';
 
 export default {
   file_resources: 'File resources',
+  select_user_role: 'Select role',
   select_user_group: 'Select User Group',
   groups: 'Groups',
   'navBar.lang': 'Languages',
@@ -151,6 +152,7 @@ export default {
   course: 'Course',
   select: 'Please select',
   select_tags: 'Select tags',
+  to: 'to',
   select_person: 'Select a person',
   select_course: 'Select a course',
   select_templates: 'Select a templates',
@@ -346,6 +348,7 @@ export default {
   'menu.Products': 'Products',
   H5P: 'H5P',
   'webinar.edit': 'Webinar Edit',
+  role: 'Role',
   'course.validate_edit.header':
     'This course is already underway! Are you sure you want to edit it?',
   'course.validate_edit.content':
@@ -406,4 +409,5 @@ export default {
   generated_pdfs: 'Generated PDFs',
   download_all: 'Download all',
   download_pdf: 'Download PDF',
+  select_content: 'Select content',
 };

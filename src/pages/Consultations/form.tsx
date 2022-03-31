@@ -45,7 +45,10 @@ const ConsultationForm = () => {
   const fetchData = useCallback(async () => {
     const response = await getConsultation(Number(consultation));
     if (response.success) {
-      validateCourseEdit(response.data);
+      if (tab === 'attributes') {
+        validateCourseEdit(response.data);
+      }
+
       setData({
         ...response.data,
         categories: response.data.categories?.map(categoriesArrToIds),

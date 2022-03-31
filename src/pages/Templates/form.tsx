@@ -47,7 +47,8 @@ const objectFlatten = (data: Record<string, string>[]): Record<string, string> =
   Object.assign({}, ...data);
 
 // helper function that throws away unnecessary keys to create a sections collection
-const filterNotAllowedKeys = (values: Record<string, string> | Partial<API.Template>) => {
+
+const filterNotAllowedKeys = (values: Partial<API.Template>) => {
   const notAllowedKeys = ['name', 'event', 'default'];
   return Object.keys(values)
     .filter((key) => !notAllowedKeys.includes(key))
@@ -71,11 +72,12 @@ type Tokens = {
 const channels = {
   email: 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
   pdf: 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
+  sms: 'EscolaLms\\TemplatesSms\\Core\\SmsChannel',
 };
 
 export default () => {
   const intl = useIntl();
-  const params = useParams<{ template: 'email' | 'pdf'; id: string }>();
+  const params = useParams<{ template: 'email' | 'pdf' | 'sms'; id: string }>();
 
   const { template, id } = params;
 
@@ -226,7 +228,7 @@ export default () => {
             <ProForm.Item label={<FormattedMessage id="templates.set_as_default_template" />}>
               <ProFormCheckbox name="default" />
             </ProForm.Item>
-            {!isNew && (
+            {!isNew && template !== 'sms' && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton
                   disabled={!saved}
