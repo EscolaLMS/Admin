@@ -38,7 +38,10 @@ const WebinarForm = () => {
   const fetchData = useCallback(async () => {
     const response = await getWebinar(Number(webinar));
     if (response.success) {
-      validateCourseEdit(response.data);
+      if (tab === 'attributes') {
+        validateCourseEdit(response.data);
+      }
+
       setData({
         ...response.data,
       });
