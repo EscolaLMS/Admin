@@ -8,7 +8,7 @@ export async function products(
     EscolaLms.Cart.Http.Requests.ProductSearchRequest & {
       type?: 'single' | 'bundle';
       purchasable?: 0 | 1;
-      free?: boolean | number;
+      free?: boolean;
     },
   options?: RequestOptionsInit,
 ) {

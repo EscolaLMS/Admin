@@ -214,7 +214,7 @@ const Products: React.FC = () => {
             type: type && type !== 'all' ? type : undefined,
             purchasable:
               purchasable && purchasable !== 'all' ? (purchasable === 'true' ? 1 : 0) : undefined,
-            free: free && free !== 'all' ? (free === 'true' ? true : false) : undefined,
+            free: free && free !== 'all' ? free : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
