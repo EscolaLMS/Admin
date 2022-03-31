@@ -7,7 +7,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    types: [assigned, opened, synchronize, reopened]
 
 jobs:
   build:
@@ -37,7 +36,7 @@ jobs:
         with:
           node-version: '14.x'
       - name: Typecheck
-      - uses: EPMatt/reviewdog-action-tsc@v1
+        uses: EPMatt/reviewdog-action-tsc@v1
         with:
           github_token: ${{ secrets.github_token }}
           # Change reviewdog reporter if you need
