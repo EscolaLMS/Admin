@@ -49,3 +49,4 @@ jobs:
           # More about reviewdog reporter level at
           # https://github.com/reviewdog/reviewdog#reporters
           level: warning
+          fail_on_error: true
