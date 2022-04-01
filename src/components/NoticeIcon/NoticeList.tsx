@@ -13,7 +13,7 @@ export type NoticeIconTabProps = {
   showViewMore?: boolean;
   style?: React.CSSProperties;
   title: string;
-  tabKey: API.Notification;
+  tabKey: string;
   onClick?: (item: API.Notification) => void;
   onClear?: () => void;
   emptyText?: string;
@@ -21,6 +21,8 @@ export type NoticeIconTabProps = {
   viewMoreText?: string;
   list: API.Notification[];
   onViewMore?: (e: any) => void;
+  listLength?: number;
+  lastElementRef: React.RefObject<HTMLDivElement>;
 };
 const NoticeList: React.FC<NoticeIconTabProps> = ({
   list = [],
@@ -34,6 +36,8 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
   // viewMoreText,
   // showViewMore = false,
   // event,
+  listLength = 0,
+  lastElementRef,
 }) => {
   if (!list || list.length === 0) {
     return (
@@ -46,6 +50,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
       </div>
     );
   }
+
   return (
     <div>
       <List<API.Notification>
@@ -59,6 +64,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           const leftIcon = (
             <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>!</Avatar>
           );
+          const isLastElement = i === listLength - 1;
 
           return (
             <List.Item
@@ -76,17 +82,25 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
                     {item.event && (
                       <FormattedMessage id={`notifications.${getEventType(item.event)}`} />
                     )}
-
                     {/* <div className={styles.extra}>Notify</div> */}
                   </div>
                 }
                 description={
-                  <div>
-                    {/* <div className={styles.description}>{item.description}</div> */}
-                    <div className={styles.datetime}>
-                      {format(new Date(item.created_at), DATETIME_FORMAT)}
+                  isLastElement ? (
+                    <div ref={lastElementRef}>
+                      {/* <div className={styles.description}>{item.description}</div> */}
+                      <div className={styles.datetime}>
+                        {format(new Date(item.created_at), DATETIME_FORMAT)}
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div>
+                      {/* <div className={styles.description}>{item.description}</div> */}
+                      <div className={styles.datetime}>
+                        {format(new Date(item.created_at), DATETIME_FORMAT)}
+                      </div>
+                    </div>
+                  )
                 }
               />
             </List.Item>

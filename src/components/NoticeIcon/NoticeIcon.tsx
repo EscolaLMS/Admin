@@ -27,7 +27,7 @@ export type NoticeIconProps = {
   viewMoreText?: string;
   clearClose?: boolean;
   emptyImage?: string;
-  children?: React.ReactElement<NoticeIconTabProps>[];
+  children?: React.ReactElement;
 };
 
 const NoticeIcon: React.FC<NoticeIconProps> & {
@@ -53,8 +53,8 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       if (!child) {
         return;
       }
-      const { list, title, tabKey, showClear, showViewMore } = child.props;
-      // const len = list && list.length ? list.length : 0;
+      const { list, title, tabKey, showClear, showViewMore, lastElementRef } = child.props;
+      const listLength = list && list.length ? list.length : 0;
       // const msgCount = count || count === 0 ? count : len;
       const tabTitle = <FormattedMessage id={title} />;
 
@@ -71,6 +71,8 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
             showClear={showClear}
             showViewMore={showViewMore}
             title={title}
+            listLength={listLength}
+            lastElementRef={lastElementRef}
           />
         </TabPane>,
       );
