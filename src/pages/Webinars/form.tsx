@@ -38,7 +38,10 @@ const WebinarForm = () => {
   const fetchData = useCallback(async () => {
     const response = await getWebinar(Number(webinar));
     if (response.success) {
-      validateCourseEdit(response.data);
+      if (tab === 'attributes') {
+        validateCourseEdit(response.data);
+      }
+
       setData({
         ...response.data,
       });
@@ -265,7 +268,7 @@ const WebinarForm = () => {
                 label={<FormattedMessage id="tutor" />}
                 valuePropName="value"
               >
-                <UserSelect multiple />
+                <UserSelect multiple role="tutor" />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>

@@ -5,6 +5,7 @@ import ProForm, {
   ProFormDigit,
   ProFormDatePicker,
   ProFormRadio,
+  ProFormSwitch,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -154,6 +155,16 @@ const VoucherForm = () => {
                   value: 'product_percent',
                 },
               ]}
+            />{' '}
+            <ProFormSwitch
+              name="active"
+              label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
+            />
+            <ProFormSwitch
+              name="exclude_promotions"
+              label={
+                <FormattedMessage id="exclude_promotions" defaultMessage="exclude_promotions" />
+              }
             />
           </ProForm.Group>
           <ProForm.Group>
