@@ -22,7 +22,7 @@ export type NoticeIconTabProps = {
   list: API.Notification[];
   onViewMore?: (e: any) => void;
   listLength?: number;
-  lastElementRef: React.RefObject<HTMLDivElement>;
+  lastElementRef: (node: HTMLDivElement) => void;
 };
 const NoticeList: React.FC<NoticeIconTabProps> = ({
   list = [],

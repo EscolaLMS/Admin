@@ -58,9 +58,10 @@ const NoticeIconView = () => {
     );
   };
 
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver | null>(null);
+
   const lastElementRef = useCallback(
-    (node) => {
+    (node: HTMLDivElement) => {
       if (loading) return;
       if (observer && observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
@@ -109,6 +110,7 @@ const NoticeIconView = () => {
         showViewMore
       /> */}
       </NoticeIcon>
+      {/* {isVisible ? 'true' : 'false'} */}
     </>
   );
 };
