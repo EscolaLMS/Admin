@@ -10,6 +10,8 @@ import SecureUpload from '@/components/SecureUpload';
 import './index.css';
 
 interface FormWysiwygProps {
+  hideDeleteBtn?: boolean;
+  forceLoading?: boolean;
   defaultDirectory?: string;
   onFile?: (value: API.File, directory?: string) => void;
 }
@@ -47,7 +49,12 @@ const FilesBrowserActions: React.FC<{
   );
 };
 
-export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/', onFile }) => {
+export const FilesBrowser: React.FC<FormWysiwygProps> = ({
+  defaultDirectory = '/',
+  onFile,
+  hideDeleteBtn = false,
+  forceLoading = false,
+}) => {
   const intl = useIntl();
   const [state, setState] = useState<FileBrowserState>({
     loading: false,
@@ -86,7 +93,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
             url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
           })),
         ].filter((file: API.File) => {
-          if (dir === '/') {
+          if (dir === '/' || dir === defaultDirectory) {
             return file.name !== '..';
           }
           return true;
@@ -192,7 +199,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
         </div>
       </div>
       <List
-        loading={state.loading}
+        loading={state.loading || forceLoading}
         size="small"
         itemLayout="horizontal"
         dataSource={state.data}
@@ -211,9 +218,10 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
         renderItem={(item) => (
           <List.Item
             actions={
-              item.mime !== 'directory'
+              item.mime !== 'directory' && !hideDeleteBtn
                 ? [
                     <Button
+                      key="dir"
                       type="default"
                       danger
                       icon={<DeleteOutlined />}

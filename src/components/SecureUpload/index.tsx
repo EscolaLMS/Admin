@@ -4,6 +4,7 @@ import React from 'react';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { useIntl, FormattedMessage } from 'umi';
 import ConditionalWrap from 'conditional-wrap';
+import type { FormProps } from 'antd';
 
 export const SecureUpload: React.FC<{
   url: string;
@@ -14,7 +15,8 @@ export const SecureUpload: React.FC<{
   data?: Record<string, any>;
   wrapInForm?: boolean;
   title?: string;
-}> = ({ onChange, url, name, extra, accept, data, wrapInForm = true, title }) => {
+  formProps?: FormProps;
+}> = ({ onChange, url, name, extra, accept, data, wrapInForm = true, title, formProps }) => {
   const intl = useIntl();
 
   if (data && data[name]) {
@@ -25,7 +27,7 @@ export const SecureUpload: React.FC<{
   return (
     <ConditionalWrap
       condition={wrapInForm}
-      wrap={(children: JSX.Element) => <Form>{children}</Form>}
+      wrap={(children: JSX.Element) => <Form {...formProps}>{children}</Form>}
     >
       <ProFormUploadButton
         title={title ? title : <FormattedMessage id="upload_click_here" />}
