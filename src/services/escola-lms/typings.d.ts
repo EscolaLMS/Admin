@@ -567,7 +567,7 @@ declare namespace API {
     event: string;
     default: boolean;
     assignables: CertificateAssignables[];
-    channel: number;
+    channel: string;
     selection: CertificateSelection[];
     created_at: string;
     updated_at: string;
