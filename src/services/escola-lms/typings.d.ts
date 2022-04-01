@@ -645,6 +645,7 @@ declare namespace API {
     description: string;
     duration: string;
     author_id: number;
+    author?: UserItem;
     base_price: number;
     active_to: string;
     active_from: string;

@@ -51,6 +51,7 @@ const ConsultationForm = () => {
 
       setData({
         ...response.data,
+        author_id: response.data.author && response.data.author.id,
         categories: response.data.categories?.map(categoriesArrToIds),
       });
     }
