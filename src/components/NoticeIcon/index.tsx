@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useModel } from 'umi';
 import { getNotifications, readNotification } from '@/services/escola-lms/notifications';
 
@@ -21,43 +21,29 @@ const getNoticeData = (notices: API.Notification[]): Record<string, API.Notifica
   };
 };
 
-const getUnreadData = (noticeData: Record<string, API.Notification[]>) => {
-  const unreadMsg: Record<string, number> = {};
-  Object.keys(noticeData).forEach((key) => {
-    const value = noticeData[key];
-
-    if (!unreadMsg[key]) {
-      unreadMsg[key] = 0;
-    }
-
-    if (Array.isArray(value)) {
-      unreadMsg[key] = value.filter((item) => !item.read_at).length;
-    }
-  });
-  return unreadMsg;
-};
-
 const NoticeIconView = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
   const [notices, setNotices] = useState<API.Notification[]>([]);
+  const [pageNum, setPageNum] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [unreadMsg, setUnreadMsg] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
 
-  const fetchNotifications = useCallback(async () => {
-    const request = await getNotifications({}, currentUser?.data.id);
+  const fetchNotifications = useCallback(async (page) => {
+    const request = await getNotifications({ current: page }, currentUser?.data.id);
     const response = await request;
 
     if (response.success) {
-      setNotices(response.data);
+      setLoading(false);
+      setUnreadMsg(response.meta?.total);
+      setNotices((prev) => [...prev, ...response.data]);
+      setHasMore(response.data.length > 0);
     }
   }, []);
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
   const noticeData = getNoticeData(notices);
-  const unreadMsg = getUnreadData(noticeData || {});
 
   const changeReadState = (id: string) => {
     readNotification(id);
@@ -72,26 +58,50 @@ const NoticeIconView = () => {
     );
   };
 
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return;
+      if (observer && observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setLoading(true);
+          setPageNum((prev) => prev + 1);
+        }
+      });
+
+      if (node && observer.current) observer.current.observe(node);
+    },
+    [loading, hasMore],
+  );
+
+  useEffect(() => {
+    fetchNotifications(pageNum);
+  }, [pageNum]);
+
   return (
-    <NoticeIcon
-      className={styles.action}
-      count={unreadMsg.notifyList}
-      onItemClick={(item) => {
-        changeReadState(item.id!);
-      }}
-      // clearText="Clear all"
-      // onClear={() => clearAll()}
-      loading={false}
-    >
-      <NoticeIcon.Tab
-        tabKey="notification"
-        list={noticeData.notifyList}
-        title={'notifications.list'}
-        emptyText="No notices"
-        showViewMore
-      />
-      {/* TODO:uncoment this if you need mor tabs in notifylist */}
-      {/* <NoticeIcon.Tab
+    <>
+      <NoticeIcon
+        className={styles.action}
+        count={unreadMsg}
+        onItemClick={(item) => {
+          changeReadState(item.id!);
+        }}
+        // clearText="Clear all"
+        // onClear={() => clearAll()}
+        loading={loading}
+      >
+        <NoticeIcon.Tab
+          tabKey="notification"
+          list={noticeData.notifyList}
+          title={'notifications.list'}
+          emptyText="No notices"
+          showViewMore
+          lastElementRef={lastElementRef}
+        />
+        {/* TODO:uncoment this if you need mor tabs in notifylist */}
+        {/* <NoticeIcon.Tab
         tabKey="message"
         count={unreadMsg.message}
         list={noticeData.message}
@@ -99,7 +109,9 @@ const NoticeIconView = () => {
         emptyText="empty"
         showViewMore
       /> */}
-    </NoticeIcon>
+      </NoticeIcon>
+      {/* {isVisible ? 'true' : 'false'} */}
+    </>
   );
 };
 
