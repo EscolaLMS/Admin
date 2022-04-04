@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Form, Button, Space, Typography } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
-import SecureUpload from '@/components/SecureUpload';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useParams, history } from 'umi';
 import { useCallback } from 'react';
@@ -10,7 +10,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
 import useModelFields from '@/hooks/useModelFields';
-import AdditionalFields from './components/AdditionalFields';
+import AdditionalField from './components/AdditionalField';
 
 export default ({
   isNew,
@@ -132,7 +132,7 @@ export default ({
         />
         {additionalFields.state === 'loaded' &&
           additionalFields.list.map((field: API.ModelField) => (
-            <AdditionalFields key={field.id} field={field} />
+            <AdditionalField key={field.id} field={field} />
           ))}
       </ProForm.Group>
       <ProForm.Group>
@@ -200,12 +200,14 @@ export default ({
           <Form.Item noStyle shouldUpdate>
             {() => (
               <>
-                <SecureUpload
+                <SecureUploadBrowser
+                  folder={`avatars/${user}`}
                   wrapInForm={false}
                   url={`/api/admin/users/${user}/avatar`}
                   name="avatar"
                   accept="image/*"
                   onChange={(info) => {
+                    console.log(info, info.file.status, info.file.response);
                     if (info.file.status === 'done') {
                       if (info.file.response.success) {
                         setData(info.file.response.data);

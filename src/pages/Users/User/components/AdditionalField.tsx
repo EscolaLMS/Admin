@@ -9,7 +9,7 @@ import React from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 import { getLocale } from 'umi';
 
-const AdditionalFields: React.FC<{
+const AdditionalField: React.FC<{
   field: API.ModelField;
 }> = ({ field }) => {
   const intl = useIntl();
@@ -81,4 +81,4 @@ const AdditionalFields: React.FC<{
   return <>{getProperField(field)}</>;
 };
 
-export default AdditionalFields;
+export default AdditionalField;

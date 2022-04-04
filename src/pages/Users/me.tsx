@@ -9,7 +9,7 @@ import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
 import UserSettings from './User/settings';
-import AdditionalFields from './User/components/AdditionalFields';
+import AdditionalField from './User/components/AdditionalField';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
@@ -121,7 +121,9 @@ export default () => {
             </ProForm.Group>
             <ProForm.Group>
               {additionalFields.state === 'loaded' &&
-                additionalFields.list.map((field) => <AdditionalFields field={field} />)}
+                additionalFields.list.map((field) => (
+                  <AdditionalField key={field.id} field={field} />
+                ))}
             </ProForm.Group>
 
             <ProForm.Group>
