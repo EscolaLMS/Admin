@@ -35,6 +35,10 @@ export const categoriesArrToIds = (
 
 export const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
 
+export const mapper = <T extends { id: string | number } | string | number>(
+  item: T,
+): string | number => (typeof item === 'object' ? item.id : item);
+
 export const splitImagePath = (path: string) => {
   return path?.split('storage')[1];
 };

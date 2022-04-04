@@ -15,7 +15,20 @@ import UserSelect from '@/components/UserSelect';
 import CategoryTree from '@/components/CategoryTree';
 import ProductSelect from '@/components/ProductsSelect';
 
-const mapper = (item) => (typeof item === 'object' ? item.id : item);
+const mapper = <T extends { id: string | number } | string | number>(item: T): string | number =>
+  typeof item === 'object' ? item.id : item;
+
+type Idks = (string | number)[];
+
+type CouponType = Omit<
+  EscolaLms.Vouchers.Models.Coupon,
+  'included_categories' | 'excluded_categories' | 'included_products' | 'excluded_products'
+> & {
+  included_categories: Idks;
+  excluded_categories: Idks;
+  included_products: Idks;
+  excluded_products: Idks;
+};
 
 const VoucherForm = () => {
   const intl = useIntl();
@@ -23,7 +36,7 @@ const VoucherForm = () => {
   const { voucherId, tab = 'attributes' } = params;
   const isNew = voucherId === 'new';
 
-  const [data, setData] = useState<Partial<EscolaLms.Vouchers.Models.Coupon>>();
+  const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
 
   const [form] = ProForm.useForm();

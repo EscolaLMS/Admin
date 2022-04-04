@@ -1,3 +1,5 @@
+declare module '*.less';
+
 declare namespace API {
   import * as Enum from './enums';
 

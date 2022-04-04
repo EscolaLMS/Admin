@@ -43,13 +43,15 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
-      return currentUser;
+      if (currentUser.success) {
+        return currentUser.data;
+      }
+      return undefined;
     } catch (error) {
       history.push('/user/login');
     }
     return undefined;
   };
-  // 如果是登录页面，不执行
   if (!authpaths.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {

@@ -14,6 +14,8 @@ declare module 'omit.js';
 
 import '@escolalms/ts-models';
 
+declare module '*.less';
+
 // google analytics interface
 type GAFieldsObject = {
   eventCategory: string;
