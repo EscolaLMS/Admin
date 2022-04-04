@@ -4,11 +4,10 @@ import ProForm, {
   ProFormText,
   ProFormDigit,
   ProFormDatePicker,
-  ProFormCheckbox,
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { useParams, history, useIntl, FormattedMessage, useAccess } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -37,7 +36,7 @@ export default () => {
   const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
-
+  const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
@@ -52,8 +51,12 @@ export default () => {
 
     const fetch = async () => {
       const response = await getCourse(Number(course));
+
       if (response.success) {
-        validateCourseEdit(response.data);
+        if (tab === 'attributes') {
+          validateCourseEdit(response.data);
+        }
+
         setData({
           ...response.data,
           categories: response.data.categories?.map(categoriesArrToIds),
@@ -330,7 +333,8 @@ export default () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
-              <ProFormCheckbox
+              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* <ProFormCheckbox
                 width="sm"
                 name="purchasable"
                 label={<FormattedMessage id="purchasable" />}
@@ -340,8 +344,9 @@ export default () => {
                   defaultMessage: 'purchasable',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-              />
-              <ProFormCheckbox
+              /> */}
+              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* <ProFormCheckbox
                 width="sm"
                 name="findable"
                 label={<FormattedMessage id="findable" />}
@@ -351,7 +356,7 @@ export default () => {
                   defaultMessage: 'findable',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-              />
+              /> */}
             </ProForm.Group>
 
             <ProForm.Group>
@@ -500,7 +505,7 @@ export default () => {
             {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {!isNew && access.scormListPermission && (
           <ProCard.TabPane
             key="scorm"
             tab={<FormattedMessage id="scorm" />}

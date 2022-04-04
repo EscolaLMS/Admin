@@ -5,11 +5,12 @@ import 'svg2pdf.js';
 import { FabricJSCanvas, useFabricJSEditor } from 'fabricjs-react';
 import type { fabric } from 'fabric';
 
-const PreviewPDF: React.FC<{ svgDef: string; width: number; height: number }> = ({
-  svgDef,
-  width,
-  height,
-}) => {
+const PreviewPDF: React.FC<{
+  svgDef: string;
+  width: number;
+  height: number;
+  mode?: 'file' | 'blob';
+}> = ({ svgDef, width, height }) => {
   useEffect(() => {
     const doc = new jsPDF('l', 'px', [width, height]);
 
@@ -34,29 +35,32 @@ const PreviewPDF: React.FC<{ svgDef: string; width: number; height: number }> = 
 };
 
 export const FabricPreview: React.FC<{
-  onRendered: () => void;
+  onRendered: (result?: Blob | jsPDF) => void;
+  onError?: (err: any) => void;
   initialValue: any;
   width?: number;
   height?: number;
-}> = ({ initialValue, width = 842, height = 592, onRendered }) => {
+  mode?: 'file' | 'blob';
+}> = ({ initialValue, width = 842, height = 592, onRendered, mode = 'file', onError }) => {
   const { onReady } = useFabricJSEditor();
 
   const onCanvasReady = (canvas: fabric.Canvas) => {
     if (initialValue) {
       try {
-        const data = JSON.parse(initialValue);
+        const data = typeof initialValue === 'string' ? JSON.parse(initialValue) : initialValue;
         canvas.loadFromJSON(data, () => {
           const svgDef = canvas.toSVG();
           const doc = new jsPDF('l', 'px', [width, height]);
           const parser = new DOMParser();
           const element = parser.parseFromString(svgDef, 'image/svg+xml');
           doc.svg(element.documentElement).then(() => {
-            doc.save('myPDF.pdf');
-            onRendered();
+            onRendered(mode === 'file' ? doc.save('myPDF.pdf') : doc.output('blob'));
           });
         });
       } catch (err) {
-        // this is not a json
+        if (onError) {
+          onError(err);
+        }
       }
     }
     onReady(canvas);

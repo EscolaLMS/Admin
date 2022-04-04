@@ -8,6 +8,7 @@ import ConfigList from './ConfigList/index';
 export enum channelType {
   email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
   pdf = 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
+  sms = 'EscolaLms\\TemplatesSms\\Core\\SmsChannel',
 }
 
 const Templates: React.FC = () => {
@@ -42,15 +43,14 @@ const Templates: React.FC = () => {
           Push
         </ProCard.TabPane>
         <ProCard.TabPane
-          disabled
-          key={'SMS'}
+          key={'sms'}
           tab={
             <span>
               <FormattedMessage id="SMS" />
             </span>
           }
         >
-          SMS
+          <ConfigList templateType={'sms'} channel={channelType.sms} />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

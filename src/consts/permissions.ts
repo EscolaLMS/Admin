@@ -62,10 +62,10 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/Files -------- */
 
-  FileUpload = 'upload:files',
+  FileUpload = 'file_create',
   FileMove = 'move:files',
-  FileDelete = 'delete:files',
-  FileList = 'list:files',
+  FileDelete = 'file_delete',
+  FileList = 'file_list',
 
   /* -------- EscolaLMS/Courses -------- */
 

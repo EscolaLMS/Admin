@@ -523,7 +523,7 @@ declare namespace API {
     content: string;
     title: string;
     event?: string;
-    channel?: string;
+    channel?: TemplateChannel;
     sections?: TemplateSections[];
     created_at?: Date;
     default?: boolean;
@@ -567,7 +567,7 @@ declare namespace API {
     event: string;
     default: boolean;
     assignables: CertificateAssignables[];
-    channel: string;
+    channel: TemplateChannel;
     selection: CertificateSelection[];
     created_at: string;
     updated_at: string;
@@ -587,6 +587,11 @@ declare namespace API {
   type Template = Certificate[];
 
   type TemplateList = DefaultResponse<Template>;
+
+  type TemplateChannel =
+    | 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel'
+    | 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel'
+    | 'EscolaLms\\TemplatesSms\\Core\\SmsChannel';
 
   type SCORM = {
     id: number;
@@ -640,6 +645,7 @@ declare namespace API {
     description: string;
     duration: string;
     author_id: number;
+    author?: UserItem;
     base_price: number;
     active_to: string;
     active_from: string;
