@@ -17,6 +17,8 @@ import { differenceInMinutes } from 'date-fns';
 import '@/services/ybug';
 import '@/services/sentry.ts';
 
+declare const REACT_APP_API_URL: string;
+
 type Token = {
   exp: number;
 };

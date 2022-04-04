@@ -22,7 +22,7 @@ type PreviewButtonState =
     };
 
 const PreviewButton: React.FC<{
-  type: 'email' | 'pdf';
+  type: API.TemplateChannelValue;
   disabled: boolean;
   id: number;
   onPreviewData?: (data: any) => void;
@@ -49,8 +49,8 @@ const PreviewButton: React.FC<{
               data: data.data,
               message: (
                 <React.Fragment>
-                  Download{' '}
-                  <a target="_blank" href={data.data.url}>
+                  <FormattedMessage id="download" />{' '}
+                  <a target="_blank" href={data.data.url} rel="noreferrer">
                     {data.data.filename}
                   </a>
                 </React.Fragment>

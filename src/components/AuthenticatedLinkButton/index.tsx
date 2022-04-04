@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from 'antd';
 import type { ButtonProps } from 'antd';
+declare const REACT_APP_API_URL: string;
 
 export const AuthenticatedLinkButton: React.FC<
   React.PropsWithChildren<{ url: string; filename: string } & ButtonProps>

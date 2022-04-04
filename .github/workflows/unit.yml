@@ -27,7 +27,7 @@ jobs:
         with:
           files: ./coverage/clover.xml # optional
 
-  tsc:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,4 +37,4 @@ jobs:
         with:
           node-version: '14.x'
       - run: npm i
-      - run: npm run tsc:noemit
+      - run: npm run lint

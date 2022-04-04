@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from 'umi';
+declare const REACT_APP_API_URL: string;
 
 /**  GET /api/currentUser */
 export async function files(

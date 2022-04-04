@@ -3,7 +3,7 @@ import styles from './index.less';
 import { Link, SelectLang } from 'umi';
 import { Divider } from 'antd';
 
-const AuthLayout: React.FC<{}> = ({ children }) => {
+const AuthLayout: React.FC = ({ children }) => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>{SelectLang && <SelectLang />}</div>

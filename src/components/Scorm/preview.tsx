@@ -1,4 +1,5 @@
 import React from 'react';
+declare const REACT_APP_API_URL: string;
 
 const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
   return (

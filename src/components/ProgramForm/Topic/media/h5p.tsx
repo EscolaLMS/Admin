@@ -8,6 +8,7 @@ import { useIntl, FormattedMessage } from 'umi';
 
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 import H5Player from '@/components/H5Player';
+declare const REACT_APP_API_URL: string;
 
 export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
   onData,
