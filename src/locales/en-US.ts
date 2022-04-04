@@ -392,6 +392,7 @@ export default {
   'available-validation-rules': 'available validation rules',
   Products: 'Products',
   free: 'free',
+  free_capi: 'Free',
   prices: 'prices',
   additional_fields: 'Additional Fields',
   user_to_add: 'Attach user to product',

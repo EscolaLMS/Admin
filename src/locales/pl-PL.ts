@@ -402,6 +402,7 @@ export default {
   'available-validation-rules': 'dostępne metody walidacji',
   Products: 'Produkty',
   free: 'darmowy',
+  free_capi: 'Darmowy',
   prices: 'Ceny',
   additional_fields: 'Dodatkowe pola',
   purchasable_tooltip: 'Mozliwość zakupu, albo tylko ręczne przypisanie',

@@ -111,7 +111,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   },
 
   {
-    title: <FormattedMessage id="free" defaultMessage="free" />,
+    title: <FormattedMessage id="free_capi" defaultMessage="free_capi" />,
     dataIndex: 'free',
     hideInSearch: false,
     hideInTable: true,
@@ -212,8 +212,9 @@ const Products: React.FC = () => {
             productable_id: productable ? Number((productable as string).split(':')[1]) : undefined,
             productable_type: productable ? (productable as string).split(':')[0] : undefined,
             type: type && type !== 'all' ? type : undefined,
-            purchasable: purchasable && purchasable !== 'all' ? purchasable === 'true' : undefined,
-            free: free && free !== 'all' ? free === 'true' : undefined,
+            purchasable:
+              purchasable && purchasable !== 'all' ? (purchasable === 'true' ? 1 : 0) : undefined,
+            free: free && free !== 'all' ? free : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
