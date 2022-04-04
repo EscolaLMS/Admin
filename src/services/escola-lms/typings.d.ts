@@ -1,6 +1,8 @@
 declare namespace API {
   import * as Enum from './enums';
 
+  /// ---- ENUMS ----- ///
+
   type TopicType = Enum.TopicType;
 
   type EventTypes = Enum.EventTypes;
@@ -12,6 +14,13 @@ declare namespace API {
   type TemplateEvents = Enum.TemplateEvents;
 
   type VouchersTypes = Enum.VouchersTypes;
+
+  /// ---- ENUMS ----- ///
+
+  type PageParams = {
+    current?: number;
+    pageSize?: number;
+  };
 
   type Category = {
     id: number;

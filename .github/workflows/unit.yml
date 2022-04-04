@@ -10,7 +10,7 @@ on:
     types: [assigned, opened, synchronize, reopened]
 
 jobs:
-  build:
+  jest:
     runs-on: ubuntu-latest
 
     steps:

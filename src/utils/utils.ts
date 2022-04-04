@@ -3,6 +3,8 @@ const reg =
 
 export const isUrl = (path: string): boolean => reg.test(path);
 
+declare const ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: string;
+
 export const isAntDesignPro = (): boolean => {
   if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
     return true;

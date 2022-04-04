@@ -233,6 +233,7 @@ const responseInterceptor = async (response: Response, options: RequestOptionsIn
               },
             };
           }
+          return null;
         })
         .catch(() => {
           refreshTokenRequest = null;
