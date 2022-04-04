@@ -1,4 +1,4 @@
-import { PlusOutlined,  DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';

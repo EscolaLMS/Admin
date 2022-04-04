@@ -1,13 +1,16 @@
 .fabric-editor {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: 20px;
+  align-items: center;
+  justify-content: center;
 }
-.fabric-editor__top {}
-.fabric-editor__canvas {}
-.fabric-editor__bottom {}
+.fabric-editor__top {
+}
+.fabric-editor__canvas {
+}
+.fabric-editor__bottom {
+}
 
 .fakeA4 {
   display: block;
@@ -23,6 +26,6 @@
   height: 100%;
 }
 
-.ant-input[type="range"] {
+.ant-input[type='range'] {
   padding: 0;
 }
