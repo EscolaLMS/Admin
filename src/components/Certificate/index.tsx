@@ -184,7 +184,11 @@ export const AssignTemplateSelect: React.FC<{
     >
       {templates.map((template) => (
         <Select.Option key={template.id} value={template.id}>
-          {template.name}
+          {template.name}{' '}
+          <small>
+            <FormattedMessage id={template.channel.split('\\').pop()} />:
+            <FormattedMessage id={template.event.split('\\').pop()} />
+          </small>{' '}
         </Select.Option>
       ))}
     </Select>
