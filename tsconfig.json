@@ -21,8 +21,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@@/*": ["./src/.umi/*"]
-    },
-    "typeRoots": ["src/typings.d.ts", "src/services/escola-lms/typings.d.ts"]
+    }
   },
 
   "include": [

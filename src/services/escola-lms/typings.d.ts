@@ -1,4 +1,4 @@
-export declare namespace API {
+declare namespace API {
   import * as Enum from './enums';
 
   type TopicType = Enum.TopicType;
