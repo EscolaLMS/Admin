@@ -4,6 +4,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { EditorContextProvider, EditorContext } from '@escolalms/h5p-react';
 import H5Player from '@/components/H5Player';
 import { Divider, Row, Col } from 'antd';
+declare const REACT_APP_API_URL: string;
 
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';

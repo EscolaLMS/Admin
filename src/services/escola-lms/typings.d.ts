@@ -1,29 +1,28 @@
-// @ts-ignore
-/* eslint-disable */
+declare module '*.less';
 
 declare namespace API {
-  enum TopicType {
-    Unselected = '',
-    RichText = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\RichText',
-    OEmbed = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\OEmbed',
-    Audio = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Audio',
-    Video = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Video',
-    H5P = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\H5P',
-    Image = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Image',
-    PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
-    SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
-  }
+  import * as Enum from './enums';
 
-  enum EventTypes {
-    OrderPaid = 'EscolaLms\\Cart\\Events\\OrderPaid',
-    UserLogged = 'EscolaLms\\Auth\\Events\\UserLogged',
-  }
+  /// ---- ENUMS ----- ///
 
-  enum CourseStatus {
-    draft = 'draft',
-    published = 'published',
-    archived = 'archived',
-  }
+  type TopicType = Enum.TopicType;
+
+  type EventTypes = Enum.EventTypes;
+
+  type CourseStatus = Enum.CourseStatus;
+
+  type TemplateChannelValue = Enum.TemplateChannelValue;
+
+  type TemplateEvents = Enum.TemplateEvents;
+
+  type VouchersTypes = Enum.VouchersTypes;
+
+  /// ---- ENUMS ----- ///
+
+  type PageParams = {
+    current?: number;
+    pageSize?: number;
+  };
 
   type Category = {
     id: number;
@@ -561,7 +560,7 @@ declare namespace API {
 
   type FileUpload = DefaultResponse<File[]>;
 
-  type Certificate = {
+  type Certificate = Template & {
     id: number;
     name: string;
     event: string;
@@ -584,14 +583,14 @@ declare namespace API {
 
   type CertificateAssignables = {};
 
-  type Template = Certificate[];
+  type Certificates = Certificate[];
 
-  type TemplateList = DefaultResponse<Template>;
+  type CertificateList = DefaultResponse<Certificates>;
 
   type TemplateChannel =
-    | 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel'
-    | 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel'
-    | 'EscolaLms\\TemplatesSms\\Core\\SmsChannel';
+    | TemplateChannelValue.email
+    | TemplateChannelValue.pdf
+    | TemplateChannelValue.sms;
 
   type SCORM = {
     id: number;
@@ -865,15 +864,6 @@ declare namespace API {
 
   type ResourceRow = DefaultResponse<Resource>;
 
-  export type TopicNotEmpty =
-    | TopicRichText
-    | TopicOEmbed
-    | TopicAudio
-    | TopicVideo
-    | TopicH5P
-    | TopicImage
-    | TopicPDF;
-
   export type TopicNew =
     | (Partial<TopicRichText> & { isNew: true; topicable_type: TopicType.RichText })
     | (Partial<TopicOEmbed> & { isNew: true; topicable_type: TopicType.OEmbed })
@@ -984,11 +974,4 @@ declare namespace API {
   };
   // I need to overwrite extra key by any, cause it could be any right now
   type ModelField = EscolaLms.ModelFields.Models.Metadata & { extra?: any };
-
-  enum VouchersTypes {
-    cart_fixed = 'cart_fixed',
-    cart_percent = 'cart_percent',
-    product_fixed = 'product_fixed',
-    product_percent = 'product_percent',
-  }
 }

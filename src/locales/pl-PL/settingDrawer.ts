@@ -25,7 +25,8 @@ export default {
   'app.setting.othersettings': 'Inne opcje',
   'app.setting.weakmode': 'Tryb słaby',
   'app.setting.copy': 'Skopiuj opcję',
-  'app.setting.copyinfo': 'Kopiowanie zakończono sukcesem，zmień defaultSettings in src/models/setting.js',
+  'app.setting.copyinfo':
+    'Kopiowanie zakończono sukcesem，zmień defaultSettings in src/models/setting.js',
   'app.setting.production.hint':
     'Panel ustawień wyświetla się tylko w środowisku programistycznym, zmodyfikuj ręcznie',
 };

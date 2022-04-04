@@ -5,6 +5,7 @@ import type { UploadChangeParam } from 'antd/lib/upload';
 import { useIntl, FormattedMessage } from 'umi';
 import ConditionalWrap from 'conditional-wrap';
 import type { FormProps } from 'antd';
+declare const REACT_APP_API_URL: string;
 
 export const SecureUpload: React.FC<{
   url: string;

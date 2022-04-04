@@ -2,6 +2,7 @@ import { useParams, history } from 'umi';
 import { EditorContextProvider } from '@escolalms/h5p-react';
 
 import { H5PForm } from '@/components/H5PForm';
+declare const REACT_APP_API_URL: string;
 
 export default () => {
   const params = useParams<{ h5p?: string }>();

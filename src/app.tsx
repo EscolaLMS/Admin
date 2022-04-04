@@ -17,6 +17,8 @@ import { differenceInMinutes } from 'date-fns';
 import '@/services/ybug';
 import '@/services/sentry.ts';
 
+declare const REACT_APP_API_URL: string;
+
 type Token = {
   exp: number;
 };
@@ -41,13 +43,15 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
-      return currentUser;
+      if (currentUser.success) {
+        return currentUser.data;
+      }
+      return undefined;
     } catch (error) {
       history.push('/user/login');
     }
     return undefined;
   };
-  // 如果是登录页面，不执行
   if (!authpaths.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
@@ -231,6 +235,7 @@ const responseInterceptor = async (response: Response, options: RequestOptionsIn
               },
             };
           }
+          return null;
         })
         .catch(() => {
           refreshTokenRequest = null;

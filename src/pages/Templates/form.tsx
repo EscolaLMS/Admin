@@ -14,6 +14,13 @@ import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
 import { FabricPreview } from '@/components/FabricEditor/preview';
+
+//import * as API from '../../services/escola-lms/enums';
+
+import { TemplateChannelValue, TemplateEvents } from '@/services/escola-lms/enums';
+
+console.log(TemplateEvents);
+
 /*
 const objectToKeysDict = (obj: Object): Record<string, string> =>
   obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
@@ -68,12 +75,18 @@ type Tokens = {
   };
 };
 
-// TODO change this to union string type
-const channels = {
-  email: 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
-  pdf: 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
-  sms: 'EscolaLms\\TemplatesSms\\Core\\SmsChannel',
-};
+/*
+enum TemplateChannelValue {
+  email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
+  pdf = 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
+  sms = 'EscolaLms\\TemplatesSms\\Core\\SmsChannel',
+}
+*/
+
+// TODO change this to union string type or Enum
+const channels = TemplateChannelValue;
+
+console.log(channels);
 
 export default () => {
   const intl = useIntl();
@@ -228,7 +241,7 @@ export default () => {
             <ProForm.Item label={<FormattedMessage id="templates.set_as_default_template" />}>
               <ProFormCheckbox name="default" />
             </ProForm.Item>
-            {!isNew && template !== 'sms' && (
+            {!isNew && (
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton
                   disabled={!saved}
@@ -242,6 +255,15 @@ export default () => {
                 />
               </ProForm.Item>
             )}
+
+            <ProForm.Item noStyle shouldUpdate>
+              {(formRef) => {
+                if (formRef.getFieldValue('event') === TemplateEvents.ManuallyTriggeredEvent) {
+                  return <b>fdsfds</b>;
+                }
+                return null;
+              }}
+            </ProForm.Item>
           </ProForm.Group>
 
           {!tokens && !isNew ? (

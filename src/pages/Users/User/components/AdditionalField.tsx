@@ -53,18 +53,6 @@ const AdditionalField: React.FC<{
           />
         );
 
-      case 'text':
-        return (
-          <ProFormTextArea
-            width="md"
-            name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
-            tooltip={<FormattedMessage id={f.name} />}
-            placeholder={intl.formatMessage({
-              id: f.name,
-            })}
-          />
-        );
       case 'json':
         return (
           <ProForm.Item
@@ -75,6 +63,20 @@ const AdditionalField: React.FC<{
           >
             <JsonEditor />
           </ProForm.Item>
+        );
+
+      case 'text':
+      default:
+        return (
+          <ProFormTextArea
+            width="md"
+            name={f.name}
+            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            tooltip={<FormattedMessage id={f.name} />}
+            placeholder={intl.formatMessage({
+              id: f.name,
+            })}
+          />
         );
     }
   };

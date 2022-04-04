@@ -134,7 +134,9 @@ const Vouchers: React.FC = () => {
                 success: true,
               };
             }
-            return [];
+            return {
+              success: false,
+            };
           });
         }}
         columns={[

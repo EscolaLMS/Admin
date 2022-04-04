@@ -8,6 +8,7 @@ import ProTable from '@ant-design/pro-table';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
 import { DeleteOutlined, EditOutlined, BookOutlined, ExportOutlined } from '@ant-design/icons';
 import UploadH5P from '@/components/H5P/upload';
+declare const REACT_APP_API_URL: string;
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);

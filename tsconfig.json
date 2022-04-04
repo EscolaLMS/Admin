@@ -23,7 +23,10 @@
       "@@/*": ["./src/.umi/*"]
     }
   },
+
   "include": [
+    "src/typings.d.ts",
+    "src/services/escola-lms/typings.d.ts",
     "mock/**/*",
     "src/**/*",
     "tests/**/*",

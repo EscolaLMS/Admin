@@ -3,6 +3,8 @@ const reg =
 
 export const isUrl = (path: string): boolean => reg.test(path);
 
+declare const ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: string;
+
 export const isAntDesignPro = (): boolean => {
   if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
     return true;
@@ -32,6 +34,10 @@ export const categoriesArrToIds = (
 ) => (typeof category === 'object' ? category.id : category);
 
 export const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
+
+export const mapper = <T extends { id: string | number } | string | number>(
+  item: T,
+): string | number => (typeof item === 'object' ? item.id : item);
 
 export const splitImagePath = (path: string) => {
   return path?.split('storage')[1];

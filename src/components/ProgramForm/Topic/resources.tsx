@@ -74,7 +74,7 @@ export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
         >
           <List.Item.Meta
             avatar={
-              <a href={item.url} target="_blank">
+              <a href={item.url} target="_blank" rel="noreferrer">
                 <Button type="default" icon={<DownloadOutlined />} size="small" />
               </a>
             }

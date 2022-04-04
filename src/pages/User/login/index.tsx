@@ -8,6 +8,8 @@ import { forgot, login } from '@/services/escola-lms/auth';
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
 
+declare const REACT_APP_CREDENTIALS: string;
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -30,7 +32,7 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo.success) {
+    if (userInfo) {
       setInitialState({
         ...initialState,
         currentUser: userInfo,

@@ -24,11 +24,16 @@ import {
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
-import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
+import { categoriesArrToIds, splitImagePath, mapper } from '@/utils/utils';
 import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
+
+type StationaryEventType = Omit<EscolaLms.StationaryEvents.Models.StationaryEvent, 'categories'> & {
+  image_url: string;
+  categories: (number | string)[];
+};
 
 const StationaryEventForm = () => {
   const intl = useIntl();
@@ -36,8 +41,7 @@ const StationaryEventForm = () => {
   const { id, tab = 'attributes' } = params;
   const isNew = id === 'new';
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [data, setData] =
-    useState<Partial<EscolaLms.StationaryEvents.Models.StationaryEvent & { image_url: string }>>();
+  const [data, setData] = useState<Partial<StationaryEventType>>();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
@@ -45,7 +49,7 @@ const StationaryEventForm = () => {
     if (response.success) {
       setData({
         ...response.data,
-        categories: response?.data?.categories.map(categoriesArrToIds),
+        categories: response?.data?.categories?.map(mapper),
       });
     }
   }, [id]);

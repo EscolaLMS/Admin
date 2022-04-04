@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from 'antd';
 import type { ImageProps } from 'antd';
+declare const REACT_APP_API_URL: string;
 
 interface ResponsiveImageProps extends ImageProps {
   path: string;

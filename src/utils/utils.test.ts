@@ -1,4 +1,5 @@
 import { isUrl } from './utils';
+import { expect } from '@jest/globals';
 
 describe('isUrl tests', () => {
   it('should return false for invalid and corner case inputs', () => {
