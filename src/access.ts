@@ -8,7 +8,7 @@ export default function access(initialState: { currentUser: API.UserItem }) {
   const { currentUser } = initialState;
 
   const havePermissions = isUserHavePermissions(currentUser);
-  const dashboardPermission = havePermissions && havePermissions(PERMISSIONS.CoreDashboardAccess);
+  const dashboardPermission = havePermissions(PERMISSIONS.CoreDashboardAccess);
   const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) =>
     dashboardPermission && havePermissions(...permissions);
 
