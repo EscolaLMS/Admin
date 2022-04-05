@@ -60,9 +60,12 @@ export const ScormSelect: React.FC<{
       onSearch={onSearch}
       placeholder={<FormattedMessage id="select_scorm_package" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return option?.children?.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
       {scorms.map((scorm) => (

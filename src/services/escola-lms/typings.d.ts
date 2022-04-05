@@ -880,6 +880,7 @@ declare namespace API {
   };
 
   export type H5PObject = {
+    id?: string | number;
     baseUrl: string;
     url: string;
     postUserStatistics: boolean;
