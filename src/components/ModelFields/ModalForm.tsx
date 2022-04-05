@@ -162,6 +162,7 @@ export const ModelFieldsModalForm: React.FC<{
                   ),
                 );
               }
+              return Promise.resolve();
             },
           },
         ]}

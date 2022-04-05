@@ -53,7 +53,7 @@ export const CategoryCheckboxTree: React.FC<{
       style={{ width: '100%' }}
       checkedKeys={value}
       onCheck={(keys) => {
-        if (typeof keys === 'object' && keys.checked) {
+        if (typeof keys === 'object' && !Array.isArray(keys) && keys.checked) {
           const checkedKeys = keys.checked;
           return onChange && Array.isArray(checkedKeys) && onChange(checkedKeys);
         }

@@ -136,11 +136,9 @@ export default () => {
                   url="/api/profile/upload-avatar"
                   name="avatar"
                   accept="image/*"
-                  onChange={(info) => {
-                    if (info.file.status === 'done') {
-                      if (info.file.response.success) {
-                        setData(info.file.response.data);
-                      }
+                  onUpload={(response) => {
+                    if (response.success) {
+                      // TODO refresh avatar here
                     }
                   }}
                 />

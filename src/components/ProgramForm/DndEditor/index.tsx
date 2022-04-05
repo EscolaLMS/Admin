@@ -75,10 +75,13 @@ export const DndEditorContainer: React.FC<{
     (item: BoxItemProps) => {
       const newTopic = addNewTopic && state.id && addNewTopic(state.id, item.type);
 
-      if (newTopic) {
-        setCards((prevCards) => [...prevCards, { ...newTopic, topicable_type: item.type }]);
+      if (typeof newTopic === 'object') {
+        setCards(
+          (prevCards) =>
+            [...prevCards, { ...newTopic, topicable_type: item.type }] as API.TopicNewOrNotEmpty[],
+        );
 
-        setIsModalVisible({ ...newTopic, topicable_type: item.type });
+        setIsModalVisible({ ...newTopic, topicable_type: item.type } as API.TopicNewOrNotEmpty);
       }
     },
     [cards, state.id],

@@ -41,6 +41,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
                 </li>
               );
             }
+            return null;
           })}
         </ul>
       );

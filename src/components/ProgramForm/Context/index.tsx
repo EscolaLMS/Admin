@@ -108,9 +108,10 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       title: 'Add title here',
       active: true,
     };
+
     setState((prevState) => ({
       ...prevState,
-      lessons: [newLesson, ...(prevState ? prevState.lessons : [])],
+      lessons: [newLesson, ...(prevState ? prevState.lessons : [])] as API.Lesson[],
     }));
 
     return newLesson;
@@ -309,7 +310,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                           lesson_item.topics?.map((topic_item) => {
                             if (topic_item.id === topic_id) {
                               if (data.data.topicable_type) {
-                                const newTopic: API.TopicNotEmpty = {
+                                const newTopic: API.Topic = {
                                   ...topic_item,
                                   ...data.data,
                                   isNew: false,
@@ -584,7 +585,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                     const topics = lesson.topics || [];
                     return {
                       ...lesson,
-                      topics: [...topics, response.data],
+                      topics: [...topics, response.data] as API.Topic[],
                     };
                   }
                   return lesson;

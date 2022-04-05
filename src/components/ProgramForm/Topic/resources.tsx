@@ -52,12 +52,17 @@ export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
       itemLayout="horizontal"
       dataSource={resources}
       header={
-        <SecureUpload
+        <SecureUpload<API.Resource>
           url={`/api/admin/topics/${topicId}/resources`}
           name="resource"
-          onChange={(response) =>
-            response.file.status === 'done' && onUploaded(response.file.response)
-          }
+          onChange={(response) => {
+            if (response.file.status === 'done') {
+              if (response.file.response?.success) {
+                onUploaded(response.file.response);
+              }
+              ///
+            }
+          }}
         />
       }
       renderItem={(item) => (

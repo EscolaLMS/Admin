@@ -60,7 +60,7 @@ export async function removeH5P(id: number) {
 
 /**  GET /api/admin/users */
 export async function allContent(options?: { [key: string]: any }) {
-  return request<API.DefaultMetaResponse<API.H5PContentListItem[]>>(
+  return request<API.DefaultMetaResponse<API.H5PContentListItem>>(
     '/api/admin/hh5p/content?per_page=0',
     {
       method: 'GET',

@@ -10,6 +10,7 @@ import { useParams, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 import './index.css';
+import { CheckboxValueType, CheckboxOptionType } from 'antd/lib/checkbox/Group';
 
 export default () => {
   const params = useParams<{ name: string }>();
@@ -67,16 +68,20 @@ export default () => {
             {!!data.length && (
               <Checkbox.Group
                 name="checkbox"
-                defaultValue={data.filter((item) => item?.assigned).map((item) => item?.name)}
+                defaultValue={
+                  data
+                    .filter((item) => item?.assigned)
+                    .map((item) => item?.name) as CheckboxValueType[]
+                }
                 onChange={handleChange}
                 options={
                   data &&
-                  data.map((item) => {
+                  (data.map((item) => {
                     return {
                       value: item?.name,
                       label: item?.name,
                     };
-                  })
+                  }) as CheckboxOptionType[])
                 }
               />
             )}

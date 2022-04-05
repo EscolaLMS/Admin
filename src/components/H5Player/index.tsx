@@ -34,7 +34,7 @@ const H5Player: React.FC<{ id: number }> = ({ id }) => {
         <Player
           h5pObject={h5pObject}
           id={id}
-          onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])}
+          onXAPI={(event: XAPIEvent) => setXAPIEvents((prevState) => [...prevState, event])}
         />
       )}
 

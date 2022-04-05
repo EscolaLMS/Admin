@@ -32,10 +32,12 @@ export const ProFormImageUpload: React.FC<{
                       if (info.file.status === 'done') {
                         form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
 
-                        setPath({
-                          [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
-                          [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
-                        });
+                        if (info.file.response?.success) {
+                          setPath({
+                            [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                            [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
+                          });
+                        }
                       }
                     }}
                   />

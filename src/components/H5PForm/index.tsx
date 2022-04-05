@@ -58,7 +58,7 @@ export const H5PForm: React.FC<{ id?: number | string; onSubmit: (id: number) =>
         },
       }}
     >
-      <Editor id={id} onSubmit={(response) => onSubmit(response.id)} />
+      <Editor id={id} onSubmit={(response) => onSubmit(Number(response.id))} />
     </PageContainer>
   );
 };
