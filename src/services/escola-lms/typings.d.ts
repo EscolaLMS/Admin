@@ -264,6 +264,7 @@ declare namespace API {
     path_avatar: string;
     avatar: string;
     roles: ('admin' | 'tutor' | 'student')[];
+    permissions: string[];
   };
 
   type UserChangePassword = {
