@@ -4,21 +4,13 @@ import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { currentUser: any }) {
+export default function access(initialState: { currentUser: API.UserItem }) {
   const { currentUser } = initialState;
 
   const havePermissions = isUserHavePermissions(currentUser);
   const dashboardPermission = havePermissions(PERMISSIONS.CoreDashboardAccess);
   const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) =>
     dashboardPermission && havePermissions(...permissions);
-
-  // const adminPermission =
-  //   dashboardPermission && currentUser && currentUser.data.roles.includes('admin');
-
-  // const tutorPermission =
-  //   dashboardPermission &&
-  //   currentUser &&
-  //   (currentUser.data.roles.includes('tutor') || currentUser.data.roles.includes('admin'));
 
   return {
     dashboardPermission,
