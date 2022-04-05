@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FunctionComponent, useMemo, useRef, useContext } from 'react';
+import { useEffect, useState, FunctionComponent, useMemo, useRef, useContext } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { unescape } from 'html-escaper';
 import { EditorContext } from '@escolalms/h5p-react';
@@ -64,8 +64,10 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
             id,
           )
             .then((response) => {
-              if (onSubmit && response) {
-                onSubmit(response.data);
+              if (onSubmit && response && response.success) {
+                if (response.data.id && typeof response.data.id !== 'undefined') {
+                  onSubmit(response.data as { id: string | number });
+                }
               }
 
               setEditorState({ state: 'loaded' });
@@ -77,6 +79,7 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
         /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
         status.h5pEditorStatus === 'error' && console.log(status.error);
       }
+      return null;
     };
     /* eslint-disable-next-line @typescript-eslint/no-unused-expressions */
     window && window.addEventListener('message', onMessage);
@@ -167,10 +170,10 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
               )}; `,
             }}
           />
-          {settings.core.scripts.map((script) => (
+          {settings.core.scripts.map((script: string) => (
             <script key={script} src={script}></script>
           ))}
-          {settings.core.styles.map((style) => (
+          {settings.core.styles.map((style: string) => (
             <link type="text/css" rel="stylesheet" key={style} href={style}></link>
           ))}
         </head>

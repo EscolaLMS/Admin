@@ -25,6 +25,7 @@ import {
   AudioOutlined,
   YoutubeOutlined,
   InteractionOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import ScormSelector from '@/components/Scorm';
 
@@ -49,6 +50,7 @@ export const getTypeIcon = (type: string | undefined) => {
         return <FileTextOutlined />;
     }
   }
+  return <ExclamationCircleOutlined />;
 };
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({

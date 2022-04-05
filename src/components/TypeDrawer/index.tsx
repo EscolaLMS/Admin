@@ -86,7 +86,7 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
       )}
 
       {data.type === 'EscolaLms\\Auth\\Models\\UserGroup' && (
-        <ProDescriptions<API.Course>
+        <ProDescriptions<API.UserGroup>
           {...descrProps}
           title={<FormattedMessage id="user_group" />}
           columns={UserGroupTableColumns as ProDescriptionsItemProps<API.UserGroup>[]}
@@ -117,7 +117,7 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
                         xl: 6,
                         xxl: 3,
                       }}
-                      dataSource={record.questions}
+                      dataSource={record.questions as EscolaLms.Questionnaire.Models.Question[]}
                       renderItem={(item) => (
                         <List.Item>
                           <Typography.Text mark>{item.id}</Typography.Text>{' '}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';

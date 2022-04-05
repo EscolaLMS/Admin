@@ -17,7 +17,7 @@ export type NoticeIconProps = {
   className?: string;
   loading?: boolean;
   onClear?: (tabName: string, tabKey: string) => void;
-  onItemClick?: (item: API.NoticeIconTabProps, tabProps: NoticeIconTabProps) => void;
+  onItemClick?: (item: API.Notification, tabProps: NoticeIconTabProps) => void;
   onViewMore?: (tabProps: NoticeIconTabProps, e: MouseEvent) => void;
   onTabChange?: (tabTile: string) => void;
   style?: React.CSSProperties;

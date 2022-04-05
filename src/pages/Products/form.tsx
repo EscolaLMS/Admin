@@ -1,4 +1,3 @@
-import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 

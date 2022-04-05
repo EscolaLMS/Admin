@@ -171,11 +171,11 @@ const TableList: React.FC = () => {
                 }}
                 onChange={(info) => {
                   if (info.file.status === 'done') {
-                    if (info.file.response.success) {
+                    if (info.file.response && info.file.response.success) {
                       message.success(info.file.response.message);
                     }
                   }
-                  if (info.file.status === 'error') {
+                  if (info.file.response && info.file.status === 'error') {
                     message.error(info.file.response.message);
                     console.error(info.file.response);
                   }

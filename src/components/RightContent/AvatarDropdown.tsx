@@ -5,6 +5,7 @@ import { history, useModel, FormattedMessage } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { logout } from '@/services/escola-lms/auth';
+import type { MenuInfo } from 'rc-menu/lib/interface';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -30,12 +31,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   }, [initialState, setInitialState]);
 
   const onMenuClick = useCallback(
-    (event: {
-      key: React.Key;
-      keyPath: React.Key[];
-      item: React.ReactInstance;
-      domEvent: React.MouseEvent<HTMLElement>;
-    }) => {
+    (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
         loginOut();
@@ -69,7 +65,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   }
 
   const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
+    <Menu className={styles.menu} selectedKeys={[]} onClick={(info) => onMenuClick(info)}>
       {menu && (
         <Menu.Item key="center">
           <UserOutlined />

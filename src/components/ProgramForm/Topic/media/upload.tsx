@@ -48,34 +48,37 @@ export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }>
   type,
   topic,
 }) => {
-  switch (type) {
-    case TopicType.Audio:
-      return topic.topicable_type === TopicType.Audio && topic.topicable?.url ? (
-        <audio preload="none" controls src={topic.topicable.url} />
-      ) : (
-        <React.Fragment />
-      );
-    case TopicType.Video:
-      return topic.topicable_type === TopicType.Video && topic.topicable?.url ? (
-        <video controls src={topic.topicable.url} width="100%" />
-      ) : (
-        <React.Fragment />
-      );
-    case TopicType.Image:
-      return topic.topicable_type === TopicType.Image && topic.topicable?.url ? (
-        <img src={topic.topicable.url} width="100%" />
-      ) : (
-        <React.Fragment />
-      );
-    case TopicType.PDF:
-      return topic.topicable_type === TopicType.PDF && topic.topicable?.url ? (
-        <PDFPreview file={topic.topicable.url} />
-      ) : (
-        <React.Fragment />
-      );
-    default:
-      return <React.Fragment />;
+  if (topic && topic.topicable && 'url' in topic.topicable) {
+    switch (type) {
+      case TopicType.Audio:
+        return topic.topicable_type === TopicType.Audio && topic.topicable?.url ? (
+          <audio preload="none" controls src={topic.topicable.url} />
+        ) : (
+          <React.Fragment />
+        );
+      case TopicType.Video:
+        return topic.topicable_type === TopicType.Video && topic.topicable?.url ? (
+          <video controls src={topic.topicable.url} width="100%" />
+        ) : (
+          <React.Fragment />
+        );
+      case TopicType.Image:
+        return topic.topicable_type === TopicType.Image && topic.topicable?.url ? (
+          <img src={topic.topicable.url} width="100%" />
+        ) : (
+          <React.Fragment />
+        );
+      case TopicType.PDF:
+        return topic.topicable_type === TopicType.PDF && topic.topicable?.url ? (
+          <PDFPreview file={topic.topicable.url} />
+        ) : (
+          <React.Fragment />
+        );
+      default:
+        return <React.Fragment />;
+    }
   }
+  return <React.Fragment />;
 };
 
 export const MediaUploadForm: React.FC<{

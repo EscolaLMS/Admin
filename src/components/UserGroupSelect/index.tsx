@@ -96,9 +96,12 @@ export const UserGroupSelect: React.FC<{
       onSearch={onSearch}
       placeholder={<FormattedMessage id="select_user_group" defaultMessage="Select user group" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return option?.children?.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
       {userGroups.map((userGroup) => (

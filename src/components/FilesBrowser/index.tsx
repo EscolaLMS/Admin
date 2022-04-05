@@ -13,7 +13,7 @@ interface FormWysiwygProps {
   hideDeleteBtn?: boolean;
   forceLoading?: boolean;
   defaultDirectory?: string;
-  onFile?: (value: API.File, directory?: string) => void;
+  onFile?: (file: API.File, directory?: string) => void;
 }
 
 type FileBrowserState = {
@@ -29,7 +29,7 @@ type FileBrowserState = {
 
 const FilesBrowserActions: React.FC<{
   directory: string;
-  onUploaded: (dir: string, name: API.File) => void;
+  onUploaded: (dir: string, file: API.File) => void;
 }> = ({ directory, onUploaded }) => {
   return (
     <Space align="start">
@@ -43,7 +43,11 @@ const FilesBrowserActions: React.FC<{
         data={{
           target: directory,
         }}
-        onChange={(data) => data.file.status === 'done' && onUploaded(directory, data.file)}
+        onUpload={(response) => {
+          if (response.success) {
+            onUploaded(directory, response.data);
+          }
+        }}
       />
     </Space>
   );
@@ -206,13 +210,25 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({
         header={
           <FilesBrowserActions
             directory={state.directory}
-            onUploaded={(dir, name) => fetchFiles(dir) && onFile && onFile(name, dir)}
+            onUploaded={(dir, file) => {
+              if (file) {
+                fetchFiles(dir);
+                if (onFile) {
+                  onFile(file, dir);
+                }
+              }
+            }}
           />
         }
         footer={
           <FilesBrowserActions
             directory={state.directory}
-            onUploaded={(dir) => fetchFiles(dir) && onFile && onFile(name, dir)}
+            onUploaded={(dir, file) => {
+              fetchFiles(dir);
+              if (file && onFile) {
+                onFile(file, dir);
+              }
+            }}
           />
         }
         renderItem={(item) => (
