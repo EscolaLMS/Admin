@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/notifications/:id */
 export async function getNotifications(
@@ -10,7 +11,7 @@ export async function getNotifications(
     date_to?: string;
   },
   id?: number,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.NotificationList>(
     id ? `/api/admin/notifications/${id}` : `/api/admin/notifications`,
@@ -28,7 +29,7 @@ export async function getNotifications(
   );
 }
 /**  GET /api/admin/notifications/events */
-export async function getEventTypes(options?: Record<string, any>) {
+export async function getEventTypes(options?: RequestOptionsInit) {
   return request<API.NotificationsEventsList>(`/api/admin/notifications/events`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -38,7 +39,7 @@ export async function getEventTypes(options?: Record<string, any>) {
 }
 
 /**  POST /api/notifications/:id/read */
-export async function readNotification(id: string, options?: Record<string, any>) {
+export async function readNotification(id: string, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Notification[]>>(`/api/notifications/${id}/read`, {
     method: 'POST',
     /* useCache: true */ useCache: false,

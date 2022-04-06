@@ -1,6 +1,5 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function orders(
@@ -14,7 +13,7 @@ export async function orders(
     date_from?: string;
     date_to?: string;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.OrderList>('/api/admin/orders?page=1', {
     params: {
@@ -29,7 +28,7 @@ export async function orders(
 }
 
 /**  GET /api/admin/users */
-export async function order(id: number, options?: { [key: string]: any }) {
+export async function order(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Order>>(`/api/admin/orders/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,

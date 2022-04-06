@@ -1,6 +1,5 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 export async function reports(
   params: {
@@ -9,7 +8,7 @@ export async function reports(
     date?: string;
     limit?: number;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.ReportList>('/api/admin/reports/report', {
     params,

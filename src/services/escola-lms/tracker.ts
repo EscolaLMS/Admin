@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/track/routes */
 export async function track(
@@ -8,7 +9,7 @@ export async function track(
     user_id?: number;
     method: 'string';
   },
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.Tracker.Models.TrackRoute>>(
     `/api/admin/tracks/routes`,

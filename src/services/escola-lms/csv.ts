@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/csv/users */
 export async function usersCsvExport(
@@ -9,7 +10,7 @@ export async function usersCsvExport(
     search?: string;
     role?: string;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.UserList>('/api/admin/csv/users', {
     params: {

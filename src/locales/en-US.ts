@@ -66,6 +66,7 @@ export default {
   'menu.Webinars': 'Webinars',
   'menu.User Groups': 'User Groups',
   'menu.Questionnaire': 'Questionnaires',
+  'menu.Questionnaire Form': 'Questionnaire Form',
   'menu.Consultations': 'Consultations',
   'menu.StationaryEvents': 'Stationary Events',
   'menu.Logs': 'Logs',
@@ -412,4 +413,11 @@ export default {
   download_pdf: 'Download PDF',
   select_content: 'Select content',
   exclude_promotions: 'Can it be combined with other promotions',
+  generate: 'Generate',
+  generate_pdf: 'Generate PDF(s)',
+  generate_pdf_tooltip: 'Generate PDF(s)',
+  generate_pdf_users_tooltip:
+    'Click this button to generate PDF for this template for all user from the list',
+  generate_pdf_products_tooltip:
+    'Click this button to generate PDF for this template for all user that purchased selected Product',
 };

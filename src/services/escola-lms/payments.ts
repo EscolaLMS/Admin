@@ -1,6 +1,5 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function payments(
@@ -15,7 +14,7 @@ export async function payments(
     // author_id?: number;
     // course_id?: number;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.PaymentList>('/api/admin/payments', {
     params: {
