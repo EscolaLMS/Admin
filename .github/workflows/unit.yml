@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: '14.x'
       - run: npm i
-      - run: npm run lint
+      - run: npm run lint:js
 
   tsc:
     runs-on: ubuntu-latest
