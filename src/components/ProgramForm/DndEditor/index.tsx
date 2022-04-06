@@ -17,7 +17,7 @@ import { Dustbin } from './dustbin';
 import { Box, BoxItemProps } from './box';
 import Topic from '../Topic/index';
 import { FormattedMessage } from 'react-intl';
-import { TopicType } from '../../../services/escola-lms/course';
+import { TopicType } from '@/services/escola-lms/enums';
 
 import './index.css';
 

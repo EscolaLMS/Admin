@@ -8,7 +8,8 @@ import Divider from 'antd/lib/divider';
 import MediaUpload from './media/upload';
 import { Popconfirm } from 'antd';
 import RichTextEditor from './media/text';
-import { TopicType } from '@/services/escola-lms/course';
+import { TopicType } from '@/services/escola-lms/enums';
+
 import Oembed from './media/oembed';
 import H5PForm from './media/h5p';
 import TopicForm from './form';

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Col, Row, Button, Pagination, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { TopicType } from '@/services/escola-lms/course';
+import { TopicType } from '@/services/escola-lms/enums';
 import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { Document, pdfjs, Page } from 'react-pdf';
