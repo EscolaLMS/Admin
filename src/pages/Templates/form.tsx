@@ -14,17 +14,13 @@ import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
 import { FabricPreview } from '@/components/FabricEditor/preview';
-
-//import * as API from '../../services/escola-lms/enums';
-
+import PdfList from '@/components/Pdf/list';
 import { TemplateChannelValue, TemplateEvents } from '@/services/escola-lms/enums';
+import { Collapse } from 'antd';
+import TemplateManuallyTrigger from '@/components/TemplateManuallyTrigger';
+import TemplateManuallyTriggerProduct from '@/components/TemplateManuallyTrigger/product';
 
-console.log(TemplateEvents);
-
-/*
-const objectToKeysDict = (obj: Object): Record<string, string> =>
-  obj ? Object.keys(obj).reduce((acc, curr) => ({ ...acc, [curr]: curr }), {}) : {};
-*/
+const { Panel } = Collapse;
 
 const variablesForChannel = (
   variables: API.TemplateVariables,
@@ -75,18 +71,7 @@ type Tokens = {
   };
 };
 
-/*
-enum TemplateChannelValue {
-  email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
-  pdf = 'EscolaLms\\TemplatesPdf\\Core\\PdfChannel',
-  sms = 'EscolaLms\\TemplatesSms\\Core\\SmsChannel',
-}
-*/
-
-// TODO change this to union string type or Enum
 const channels = TemplateChannelValue;
-
-console.log(channels);
 
 export default () => {
   const intl = useIntl();
@@ -101,6 +86,7 @@ export default () => {
   const [variables, setVariables] = useState<API.TemplateVariables>();
   const [tokens, setTokens] = useState<Tokens | undefined>(undefined);
   const [previewData, setPreviewData] = useState<any>();
+  const [isManuallyTriggered, setIsManuallyTriggered] = useState<boolean>(false);
 
   useEffect(() => {
     fetchVariables().then((response) => {
@@ -134,6 +120,7 @@ export default () => {
 
         setTokens(_tokens as Tokens);
       }
+      setIsManuallyTriggered(event === TemplateEvents.ManuallyTriggeredEvent);
     },
     [variables, id],
   );
@@ -241,7 +228,10 @@ export default () => {
             <ProForm.Item label={<FormattedMessage id="templates.set_as_default_template" />}>
               <ProFormCheckbox name="default" />
             </ProForm.Item>
-            {!isNew && (
+          </ProForm.Group>
+
+          {!isNew && (
+            <ProForm.Group>
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton
                   disabled={!saved}
@@ -254,17 +244,34 @@ export default () => {
                   }}
                 />
               </ProForm.Item>
-            )}
 
-            <ProForm.Item noStyle shouldUpdate>
-              {(formRef) => {
-                if (formRef.getFieldValue('event') === TemplateEvents.ManuallyTriggeredEvent) {
-                  return <b>fdsfds</b>;
-                }
-                return null;
-              }}
-            </ProForm.Item>
-          </ProForm.Group>
+              {isManuallyTriggered && (
+                <ProForm.Item
+                  label={<FormattedMessage id="generate_pdf" />}
+                  tooltip={<FormattedMessage id="generate_pdf_tooltip" />}
+                >
+                  <TemplateManuallyTrigger templateId={Number(id)} />
+                </ProForm.Item>
+              )}
+
+              {isManuallyTriggered && (
+                <ProForm.Item
+                  label={<FormattedMessage id="generate_pdf" />}
+                  tooltip={<FormattedMessage id="generate_pdf_tooltip" />}
+                >
+                  <TemplateManuallyTriggerProduct templateId={Number(id)} />
+                </ProForm.Item>
+              )}
+            </ProForm.Group>
+          )}
+
+          {channels[template] === TemplateChannelValue.pdf && (
+            <Collapse ghost destroyInactivePanel defaultActiveKey={[-1]}>
+              <Panel header={<FormattedMessage id="generated_pdfs" />} key={0}>
+                <PdfList template_id={Number(id)} />
+              </Panel>
+            </Collapse>
+          )}
 
           {!tokens && !isNew ? (
             <Spin />

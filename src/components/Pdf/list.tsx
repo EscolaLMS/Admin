@@ -122,6 +122,7 @@ export const PdfList: React.FC<Request> = ({ user_id, template_id, title }) => {
           <List.Item
             actions={[
               <Button
+                size="small"
                 icon={<DownloadOutlined />}
                 type="primary"
                 onClick={() => getPdf(item.id)}

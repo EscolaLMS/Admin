@@ -1,5 +1,5 @@
-// @ts-ignore
-/* eslint-disable */
+import type { RequestOptionsInit } from 'umi-request';
+
 import { request } from 'umi';
 
 /**  GET /api/admin/users */
@@ -11,7 +11,7 @@ export async function users(
     search?: string;
     role?: string;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.UserList>('/api/admin/users', {
     params: {
@@ -26,7 +26,7 @@ export async function users(
 }
 
 /**  GET /api/admin/users */
-export async function user(id: number, options?: { [key: string]: any }, cache?: boolean) {
+export async function user(id: number, options?: RequestOptionsInit, cache?: boolean) {
   return request<API.UserRow>(`/api/admin/users/${id}`, {
     method: 'GET',
     useCache: cache !== undefined ? cache : true,
@@ -34,7 +34,7 @@ export async function user(id: number, options?: { [key: string]: any }, cache?:
   });
 }
 /**  GET /api/profile/me */
-export async function profile(options?: { [key: string]: any }) {
+export async function profile(options?: RequestOptionsInit) {
   return request<API.UserRow>(`/api/profile/me`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -43,7 +43,7 @@ export async function profile(options?: { [key: string]: any }) {
 }
 
 /**  PUT /api/profile/me */
-export async function updateProfile(data: Partial<API.UserItem>, options?: { [key: string]: any }) {
+export async function updateProfile(data: Partial<API.UserItem>, options?: RequestOptionsInit) {
   return request<API.UserRow>(`/api/profile/me`, {
     data,
     method: 'PUT',
@@ -53,7 +53,7 @@ export async function updateProfile(data: Partial<API.UserItem>, options?: { [ke
 /**  PUT /api/profile/password */
 export async function updateProfilePassword(
   data: Partial<API.UserChangePassword>,
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.UserRowPassword>(`/api/profile/password`, {
     data,
@@ -65,7 +65,7 @@ export async function updateProfilePassword(
 export async function updateUser(
   id: number,
   data: Partial<API.UserItem>,
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.UserRow>(`/api/admin/users/${id}`, {
     data,
@@ -74,7 +74,7 @@ export async function updateUser(
   });
 }
 /**  POST /api/admin/users */
-export async function createUser(data: Partial<API.UserItem>, options?: { [key: string]: any }) {
+export async function createUser(data: Partial<API.UserItem>, options?: RequestOptionsInit) {
   return request<API.UserRow>(`/api/admin/users`, {
     data,
     method: 'POST',
@@ -82,14 +82,14 @@ export async function createUser(data: Partial<API.UserItem>, options?: { [key: 
   });
 }
 /**  DELETE /api/admin/users/:id */
-export async function deleteUser(id: number, options?: { [key: string]: any }) {
+export async function deleteUser(id: number, options?: RequestOptionsInit) {
   return request<API.UserRow>(`/api/admin/users/${id}`, {
     method: 'DELETE',
     ...(options || {}),
   });
 }
 /**  POST /api/auth/email/resend */
-export async function resendEmail(email: string, options?: { [key: string]: any }) {
+export async function resendEmail(email: string, options?: RequestOptionsInit) {
   return request<API.UserRow>(`/api/auth/email/resend`, {
     method: 'POST',
     data: {
@@ -100,7 +100,7 @@ export async function resendEmail(email: string, options?: { [key: string]: any 
 }
 
 /**  GET /api/admin/users/:id/settings */
-export async function getUserSettings(id: number, options?: { [key: string]: any }) {
+export async function getUserSettings(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.UserSetting>>(`/api/admin/users/${id}/settings`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -112,7 +112,7 @@ export async function setUserSettings(
   id: number,
   method: string,
   data: API.UserSetting,
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.UserSetting>>(`/api/admin/users/${id}/settings`, {
     method: method,
@@ -124,7 +124,7 @@ export async function setUserSettings(
   });
 }
 /**  DELETE /api/admin/users/:id/avatar */
-export async function deleteUserAvatar(id: number, options?: { [key: string]: any }) {
+export async function deleteUserAvatar(id: number, options?: RequestOptionsInit) {
   return request<API.DeleteResponse>(`/api/admin/users/${id}/avatar`, {
     method: 'DELETE',
     ...(options || {}),
@@ -135,7 +135,7 @@ export async function deleteUserAvatar(id: number, options?: { [key: string]: an
 export async function updateUserInterests(
   id: number,
   data: Partial<API.UserItem>,
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.UserRow>(`/api/admin/users/${id}/interests`, {
     data,

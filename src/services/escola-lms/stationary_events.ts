@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/webinars */
 export async function stationaryEvents(
@@ -6,7 +7,7 @@ export async function stationaryEvents(
     API.PaginationParams & {
       name?: string;
     },
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
     `/api/admin/stationary-events`,
@@ -25,7 +26,7 @@ export async function stationaryEvents(
 /**  POST /api/webinars */
 export async function createStationaryEvent(
   body?: Record<string, any>,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
     `/api/admin/stationary-events`,
@@ -41,7 +42,7 @@ export async function createStationaryEvent(
 }
 
 /**  GET /api/admin/webinars/:id */
-export async function getStationaryEvent(id: number, options?: Record<string, any>) {
+export async function getStationaryEvent(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
     `/api/admin/stationary-events/${id}`,
     {
@@ -55,7 +56,7 @@ export async function getStationaryEvent(id: number, options?: Record<string, an
 export async function updateStationaryEvent(
   id: number,
   body?: Record<string, any>,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
     `/api/admin/stationary-events/${id}?_method=PUT`,
@@ -71,7 +72,7 @@ export async function updateStationaryEvent(
 }
 
 /**  GET /api/admin/webinars/:id */
-export async function deleteStationaryEvent(id: number, options?: Record<string, any>) {
+export async function deleteStationaryEvent(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>(
     `/api/admin/stationary-events/${id}`,
     {

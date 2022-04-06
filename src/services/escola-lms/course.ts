@@ -1,19 +1,5 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
 import { RequestOptionsInit } from 'umi-request';
-
-export enum TopicType {
-  Unselected = '',
-  RichText = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\RichText',
-  OEmbed = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\OEmbed',
-  Audio = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Audio',
-  Video = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Video',
-  H5P = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\H5P',
-  Image = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Image',
-  PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
-  SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
-}
 
 /**  GET /api/courses */
 export async function course(
@@ -51,7 +37,7 @@ export async function getCourse(id: number, options?: RequestOptionsInit, cache?
 export async function updateCourse(
   id: number,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}`, {
     method: 'POST',
@@ -64,10 +50,7 @@ export async function updateCourse(
 }
 
 /**  POST /api/courses */
-export async function createCourse(
-  body?: { [key: string]: any },
-  options?: { [key: string]: any },
-) {
+export async function createCourse(body?: { [key: string]: any }, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses`, {
     method: 'POST',
     headers: {
@@ -82,7 +65,7 @@ export async function createCourse(
 export async function program(
   id: number,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.CourseProgram>>(`/api/admin/courses/${id}/program`, {
     method: 'GET',
@@ -95,10 +78,7 @@ export async function program(
   });
 }
 
-export async function createLesson(
-  body?: { [key: string]: any },
-  options?: { [key: string]: any },
-) {
+export async function createLesson(body?: { [key: string]: any }, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Lesson>>(`/api/admin/lessons`, {
     method: 'POST',
     data: body,
@@ -109,7 +89,7 @@ export async function createLesson(
 export async function getCourseStats(
   id: number,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.CourseStats>>(`/api/admin/stats/course/${id}`, {
     method: 'GET',
@@ -121,7 +101,7 @@ export async function getCourseStats(
 export async function updateLesson(
   id: number | false,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Lesson>>(`/api/admin/lessons/${id}?_method=PUT`, {
     method: 'POST',
@@ -130,7 +110,7 @@ export async function updateLesson(
   });
 }
 
-export async function createTopic(body?: { [key: string]: any }, options?: { [key: string]: any }) {
+export async function createTopic(body?: { [key: string]: any }, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Topic>>(`/api/admin/topics`, {
     method: 'POST',
     data: body,
@@ -141,7 +121,7 @@ export async function createTopic(body?: { [key: string]: any }, options?: { [ke
 export async function updateTopic(
   id: number,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Topic>>(`/api/admin/topics/${id}?_method=PUT`, {
     method: 'POST',
@@ -151,7 +131,7 @@ export async function updateTopic(
 }
 
 /**  POST /api/courses/sort */
-export async function sort(body?: { [key: string]: any }, options?: { [key: string]: any }) {
+export async function sort(body?: { [key: string]: any }, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<{}>>(`/api/admin/courses/sort`, {
     method: 'POST',
     headers: {
@@ -167,7 +147,7 @@ export async function sort(body?: { [key: string]: any }, options?: { [key: stri
 export async function updateCourseCategories(
   id: number,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request(`/api/courses/attach/${id}/categories`, {
     method: 'POST',
@@ -204,7 +184,7 @@ export async function removeTopic(id: number) {
 export async function access(
   id: number,
   body?: { [key: string]: any },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.CourseAccessList>(`/api/admin/courses/${id}/access`, {
     method: 'GET',
@@ -217,11 +197,7 @@ export async function access(
   });
 }
 
-export async function setAccess(
-  id: number,
-  body: API.CourseAccess,
-  options?: { [key: string]: any },
-) {
+export async function setAccess(id: number, body: API.CourseAccess, options?: RequestOptionsInit) {
   return request<API.CourseAccessList>(`/api/admin/courses/${id}/access/set`, {
     method: 'POST',
     headers: {
@@ -232,7 +208,7 @@ export async function setAccess(
   });
 }
 
-export async function resources(topicId: number, options?: { [key: string]: any }) {
+export async function resources(topicId: number, options?: RequestOptionsInit) {
   return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -246,7 +222,7 @@ export async function resources(topicId: number, options?: { [key: string]: any 
 export async function deleteResource(
   topicId: number,
   resourceId: number,
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.ResourceList>(`/api/admin/topics/${topicId}/resources/${resourceId}`, {
     method: 'DELETE',
@@ -258,7 +234,7 @@ export async function deleteResource(
 }
 
 /**  GET /api/admin/courses/:id/export */
-export async function exportCourse(id: number, options?: { [key: string]: any }) {
+export async function exportCourse(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<string>>(`/api/admin/courses/${id}/export`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -267,7 +243,7 @@ export async function exportCourse(id: number, options?: { [key: string]: any })
 }
 
 /**  POST /api/admin/lessons/:id/clone */
-export async function cloneLesson(id: number, options?: { [key: string]: any }) {
+export async function cloneLesson(id: number, options?: RequestOptionsInit) {
   return request<API.CourseAccessList>(`/api/admin/lessons/${id}/clone`, {
     method: 'POST',
     headers: {
@@ -278,7 +254,7 @@ export async function cloneLesson(id: number, options?: { [key: string]: any }) 
 }
 
 /**  POST /api/admin/topics/:id/clone */
-export async function cloneTopic(id: number, options?: { [key: string]: any }) {
+export async function cloneTopic(id: number, options?: RequestOptionsInit) {
   return request<API.CourseAccessList>(`/api/admin/topics/${id}/clone`, {
     method: 'POST',
     headers: {
@@ -289,7 +265,7 @@ export async function cloneTopic(id: number, options?: { [key: string]: any }) {
 }
 
 /**  POST /api/admin/courses/:id/clone */
-export async function cloneCourse(id: number, options?: { [key: string]: any }) {
+export async function cloneCourse(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Course>>(`/api/admin/courses/${id}/clone`, {
     method: 'GET',
     headers: {

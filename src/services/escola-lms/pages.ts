@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 export async function pages(
   params: {
@@ -6,7 +7,7 @@ export async function pages(
     current?: number;
     pageSize?: number;
   },
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
@@ -20,14 +21,14 @@ export async function pages(
   });
 }
 
-export async function page(id: number, options?: Record<string, any>) {
+export async function page(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-export async function createPage(body?: Partial<API.Page>, options?: Record<string, any>) {
+export async function createPage(body?: Partial<API.Page>, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages`, {
     method: 'POST',
     headers: {
@@ -41,7 +42,7 @@ export async function createPage(body?: Partial<API.Page>, options?: Record<stri
 export async function updatePage(
   id: number,
   body?: Partial<API.Page>,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'PATCH',
@@ -53,7 +54,7 @@ export async function updatePage(
   });
 }
 
-export async function deletePage(id: number, options?: Record<string, any>) {
+export async function deletePage(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'DELETE',
     headers: {
