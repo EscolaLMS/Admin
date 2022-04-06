@@ -23,7 +23,6 @@ import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
-// import {format} from
 
 const WebinarForm = () => {
   const intl = useIntl();
@@ -45,7 +44,6 @@ const WebinarForm = () => {
 
       setData({
         ...response.data,
-        // active_from: response.data.active_from.toLocaleString(),
       });
     }
   }, [webinar]);
