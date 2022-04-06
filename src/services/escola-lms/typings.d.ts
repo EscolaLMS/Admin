@@ -963,8 +963,8 @@ declare namespace API {
     description: string;
     duration: string;
     base_price: number;
-    active_to: string;
-    active_from: string;
+    active_to: Date;
+    active_from: Date;
     created_at: string;
     updated_at: string;
     trainers: UserItem[] | number[];

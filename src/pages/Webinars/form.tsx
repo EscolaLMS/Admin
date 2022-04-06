@@ -3,9 +3,9 @@ import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
-  ProFormDatePicker,
   ProFormSelect,
   ProFormTextArea,
+  ProFormDateTimePicker,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -73,6 +73,8 @@ const WebinarForm = () => {
 
         const postData = {
           ...values,
+          active_from: new Date(String(values.active_from)),
+          active_to: new Date(String(values.active_to)),
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
           trainers:
@@ -241,7 +243,7 @@ const WebinarForm = () => {
               />
             </ProForm.Group>
             <ProForm.Group>
-              <ProFormDatePicker
+              <ProFormDateTimePicker
                 width="sm"
                 name="active_from"
                 label={<FormattedMessage id="active_from" />}
@@ -252,7 +254,7 @@ const WebinarForm = () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
-              <ProFormDatePicker
+              <ProFormDateTimePicker
                 width="sm"
                 name="active_to"
                 label={<FormattedMessage id="active_to" />}
