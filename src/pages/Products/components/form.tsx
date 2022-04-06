@@ -24,6 +24,7 @@ import UserSubmissions from '@/components/UsersSubmissions';
 import TagsInput from '@/components/TagsInput';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
 
 type MinimumProductProductable = {
   class: string;
@@ -495,6 +496,15 @@ const ProductsForm: React.FC<{
               {productId && (
                 <UserSubmissions id={Number(productId)} type="EscolaLms\Cart\Models\Product" />
               )}
+            </Col>
+          </Row>
+        </ProCard.TabPane>
+      )}
+      {!isNew && productId && (
+        <ProCard.TabPane key="template" tab={<FormattedMessage id="template" />}>
+          <Row>
+            <Col span={12}>
+              <TemplateManuallyTriggerForProduct productId={Number(productId)} />
             </Col>
           </Row>
         </ProCard.TabPane>
