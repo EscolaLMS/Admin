@@ -63,6 +63,7 @@ const getProductables = (
 };
 
 const ProductsForm: React.FC<{
+  type?: 'line' | 'card';
   id?: string;
   productable?: {
     name?: string;
@@ -72,7 +73,7 @@ const ProductsForm: React.FC<{
   tab: string;
   onTabChange: (tab: string) => void;
   onProductSaved?: (model: EscolaLms.Cart.Models.Product) => void;
-}> = ({ tab = 'attributes', onTabChange, id, productable, onProductSaved }) => {
+}> = ({ tab = 'attributes', onTabChange, id, productable, onProductSaved, type = 'card' }) => {
   const intl = useIntl();
 
   const [productId, setProductId] = useState<string | number | undefined>(id);
@@ -194,8 +195,29 @@ const ProductsForm: React.FC<{
 
   return (
     <ProCard
+      title={
+        type === 'line' ? (
+          <FormattedMessage id="product_widget_title" defaultMessage="Product Attibutes" />
+        ) : null
+      }
+      tooltip={
+        type === 'line' ? (
+          <FormattedMessage
+            id="product_widget_tooltip"
+            defaultMessage="All attributes below are related only to product"
+          />
+        ) : null
+      }
+      subTitle={
+        type === 'line' ? (
+          <FormattedMessage
+            id="product_widget_subtitle"
+            defaultMessage="All attributes below are related only to product"
+          />
+        ) : null
+      }
       tabs={{
-        type: 'card',
+        type: type,
         activeKey: tab,
         onChange: (key) => onTabChange(key),
       }}
@@ -218,6 +240,7 @@ const ProductsForm: React.FC<{
             <ProForm.Item
               style={{ minWidth: 104 * 3 }}
               name="productables"
+              tooltip={<FormattedMessage id="productables_tooltip" />}
               label={<FormattedMessage id="productables" />}
               valuePropName="value"
             >
@@ -442,7 +465,10 @@ const ProductsForm: React.FC<{
         </ProForm>
       </ProCard.TabPane>
       {!isNew && (
-        <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
+        <ProCard.TabPane
+          key="media"
+          tab={<FormattedMessage id="cart_media" defaultMessage="Cart Media" />}
+        >
           <ProForm {...formProps} form={form}>
             <ProFormImageUpload
               wrapInForm={false}
@@ -457,7 +483,15 @@ const ProductsForm: React.FC<{
         </ProCard.TabPane>
       )}
       {!isNew && (
-        <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories_and_tags" />}>
+        <ProCard.TabPane
+          key="categories"
+          tab={
+            <FormattedMessage
+              id="product_categories_and_tags"
+              defaultMessage="Product Categories & Tags"
+            />
+          }
+        >
           <ProForm {...formProps} form={form}>
             <Row>
               <Col span={12}>
@@ -483,14 +517,25 @@ const ProductsForm: React.FC<{
         </ProCard.TabPane>
       )}
       {!isNew && (
-        <ProCard.TabPane key="users" tab={<FormattedMessage id="users" />}>
+        <ProCard.TabPane
+          key="users"
+          tab={<FormattedMessage id="users_attached" defaultMessage="Users Attached" />}
+        >
           <Row>
-            <Col span={12}>{productId && <UserAccess id={productId} />}</Col>
+            <Col span={24}>{productId && <UserAccess id={productId} />}</Col>
           </Row>
         </ProCard.TabPane>
       )}{' '}
       {!isNew && (
-        <ProCard.TabPane key="user_submission" tab={<FormattedMessage id="user_submission" />}>
+        <ProCard.TabPane
+          key="user_submission"
+          tab={
+            <FormattedMessage
+              id="user_submission"
+              defaultMessage="Users Attached without Account"
+            />
+          }
+        >
           <Row>
             <Col span={12}>
               {productId && (

@@ -1,11 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col, Alert, Button } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormDigit,
-  ProFormDatePicker,
-  ProFormSelect,
-} from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormDatePicker, ProFormSelect } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -216,20 +211,6 @@ const ConsultationForm = () => {
                 disabled={manageCourseEdit.disableEdit}
               />
 
-              <ProFormDigit
-                width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
-                placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
-                })}
-                min={0}
-                max={9999}
-                fieldProps={{ step: 1 }}
-                disabled={manageCourseEdit.disableEdit}
-              />
               <ProFormText
                 width="sm"
                 name="duration"
@@ -245,6 +226,7 @@ const ConsultationForm = () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
+                tooltip={<FormattedMessage id="status_consultation_tooltip" />}
                 valueEnum={ModelStatus}
                 initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
@@ -280,7 +262,9 @@ const ConsultationForm = () => {
               <ProForm.Item
                 name="author_id"
                 label={<FormattedMessage id="tutor" />}
+                tooltip={<FormattedMessage id="tutor_consultation_tooltip" />}
                 valuePropName="value"
+                required
               >
                 <UserSelect />
               </ProForm.Item>
@@ -291,6 +275,7 @@ const ConsultationForm = () => {
                 label={<FormattedMessage id="description" />}
                 tooltip={<FormattedMessage id="description_tooltip" />}
                 valuePropName="value"
+                required
               >
                 <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />
               </ProForm.Item>
@@ -299,6 +284,7 @@ const ConsultationForm = () => {
               <ProForm.Item
                 valuePropName="value"
                 name="proposed_terms"
+                tooltip={<FormattedMessage id="proposed_terms_tooltip" />}
                 label={<FormattedMessage id="consultations.proposed_terms" />}
               >
                 <MultipleDatePicker />
@@ -308,12 +294,13 @@ const ConsultationForm = () => {
         </ProCard.TabPane>
         {!isNew && (
           <ProCard.TabPane
-            key="prices"
-            tab={<FormattedMessage id="prices" />}
+            key="product"
+            tab={<FormattedMessage id="product" />}
             disabled={manageCourseEdit.disableEdit}
           >
             {consultation && (
               <ProductWidget
+                type="line"
                 productable={{
                   class_type: 'App\\Models\\Consultation',
                   class_id: consultation,

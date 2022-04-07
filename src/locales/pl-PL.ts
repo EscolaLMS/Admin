@@ -404,7 +404,7 @@ export default {
   additional_fields: 'Dodatkowe pola',
   purchasable_tooltip: 'Mozliwość zakupu, albo tylko ręczne przypisanie',
   user_to_add: 'Przypisz użytkownika do produktu',
-  user_submission: 'Zgłoszenie użytkownika',
+  user_submission: 'Zapisanie użytkownika bez konta',
   email_to_add: 'Dodaj użytkownika po adresie email',
   Webinar: 'Webinar',
   productable: 'Encja',
