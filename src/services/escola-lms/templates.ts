@@ -2,7 +2,7 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 export async function templates(
-  params: {
+  params?: EscolaLms.Templates.Http.Requests.TemplateListingRequest & {
     // query
     current?: number;
     pageSize?: number;
@@ -14,8 +14,8 @@ export async function templates(
     useCache: false,
     params: {
       ...params,
-      per_page: params.pageSize && params.pageSize,
-      page: params.current && params.current,
+      per_page: params && params.pageSize,
+      page: params && params.current,
     },
     ...(options || {}),
   });

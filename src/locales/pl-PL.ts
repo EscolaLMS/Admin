@@ -420,4 +420,15 @@ export default {
   download_pdf: 'Pobierz PDF',
   select_content: 'Wybierz kontent',
   exclude_promotions: 'Czy łaczy sie z innymi promocjami',
+
+  generate: 'Generuj',
+  generate_pdf: 'Generuj PDF(y)',
+  generate_pdf_tooltip: 'Generuj PDF(y)',
+  generate_pdf_users_tooltip:
+    'Klinij aby wygenerować PDFy dla tego szablonu dla wszystkich uzytkowników z listy',
+  generate_pdf_products_tooltip:
+    'Klinij aby wygenerować PDFy dla tego szablonu dla wszystkich uzytkowników którzy zakupili wybrany produkt',
+  generate_pdf_for_products_tooltip:
+    'Klinij aby wygenerować PDFy dla wybranego szablonu dla wszystkich uzytkowników którzy zakupili ten produkt',
+  select_template: 'Select template',
 };

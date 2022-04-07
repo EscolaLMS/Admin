@@ -339,8 +339,8 @@ export default {
   'menu.Roles': 'Roles',
   'menu.Templates': 'Templates',
   'menu.Permissions': 'Permissions',
-  new_template: 'new template',
-  template: 'template',
+  new_template: 'New Template',
+  template: 'Template',
   contentHtml: 'HTML Content',
   contentMjml: 'Mjml Content',
   html_tooltip: 'HTML content',
@@ -420,4 +420,7 @@ export default {
     'Click this button to generate PDF for this template for all user from the list',
   generate_pdf_products_tooltip:
     'Click this button to generate PDF for this template for all user that purchased selected Product',
+  generate_pdf_for_products_tooltip:
+    'Click this button to generate PDF for selected template for all users that purchased this Product',
+  select_template: 'Wybierz szablon',
 };
