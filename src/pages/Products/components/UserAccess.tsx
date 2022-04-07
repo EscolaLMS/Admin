@@ -61,11 +61,11 @@ export const UserAccess: React.FC<{
   );
   return (
     <Fragment>
-      <ProForm layout="inline" onFinish={onFinish} form={form}>
+      <ProForm layout="inline" onFinish={onFinish} form={form} labelWrap={true}>
         <ProForm.Group>
           <ProForm.Item
             name="user_id"
-            label={<FormattedMessage id="user_to_add" />}
+            label={<FormattedMessage id="users" />}
             valuePropName="value"
           >
             <UserSelect />

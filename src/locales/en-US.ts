@@ -397,7 +397,7 @@ export default {
   prices: 'prices',
   additional_fields: 'Additional Fields',
   user_to_add: 'Attach user to product',
-  user_submission: 'User submission',
+  user_submission: 'Users Attached without Account',
   email_to_add: 'Add user by email address',
   Webinar: 'Webinar',
   productable: 'Entity',
