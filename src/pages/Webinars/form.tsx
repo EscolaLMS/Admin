@@ -73,14 +73,15 @@ const WebinarForm = () => {
 
         const postData = {
           ...values,
-          active_from: new Date(String(values.active_from)),
-          active_to: new Date(String(values.active_to)),
+          ...(tab === 'attributes' && { active_from: new Date(String(values.active_from)) }),
+          ...(tab === 'attributes' && { active_to: new Date(String(values.active_to)) }),
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
           trainers:
             values.trainers &&
             values.trainers.map((author) => (typeof author === 'object' ? author.id : author)),
         };
+
         let response: API.DefaultResponse<API.Webinar>;
         if (isNew) {
           response = await createWebinar(postData);
