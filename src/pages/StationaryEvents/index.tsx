@@ -80,9 +80,11 @@ const StationaryEvents: React.FC = () => {
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Link key="addnew" to="/stationary-events/new">
             <Button type="primary" key="primary">

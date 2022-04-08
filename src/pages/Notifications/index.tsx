@@ -79,9 +79,11 @@ const NotificationsPage: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         request={({ pageSize, current, event, notifiable_id, dateRange }) => {
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
