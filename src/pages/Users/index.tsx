@@ -86,6 +86,42 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
   },
 
   {
+    title: <FormattedMessage id="created_after" defaultMessage="Created After" />,
+    key: 'from',
+    dataIndex: 'from',
+    valueType: 'date',
+    hideInTable: true,
+    hideInDescriptions: true,
+  },
+
+  {
+    title: <FormattedMessage id="created_before" defaultMessage="Created Before" />,
+    key: 'to',
+    dataIndex: 'to',
+    valueType: 'date',
+    hideInTable: true,
+    hideInDescriptions: true,
+  },
+
+  {
+    title: <FormattedMessage id="gt_last_login_day" defaultMessage=">= Login last n days" />,
+    key: 'gt_last_login_day',
+    dataIndex: 'gt_last_login_day',
+    valueType: 'digit',
+    hideInTable: true,
+    hideInDescriptions: true,
+  },
+
+  {
+    title: <FormattedMessage id="lt_last_login_day" defaultMessage="<= Login last n days" />,
+    key: 'gt_last_login_day',
+    dataIndex: 'gt_last_login_day',
+    valueType: 'digit',
+    hideInTable: true,
+    hideInDescriptions: true,
+  },
+
+  {
     title: <FormattedMessage id="roles" defaultMessage="roles" />,
     dataIndex: 'roles',
     hideInSearch: true,
@@ -148,7 +184,16 @@ const TableList: React.FC = () => {
         }}
       >
         <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}>
-          <ProTable<API.UserListItem, API.PageParams & { search: string; role: string }>
+          <ProTable<
+            API.UserListItem,
+            API.PageParams &
+              EscolaLms.Auth.Http.Requests.Admin.UsersListRequest & {
+                search: string;
+                role: string;
+                gt_last_login_day?: number;
+                lt_last_login_day?: number;
+              }
+          >
             headerTitle={intl.formatMessage({
               id: 'users',
               defaultMessage: 'users',
@@ -196,10 +241,37 @@ const TableList: React.FC = () => {
                 </Button>
               </Link>,
             ]}
-            request={({ pageSize, current, search, role }) => {
-              setParams({ pageSize, current, search, role });
+            request={({
+              pageSize,
+              current,
+              search,
+              role,
+              from,
+              to,
+              gt_last_login_day,
+              lt_last_login_day,
+            }) => {
+              setParams({
+                pageSize,
+                current,
+                search,
+                role,
+                from,
+                to,
+                gt_last_login_day,
+                lt_last_login_day,
+              });
               const requestRole = role && role.toString() === 'all' ? undefined : role;
-              return users({ pageSize, current, search, role: requestRole }).then((response) => {
+              return users({
+                pageSize,
+                current,
+                search,
+                role: requestRole,
+                from,
+                to,
+                gt_last_login_day,
+                lt_last_login_day,
+              }).then((response) => {
                 if (response.success) {
                   return {
                     data: response.data,
