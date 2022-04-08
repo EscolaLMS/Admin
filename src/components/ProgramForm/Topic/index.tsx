@@ -198,7 +198,7 @@ export const Topic: React.FC<{
             <Divider>
               <FormattedMessage id="file_resources" />
             </Divider>
-            <Resources topicId={Number(topic.id)} />
+            <Resources topicId={Number(topic.id)} folder={`course/${courseId}`} />
           </React.Fragment>
         )}
 
@@ -219,6 +219,7 @@ export const Topic: React.FC<{
             type === TopicType.Image ||
             type === TopicType.PDF) && (
             <MediaUpload
+              folder={`course/${courseId}`}
               type={type}
               topic={topic}
               currentState={state}

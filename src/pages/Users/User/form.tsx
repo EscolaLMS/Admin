@@ -207,9 +207,8 @@ export default ({
                   name="avatar"
                   accept="image/*"
                   onChange={(info) => {
-                    console.log(info, info.file.status, info.file.response);
                     if (info.file.status === 'done') {
-                      if (info.file.response.success) {
+                      if (info.file.response && info.file.response.success) {
                         setData(info.file.response.data);
                       }
                     }

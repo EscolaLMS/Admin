@@ -8,7 +8,7 @@ import ConditionalWrap from 'conditional-wrap';
 import type { FormProps } from 'antd';
 declare const REACT_APP_API_URL: string;
 
-type SecureUploadType<T = API.File> = {
+export type SecureUploadType<T = API.File> = {
   url: string;
   name: string;
   extra?: string;
