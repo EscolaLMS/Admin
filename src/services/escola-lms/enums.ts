@@ -37,3 +37,13 @@ export enum VouchersTypes {
   product_fixed = 'product_fixed',
   product_percent = 'product_percent',
 }
+
+export type BuyableTypes =
+  | 'App\\Models\\Course'
+  | 'App\\Models\\Consultation'
+  | 'App\\Models\\Webinar'
+  | 'App\\Models\\StationaryEvent'
+  | 'EscolaLms\\Courses\\Models\\Course'
+  | 'EscolaLms\\Consultations\\Models\\Consultation'
+  | 'EscolaLms\\Webinars\\Models\\Webinar'
+  | 'EscolaLms\\StationaryEvents\\Models\\StationaryEvent';
