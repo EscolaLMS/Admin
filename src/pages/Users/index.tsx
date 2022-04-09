@@ -155,9 +155,11 @@ const TableList: React.FC = () => {
             })}
             actionRef={actionRef}
             rowKey="key"
-            search={{
-              labelWidth: 120,
-            }}
+            search={
+              {
+                // labelWidth: 120,
+              }
+            }
             toolBarRender={() => [
               <SecureUpload
                 title={intl.formatMessage({

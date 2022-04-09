@@ -63,9 +63,11 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
       loading={loading}
       actionRef={actionRef}
       rowKey="id"
-      search={{
-        labelWidth: 120,
-      }}
+      search={
+        {
+          // labelWidth: 120,
+        }
+      }
       request={({ user_id, method, dateRange, pageSize, current }) => {
         setLoading(true);
         const date_from =
