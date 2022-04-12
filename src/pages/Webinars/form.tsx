@@ -329,6 +329,7 @@ const WebinarForm = () => {
           >
             <ProForm {...formProps}>
               <ProFormImageUpload
+                folder={`webinars/${webinar}`}
                 title="image"
                 action={`/api/admin/webinars/${webinar}`}
                 src_name="image_url"

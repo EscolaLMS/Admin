@@ -2,9 +2,9 @@ import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { resources as fetchResources, deleteResource } from '@/services/escola-lms/course';
 import { List, Button } from 'antd';
 import { DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import SecureUpload from '@/components/SecureUpload';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
-export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
+export const Resources: React.FC<{ topicId: number; folder: string }> = ({ topicId, folder }) => {
   const [resources, setResources] = useState<API.Resource[]>();
   const controller = useRef<AbortController>();
 
@@ -52,7 +52,8 @@ export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
       itemLayout="horizontal"
       dataSource={resources}
       header={
-        <SecureUpload<API.Resource>
+        <SecureUploadBrowser<API.Resource>
+          folder={folder}
           url={`/api/admin/topics/${topicId}/resources`}
           name="resource"
           onChange={(response) => {

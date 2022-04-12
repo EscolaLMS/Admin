@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import { Col, Row, Button, Pagination, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { TopicType } from '@/services/escola-lms/enums';
-import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { Document, pdfjs, Page } from 'react-pdf';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 const CONFIG = {
@@ -88,7 +88,8 @@ export const MediaUploadForm: React.FC<{
   onUpdate: (info: UploadChangeParam) => void;
   onChange: (info: UploadChangeParam) => void;
   disabled: boolean;
-}> = ({ topic, type, onUpdate, disabled = false, currentState, onChange }) => {
+  folder: string;
+}> = ({ topic, type, onUpdate, disabled = false, currentState, onChange, folder }) => {
   const onInfoChange = useCallback(
     (info) => {
       if (info.file.status === 'done') {
@@ -110,7 +111,8 @@ export const MediaUploadForm: React.FC<{
   return (
     <Row>
       <Col span={12}>
-        <SecureUpload
+        <SecureUploadBrowser
+          folder={folder}
           onChange={onInfoChange}
           name="value"
           url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
@@ -120,7 +122,7 @@ export const MediaUploadForm: React.FC<{
           <Button disabled={disabled} icon={<UploadOutlined />}>
             Click to upload {type}
           </Button>
-        </SecureUpload>
+        </SecureUploadBrowser>
       </Col>
       <Col span={12}>
         <div style={{ padding: '0 12px' }}>

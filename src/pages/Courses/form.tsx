@@ -418,6 +418,7 @@ export default () => {
               <Row>
                 <Col>
                   <ProFormImageUpload
+                    folder={`course/${course}`}
                     title="image"
                     action={`/api/admin/courses/${course}`}
                     src_name="image_url"
@@ -433,6 +434,7 @@ export default () => {
                 </Col>
                 <Col>
                   <ProFormVideoUpload
+                    folder={`course/${course}`}
                     action={`/api/admin/courses/${course}`}
                     src_name="video_url"
                     form_name="video"
@@ -447,6 +449,7 @@ export default () => {
                 </Col>
                 <Col>
                   <ProFormImageUpload
+                    folder={`course/${course}`}
                     title="poster"
                     action={`/api/admin/courses/${course}`}
                     src_name="poster_url"

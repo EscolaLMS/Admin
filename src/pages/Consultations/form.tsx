@@ -318,6 +318,7 @@ const ConsultationForm = () => {
           >
             <ProForm {...formProps}>
               <ProFormImageUpload
+                folder={`consultations/${consultation}`}
                 title="image"
                 action={`/api/admin/consultations/${consultation}`}
                 src_name="image_url"
