@@ -66,7 +66,6 @@ function SecureUploadBrowser<Type = API.File>({
             hideDeleteBtn={true}
             defaultDirectory={folder}
             onFile={(file, dir) => {
-              console.log(dir);
               if (dir) {
                 setLoading(true);
                 const path = `${fixDirName(dir)}${file.name}`;
