@@ -253,7 +253,7 @@ const StationaryEventForm = () => {
           </ProForm>
         </ProCard.TabPane>{' '}
         {!isNew && (
-          <ProCard.TabPane key="prices" tab={<FormattedMessage id="prices" />}>
+          <ProCard.TabPane key="product" tab={<FormattedMessage id="product" />}>
             {id && (
               <ProductWidget
                 productable={{

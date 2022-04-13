@@ -393,8 +393,8 @@ export default () => {
         </ProCard.TabPane>
         {!isNew && (
           <ProCard.TabPane
-            key="prices"
-            tab={<FormattedMessage id="prices" />}
+            key="product"
+            tab={<FormattedMessage id="product" />}
             disabled={manageCourseEdit.disableEdit}
           >
             {course && (
