@@ -183,9 +183,11 @@ const Webinars: React.FC = () => {
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Link key="addnew" to="/webinars/new">
             <Button type="primary" key="primary">

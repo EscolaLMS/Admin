@@ -4,12 +4,14 @@ import { request } from 'umi';
 
 /**  GET /api/admin/users */
 export async function users(
-  params: {
+  params: EscolaLms.Auth.Http.Requests.Admin.UsersListRequest & {
     // query
     current?: number;
     pageSize?: number;
     search?: string;
     role?: string;
+    gt_last_login_day?: number;
+    lt_last_login_day?: number;
   },
   options?: RequestOptionsInit,
 ) {

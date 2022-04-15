@@ -5,11 +5,11 @@ import ProCard from '@ant-design/pro-card';
 import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
 import useModelFields from '@/hooks/useModelFields';
 import { PageContainer } from '@ant-design/pro-layout';
-import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
 import UserSettings from './User/settings';
 import AdditionalField from './User/components/AdditionalField';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
@@ -132,7 +132,8 @@ export default () => {
                   <ResponsiveImage path={data.path_avatar} size={600} width={200} />
                 )}
 
-                <SecureUpload
+                <SecureUploadBrowser
+                  folder={`avatars/${data.id}`}
                   url="/api/profile/upload-avatar"
                   name="avatar"
                   accept="image/*"

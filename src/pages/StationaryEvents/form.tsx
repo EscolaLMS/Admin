@@ -253,7 +253,7 @@ const StationaryEventForm = () => {
           </ProForm>
         </ProCard.TabPane>{' '}
         {!isNew && (
-          <ProCard.TabPane key="prices" tab={<FormattedMessage id="prices" />}>
+          <ProCard.TabPane key="product" tab={<FormattedMessage id="product" />}>
             {id && (
               <ProductWidget
                 productable={{
@@ -269,6 +269,7 @@ const StationaryEventForm = () => {
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <ProFormImageUpload
+                folder={`stationary-events/${id}`}
                 title="image"
                 action={`/api/admin/stationary-events/${id}/?_method=PUT`}
                 src_name="image_url"

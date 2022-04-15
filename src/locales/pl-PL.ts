@@ -35,6 +35,8 @@ export default {
   ...consultations,
   ...fabric,
   ...vouchers,
+  branding: 'Branding',
+  product_details: 'Ustawienia produktu',
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',

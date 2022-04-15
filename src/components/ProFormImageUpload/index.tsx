@@ -2,11 +2,12 @@ import React from 'react';
 import { Button, Image, Row, Col } from 'antd';
 
 import ProForm from '@ant-design/pro-form';
-import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { FormattedMessage } from 'umi';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 export const ProFormImageUpload: React.FC<{
+  folder: string;
   title: string;
   action: string;
   form_name: string;
@@ -14,7 +15,16 @@ export const ProFormImageUpload: React.FC<{
   getUploadedSrcField: (info: UploadChangeParam) => string;
   setPath: (state: object) => void;
   wrapInForm?: boolean;
-}> = ({ title, action, form_name, src_name, getUploadedSrcField, setPath, wrapInForm = true }) => {
+}> = ({
+  title,
+  action,
+  form_name,
+  src_name,
+  getUploadedSrcField,
+  setPath,
+  wrapInForm = true,
+  folder,
+}) => {
   return (
     <ProForm.Group title={<FormattedMessage id={title} />}>
       <Row>
@@ -23,7 +33,8 @@ export const ProFormImageUpload: React.FC<{
             {(form) => {
               return (
                 <React.Fragment>
-                  <SecureUpload
+                  <SecureUploadBrowser
+                    folder={folder}
                     wrapInForm={wrapInForm}
                     accept="image/*"
                     name={form_name}

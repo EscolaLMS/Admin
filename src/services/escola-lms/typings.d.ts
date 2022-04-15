@@ -662,6 +662,8 @@ declare namespace API {
     proposed_terms: (number | string)[];
     image_path?: string;
     image_url?: string;
+    logotype_path?: string;
+    logotype_url?: string;
   };
 
   type ConsultationAppointment = {
@@ -962,6 +964,8 @@ declare namespace API {
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
+    logotype_url?: string;
+    logotype_path?: string;
   };
 
   type ProductableListItem = {

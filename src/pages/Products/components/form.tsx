@@ -471,6 +471,7 @@ const ProductsForm: React.FC<{
         >
           <ProForm {...formProps} form={form}>
             <ProFormImageUpload
+              folder={`products/${productId}`}
               wrapInForm={false}
               title="image"
               action={`/api/admin/products/${productId}/?_method=PUT`}

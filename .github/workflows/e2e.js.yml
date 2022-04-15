@@ -45,7 +45,9 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          cd api && composer install --no-scripts
+          cd api  
+          apt-get install unzip
+          composer && self-update && composer install --no-scripts
 
       - name: Prepare Laravel Application
         run: |

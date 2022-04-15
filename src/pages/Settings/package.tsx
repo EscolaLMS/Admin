@@ -90,9 +90,11 @@ const TableList: React.FC<{
           id: 'menu.settings',
         })}
         rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         dataSource={entries as API.ConfigEntry[]}
         columns={[
           ...columns,
