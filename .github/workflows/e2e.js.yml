@@ -47,7 +47,7 @@ jobs:
         run: |
           cd api  
           apt-get install unzip
-          composer && self-update && composer install --no-scripts
+          composer self-update && composer install --no-scripts
 
       - name: Prepare Laravel Application
         run: |
