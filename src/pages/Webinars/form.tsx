@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
-  ProFormDigit,
   ProFormSelect,
   ProFormTextArea,
   ProFormDateTimePicker,
@@ -211,20 +210,6 @@ const WebinarForm = () => {
                 disabled={manageCourseEdit.disableEdit}
               />
 
-              <ProFormDigit
-                width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
-                placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
-                })}
-                min={0}
-                max={9999}
-                fieldProps={{ step: 1 }}
-                disabled={manageCourseEdit.disableEdit}
-              />
               <ProFormText
                 width="sm"
                 name="duration"
