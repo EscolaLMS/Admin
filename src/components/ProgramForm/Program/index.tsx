@@ -48,6 +48,7 @@ export const Curriculum = () => {
   };
 
   if (state && state.lessons) {
+    console.log(state);
     return (
       <div className="course-block">
         <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
@@ -129,7 +130,12 @@ export const Curriculum = () => {
                     )
                   }
                 >
-                  <Lesson key={lesson.id} lesson={lesson} courseLessons={state.lessons} />
+                  <Lesson
+                    key={lesson.id}
+                    lesson={lesson}
+                    courseLessons={state.lessons}
+                    courseId={state.id}
+                  />
                 </Panel>
               ))}
           </Collapse>

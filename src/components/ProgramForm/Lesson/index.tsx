@@ -10,10 +10,11 @@ import { DndEditorContainer } from '@/components/ProgramForm/DndEditor/index';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] }> = ({
-  lesson,
-  courseLessons,
-}) => {
+export const Lesson: React.FC<{
+  lesson: API.Lesson;
+  courseLessons: API.Lesson[];
+  courseId?: number;
+}> = ({ lesson, courseLessons, courseId }) => {
   const [state, setState] = useState<API.Lesson>(lesson);
   const [topicList, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
@@ -97,7 +98,7 @@ export const Lesson: React.FC<{ lesson: API.Lesson; courseLessons: API.Lesson[] 
 
       <DndProvider backend={HTML5Backend}>
         <DndEditorContainer
-          courseId={lesson.course_id}
+          courseId={courseId}
           courseLessons={courseLessons}
           state={state}
           setState={setState}

@@ -426,4 +426,7 @@ export default {
   generate_pdf_for_products_tooltip:
     'Click this button to generate PDF for selected template for all users that purchased this Product',
   select_template: 'Wybierz szablon',
+  product_categories_and_tags: 'Product Categories & Tags',
+  cart_media: 'Cart Media',
+  users_attached: 'Users Attached',
 };
