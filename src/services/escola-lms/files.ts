@@ -48,7 +48,7 @@ export async function upload(file: File, directory: string, options?: RequestOpt
 }
 
 export const resizedImage = (path: string, width = 1000) =>
-  `${REACT_APP_API_URL}/api/images/img?path=${path}&w=${width}`;
+  `${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/images/img?path=${path}&w=${width}`;
 
 /**  GET /api/currentUser */
 export async function remove(url: string, options?: RequestOptionsInit) {

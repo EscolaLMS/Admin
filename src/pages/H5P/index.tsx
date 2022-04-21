@@ -137,7 +137,12 @@ const TableList: React.FC = () => {
             <Button icon={<BookOutlined />}></Button>
           </Tooltip>
         </Link>,
-        <a href={`${REACT_APP_API_URL}/api/admin/hh5p/content/${record.id}/export`} download>
+        <a
+          href={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p/content/${
+            record.id
+          }/export`}
+          download
+        >
           <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
             <Button icon={<ExportOutlined />}></Button>
           </Tooltip>
