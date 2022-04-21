@@ -68,7 +68,7 @@ function SecureUpload<Type = API.File>({
           name,
           headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
         }}
-        action={`${REACT_APP_API_URL}${url}`}
+        action={`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`}
         extra={extra}
       />
     </ConditionalWrap>
