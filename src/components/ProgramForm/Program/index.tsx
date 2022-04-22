@@ -48,7 +48,6 @@ export const Curriculum = () => {
   };
 
   if (state && state.lessons) {
-    console.log(state);
     return (
       <div className="course-block">
         <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
