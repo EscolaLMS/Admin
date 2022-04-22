@@ -13,7 +13,8 @@ export type PossibleType =
   | 'EscolaLms\\Cart\\Models\\Course'
   | 'EscolaLms\\Webinars\\Models\\Webinar'
   | 'EscolaLms\\Auth\\Models\\UserGroup'
-  | 'Questionnaire';
+  | 'Questionnaire'
+  | 'Product';
 
 export const TypeButtonDrawer: React.FC<{
   type: PossibleType;

@@ -483,27 +483,14 @@ declare namespace API {
 
   type H5PContentParams = PageParams & PaginationParams;
 
-  type OrderItem = {
-    buyable_id: number;
-    buyable_type: 'EscolaLms\\Cart\\Models\\Course';
-    created_at: null;
-    id: number;
-    options: object;
-    order_id: number;
-    quantity: number;
-    updated_at: string;
+  type OrderItem = EscolaLms.Cart.Models.OrderItem & {
+    product_id: number;
+    product_type: Enum.BuyableTypes;
   };
 
-  type Order = {
-    created_at: string;
-    id: number;
-    items: OrderItem[];
+  interface Order extends EscolaLms.Cart.Models.Order {
     status: PaymentStatus;
-    subtotal: string;
-    tax: string;
-    total: string;
-    user_id: number;
-  };
+  }
 
   type PaymentStatus = 'NEW' | 'PAID' | 'CANCELLED' | 'FAILED';
 
@@ -824,6 +811,10 @@ declare namespace API {
     | {
         type: 'App\\Models\\Consultation' | 'EscolaLms\\Consultations\\Models\\Consultation';
         value: API.Consultation;
+      }
+    | {
+        type: 'Product';
+        value: EscolaLms.Cart.Models.Product;
       };
 
   type ReportType =

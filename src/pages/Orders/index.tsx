@@ -5,24 +5,19 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
 import { orders } from '@/services/escola-lms/orders';
-import UserLink from '@/components/UserLink';
 import UserSelect from '@/components/UserSelect';
-import CourseSelect from '@/components/CourseSelect';
 import { format } from 'date-fns';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { Space } from 'antd';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import ProductsSelect from '@/components/ProductsSelect';
 
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
-    <Space>
+    <Space key={'space'}>
       {items.map((item) => (
-        <TypeButtonDrawer
-          key={item.buyable_id}
-          type={item.buyable_type}
-          type_id={item.buyable_id}
-        />
+        <TypeButtonDrawer key={item.product_id} type={'Product'} type_id={item.product_id} />
       ))}
     </Space>
   );
@@ -50,7 +45,8 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     dataIndex: 'created_at',
     hideInSearch: true,
     sorter: true,
-    render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
+    render: (_, record) =>
+      record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
   },
   {
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
@@ -74,7 +70,7 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     title: <FormattedMessage id="items" defaultMessage="items" />,
     dataIndex: 'items',
     hideInSearch: true,
-    render: (_, record) => <OrderItems items={record.items} />,
+    render: (_, record) => record.items && <OrderItems items={record.items as API.OrderItem[]} />,
   },
   {
     title: <FormattedMessage id="user" defaultMessage="user" />,
@@ -96,37 +92,14 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
         />
       );
     },
-    render: (_, record) => <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />,
+    render: (_, record) =>
+      record.user_id && <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />,
   },
 
   {
-    title: <FormattedMessage id="author" defaultMessage="author" />,
-    dataIndex: 'author_id',
-    key: 'author_id',
-    hideInSearch: false,
-    hideInTable: true,
-    hideInDescriptions: true,
-    renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-      if (type === 'form') {
-        return null;
-      }
-      const stateType = form.getFieldValue('state');
-      return (
-        <UserSelect
-          {...rest}
-          state={{
-            type: stateType,
-          }}
-        />
-      );
-    },
-    render: (_, record) => [<UserLink id={record.user_id} />],
-  },
-
-  {
-    title: <FormattedMessage id="course" defaultMessage="course" />,
-    dataIndex: 'course_id',
-    key: 'course_id',
+    title: <FormattedMessage id="product" defaultMessage="product" />,
+    dataIndex: 'product_id',
+    key: 'product_id',
     hideInSearch: false,
     hideInTable: true,
     hideInDescriptions: true,
@@ -137,7 +110,8 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
       }
       const stateType = form.getFieldValue('state');
       return (
-        <CourseSelect
+        <ProductsSelect
+          multiple={false}
           {...rest}
           state={{
             type: stateType,
@@ -145,8 +119,8 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
         />
       );
     },
-    render: (_, record) => [<UserLink id={record.user_id} />],
   },
+
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
@@ -162,12 +136,10 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<
         API.OrderListItem,
-        API.PageParams & {
-          user_id: number;
-          author_id: number;
-          course_id: number;
-          dateRange: [string, string];
-        }
+        API.PageParams &
+          EscolaLms.Cart.Http.Requests.Admin.OrderSearchRequest & {
+            dateRange: [string, string];
+          }
       >
         headerTitle={intl.formatMessage({
           id: 'orders',
@@ -175,12 +147,7 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
-        request={({ pageSize, current, user_id, author_id, course_id, dateRange }, sort) => {
+        request={({ pageSize, current, user_id, product_id, dateRange }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
@@ -190,10 +157,9 @@ const TableList: React.FC = () => {
             pageSize,
             current,
             user_id,
-            author_id,
-            course_id,
             date_from,
             date_to,
+            product_id,
             order_by: sortArr && sortArr[0], // i like nested ternary
             /* eslint-disable */ order: sortArr
               ? sortArr[1] === 'ascend'

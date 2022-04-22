@@ -7,6 +7,7 @@ import QuestionnaireRow from '../QuestionnaireRow';
 import ConsultationRow from '../ConsultationRow';
 import WebinarRow from '../WebinarRow';
 import StationaryEventRow from '../StationaryEventRow';
+import ProductRow from '../ProductRow';
 
 type PossibleType =
   | 'App\\Models\\User'
@@ -21,7 +22,8 @@ type PossibleType =
   | 'EscolaLms\\Cart\\Models\\Order'
   | 'EscolaLms\\Cart\\Models\\Course'
   | 'EscolaLms\\Auth\\Models\\UserGroup'
-  | 'Questionnaire';
+  | 'Questionnaire'
+  | 'Product';
 type DataProps = API.LinkedType;
 
 export const TypeButton: React.FC<{
@@ -71,6 +73,9 @@ export const TypeButton: React.FC<{
           onLoaded={(questionnaire) => onData({ type, value: questionnaire })}
         />
       );
+
+    case 'Product':
+      return <ProductRow id={type_id} onLoaded={(product) => onData({ type, value: product })} />;
     default:
       return type && type_id ? (
         <pre>
