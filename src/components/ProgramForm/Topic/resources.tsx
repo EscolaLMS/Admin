@@ -61,7 +61,6 @@ export const Resources: React.FC<{ topicId: number; folder: string }> = ({ topic
               if (response.file.response?.success) {
                 onUploaded(response.file.response);
               }
-              ///
             }
           }}
         />

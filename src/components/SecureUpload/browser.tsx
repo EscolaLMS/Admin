@@ -46,7 +46,7 @@ function SecureUploadBrowser<Type = API.File>({
 >) {
   const [showBrowser, setShowBrowser] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { url, name, onChange } = props;
+  const { url, name, onChange, data } = props;
 
   const closeModal = useCallback(() => {
     setShowBrowser(false);
@@ -69,7 +69,10 @@ function SecureUploadBrowser<Type = API.File>({
               if (dir) {
                 setLoading(true);
                 const path = `${fixDirName(dir)}${file.name}`;
-                post(url, { [name]: path })
+                post(
+                  url,
+                  data ? { [name]: path, topicable_type: data.topicable_type } : { [name]: path },
+                )
                   .then((response: AnyResponse) => {
                     setLoading(false);
                     if (onResponse) {

@@ -14,7 +14,7 @@ import { useCallback } from 'react';
 import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
-import { splitImagePath } from '@/utils/utils';
+import { capitalize, splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
@@ -142,7 +142,7 @@ const WebinarForm = () => {
             {
               path: String(tab),
               breadcrumbName: intl.formatMessage({
-                id: String(tab),
+                id: String(capitalize(tab)),
               }),
             },
           ],
