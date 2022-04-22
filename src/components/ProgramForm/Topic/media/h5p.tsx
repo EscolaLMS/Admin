@@ -14,14 +14,14 @@ export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new'
   onData,
   id,
 }) => (
-  <EditorContextProvider url={`${REACT_APP_API_URL}/api/admin/hh5p`}>
+  <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
     <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
   </EditorContextProvider>
 );
 
 export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
   return (
-    <EditorContextProvider url={`${REACT_APP_API_URL}/api/admin/hh5p`}>
+    <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
       <Divider />
       <H5Player id={Number(id)} />
     </EditorContextProvider>

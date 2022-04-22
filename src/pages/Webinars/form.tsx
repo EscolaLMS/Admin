@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
-  ProFormDigit,
   ProFormSelect,
   ProFormTextArea,
   ProFormDateTimePicker,
@@ -15,7 +14,7 @@ import { useCallback } from 'react';
 import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
-import { splitImagePath } from '@/utils/utils';
+import { capitalize, splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
@@ -143,7 +142,7 @@ const WebinarForm = () => {
             {
               path: String(tab),
               breadcrumbName: intl.formatMessage({
-                id: String(tab),
+                id: String(capitalize(tab)),
               }),
             },
           ],
@@ -211,20 +210,6 @@ const WebinarForm = () => {
                 disabled={manageCourseEdit.disableEdit}
               />
 
-              <ProFormDigit
-                width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
-                placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
-                })}
-                min={0}
-                max={9999}
-                fieldProps={{ step: 1 }}
-                disabled={manageCourseEdit.disableEdit}
-              />
               <ProFormText
                 width="sm"
                 name="duration"
@@ -337,7 +322,7 @@ const WebinarForm = () => {
               <ProFormImageUpload
                 folder={`webinar/${webinar}`}
                 title="image"
-                action={`/api/admin/webinar/${webinar}`}
+                action={`/api/admin/webinars/${webinar}`}
                 src_name="image_url"
                 form_name="image"
                 getUploadedSrcField={(info) => info.file.response.data.image_url}
