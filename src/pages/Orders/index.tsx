@@ -147,7 +147,7 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        request={({ pageSize, current, user_id, author_id, course_id, dateRange }, sort) => {
+        request={({ pageSize, current, user_id, product_id, dateRange }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
