@@ -66,3 +66,15 @@ export async function deleteWebinar(id: number, options?: RequestOptionsInit) {
     ...(options || {}),
   });
 }
+
+/**  POST /api/admin/g-token/generate */
+export async function generateYoutubeToken(body?: { email: string }, options?: RequestOptionsInit) {
+  return request<{ url: string }>(`/api/admin/g-token/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

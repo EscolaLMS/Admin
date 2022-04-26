@@ -429,4 +429,5 @@ export default {
   product_categories_and_tags: 'Product Categories & Tags',
   cart_media: 'Cart Media',
   users_attached: 'Users Attached',
+  generate_token: 'Generate youtube token',
 };

@@ -37,7 +37,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
             if (value.format('yyyy-MM-DD') === moment(item.date).format('yyyy-MM-DD')) {
               return (
                 <li>
-                  <Badge status={consultationStatus[item.status]} text={`${item.author.email} `} />
+                  <Badge status={consultationStatus[item.status]} text={`${item?.user?.email} `} />
                 </li>
               );
             }
