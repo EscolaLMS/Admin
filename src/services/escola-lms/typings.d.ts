@@ -668,7 +668,7 @@ declare namespace API {
 
   type ConsultationAppointment = {
     date: Date;
-    author: UserItem;
+    user: UserItem;
     status: string;
   };
 
