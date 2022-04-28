@@ -18,7 +18,7 @@ const FabricEditor: React.FC<{
   variables?: string[];
   width?: number;
   height?: number;
-}> = ({ onUpdate, initialValue, width = 842, height = 592, variables = [] }) => {
+}> = ({ onUpdate, initialValue, width = 842, height = 595, variables = [] }) => {
   const [svg, setSvg] = useState<string>();
   const { editor, onReady } = useFabricJSEditor();
 
@@ -78,11 +78,9 @@ const FabricEditor: React.FC<{
           </Button>
         </Col>
       </Row>
-
       <div className="fabric-editor__canvas fakeA4" style={{ width, height }}>
         <FabricJSCanvas className="fakeA4-canvas" onReady={onCanvasReady} />
       </div>
-
       <div className="fabric-editor__bottom">
         {editorController?.canvas && (
           <FabricEditorActiveElementForm
@@ -91,7 +89,6 @@ const FabricEditor: React.FC<{
           />
         )}
       </div>
-
       {svg && <PreviewPDF svgDef={svg} width={width} height={height} />}
     </div>
   );

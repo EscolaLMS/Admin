@@ -21,7 +21,7 @@ import ScormSelector from '@/components/Scorm';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
-import { capitalize, categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
+import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
 import { ModelTypes } from '../Questionnaire/form';
@@ -150,7 +150,7 @@ export default () => {
             },
             {
               path: String(tab),
-              breadcrumbName: String(capitalize(tab)),
+              breadcrumbName: String(tab),
             },
           ],
         },

@@ -397,7 +397,7 @@ export default {
   Products: 'Products',
   free: 'free',
   free_capi: 'Free',
-  prices: 'prices',
+  prices: 'Prices',
   additional_fields: 'Additional Fields',
   user_to_add: 'Attach user to product',
   user_submission: 'Users Attached without Account',
@@ -430,4 +430,5 @@ export default {
   cart_media: 'Cart Media',
   users_attached: 'Users Attached',
   generate_token: 'Generate youtube token',
+  browse: 'Browse files',
 };

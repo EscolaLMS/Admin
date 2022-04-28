@@ -16,7 +16,7 @@ import {
   updateConsultation,
 } from '@/services/escola-lms/consultations';
 import MultipleDatePicker from '@/components/MultipleDatePicker';
-import { capitalize, categoriesArrToIds, splitImagePath } from '@/utils/utils';
+import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
@@ -145,7 +145,7 @@ const ConsultationForm = () => {
             {
               path: String(tab),
               breadcrumbName: intl.formatMessage({
-                id: String(capitalize(tab)),
+                id: String(tab),
               }),
             },
           ],

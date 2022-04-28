@@ -47,7 +47,13 @@ function SecureUpload<Type = API.File>({
       wrap={(children: JSX.Element) => <Form {...formProps}>{children}</Form>}
     >
       <ProFormUploadButton
-        title={title ? title : <FormattedMessage id="upload_click_here" />}
+        title={
+          title
+            ? title
+            : ` ${intl.formatMessage({
+                id: 'upload_click_here',
+              })}`
+        }
         placeholder={intl.formatMessage({
           id: 'upload_click_here',
         })}

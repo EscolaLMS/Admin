@@ -100,8 +100,9 @@ function SecureUploadBrowser<Type = API.File>({
           />
         </Modal>
       )}
-
-      <SecureUpload {...props} />
+      <div style={{ marginTop: '10px' }}>
+        <SecureUpload {...props} />
+      </div>
     </div>
   );
 }

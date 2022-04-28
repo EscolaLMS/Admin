@@ -57,7 +57,7 @@ export const FONT_FAMILY = [
 
 export const TEXT_ALIGN = ['Left', 'Center', 'Right', 'Justify'];
 
-export const FONT_SIZE = [...Array(120)].map((_value, index) => index + 1);
+export const FONT_SIZE = [...Array(50)].map((_value, index) => index + 1);
 
 export const TEXT_STROKE_WIDTH = [...Array(6)].map((_value, index) => index);
 
