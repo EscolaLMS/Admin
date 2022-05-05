@@ -10,7 +10,7 @@ const PreviewPDF: React.FC<{
   width: number;
   height: number;
   mode?: 'file' | 'blob';
-}> = ({ svgDef, width, height }) => {
+}> = ({ svgDef, width = 840, height = 592 }) => {
   useEffect(() => {
     const doc = new jsPDF('l', 'px', [width, height]);
 
@@ -41,7 +41,7 @@ export const FabricPreview: React.FC<{
   width?: number;
   height?: number;
   mode?: 'file' | 'blob';
-}> = ({ initialValue, width = 842, height = 592, onRendered, mode = 'file', onError }) => {
+}> = ({ initialValue, width = 840, height = 592, onRendered, mode = 'file', onError }) => {
   const { onReady } = useFabricJSEditor();
 
   const onCanvasReady = (canvas: fabric.Canvas) => {
@@ -50,9 +50,21 @@ export const FabricPreview: React.FC<{
         const data = typeof initialValue === 'string' ? JSON.parse(initialValue) : initialValue;
         canvas.loadFromJSON(data, () => {
           const svgDef = canvas.toSVG();
+
           const doc = new jsPDF('l', 'px', [width, height]);
+
           const parser = new DOMParser();
           const element = parser.parseFromString(svgDef, 'image/svg+xml');
+
+          const bg = element.documentElement.querySelector('rect');
+          // const span = element.documentElement.querySelector('tspan');
+          if (bg) {
+            bg.setAttribute('width', width + 'px');
+            bg.setAttribute('height', height + 'px');
+          }
+          // if (span) {
+          //   span.setAttribute('width', width + 'px');
+          // }
           doc.svg(element.documentElement).then(() => {
             onRendered(mode === 'file' ? doc.save('myPDF.pdf') : doc.output('blob'));
           });

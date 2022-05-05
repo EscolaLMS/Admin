@@ -97,7 +97,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
             setLoading(false);
             return {
               data: response.data.filter((item) => item.channel === channel),
-              total: response.meta.total,
+              total: response.data.filter((item) => item.channel === channel).length,
               success: true,
             };
           }

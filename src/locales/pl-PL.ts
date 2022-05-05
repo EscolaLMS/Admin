@@ -437,4 +437,5 @@ export default {
   cart_media: 'Media do koszyka',
   users_attached: 'Dołączenie użytkownika',
   generate_token: 'Generuj token dla youtube',
+  browse: 'Przeglądaj pliki',
 };
