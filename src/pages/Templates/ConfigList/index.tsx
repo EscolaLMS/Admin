@@ -17,8 +17,6 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
 
-  console.log(channel);
-
   const columns: ProColumns<API.TemplateListItem>[] = [
     {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
