@@ -332,6 +332,9 @@ declare namespace API {
     preview?: boolean;
     can_skip?: boolean;
     json?: object;
+    introduction?: string;
+    description?: string;
+    summary?: string;
     /*
     topicable_type?:
       | TopicType.RichText

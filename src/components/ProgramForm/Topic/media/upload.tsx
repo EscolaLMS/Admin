@@ -64,7 +64,7 @@ export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }>
         );
       case TopicType.Image:
         return topic.topicable_type === TopicType.Image && topic.topicable?.url ? (
-          <img src={topic.topicable.url} width="100%" />
+          <img title="Topic image" src={topic.topicable.url} width="100%" />
         ) : (
           <React.Fragment />
         );
@@ -108,6 +108,19 @@ export const MediaUploadForm: React.FC<{
     can_skip: currentState.can_skip ? 1 : 0,
   };
 
+  if (!data.introduction) {
+    delete data?.introduction;
+  }
+  if (!data.description) {
+    delete data?.description;
+  }
+  if (!data.summary) {
+    delete data?.summary;
+  }
+  if (!data.json) {
+    delete data?.json;
+  }
+
   return (
     <Row>
       <Col span={12}>
@@ -126,7 +139,7 @@ export const MediaUploadForm: React.FC<{
       </Col>
       <Col span={12}>
         <div style={{ padding: '0 12px' }}>
-          <MediaUploadPreview type={type} topic={topic} />
+          <MediaUploadPreview type={type} topic={currentState} />
         </div>
       </Col>
     </Row>
