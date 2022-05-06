@@ -32,6 +32,7 @@ type Window = {
     fieldsObject: GAFieldsObject | string,
   ) => void;
   reloadAuthorized: () => void;
+  REACT_APP_API_URL: string;
 };
 
 declare let ga: () => void;
@@ -44,3 +45,9 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 declare const REACT_APP_API_URL: string;
 declare const REACT_APP_CREDENTIALS: string;
 declare const REACT_APP_API_URI: string;
+
+declare global {
+  interface Window {
+    REACT_APP_API_URL: string;
+  }
+}

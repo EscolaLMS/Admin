@@ -69,10 +69,8 @@ function SecureUploadBrowser<Type = API.File>({
               if (dir) {
                 setLoading(true);
                 const path = `${fixDirName(dir)}${file.name}`;
-                post(
-                  url,
-                  data ? { [name]: path, topicable_type: data.topicable_type } : { [name]: path },
-                )
+
+                post(url, { ...data, [name]: path })
                   .then((response: AnyResponse) => {
                     setLoading(false);
                     if (onResponse) {
