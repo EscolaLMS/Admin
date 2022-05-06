@@ -108,6 +108,8 @@ export const MediaUploadForm: React.FC<{
     can_skip: currentState.can_skip ? 1 : 0,
   };
 
+  // I delete these fields if they are null because validation does not allow them on the backend so if they are null the user has not edited them
+
   if (!data.introduction) {
     delete data?.introduction;
   }
