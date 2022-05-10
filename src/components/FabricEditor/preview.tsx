@@ -5,28 +5,42 @@ import 'svg2pdf.js';
 import { FabricJSCanvas, useFabricJSEditor } from 'fabricjs-react';
 import type { fabric } from 'fabric';
 
-import { arialFont } from './fonts/arial';
-import { timesNewRomanFont } from './fonts/times';
+import { arialBoldFont } from './fonts/arial/bold';
+import { arialNormalFont } from './fonts/arial/normal';
+import { arialItalicFont } from './fonts/arial/italic';
 
-import { monacoFont } from './fonts/monaco';
-
-const fonts = [{ arial: 'ARIAL' }, { 'times new roman': 'times' }, { monaco: 'monaco' }];
+const fonts = [
+  { arial: ['Arial', 'Arial Bold', 'Arial Italic'] },
+  { 'times new roman': 'times' },
+  { monaco: 'monaco' },
+];
 
 const setFonts = (doc: any) => {
-  doc.addFileToVFS('ARIAL-normal.ttf', arialFont);
-  doc.addFont('ARIAL-normal.ttf', 'ARIAL', 'normal');
-  doc.addFileToVFS('times-normal.ttf', timesNewRomanFont);
-  doc.addFont('times-normal.ttf', 'times', 'normal');
-  doc.addFileToVFS('monaco-normal.ttf', monacoFont);
-  doc.addFont('monaco-normal.ttf', 'monaco', 'normal');
+  // ARIAL
+  doc.addFileToVFS('Arial-normal.ttf', arialNormalFont);
+  doc.addFont('Arial-normal.ttf', 'Arial', 'normal');
+  doc.addFileToVFS('Arial Bold-normal.ttf', arialBoldFont);
+  doc.addFont('Arial Bold-normal.ttf', 'Arial Bold', 'bold');
+  doc.addFileToVFS('Arial Italic-normal.ttf', arialItalicFont);
+  doc.addFont('Arial Italic-normal.ttf', 'Arial Italic', 'italic');
+
+  // doc.addFileToVFS('monaco-normal.ttf', monacoFont);
+  // doc.addFont('monaco-normal.ttf', 'monaco', 'normal');
 };
 
 const fontsManager = (collection: any) => {
   collection.forEach((tspan: HTMLElement) => {
     const currFont = tspan.style['font-family'];
-    const findFont = fonts.find((t) => currFont.toLowerCase() in t);
-    if (findFont) {
-      tspan.style.fontFamily = `${findFont[Object.keys(findFont)[0]]}`;
+
+    const findedFont = fonts.find((t) => currFont.toLowerCase() in t);
+    if (findedFont) {
+      if (tspan.style.fontWeight === 'bold') {
+        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][1]}`;
+      } else if (tspan.style.fontStyle === 'italic') {
+        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][2]}`;
+      } else {
+        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][0]}`;
+      }
     }
   });
 };
