@@ -431,4 +431,5 @@ export default {
   users_attached: 'Users Attached',
   generate_token: 'Generate youtube token',
   browse: 'Browse files',
+  related_products: 'Related Products',
 };
