@@ -438,4 +438,5 @@ export default {
   users_attached: 'Dołączenie użytkownika',
   generate_token: 'Generuj token dla youtube',
   browse: 'Przeglądaj pliki',
+  related_products: 'Powiązane produkty',
 };

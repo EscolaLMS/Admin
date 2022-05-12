@@ -12,7 +12,8 @@ export const ProductsSelect: React.FC<{
   multiple?: boolean;
   value?: string | string[] | number | number[] | EscolaLms.Cart.Models.Product[];
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  type?: string;
+}> = ({ value, onChange, multiple = false, type }) => {
   const [products, setProducts] = useState<EscolaLms.Cart.Models.Product[]>([]);
   const [fetching, setFetching] = useState(false);
   const [currProducts, setCurrProducts] = useState<number[]>([]);
@@ -26,10 +27,16 @@ export const ProductsSelect: React.FC<{
     }
 
     abortController.current = new AbortController();
-    fetchProducts({}, { signal: abortController.current.signal })
+    fetchProducts({ productable_type: type }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setProducts(response.data);
+          setProducts(
+            type
+              ? response.data.filter(
+                  (i) => i.type === 'single' && i.productables && i.productables[0].id,
+                )
+              : response.data,
+          );
         }
         setFetching(false);
       })
