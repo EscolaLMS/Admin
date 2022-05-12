@@ -162,7 +162,6 @@ const ProductsForm: React.FC<{
             productables: string[] | string;
           },
       ) => {
-        console.log(values);
         const postData = {
           ...values,
           productables: values.productables ? getProductables(values.productables) : undefined,
