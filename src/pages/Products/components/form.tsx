@@ -82,7 +82,7 @@ const ProductsForm: React.FC<{
 
   const isNew = useMemo(() => productId === 'new', [productId]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [productableType, setProductableType] = useState<string | null>(null);
   const [form] = ProForm.useForm();
 
   const [multiple, setMultiple] = useState<boolean>(false);
@@ -127,6 +127,9 @@ const ProductsForm: React.FC<{
             ? transformProductablesFromAPI(response.data.productables as API.ProductProductable[])
             : [],
         };
+        if (response.data.productables) {
+          setProductableType(response.data.productables[0].productable_type);
+        }
 
         form.setFieldsValue(newData);
 
@@ -456,7 +459,7 @@ const ProductsForm: React.FC<{
             label={<FormattedMessage id={'related_products'} />}
             valuePropName="value"
           >
-            <ProductsSelect multiple />
+            {productableType && <ProductsSelect type={productableType} multiple />}
           </ProForm.Item>
           {!isNew && (
             <ProForm.Item
