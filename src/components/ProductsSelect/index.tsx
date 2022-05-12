@@ -30,7 +30,13 @@ export const ProductsSelect: React.FC<{
     fetchProducts({ productable_type: type }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setProducts(type ? response.data.filter((i) => i.type === 'single') : response.data);
+          setProducts(
+            type
+              ? response.data.filter(
+                  (i) => i.type === 'single' && i.productables && i.productables[0].id,
+                )
+              : response.data,
+          );
         }
         setFetching(false);
       })
