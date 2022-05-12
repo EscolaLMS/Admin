@@ -63,7 +63,7 @@
         "@ant-design/pro-table": "2.65.0",
         "@escolalms/h5p-react": "0.1.31",
         "@escolalms/ts-models": "^0.0.27",
-        "@sentry/react": "^6.15.0",
+        "@sentry/react": "^6.19.6",
         "@sentry/tracing": "^6.15.0",
         "@testing-library/jest-dom": "^5.11.9",
         "@types/enzyme": "^3.10.8",
