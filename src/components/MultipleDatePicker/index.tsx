@@ -81,6 +81,11 @@ const MultipleDatePicker: React.FC<{
     },
     [selectedDate],
   );
+  const disableMinutes = () => {
+    return {
+      disabledMinutes: () => Array.from({ length: 59 }, (_, i) => i + 1),
+    };
+  };
 
   return (
     <Select
@@ -105,6 +110,7 @@ const MultipleDatePicker: React.FC<{
               return current && current.valueOf() <= date.setDate(date.getDate() - 1);
             }}
             showTime={{ format: 'HH:mm' }}
+            disabledTime={disableMinutes}
             onChange={(date: moment.Moment | null) => date && onValueChange(date)}
             open
             dateRender={dateRender}
