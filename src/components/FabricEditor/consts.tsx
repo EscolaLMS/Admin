@@ -39,12 +39,12 @@ export const PROPS_ALLOWED_IN_SELECTIONS = [
 
 export const FONT_FAMILY = [
   'Arial',
-  // 'Times New Roman',
+  'Times New Roman',
   // 'Helvetica',
   // 'Myriad Pro',
   // 'Delicious',
-  // 'Verdana',
-  // 'Georgia',
+  'Verdana',
+  'Georgia',
   // 'Courier',
   // 'Comic Sans MS',
   // 'Impact',
