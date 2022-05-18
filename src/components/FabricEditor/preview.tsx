@@ -5,22 +5,42 @@ import type { fabric } from 'fabric';
 import { fonts, setFonts } from './utils';
 import 'svg2pdf.js';
 
-const fontsManager = (collection: NodeListOf<SVGTSpanElement>) => {
-  collection.forEach((tspan: SVGTSpanElement) => {
-    const currFont = tspan.style['font-family'];
+const fontsManager = (collection: NodeListOf<SVGTextElement>) => {
+  let missedFont: string;
+  collection.forEach((text: SVGTextElement) => {
+    (text.childNodes as NodeListOf<SVGTSpanElement>).forEach((tspan: SVGTSpanElement) => {
+      const currFont = tspan.style['font-family'];
+      const findedFont = fonts.find((t) => currFont.replace(/['"]+/g, '').toLowerCase() in t);
 
-    const findedFont = fonts.find((t) => currFont.replace(/['"]+/g, '').toLowerCase() in t);
-    if (findedFont) {
-      if (tspan.style.fontWeight === 'bold' && tspan.style.fontStyle === 'italic') {
-        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][3]}`;
-      } else if (tspan.style.fontWeight === 'bold') {
-        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][1]}`;
-      } else if (tspan.style.fontStyle === 'italic') {
-        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][2]}`;
+      if (findedFont) {
+        if (tspan.style.fontWeight === 'bold' && tspan.style.fontStyle === 'italic') {
+          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][3]}`;
+          missedFont = `${findedFont[Object.keys(findedFont)[0]][3]}`;
+        } else if (tspan.style.fontWeight === 'bold') {
+          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][1]}`;
+          missedFont = `${findedFont[Object.keys(findedFont)[0]][1]}`;
+        } else if (tspan.style.fontStyle === 'italic') {
+          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][2]}`;
+          missedFont = `${findedFont[Object.keys(findedFont)[0]][1]}`;
+        } else {
+          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][0]}`;
+          missedFont = `${findedFont[Object.keys(findedFont)[0]][0]}`;
+        }
       } else {
-        tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][0]}`;
+        // this is for vars like @VarUserName
+        tspan.style.fontFamily = missedFont;
+        if (missedFont.includes('Bold Italic')) {
+          tspan.style.fontWeight = 'bold';
+          tspan.style.fontStyle = 'italic';
+        } else if (missedFont.includes('Bold')) {
+          tspan.style.fontWeight = 'bold';
+        } else if (missedFont.includes('Italic')) {
+          tspan.style.fontStyle = 'italic';
+        } else {
+          tspan.style.fontWeight = 'normal';
+        }
       }
-    }
+    });
   });
 };
 
@@ -39,7 +59,7 @@ const PreviewPDF: React.FC<{
     const element = parser.parseFromString(svgDef, 'image/svg+xml');
 
     const bg = element.documentElement.querySelector('rect');
-    const texts = element.documentElement.querySelectorAll('tspan');
+    const texts = element.documentElement.querySelectorAll('text');
     // hack for background
     // svg2pdf.js don't support % units (for now)
     if (bg) {
@@ -75,7 +95,7 @@ export const FabricPreview: React.FC<{
 
         canvas.loadFromJSON(data, () => {
           const svgDef = canvas.toSVG();
-          console.log(svgDef);
+
           const doc = new jsPDF('l', 'px', [width, height]);
           setFonts(doc);
 
@@ -83,8 +103,8 @@ export const FabricPreview: React.FC<{
           const element = parser.parseFromString(svgDef, 'image/svg+xml');
 
           const bg = element.documentElement.querySelector('rect');
-          const texts = element.documentElement.querySelectorAll('tspan');
-          // const span = element.documentElement.querySelector('tspan');
+          const texts = element.documentElement.querySelectorAll('text');
+
           if (bg) {
             bg.setAttribute('width', width + 'px');
             bg.setAttribute('height', height + 'px');
