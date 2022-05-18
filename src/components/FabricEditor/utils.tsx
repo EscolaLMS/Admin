@@ -127,19 +127,17 @@ export const isTextType = (type?: string): boolean => {
   return type === 'text' || type === 'i-text' || type === 'textbox';
 };
 
-export const fonts = [
-  { arial: ['Arial', 'Arial Bold', 'Arial Italic', 'Arial Bold Italic'] },
-  { verdana: ['Verdana', 'Verdana Bold', 'Verdana Italic', 'Verdana Bold Italic'] },
-  {
-    'times new roman': [
-      'Times New Roman',
-      'Times New Roman Bold',
-      'Times New Roman Italic',
-      'Times New Roman Bold Italic',
-    ],
-  },
-  { georgia: ['Georgia', 'Georgia Bold', 'Georgia Italic', 'Georgia Bold Italic'] },
-];
+export const fonts: Record<string, string[]> = {
+  arial: ['Arial', 'Arial Bold', 'Arial Italic', 'Arial Bold Italic'],
+  verdana: ['Verdana', 'Verdana Bold', 'Verdana Italic', 'Verdana Bold Italic'],
+  'times new roman': [
+    'Times New Roman',
+    'Times New Roman Bold',
+    'Times New Roman Italic',
+    'Times New Roman Bold Italic',
+  ],
+  georgia: ['Georgia', 'Georgia Bold', 'Georgia Italic', 'Georgia Bold Italic'],
+};
 
 export const setFonts = (doc: any) => {
   // ARIAL
