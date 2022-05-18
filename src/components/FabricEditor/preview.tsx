@@ -10,21 +10,23 @@ const fontsManager = (collection: NodeListOf<SVGTextElement>) => {
   collection.forEach((text: SVGTextElement) => {
     (text.childNodes as NodeListOf<SVGTSpanElement>).forEach((tspan: SVGTSpanElement) => {
       const currFont = tspan.style['font-family'];
-      const findedFont = fonts.find((t) => currFont.replace(/['"]+/g, '').toLowerCase() in t);
+      const findedFont = Object.keys(fonts).filter(
+        (t) => currFont.replace(/['"]+/g, '').toLowerCase() === t,
+      )[0];
 
       if (findedFont) {
         if (tspan.style.fontWeight === 'bold' && tspan.style.fontStyle === 'italic') {
-          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][3]}`;
-          missedFont = `${findedFont[Object.keys(findedFont)[0]][3]}`;
+          tspan.style.fontFamily = `${fonts[findedFont][3]}`;
+          missedFont = `${fonts[findedFont][3]}`;
         } else if (tspan.style.fontWeight === 'bold') {
-          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][1]}`;
-          missedFont = `${findedFont[Object.keys(findedFont)[0]][1]}`;
+          tspan.style.fontFamily = `${fonts[findedFont][1]}`;
+          missedFont = `${fonts[findedFont][1]}`;
         } else if (tspan.style.fontStyle === 'italic') {
-          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][2]}`;
-          missedFont = `${findedFont[Object.keys(findedFont)[0]][1]}`;
+          tspan.style.fontFamily = `${fonts[findedFont][2]}`;
+          missedFont = `${fonts[findedFont][2]}`;
         } else {
-          tspan.style.fontFamily = `${findedFont[Object.keys(findedFont)[0]][0]}`;
-          missedFont = `${findedFont[Object.keys(findedFont)[0]][0]}`;
+          tspan.style.fontFamily = `${fonts[findedFont][0]}`;
+          missedFont = `${fonts[findedFont][0]}`;
         }
       } else {
         // this is for vars like @VarUserName
