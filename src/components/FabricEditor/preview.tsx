@@ -75,7 +75,7 @@ export const FabricPreview: React.FC<{
 
         canvas.loadFromJSON(data, () => {
           const svgDef = canvas.toSVG();
-
+          console.log(svgDef);
           const doc = new jsPDF('l', 'px', [width, height]);
           setFonts(doc);
 
