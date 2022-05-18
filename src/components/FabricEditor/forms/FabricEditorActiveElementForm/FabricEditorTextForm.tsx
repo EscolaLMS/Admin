@@ -94,7 +94,7 @@ const FabricEditorTextForm: React.FC<{
                   name={'italic'}
                 />
               </Col>
-              <Col>
+              {/* <Col>
                 <FabricCheckbox
                   value={values.underline}
                   onChange={onChange('underline')}
@@ -117,7 +117,7 @@ const FabricEditorTextForm: React.FC<{
                   label={intl.formatMessage({ id: 'fabric.overline' })}
                   name={'overline'}
                 />
-              </Col>
+              </Col> */}
             </Row>
           </Input.Group>
         </Col>
