@@ -7,9 +7,13 @@ import 'svg2pdf.js';
 
 const fontsManager = (collection: NodeListOf<SVGTextElement>) => {
   let missedFont: string;
+  let missedFontSize: string;
+
   collection.forEach((text: SVGTextElement) => {
     (text.childNodes as NodeListOf<SVGTSpanElement>).forEach((tspan: SVGTSpanElement) => {
       const currFont = tspan.style['font-family'];
+      const currFontSize = tspan.style['font-size'];
+
       const findedFont = Object.keys(fonts).filter(
         (t) => currFont.replace(/['"]+/g, '').toLowerCase() === t,
       )[0];
@@ -18,15 +22,19 @@ const fontsManager = (collection: NodeListOf<SVGTextElement>) => {
         if (tspan.style.fontWeight === 'bold' && tspan.style.fontStyle === 'italic') {
           tspan.style.fontFamily = `${fonts[findedFont][3]}`;
           missedFont = `${fonts[findedFont][3]}`;
+          missedFontSize = currFontSize;
         } else if (tspan.style.fontWeight === 'bold') {
           tspan.style.fontFamily = `${fonts[findedFont][1]}`;
           missedFont = `${fonts[findedFont][1]}`;
+          missedFontSize = currFontSize;
         } else if (tspan.style.fontStyle === 'italic') {
           tspan.style.fontFamily = `${fonts[findedFont][2]}`;
           missedFont = `${fonts[findedFont][2]}`;
+          missedFontSize = currFontSize;
         } else {
           tspan.style.fontFamily = `${fonts[findedFont][0]}`;
           missedFont = `${fonts[findedFont][0]}`;
+          missedFontSize = currFontSize;
         }
       } else {
         // this is for vars like @VarUserName
@@ -34,12 +42,16 @@ const fontsManager = (collection: NodeListOf<SVGTextElement>) => {
         if (missedFont.includes('Bold Italic')) {
           tspan.style.fontWeight = 'bold';
           tspan.style.fontStyle = 'italic';
+          tspan.style.fontSize = missedFontSize;
         } else if (missedFont.includes('Bold')) {
           tspan.style.fontWeight = 'bold';
+          tspan.style.fontSize = missedFontSize;
         } else if (missedFont.includes('Italic')) {
           tspan.style.fontStyle = 'italic';
+          tspan.style.fontSize = missedFontSize;
         } else {
           tspan.style.fontWeight = 'normal';
+          tspan.style.fontSize = missedFontSize;
         }
       }
     });
