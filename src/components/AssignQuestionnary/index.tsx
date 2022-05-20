@@ -12,7 +12,7 @@ import { message, Switch } from 'antd';
 import TypeButtonDrawer from '../TypeButtonDrawer';
 
 const ModelNames = {
-  1: 'Course',
+  1: 'course',
 };
 
 const TableColumns: ProColumns<API.Questionnaire>[] = [
