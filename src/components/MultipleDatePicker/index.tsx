@@ -100,7 +100,7 @@ const MultipleDatePicker: React.FC<{
       onBlur={() => setOpen(false)}
       dropdownMatchSelectWidth={false}
       dropdownClassName={'multipleDropdownClassName'}
-      dropdownStyle={{ height: '310px', width: '390px', minWidth: '0' }}
+      dropdownStyle={{ height: '310px', width: '335px', minWidth: '0' }}
       dropdownRender={() => {
         return (
           <DatePicker
@@ -109,7 +109,7 @@ const MultipleDatePicker: React.FC<{
 
               return current && current.valueOf() <= date.setDate(date.getDate() - 1);
             }}
-            showTime={{ format: 'HH:mm' }}
+            showTime={{ format: 'HH' }}
             disabledTime={disableMinutes}
             onChange={(date: moment.Moment | null) => date && onValueChange(date)}
             open

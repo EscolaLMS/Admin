@@ -12,3 +12,7 @@
   .ant-picker-cell-inner::before {
   content: none;
 }
+
+.ant-picker-now-btn {
+  display: none;
+}
