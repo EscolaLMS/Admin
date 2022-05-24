@@ -215,7 +215,6 @@ const Webinars: React.FC = () => {
             status,
           })
             .then((response) => {
-              setLoading(false);
               if (response.success) {
                 return {
                   data: response.data,
@@ -227,12 +226,15 @@ const Webinars: React.FC = () => {
             })
             .catch(async (error) => {
               const err = await error.response.json();
-              setLoading(false);
-              if (err) {
-                message.error(err.message);
+              console.log(err);
+              if (err.data.code === 400 && err.data.message.includes('Youtube')) {
+                message.error(err.data.message);
                 setGenarateToken(true);
               }
               return [];
+            })
+            .finally(() => {
+              setLoading(false);
             });
         }}
         columns={[
