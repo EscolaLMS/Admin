@@ -152,10 +152,12 @@ const errorHandler = (error: ResponseError) => {
     }
 
     if (typeof data.data === 'object') {
-      notification.error({
-        description: data.data.value.map((errorMessage: string) => `${errorMessage}`),
-        message: data.message,
-      });
+      if (data.data.value) {
+        notification.error({
+          description: data?.data?.value?.map((errorMessage: string) => `${errorMessage}`),
+          message: data.message,
+        });
+      }
     }
   } else if (response && response.status) {
     const { status, url } = response;
