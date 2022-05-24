@@ -16,3 +16,7 @@
 .ant-picker-now-btn {
   display: none;
 }
+
+.multipleDropdownClassName .ant-picker-cell-selected {
+  background-color: rgba(0, 0, 0, 0.04);
+}

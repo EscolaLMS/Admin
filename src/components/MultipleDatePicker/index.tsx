@@ -118,6 +118,7 @@ const MultipleDatePicker: React.FC<{
             getPopupContainer={({ parentNode }: any) => {
               return parentNode;
             }}
+            defaultValue={moment('00:00', 'HH')}
           />
         );
       }}
