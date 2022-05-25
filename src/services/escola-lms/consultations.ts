@@ -78,3 +78,24 @@ export async function getSchedule(id: number, options?: RequestOptionsInit) {
     },
   );
 }
+
+/**  POST /api/admin/consultations/change-term/{termId} */
+export async function changeTermDate(
+  termId: number,
+  newDate: string,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.Consultation>>(
+    `/api/admin/consultations/change-term/${termId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        executed_at: newDate,
+      },
+      ...(options || {}),
+    },
+  );
+}

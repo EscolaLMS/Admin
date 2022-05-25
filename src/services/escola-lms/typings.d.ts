@@ -669,10 +669,18 @@ declare namespace API {
     logotype_url?: string;
   };
 
+  type ConsultationAppointmentStatus = 'not_reported' | 'reported' | 'reject' | 'approved';
+
   type ConsultationAppointment = {
-    date: Date;
+    consultation_term_id: number;
+    duration: string;
+    in_coming: boolean;
+    is_ended: boolean;
+    is_started: boolean;
+    status: ConsultationAppointmentStatus;
+    user: API.UserItem;
+    date: Date | string;
     user: UserItem;
-    status: string;
   };
 
   type TemplateItem = {

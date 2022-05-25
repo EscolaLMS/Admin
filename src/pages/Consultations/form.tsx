@@ -138,15 +138,11 @@ const ConsultationForm = () => {
             },
             {
               path: '/',
-              breadcrumbName: intl.formatMessage({
-                id: String(data.name),
-              }),
+              breadcrumbName: String(data.name),
             },
             {
               path: String(tab),
-              breadcrumbName: intl.formatMessage({
-                id: String(tab),
-              }),
+              breadcrumbName: String(data.name),
             },
           ],
         },
