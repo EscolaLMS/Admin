@@ -11,6 +11,7 @@ import { roles as getRoles } from '@/services/escola-lms/roles';
 import { deleteUserAvatar } from '@/services/escola-lms/user';
 import useModelFields from '@/hooks/useModelFields';
 import AdditionalField from './components/AdditionalField';
+declare const REACT_APP_MULTIPLE_ROLES: string;
 
 export default ({
   isNew,
@@ -74,6 +75,10 @@ export default ({
           }
         } else {
           response = await updateUser(Number(user), postData);
+
+          if (response.success) {
+            setData(response.data);
+          }
         }
 
         message.success(response.message);
@@ -181,7 +186,13 @@ export default ({
             label={<FormattedMessage id="roles" />}
             options={roles
               .filter((role: API.Role) => role.guard_name !== 'web')
-              .map((role: API.Role) => role.name)}
+              .map((role: API.Role) => ({
+                label: role.name,
+                value: role.name,
+                ...(REACT_APP_MULTIPLE_ROLES === 'false' && {
+                  disabled: data.roles && data.roles?.length > 0 && data.roles[0] !== role.name,
+                }),
+              }))}
           />
         )}
       </ProForm.Group>

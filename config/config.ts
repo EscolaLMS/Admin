@@ -4,7 +4,13 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV, REACT_APP_API_URL, BASE_PATH, REACT_APP_CREDENTIALS } = process.env;
+const {
+  REACT_APP_ENV,
+  REACT_APP_API_URL,
+  BASE_PATH,
+  REACT_APP_CREDENTIALS,
+  REACT_APP_MULTIPLE_ROLES,
+} = process.env;
 
 export default defineConfig({
   history: { type: 'hash' },
@@ -52,6 +58,7 @@ export default defineConfig({
     REACT_APP_API_URL:
       typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : 'http://localhost:1000', // API address,
     REACT_APP_CREDENTIALS: REACT_APP_CREDENTIALS || 'CREDENTIALS',
+    REACT_APP_MULTIPLE_ROLES: REACT_APP_MULTIPLE_ROLES || 'true',
   },
   base: BASE_PATH || '/',
   publicPath: BASE_PATH || '/',

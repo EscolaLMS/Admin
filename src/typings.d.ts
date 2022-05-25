@@ -45,7 +45,7 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 declare const REACT_APP_API_URL: string;
 declare const REACT_APP_CREDENTIALS: string;
 declare const REACT_APP_API_URI: string;
-
+declare const REACT_APP_MULTIPLE_ROLES: string;
 declare global {
   interface Window {
     REACT_APP_API_URL: string;
