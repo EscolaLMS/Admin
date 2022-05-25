@@ -8,7 +8,7 @@ import ConditionalWrap from 'conditional-wrap';
 import type { FormProps } from 'antd';
 declare const REACT_APP_API_URL: string;
 
-type SecureUploadType<T = API.File> = {
+export type SecureUploadType<T = API.File> = {
   url: string;
   name: string;
   extra?: string;
@@ -47,7 +47,13 @@ function SecureUpload<Type = API.File>({
       wrap={(children: JSX.Element) => <Form {...formProps}>{children}</Form>}
     >
       <ProFormUploadButton
-        title={title ? title : <FormattedMessage id="upload_click_here" />}
+        title={
+          title
+            ? title
+            : ` ${intl.formatMessage({
+                id: 'upload_click_here',
+              })}`
+        }
         placeholder={intl.formatMessage({
           id: 'upload_click_here',
         })}
@@ -68,7 +74,7 @@ function SecureUpload<Type = API.File>({
           name,
           headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
         }}
-        action={`${REACT_APP_API_URL}${url}`}
+        action={`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`}
         extra={extra}
       />
     </ConditionalWrap>

@@ -79,6 +79,8 @@ const ConsultationForm = () => {
           ...values,
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
+          logotype_url: data && data.logotype_url,
+          logotype_path: data && data.logotype_path && splitImagePath(data.logotype_path),
         };
         let response: API.DefaultResponse<API.Consultation>;
         if (isNew) {
@@ -314,6 +316,7 @@ const ConsultationForm = () => {
           >
             <ProForm {...formProps}>
               <ProFormImageUpload
+                folder={`consultation/${consultation}`}
                 title="image"
                 action={`/api/admin/consultations/${consultation}`}
                 src_name="image_url"
@@ -349,7 +352,31 @@ const ConsultationForm = () => {
               </Col>
             </Row>
           </ProCard.TabPane>
-        )}
+        )}{' '}
+        {!isNew && (
+          <ProCard.TabPane
+            key="branding"
+            tab={<FormattedMessage id="branding" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <ProForm {...formProps}>
+              <ProFormImageUpload
+                folder={`consultation/${consultation}`}
+                title="logotype"
+                action={`/api/admin/consultations/${consultation}`}
+                src_name="logotype_url"
+                form_name="logotype"
+                getUploadedSrcField={(info) => info.file.response.data.logotype_url}
+                setPath={(removedPath) =>
+                  setData((prevState) => ({
+                    ...prevState,
+                    ...removedPath,
+                  }))
+                }
+              />
+            </ProForm>
+          </ProCard.TabPane>
+        )}{' '}
         {!isNew && (
           <ProCard.TabPane
             key="user_submission"

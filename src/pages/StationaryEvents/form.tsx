@@ -5,6 +5,7 @@ import ProForm, {
   ProFormDigit,
   ProFormDatePicker,
   ProFormTextArea,
+  ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 
@@ -29,6 +30,7 @@ import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
+import { ModelStatus } from '@/consts/status';
 
 type StationaryEventType = Omit<EscolaLms.StationaryEvents.Models.StationaryEvent, 'categories'> & {
   image_url: string;
@@ -201,6 +203,18 @@ const StationaryEventForm = () => {
                 max={9999}
                 fieldProps={{ step: 1 }}
               />
+              <ProFormSelect
+                name="status"
+                width="md"
+                label={<FormattedMessage id="status" />}
+                tooltip={<FormattedMessage id="status_consultation_tooltip" />}
+                valueEnum={{ ...ModelStatus, published_unactivated: 'published_unactivated' }}
+                initialValue={ModelStatus.draft}
+                placeholder={intl.formatMessage({
+                  id: 'status',
+                })}
+                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+              />
             </ProForm.Group>
 
             <ProForm.Group>
@@ -253,7 +267,7 @@ const StationaryEventForm = () => {
           </ProForm>
         </ProCard.TabPane>{' '}
         {!isNew && (
-          <ProCard.TabPane key="prices" tab={<FormattedMessage id="prices" />}>
+          <ProCard.TabPane key="product" tab={<FormattedMessage id="product" />}>
             {id && (
               <ProductWidget
                 productable={{
@@ -269,6 +283,7 @@ const StationaryEventForm = () => {
           <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
             <ProForm {...formProps}>
               <ProFormImageUpload
+                folder={`stationary-events/${id}`}
                 title="image"
                 action={`/api/admin/stationary-events/${id}/?_method=PUT`}
                 src_name="image_url"

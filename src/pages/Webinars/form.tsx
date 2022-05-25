@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
-  ProFormDigit,
   ProFormSelect,
   ProFormTextArea,
   ProFormDateTimePicker,
@@ -75,8 +74,14 @@ const WebinarForm = () => {
           ...values,
           ...(tab === 'attributes' && { active_from: new Date(String(values.active_from)) }),
           ...(tab === 'attributes' && { active_to: new Date(String(values.active_to)) }),
-          image_url: data && data.image_url,
-          image_path: data && data.image_url && splitImagePath(data.image_url),
+          ...(tab === 'media' && { image_url: data && data.image_url }),
+          ...(tab === 'media' && {
+            image_path: data && data.image_url && splitImagePath(data.image_url),
+          }),
+          ...(tab === 'branding' && { logotype_url: data && data.logotype_url }),
+          ...(tab === 'branding' && {
+            logotype_path: data && data.logotype_path && splitImagePath(data.logotype_path),
+          }),
           trainers:
             values.trainers &&
             values.trainers.map((author) => (typeof author === 'object' ? author.id : author)),
@@ -205,20 +210,6 @@ const WebinarForm = () => {
                 disabled={manageCourseEdit.disableEdit}
               />
 
-              <ProFormDigit
-                width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
-                placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
-                })}
-                min={0}
-                max={9999}
-                fieldProps={{ step: 1 }}
-                disabled={manageCourseEdit.disableEdit}
-              />
               <ProFormText
                 width="sm"
                 name="duration"
@@ -306,8 +297,8 @@ const WebinarForm = () => {
         </ProCard.TabPane>{' '}
         {!isNew && (
           <ProCard.TabPane
-            key="prices"
-            tab={<FormattedMessage id="prices" />}
+            key="product"
+            tab={<FormattedMessage id="product" />}
             disabled={manageCourseEdit.disableEdit}
           >
             {webinar && (
@@ -329,6 +320,7 @@ const WebinarForm = () => {
           >
             <ProForm {...formProps}>
               <ProFormImageUpload
+                folder={`webinar/${webinar}`}
                 title="image"
                 action={`/api/admin/webinars/${webinar}`}
                 src_name="image_url"
@@ -363,6 +355,30 @@ const WebinarForm = () => {
                 </ProForm>
               </Col>
             </Row>
+          </ProCard.TabPane>
+        )}{' '}
+        {!isNew && (
+          <ProCard.TabPane
+            key="branding"
+            tab={<FormattedMessage id="branding" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <ProForm {...formProps}>
+              <ProFormImageUpload
+                folder={`webinar/${webinar}`}
+                title="logotype"
+                action={`/api/admin/webinars/${webinar}`}
+                src_name="logotype_url"
+                form_name="logotype"
+                getUploadedSrcField={(info) => info.file.response.data.logotype_url}
+                setPath={(removedPath) =>
+                  setData((prevState) => ({
+                    ...prevState,
+                    ...removedPath,
+                  }))
+                }
+              />
+            </ProForm>
           </ProCard.TabPane>
         )}{' '}
         {!isNew && (

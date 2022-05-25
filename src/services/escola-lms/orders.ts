@@ -3,16 +3,12 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function orders(
-  params: API.PaginationParams & {
-    // query
-    current?: number;
-    pageSize?: number;
-    user_id?: number;
-    author_id?: number;
-    course_id?: number;
-    date_from?: string;
-    date_to?: string;
-  },
+  params: API.PaginationParams &
+    EscolaLms.Cart.Http.Requests.Admin.OrderSearchRequest & {
+      // query
+      current?: number;
+      pageSize?: number;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.OrderList>('/api/admin/orders?page=1', {

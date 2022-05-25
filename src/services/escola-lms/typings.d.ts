@@ -332,6 +332,9 @@ declare namespace API {
     preview?: boolean;
     can_skip?: boolean;
     json?: object;
+    introduction?: string;
+    description?: string;
+    summary?: string;
     /*
     topicable_type?:
       | TopicType.RichText
@@ -483,27 +486,14 @@ declare namespace API {
 
   type H5PContentParams = PageParams & PaginationParams;
 
-  type OrderItem = {
-    buyable_id: number;
-    buyable_type: 'EscolaLms\\Cart\\Models\\Course';
-    created_at: null;
-    id: number;
-    options: object;
-    order_id: number;
-    quantity: number;
-    updated_at: string;
+  type OrderItem = EscolaLms.Cart.Models.OrderItem & {
+    product_id: number;
+    product_type: Enum.BuyableTypes;
   };
 
-  type Order = {
-    created_at: string;
-    id: number;
-    items: OrderItem[];
+  interface Order extends EscolaLms.Cart.Models.Order {
     status: PaymentStatus;
-    subtotal: string;
-    tax: string;
-    total: string;
-    user_id: number;
-  };
+  }
 
   type PaymentStatus = 'NEW' | 'PAID' | 'CANCELLED' | 'FAILED';
 
@@ -675,19 +665,22 @@ declare namespace API {
     proposed_terms: (number | string)[];
     image_path?: string;
     image_url?: string;
+    logotype_path?: string;
+    logotype_url?: string;
   };
 
   type ConsultationAppointmentStatus = 'not_reported' | 'reported' | 'reject' | 'approved';
 
   type ConsultationAppointment = {
     consultation_term_id: number;
-    date: string;
     duration: string;
     in_coming: boolean;
     is_ended: boolean;
     is_started: boolean;
     status: ConsultationAppointmentStatus;
     user: API.UserItem;
+    date: Date | string;
+    user: UserItem;
   };
 
   type TemplateItem = {
@@ -829,6 +822,10 @@ declare namespace API {
     | {
         type: 'App\\Models\\Consultation' | 'EscolaLms\\Consultations\\Models\\Consultation';
         value: API.Consultation;
+      }
+    | {
+        type: 'Product';
+        value: EscolaLms.Cart.Models.Product;
       };
 
   type ReportType =
@@ -978,6 +975,8 @@ declare namespace API {
     image_path?: string;
     image_url?: string;
     tags?: Tag[] | string[];
+    logotype_url?: string;
+    logotype_path?: string;
   };
 
   type ProductableListItem = {

@@ -35,6 +35,8 @@ export default {
   ...consultations,
   ...fabric,
   ...vouchers,
+  branding: 'Branding',
+  product_details: 'Ustawienia produktu',
   title: 'Tytuł',
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',
@@ -431,4 +433,10 @@ export default {
   generate_pdf_for_products_tooltip:
     'Klinij aby wygenerować PDFy dla wybranego szablonu dla wszystkich uzytkowników którzy zakupili ten produkt',
   select_template: 'Select template',
+  product_categories_and_tags: 'Kategorie i Tagi produktu',
+  cart_media: 'Media do koszyka',
+  users_attached: 'Dołączenie użytkownika',
+  generate_token: 'Generuj token dla youtube',
+  browse: 'Przeglądaj pliki',
+  related_products: 'Powiązane produkty',
 };

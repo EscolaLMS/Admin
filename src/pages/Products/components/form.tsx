@@ -8,7 +8,8 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
-import ProductSelect from '@/components/ProductablesSelect';
+import ProductablesSelect from '@/components/ProductablesSelect';
+
 import {
   getProduct,
   createProduct,
@@ -25,6 +26,7 @@ import TagsInput from '@/components/TagsInput';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
+import ProductsSelect from '@/components/ProductsSelect';
 
 type MinimumProductProductable = {
   class: string;
@@ -80,7 +82,7 @@ const ProductsForm: React.FC<{
 
   const isNew = useMemo(() => productId === 'new', [productId]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [productableType, setProductableType] = useState<string | null>(null);
   const [form] = ProForm.useForm();
 
   const [multiple, setMultiple] = useState<boolean>(false);
@@ -125,6 +127,9 @@ const ProductsForm: React.FC<{
             ? transformProductablesFromAPI(response.data.productables as API.ProductProductable[])
             : [],
         };
+        if (response.data.productables) {
+          setProductableType(response.data.productables[0].productable_type);
+        }
 
         form.setFieldsValue(newData);
 
@@ -244,10 +249,9 @@ const ProductsForm: React.FC<{
               label={<FormattedMessage id="productables" />}
               valuePropName="value"
             >
-              <ProductSelect multiple={multiple} disabled={productable !== undefined} />
+              <ProductablesSelect multiple={multiple} disabled={productable !== undefined} />
             </ProForm.Item>
           </ProForm.Group>
-
           <ProForm.Group>
             <ProFormRadio.Group
               disabled={productable !== undefined}
@@ -282,7 +286,6 @@ const ProductsForm: React.FC<{
               tooltip={<FormattedMessage id="purchasable_tooltip" />}
             />
           </ProForm.Group>
-
           <ProForm.Group title={<FormattedMessage id="prices" />}>
             <ProFormDigit
               rules={[
@@ -400,7 +403,6 @@ const ProductsForm: React.FC<{
               fieldProps={{ step: 1 }}
             />
           </ProForm.Group>
-
           <ProForm.Group title={<FormattedMessage id="additional_fields" />}>
             <ProFormText
               width="md"
@@ -450,7 +452,15 @@ const ProductsForm: React.FC<{
                 defaultMessage: 'teaser_url',
               })}
             />
-          </ProForm.Group>
+          </ProForm.Group>{' '}
+          <ProForm.Item
+            shouldUpdate
+            name={'related_products'}
+            label={<FormattedMessage id={'related_products'} />}
+            valuePropName="value"
+          >
+            {productableType && <ProductsSelect type={productableType} multiple />}
+          </ProForm.Item>
           {!isNew && (
             <ProForm.Item
               style={{ width: '100%' }}
@@ -462,7 +472,7 @@ const ProductsForm: React.FC<{
               <WysiwygMarkdown directory={`products/${productId}/wysiwyg`} />
             </ProForm.Item>
           )}
-        </ProForm>
+        </ProForm>{' '}
       </ProCard.TabPane>
       {!isNew && (
         <ProCard.TabPane
@@ -471,6 +481,7 @@ const ProductsForm: React.FC<{
         >
           <ProForm {...formProps} form={form}>
             <ProFormImageUpload
+              folder={`products/${productId}`}
               wrapInForm={false}
               title="image"
               action={`/api/admin/products/${productId}/?_method=PUT`}

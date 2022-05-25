@@ -1,18 +1,19 @@
 import React from 'react';
 import ProForm from '@ant-design/pro-form';
-import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import ReactPlayer from 'react-player';
 import { FormattedMessage } from 'umi';
 import { Button, Row, Col } from 'antd';
+import SecureUploadBrowser from '../SecureUpload/browser';
 
 export const ProFormVideoUpload: React.FC<{
+  folder: string;
   action: string;
   form_name: string;
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
   setPath: (state: object) => void;
-}> = ({ action, form_name, src_name, getUploadedSrcField, setPath }) => {
+}> = ({ action, form_name, src_name, getUploadedSrcField, setPath, folder }) => {
   return (
     <ProForm.Group title={<FormattedMessage id="video" />}>
       <Row>
@@ -21,7 +22,8 @@ export const ProFormVideoUpload: React.FC<{
             {(form) => {
               return (
                 <React.Fragment>
-                  <SecureUpload
+                  <SecureUploadBrowser
+                    folder={folder}
                     accept="video/*"
                     name={form_name}
                     url={action}

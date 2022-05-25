@@ -92,11 +92,11 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       ]}
       request={({ pageSize, current }) => {
         setLoading(true);
-        return templates({ pageSize, current }).then((response) => {
+        return templates({ pageSize, current, channel }).then((response) => {
           if (response.success) {
             setLoading(false);
             return {
-              data: response.data.filter((item) => item.channel === channel),
+              data: response.data,
               total: response.meta.total,
               success: true,
             };

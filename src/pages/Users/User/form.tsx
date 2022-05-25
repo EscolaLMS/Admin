@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Form, Button, Space, Typography } from 'antd';
+import { message, Spin, Form, Button, Space, Typography, Divider } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
 import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
@@ -185,7 +185,7 @@ export default ({
           />
         )}
       </ProForm.Group>
-
+      <Divider />
       {!isNew && (
         <ProForm.Group>
           <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
@@ -207,9 +207,8 @@ export default ({
                   name="avatar"
                   accept="image/*"
                   onChange={(info) => {
-                    console.log(info, info.file.status, info.file.response);
                     if (info.file.status === 'done') {
-                      if (info.file.response.success) {
+                      if (info.file.response && info.file.response.success) {
                         setData(info.file.response.data);
                       }
                     }

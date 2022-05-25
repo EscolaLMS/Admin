@@ -1,12 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { UploadChangeParam } from 'antd/lib/upload';
-import { Button, FormProps, message, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 import SecureUpload from '@/components/SecureUpload';
 import FilesBrowser from '@/components/FilesBrowser';
 import request from 'umi-request';
 import type { RequestOptionsInit } from 'umi-request';
 import { FormattedMessage } from 'umi';
 import { FolderOpenOutlined } from '@ant-design/icons';
+import { PropsWithChildren } from 'react';
+import type { SecureUploadType } from './index';
 
 type AnyResponse = API.DefaultResponse<any>;
 
@@ -35,23 +37,16 @@ const getUploadChangeSuccessParam = (data: any): UploadChangeParam => ({
   fileList: [],
 });
 
-export const SecureUploadBrowser: React.FC<{
-  url: string;
-  name: string;
-  extra?: string;
-  onChange?: (info: UploadChangeParam) => void;
-  accept?: string;
-  data?: Record<string, any>;
-  wrapInForm?: boolean;
-  title?: string;
-  formProps?: FormProps;
-  folder: string;
-  onResponse?: (response: AnyResponse) => void;
-}> = (props) => {
+function SecureUploadBrowser<Type = API.File>({
+  folder,
+  onResponse,
+  ...props
+}: PropsWithChildren<
+  SecureUploadType<Type> & { folder: string; onResponse?: (response: AnyResponse) => void }
+>) {
   const [showBrowser, setShowBrowser] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const { url, name, onChange, onResponse, folder } = props;
+  const { url, name, onChange, data } = props;
 
   const closeModal = useCallback(() => {
     setShowBrowser(false);
@@ -74,7 +69,8 @@ export const SecureUploadBrowser: React.FC<{
               if (dir) {
                 setLoading(true);
                 const path = `${fixDirName(dir)}${file.name}`;
-                post(url, { [name]: path })
+
+                post(url, { ...data, [name]: path })
                   .then((response: AnyResponse) => {
                     setLoading(false);
                     if (onResponse) {
@@ -102,10 +98,11 @@ export const SecureUploadBrowser: React.FC<{
           />
         </Modal>
       )}
-
-      <SecureUpload {...props} />
+      <div style={{ marginTop: '10px' }}>
+        <SecureUpload {...props} />
+      </div>
     </div>
   );
-};
+}
 
 export default SecureUploadBrowser;

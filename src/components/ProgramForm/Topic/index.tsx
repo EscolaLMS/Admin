@@ -198,7 +198,7 @@ export const Topic: React.FC<{
             <Divider>
               <FormattedMessage id="file_resources" />
             </Divider>
-            <Resources topicId={Number(topic.id)} />
+            <Resources topicId={Number(topic.id)} folder={`course/${courseId}`} />
           </React.Fragment>
         )}
 
@@ -219,17 +219,20 @@ export const Topic: React.FC<{
             type === TopicType.Image ||
             type === TopicType.PDF) && (
             <MediaUpload
+              folder={`course/${courseId}`}
               type={type}
               topic={topic}
               currentState={state}
               onChange={() => setLoading(true)}
               onUpdate={(info) => {
                 if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
+
                 setState({
                   ...state,
                   id: info?.file?.response?.data?.id,
                   order: info.file.response.data?.order,
                   value: info?.file?.response.data?.topicable?.value,
+                  topicable: info?.file?.response.data?.topicable,
                 });
                 setSaveIsDisabled(false);
                 setLoading(false);

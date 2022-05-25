@@ -152,10 +152,12 @@ const errorHandler = (error: ResponseError) => {
     }
 
     if (typeof data.data === 'object') {
-      notification.error({
-        description: data.data.value.map((errorMessage: string) => `${errorMessage}`),
-        message: data.message,
-      });
+      if (data.data.value) {
+        notification.error({
+          description: data?.data?.value?.map((errorMessage: string) => `${errorMessage}`),
+          message: data.message,
+        });
+      }
     }
   } else if (response && response.status) {
     const { status, url } = response;
@@ -182,13 +184,13 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 
   if (url.includes('login')) {
     return {
-      url: `${REACT_APP_API_URL}${url}`,
+      url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
       options,
     };
   }
 
   return {
-    url: `${REACT_APP_API_URL}${url}`,
+    url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
     options: {
       ...options,
       interceptors: true,
@@ -221,7 +223,7 @@ const responseInterceptor = async (response: Response, options: RequestOptionsIn
             localStorage.setItem('TOKEN', res.data.token);
             refreshTokenRequest = null;
             return {
-              url: `${REACT_APP_API_URL}${response.url}`,
+              url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${response.url}`,
               options: {
                 ...options,
                 interceptors: true,

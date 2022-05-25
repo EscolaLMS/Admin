@@ -7,9 +7,12 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, Tag, Select, message } from 'antd';
 import { format } from 'date-fns/esm';
-import { deleteWebinar, webinars } from '@/services/escola-lms/webinars';
+import { deleteWebinar, webinars, generateYoutubeToken } from '@/services/escola-lms/webinars';
+
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 import Tags from '@/components/Tags';
+
+import TokenForm from './components/TokenForm';
 
 export const TableColumns: ProColumns<API.Webinar>[] = [
   {
@@ -144,6 +147,7 @@ export const TableColumns: ProColumns<API.Webinar>[] = [
 ];
 
 const Webinars: React.FC = () => {
+  const [generateToken, setGenarateToken] = useState(false);
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
@@ -175,7 +179,7 @@ const Webinars: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Webinar, Partial<API.ConsultationsParams>>
+      <ProTable<API.Webinar, API.ConsultationsParams>
         headerTitle={intl.formatMessage({
           id: 'Webinars',
           defaultMessage: 'Webinars',
@@ -183,9 +187,11 @@ const Webinars: React.FC = () => {
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Link key="addnew" to="/webinars/new">
             <Button type="primary" key="primary">
@@ -207,17 +213,29 @@ const Webinars: React.FC = () => {
             date_from,
             date_to,
             status,
-          }).then((response) => {
-            setLoading(false);
-            if (response.success) {
-              return {
-                data: response.data,
-                total: response.meta.total,
-                success: true,
-              };
-            }
-            return [];
-          });
+          })
+            .then((response) => {
+              if (response.success) {
+                return {
+                  data: response.data,
+                  total: response.meta.total,
+                  success: true,
+                };
+              }
+              return [];
+            })
+            .catch(async (error) => {
+              const err = await error.response.json();
+              console.log(err);
+              if (err.data.code === 400 && err.data.message.includes('Youtube')) {
+                message.error(err.data.message);
+                setGenarateToken(true);
+              }
+              return [];
+            })
+            .finally(() => {
+              setLoading(false);
+            });
         }}
         columns={[
           ...TableColumns,
@@ -251,6 +269,23 @@ const Webinars: React.FC = () => {
             ],
           },
         ]}
+      />
+      <TokenForm
+        visible={generateToken}
+        onVisibleChange={(value) => {
+          return value === false && setGenarateToken(false);
+        }}
+        onFinish={async (value) => {
+          try {
+            const request = await generateYoutubeToken({ email: value.email });
+            if (request.url) {
+              window.open(request.url, '_blank');
+              setGenarateToken(false);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }}
       />
     </PageContainer>
   );

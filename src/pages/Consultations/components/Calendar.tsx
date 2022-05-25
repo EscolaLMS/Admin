@@ -35,9 +35,14 @@ export const ChangeDate: React.FC<{
   return (
     <React.Fragment>
       <DatePicker
+        disabledDate={(current: moment.Moment) => {
+          const currDate = new Date();
+
+          return current && current.valueOf() <= currDate.setDate(currDate.getDate() - 1);
+        }}
         disabled={loading}
         value={date}
-        showTime
+        showTime={{ format: 'HH' }}
         onChange={(newDate) => {
           if (newDate) {
             changeDate(newDate);
@@ -65,7 +70,7 @@ export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
   {
     title: <FormattedMessage id="user" defaultMessage="user" />,
     dataIndex: 'user',
-    render: (_, item) => `${item.user.first_name} ${item.user.last_name} ${item.user.email}`,
+    render: (_, item) => `${item.user?.first_name} ${item.user?.last_name} ${item.user?.email}`,
   },
   {
     title: <FormattedMessage id="date" defaultMessage="date" />,
@@ -120,9 +125,9 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
                     text={
                       <React.Fragment>
                         <Tooltip
-                          title={`${item.user.first_name} ${item.user.last_name} ${item.user.email}`}
+                          title={`${item.user?.first_name} ${item.user?.last_name} ${item.user?.email}`}
                         >
-                          <small>{moment(item.date).format('HH:mm')}</small> {item.user.email}
+                          <small>{moment(item.date).format('HH:mm')}</small> {item.user?.email}
                         </Tooltip>
                       </React.Fragment>
                     }
