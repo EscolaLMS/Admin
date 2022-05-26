@@ -14,10 +14,10 @@ export const ChangeDate: React.FC<{
   const [date, setDate] = useState<Moment>(moment(data.date));
 
   const changeDate = useCallback(
-    (newDate: Moment) => {
-      setDate(newDate);
+    (newDate: string) => {
+      setDate(moment(newDate));
       setLoading(true);
-      changeTermDate(data.consultation_term_id, newDate.format())
+      changeTermDate(data.consultation_term_id, newDate)
         .then((response) => {
           if (response.success) {
             message.success(response.message);
@@ -45,7 +45,7 @@ export const ChangeDate: React.FC<{
         showTime={{ format: 'HH' }}
         onChange={(newDate) => {
           if (newDate) {
-            changeDate(newDate);
+            changeDate(newDate.toISOString());
           }
         }}
       />
@@ -80,6 +80,7 @@ export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
+
     render: (_, item) => (
       <Badge
         status={consultationStatus[item.status]}
@@ -172,7 +173,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
               title: <FormattedMessage id="options" defaultMessage="options" />,
               dataIndex: 'option',
               valueType: 'option',
-              width: '10%',
+              width: '20%',
               render: (_, record) => [
                 <ChangeDate data={record} onChange={() => fetchAppointments()} />,
               ],
