@@ -7,10 +7,10 @@ import { useCallback } from 'react';
 import { productables as fetchProductables } from '@/services/escola-lms/products';
 
 const transformListItemToValueKey = (input: API.ProductableListItem): string =>
-  `${input.productable_type}:${input.productable_id}`;
+  `${input.productable_type}:${input.productable_id}:${input.name}`;
 
 const transformInputItemToValueKey = (input: API.ProductableResourceListItem): string =>
-  `${input.class}:${input.id}`;
+  `${input.class}:${input.id}:${input.name}`;
 
 export const ProductablesSelect: React.FC<{
   multiple?: boolean;
@@ -97,7 +97,7 @@ export const ProductablesSelect: React.FC<{
                 defaultMessage={productable.productable_type.split('\\').pop()}
               />
             </Tag>{' '}
-            {productable.name} <small>id:{productable.productable_id}</small>
+            {productable.name} <small>id:{productable.productable_id}</small>{' '}
           </Select.Option>
         );
       })}

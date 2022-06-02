@@ -986,6 +986,7 @@ declare namespace API {
     id: number;
     morph_class: string;
     description: string;
+    quantity?: number;
   };
 
   type ProductableResourceListItem = {

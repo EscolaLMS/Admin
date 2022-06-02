@@ -262,7 +262,7 @@ const WebinarForm = () => {
                 label={<FormattedMessage id="tutor" />}
                 valuePropName="value"
               >
-                <UserSelect multiple role="tutor" />
+                <UserSelect multiple />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>

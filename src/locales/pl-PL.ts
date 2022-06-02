@@ -439,4 +439,6 @@ export default {
   generate_token: 'Generuj token dla youtube',
   browse: 'Przeglądaj pliki',
   related_products: 'Powiązane produkty',
+  selected_products: 'Wybrane obiekty',
+  quantity: 'Ilość',
 };
