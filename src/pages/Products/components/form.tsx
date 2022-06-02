@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { message, Spin, Row, Col, Input } from 'antd';
+import { message, Spin, Row, Col, Input, Tag } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
@@ -27,10 +27,13 @@ import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
 import ProductsSelect from '@/components/ProductsSelect';
+import ProTable from '@ant-design/pro-table';
 
 type MinimumProductProductable = {
   class: string;
   id: number;
+  quantity?: number;
+  name?: string;
 };
 
 const transformProductablesFromAPI = (
@@ -39,6 +42,8 @@ const transformProductablesFromAPI = (
   input.map((row) => ({
     class: row.productable_type,
     id: Number(row.productable_id),
+    name: row.name,
+    quantity: row.quantity,
   }));
 
 const getProductables = (
@@ -58,6 +63,7 @@ const getProductables = (
     return {
       id: parseInt(item.split(':')[1]),
       class: item.split(':')[0],
+      name: item.split(':')[2],
     };
   });
 
@@ -71,6 +77,7 @@ const ProductsForm: React.FC<{
     name?: string;
     class_type?: string;
     class_id?: string | number;
+    quantity?: number;
   };
   tab: string;
   onTabChange: (tab: string) => void;
@@ -79,10 +86,12 @@ const ProductsForm: React.FC<{
   const intl = useIntl();
 
   const [productId, setProductId] = useState<string | number | undefined>(id);
-
+  const [currProductables, setCurrProductables] = useState<MinimumProductProductable[]>([]);
   const isNew = useMemo(() => productId === 'new', [productId]);
   const [loading, setLoading] = useState<boolean>(true);
   const [productableType, setProductableType] = useState<string | null>(null);
+  const [, updateState] = useState({});
+  const forceUpdate = useCallback(() => updateState({}), []);
   const [form] = ProForm.useForm();
 
   const [multiple, setMultiple] = useState<boolean>(false);
@@ -109,6 +118,7 @@ const ProductsForm: React.FC<{
           {
             class: productable.class_type,
             id: productable.class_id,
+            name: productable.name,
           },
         ],
       });
@@ -131,6 +141,9 @@ const ProductsForm: React.FC<{
           setProductableType(response.data.productables[0].productable_type);
         }
 
+        setCurrProductables(
+          transformProductablesFromAPI(response.data.productables as API.ProductProductable[]),
+        );
         form.setFieldsValue(newData);
 
         setMultiple(response.data.type === 'bundle');
@@ -167,8 +180,13 @@ const ProductsForm: React.FC<{
       ) => {
         const postData = {
           ...values,
-          productables: values.productables ? getProductables(values.productables) : undefined,
+          productables: currProductables
+            ? getProductables(
+                currProductables as string[] | string | API.ProductableResourceListItem[],
+              )
+            : undefined,
         };
+
         let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;
         if (isNew) {
           response = await createProduct(postData);
@@ -191,7 +209,7 @@ const ProductsForm: React.FC<{
         message.success(response.message);
       },
     }),
-    [productId, onProductSaved],
+    [productId, onProductSaved, currProductables],
   );
 
   if (loading) {
@@ -243,13 +261,22 @@ const ProductsForm: React.FC<{
               required
             />
             <ProForm.Item
+              shouldUpdate
               style={{ minWidth: 104 * 3 }}
               name="productables"
               tooltip={<FormattedMessage id="productables_tooltip" />}
               label={<FormattedMessage id="productables" />}
               valuePropName="value"
             >
-              <ProductablesSelect multiple={multiple} disabled={productable !== undefined} />
+              <ProductablesSelect
+                multiple={multiple}
+                disabled={productable !== undefined}
+                onChange={(p) =>
+                  setCurrProductables(
+                    getProductables(p as string[] | string | API.ProductableResourceListItem[]),
+                  )
+                }
+              />
             </ProForm.Item>
           </ProForm.Group>
           <ProForm.Group>
@@ -471,6 +498,66 @@ const ProductsForm: React.FC<{
             >
               <WysiwygMarkdown directory={`products/${productId}/wysiwyg`} />
             </ProForm.Item>
+          )}
+          {currProductables.length > 0 && multiple && (
+            <ProTable<MinimumProductProductable>
+              headerTitle={intl.formatMessage({
+                id: 'selected_products',
+                defaultMessage: 'Selected Products',
+              })}
+              pagination={false}
+              search={false}
+              dataSource={[...currProductables]}
+              rowKey="id"
+              columns={[
+                {
+                  title: <FormattedMessage id="id" defaultMessage="id" />,
+                  dataIndex: 'id',
+                  width: '10%',
+                },
+                {
+                  title: <FormattedMessage id="name" defaultMessage="name" />,
+                  dataIndex: 'name',
+                },
+                {
+                  title: <FormattedMessage id="type" defaultMessage="type" />,
+                  dataIndex: 'class',
+                  render: (_, record) => (
+                    <Tag>
+                      <FormattedMessage
+                        id={record.class.split('\\').pop()}
+                        defaultMessage={record.class.split('\\').pop()}
+                      />
+                    </Tag>
+                  ),
+                },
+                {
+                  title: <FormattedMessage id="quantity" defaultMessage="quantity" />,
+                  dataIndex: 'quantity',
+                  width: '10%',
+                  render: (_, record) => {
+                    return (
+                      <Input
+                        min={1}
+                        type="number"
+                        value={record.quantity || 1}
+                        onChange={(e) => {
+                          const value = e.target.value;
+
+                          const index = currProductables.findIndex((item) => item.id === record.id);
+                          const collection = currProductables;
+                          collection[index].quantity = Number(value);
+
+                          setCurrProductables(collection);
+                          // this is needed because the datasource in the pro table does not want to update the data :(
+                          forceUpdate();
+                        }}
+                      />
+                    );
+                  },
+                },
+              ]}
+            />
           )}
         </ProForm>{' '}
       </ProCard.TabPane>
