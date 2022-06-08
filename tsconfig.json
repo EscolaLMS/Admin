@@ -23,7 +23,10 @@
       "@@/*": ["./src/.umi/*"]
     }
   },
+
   "include": [
+    "src/typings.d.ts",
+    "src/services/escola-lms/typings.d.ts",
     "mock/**/*",
     "src/**/*",
     "tests/**/*",
@@ -35,7 +38,8 @@
     ".stylelintrc.js",
     ".prettierrc.js",
     "jest.config.js",
-    "mock/*"
+    "mock/*",
+    "node_modules/@escolalms/ts-types"
   ],
   "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"],
   "parser": "@typescript-eslint/parser",

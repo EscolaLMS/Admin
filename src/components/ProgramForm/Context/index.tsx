@@ -9,8 +9,9 @@ import {
   updateTopic as apiUpdateTopic,
   removeLesson as apiRemoveLesson,
   removeTopic as apiRemoveTopic,
-  TopicType,
   sort,
+  cloneLesson as apiCloneLesson,
+  cloneTopic as apiCloneTopic,
 } from '@/services/escola-lms/course';
 
 import type { UploadChangeParam } from 'antd/lib/upload';
@@ -28,10 +29,13 @@ type ProgramContext = {
   deleteLesson?: (lesson_id: number) => void;
   // updateH5P,
   sortLesson?: (lesson_id: number, upDirection?: boolean) => void;
-  addNewTopic?: (lesson_id: number) => API.Topic;
+  addNewTopic?: (lesson_id: number, type: API.TopicType) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
+  updateTopicsOrder?: (lesson_id: number) => void;
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
+  cloneTopic?: (topic_id: number) => void;
+  cloneLesson?: (lesson_id: number) => void;
 };
 
 export const Context = React.createContext<ProgramContext>({});
@@ -104,9 +108,10 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       title: 'Add title here',
       active: true,
     };
+
     setState((prevState) => ({
       ...prevState,
-      lessons: [newLesson, ...(prevState ? prevState.lessons : [])],
+      lessons: [newLesson, ...(prevState ? prevState.lessons : [])] as API.Lesson[],
     }));
 
     return newLesson;
@@ -216,8 +221,14 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
             })
           : [],
       }));
+    },
+    [state],
+  );
 
-      const orders = topics
+  const updateTopicsOrder = useCallback(
+    (lesson_id) => {
+      const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
+      const orders = lesson?.topics
         ?.filter((topic) => !topic.isNew)
         .map((topic) => [topic.id, topic.order]);
 
@@ -299,7 +310,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                           lesson_item.topics?.map((topic_item) => {
                             if (topic_item.id === topic_id) {
                               if (data.data.topicable_type) {
-                                const newTopic: API.TopicNotEmpty = {
+                                const newTopic: API.Topic = {
                                   ...topic_item,
                                   ...data.data,
                                   isNew: false,
@@ -507,16 +518,16 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
   */
 
-  const addNewTopic = useCallback((lesson_id: number) => {
+  const addNewTopic = useCallback((lesson_id: number, type: API.TopicType) => {
     const newTopic: API.Topic = {
       lesson_id,
-      topicable_type: TopicType.Unselected,
       isNew: true,
       id: getRandomId(),
-      order: 0,
       title: 'Add new title here',
       active: true,
+      topicable_type: type,
     };
+
     setState((prevState) => ({
       ...prevState,
       lessons: prevState
@@ -559,6 +570,47 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     }));
   };
 
+  const cloneTopic = useCallback(
+    (topic_id: number) => {
+      return apiCloneTopic(topic_id).then((response) => {
+        if (response.success) {
+          message.success(response.message);
+          const lesson_id = getLessonIdByTopicId(topic_id);
+
+          setState((prevState) => ({
+            ...prevState,
+            lessons: prevState
+              ? prevState.lessons?.map((lesson) => {
+                  if (lesson.id === lesson_id) {
+                    const topics = lesson.topics || [];
+                    return {
+                      ...lesson,
+                      topics: [...topics, response.data] as API.Topic[],
+                    };
+                  }
+                  return lesson;
+                })
+              : [],
+          }));
+        }
+      });
+    },
+    [state, getLessonIdByTopicId],
+  );
+
+  const cloneLesson = useCallback((lesson_id: number) => {
+    return apiCloneLesson(lesson_id).then((response) => {
+      if (response.success) {
+        message.success(response.message);
+
+        setState((prevState) => ({
+          ...prevState,
+          lessons: prevState ? [...prevState.lessons, response.data] : [],
+        }));
+      }
+    });
+  }, []);
+
   const value = {
     state,
     h5ps,
@@ -575,7 +627,10 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     addNewTopic,
     deleteTopic,
     sortTopic,
+    updateTopicsOrder,
     onTopicUploaded,
+    cloneTopic,
+    cloneLesson,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

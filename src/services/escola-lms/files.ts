@@ -1,6 +1,7 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
+
+declare const REACT_APP_API_URL: string;
 
 /**  GET /api/currentUser */
 export async function files(
@@ -9,7 +10,7 @@ export async function files(
     directory: string;
     page?: number;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.FileList>('/api/admin/file/list', {
     method: 'GET',
@@ -24,7 +25,7 @@ export async function findFile(
     name: string;
     page?: number;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.FileList>(`/api/admin/file/find`, {
     method: 'GET',
@@ -34,7 +35,7 @@ export async function findFile(
 }
 
 /**  GET /api/currentUser */
-export async function upload(file: File, directory: string, options?: { [key: string]: any }) {
+export async function upload(file: File, directory: string, options?: RequestOptionsInit) {
   const formData = new FormData();
   formData.append('file[]', file);
   formData.append('target', directory);
@@ -47,10 +48,10 @@ export async function upload(file: File, directory: string, options?: { [key: st
 }
 
 export const resizedImage = (path: string, width = 1000) =>
-  `${REACT_APP_API_URL}/api/images/img?path=${path}&w=${width}`;
+  `${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/images/img?path=${path}&w=${width}`;
 
 /**  GET /api/currentUser */
-export async function remove(url: string, options?: { [key: string]: any }) {
+export async function remove(url: string, options?: RequestOptionsInit) {
   return request<API.FileList>('/api/admin/file/delete', {
     method: 'DELETE',
     data: {

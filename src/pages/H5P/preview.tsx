@@ -1,20 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { EditorContextProvider, EditorContext, Player } from '@escolalms/h5p-react';
+import { EditorContextProvider, EditorContext } from '@escolalms/h5p-react';
+import H5Player from '@/components/H5Player';
+import { Divider, Row, Col } from 'antd';
+declare const REACT_APP_API_URL: string;
 
-import { Divider, Typography, Row, Col } from 'antd';
-import type { XAPIEvent } from '@escolalms/h5p-react';
 import ProCard from '@ant-design/pro-card';
 import { useIntl, FormattedMessage } from 'umi';
-import ReactJson from 'react-json-view';
-
 import './preview.css';
 
 const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
   const intl = useIntl();
-  const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
-  const { Title } = Typography;
 
   const { state } = useContext(EditorContext);
 
@@ -57,15 +54,7 @@ const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
         <Row>
           <Col span={24}>
             <Divider />
-            <Player
-              id={id}
-              onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])}
-            />
-            <Divider />
-            <div style={{ overflow: 'auto', maxHeight: '400px' }}>
-              <Title level={5}>XAPI Events</Title>
-              <ReactJson src={XAPIEvents} />
-            </div>
+            <H5Player id={Number(id)} />
           </Col>
         </Row>
       </ProCard>
@@ -77,7 +66,7 @@ export default () => {
   const params = useParams<{ h5p?: string }>();
   const { h5p } = params;
   return (
-    <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+    <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
       {h5p ? <H5PPreviewPage id={h5p} /> : <React.Fragment />}
     </EditorContextProvider>
   );

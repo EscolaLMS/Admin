@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from 'antd';
 import type { ButtonProps } from 'antd';
+declare const REACT_APP_API_URL: string;
 
 export const AuthenticatedLinkButton: React.FC<
   React.PropsWithChildren<{ url: string; filename: string } & ButtonProps>
@@ -9,7 +10,7 @@ export const AuthenticatedLinkButton: React.FC<
 
   const handleAction = useCallback(async () => {
     setLoading(true);
-    const result = await fetch(`${REACT_APP_API_URL}${url}`, {
+    const result = await fetch(`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
     });
 

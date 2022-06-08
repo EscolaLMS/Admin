@@ -1,36 +1,34 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 export async function templates(
-  params: {
+  params?: EscolaLms.Templates.Http.Requests.TemplateListingRequest & {
     // query
     current?: number;
     pageSize?: number;
   },
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.TemplateList>(`/api/admin/templates`, {
     method: 'GET',
-    useCache: true,
+    useCache: false,
     params: {
       ...params,
-      per_page: params.pageSize,
-      page: params.current,
+      per_page: params && params.pageSize,
+      page: params && params.current,
     },
     ...(options || {}),
   });
 }
 
-export async function template(id: number, options?: { [key: string]: any }) {
+export async function template(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Template>>(`/api/admin/templates/${id}`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-export async function createTemplate(
-  body?: Partial<API.Template>,
-  options?: { [key: string]: any },
-) {
+export async function createTemplate(body?: Partial<API.Template>, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Template>>(`/api/admin/templates`, {
     method: 'POST',
     headers: {
@@ -44,7 +42,7 @@ export async function createTemplate(
 export async function updateTemplate(
   id: number,
   body?: Partial<API.Template>,
-  options?: { [key: string]: any },
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Template>>(`/api/admin/templates/${id}`, {
     method: 'PATCH',
@@ -56,7 +54,7 @@ export async function updateTemplate(
   });
 }
 
-export async function deleteTemplate(id: number, options?: { [key: string]: any }) {
+export async function deleteTemplate(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Template>>(`/api/admin/templates/${id}`, {
     method: 'DELETE',
     headers: {
@@ -66,18 +64,58 @@ export async function deleteTemplate(id: number, options?: { [key: string]: any 
   });
 }
 
-export async function variables(options?: { [key: string]: any }) {
+export async function variables(options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.TemplateVariables>>(`/api/admin/templates/variables`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-export async function preview(id: number, options?: { [key: string]: any }) {
+export async function preview(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<Record<string, string>>>(
     `/api/admin/templates/${id}/preview`,
     {
       method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+/// api/admin/events/trigger-manually/{id}
+
+export async function triggerManualEvent(
+  id: number,
+
+  users: number[],
+
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.Template>>(`/api/admin/events/trigger-manually/${id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      users,
+    },
+    ...(options || {}),
+  });
+}
+
+// /api/admin/products/{id}/trigger-event-manually/{idTemplate}
+
+export async function triggerManualEventForProduct(
+  templateId: number,
+  productId: number,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.Template>>(
+    `/api/admin/products/${productId}/trigger-event-manually/${templateId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       ...(options || {}),
     },
   );

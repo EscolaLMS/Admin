@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 export async function settings(
   params: {
@@ -7,7 +8,7 @@ export async function settings(
     pageSize?: number;
     group?: string;
   },
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.SettingsList>(`/api/admin/settings`, {
     method: 'GET',
@@ -21,7 +22,7 @@ export async function settings(
   });
 }
 
-export async function setting(id: number, options?: Record<string, any>) {
+export async function setting(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -29,7 +30,7 @@ export async function setting(id: number, options?: Record<string, any>) {
   });
 }
 
-export async function createSettings(body?: Partial<API.Setting>, options?: Record<string, any>) {
+export async function createSettings(body?: Partial<API.Setting>, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings`, {
     method: 'POST',
     headers: {
@@ -43,7 +44,7 @@ export async function createSettings(body?: Partial<API.Setting>, options?: Reco
 export async function updateSettings(
   id: number,
   body?: Partial<API.Setting>,
-  options?: Record<string, any>,
+  options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'PUT',
@@ -55,7 +56,7 @@ export async function updateSettings(
   });
 }
 
-export async function deleteSettings(id: number, options?: Record<string, any>) {
+export async function deleteSettings(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'DELETE',
     headers: {
@@ -65,10 +66,42 @@ export async function deleteSettings(id: number, options?: Record<string, any>) 
   });
 }
 
-export async function settingGroups(options?: Record<string, any>) {
+export async function settingGroups(options?: RequestOptionsInit) {
   return request<API.DefaultResponse<string[]>>(`/api/admin/settings/groups`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
+export async function configs(options?: RequestOptionsInit) {
+  return request<API.ConfigsList>(`/api/admin/config`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
+export async function updateConfig(
+  {
+    key,
+    value,
+  }: {
+    key: string;
+    value: string | string[];
+  },
+  options?: RequestOptionsInit,
+) {
+  return request<API.ConfigsList>(`/api/admin/config`, {
+    method: 'POST',
+    data: {
+      config: [
+        {
+          key,
+          value,
+        },
+      ],
+    },
     ...(options || {}),
   });
 }

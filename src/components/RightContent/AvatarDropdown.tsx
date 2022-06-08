@@ -2,50 +2,38 @@ import React, { useCallback } from 'react';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Menu, Spin, message } from 'antd';
 import { history, useModel, FormattedMessage } from 'umi';
-import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { logout } from '@/services/escola-lms/login';
+import { logout } from '@/services/escola-lms/auth';
+import type { MenuInfo } from 'rc-menu/lib/interface';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
 
-const loginOut = async () => {
-  const msg = await logout();
-  if (msg.success) {
-    localStorage.removeItem('TOKEN');
-    message.success(msg.message);
-
-    const { query = {}, pathname } = history.location;
-    const { redirect } = query;
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      history.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: pathname,
-        }),
-      });
-    }
-  } else {
-    message.error(msg.message);
-  }
-};
-
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
+  const loginOut = useCallback(async () => {
+    const msg = await logout();
+    if (msg.success) {
+      localStorage.removeItem('TOKEN');
+      message.success(msg.message);
+
+      const { query = {} } = history.location;
+      const { redirect } = query;
+      if (window.location.pathname !== '/user/login' && !redirect) {
+        setInitialState({ ...initialState, currentUser: undefined });
+      }
+    } else {
+      message.error(msg.message);
+    }
+  }, [initialState, setInitialState]);
+
   const onMenuClick = useCallback(
-    (event: {
-      key: React.Key;
-      keyPath: React.Key[];
-      item: React.ReactInstance;
-      domEvent: React.MouseEvent<HTMLElement>;
-    }) => {
+    (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
-        setInitialState({ ...initialState, currentUser: undefined });
         loginOut();
         return;
       }
@@ -72,12 +60,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.data.name) {
+  if (!currentUser || !currentUser?.id) {
     return loading;
   }
 
   const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
+    <Menu className={styles.menu} selectedKeys={[]} onClick={(info) => onMenuClick(info)}>
       {menu && (
         <Menu.Item key="center">
           <UserOutlined />
@@ -106,7 +94,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <span className={`${styles.name} anticon`}>{currentUser.data.name}</span>
+        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
       </span>
     </HeaderDropdown>
   );

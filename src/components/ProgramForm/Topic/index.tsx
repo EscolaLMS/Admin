@@ -7,14 +7,52 @@ import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import MediaUpload from './media/upload';
 import { Popconfirm } from 'antd';
-import { Radio } from 'antd';
 import RichTextEditor from './media/text';
-import { TopicType } from '@/services/escola-lms/course';
+import { TopicType } from '@/services/escola-lms/enums';
+
 import Oembed from './media/oembed';
 import H5PForm from './media/h5p';
 import TopicForm from './form';
 import { FormattedMessage } from 'umi';
 import Resources from './resources';
+import { getTypeName } from './media';
+
+import {
+  FundOutlined,
+  FileTextOutlined,
+  FilePdfOutlined,
+  FileImageOutlined,
+  VideoCameraAddOutlined,
+  AudioOutlined,
+  YoutubeOutlined,
+  InteractionOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import ScormSelector from '@/components/Scorm';
+
+export const getTypeIcon = (type: string | undefined) => {
+  if (type) {
+    switch (type) {
+      case 'ScormSco':
+        return <FundOutlined />;
+      case 'PDF':
+        return <FilePdfOutlined />;
+      case 'Audio':
+        return <AudioOutlined />;
+      case 'Image':
+        return <FileImageOutlined />;
+      case 'OEmbed':
+        return <YoutubeOutlined />;
+      case 'H5P':
+        return <InteractionOutlined />;
+      case 'Video':
+        return <VideoCameraAddOutlined />;
+      case 'RichText':
+        return <FileTextOutlined />;
+    }
+  }
+  return <ExclamationCircleOutlined />;
+};
 
 const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
   onDelete,
@@ -40,12 +78,12 @@ const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
 export const Topic: React.FC<{
   topic: API.Topic;
   itemsLength?: number;
-  onUpload?: (topic: API.Topic) => void;
   courseId?: number;
   courseLessons: API.Lesson[];
-}> = ({ topic, onUpload, courseId, courseLessons }) => {
+  onClose: () => void;
+}> = ({ topic, courseId, courseLessons, onClose }) => {
   const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
-
+  const [saveIsDisabled, setSaveIsDisabled] = useState(false);
   const [state, setState] = useState<API.Topic>({
     ...topic,
     value: topic.topicable?.value,
@@ -63,21 +101,31 @@ export const Topic: React.FC<{
         value: type === topic.topicable_type ? topic.topicable?.value : '',
       };
     });
+    if (topic.isNew) {
+      setSaveIsDisabled(true);
+    }
   }, [type, topic]);
 
-  const updateValue = useCallback((key, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-  }, []);
+  const updateValue = useCallback(
+    (key, value) => {
+      setState((prevState) => ({
+        ...prevState,
+        [key]: value,
+      }));
+      setSaveIsDisabled(false);
+    },
+    [topic],
+  );
 
-  const updateValues = useCallback((values) => {
-    setState((prevState) => ({
-      ...prevState,
-      ...values,
-    }));
-  }, []);
+  const updateValues = useCallback(
+    (values) => {
+      setState((prevState) => ({
+        ...prevState,
+        ...values,
+      }));
+    },
+    [topic],
+  );
 
   const handleSave = useCallback(
     (formData) => {
@@ -88,10 +136,11 @@ export const Topic: React.FC<{
           .then(() => setLoading(false))
           .catch(() => {
             setLoading(false);
-          });
+          })
+          .finally(() => onClose());
       }
     },
-    [state, updateTopic],
+    [state, updateTopic, topic],
   );
 
   const onFormSubmit = useCallback(() => {
@@ -104,16 +153,6 @@ export const Topic: React.FC<{
       json: state.json ? JSON.stringify(state.json) : null,
     };
 
-    // it threw a validation error when the user wanted to set the skip topic to true without this code it works fine
-    // if (
-    //   values.topicable_type &&
-    //   [TopicType.Audio, TopicType.Image, TopicType.PDF, TopicType.Video].includes(
-    //     values.topicable_type,
-    //   )
-    // ) {
-    //   delete values.value;
-    // }
-
     const formData = getFormData(values);
 
     handleSave(formData);
@@ -124,26 +163,26 @@ export const Topic: React.FC<{
       return deleteTopic && state.id && deleteTopic(state.id);
     }
     setLoading(true);
+    onClose();
     return deleteTopic && state.id && deleteTopic(state.id);
-  }, [state, deleteTopic, topic.isNew]);
+  }, [state, deleteTopic, topic]);
 
   return (
     <React.Fragment>
       <Card
         title={
           <>
-            <FormattedMessage id="topic" />
-            {`: ${state.title}`}
+            {getTypeIcon(getTypeName(topic))}{' '}
+            {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
+            <FormattedMessage id="type" />
           </>
         }
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
-          <Button
-            type="primary"
-            onClick={onFormSubmit}
-            disabled={type === TopicType.Unselected}
-            loading={loading}
-          >
+          <Button onClick={onClose} loading={loading}>
+            <FormattedMessage id="Cancel" />
+          </Button>,
+          <Button type="primary" onClick={onFormSubmit} disabled={saveIsDisabled} loading={loading}>
             <FormattedMessage id="save" />
           </Button>,
         ]}
@@ -159,31 +198,18 @@ export const Topic: React.FC<{
             <Divider>
               <FormattedMessage id="file_resources" />
             </Divider>
-            <Resources topicId={Number(topic.id)} />
+            <Resources topicId={Number(topic.id)} folder={`course/${courseId}`} />
           </React.Fragment>
         )}
 
-        <Divider>
-          <FormattedMessage id="select_type_topic" />
-          ...
-        </Divider>
-        <Radio.Group
-          name="radiogroup"
-          value={type}
-          onChange={(e) => updateValue('topicable_type', e.target.value)}
-        >
-          {Object.keys(TopicType).map((key) => (
-            <Radio key={key} value={TopicType[key]}>
-              {key}
-            </Radio>
-          ))}
-        </Radio.Group>
-        <Divider />
+        <Divider>{getTypeName(topic)}</Divider>
         {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
-        {type && type === TopicType.RichText && (
+        {type && type === TopicType?.RichText && (
           <RichTextEditor
             directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
-            text={topic.topicable_type === TopicType.RichText ? topic.topicable.value || '' : ''}
+            text={
+              topic?.topicable_type === TopicType?.RichText ? topic?.topicable?.value || '' : ''
+            }
             onChange={(value) => updateValue('value', value)}
           />
         )}
@@ -193,13 +219,22 @@ export const Topic: React.FC<{
             type === TopicType.Image ||
             type === TopicType.PDF) && (
             <MediaUpload
+              folder={`course/${courseId}`}
               type={type}
               topic={topic}
               currentState={state}
               onChange={() => setLoading(true)}
               onUpdate={(info) => {
                 if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
-                if (onUpload) onUpload(info.file.response.data);
+
+                setState({
+                  ...state,
+                  id: info?.file?.response?.data?.id,
+                  order: info.file.response.data?.order,
+                  value: info?.file?.response.data?.topicable?.value,
+                  topicable: info?.file?.response.data?.topicable,
+                });
+                setSaveIsDisabled(false);
                 setLoading(false);
               }}
               disabled={false}
@@ -211,9 +246,13 @@ export const Topic: React.FC<{
         {type && type === TopicType.H5P && (
           <H5PForm id={state.value} onChange={(value) => updateValue('value', value)} />
         )}
+        {type && type === TopicType.SCORM && (
+          <ScormSelector
+            value={Number(state.value)}
+            onChange={(value) => updateValue('value', value)}
+          />
+        )}
       </Card>
-
-      <Divider />
     </React.Fragment>
   );
 };

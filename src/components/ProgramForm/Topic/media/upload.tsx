@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { Col, Row, Button, Pagination, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { TopicType } from '@/services/escola-lms/course';
-import SecureUpload from '@/components/SecureUpload';
+import { TopicType } from '@/services/escola-lms/enums';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { Document, pdfjs, Page } from 'react-pdf';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 const CONFIG = {
@@ -48,34 +48,37 @@ export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }>
   type,
   topic,
 }) => {
-  switch (type) {
-    case TopicType.Audio:
-      return topic.topicable_type === TopicType.Audio && topic.topicable?.url ? (
-        <audio preload="none" controls src={topic.topicable.url} />
-      ) : (
-        <React.Fragment />
-      );
-    case TopicType.Video:
-      return topic.topicable_type === TopicType.Video && topic.topicable?.url ? (
-        <video controls src={topic.topicable.url} width="100%" />
-      ) : (
-        <React.Fragment />
-      );
-    case TopicType.Image:
-      return topic.topicable_type === TopicType.Image && topic.topicable?.url ? (
-        <img src={topic.topicable.url} width="100%" />
-      ) : (
-        <React.Fragment />
-      );
-    case TopicType.PDF:
-      return topic.topicable_type === TopicType.PDF && topic.topicable?.url ? (
-        <PDFPreview file={topic.topicable.url} />
-      ) : (
-        <React.Fragment />
-      );
-    default:
-      return <React.Fragment />;
+  if (topic && topic.topicable && 'url' in topic.topicable) {
+    switch (type) {
+      case TopicType.Audio:
+        return topic.topicable_type === TopicType.Audio && topic.topicable?.url ? (
+          <audio preload="none" controls src={topic.topicable.url} />
+        ) : (
+          <React.Fragment />
+        );
+      case TopicType.Video:
+        return topic.topicable_type === TopicType.Video && topic.topicable?.url ? (
+          <video controls src={topic.topicable.url} width="100%" />
+        ) : (
+          <React.Fragment />
+        );
+      case TopicType.Image:
+        return topic.topicable_type === TopicType.Image && topic.topicable?.url ? (
+          <img title="Topic image" src={topic.topicable.url} width="100%" />
+        ) : (
+          <React.Fragment />
+        );
+      case TopicType.PDF:
+        return topic.topicable_type === TopicType.PDF && topic.topicable?.url ? (
+          <PDFPreview file={topic.topicable.url} />
+        ) : (
+          <React.Fragment />
+        );
+      default:
+        return <React.Fragment />;
+    }
   }
+  return <React.Fragment />;
 };
 
 export const MediaUploadForm: React.FC<{
@@ -85,7 +88,8 @@ export const MediaUploadForm: React.FC<{
   onUpdate: (info: UploadChangeParam) => void;
   onChange: (info: UploadChangeParam) => void;
   disabled: boolean;
-}> = ({ topic, type, onUpdate, disabled = false, currentState, onChange }) => {
+  folder: string;
+}> = ({ topic, type, onUpdate, disabled = false, currentState, onChange, folder }) => {
   const onInfoChange = useCallback(
     (info) => {
       if (info.file.status === 'done') {
@@ -104,10 +108,26 @@ export const MediaUploadForm: React.FC<{
     can_skip: currentState.can_skip ? 1 : 0,
   };
 
+  // I delete these fields if they are null because validation does not allow them on the backend so if they are null the user has not edited them
+
+  if (!data.introduction) {
+    delete data?.introduction;
+  }
+  if (!data.description) {
+    delete data?.description;
+  }
+  if (!data.summary) {
+    delete data?.summary;
+  }
+  if (!data.json) {
+    delete data?.json;
+  }
+
   return (
     <Row>
       <Col span={12}>
-        <SecureUpload
+        <SecureUploadBrowser
+          folder={folder}
           onChange={onInfoChange}
           name="value"
           url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
@@ -117,11 +137,11 @@ export const MediaUploadForm: React.FC<{
           <Button disabled={disabled} icon={<UploadOutlined />}>
             Click to upload {type}
           </Button>
-        </SecureUpload>
+        </SecureUploadBrowser>
       </Col>
       <Col span={12}>
         <div style={{ padding: '0 12px' }}>
-          <MediaUploadPreview type={type} topic={topic} />
+          <MediaUploadPreview type={type} topic={currentState} />
         </div>
       </Col>
     </Row>

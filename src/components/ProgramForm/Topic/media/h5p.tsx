@@ -1,48 +1,37 @@
 import React, { useState } from 'react';
-import { Row, Col, Divider, Button, List, Typography, Modal } from 'antd';
+import { Row, Col, Divider, Button, Typography, Modal } from 'antd';
 import H5PContentSelect from '@/components/H5PContentSelect';
-import { EditorContextProvider, Player } from '@escolalms/h5p-react';
-import type { XAPIEvent } from '@escolalms/h5p-react';
+import { EditorContextProvider } from '@escolalms/h5p-react';
+
 import UploadH5P from '@/components/H5P/upload';
 import { useIntl, FormattedMessage } from 'umi';
-import ReactJson from 'react-json-view';
+
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
+import H5Player from '@/components/H5Player';
+declare const REACT_APP_API_URL: string;
 
 export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
   onData,
   id,
 }) => (
-  <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+  <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
     <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
   </EditorContextProvider>
 );
 
 export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
-  const [XAPIEvents, setXAPIEvents] = useState<XAPIEvent[]>([]);
   return (
-    <EditorContextProvider url={`${REACT_APP_API_URL}/api/hh5p`}>
+    <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
       <Divider />
-      <Player id={id} onXAPI={(event) => setXAPIEvents((prevState) => [...prevState, event])} />
-
-      <div style={{ overflow: 'auto', maxHeight: '300px' }}>
-        <List
-          dataSource={XAPIEvents}
-          header="XAPI Events"
-          renderItem={() => (
-            <List.Item>
-              <ReactJson src={XAPIEvents} />
-            </List.Item>
-          )}
-        ></List>
-      </div>
+      <H5Player id={Number(id)} />
     </EditorContextProvider>
   );
 };
 
-export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }> = ({
-  id,
-  onChange,
-}) => {
+export const H5PForm: React.FC<{
+  id: string;
+  onChange: (value: string) => void;
+}> = ({ id, onChange }) => {
   const intl = useIntl();
   const [previewId, setPreviewId] = useState<number>();
   const [editId, setEditId] = useState<number | 'new'>();
@@ -74,7 +63,7 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
             <FormattedMessage id="preview" />
           </Button>
 
-          <Button type="primary" onClick={() => setEditId(Number(id))}>
+          <Button type="primary" disabled={!id} onClick={() => setEditId(Number(id))}>
             <FormattedMessage id="edit" />
           </Button>
         </Col>
@@ -92,8 +81,8 @@ export const H5PForm: React.FC<{ id: string; onChange: (value: string) => void }
         <Col span={12}>
           <UploadH5P
             onSuccess={(data) => {
-              if (data.id) {
-                onChange(String(data.id));
+              if (data.data.id) {
+                onChange(String(data.data.id));
               }
             }}
             onError={() =>

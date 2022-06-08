@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { CopyOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip, Popconfirm, message } from 'antd';
 import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
@@ -6,10 +6,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 
-import { course, removeCourse } from '@/services/escola-lms/course';
+import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
@@ -24,17 +24,35 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     sorter: true,
   },
   {
-    title: <FormattedMessage id="Active" defaultMessage="active" />,
-    dataIndex: 'active',
+    title: <FormattedMessage id="status" defaultMessage="status" />,
+    dataIndex: 'status',
     sorter: false,
-
     valueEnum: {
-      true: { text: <FormattedMessage id="Active" defaultMessage="active" /> },
-      false: {
-        text: <FormattedMessage id="Inactive" defaultMessage="Inactive" />,
+      draft: {
+        text: (
+          <Tag>
+            <FormattedMessage id="draft" defaultMessage="draft" />
+          </Tag>
+        ),
+        status: 'draft',
+      },
+      archived: {
+        text: (
+          <Tag color="error">
+            <FormattedMessage id="archived" defaultMessage="archived" />
+          </Tag>
+        ),
+        status: 'archived',
+      },
+      published: {
+        text: (
+          <Tag color="success">
+            <FormattedMessage id="published" defaultMessage="published" />
+          </Tag>
+        ),
+        status: 'published',
       },
     },
-    render: (_, record) => <Tag>{record.active ? 'Active' : 'Inactive'}</Tag>,
   },
   {
     title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
@@ -146,6 +164,43 @@ const TableList: React.FC = () => {
     [actionRef],
   );
 
+  const handleExport = useCallback(async (id: number) => {
+    setLoading(true);
+    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+    try {
+      const request = await exportCourse(id);
+      const response = await request;
+      if (response.success) {
+        const url: string = response.data;
+        window.open(url, '_blank');
+      }
+    } catch (error) {
+      message.error(<FormattedMessage id="error" defaultMessage="error" />);
+    } finally {
+      hide();
+      setLoading(false);
+    }
+  }, []);
+
+  const handleClone = useCallback(async (id: number) => {
+    setLoading(true);
+    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+    try {
+      const request = await cloneCourse(id);
+      if (request.success) {
+        message.success(request.message);
+        hide();
+        setLoading(false);
+        actionRef.current?.reload();
+      }
+      return true;
+    } catch (error) {
+      hide();
+      setLoading(false);
+      return false;
+    }
+  }, []);
+
   return (
     <PageContainer>
       <ProTable<API.CourseListItem, API.CourseParams>
@@ -156,9 +211,11 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Link to="/courses/new">
             <Button type="primary" key="primary">
@@ -166,11 +223,12 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title, active, category_id, tag }, sort) => {
+        request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return course({
             title,
+            status,
             pageSize,
             current,
             category_id,
@@ -220,6 +278,19 @@ const TableList: React.FC = () => {
                   <Button type="primary" icon={<DeleteOutlined />} danger></Button>
                 </Tooltip>
               </Popconfirm>,
+
+              <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
+                <Button
+                  onClick={() => handleExport(Number(record.id))}
+                  icon={<ExportOutlined />}
+                ></Button>
+              </Tooltip>,
+              <Tooltip title={<FormattedMessage id="clone" defaultMessage="clone" />}>
+                <Button
+                  onClick={() => record.id && handleClone(record.id)}
+                  icon={<CopyOutlined />}
+                ></Button>
+              </Tooltip>,
             ],
           },
         ]}

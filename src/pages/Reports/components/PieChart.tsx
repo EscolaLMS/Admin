@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Pie } from '@ant-design/charts';
 import { reports } from '@/services/escola-lms/reports';
-import { Spin, Alert } from 'antd';
-import { FormattedMessage } from 'umi';
+import { Spin, Alert, Button } from 'antd';
+import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
+import { FileExcelOutlined } from '@ant-design/icons';
+import { ExportToCsv } from 'export-to-csv';
 
 const config = {
   appendPadding: 10,
@@ -16,7 +18,7 @@ const config = {
 
     content: function content(_ref: Record<string, any>) {
       const percent = _ref.percent as number;
-      return ''.concat((percent * 100).toFixed(0), '%');
+      return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
     },
     style: {
       fontSize: 14,
@@ -44,6 +46,7 @@ type State =
 
 const PieChart: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
   const [state, setState] = useState<State>({ mode: 'init' });
+  const intl = useIntl();
 
   useEffect(() => {
     setState({ mode: 'loading' });
@@ -58,13 +61,48 @@ const PieChart: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
       .catch((err) => setState({ mode: 'error', error: err.toString() }));
   }, [metric]);
 
+  const onDownload = useCallback(() => {
+    if (state.mode === 'loaded') {
+      const options = {
+        filename: metric.split('\\').join('-'),
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        showTitle: true,
+        title: intl.formatMessage({ id: metric.split('\\').pop() }),
+        useTextFile: false,
+        useBom: true,
+        useKeysAsHeaders: true,
+        // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+      };
+
+      const csvExporter = new ExportToCsv(options);
+
+      csvExporter.generateCsv(state.value);
+    }
+  }, [state]);
+
   return (
     <ProCard
-      title={<FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />}
+      title={
+        <FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />
+      }
+      extra={
+        <Button icon={<FileExcelOutlined />} size="small" onClick={() => onDownload()}>
+          {' '}
+          <FormattedMessage id={'download'} />
+          {'\u00A0'}CSV
+        </Button>
+      }
       headerBordered
     >
       {state.mode === 'loading' && <Spin />}
-      {state.mode === 'loaded' && <Pie {...config} data={state.value} />}
+      {state.mode === 'loaded' && (
+        <div>
+          <Pie {...config} data={state.value} />
+        </div>
+      )}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}
     </ProCard>
   );

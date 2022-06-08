@@ -9,12 +9,15 @@ export const UserSelect: React.FC<{
   state?: {
     type: number;
   };
+  role?: string;
   multiple?: boolean;
-  value?: string | string[] | number | number[];
+  value?: string | string[] | number | number[] | API.UserItem[];
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  showEmail?: boolean;
+}> = ({ value, onChange, multiple = false, role, showEmail }) => {
   const [users, setUsers] = useState<API.UserItem[]>([]);
   const [fetching, setFetching] = useState(false);
+  const [currUsers, setCurrUsers] = useState<number[]>([]);
 
   const cache = useRef<API.UserItem[]>();
   const abortController = useRef<AbortController>();
@@ -22,7 +25,10 @@ export const UserSelect: React.FC<{
   const setUsersFromResponse = useCallback((responseUsers: API.UserItem[]) => {
     setUsers((prevUsers) =>
       [...prevUsers, ...responseUsers].filter(
-        (user, index, arr) => arr.findIndex((fuser) => fuser.id === user.id) === index,
+        (user, index, arr) =>
+          arr.findIndex((fuser) =>
+            showEmail ? fuser.email === user.email : fuser.id === user.id,
+          ) === index,
       ),
     );
   }, []);
@@ -38,12 +44,12 @@ export const UserSelect: React.FC<{
     }
 
     abortController.current = new AbortController();
-    fetchUsers({ search }, { signal: abortController.current.signal })
+    fetchUsers({ search, role }, { signal: abortController.current.signal })
       .then((response) => {
-        if (response.success) {
+        if (response && response.success) {
           setUsersFromResponse(response.data);
+          setFetching(false);
         }
-        setFetching(false);
       })
       .catch(() => setFetching(false));
   }, []);
@@ -58,7 +64,15 @@ export const UserSelect: React.FC<{
   useEffect(() => {
     const controller = new AbortController();
     if (value) {
-      const values = Array.isArray(value) ? value : [value];
+      const val = Array.isArray(value) ? value : [value];
+      const values: number[] = val.map((user) => {
+        if (typeof user === 'object') {
+          return Number((user as API.UserItem).id);
+        }
+        return Number(user);
+      });
+
+      setCurrUsers(values);
 
       values
         .filter((id) => !cache.current?.find((user) => user.id === id))
@@ -79,22 +93,29 @@ export const UserSelect: React.FC<{
     <Select
       onFocus={() => fetch()}
       allowClear
-      style={{ width: '100%' }}
-      value={value}
+      style={{ width: '100%', minWidth: '150px' }}
+      value={currUsers}
       onChange={onChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
       placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return (
+            String(`${option.user.name} ${option.user.email}`)
+              .toLowerCase()
+              .indexOf((input && input.toLowerCase()) || '') >= 0
+          );
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
       {users.map((user) => (
-        <Select.Option key={user.id} value={user.id}>
-          {user.name}
+        <Select.Option key={user.id} value={user.id} user={user}>
+          {user.name} {showEmail && ` - ${user.email}`}
         </Select.Option>
       ))}
     </Select>

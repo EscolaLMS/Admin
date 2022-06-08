@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select } from 'antd';
 import { FormattedMessage } from 'umi';
 import { allContent } from '@/services/escola-lms/h5p';
@@ -12,25 +12,22 @@ export const H5PContentSelect: React.FC<{
   value?: string;
   onChange?: (value: string) => void;
 }> = ({ value, onChange, multiple = false }) => {
-  const ref = useRef();
-
   const [contents, setContents] = useState<API.H5PContentListItem[]>([]);
 
   useEffect(() => {
-    allContent().then((response) => setContents(response));
+    allContent().then((response) => response.success && setContents(response.data));
   }, []);
 
   useEffect(() => {
     if (contents.length) {
       if (!contents.find((content) => Number(content.id) === Number(value))) {
-        allContent().then((response) => setContents(response));
+        allContent().then((response) => response.success && setContents(response.data));
       }
     }
   }, [value]);
 
   return (
     <Select
-      ref={ref}
       loading={contents.length === 0}
       style={{ width: '100%' }}
       value={value}
@@ -40,7 +37,7 @@ export const H5PContentSelect: React.FC<{
       placeholder={<FormattedMessage id="H5P_select_content" />}
       optionFilterProp="children"
       filterOption={(input, option) => {
-        const h5pTitle = option?.children.slice(1, option?.children.length).join('');
+        const h5pTitle = option?.children?.slice(1, option?.children.length).join('');
         return searchSubstring(h5pTitle, input);
       }}
     >

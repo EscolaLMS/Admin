@@ -10,8 +10,10 @@ import SecureUpload from '@/components/SecureUpload';
 import './index.css';
 
 interface FormWysiwygProps {
+  hideDeleteBtn?: boolean;
+  forceLoading?: boolean;
   defaultDirectory?: string;
-  onFile?: (value: API.File, directory?: string) => void;
+  onFile?: (file: API.File, directory?: string) => void;
 }
 
 type FileBrowserState = {
@@ -25,10 +27,10 @@ type FileBrowserState = {
   total: number;
 };
 
-const FilesBrowserActions: React.FC<{ directory: string; onUploaded: (dir: string) => void }> = ({
-  directory,
-  onUploaded,
-}) => {
+const FilesBrowserActions: React.FC<{
+  directory: string;
+  onUploaded: (dir: string, file: API.File) => void;
+}> = ({ directory, onUploaded }) => {
   return (
     <Space align="start">
       <Typography.Text>
@@ -41,13 +43,22 @@ const FilesBrowserActions: React.FC<{ directory: string; onUploaded: (dir: strin
         data={{
           target: directory,
         }}
-        onChange={(data) => data.file.status === 'done' && onUploaded(directory)}
+        onUpload={(response) => {
+          if (response.success) {
+            onUploaded(directory, response.data);
+          }
+        }}
       />
     </Space>
   );
 };
 
-export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/', onFile }) => {
+export const FilesBrowser: React.FC<FormWysiwygProps> = ({
+  defaultDirectory = '/',
+  onFile,
+  hideDeleteBtn = false,
+  forceLoading = false,
+}) => {
   const intl = useIntl();
   const [state, setState] = useState<FileBrowserState>({
     loading: false,
@@ -69,6 +80,35 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
     }));
   }, []);
 
+  const handleSuccessResponse = useCallback(
+    (response, dir) => {
+      setState((prevState) => ({
+        ...prevState,
+        ...response.data,
+        data: [
+          {
+            url: dir.split('/').slice(0, -1).join('/'),
+            name: '..',
+            created_at: '',
+            mime: 'directory',
+          } as API.File,
+          ...response.data.data.map((file: API.File) => ({
+            ...file,
+            url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
+          })),
+        ].filter((file: API.File) => {
+          if (dir === '/' || dir === defaultDirectory) {
+            return file.name !== '..';
+          }
+          return true;
+        }),
+        directory: dir,
+        loading: false,
+      }));
+    },
+    [setLoading],
+  );
+
   const fetchFiles = useCallback(
     (dir, page = 1) => {
       const abort = () => controllerRef.current && controllerRef.current.abort();
@@ -81,29 +121,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
       files({ directory: dir, page }, { signal: controllerRef.current?.signal })
         .then((response) => {
           if (response.success) {
-            setState((prevState) => ({
-              ...prevState,
-              ...response.data,
-              data: [
-                {
-                  url: dir.split('/').slice(0, -1).join('/'),
-                  name: '..',
-                  created_at: '',
-                  mime: 'directory',
-                } as API.File,
-                ...response.data.data.map((file) => ({
-                  ...file,
-                  url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
-                })),
-              ].filter((file: API.File) => {
-                if (dir === '/') {
-                  return file.name !== '..';
-                }
-                return true;
-              }),
-              directory: dir,
-              loading: false,
-            }));
+            handleSuccessResponse(response, dir);
           }
         })
         .catch(() => setLoading(false));
@@ -145,29 +163,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
       findFile({ directory: dir, name: input, page }, { signal: controllerRef.current?.signal })
         .then((response) => {
           if (response.success) {
-            setState((prevState) => ({
-              ...prevState,
-              ...response.data,
-              data: [
-                {
-                  url: dir.split('/').slice(0, -1).join('/'),
-                  name: '..',
-                  created_at: '',
-                  mime: 'directory',
-                } as API.File,
-                ...response.data.data.map((file) => ({
-                  ...file,
-                  url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
-                })),
-              ].filter((file: API.File) => {
-                if (dir === '/') {
-                  return file.name !== '..';
-                }
-                return true;
-              }),
-              directory: dir,
-              loading: false,
-            }));
+            handleSuccessResponse(response, dir);
           }
         })
         .catch(() => setLoading(false));
@@ -207,22 +203,41 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
         </div>
       </div>
       <List
-        loading={state.loading}
+        loading={state.loading || forceLoading}
         size="small"
         itemLayout="horizontal"
         dataSource={state.data}
         header={
-          <FilesBrowserActions directory={state.directory} onUploaded={(dir) => fetchFiles(dir)} />
+          <FilesBrowserActions
+            directory={state.directory}
+            onUploaded={(dir, file) => {
+              if (file) {
+                fetchFiles(dir);
+                if (onFile) {
+                  onFile(file, dir);
+                }
+              }
+            }}
+          />
         }
         footer={
-          <FilesBrowserActions directory={state.directory} onUploaded={(dir) => fetchFiles(dir)} />
+          <FilesBrowserActions
+            directory={state.directory}
+            onUploaded={(dir, file) => {
+              fetchFiles(dir);
+              if (file && onFile) {
+                onFile(file, dir);
+              }
+            }}
+          />
         }
         renderItem={(item) => (
           <List.Item
             actions={
-              item.mime !== 'directory'
+              item.mime !== 'directory' && !hideDeleteBtn
                 ? [
                     <Button
+                      key="dir"
                       type="default"
                       danger
                       icon={<DeleteOutlined />}
@@ -243,7 +258,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({ defaultDirectory = '/
                     onClick={() => fetchFiles(item.url)}
                   />
                 ) : (
-                  <a href={item.url} target="_blank">
+                  <a href={item.url} target={'_blank'} rel="noreferrer">
                     <Button type="default" icon={<DownloadOutlined />} size="small" />
                   </a>
                 )

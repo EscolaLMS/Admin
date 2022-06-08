@@ -2,9 +2,9 @@ import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { resources as fetchResources, deleteResource } from '@/services/escola-lms/course';
 import { List, Button } from 'antd';
 import { DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import SecureUpload from '@/components/SecureUpload';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
-export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
+export const Resources: React.FC<{ topicId: number; folder: string }> = ({ topicId, folder }) => {
   const [resources, setResources] = useState<API.Resource[]>();
   const controller = useRef<AbortController>();
 
@@ -52,12 +52,17 @@ export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
       itemLayout="horizontal"
       dataSource={resources}
       header={
-        <SecureUpload
+        <SecureUploadBrowser<API.Resource>
+          folder={folder}
           url={`/api/admin/topics/${topicId}/resources`}
           name="resource"
-          onChange={(response) =>
-            response.file.status === 'done' && onUploaded(response.file.response)
-          }
+          onChange={(response) => {
+            if (response.file.status === 'done') {
+              if (response.file.response?.success) {
+                onUploaded(response.file.response);
+              }
+            }
+          }}
         />
       }
       renderItem={(item) => (
@@ -74,7 +79,7 @@ export const Resources: React.FC<{ topicId: number }> = ({ topicId }) => {
         >
           <List.Item.Meta
             avatar={
-              <a href={item.url} target="_blank">
+              <a href={item.url} target="_blank" rel="noreferrer">
                 <Button type="default" icon={<DownloadOutlined />} size="small" />
               </a>
             }

@@ -3,13 +3,27 @@ import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
+
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
-import '@/services/ybug';
 import RestrictedPage from './pages/403';
+import Reqs from 'umi-request';
+import { refreshToken } from './services/escola-lms/auth';
+import jwt_decode from 'jwt-decode';
+import { differenceInMinutes } from 'date-fns';
+import '@/services/ybug';
+import '@/services/sentry.ts';
+
+declare const REACT_APP_API_URL: string;
+
+type Token = {
+  exp: number;
+};
+
+const authpaths = ['/user/login', '/user/reset-password'];
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -23,20 +37,22 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.User;
-  fetchUserInfo?: () => Promise<API.User | undefined>;
+  currentUser?: API.UserItem;
+  fetchUserInfo?: () => Promise<API.UserItem | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
-      return currentUser;
+      if (currentUser.success) {
+        return currentUser.data;
+      }
+      return undefined;
     } catch (error) {
       history.push('/user/login');
     }
     return undefined;
   };
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  if (!authpaths.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -52,14 +68,22 @@ export async function getInitialState(): Promise<{
 
 // https://umijs.org/zh-CN/plugins/plugin-layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+  if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
+    history.push('/');
+  }
+  if (!initialState?.currentUser && !authpaths.includes(history.location.pathname)) {
+    history.push('/user/login');
+  }
+
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      //  login
-      if (!initialState?.currentUser && location.pathname !== '/user/login') {
+      // login;
+
+      if (!initialState?.currentUser && !authpaths.includes(location.pathname)) {
         history.push('/user/login');
       }
     },
@@ -128,10 +152,12 @@ const errorHandler = (error: ResponseError) => {
     }
 
     if (typeof data.data === 'object') {
-      notification.error({
-        description: data.data.value.map((errorMessage: string) => `${errorMessage}`),
-        message: data.message,
-      });
+      if (data.data.value) {
+        notification.error({
+          description: data?.data?.value?.map((errorMessage: string) => `${errorMessage}`),
+          message: data.message,
+        });
+      }
     }
   } else if (response && response.status) {
     const { status, url } = response;
@@ -158,13 +184,13 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 
   if (url.includes('login')) {
     return {
-      url: `${REACT_APP_API_URL}${url}`,
+      url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
       options,
     };
   }
 
   return {
-    url: `${REACT_APP_API_URL}${url}`,
+    url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
     options: {
       ...options,
       interceptors: true,
@@ -174,8 +200,60 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
     },
   };
 };
+const { cancel } = Reqs.CancelToken.source();
+let refreshTokenRequest: Promise<API.DefaultResponse<{ token: string }>> | null = null;
+const responseInterceptor = async (response: Response, options: RequestOptionsInit) => {
+  const token = localStorage.getItem('TOKEN');
+  const now = new Date();
+  const tokenRefreshTime = 2;
+
+  if (token) {
+    const decode = jwt_decode<Token>(token);
+
+    const accessTokenExpired = differenceInMinutes(new Date(decode.exp * 1000), now);
+
+    if (accessTokenExpired <= tokenRefreshTime) {
+      if (!refreshTokenRequest) {
+        refreshTokenRequest = refreshToken();
+      }
+
+      refreshTokenRequest
+        .then((res) => {
+          if (res.success) {
+            localStorage.setItem('TOKEN', res.data.token);
+            refreshTokenRequest = null;
+            return {
+              url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${response.url}`,
+              options: {
+                ...options,
+                interceptors: true,
+                headers: token
+                  ? {
+                      ...options.headers,
+                      Accept: 'application/json',
+                      Authorization: `Bearer ${res.data.token}`,
+                    }
+                  : options.headers,
+              },
+            };
+          }
+          return null;
+        })
+        .catch(() => {
+          refreshTokenRequest = null;
+          window.location.reload();
+          localStorage.removeItem('TOKEN');
+          cancel();
+          return;
+        });
+    }
+  }
+
+  return response;
+};
 
 export const request: RequestConfig = {
   errorHandler,
   requestInterceptors: [authHeaderInterceptor],
+  responseInterceptors: [responseInterceptor],
 };

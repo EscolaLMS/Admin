@@ -110,24 +110,16 @@ const TableList: React.FC = () => {
       dataIndex: 'is_active',
       hideInForm: true,
       hideInSearch: true,
-      valueEnum: {
-        true: {
-          text: (
-            <Tag color="error">
-              <FormattedMessage id="Inactive" defaultMessage="Inactive" />
-            </Tag>
-          ),
-          status: 'Inactive',
-        },
-        false: {
-          text: (
-            <Tag color="success">
-              <FormattedMessage id="Active" defaultMessage="Active" />
-            </Tag>
-          ),
-          status: 'Active',
-        },
-      },
+      render: (_, record) =>
+        record.is_active ? (
+          <Tag color="success">
+            <FormattedMessage id="Active" defaultMessage="Active" />
+          </Tag>
+        ) : (
+          <Tag color="error">
+            <FormattedMessage id="Inactive" defaultMessage="Inactive" />
+          </Tag>
+        ),
     },
 
     {
@@ -216,9 +208,11 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Button
             type="primary"

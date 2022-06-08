@@ -90,18 +90,8 @@ const TableList: React.FC = () => {
               }
             }
           }}
-          okText={
-            <FormattedMessage
-              id="yes"
-              defaultMessage="Yes"
-            />
-          }
-          cancelText={
-            <FormattedMessage
-              id="no"
-              defaultMessage="No"
-            />
-          }
+          okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+          cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
             <Button type="primary" icon={<DeleteOutlined />} danger></Button>
@@ -120,9 +110,11 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         request={({ pageSize, current }) => {
           return scorms({ pageSize, current }).then((response) => {
             if (response.success) {

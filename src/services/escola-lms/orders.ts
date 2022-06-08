@@ -1,20 +1,15 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function orders(
-  params: API.PaginationParams & {
-    // query
-    current?: number;
-    pageSize?: number;
-    user_id?: number;
-    author_id?: number;
-    course_id?: number;
-    date_from?: string;
-    date_to?: string;
-  },
-  options?: { [key: string]: any },
+  params: API.PaginationParams &
+    EscolaLms.Cart.Http.Requests.Admin.OrderSearchRequest & {
+      // query
+      current?: number;
+      pageSize?: number;
+    },
+  options?: RequestOptionsInit,
 ) {
   return request<API.OrderList>('/api/admin/orders?page=1', {
     params: {
@@ -29,7 +24,7 @@ export async function orders(
 }
 
 /**  GET /api/admin/users */
-export async function order(id: number, options?: { [key: string]: any }) {
+export async function order(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Order>>(`/api/admin/orders/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,

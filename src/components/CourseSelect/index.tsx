@@ -2,7 +2,33 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Select, Spin } from 'antd';
 
 import { course as getCourses, getCourse } from '@/services/escola-lms/course';
+import { webinars as getWebinars, getWebinar } from '@/services/escola-lms/webinars';
+import {
+  consultations as getConsultations,
+  getConsultation,
+} from '@/services/escola-lms/consultations';
 import { FormattedMessage } from 'umi';
+
+type CollectionModelItem = {
+  id: number;
+  name: string;
+};
+
+// this creates a simple state object with typegurad
+const prepareObj = (arr: (API.Course | API.Webinar | API.Consultation)[]) =>
+  arr.map((item: API.Course | API.Webinar | API.Consultation) => {
+    if ('name' in item) {
+      return {
+        id: Number(item.id),
+        name: item.name,
+      };
+    }
+
+    return {
+      id: Number(item.id),
+      name: item.title ? item.title : '',
+    };
+  });
 
 export const CourseSelect: React.FC<{
   state?: {
@@ -11,29 +37,65 @@ export const CourseSelect: React.FC<{
   multiple?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-}> = ({ value, onChange, multiple = false }) => {
-  const [courses, setCourses] = useState<API.Course[]>([]);
+  defaultValue?: number[];
+  modelType?: string;
+}> = ({ value, onChange, multiple = false, defaultValue, modelType = 'COURSE' }) => {
+  const [modelCollection, setModelCollection] = useState<CollectionModelItem[]>([]);
   const [fetching, setFetching] = useState(false);
 
   const abortController = useRef<AbortController>();
 
-  const fetch = useCallback((search?: string) => {
-    setFetching(true);
-    if (abortController.current) {
-      abortController.current.abort();
-    }
+  const modelCollectionMethod = useCallback(
+    (search) => {
+      switch (modelType) {
+        case 'COURSE':
+          return getCourses({ title: search }, { signal: abortController?.current?.signal });
+        case 'WEBINAR':
+          return getWebinars();
+        case 'CONSULTATIONS':
+          return getConsultations();
+        default:
+          return getCourses({ title: search }, { signal: abortController?.current?.signal });
+      }
+    },
+    [modelType, abortController],
+  );
+  const modelSingleMethod = useCallback(
+    (id) => {
+      switch (modelType) {
+        case 'COURSE':
+          return getCourse(Number(id), { signal: abortController.current?.signal });
+        case 'WEBINAR':
+          return getWebinar(Number(id), { signal: abortController.current?.signal });
+        case 'CONSULTATIONS':
+          return getConsultation(Number(id), { signal: abortController.current?.signal });
+        default:
+          return getCourse(Number(id), { signal: abortController.current?.signal });
+      }
+    },
+    [modelType, abortController],
+  );
 
-    abortController.current = new AbortController();
-    getCourses({ title: search }, { signal: abortController.current.signal })
-      .then((response) => {
-        if (response.success) {
-          setCourses((prevUsers) => [...prevUsers, ...response.data.data]);
-          // TODO: don't reset just add new. unique table
-        }
-        setFetching(false);
-      })
-      .catch(() => setFetching(false));
-  }, []);
+  const fetch = useCallback(
+    (search?: string) => {
+      setFetching(true);
+      if (abortController.current) {
+        abortController.current.abort();
+      }
+
+      abortController.current = new AbortController();
+
+      modelCollectionMethod(search)
+        .then((response) => {
+          if (response.success) {
+            setModelCollection(prepareObj(response.data));
+          }
+          setFetching(false);
+        })
+        .catch(() => setFetching(false));
+    },
+    [modelType],
+  );
 
   const onSearch = useCallback(
     (search) => {
@@ -43,22 +105,28 @@ export const CourseSelect: React.FC<{
   );
 
   useEffect(() => {
-    const controller = new AbortController();
+    abortController.current = new AbortController();
 
     if (value) {
-      getCourse(Number(value), { signal: controller.signal }).then(
-        (response) =>
-          response.success && setCourses((prevCourses) => [...prevCourses, response.data]),
-        // TODO don't reset. unique table
-      );
+      modelSingleMethod(Number(value)).then((response) => {
+        if (response) {
+          if (response.success) {
+            setModelCollection((prevCourses) => [...prevCourses, ...prepareObj([response.data])]);
+          }
+        }
+      });
     }
     return () => {
-      controller.abort();
+      if (abortController.current) {
+        abortController.current.abort();
+      }
     };
-  }, [value]);
+  }, [value, modelType]);
 
   return (
     <Select
+      // @ts-ignore  Type 'number[]' is not assignable to type 'string'
+      defaultValue={defaultValue!}
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}
@@ -67,16 +135,19 @@ export const CourseSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
-      placeholder={<FormattedMessage id="select_course" defaultMessage="Select a course" />}
+      placeholder={<FormattedMessage id="select_content" defaultMessage="select_content" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return option?.children?.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
-      {courses.map((course) => (
-        <Select.Option key={course.id} value={course.id}>
-          {course.title}
+      {modelCollection.map((modelItem: CollectionModelItem) => (
+        <Select.Option key={modelItem.id} value={modelItem.id}>
+          {modelItem.name}
         </Select.Option>
       ))}
     </Select>

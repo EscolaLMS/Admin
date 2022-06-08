@@ -1,15 +1,16 @@
 import React from 'react';
 import ProForm from '@ant-design/pro-form';
-import SecureUpload from '@/components/SecureUpload';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { FormattedMessage } from 'umi';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 export const ProFormAudioUpload: React.FC<{
+  folder: string;
   action: string;
   form_name: string;
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
-}> = ({ action, form_name, src_name, getUploadedSrcField }) => {
+}> = ({ action, form_name, src_name, getUploadedSrcField, folder }) => {
   return (
     <ProForm.Group title={<FormattedMessage id="audio" />}>
       <ProForm.Item shouldUpdate>
@@ -24,7 +25,8 @@ export const ProFormAudioUpload: React.FC<{
       <ProForm.Item shouldUpdate>
         {(form) => {
           return (
-            <SecureUpload
+            <SecureUploadBrowser
+              folder={folder}
               accept="video/*"
               name={form_name}
               url={action}

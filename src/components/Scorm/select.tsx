@@ -13,7 +13,7 @@ export const ScormSelect: React.FC<{
 }> = ({ value, onChange }) => {
   const [scorms, setScorms] = useState<API.SCORM[]>([]);
   const [fetching, setFetching] = useState(false);
-
+  const [currSco, setCurrSco] = useState<API.SCORM_SCO | undefined>();
   const abortController = useRef<AbortController>();
 
   const fetch = useCallback((search?: string) => {
@@ -26,7 +26,7 @@ export const ScormSelect: React.FC<{
     fetchScorms({ search }, { signal: abortController.current.signal })
       .then((response) => {
         if (response.success) {
-          setScorms(response.data.data);
+          return Array.isArray(response.data.data) && setScorms(response.data.data);
         }
         setFetching(false);
       })
@@ -44,36 +44,44 @@ export const ScormSelect: React.FC<{
     fetch();
   }, [value]);
 
+  useEffect(() => {
+    setCurrSco(scorms.map((scorm) => scorm.scos.filter((sco) => sco.id === value)).flat()[0]);
+  }, [scorms]);
+
   return (
     <Select
       allowClear
-      style={{ width: '100%' }}
-      value={value?.toString()}
-      onChange={onChange}
+      style={{ width: '100%', minWidth: '300px' }}
+      value={currSco ? `${currSco?.id}: ${currSco?.title}` : undefined}
+      onChange={(changeValue: string) =>
+        onChange && onChange(changeValue ? changeValue.split(':')[0] : changeValue)
+      }
       showSearch
       onSearch={onSearch}
       placeholder={<FormattedMessage id="select_scorm_package" />}
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
+      filterOption={(input, option) => {
+        if (option && option.children) {
+          return option?.children?.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
+        return true;
+      }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
     >
       {scorms.map((scorm) => (
-        <Select.Option key={scorm.id} value={scorm.id.toString()}>
+        <Select.OptGroup key={scorm.id} label={`${scorm.id}: ${scorm.version}`}>
           <React.Fragment>
-            {scorm.id}:{' '}
             {scorm.scos.map((sco) => (
-              <React.Fragment>
+              <Select.Option key={sco.id} value={`${sco.id}: ${sco.title}`}>
                 {sco.title}
                 {'  '}
                 <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
                   <FormattedMessage id="preview" />
                 </Link>
-              </React.Fragment>
+              </Select.Option>
             ))}
           </React.Fragment>
-        </Select.Option>
+        </Select.OptGroup>
       ))}
     </Select>
   );

@@ -1,14 +1,13 @@
 import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
+import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDigit,
-  ProFormSwitch,
   ProFormDatePicker,
-  ProFormCheckbox,
+  ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history } from 'umi';
+import { useParams, history, useIntl, FormattedMessage, useAccess } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -17,36 +16,47 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import TagsInput from '@/components/TagsInput';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProgramForm from '@/components/ProgramForm';
+import ProgramForm from '@/components/ProgramForm/';
 import ScormSelector from '@/components/Scorm';
-import { useIntl, FormattedMessage } from 'umi';
 import CourseAccess from './components/CourseAccess';
-import TemplateEditor from '@/components/TemplateEditor';
+import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
-
-const categoriesArrToIds = (category: API.Category | string | number) =>
-  typeof category === 'object' ? category.id : category;
-
-const tagsArrToIds = (tag: API.Tag | string) => (typeof tag === 'object' ? tag.title : tag);
+import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
+import UnsavedPrompt from '@/components/UnsavedPrompt';
+import AssignQuestionnary from '@/components/AssignQuestionnary';
+import { ModelTypes } from '../Questionnaire/form';
+import { ModelStatus } from '@/consts/status';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import EditValidateModal from '@/components/EditValidateModal';
+import ProductWidget from '@/components/ProductWidget';
+import UserSubmissions from '@/components/UsersSubmissions';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
   const intl = useIntl();
   const { course, tab = 'attributes' } = params;
   const isNew = course === 'new';
-
+  const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
 
   useEffect(() => {
     if (course === 'new') {
       setData({
-        active: true,
+        title: 'new',
       });
       return;
     }
+
     const fetch = async () => {
       const response = await getCourse(Number(course));
+
       if (response.success) {
+        if (tab === 'attributes') {
+          validateCourseEdit(response.data);
+        }
+
         setData({
           ...response.data,
           categories: response.data.categories?.map(categoriesArrToIds),
@@ -61,33 +71,49 @@ export default () => {
   const formProps = useMemo(
     () => ({
       onFinish: async (values: API.Course) => {
+        if (manageCourseEdit.disableEdit) {
+          setManageCourseEdit({
+            showModal: true,
+            disableEdit: true,
+            clicked: false,
+          });
+          return;
+        }
+
         const postData = {
           ...values,
-          scorm_id: values.scorm_id ? values.scorm_id : null,
+          authors:
+            values.authors &&
+            values.authors.map((author) => (typeof author === 'object' ? author.id : author)),
+          scorm_sco_id: values.scorm_sco_id ? values.scorm_sco_id : null,
+          image_url: data && data.image_url,
+          image_path: data && data.image_url && splitImagePath(data.image_url),
+          video_url: data && data.video_url,
+          video_path: data && data.video_url && splitImagePath(data.video_url),
+          poster_url: data && data.poster_url,
+          poster_path: data && data.poster_url && splitImagePath(data.poster_url),
         };
+
         let response: API.DefaultResponse<API.Course>;
         if (course === 'new') {
           response = await createCourse(postData);
           if (response.success) {
+            setUnsavedChanges(false);
             history.push(`/courses/${response.data.id}/attributes`);
           }
         } else {
           response = await updateCourse(Number(course), postData);
+          if (response.success) {
+            setUnsavedChanges(false);
+            validateCourseEdit(response.data);
+            history.push(`/courses/${response.data.id}/attributes`);
+          }
         }
         message.success(response.message);
       },
       initialValues: data,
-      /*
-      request: async () => {
-        const response = await getCourse(Number(course));
-        if (response.success) {
-          return response.data;
-        }
-        return {};
-      },
-      */
     }),
-    [course, data],
+    [course, data, manageCourseEdit],
   );
 
   if (!data) {
@@ -120,15 +146,11 @@ export default () => {
             },
             {
               path: '/',
-              breadcrumbName: intl.formatMessage({
-                id: String(data.title),
-              }),
+              breadcrumbName: String(data.title),
             },
             {
               path: String(tab),
-              breadcrumbName: intl.formatMessage({
-                id: String(tab),
-              }),
+              breadcrumbName: String(tab),
             },
           ],
         },
@@ -142,9 +164,43 @@ export default () => {
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+          {manageCourseEdit.disableEdit && (
+            <Alert
+              closable
+              style={{ marginBottom: '20px' }}
+              type="warning"
+              message={
+                <FormattedMessage
+                  id="course_edit_warning_message"
+                  defaultMessage="course_edit_warning_message"
+                />
+              }
+              action={
+                <Button
+                  onClick={() =>
+                    setManageCourseEdit({
+                      showModal: true,
+                      disableEdit: true,
+                      clicked: true,
+                    })
+                  }
+                  type="primary"
+                >
+                  <FormattedMessage
+                    id="questionnaire.submit"
+                    defaultMessage="questionnaire.submit"
+                  />
+                </Button>
+              }
+            />
+          )}
+          <UnsavedPrompt show={unsavedChanges} />
+          <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
+
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
+              setUnsavedChanges(true);
               return values.title && setData({ title: values.title });
             }}
           >
@@ -159,6 +215,7 @@ export default () => {
                   defaultMessage: 'title',
                 })}
                 required
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormText
                 width="md"
@@ -169,6 +226,7 @@ export default () => {
                   id: 'subtitle',
                   defaultMessage: 'subtitle',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormText
                 width="sm"
@@ -179,8 +237,20 @@ export default () => {
                   id: 'language',
                   defaultMessage: 'language',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
-              <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+              <ProFormSelect
+                name="status"
+                width="xs"
+                label={<FormattedMessage id="status" />}
+                valueEnum={ModelStatus}
+                initialValue={ModelStatus.draft}
+                placeholder={intl.formatMessage({
+                  id: 'status',
+                })}
+                disabled={manageCourseEdit.disableEdit}
+                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+              />
             </ProForm.Group>
 
             <ProForm.Group>
@@ -193,6 +263,7 @@ export default () => {
                   id: 'duration',
                   defaultMessage: 'duration',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormDigit
                 width="md"
@@ -205,11 +276,12 @@ export default () => {
                 })}
                 min={0}
                 max={9999}
+                disabled={manageCourseEdit.disableEdit}
                 fieldProps={{ step: 1 }}
               />
 
               <ProFormText
-                width="sm"
+                width="xs"
                 name="level"
                 label={<FormattedMessage id="level" />}
                 tooltip={<FormattedMessage id="level" />}
@@ -220,11 +292,11 @@ export default () => {
               />
 
               <ProForm.Item
-                name="author_id"
+                name="authors"
                 label={<FormattedMessage id="author_tutor" />}
                 valuePropName="value"
               >
-                <UserSelect />
+                <UserSelect multiple />
               </ProForm.Item>
             </ProForm.Group>
             <ProForm.Group>
@@ -237,6 +309,7 @@ export default () => {
                   id: 'active_from',
                   defaultMessage: 'active_from',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormDatePicker
                 width="sm"
@@ -247,6 +320,7 @@ export default () => {
                   id: 'active_to',
                   defaultMessage: 'active_to',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
               <ProFormDigit
                 width="sm"
@@ -257,8 +331,10 @@ export default () => {
                   id: 'hours_to_complete',
                   defaultMessage: 'hours_to_complete',
                 })}
+                disabled={manageCourseEdit.disableEdit}
               />
-              <ProFormCheckbox
+              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* <ProFormCheckbox
                 width="sm"
                 name="purchasable"
                 label={<FormattedMessage id="purchasable" />}
@@ -267,8 +343,10 @@ export default () => {
                   id: 'purchasable',
                   defaultMessage: 'purchasable',
                 })}
-              />
-              <ProFormCheckbox
+                disabled={manageCourseEdit.disableEdit}
+              /> */}
+              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* <ProFormCheckbox
                 width="sm"
                 name="findable"
                 label={<FormattedMessage id="findable" />}
@@ -277,6 +355,21 @@ export default () => {
                   id: 'findable',
                   defaultMessage: 'findable',
                 })}
+                disabled={manageCourseEdit.disableEdit}
+              /> */}
+            </ProForm.Group>
+
+            <ProForm.Group>
+              <ProFormText
+                width="sm"
+                name="target_group"
+                label={<FormattedMessage id="target_group" />}
+                tooltip={<FormattedMessage id="target_group" />}
+                placeholder={intl.formatMessage({
+                  id: 'target_group',
+                  defaultMessage: 'target_group',
+                })}
+                disabled={manageCourseEdit.disableEdit}
               />
             </ProForm.Group>
             <ProForm.Item
@@ -299,31 +392,75 @@ export default () => {
           </ProForm>
         </ProCard.TabPane>
         {!isNew && (
-          <ProCard.TabPane key="media" tab={<FormattedMessage id="media" />}>
+          <ProCard.TabPane
+            key="product"
+            tab={<FormattedMessage id="product" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {course && (
+              <ProductWidget
+                productable={{
+                  class_type: 'App\\Models\\Course',
+                  class_id: course,
+                  name: String(data.title),
+                }}
+              />
+            )}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
+            key="media"
+            tab={<FormattedMessage id="media" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <ProForm {...formProps}>
               <Row>
-                <Col offset={1}>
+                <Col>
                   <ProFormImageUpload
+                    folder={`course/${course}`}
+                    title="image"
                     action={`/api/admin/courses/${course}`}
                     src_name="image_url"
                     form_name="image"
                     getUploadedSrcField={(info) => info.file.response.data.image_url}
+                    setPath={(removedPath) =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        ...removedPath,
+                      }))
+                    }
                   />
                 </Col>
-                <Col offset={1}>
+                <Col>
                   <ProFormVideoUpload
+                    folder={`course/${course}`}
                     action={`/api/admin/courses/${course}`}
                     src_name="video_url"
                     form_name="video"
                     getUploadedSrcField={(info) => info.file.response.data.video_url}
+                    setPath={(removedPath) =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        ...removedPath,
+                      }))
+                    }
                   />
                 </Col>
-                <Col offset={1}>
+                <Col>
                   <ProFormImageUpload
+                    folder={`course/${course}`}
+                    title="poster"
                     action={`/api/admin/courses/${course}`}
                     src_name="poster_url"
                     form_name="poster"
                     getUploadedSrcField={(info) => info.file.response.data.poster_url}
+                    setPath={(removedPath) =>
+                      setData((prevState) => ({
+                        ...prevState,
+                        ...removedPath,
+                      }))
+                    }
                   />
                 </Col>
               </Row>
@@ -331,7 +468,11 @@ export default () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="categories" tab={<FormattedMessage id="categories_tags" />}>
+          <ProCard.TabPane
+            key="categories"
+            tab={<FormattedMessage id="categories_tags" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <Row>
               <Col span={12}>
                 <ProForm {...formProps}>
@@ -359,35 +500,76 @@ export default () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="program" tab={<FormattedMessage id="program" />}>
+          <ProCard.TabPane
+            key="program"
+            tab={<FormattedMessage id="program" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
-          <ProCard.TabPane key="scorm" tab={<FormattedMessage id="scorm" />}>
+        {!isNew && access.scormListPermission && (
+          <ProCard.TabPane
+            key="scorm"
+            tab={<FormattedMessage id="scorm" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             <ProForm {...formProps}>
-              <ProForm.Item label="Scorm" name="scorm_id" valuePropName="value">
+              <ProForm.Item label="Scorm" name="scorm_sco_id" valuePropName="value">
                 <ScormSelector />
               </ProForm.Item>
             </ProForm>
           </ProCard.TabPane>
         )}
-
         {!isNew && (
-          <ProCard.TabPane key="access" tab={<FormattedMessage id="access" />}>
+          <ProCard.TabPane
+            key="access"
+            tab={<FormattedMessage id="access" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             {course && <CourseAccess id={course} />}
           </ProCard.TabPane>
         )}
-
         {!isNew && (
-          <ProCard.TabPane key="certificates" tab={<FormattedMessage id="certificates" />}>
-            <TemplateEditor />
+          <ProCard.TabPane
+            key="certificates"
+            tab={<FormattedMessage id="certificates" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {course && <CourseCertificateForm id={course} />}
           </ProCard.TabPane>
         )}
 
         {!isNew && (
-          <ProCard.TabPane key="statistics" tab={<FormattedMessage id="statistics" />}>
+          <ProCard.TabPane
+            key="questionnaires"
+            tab={<FormattedMessage id="questionnaires" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {course && <AssignQuestionnary modelType={ModelTypes.course} id={Number(course)} />}
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane
+            key="statistics"
+            tab={<FormattedMessage id="statistics" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
             {course && <CourseStatistics courseId={course} />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && (
+          <ProCard.TabPane
+            key="user_submission"
+            tab={<FormattedMessage id="user_submission" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            <Row>
+              <Col span={12}>
+                {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
+              </Col>
+            </Row>
           </ProCard.TabPane>
         )}
       </ProCard>

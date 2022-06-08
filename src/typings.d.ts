@@ -12,6 +12,10 @@ declare module '*.bmp';
 declare module '*.tiff';
 declare module 'omit.js';
 
+import '@escolalms/ts-models';
+
+declare module '*.less';
+
 // google analytics interface
 type GAFieldsObject = {
   eventCategory: string;
@@ -28,6 +32,7 @@ type Window = {
     fieldsObject: GAFieldsObject | string,
   ) => void;
   reloadAuthorized: () => void;
+  REACT_APP_API_URL: string;
 };
 
 declare let ga: () => void;
@@ -39,3 +44,10 @@ declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefine
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 declare const REACT_APP_API_URL: string;
 declare const REACT_APP_CREDENTIALS: string;
+declare const REACT_APP_API_URI: string;
+
+declare global {
+  interface Window {
+    REACT_APP_API_URL: string;
+  }
+}

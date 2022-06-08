@@ -1,19 +1,21 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { message, Spin } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import useModelFields from '@/hooks/useModelFields';
 import { PageContainer } from '@ant-design/pro-layout';
-import SecureUpload from '@/components/SecureUpload';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useIntl, useParams, FormattedMessage, history } from 'umi';
+import UserSettings from './User/settings';
+import AdditionalField from './User/components/AdditionalField';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
   const intl = useIntl();
   const { tab = 'general' } = params;
-
+  const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
   const [data, setData] = useState<API.UserItem>();
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default () => {
         });
       }
     };
+
     fetch();
   }, []);
 
@@ -116,15 +119,12 @@ export default () => {
                 required
               />
             </ProForm.Group>
-
-            <ProForm.Item
-              name="bio"
-              label={<FormattedMessage id="bio" />}
-              tooltip={<FormattedMessage id="bio_tooltip" />}
-              valuePropName="value"
-            >
-              <WysiwygMarkdown directory={`users/wysiwyg`} />
-            </ProForm.Item>
+            <ProForm.Group>
+              {additionalFields.state === 'loaded' &&
+                additionalFields.list.map((field) => (
+                  <AdditionalField key={field.id} field={field} />
+                ))}
+            </ProForm.Group>
 
             <ProForm.Group>
               <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
@@ -132,15 +132,14 @@ export default () => {
                   <ResponsiveImage path={data.path_avatar} size={600} width={200} />
                 )}
 
-                <SecureUpload
+                <SecureUploadBrowser
+                  folder={`avatars/${data.id}`}
                   url="/api/profile/upload-avatar"
                   name="avatar"
                   accept="image/*"
-                  onChange={(info) => {
-                    if (info.file.status === 'done') {
-                      if (info.file.response.success) {
-                        setData(info.file.response.data);
-                      }
+                  onUpload={(response) => {
+                    if (response.success) {
+                      // TODO refresh avatar here
                     }
                   }}
                 />
@@ -182,6 +181,9 @@ export default () => {
               />
             </ProForm.Group>
           </ProForm>
+        </ProCard.TabPane>
+        <ProCard.TabPane key="user_settings" tab={<FormattedMessage id="user.settings" />}>
+          <UserSettings user={String(data.id)} isProfile />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

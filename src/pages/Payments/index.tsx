@@ -104,9 +104,11 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         request={(
           { pageSize, current, dateRange, status /* , user_id, author_id, course_id */ },
           sort,

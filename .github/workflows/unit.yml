@@ -5,12 +5,12 @@ name: Unit Tests
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
     types: [assigned, opened, synchronize, reopened]
 
 jobs:
-  build:
+  jest:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - run: npm i
       - run: npm run test
 
@@ -26,3 +26,27 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage/clover.xml # optional
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - run: npm i
+      - run: npm run lint:js
+
+  tsc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - run: npm i
+      - run: npm run tsc:noemit

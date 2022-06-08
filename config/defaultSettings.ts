@@ -5,6 +5,7 @@ const Settings: LayoutSettings & {
   logo?: string;
 } = {
   navTheme: 'light',
+  headerTheme: 'light',
   // 拂晓蓝
   primaryColor: '#1890ff',
   layout: 'mix',
@@ -12,9 +13,9 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Escola LMS',
+  title: false,
   pwa: false,
-  logo: 'teacher.svg',
+  logo: 'logo.svg',
   iconfontUrl: '',
 };
 

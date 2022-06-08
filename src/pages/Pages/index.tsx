@@ -1,4 +1,4 @@
-import { PlusOutlined,  DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
@@ -97,9 +97,11 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Link to="/pages/new">
             <Button type="primary" key="primary">

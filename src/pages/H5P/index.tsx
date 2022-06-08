@@ -6,8 +6,9 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
-import { DeleteOutlined, EditOutlined, BookOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, BookOutlined, ExportOutlined } from '@ant-design/icons';
 import UploadH5P from '@/components/H5P/upload';
+declare const REACT_APP_API_URL: string;
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,8 +69,7 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
-      sorter: false,
-      search: false,
+      sorter: (a, b) => a.title.length - b.title.length,
       render: (dom, entity) => {
         return entity.title;
       },
@@ -77,10 +77,27 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="library" defaultMessage="library" />,
       dataIndex: 'library',
-      sorter: false,
+      sorter: (a, b) => a.library.title.length - b.library.title.length,
       search: false,
       render: (dom, entity) => {
         return entity.library.title;
+      },
+    },
+    {
+      title: <FormattedMessage id="library_id" defaultMessage="library_id" />,
+      dataIndex: 'library_id',
+      sorter: (a, b) => a.library.id - b.library.id,
+      render: (dom, entity) => {
+        return entity.library.id;
+      },
+    },
+    {
+      title: <FormattedMessage id="count_h5p" defaultMessage="count_h5p" />,
+      dataIndex: 'count_h5p',
+      sorter: (a, b) => a.count_h5p - b.count_h5p,
+      search: false,
+      render: (dom, entity) => {
+        return entity.count_h5p;
       },
     },
     {
@@ -93,7 +110,9 @@ const TableList: React.FC = () => {
             <Button type="primary" icon={<EditOutlined />}></Button>
           </Tooltip>
         </Link>,
+
         <Popconfirm
+          disabled={record.count_h5p !== 0}
           title={
             <FormattedMessage
               id="deleteQuestion"
@@ -105,7 +124,12 @@ const TableList: React.FC = () => {
           cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+            <Button
+              disabled={record.count_h5p !== 0}
+              type="primary"
+              icon={<DeleteOutlined />}
+              danger
+            ></Button>
           </Tooltip>
         </Popconfirm>,
         <Link to={`/h5ps/preview/${record.id}`}>
@@ -113,13 +137,23 @@ const TableList: React.FC = () => {
             <Button icon={<BookOutlined />}></Button>
           </Tooltip>
         </Link>,
+        <a
+          href={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p/content/${
+            record.id
+          }/export`}
+          download
+        >
+          <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
+            <Button icon={<ExportOutlined />}></Button>
+          </Tooltip>
+        </a>,
       ],
     },
   ];
 
   return (
     <PageContainer>
-      <ProTable<API.H5PContentListItem, API.H5PContentParams>
+      <ProTable<API.H5PContentListItem, API.H5PListParams>
         loading={loading}
         headerTitle={intl.formatMessage({
           id: 'H5Ps',
@@ -127,9 +161,11 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 120,
-        }}
+        search={
+          {
+            // labelWidth: 120,
+          }
+        }
         toolBarRender={() => [
           <Link to="/h5ps/new">
             <Button type="primary" key="primary">
@@ -137,14 +173,24 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current }) => {
+        request={({ pageSize, current, title, library_id }) => {
           setLoading(true);
+
           return h5p({
+            title,
+            library_id,
             pageSize,
             current,
-          }).then((data) => {
+          }).then((response) => {
             setLoading(false);
-            return data || [];
+            if (response.success) {
+              return {
+                data: response.data,
+                total: response.meta.total,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={columns}

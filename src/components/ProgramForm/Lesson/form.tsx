@@ -44,7 +44,9 @@ export const LessonForm: React.FC<{
         },
       }}
       onFinish={onFinish}
-      onValuesChange={onValuesChange}
+      onValuesChange={(a, b) => {
+        onValuesChange(a, b);
+      }}
       initialValues={{ ...initialValues, summary: initialValues.summary || '' }}
     >
       <ProForm.Group>
