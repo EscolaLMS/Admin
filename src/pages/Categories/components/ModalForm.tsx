@@ -5,6 +5,7 @@ import { slugify } from '@/services/escola-lms/slug';
 import { useIntl, FormattedMessage } from 'umi';
 import CategoryTree from '@/components/CategoryTree';
 import { category } from '@/services/escola-lms/category';
+import ProFormImageUpload from '@/components/ProFormImageUpload';
 
 export const CategoryModalForm: React.FC<{
   id?: number | false;
@@ -76,6 +77,18 @@ export const CategoryModalForm: React.FC<{
       >
         <CategoryTree />
       </ProForm.Item>
+      {id && (
+        <ProFormImageUpload
+          folder={`categories/${id}`}
+          wrapInForm={false}
+          title="icon"
+          action={`/api/admin/categories/${id}`}
+          src_name="icon"
+          form_name="icon"
+          getUploadedSrcField={(info) => info.file.response.data.icon}
+          setPath={(removed) => form.setFieldsValue(removed)}
+        />
+      )}
     </ModalForm>
   );
 };

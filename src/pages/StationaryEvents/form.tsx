@@ -188,7 +188,7 @@ const StationaryEventForm = () => {
                 label={<FormattedMessage id="tutor" />}
                 valuePropName="value"
               >
-                <UserSelect multiple role="tutor" />
+                <UserSelect multiple />
               </ProForm.Item>
               <ProFormDigit
                 width="xs"

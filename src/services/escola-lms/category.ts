@@ -43,7 +43,7 @@ export async function updateCategory(
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
