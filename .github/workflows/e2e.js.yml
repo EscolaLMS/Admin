@@ -103,7 +103,6 @@ jobs:
           BASE_URL: http://localhost:8000
           PORT: 8000
           REACT_APP_API_URL: http://localhost
-          REACT_APP_CREDENTIALS: CREDENTIALS
           VERIFY_TEST_RUNNER_TIMEOUT_MS: 100000
 
       # after the test run completes

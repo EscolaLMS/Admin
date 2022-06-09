@@ -8,8 +8,6 @@ import { forgot, login } from '@/services/escola-lms/auth';
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
 
-declare const REACT_APP_CREDENTIALS: string;
-
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -122,10 +120,6 @@ const Login: React.FC = () => {
         )}
 
         <>
-          {REACT_APP_CREDENTIALS === 'CREDENTIALS' && (
-            <pre>email/password: admin@escola-lms.com/secret</pre>
-          )}
-
           <ProFormText
             name="email"
             fieldProps={{
