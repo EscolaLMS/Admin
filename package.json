@@ -10,7 +10,7 @@
         "dev": "npm run start:dev",
         "dev-stage": "env-cmd -f .env.staging yarn dev",
         "dev-local": "env-cmd -f .env.local yarn dev",
-        "dev-awf": "REACT_APP_CREDENTIALS=NOCREDENTIALS REACT_APP_API_URL='https://awflms.etd24.pl/' yarn dev",
+        "dev-awf": "REACT_APP_API_URL='https://awflms.etd24.pl/' yarn dev",
         "gh-pages": "gh-pages -d dist",
         "gh-pages-build": "yarn && yarn umi build && gh-pages -d dist",
         "i18n-remove": "pro i18n-remove --locale=zh-CN --write",

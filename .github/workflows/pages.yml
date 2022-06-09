@@ -16,7 +16,6 @@ jobs:
           CI: false
           BASE_PATH: /
           REACT_APP_PUBLIC_URL: https://admin-stage.escolalms.com/
-          REACT_APP_CREDENTIALS: CREDENTIALS
           REACT_APP_API_URL: https://api-stage.escolalms.com
           REACT_APP_SENTRYDSN: https://ded0d6568b9744a5bcdbedb734946671@sentry.etd24.pl/63
         run: |
