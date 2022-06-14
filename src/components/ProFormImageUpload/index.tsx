@@ -13,7 +13,7 @@ export const ProFormImageUpload: React.FC<{
   form_name: string;
   src_name: string;
   getUploadedSrcField: (info: UploadChangeParam) => string;
-  setPath: (state: object) => void;
+  setPath: (state: Record<string, string>) => void;
   wrapInForm?: boolean;
 }> = ({
   title,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch, ModalForm } from '@ant-design/pro-form';
 import { slugify } from '@/services/escola-lms/slug';
@@ -11,15 +11,16 @@ export const CategoryModalForm: React.FC<{
   id?: number | false;
   visible: boolean;
   onVisibleChange: (visible: boolean) => void;
-  onFinish: (formData: API.CategoryListItem) => Promise<boolean | void>;
+  onFinish: (formData: API.CategoryListItem & { icon_path: null }) => Promise<boolean | void>;
 }> = (props) => {
   const intl = useIntl();
-
+  const [deletedIcon, setDeletedIcon] = useState(false);
   const { visible, onVisibleChange, onFinish, id } = props;
 
   const [form] = Form.useForm();
 
   useEffect(() => {
+    setDeletedIcon(false);
     if (typeof id === 'number' && id > 0) {
       category(id).then((response) => {
         form.setFieldsValue(response.data);
@@ -39,7 +40,9 @@ export const CategoryModalForm: React.FC<{
       width="400px"
       visible={visible}
       onVisibleChange={onVisibleChange}
-      onFinish={onFinish}
+      onFinish={(values) =>
+        deletedIcon ? onFinish({ ...values, icon_path: null }) : onFinish({ ...values })
+      }
       onValuesChange={(values) => {
         if (values.name) {
           form.setFieldsValue({ slug: slugify(values.name) });
@@ -86,7 +89,11 @@ export const CategoryModalForm: React.FC<{
           src_name="icon"
           form_name="icon"
           getUploadedSrcField={(info) => info.file.response.data.icon}
-          setPath={(removed) => form.setFieldsValue(removed)}
+          setPath={(removed: Record<string, string>) => {
+            if (removed.icon_path === '') {
+              setDeletedIcon(true);
+            }
+          }}
         />
       )}
     </ModalForm>
