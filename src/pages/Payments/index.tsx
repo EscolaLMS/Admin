@@ -69,6 +69,7 @@ const TableList: React.FC = () => {
         paid: <FormattedMessage id="paid" />,
         cancelled: <FormattedMessage id="cancelled" />,
         failed: <FormattedMessage id="failed" />,
+        redirect: <FormattedMessage id="redirect" />,
       },
     },
 

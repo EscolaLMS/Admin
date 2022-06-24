@@ -60,6 +60,9 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     sorter: true,
     valueType: 'textarea',
     search: false,
+    render: (_, record) => {
+      return record.product && record.product.price;
+    },
   },
   {
     title: <FormattedMessage id="duration" defaultMessage="Duration" />,

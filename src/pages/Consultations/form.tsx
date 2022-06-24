@@ -362,7 +362,7 @@ const ConsultationForm = () => {
             <ProForm {...formProps}>
               <ProFormImageUpload
                 folder={`consultation/${consultation}`}
-                title="logotype"
+                title={intl.formatMessage({ id: 'logotype' })}
                 action={`/api/admin/consultations/${consultation}`}
                 src_name="logotype_url"
                 form_name="logotype"

@@ -25,11 +25,17 @@ import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils'
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
 import { ModelTypes } from '../Questionnaire/form';
-import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
+
+enum ModelStatus {
+  draft = 'draft',
+  published = 'published',
+  archived = 'archived',
+  published_unactivated = 'published_unactivated',
+}
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();

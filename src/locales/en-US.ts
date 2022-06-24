@@ -434,4 +434,10 @@ export default {
   related_products: 'Related Products',
   selected_products: 'Selected objects',
   quantity: 'Quantity',
+  gt_last_login_day: '>= Login last n days',
+  lt_last_login_day: '<= Login last n days',
+  created_before: 'Created before',
+  created_after: 'Created after',
+  redirect: 'redirect',
+  logotype: 'Logotype',
 };

@@ -96,6 +96,7 @@ declare namespace API {
     purchasable?: boolean;
     boolean?: boolean;
     target_group?: string;
+    product?: EscolaLms.Cart.Models.Product;
   };
 
   type PaginatedList<Model> = {
@@ -496,6 +497,7 @@ declare namespace API {
   }
 
   type PaymentStatus = 'NEW' | 'PAID' | 'CANCELLED' | 'FAILED';
+  type OrderStatus = 'PAID' | 'CANCELLED';
 
   type Payment = {
     amount: number;
@@ -667,6 +669,7 @@ declare namespace API {
     image_url?: string;
     logotype_path?: string;
     logotype_url?: string;
+    product?: EscolaLms.Cart.Models.Product;
   };
 
   type ConsultationAppointmentStatus = 'not_reported' | 'reported' | 'reject' | 'approved';

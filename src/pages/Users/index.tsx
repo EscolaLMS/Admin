@@ -114,8 +114,8 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
 
   {
     title: <FormattedMessage id="lt_last_login_day" defaultMessage="<= Login last n days" />,
-    key: 'gt_last_login_day',
-    dataIndex: 'gt_last_login_day',
+    key: 'lt_last_login_day',
+    dataIndex: 'lt_last_login_day',
     valueType: 'digit',
     hideInTable: true,
     hideInDescriptions: true,

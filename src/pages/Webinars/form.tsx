@@ -116,7 +116,7 @@ const WebinarForm = () => {
   return (
     <PageContainer
       title={
-        isNew ? <FormattedMessage id="menu.webinars" /> : <FormattedMessage id="webinar.edit" />
+        isNew ? <FormattedMessage id="menu.Webinars" /> : <FormattedMessage id="webinar.edit" />
       }
       header={{
         breadcrumb: {

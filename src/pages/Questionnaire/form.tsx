@@ -220,7 +220,10 @@ export const QuestionareForm = () => {
               tab={`${intl.formatMessage({ id: 'assign' })} ${intl.formatMessage({
                 id: 'to',
               })} ${intl.formatMessage({
-                id: model.title,
+                id: model.title?.replace(
+                  model.title.charAt(0),
+                  model.title.charAt(0).toUpperCase(),
+                ),
               })}`}
               disabled={isNew}
             >
