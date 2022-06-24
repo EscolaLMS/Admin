@@ -441,4 +441,10 @@ export default {
   related_products: 'Powiązane produkty',
   selected_products: 'Wybrane obiekty',
   quantity: 'Ilość',
+  gt_last_login_day: '>= Logowanie z ostatnich n dni',
+  lt_last_login_day: '<= Logowanie z ostatnich n dni',
+  created_before: 'Utworzony przed',
+  created_after: 'Utworzony po',
+  redirect: 'przekierowanie',
+  logotype: 'Logotyp',
 };

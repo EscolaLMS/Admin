@@ -208,7 +208,7 @@ const StationaryEventForm = () => {
                 width="md"
                 label={<FormattedMessage id="status" />}
                 tooltip={<FormattedMessage id="status_consultation_tooltip" />}
-                valueEnum={{ ...ModelStatus, published_unactivated: 'published_unactivated' }}
+                valueEnum={{ ...ModelStatus }}
                 initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',

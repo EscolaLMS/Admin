@@ -91,6 +91,9 @@ export const TableColumns: ProColumns<API.Consultation>[] = [
     title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
     dataIndex: 'base_price',
     hideInSearch: true,
+    render: (_, record) => {
+      return record.product && record.product.price;
+    },
   },
   {
     title: <FormattedMessage id="duration" defaultMessage="duration" />,

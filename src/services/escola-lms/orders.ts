@@ -8,6 +8,7 @@ export async function orders(
       // query
       current?: number;
       pageSize?: number;
+      status?: API.OrderStatus;
     },
   options?: RequestOptionsInit,
 ) {

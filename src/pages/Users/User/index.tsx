@@ -3,7 +3,7 @@ import { useParams, history } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl, FormattedMessage } from 'umi';
 import UserForm from './form';
-import Settings from './settings';
+
 import UserCategories from './components/Categories';
 import { useCallback, useEffect, useState } from 'react';
 import { user as fetchUser } from '@/services/escola-lms/user';
@@ -82,7 +82,7 @@ export default () => {
             {data?.id && <UserCategories data={data} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {/* {!isNew && (
           <ProCard.TabPane
             key={'settings'}
             tab={
@@ -93,7 +93,7 @@ export default () => {
           >
             {user && <Settings user={user} isProfile={false} />}
           </ProCard.TabPane>
-        )}
+        )} */}
         {!isNew && (
           <ProCard.TabPane
             key={'logs'}

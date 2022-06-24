@@ -124,7 +124,17 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
-    hideInSearch: true,
+    hideInSearch: false,
+    valueEnum: {
+      paid: <FormattedMessage id="paid" />,
+      cancelled: <FormattedMessage id="cancelled" />,
+    },
+    render: (_, record) => (
+      <FormattedMessage
+        id={record.status.toLocaleLowerCase()}
+        defaultMessage={record.status.toLocaleLowerCase()}
+      />
+    ),
   },
 ];
 
@@ -139,6 +149,7 @@ const TableList: React.FC = () => {
         API.PageParams &
           EscolaLms.Cart.Http.Requests.Admin.OrderSearchRequest & {
             dateRange: [string, string];
+            status: API.OrderStatus;
           }
       >
         headerTitle={intl.formatMessage({
@@ -147,7 +158,7 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        request={({ pageSize, current, user_id, product_id, dateRange }, sort) => {
+        request={({ pageSize, current, user_id, product_id, dateRange, status }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
@@ -166,6 +177,7 @@ const TableList: React.FC = () => {
                 ? 'ASC'
                 : 'DESC'
               : undefined,
+            status,
           }).then((response) => {
             if (response.success) {
               return {
