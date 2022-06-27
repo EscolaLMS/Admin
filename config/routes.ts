@@ -386,6 +386,13 @@
     component: './Logs',
   },
   {
+    name: 'Translations',
+    icon: 'translation',
+    path: '/translations',
+    access: 'translationListPermission',
+    component: './Translations',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

@@ -1,0 +1,75 @@
+import React, { useEffect } from 'react';
+import { Form } from 'antd';
+import ProForm, { ProFormText, ModalForm } from '@ant-design/pro-form';
+import { slugify } from '@/services/escola-lms/slug';
+import { useIntl, FormattedMessage } from 'umi';
+import JsonEditor from '@/components/JsonEditor';
+import { getTranslation } from '@/services/escola-lms/translations';
+
+export const TranslationModalForm: React.FC<{
+  id?: number | false;
+  visible: boolean;
+  onVisibleChange: (visible: boolean) => void;
+  onFinish: (formData: API.Translation) => Promise<boolean | void>;
+}> = (props) => {
+  const intl = useIntl();
+
+  const { visible, onVisibleChange, onFinish, id } = props;
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (typeof id === 'number' && id > 0) {
+      getTranslation(id).then((response) => {
+        if (response.success) form.setFieldsValue(response.data);
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [id, form]);
+
+  return (
+    <ModalForm
+      form={form}
+      title={intl.formatMessage({
+        id: typeof id === 'number' && id > 0 ? 'editTranslation' : 'newTranslation',
+        defaultMessage: typeof id === 'number' && id > 0 ? 'editTranslation' : 'newTranslation',
+      })}
+      width="400px"
+      visible={visible}
+      onVisibleChange={onVisibleChange}
+      onFinish={(values) => onFinish({ ...values })}
+      onValuesChange={(values) => {
+        if (values.name) {
+          form.setFieldsValue({ slug: slugify(values.name) });
+        }
+      }}
+    >
+      <ProFormText
+        label={<FormattedMessage id="group" defaultMessage="group" />}
+        width="md"
+        name="group"
+        initialValue={'*'}
+      />
+      <ProFormText
+        width="md"
+        name="key"
+        label={<FormattedMessage id="key" />}
+        placeholder={intl.formatMessage({
+          id: 'key',
+        })}
+        required
+      />
+      <ProForm.Item
+        name={'text'}
+        label={<FormattedMessage id={'text'} />}
+        tooltip={<FormattedMessage id={'text'} />}
+        valuePropName="value"
+      >
+        <JsonEditor />
+      </ProForm.Item>
+    </ModalForm>
+  );
+};
+
+export default TranslationModalForm;

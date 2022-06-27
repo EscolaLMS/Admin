@@ -76,6 +76,9 @@ export default function access(initialState: { currentUser: API.UserItem }) {
     voucherListPermission: havePermissionsInDashboard(PERMISSIONS.VoucherList),
     voucherDetailPermission: havePermissionsInDashboard(PERMISSIONS.VoucherRead),
 
+    translationListPermission: havePermissionsInDashboard(PERMISSIONS.TranslationList),
+    translationDetailPermission: havePermissionsInDashboard(PERMISSIONS.TranslationRead),
+
     loggedOut: !currentUser,
   };
 }
