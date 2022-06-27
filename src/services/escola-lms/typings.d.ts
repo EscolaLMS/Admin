@@ -1006,6 +1006,13 @@ declare namespace API {
   };
   // I need to overwrite extra key by any, cause it could be any right now
   type ModelField = EscolaLms.ModelFields.Models.Metadata & { extra?: any };
+
+  export type Translation = {
+    group: string;
+    key: string;
+    text: Record<string, string>;
+    id?: number;
+  };
 }
 
 declare module 'jsoneditor-react' {
