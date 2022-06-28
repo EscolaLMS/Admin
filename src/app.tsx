@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
+import { history, Link, getLocale } from 'umi';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -18,6 +18,8 @@ import '@/services/ybug';
 import '@/services/sentry.ts';
 
 declare const REACT_APP_API_URL: string;
+
+const langParser = (lang: string) => lang.split('-')[0];
 
 type Token = {
   exp: number;
@@ -195,8 +197,13 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
       ...options,
       interceptors: true,
       headers: token
-        ? { ...options.headers, Accept: 'application/json', Authorization: `Bearer ${token}` }
-        : options.headers,
+        ? {
+            ...options.headers,
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'X-locale': langParser(getLocale()),
+          }
+        : { ...options.headers, 'X-locale': langParser(getLocale()) },
     },
   };
 };
