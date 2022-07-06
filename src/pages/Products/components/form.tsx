@@ -112,7 +112,13 @@ const ProductsForm: React.FC<{
           console.log('err');
           setProductId('new');
         });
-
+      setCurrProductables([
+        {
+          class: productable.class_type,
+          id: Number(productable.class_id),
+          name: productable.name,
+        },
+      ]);
       form.setFieldsValue({
         productables: [
           {
@@ -137,8 +143,8 @@ const ProductsForm: React.FC<{
             ? transformProductablesFromAPI(response.data.productables as API.ProductProductable[])
             : [],
         };
-        if (response.data.productables) {
-          setProductableType(response.data.productables[0].productable_type);
+        if (response.data && response?.data?.productables) {
+          setProductableType(response?.data?.productables[0]?.productable_type);
         }
 
         setCurrProductables(

@@ -307,6 +307,7 @@ const WebinarForm = () => {
                   class_type: 'App\\Models\\Webinar',
                   class_id: webinar,
                   name: String(data.name),
+                  quantity: 1,
                 }}
               />
             )}

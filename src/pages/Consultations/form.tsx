@@ -303,6 +303,7 @@ const ConsultationForm = () => {
                   class_type: 'App\\Models\\Consultation',
                   class_id: consultation,
                   name: String(data.name),
+                  quantity: 1,
                 }}
               />
             )}

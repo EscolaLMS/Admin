@@ -409,6 +409,7 @@ export default () => {
                   class_type: 'App\\Models\\Course',
                   class_id: course,
                   name: String(data.title),
+                  quantity: 1,
                 }}
               />
             )}
