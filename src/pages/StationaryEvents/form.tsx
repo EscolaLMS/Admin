@@ -274,6 +274,7 @@ const StationaryEventForm = () => {
                   class_type: 'App\\Models\\StationaryEvent',
                   class_id: id,
                   name: String(data.name),
+                  quantity: 1,
                 }}
               />
             )}

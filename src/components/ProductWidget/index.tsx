@@ -7,6 +7,7 @@ export const ProductWidget: React.FC<{
     name?: string;
     class_type?: string;
     class_id?: string | number;
+    quantity?: number;
   };
 }> = ({ productable, type = 'card' }) => {
   const [tab, setTab] = useState<string>('attributes');
