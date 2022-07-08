@@ -440,4 +440,5 @@ export default {
   created_after: 'Created after',
   redirect: 'redirect',
   logotype: 'Logotype',
+  published_unactivated: 'Opublikowany nieaktywny',
 };

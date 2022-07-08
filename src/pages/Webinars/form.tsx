@@ -17,7 +17,6 @@ import ProFormImageUpload from '@/components/ProFormImageUpload';
 import { splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
-import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
@@ -225,8 +224,26 @@ const WebinarForm = () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={ModelStatus}
-                initialValue={ModelStatus.draft}
+                valueEnum={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                  published: intl.formatMessage({
+                    id: 'published',
+                    defaultMessage: 'published',
+                  }),
+                  archived: intl.formatMessage({
+                    id: 'archived',
+                    defaultMessage: 'archived',
+                  }),
+                }}
+                initialValue={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}

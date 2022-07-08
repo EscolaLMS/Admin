@@ -30,7 +30,6 @@ import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
-import { ModelStatus } from '@/consts/status';
 
 type StationaryEventType = Omit<EscolaLms.StationaryEvents.Models.StationaryEvent, 'categories'> & {
   image_url: string;
@@ -208,8 +207,26 @@ const StationaryEventForm = () => {
                 width="md"
                 label={<FormattedMessage id="status" />}
                 tooltip={<FormattedMessage id="status_consultation_tooltip" />}
-                valueEnum={{ ...ModelStatus }}
-                initialValue={ModelStatus.draft}
+                valueEnum={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                  published: intl.formatMessage({
+                    id: 'published',
+                    defaultMessage: 'published',
+                  }),
+                  archived: intl.formatMessage({
+                    id: 'archived',
+                    defaultMessage: 'archived',
+                  }),
+                }}
+                initialValue={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}

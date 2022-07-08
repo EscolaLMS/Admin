@@ -30,13 +30,6 @@ import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
 
-enum ModelStatus {
-  draft = 'draft',
-  published = 'published',
-  archived = 'archived',
-  published_unactivated = 'published_unactivated',
-}
-
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
   const intl = useIntl();
@@ -249,8 +242,30 @@ export default () => {
                 name="status"
                 width="xs"
                 label={<FormattedMessage id="status" />}
-                valueEnum={ModelStatus}
-                initialValue={ModelStatus.draft}
+                valueEnum={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                  published: intl.formatMessage({
+                    id: 'published',
+                    defaultMessage: 'published',
+                  }),
+                  archived: intl.formatMessage({
+                    id: 'archived',
+                    defaultMessage: 'archived',
+                  }),
+                  published_unactivated: intl.formatMessage({
+                    id: 'published_unactivated',
+                    defaultMessage: 'published_unactivated',
+                  }),
+                }}
+                initialValue={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
