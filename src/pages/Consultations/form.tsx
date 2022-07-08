@@ -222,10 +222,23 @@ const ConsultationForm = () => {
               />
               <ProFormSelect
                 name="status"
-                width="xs"
+                width="sm"
                 label={<FormattedMessage id="status" />}
                 tooltip={<FormattedMessage id="status_consultation_tooltip" />}
-                valueEnum={ModelStatus}
+                valueEnum={{
+                  draft: intl.formatMessage({
+                    id: 'draft',
+                    defaultMessage: 'draft',
+                  }),
+                  published: intl.formatMessage({
+                    id: 'published',
+                    defaultMessage: 'published',
+                  }),
+                  archived: intl.formatMessage({
+                    id: 'archived',
+                    defaultMessage: 'archived',
+                  }),
+                }}
                 initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
