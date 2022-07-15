@@ -48,11 +48,11 @@ const ProductsFormPage = () => {
         <ProductsForm
           id={id}
           tab={tab}
-          onTabChange={(newTab) => history.push(`/products/${id}/${newTab}`)}
+          onTabChange={(newTab) => history.push(`/other/products/${id}/${newTab}`)}
           onProductSaved={(model) => {
             return isNew
-              ? history.push(`/products/${model.id}`)
-              : history.push(`/products/${model.id}/${tab}`);
+              ? history.push(`/other/products/${model.id}`)
+              : history.push(`/other/products/${model.id}/${tab}`);
           }}
         />
       )}

@@ -83,13 +83,13 @@ const StationaryEventForm = () => {
           response = await createStationaryEvent(postData);
           if (response.success) {
             setUnsavedChanges(false);
-            history.push(`/stationary-events/${response.data.id}`);
+            history.push(`/other/stationary-events/${response.data.id}`);
           }
         } else {
           response = await updateStationaryEvent(Number(id), postData);
           if (response.success) {
             setUnsavedChanges(false);
-            history.push(`/stationary-events/${response.data.id}/${tab}`);
+            history.push(`/other/stationary-events/${response.data.id}/${tab}`);
           }
         }
         message.success(response.message);
@@ -147,7 +147,7 @@ const StationaryEventForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/stationary-events/${id}/${key}`),
+          onChange: (key) => history.push(`/other/stationary-events/${id}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>

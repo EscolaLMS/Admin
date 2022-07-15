@@ -97,7 +97,7 @@ export const QuestionareForm = () => {
           if (isNew) {
             const request = await createQuestionnaire({ ...values, models: formatData(models) });
             if (request.success) {
-              history.push(`/questionnaire/${request.data.id}`);
+              history.push(`/other/questionnaire/${request.data.id}`);
             }
             message.success(<FormattedMessage id="success" defaultMessage="success" />);
           } else {

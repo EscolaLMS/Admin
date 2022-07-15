@@ -105,7 +105,7 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Link to={`/h5ps/${record.id}`}>
+        <Link to={`/courses/h5ps/${record.id}`}>
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
             <Button type="primary" icon={<EditOutlined />}></Button>
           </Tooltip>

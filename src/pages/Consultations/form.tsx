@@ -87,14 +87,14 @@ const ConsultationForm = () => {
           response = await createConsultation(postData);
           if (response.success) {
             setUnsavedChanges(false);
-            history.push(`/consultations/${response.data.id}`);
+            history.push(`/other/consultations/${response.data.id}`);
           }
         } else {
           response = await updateConsultation(Number(consultation), postData);
           if (response.success) {
             setUnsavedChanges(false);
             validateCourseEdit(response.data);
-            history.push(`/consultations/${response.data.id}/${tab}`);
+            history.push(`/other/consultations/${response.data.id}/${tab}`);
           }
         }
         message.success(response.message);
@@ -152,7 +152,7 @@ const ConsultationForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/consultations/${consultation}/${key}`),
+          onChange: (key) => history.push(`/other/consultations/${consultation}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>

@@ -21,7 +21,7 @@ const Templates: React.FC = () => {
         tabs={{
           type: 'card',
           activeKey: template,
-          onChange: (key) => history.push(`/templates/${key}`),
+          onChange: (key) => history.push(`/configuration/templates/${key}`),
         }}
       >
         <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>

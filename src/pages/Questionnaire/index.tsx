@@ -61,7 +61,7 @@ const Questionnaire: React.FC = () => {
         rowKey="id"
         search={false}
         toolBarRender={() => [
-          <Link to="/questionnaire/new" key="addnew">
+          <Link to="/other/questionnaire/new" key="addnew">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
@@ -86,7 +86,7 @@ const Questionnaire: React.FC = () => {
             valueType: 'option',
 
             render: (_, record) => [
-              <Link to={`/questionnaire/${record.id}`} key="editlink">
+              <Link to={`/other/questionnaire/${record.id}`} key="editlink">
                 <Button type="primary" icon={<EditOutlined />} />
               </Link>,
               <Popconfirm
