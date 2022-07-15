@@ -59,7 +59,7 @@
         "@ant-design/pro-card": "^1.14.0",
         "@ant-design/pro-descriptions": "1.10.47",
         "@ant-design/pro-form": "1.55.1",
-        "@ant-design/pro-layout": "6.33.1",
+        "@ant-design/pro-layout": "^6.38.13",
         "@ant-design/pro-table": "2.65.0",
         "@escolalms/h5p-react": "0.1.31",
         "@escolalms/ts-models": "^0.0.27",

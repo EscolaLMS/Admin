@@ -220,7 +220,7 @@ const TableList: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link to="/courses/new">
+          <Link to="/courses/list/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>

@@ -116,7 +116,7 @@ const Vouchers: React.FC = () => {
         rowKey="id"
         search={false}
         toolBarRender={() => [
-          <Link key="addnew" to="/vouchers/new">
+          <Link key="addnew" to="/sales/vouchers/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
@@ -147,7 +147,7 @@ const Vouchers: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/vouchers/${record.id}`}>
+              <Link key="edit" to={`/sales/vouchers/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>
