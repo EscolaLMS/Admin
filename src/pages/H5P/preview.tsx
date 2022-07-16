@@ -65,8 +65,13 @@ const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
 export default () => {
   const params = useParams<{ h5p?: string }>();
   const { h5p } = params;
+  const intl = useIntl();
+  const lang = intl.locale.split('-')[0];
   return (
-    <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
+    <EditorContextProvider
+      defaultLang={lang}
+      url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
+    >
       {h5p ? <H5PPreviewPage id={h5p} /> : <React.Fragment />}
     </EditorContextProvider>
   );
