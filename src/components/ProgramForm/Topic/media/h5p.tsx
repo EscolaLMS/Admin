@@ -8,20 +8,34 @@ import { useIntl, FormattedMessage } from 'umi';
 
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 import H5Player from '@/components/H5Player';
+
 declare const REACT_APP_API_URL: string;
 
 export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
   onData,
   id,
-}) => (
-  <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
-    <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
-  </EditorContextProvider>
-);
+}) => {
+  const intl = useIntl();
+  const lang = intl.locale.split('-')[0];
+
+  return (
+    <EditorContextProvider
+      defaultLang={lang}
+      url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
+    >
+      <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
+    </EditorContextProvider>
+  );
+};
 
 export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
+  const intl = useIntl();
+  const lang = intl.locale.split('-')[0];
   return (
-    <EditorContextProvider url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}>
+    <EditorContextProvider
+      defaultLang={lang}
+      url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
+    >
       <Divider />
       <H5Player id={Number(id)} />
     </EditorContextProvider>
