@@ -1,5 +1,13 @@
 @import '~antd/es/style/themes/default.less';
 
+// create a new map of color variables
+
+// establish social media colors
+@colors: 'users' #f2d434, 'sales' #7b61ff, 'courses' #28bd25, 'analytics' #f47820,
+  'configuration' #7b8fa2, 'other' #ba25bd;
+
+//@colors: 'sales' #7B61FF;
+
 html,
 body,
 #root {
@@ -63,3 +71,40 @@ ol {
 .ant-dropdown-menu {
   width: 105px !important;
 }
+
+// for loop to iterate over array
+.each(@array, @i: 1) when (@i <= length(@array)) {
+  @pair: extract(@array, @i);
+  @name: extract(@pair, 1);
+  @color: extract(@pair, 2);
+
+  .ant-menu-submenu-title[data-menu-id$='@{name}'] {
+    color: @color !important;
+
+    * {
+      color: @color !important;
+    }
+  }
+
+  .ant-menu-sub[id$='@{name}-popup'] {
+    .ant-menu-item::after {
+      background-color: @color;
+      border-right-color: @color;
+    }
+
+    .ant-menu-item a:hover {
+      color: #333;
+    }
+
+    .ant-menu-item-active,
+    .ant-menu-item-selected {
+      color: #333;
+      background-color: rgba(@color, 0.1);
+    }
+  }
+
+  .each(@array, @i + 1);
+}
+
+// application
+.each(@colors);
