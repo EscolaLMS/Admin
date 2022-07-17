@@ -19,7 +19,7 @@ const ProductsFormPage = () => {
             {
               path: 'products',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.Products',
+                id: 'menu.Other activities.Products',
               }),
             },
             {

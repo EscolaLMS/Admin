@@ -118,7 +118,7 @@ const StationaryEventForm = () => {
             {
               path: 'stationary-events',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.StationaryEvents',
+                id: 'menu.Other activities.StationaryEvents',
               }),
             },
             {

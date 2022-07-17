@@ -127,7 +127,7 @@ const ConsultationForm = () => {
             {
               path: 'consultations',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.Consultations',
+                id: 'menu.Other activities.Consultations',
               }),
             },
             {

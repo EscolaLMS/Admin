@@ -136,7 +136,7 @@ export const QuestionareForm = () => {
             {
               path: 'questionnaire',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.Questionnaire',
+                id: 'menu.Other activities.Questionnaire',
               }),
             },
             {
