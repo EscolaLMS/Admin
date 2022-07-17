@@ -33,6 +33,7 @@
     path: '/courses',
     name: 'Courses',
     icon: 'fire',
+    access: 'coursesPermission',
     routes: [
       {
         path: '/courses',
@@ -130,6 +131,7 @@
   {
     path: '/sales',
     name: 'Sales',
+    access: 'salesPermission',
     icon: 'shopping-cart',
     routes: [
       {
@@ -168,6 +170,7 @@
   {
     path: '/users',
     name: 'Users',
+    access: 'usersPermission',
     icon: 'user',
     routes: [
       {
@@ -253,6 +256,7 @@
   {
     name: 'Analytics',
     path: '/analytics',
+    access: 'analyticsPermission',
     icon: 'rise',
     routes: [
       {
@@ -285,6 +289,7 @@
   {
     name: 'Configuration',
     path: '/configuration',
+    access: 'configurationPermission',
     icon: 'setting',
     routes: [
       {
@@ -348,6 +353,7 @@
   {
     name: 'Other activities',
     path: '/other',
+    access: 'otherPermission',
     icon: 'appstore',
     routes: [
       {

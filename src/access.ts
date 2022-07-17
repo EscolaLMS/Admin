@@ -24,15 +24,42 @@ export default function access(initialState: { currentUser: API.UserItem }) {
     userGroupListPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupList),
     userGroupDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupRead),
 
+    analyticsPermission: havePermissionsInDashboard(
+      PERMISSIONS.NotificationListAll || PERMISSIONS.ReportList || PERMISSIONS.TrackerList,
+    ),
+
+    configurationPermission: havePermissionsInDashboard(
+      PERMISSIONS.FileList ||
+        PERMISSIONS.SettingsList ||
+        PERMISSIONS.TemplateRead ||
+        PERMISSIONS.TranslationList,
+    ),
+
     orderListPermission: havePermissionsInDashboard(PERMISSIONS.CartOrderList),
 
     paymentListPermission: havePermissionsInDashboard(PERMISSIONS.PaymentList),
+
+    coursesPermission: havePermissionsInDashboard(
+      PERMISSIONS.CourseList ||
+        PERMISSIONS.H5PList ||
+        PERMISSIONS.ScormList ||
+        PERMISSIONS.CategoryList ||
+        PERMISSIONS.WebinarList,
+    ),
 
     courseListPermission: havePermissionsInDashboard(PERMISSIONS.CourseList),
     courseDetailsPermission: havePermissionsInDashboard(PERMISSIONS.CourseRead),
 
     h5pListPermission: havePermissionsInDashboard(PERMISSIONS.H5PList),
     h5pDetailsPermission: havePermissionsInDashboard(PERMISSIONS.H5PRead),
+
+    otherPermission: havePermissionsInDashboard(
+      PERMISSIONS.ConsultationList ||
+        PERMISSIONS.StationaryEventsList ||
+        PERMISSIONS.ProductsManage ||
+        PERMISSIONS.QuestionnaireList ||
+        PERMISSIONS.PageList,
+    ),
 
     scormListPermission: havePermissionsInDashboard(PERMISSIONS.ScormList),
     scormDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ScormRead),
@@ -47,6 +74,10 @@ export default function access(initialState: { currentUser: API.UserItem }) {
 
     categoryListPermission: havePermissionsInDashboard(PERMISSIONS.CategoryList),
 
+    salesPermission: havePermissionsInDashboard(
+      PERMISSIONS.CartOrderList || PERMISSIONS.PaymentList || PERMISSIONS.VoucherList,
+    ),
+
     settingListPermission: havePermissionsInDashboard(PERMISSIONS.SettingsList),
 
     roleListPermission: havePermissionsInDashboard(PERMISSIONS.PermisionRoleList),
@@ -55,6 +86,10 @@ export default function access(initialState: { currentUser: API.UserItem }) {
     notificationListPermission: havePermissionsInDashboard(PERMISSIONS.NotificationListAll),
 
     reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
+
+    usersPermission: havePermissionsInDashboard(
+      PERMISSIONS.UserList || PERMISSIONS.PermisionRoleList || PERMISSIONS.UserGroupList,
+    ),
 
     questionnaireListPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireList),
     questionnaireDetailPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireRead),
