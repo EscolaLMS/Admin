@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, Link, getLocale } from 'umi';
+import { history, getLocale } from 'umi';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -94,7 +94,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
           <>
             <BookOutlined />
             <span>
-              <Link to="/~docs">Documentation</Link>
+              <a href="http://docs.wellms.io/">Documentation</a>
             </span>
           </>,
         ]
