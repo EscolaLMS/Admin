@@ -237,7 +237,7 @@ const TableList: React.FC = () => {
                 <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
               </Button>,
 
-              <Link to="/users/new">
+              <Link to="/users/list/new">
                 <Button type="primary" key="primary">
                   <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
                 </Button>
