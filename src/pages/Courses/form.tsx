@@ -203,9 +203,9 @@ export default () => {
               return values.title && setData({ title: values.title });
             }}
           >
-            <ProForm.Group>
+            <ProForm.Group label={<FormattedMessage id="description" />}>
               <ProFormText
-                width="md"
+                width="xl"
                 name="title"
                 label={<FormattedMessage id="title" />}
                 tooltip={<FormattedMessage id="title" />}
@@ -217,7 +217,7 @@ export default () => {
                 disabled={manageCourseEdit.disableEdit}
               />
               <ProFormText
-                width="md"
+                width="xl"
                 name="subtitle"
                 label={<FormattedMessage id="subtitle" />}
                 tooltip={<FormattedMessage id="subtitle" />}
@@ -226,6 +226,97 @@ export default () => {
                   defaultMessage: 'subtitle',
                 })}
                 disabled={manageCourseEdit.disableEdit}
+              />
+              <ProForm.Item
+                name="summary"
+                label={<FormattedMessage id="summary" />}
+                tooltip={<FormattedMessage id="summary_tooltip" />}
+                valuePropName="value"
+              >
+                <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
+              </ProForm.Item>
+              <ProForm.Item
+                name="description"
+                label={<FormattedMessage id="description" />}
+                tooltip={<FormattedMessage id="description_tooltip" />}
+                valuePropName="value"
+              >
+                <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
+              </ProForm.Item>
+            </ProForm.Group>
+            <ProForm.Group label={<FormattedMessage id="duration" />}>
+              <ProFormDatePicker
+                width="md"
+                name="active_from"
+                label={<FormattedMessage id="active_from" />}
+                tooltip={<FormattedMessage id="active_from" />}
+                placeholder={intl.formatMessage({
+                  id: 'active_from',
+                  defaultMessage: 'active_from',
+                })}
+                disabled={manageCourseEdit.disableEdit}
+                extra={<FormattedMessage id="active_from_extra" />}
+              />
+              <ProFormDatePicker
+                width="md"
+                name="active_to"
+                label={<FormattedMessage id="active_to" />}
+                tooltip={<FormattedMessage id="active_to" />}
+                placeholder={intl.formatMessage({
+                  id: 'active_to',
+                  defaultMessage: 'active_to',
+                })}
+                disabled={manageCourseEdit.disableEdit}
+                extra={<FormattedMessage id="active_to_extra" />}
+              />
+              <ProFormText
+                width="md"
+                name="duration"
+                label={<FormattedMessage id="duration" />}
+                tooltip={<FormattedMessage id="duration" />}
+                placeholder={intl.formatMessage({
+                  id: 'duration',
+                  defaultMessage: 'duration',
+                })}
+                disabled={manageCourseEdit.disableEdit}
+                extra={<FormattedMessage id="duration_extra" />}
+              />
+              <ProFormDigit
+                width="md"
+                name="hours_to_complete"
+                label={<FormattedMessage id="hours_to_complete" />}
+                tooltip={<FormattedMessage id="hours_to_complete" />}
+                placeholder={intl.formatMessage({
+                  id: 'hours_to_complete',
+                  defaultMessage: 'hours_to_complete',
+                })}
+                disabled={manageCourseEdit.disableEdit}
+              />
+            </ProForm.Group>
+            <ProForm.Group label={<FormattedMessage id="additional" />}>
+              <ProFormDigit
+                width="md"
+                name="base_price"
+                label={<FormattedMessage id="base_price" />}
+                tooltip={<FormattedMessage id="base_price_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'base_price',
+                  defaultMessage: 'base_price',
+                })}
+                min={0}
+                max={9999}
+                disabled={manageCourseEdit.disableEdit}
+                fieldProps={{ step: 1 }}
+              />
+              <ProFormText
+                width="xs"
+                name="level"
+                label={<FormattedMessage id="level" />}
+                tooltip={<FormattedMessage id="level" />}
+                placeholder={intl.formatMessage({
+                  id: 'level',
+                  defaultMessage: 'level',
+                })}
               />
               <ProFormText
                 width="sm"
@@ -272,46 +363,17 @@ export default () => {
                 disabled={manageCourseEdit.disableEdit}
                 rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
               />
-            </ProForm.Group>
-
-            <ProForm.Group>
               <ProFormText
-                width="md"
-                name="duration"
-                label={<FormattedMessage id="duration" />}
-                tooltip={<FormattedMessage id="duration" />}
+                width="sm"
+                name="target_group"
+                label={<FormattedMessage id="target_group" />}
+                tooltip={<FormattedMessage id="target_group" />}
                 placeholder={intl.formatMessage({
-                  id: 'duration',
-                  defaultMessage: 'duration',
+                  id: 'target_group',
+                  defaultMessage: 'target_group',
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
-              <ProFormDigit
-                width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
-                placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
-                })}
-                min={0}
-                max={9999}
-                disabled={manageCourseEdit.disableEdit}
-                fieldProps={{ step: 1 }}
-              />
-
-              <ProFormText
-                width="xs"
-                name="level"
-                label={<FormattedMessage id="level" />}
-                tooltip={<FormattedMessage id="level" />}
-                placeholder={intl.formatMessage({
-                  id: 'level',
-                  defaultMessage: 'level',
-                })}
-              />
-
               <ProForm.Item
                 name="authors"
                 label={<FormattedMessage id="author_tutor" />}
@@ -319,41 +381,6 @@ export default () => {
               >
                 <UserSelect multiple />
               </ProForm.Item>
-            </ProForm.Group>
-            <ProForm.Group>
-              <ProFormDatePicker
-                width="sm"
-                name="active_from"
-                label={<FormattedMessage id="active_from" />}
-                tooltip={<FormattedMessage id="active_from" />}
-                placeholder={intl.formatMessage({
-                  id: 'active_from',
-                  defaultMessage: 'active_from',
-                })}
-                disabled={manageCourseEdit.disableEdit}
-              />
-              <ProFormDatePicker
-                width="sm"
-                name="active_to"
-                label={<FormattedMessage id="active_to" />}
-                tooltip={<FormattedMessage id="active_to" />}
-                placeholder={intl.formatMessage({
-                  id: 'active_to',
-                  defaultMessage: 'active_to',
-                })}
-                disabled={manageCourseEdit.disableEdit}
-              />
-              <ProFormDigit
-                width="sm"
-                name="hours_to_complete"
-                label={<FormattedMessage id="hours_to_complete" />}
-                tooltip={<FormattedMessage id="hours_to_complete" />}
-                placeholder={intl.formatMessage({
-                  id: 'hours_to_complete',
-                  defaultMessage: 'hours_to_complete',
-                })}
-                disabled={manageCourseEdit.disableEdit}
-              />
               {/* TODO: remove it if you are sure it is not needed on the backend */}
               {/* <ProFormCheckbox
                 width="sm"
@@ -379,37 +406,6 @@ export default () => {
                 disabled={manageCourseEdit.disableEdit}
               /> */}
             </ProForm.Group>
-
-            <ProForm.Group>
-              <ProFormText
-                width="sm"
-                name="target_group"
-                label={<FormattedMessage id="target_group" />}
-                tooltip={<FormattedMessage id="target_group" />}
-                placeholder={intl.formatMessage({
-                  id: 'target_group',
-                  defaultMessage: 'target_group',
-                })}
-                disabled={manageCourseEdit.disableEdit}
-              />
-            </ProForm.Group>
-            <ProForm.Item
-              name="summary"
-              label={<FormattedMessage id="summary" />}
-              tooltip={<FormattedMessage id="summary_tooltip" />}
-              valuePropName="value"
-            >
-              <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
-            </ProForm.Item>
-
-            <ProForm.Item
-              name="description"
-              label={<FormattedMessage id="description" />}
-              tooltip={<FormattedMessage id="description_tooltip" />}
-              valuePropName="value"
-            >
-              <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
-            </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
         {!isNew && (
