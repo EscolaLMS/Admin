@@ -22,8 +22,8 @@ export const Curriculum = () => {
   }, [addNewLesson]);
 
   const onSort = useCallback(
-    (lesson, up) => {
-      return sortLesson && sortLesson(lesson.id, up);
+    (lesson: API.Lesson, up: boolean) => {
+      return lesson.id && sortLesson && sortLesson(lesson.id, up);
     },
     [sortLesson],
   );

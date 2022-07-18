@@ -5,6 +5,7 @@ import { List, Button, Typography, Space, Pagination, Input } from 'antd';
 
 import { FolderOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useIntl, FormattedMessage } from 'umi';
+
 import SecureUpload from '@/components/SecureUpload';
 
 import './index.css';
@@ -81,36 +82,38 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({
   }, []);
 
   const handleSuccessResponse = useCallback(
-    (response, dir) => {
-      setState((prevState) => ({
-        ...prevState,
-        ...response.data,
-        data: [
-          {
-            url: dir.split('/').slice(0, -1).join('/'),
-            name: '..',
-            created_at: '',
-            mime: 'directory',
-          } as API.File,
-          ...response.data.data.map((file: API.File) => ({
-            ...file,
-            url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
-          })),
-        ].filter((file: API.File) => {
-          if (dir === '/' || dir === defaultDirectory) {
-            return file.name !== '..';
-          }
-          return true;
-        }),
-        directory: dir,
-        loading: false,
-      }));
+    (response: API.FileList, dir: string) => {
+      if (response.success) {
+        setState((prevState) => ({
+          ...prevState,
+          ...response.data,
+          data: [
+            {
+              url: dir.split('/').slice(0, -1).join('/'),
+              name: '..',
+              created_at: '',
+              mime: 'directory',
+            } as API.File,
+            ...response.data.data.map((file: API.File) => ({
+              ...file,
+              url: file.mime === 'directory' ? `${dir}/${file.name}` : file.url,
+            })),
+          ].filter((file: API.File) => {
+            if (dir === '/' || dir === defaultDirectory) {
+              return file.name !== '..';
+            }
+            return true;
+          }),
+          directory: dir,
+          loading: false,
+        }));
+      }
     },
     [setLoading],
   );
 
   const fetchFiles = useCallback(
-    (dir, page = 1) => {
+    (dir: string, page = 1) => {
       const abort = () => controllerRef.current && controllerRef.current.abort();
       abort();
 
@@ -152,7 +155,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({
   );
 
   const findByInputValue = useCallback(
-    (dir, input, page = 1) => {
+    (dir: string, input: string, page = 1) => {
       const abort = () => controllerRef.current && controllerRef.current.abort();
       abort();
 

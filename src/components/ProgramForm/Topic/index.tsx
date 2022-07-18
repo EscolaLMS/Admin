@@ -107,7 +107,7 @@ export const Topic: React.FC<{
   }, [type, topic]);
 
   const updateValue = useCallback(
-    (key, value) => {
+    (key: keyof API.Topic, value: any) => {
       setState((prevState) => ({
         ...prevState,
         [key]: value,
@@ -118,7 +118,7 @@ export const Topic: React.FC<{
   );
 
   const updateValues = useCallback(
-    (values) => {
+    (values: API.Topic) => {
       setState((prevState) => ({
         ...prevState,
         ...values,
@@ -128,7 +128,7 @@ export const Topic: React.FC<{
   );
 
   const handleSave = useCallback(
-    (formData) => {
+    (formData: FormData) => {
       if (updateTopic && state.id) {
         setLoading(true);
 

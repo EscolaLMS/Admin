@@ -34,11 +34,11 @@ const handleUpdate = async (intl: IntlShape, fields: API.CategoryListItem, id?: 
   } catch (error) {
     hide();
     message.error(
-      message.success(
-        intl.formatMessage({
+      intl
+        .formatMessage({
           id: 'error',
-        }),
-      ),
+        })
+        .toString(),
     );
     return false;
   }

@@ -40,7 +40,7 @@ export const ModelFields: React.FC<{
   const [fields, setFields] = useState<EscolaLms.ModelFields.Models.Metadata[]>([]);
 
   const handleRemove = useCallback(
-    async ({ class_type_to_remove, name }) => {
+    async ({ class_type_to_remove, name }: { class_type_to_remove: string; name: string }) => {
       setLoading(true);
       const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
       try {

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { ItemTypes } from './itemtypes';
-import { XYCoord } from 'dnd-core';
+import { XYCoord, Identifier } from 'dnd-core';
 import { Popconfirm } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';
@@ -60,6 +60,12 @@ const TopicButtons: React.FC<{
   );
 };
 
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
+
 export const DndCard: React.FC<CardProps> = ({
   id,
   topic,
@@ -73,7 +79,7 @@ export const DndCard: React.FC<CardProps> = ({
   const [showOptions, setShowOptions] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const [{ handlerId }, drop] = useDrop({
+  const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.CARD,
     collect(monitor) {
       return {

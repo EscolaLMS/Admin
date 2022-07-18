@@ -57,7 +57,7 @@ export const UserGroupSelect: React.FC<{
   );
 
   const onSearch = useCallback(
-    (search) => {
+    (search: string) => {
       fetch(search);
     },
     [fetch],
