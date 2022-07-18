@@ -52,7 +52,7 @@ const FabricEditorBasicForm: React.FC<{
     [editorController],
   );
 
-  const onFile = useCallback((file) => {
+  const onFile = useCallback((file: File) => {
     // TODO implement max size here !
     if (file) {
       const reader = new FileReader();

@@ -30,11 +30,11 @@ export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
     dataIndex: 'method',
     hideInSearch: false,
     valueEnum: {
-      GET: { text: 'GET' },
-      POST: { text: 'POST' },
-      PUT: { text: 'PUT' },
-      DELETE: { text: 'DELETE' },
-      PATCH: { text: 'PATCH' },
+      GET: 'GET',
+      POST: 'POST',
+      PUT: 'PUT',
+      DELETE: 'DELETE',
+      PATCH: 'PATCH',
     },
   },
   {

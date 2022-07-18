@@ -1,9 +1,10 @@
+import { PropsWithChildren } from 'react';
 import Footer from '@/components/Footer';
 import styles from './index.less';
 import { Link, SelectLang } from 'umi';
 import { Divider } from 'antd';
 
-const AuthLayout: React.FC = ({ children }) => {
+const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>{SelectLang && <SelectLang />}</div>

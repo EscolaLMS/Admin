@@ -114,7 +114,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
   }, [consultation]);
 
   const dateCellRender = useCallback(
-    (value) => {
+    (value: moment.Moment) => {
       return (
         <ul className="events">
           {appointments.map((item: API.ConsultationAppointment) => {
