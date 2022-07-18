@@ -4,6 +4,7 @@ import { Select, Spin } from 'antd';
 import { users as fetchUsers, user as fetchUser } from '@/services/escola-lms/user';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { DefaultOptionType } from 'antd/lib/select';
 
 export const UserSelect: React.FC<{
   state?: {
@@ -12,7 +13,10 @@ export const UserSelect: React.FC<{
   role?: string;
   multiple?: boolean;
   value?: string | string[] | number | number[] | API.UserItem[];
-  onChange?: (value: string | string[] | number | number[]) => void;
+  onChange?: (
+    value: string | string[] | number | number[],
+    option: DefaultOptionType | DefaultOptionType[],
+  ) => void;
   showEmail?: boolean;
 }> = ({ value, onChange, multiple = false, role, showEmail }) => {
   const [users, setUsers] = useState<API.UserItem[]>([]);
@@ -55,7 +59,7 @@ export const UserSelect: React.FC<{
   }, []);
 
   const onSearch = useCallback(
-    (search) => {
+    (search: string) => {
       fetch(search);
     },
     [fetch],

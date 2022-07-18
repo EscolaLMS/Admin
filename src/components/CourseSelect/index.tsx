@@ -36,8 +36,8 @@ export const CourseSelect: React.FC<{
   };
   multiple?: boolean;
   value?: string;
-  onChange?: (value: string) => void;
-  defaultValue?: number[];
+  onChange?: (value: string | string[] | number | number[], option: {}) => void;
+  defaultValue?: string | string[] | number | number[];
   modelType?: string;
 }> = ({ value, onChange, multiple = false, defaultValue, modelType = 'COURSE' }) => {
   const [modelCollection, setModelCollection] = useState<CollectionModelItem[]>([]);
@@ -46,7 +46,7 @@ export const CourseSelect: React.FC<{
   const abortController = useRef<AbortController>();
 
   const modelCollectionMethod = useCallback(
-    (search) => {
+    (search: string) => {
       switch (modelType) {
         case 'COURSE':
           return getCourses({ title: search }, { signal: abortController?.current?.signal });
@@ -61,7 +61,7 @@ export const CourseSelect: React.FC<{
     [modelType, abortController],
   );
   const modelSingleMethod = useCallback(
-    (id) => {
+    (id: string | number) => {
       switch (modelType) {
         case 'COURSE':
           return getCourse(Number(id), { signal: abortController.current?.signal });
@@ -85,7 +85,7 @@ export const CourseSelect: React.FC<{
 
       abortController.current = new AbortController();
 
-      modelCollectionMethod(search)
+      modelCollectionMethod(search || '')
         .then((response) => {
           if (response.success) {
             setModelCollection(prepareObj(response.data));
@@ -98,7 +98,7 @@ export const CourseSelect: React.FC<{
   );
 
   const onSearch = useCallback(
-    (search) => {
+    (search: string) => {
       fetch(search);
     },
     [fetch],
@@ -124,9 +124,8 @@ export const CourseSelect: React.FC<{
   }, [value, modelType]);
 
   return (
-    <Select
-      // @ts-ignore  Type 'number[]' is not assignable to type 'string'
-      defaultValue={defaultValue!}
+    <Select<string | string[] | number | number[]>
+      defaultValue={defaultValue}
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}

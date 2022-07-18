@@ -1,7 +1,6 @@
 # Escola LMS
 
-![end-to-end tests](https://github.com/EscolaLMS/Admin/actions/workflows/e2e.js.yml/badge.svg) ![unit tests](https://github.com/EscolaLMS/Admin/actions/workflows/unit.yml/badge.svg) [![Admin Panel](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/diinyp&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/diinyp/runs) [![codecov](https://codecov.io/gh/EscolaLMS/Admin/branch/master/graph/badge.svg?token=Y70KNN8H7W)](https://codecov.io/gh/EscolaLMS/Admin)
-[![Maintainability](https://api.codeclimate.com/v1/badges/4391383cac54bdb7727d/maintainability)](https://codeclimate.com/github/EscolaLMS/Admin/maintainability)
+![end-to-end tests](https://github.com/EscolaLMS/Admin/actions/workflows/e2e.js.yml/badge.svg) [![Admin Panel](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/diinyp&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/diinyp/runs) [![Maintainability](https://api.codeclimate.com/v1/badges/4391383cac54bdb7727d/maintainability)](https://codeclimate.com/github/EscolaLMS/Admin/maintainability)
 
 This project is initialized with [Ant.design PRO](https://pro.ant.design). Follow is the quick guide for how to use.
 

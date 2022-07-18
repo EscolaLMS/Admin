@@ -46,7 +46,7 @@ const TableList: React.FC = () => {
               <FormattedMessage id="scorm_uploaded" defaultMessage="scorm uploaded" />,
             );
           }}
-          onError={(error) => message.error(error)}
+          onError={(error) => message.error(error.message || error.toString())}
         />,
       ],
     },

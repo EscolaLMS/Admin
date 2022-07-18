@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Col, Row, Button, Pagination, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { TopicType } from '@/services/escola-lms/enums';
-import type { UploadChangeParam } from 'antd/lib/upload';
+import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import { Document, pdfjs, Page } from 'react-pdf';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
@@ -91,7 +91,7 @@ export const MediaUploadForm: React.FC<{
   folder: string;
 }> = ({ topic, type, onUpdate, disabled = false, currentState, onChange, folder }) => {
   const onInfoChange = useCallback(
-    (info) => {
+    (info: UploadChangeParam<UploadFile<API.DefaultResponse<API.File>>>) => {
       if (info.file.status === 'done') {
         return onUpdate && onUpdate(info);
       }

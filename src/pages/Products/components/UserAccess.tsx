@@ -39,9 +39,9 @@ export const UserAccess: React.FC<{
   const [loading, setLoading] = useState<boolean>(false);
   const [form] = ProForm.useForm();
   const onFinish = useCallback(
-    async (values) => {
+    async (value: { user_id: number }) => {
       setLoading(true);
-      await productAttachToUser(Number(id), { user_id: values.user_id });
+      await productAttachToUser(Number(id), { user_id: value.user_id });
 
       form.resetFields();
       actionRef.current?.reload();
@@ -51,7 +51,7 @@ export const UserAccess: React.FC<{
   );
 
   const onDetachUser = useCallback(
-    async (user_id) => {
+    async (user_id: number) => {
       setLoading(true);
       await productDetachToUser(Number(id), { user_id });
       actionRef.current?.reload();

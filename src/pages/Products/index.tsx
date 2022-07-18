@@ -78,9 +78,9 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     valueType: 'select',
     initialValue: 'all',
     valueEnum: {
-      all: { text: <FormattedMessage id="all" defaultMessage="all" /> },
-      single: { text: <FormattedMessage id="single" defaultMessage="single" /> },
-      bundle: { text: <FormattedMessage id="bundle" defaultMessage="bundle" /> },
+      all: <FormattedMessage id="all" defaultMessage="all" />,
+      single: <FormattedMessage id="single" defaultMessage="single" />,
+      bundle: <FormattedMessage id="bundle" defaultMessage="bundle" />,
     },
     render: (_, record) => (
       <Tag>
@@ -96,9 +96,9 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     valueType: 'select',
     initialValue: 'all',
     valueEnum: {
-      all: { text: <FormattedMessage id="all" defaultMessage="all" /> },
-      true: { text: <FormattedMessage id="true" defaultMessage="true" /> },
-      false: { text: <FormattedMessage id="false" defaultMessage="false" /> },
+      all: <FormattedMessage id="all" defaultMessage="all" />,
+      true: <FormattedMessage id="true" defaultMessage="true" />,
+      false: <FormattedMessage id="false" defaultMessage="false" />,
     },
     render: (_, record) => (
       <Tag color={record.purchasable ? 'success' : 'error'}>
@@ -119,9 +119,9 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     valueType: 'select',
     initialValue: 'all',
     valueEnum: {
-      all: { text: <FormattedMessage id="all" defaultMessage="all" /> },
-      true: { text: <FormattedMessage id="true" defaultMessage="true" /> },
-      false: { text: <FormattedMessage id="false" defaultMessage="false" /> },
+      all: <FormattedMessage id="all" defaultMessage="all" />,
+      true: <FormattedMessage id="true" defaultMessage="true" />,
+      false: <FormattedMessage id="false" defaultMessage="false" />,
     },
   },
   {

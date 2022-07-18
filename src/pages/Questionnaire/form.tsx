@@ -34,7 +34,7 @@ export const QuestionareForm = () => {
   const [data, setData] = useState<Partial<API.Questionnaire>>();
   const [tab, setTab] = useState('questionnaire');
   const [listOfModels, setListOfModels] = useState<API.QuestionnaireModel[]>();
-  const [models, setModels] = useState({});
+  const [models, setModels] = useState<Record<number, (string | number)[]>>({});
 
   const fetchModels = useCallback(async () => {
     const response = await getQuestionnaireModels();
@@ -43,8 +43,8 @@ export const QuestionareForm = () => {
     }
   }, []);
 
-  const parseData = useCallback((array, key: string) => {
-    return array.reduce((result: Record<number, number[]>, obj: Record<string, string>) => {
+  const parseData = useCallback((array: API.QuestionnaireModel[], key: string) => {
+    return array.reduce((result: Record<number, number[]>, obj: API.QuestionnaireModel) => {
       (result[obj[key]] = result[obj[key]] || []).push(obj.model_id);
       return result;
     }, {});
@@ -56,7 +56,9 @@ export const QuestionareForm = () => {
       setData({
         ...response.data,
       });
-      setModels(parseData(response.data.models, 'model_type_id'));
+      if (response.data.models) {
+        setModels(parseData(response.data.models, 'model_type_id'));
+      }
     }
   }, [questionnaireId, parseData]);
 
@@ -73,14 +75,17 @@ export const QuestionareForm = () => {
     fetchData();
   }, [questionnaireId, fetchData, fetchModels, isNew]);
 
-  const handleModelChange = useCallback((modelids, selectedModel: ModelTypes) => {
-    setModels((prevState) => ({
-      ...prevState,
-      [selectedModel]: modelids,
-    }));
-  }, []);
+  const handleModelChange = useCallback(
+    (modelids: (string | number)[], selectedModel: ModelTypes) => {
+      setModels((prevState) => ({
+        ...prevState,
+        [selectedModel]: modelids,
+      }));
+    },
+    [],
+  );
 
-  const formatData = useCallback((items) => {
+  const formatData = useCallback((items: Record<number, (string | number)[]>) => {
     const mappedData: Record<string, number>[] = [];
     Object.keys(items).map((key) => {
       mappedData.push(
@@ -228,9 +233,13 @@ export const QuestionareForm = () => {
               disabled={isNew}
             >
               <CourseSelect
-                defaultValue={models && models[model.id]?.map((item: number) => item)}
+                defaultValue={
+                  (models ? models[model.id]?.map((item: number | string) => item) : []) as (
+                    | number
+                  )[]
+                }
                 multiple
-                onChange={(values) => handleModelChange(values, model.id)}
+                onChange={(values) => handleModelChange(values as (string | number)[], model.id)}
                 modelType={model.title?.toUpperCase()}
               />
               <Button
