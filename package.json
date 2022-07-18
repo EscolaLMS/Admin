@@ -1,7 +1,8 @@
 {
     "name": "escola-lms",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "private": false,
+    "license": "MIT",
     "description": "Headless LMS Admin panel",
     "scripts": {
         "analyze": "cross-env ANALYZE=1 umi build",
