@@ -31,7 +31,7 @@ const NoticeIconView = () => {
   const [unreadMsg, setUnreadMsg] = useState(0);
   const [hasMore, setHasMore] = useState(false);
 
-  const fetchNotifications = useCallback(async (page) => {
+  const fetchNotifications = useCallback(async (page: number) => {
     const request = await getNotifications({ current: page }, currentUser?.id);
     const response = await request;
 

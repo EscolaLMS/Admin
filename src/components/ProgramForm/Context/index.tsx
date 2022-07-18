@@ -76,7 +76,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   }, [getLessons]);
 
   const getLessonIdByTopicId = useCallback(
-    (topic_id) => {
+    (topic_id: number) => {
       const lesson = state?.lessons.find((lesson_item) =>
         lesson_item?.topics?.find((topic) => topic.id === topic_id),
       );
@@ -118,7 +118,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   }, [id, state]);
 
   const updateLesson = useCallback(
-    (lesson_id, formData) => {
+    (lesson_id: number, formData: FormData) => {
       const newLesson = state?.lessons?.find((lesson) => lesson.id === lesson_id);
       const isNew = newLesson && newLesson.isNew;
 
@@ -150,7 +150,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const sortLesson = useCallback(
-    (lesson_id, up = true) => {
+    (lesson_id: number, up: boolean = true) => {
       const cIndex = state?.lessons.findIndex((lesson) => lesson.id === lesson_id) || 0;
 
       const swapIndex = up ? cIndex - 1 : cIndex + 1;
@@ -184,7 +184,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const sortTopic = useCallback(
-    (lesson_id, topic_id, up = true) => {
+    (lesson_id: number, topic_id: number, up = true) => {
       const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
 
       const lIndex = lesson?.topics?.findIndex((topic) => topic.id === topic_id);
@@ -226,7 +226,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const updateTopicsOrder = useCallback(
-    (lesson_id) => {
+    (lesson_id: number) => {
       const lesson = state?.lessons.find((lesson_item) => lesson_item.id === lesson_id);
       const orders = lesson?.topics
         ?.filter((topic) => !topic.isNew)
@@ -286,7 +286,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const updateTopic = useCallback(
-    (topic_id, formData) => {
+    (topic_id: number, formData: FormData) => {
       const lesson_id = getLessonIdByTopicId(topic_id);
 
       const lesson = state?.lessons?.find((lesson_item) => lesson_item.id === lesson_id);

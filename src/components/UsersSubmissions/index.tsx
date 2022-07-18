@@ -46,7 +46,7 @@ export const UserSubmissions: React.FC<{
   const [modalVisible, setModalVisible] = useState(false);
 
   const onDetachUser = useCallback(
-    async (user_id) => {
+    async (user_id: number) => {
       setLoading(true);
       await deleteUserSubmission(Number(user_id));
       actionRef.current?.reload();

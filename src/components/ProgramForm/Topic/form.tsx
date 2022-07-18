@@ -6,7 +6,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import JsonEditor from '@/components/JsonEditor';
 
 export const TopicForm: React.FC<{
-  onValuesChange: (changedValues: any, values: Record<string, string>) => void;
+  onValuesChange: (changedValues: API.Topic, values: API.Topic) => void;
   initialValues: API.Topic;
   courseId: number;
   courseLessons: API.Lesson[];
@@ -14,7 +14,11 @@ export const TopicForm: React.FC<{
   const intl = useIntl();
 
   return (
-    <ProForm submitter={false} onValuesChange={onValuesChange} initialValues={{ ...initialValues }}>
+    <ProForm<API.Topic>
+      submitter={false}
+      onValuesChange={onValuesChange}
+      initialValues={{ ...initialValues }}
+    >
       <ProForm.Group>
         <ProFormText
           width="md"

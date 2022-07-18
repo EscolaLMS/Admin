@@ -17,7 +17,7 @@ export default () => {
   const { name } = params;
 
   const [data, setData] = useState<Partial<API.Role[]>>([]);
-  const [selectedPermisions, setSelectedPermisions] = useState([]);
+  const [selectedPermisions, setSelectedPermisions] = useState<CheckboxValueType[]>([]);
   const [form] = Form.useForm();
 
   const fetchData = useCallback(async () => {
@@ -50,7 +50,7 @@ export default () => {
   );
 
   const handleChange = useCallback(
-    (checkedValues) => {
+    (checkedValues: CheckboxValueType[]) => {
       setSelectedPermisions(checkedValues);
     },
     [name],

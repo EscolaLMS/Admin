@@ -48,7 +48,7 @@ export const UserRoleSelect: React.FC<{
   );
 
   const onSearch = useCallback(
-    (search) => {
+    (search: string) => {
       fetch(search);
     },
     [fetch],
