@@ -23,7 +23,7 @@
     ],
   },
   {
-    path: '/welcome',
+    path: '/',
     name: 'Welcome',
     icon: 'smile',
     access: 'dashboardPermission',
@@ -447,10 +447,6 @@
         hideInMenu: true,
       },
     ],
-  },
-  {
-    path: '/',
-    redirect: '/welcome',
   },
   {
     component: './404',
