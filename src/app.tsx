@@ -91,7 +91,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       <>
         <BookOutlined />
         <span>
-          <a href="http://docs.wellms.io/">Documentation</a>
+          <a href="http://docs.wellms.io/" target="_blank">Documentation</a>
         </span>
       </>,
     ],
