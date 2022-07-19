@@ -38,6 +38,10 @@ export default defineConfig({
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
     'primary-color': defaultSettings.primaryColor,
+    'control-border-radius': '4px',
+    'input-height-base': '40px',
+    'form-vertical-label-padding': '0 0 12px',
+    'form-item-margin-bottom': '20px',
   },
   // esbuild is father build tools
   // https://umijs.org/plugins/plugin-esbuild

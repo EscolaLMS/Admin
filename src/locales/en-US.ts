@@ -337,6 +337,7 @@ export default {
   reset_password: 'Reset password',
   search_file: 'Search file',
   json: 'JSON Metadata',
+  additional: 'Additional',
   json_tooltip: 'Additional metadata for rendering course',
   introduction: 'Introduction',
   introduction_tooltip:
@@ -449,4 +450,7 @@ export default {
   redirect: 'redirect',
   logotype: 'Logotype',
   published_unactivated: 'Opublikowany nieaktywny',
+  active_from_extra: 'Select a sales activation date',
+  active_to_extra: 'Select a sales deactivation date',
+  duration_extra: 'Specify duration in minutes',
 };

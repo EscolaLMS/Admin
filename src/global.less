@@ -1,12 +1,8 @@
 @import '~antd/es/style/themes/default.less';
 
-// create a new map of color variables
-
-// establish social media colors
+// colors of menu categories
 @colors: 'users' #f2d434, 'sales' #7b61ff, 'courses' #28bd25, 'analytics' #f47820,
   'configuration' #7b8fa2, 'other' #ba25bd;
-
-//@colors: 'sales' #7B61FF;
 
 html,
 body,
@@ -70,6 +66,48 @@ ol {
 
 .ant-dropdown-menu {
   width: 105px !important;
+}
+
+.ant-form-item-label > label {
+  font-weight: bold;
+}
+
+.ant-form-vertical .ant-pro-form-group {
+  display: flex;
+  padding: 50px 0 10px 0;
+  border-top: 1px solid @border-color-base;
+
+  .ant-pro-form-group-title {
+    flex: 0 0 120px;
+    margin-right: 10px;
+    color: @text-color-secondary;
+    font-size: @font-size-sm;
+    text-transform: uppercase;
+  }
+
+  &:first-of-type {
+    padding-top: 20px;
+    border-top: none;
+  }
+
+  .ant-form-item-extra {
+    order: -1;
+    margin: 8px 0 12px 0;
+  }
+
+  .ant-space-align-start {
+    align-items: stretch;
+  }
+
+  .ant-form-item {
+    height: calc(100% - @form-item-margin-bottom);
+  }
+
+  .ant-form-item-control {
+    flex-grow: 0;
+    width: 100%;
+    margin-top: auto;
+  }
 }
 
 // for loop to iterate over array

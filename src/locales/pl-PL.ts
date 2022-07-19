@@ -361,6 +361,7 @@ export default {
   'product.edit': 'Edycja Produktu',
   'menu.Other activities.Products': 'Produkty',
   json: 'JSON Metadata',
+  additional: 'Dodatkowe',
   json_tooltip:
     'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
   json_editor: 'Otwórz edytor JSON',
@@ -457,4 +458,7 @@ export default {
   redirect: 'przekierowanie',
   logotype: 'Logotyp',
   published_unactivated: 'Opublikowany nieaktywny',
+  active_from_extra: 'Wybierz datę rozpoczęcia sprzedaży',
+  active_to_extra: 'Wybierz datę zakończenia sprzedaży',
+  duration_extra: 'Określ czas trwania sprzedaży w minutach',
 };
