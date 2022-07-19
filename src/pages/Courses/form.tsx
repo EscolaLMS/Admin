@@ -7,12 +7,6 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-/** general issue here
- * https://pro.ant.design/docs/authority-management/
- * TS saying `Module '"umi"' has no exported member 'useAccess'.`
- * ¯\_(ツ)_/¯
- */
-// @ts-ignore,
 import { useParams, history, useIntl, FormattedMessage, useAccess } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
