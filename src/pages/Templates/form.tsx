@@ -160,7 +160,7 @@ export default () => {
       if (isNew) {
         response = await createTemplate(postData);
         if (response.success) {
-          history.push(`/templates/${template}/${response.data.id}`);
+          history.push(`/configuration/templates/${template}/${response.data.id}`);
         }
       } else {
         response = await updateTemplate(Number(id), postData);

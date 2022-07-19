@@ -191,7 +191,7 @@ const Consultations: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link key="addnew" to="/consultations/new">
+          <Link key="addnew" to="/other/consultations/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
@@ -232,7 +232,7 @@ const Consultations: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/consultations/${record.id}`}>
+              <Link key="edit" to={`/other/consultations/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>

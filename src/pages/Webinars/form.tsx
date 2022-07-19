@@ -91,14 +91,14 @@ const WebinarForm = () => {
           response = await createWebinar(postData);
           if (response.success) {
             setUnsavedChanges(false);
-            history.push(`/webinars/${response.data.id}`);
+            history.push(`/courses/webinars/${response.data.id}`);
           }
         } else {
           response = await updateWebinar(Number(webinar), postData);
           if (response.success) {
             setUnsavedChanges(false);
             validateCourseEdit(response.data);
-            history.push(`/webinars/${response.data.id}/${tab}`);
+            history.push(`/courses/webinars/${response.data.id}/${tab}`);
           }
         }
         message.success(response.message);
@@ -152,7 +152,7 @@ const WebinarForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/webinars/${webinar}/${key}`),
+          onChange: (key) => history.push(`/courses/webinars/${webinar}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>

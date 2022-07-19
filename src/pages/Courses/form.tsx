@@ -104,14 +104,14 @@ export default () => {
           response = await createCourse(postData);
           if (response.success) {
             setUnsavedChanges(false);
-            history.push(`/courses/${response.data.id}/attributes`);
+            history.push(`/courses/list/${response.data.id}/attributes`);
           }
         } else {
           response = await updateCourse(Number(course), postData);
           if (response.success) {
             setUnsavedChanges(false);
             validateCourseEdit(response.data);
-            history.push(`/courses/${response.data.id}/attributes`);
+            history.push(`/courses/list/${response.data.id}/attributes`);
           }
         }
         message.success(response.message);
@@ -165,7 +165,7 @@ export default () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/courses/${course}/${key}`),
+          onChange: (key) => history.push(`/courses/list/${course}/${key}`),
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>

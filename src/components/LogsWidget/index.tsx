@@ -57,8 +57,8 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
       API.PageParams & { user_id?: number; method: 'string'; dateRange: [string, string] }
     >
       headerTitle={intl.formatMessage({
-        id: 'menu.Logs',
-        defaultMessage: 'menu.Logs',
+        id: 'menu.Analytics.Logs',
+        defaultMessage: 'menu.Analytics.Logs',
       })}
       loading={loading}
       actionRef={actionRef}

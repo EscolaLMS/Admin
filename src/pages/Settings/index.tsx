@@ -45,7 +45,7 @@ export default () => {
             {
               path: 'settings',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.Settings',
+                id: 'menu.Configuration.settings',
               }),
             },
 
@@ -61,7 +61,7 @@ export default () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/settings/${key}`),
+          onChange: (key) => history.push(`/configuration/settings/${key}`),
         }}
       >
         <ProCard.TabPane key="user_settings" tab={<FormattedMessage id="user.settings" />}>

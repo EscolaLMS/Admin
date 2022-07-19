@@ -64,7 +64,7 @@ const RolesPage: React.FC = () => {
             dataIndex: 'option',
             valueType: 'option',
             render: (_, record) => [
-              <Link to={`/roles/${record.name}`} key="new">
+              <Link to={`/users/roles/${record.name}`} key="new">
                 <Button type="primary" icon={<EditOutlined />}></Button>
               </Link>,
               <Popconfirm
@@ -108,7 +108,7 @@ const RolesPage: React.FC = () => {
             setModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
-              history.push(`/roles/${response.data.name}`);
+              history.push(`/users/roles/${response.data.name}`);
             }
           }
         }}

@@ -1,5 +1,9 @@
 @import '~antd/es/style/themes/default.less';
 
+// colors of menu categories
+@colors: 'users' #f2d434, 'sales' #7b61ff, 'courses' #28bd25, 'analytics' #f47820,
+  'configuration' #7b8fa2, 'other' #ba25bd;
+
 html,
 body,
 #root {
@@ -105,3 +109,44 @@ ol {
     margin-top: auto;
   }
 }
+
+// for loop to iterate over array
+.each(@array, @i: 1) when (@i <= length(@array)) {
+  @pair: extract(@array, @i);
+  @name: extract(@pair, 1);
+  @color: extract(@pair, 2);
+
+  .ant-menu-submenu-title[data-menu-id$='@{name}'] {
+    color: @color !important;
+
+    * {
+      color: @color !important;
+    }
+  }
+
+  .ant-menu-sub[id$='@{name}-popup'] {
+    .ant-menu-item::after {
+      background-color: @color;
+      border-right-color: @color;
+    }
+
+    .ant-menu-item a:hover {
+      color: #333;
+    }
+
+    .ant-menu-item-active,
+    .ant-menu-item-selected {
+      color: #333;
+      background-color: rgba(@color, 0.1);
+    }
+
+    .ant-menu-item-selected a {
+      color: #333;
+    }
+  }
+
+  .each(@array, @i + 1);
+}
+
+// application
+.each(@colors);

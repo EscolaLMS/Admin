@@ -16,7 +16,7 @@ export default () => {
       url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
     >
       <H5PForm
-        onSubmit={(id) => h5p === 'new' && history.push(`/h5ps/${id}`)}
+        onSubmit={(id) => h5p === 'new' && history.push(`/courses/h5ps/${id}`)}
         id={h5p === 'new' ? undefined : h5p}
       />
     </EditorContextProvider>

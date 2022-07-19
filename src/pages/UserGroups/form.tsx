@@ -91,7 +91,7 @@ export default () => {
         if (group === 'new') {
           response = await createUserGroup(postData);
           if (response.success) {
-            history.push(`/user_groups/${response.data.id}`);
+            history.push(`/users/groups/${response.data.id}`);
           }
         } else {
           response = await updateUserGroup(Number(group), postData);

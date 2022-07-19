@@ -86,7 +86,7 @@ const StationaryEvents: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link key="addnew" to="/stationary-events/new">
+          <Link key="addnew" to="/other/stationary-events/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
@@ -126,7 +126,7 @@ const StationaryEvents: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/stationary-events/${record.id}`}>
+              <Link key="edit" to={`/other/stationary-events/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>

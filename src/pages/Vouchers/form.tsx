@@ -80,7 +80,7 @@ const VoucherForm = () => {
           try {
             response = await createVoucher(postData);
             if (response.success) {
-              history.push(`/vouchers/${response.data.id}`);
+              history.push(`/sales/vouchers/${response.data.id}`);
               message.success(<FormattedMessage id="success" defaultMessage="success" />);
             }
           } catch (error) {
@@ -90,7 +90,7 @@ const VoucherForm = () => {
           try {
             response = await updateVoucher(Number(voucherId), postData);
             if (response.success) {
-              history.push(`/vouchers/${response.data.id}`);
+              history.push(`sales//vouchers/${response.data.id}`);
               message.success(<FormattedMessage id="success" defaultMessage="success" />);
             }
           } catch (error) {
