@@ -27,8 +27,6 @@ type Token = {
 
 const authpaths = ['/user/login', '/user/reset-password'];
 
-const isDev = process.env.NODE_ENV === 'development';
-
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
@@ -89,16 +87,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         history.push('/user/login');
       }
     },
-    links: isDev
-      ? [
-          <>
-            <BookOutlined />
-            <span>
-              <a href="http://docs.wellms.io/">Documentation</a>
-            </span>
-          </>,
-        ]
-      : [],
+    links: [
+      <>
+        <BookOutlined />
+        <span>
+          <a href="http://docs.wellms.io/">Documentation</a>
+        </span>
+      </>,
+    ],
     menuHeaderRender: undefined,
     //  403
     unAccessible: <RestrictedPage />,
