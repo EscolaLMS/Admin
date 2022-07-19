@@ -58,4 +58,7 @@ export default defineConfig({
   },
   base: BASE_PATH || '/',
   publicPath: BASE_PATH || '/',
+  access: {
+    strictMode: true,
+  },
 });

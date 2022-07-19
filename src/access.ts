@@ -4,7 +4,7 @@ import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { currentUser: API.UserItem }) {
+export default function (initialState: { currentUser: API.UserItem }) {
   const { currentUser } = initialState;
 
   const havePermissions = isUserHavePermissions(currentUser);
