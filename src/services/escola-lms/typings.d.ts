@@ -590,7 +590,7 @@ declare namespace API {
     updated_at: string;
   };
 
-  type CertificateAssignables = {};
+  type CertificateAssignables = object;
 
   type Certificates = Certificate[];
 

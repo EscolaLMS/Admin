@@ -38,6 +38,7 @@ const TableList: React.FC = () => {
 
       renderFormItem: () => [
         <UploadScorm
+          key="upload"
           onSuccess={() => {
             if (actionRef.current) {
               actionRef.current.reload();

@@ -54,6 +54,7 @@ const TableList: React.FC = () => {
 
       renderFormItem: () => [
         <UploadH5P
+          key={'upload'}
           onSuccess={() => {
             if (actionRef.current) {
               actionRef.current.reload();
@@ -105,13 +106,14 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Link to={`/courses/h5ps/${record.id}`}>
+        <Link key={'edit'} to={`/courses/h5ps/${record.id}`}>
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
             <Button type="primary" icon={<EditOutlined />} />
           </Tooltip>
         </Link>,
 
         <Popconfirm
+          key={'delete'}
           disabled={record.count_h5p !== 0}
           title={
             <FormattedMessage
@@ -132,12 +134,13 @@ const TableList: React.FC = () => {
             />
           </Tooltip>
         </Popconfirm>,
-        <Link to={`/h5ps/preview/${record.id}`}>
+        <Link key={'preview'} to={`/h5ps/preview/${record.id}`}>
           <Tooltip title={<FormattedMessage id="preview" defaultMessage="preview" />}>
             <Button icon={<BookOutlined />} />
           </Tooltip>
         </Link>,
         <a
+          key={'export'}
           href={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p/content/${
             record.id
           }/export`}
@@ -167,7 +170,7 @@ const TableList: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link to="/courses/h5ps/new">
+          <Link to="/courses/h5ps/new" key={'new'}>
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>

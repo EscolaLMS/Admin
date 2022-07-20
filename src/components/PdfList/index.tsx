@@ -95,6 +95,7 @@ export const PdfList: React.FC<Request> = ({ user_id, template_id }) => {
           <List.Item
             actions={[
               <Button
+                key="download"
                 type="primary"
                 onClick={() => getPdf(item.id)}
                 loading={previewState.state === 'loading'}

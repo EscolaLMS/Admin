@@ -7,7 +7,7 @@ const FabricInput: React.FC<{
   label: string;
   name: string;
   type?: string;
-  style?: Object;
+  style?: React.CSSProperties;
 }> = ({ value, onChange, label, name, type = 'text', style, ...props }) => {
   const onChangeField = useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {

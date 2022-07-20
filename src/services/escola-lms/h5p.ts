@@ -52,7 +52,7 @@ export async function createH5P(
 
 /**  DELETE /api/rule */
 export async function removeH5P(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/admin/hh5p/content/${id}`, {
+  return request<API.DefaultResponse<unknown>>(`/api/admin/hh5p/content/${id}`, {
     method: 'DELETE',
   });
 }

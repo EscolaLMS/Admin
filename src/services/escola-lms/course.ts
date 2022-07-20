@@ -132,7 +132,7 @@ export async function updateTopic(
 
 /**  POST /api/courses/sort */
 export async function sort(body?: Record<string, any>, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<{}>>(`/api/admin/courses/sort`, {
+  return request<API.DefaultResponse<unknown>>(`/api/admin/courses/sort`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -162,21 +162,21 @@ export async function updateCourseCategories(
 
 /**  DELETE /api/rule */
 export async function removeCourse(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/admin/courses/${id}`, {
+  return request<API.DefaultResponse<unknown>>(`/api/admin/courses/${id}`, {
     method: 'DELETE',
   });
 }
 
 /**  DELETE /api/rule */
 export async function removeLesson(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/admin/lessons/${id}`, {
+  return request<API.DefaultResponse<unknown>>(`/api/admin/lessons/${id}`, {
     method: 'DELETE',
   });
 }
 
 /**  DELETE /api/rule */
 export async function removeTopic(id: number) {
-  return request<API.DefaultResponse<{}>>(`/api/admin/topics/${id}`, {
+  return request<API.DefaultResponse<unknown>>(`/api/admin/topics/${id}`, {
     method: 'DELETE',
   });
 }

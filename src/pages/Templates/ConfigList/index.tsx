@@ -84,7 +84,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       rowKey="id"
       search={false}
       toolBarRender={() => [
-        <Link to={`/configuration/templates/${templateType}/new`}>
+        <Link key={'new'} to={`/configuration/templates/${templateType}/new`}>
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>

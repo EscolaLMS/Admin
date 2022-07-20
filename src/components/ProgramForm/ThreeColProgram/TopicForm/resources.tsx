@@ -69,6 +69,7 @@ export const Resources: React.FC<{ topicId: number; folder: string }> = ({ topic
         <List.Item
           actions={[
             <Button
+              key="delete"
               type="default"
               danger
               icon={<DeleteOutlined />}

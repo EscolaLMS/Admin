@@ -13,7 +13,7 @@ import './index.css';
 import { FormattedMessage } from 'umi';
 
 const FabricEditor: React.FC<{
-  onUpdate?: (obj: Object) => void;
+  onUpdate?: (obj: unknown) => void;
   initialValue: any;
   variables?: string[];
   width?: number;

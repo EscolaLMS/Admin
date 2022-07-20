@@ -112,7 +112,10 @@ export const UserAccess: React.FC<{
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+              <Tooltip
+                key={'delete'}
+                title={<FormattedMessage id="delete" defaultMessage="delete" />}
+              >
                 <Button
                   type="primary"
                   icon={<DeleteOutlined />}

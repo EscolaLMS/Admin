@@ -176,7 +176,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
               valueType: 'option',
               width: '20%',
               render: (_, record) => [
-                <ChangeDate data={record} onChange={() => fetchAppointments()} />,
+                <ChangeDate key="change_date" data={record} onChange={() => fetchAppointments()} />,
               ],
             },
           ]}
