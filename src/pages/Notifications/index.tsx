@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import UserSelect from '@/components/UserSelect';
 
-export const getEventType = (event: string) => event.split('\\').pop() as String;
+export const getEventType = (event: string) => event.split('\\').pop() as string;
 
 export const TableColumns: ProColumns<API.Notification>[] = [
   {

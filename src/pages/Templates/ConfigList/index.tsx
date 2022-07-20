@@ -7,7 +7,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { templates, deleteTemplate } from '@/services/escola-lms/templates';
 import { DATETIME_FORMAT } from '@/consts/dates';
-import { channelType } from '..';
+import type { channelType } from '..';
 
 const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   templateType,
@@ -84,7 +84,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       rowKey="id"
       search={false}
       toolBarRender={() => [
-        <Link to={`/configuration/templates/${templateType}/new`}>
+        <Link key={'new'} to={`/configuration/templates/${templateType}/new`}>
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>
@@ -114,7 +114,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
           render: (_, record) => [
             <Link to={`/configuration/templates/${templateType}/${record.id}`} key="edit">
               <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                <Button type="primary" icon={<EditOutlined />}></Button>
+                <Button type="primary" icon={<EditOutlined />} />
               </Tooltip>
             </Link>,
             <Popconfirm
@@ -130,7 +130,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
               cancelText={<FormattedMessage id="no" />}
             >
               <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                <Button type="primary" icon={<DeleteOutlined />} danger />
               </Tooltip>
             </Popconfirm>,
           ],

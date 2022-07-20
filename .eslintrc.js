@@ -6,4 +6,7 @@ module.exports = {
     REACT_APP_ENV: true,
   },
   parser: '@typescript-eslint/parser',
+  rules: {
+    'react-hooks/exhaustive-deps': 'off',
+  },
 };

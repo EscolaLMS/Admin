@@ -6,7 +6,8 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message, Space, Typography, Tag } from 'antd';
 
-import TypeButtonDrawer, { PossibleType } from '@/components/TypeButtonDrawer';
+import type { PossibleType } from '@/components/TypeButtonDrawer';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 import { products, deleteProduct } from '@/services/escola-lms/products';
 import ProductSelect from '@/components/ProductablesSelect';

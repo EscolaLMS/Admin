@@ -1,6 +1,7 @@
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { getQuestionAnswers } from '@/services/escola-lms/questionnaire';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 

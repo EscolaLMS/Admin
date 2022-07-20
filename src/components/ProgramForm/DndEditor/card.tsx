@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
+import type { DropTargetMonitor } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './itemtypes';
-import { XYCoord, Identifier } from 'dnd-core';
+import type { XYCoord, Identifier } from 'dnd-core';
 import { Popconfirm } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';

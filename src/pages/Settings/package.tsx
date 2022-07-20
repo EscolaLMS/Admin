@@ -109,7 +109,7 @@ const TableList: React.FC<{
                   type="primary"
                   icon={<EditOutlined />}
                   onClick={() => setSelectedEntry(record)}
-                ></Button>
+                />
               </Tooltip>,
             ],
           },

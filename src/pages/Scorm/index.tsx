@@ -38,6 +38,7 @@ const TableList: React.FC = () => {
 
       renderFormItem: () => [
         <UploadScorm
+          key="upload"
           onSuccess={() => {
             if (actionRef.current) {
               actionRef.current.reload();
@@ -94,7 +95,7 @@ const TableList: React.FC = () => {
           cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+            <Button type="primary" icon={<DeleteOutlined />} danger />
           </Tooltip>
         </Popconfirm>,
       ],

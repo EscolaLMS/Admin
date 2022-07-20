@@ -13,7 +13,7 @@ const InputColor: React.FC<{
   onChange: (value: string) => void;
   label?: string;
   name?: string;
-  style?: Object;
+  style?: React.CSSProperties;
 }> = ({ className = '', name, value, onChange, label, style }) => {
   const [color, alpha] = useMemo(() => {
     if (value && value.length === 9) return [value.substring(0, 7), +value.substring(7, 9) / 100];

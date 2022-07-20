@@ -179,10 +179,16 @@ export const Topic: React.FC<{
         }
         extra={<TopicButtons onDelete={onDelete} loading={loading} />}
         actions={[
-          <Button onClick={onClose} loading={loading}>
+          <Button key={'cancel'} onClick={onClose} loading={loading}>
             <FormattedMessage id="Cancel" />
           </Button>,
-          <Button type="primary" onClick={onFormSubmit} disabled={saveIsDisabled} loading={loading}>
+          <Button
+            key="save"
+            type="primary"
+            onClick={onFormSubmit}
+            disabled={saveIsDisabled}
+            loading={loading}
+          >
             <FormattedMessage id="save" />
           </Button>,
         ]}

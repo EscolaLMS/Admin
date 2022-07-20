@@ -157,6 +157,7 @@ export default () => {
                   <List.Item
                     actions={[
                       <Button
+                        key={'delete'}
                         onClick={() => handleDelete(item.id)}
                         type="primary"
                         icon={<DeleteOutlined />}

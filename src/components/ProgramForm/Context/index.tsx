@@ -1,5 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
+import { useLocation } from 'umi';
+import type { Location } from 'history';
 
 import {
   program,
@@ -16,7 +18,13 @@ import {
 
 import type { UploadChangeParam } from 'antd/lib/upload';
 
+type CurrentEditMode =
+  | { mode: 'lesson'; id: number; value?: API.Lesson | null }
+  | { mode: 'topic'; id: number; value?: API.Topic | null }
+  | { mode: 'init' };
+
 type ProgramContext = {
+  currentEditMode?: CurrentEditMode;
   state?: API.CourseProgram;
   h5ps?: any[];
   // token: credentials.token,
@@ -49,6 +57,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   const [state, setState] = useState<API.CourseProgram>();
 
   const [h5ps, setH5ps] = useState([]);
+
+  const l = useLocation() as Location & { query: { lesson?: string; topic?: string } };
 
   useEffect(() => {
     setH5ps([]);
@@ -85,18 +95,34 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     [state],
   );
 
-  /*
-  const getTopicIdByResourceId = useCallback(
-    (resId) => {
-      const topic = state.lessons
+  const getTopicByTopicId = useCallback(
+    (topic_id: number) => {
+      const topic = state?.lessons
         .map((lesson) => lesson.topics)
         .flat()
-        .find((topic) => topic.resources.find((resource) => resource.id == resId));
-      return topic ? topic.id : null;
+        .find((fTopic) => fTopic && fTopic.id == topic_id);
+      return topic ? topic : null;
     },
     [state],
   );
-  */
+
+  const currentEditMode = useMemo<CurrentEditMode>(() => {
+    if (l.query?.lesson) {
+      return {
+        mode: 'lesson',
+        id: Number(l.query.lesson),
+        value: state?.lessons.find((lesson) => lesson.id === Number(l.query.lesson)),
+      };
+    }
+    if (l.query?.topic) {
+      return {
+        mode: 'topic',
+        id: Number(l.query.topic),
+        value: getTopicByTopicId(Number(l.query.topic)),
+      };
+    }
+    return { mode: 'init' };
+  }, [l.query, state]);
 
   const addNewLesson = useCallback(() => {
     const newLesson: API.Lesson = {
@@ -631,6 +657,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     onTopicUploaded,
     cloneTopic,
     cloneLesson,
+    currentEditMode,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

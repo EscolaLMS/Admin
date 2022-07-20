@@ -14,7 +14,8 @@ import {
 } from '@ant-design/icons';
 import { DndCard } from './card';
 import { Dustbin } from './dustbin';
-import { Box, BoxItemProps } from './box';
+import type { BoxItemProps } from './box';
+import { Box } from './box';
 import Topic from '../Topic/index';
 import { FormattedMessage } from 'react-intl';
 import { TopicType } from '@/services/escola-lms/enums';

@@ -1,0 +1,11 @@
+.topic-types-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.topic-types-selector__list {
+  position: absolute;
+  top: 0px;
+  left: 100%;
+  min-width: 48px;
+}

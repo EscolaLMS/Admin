@@ -9,7 +9,7 @@ const FabricSelect: React.FC<{
   label: string;
   name: string;
   options: { value: string | number; label: string }[];
-  style?: Object;
+  style?: React.CSSProperties;
 }> = ({ value, onChange, label, name, options = [], style, ...props }) => {
   return (
     <Form.Item label={label}>

@@ -8,6 +8,7 @@ import {
   getConsultation,
 } from '@/services/escola-lms/consultations';
 import { FormattedMessage } from 'umi';
+import type { DefaultOptionType } from 'antd/lib/select';
 
 type CollectionModelItem = {
   id: number;
@@ -36,7 +37,10 @@ export const CourseSelect: React.FC<{
   };
   multiple?: boolean;
   value?: string;
-  onChange?: (value: string | string[] | number | number[], option: {}) => void;
+  onChange?: (
+    value: string | string[] | number | number[],
+    option: DefaultOptionType | DefaultOptionType[],
+  ) => void;
   defaultValue?: string | string[] | number | number[];
   modelType?: string;
 }> = ({ value, onChange, multiple = false, defaultValue, modelType = 'COURSE' }) => {

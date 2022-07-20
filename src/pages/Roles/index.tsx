@@ -65,7 +65,7 @@ const RolesPage: React.FC = () => {
             valueType: 'option',
             render: (_, record) => [
               <Link to={`/users/roles/${record.name}`} key="new">
-                <Button type="primary" icon={<EditOutlined />}></Button>
+                <Button type="primary" icon={<EditOutlined />} />
               </Link>,
               <Popconfirm
                 key="delete"
@@ -112,7 +112,7 @@ const RolesPage: React.FC = () => {
             }
           }
         }}
-      ></RolesModalForm>
+      />
     </PageContainer>
   );
 };

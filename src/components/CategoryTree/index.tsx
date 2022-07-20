@@ -55,7 +55,7 @@ export const CategoryTree: React.FC<{
       onChange={onChange}
       treeData={treeData}
       disabled={categories.length === 0}
-    ></TreeSelect>
+    />
   );
 };
 

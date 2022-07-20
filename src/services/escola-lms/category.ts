@@ -26,7 +26,7 @@ export async function category(id: number, options?: RequestOptionsInit) {
   });
 }
 
-export async function createCategory(body?: { [key: string]: any }, options?: RequestOptionsInit) {
+export async function createCategory(body?: Record<string, any>, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories`, {
     method: 'POST',
     headers: {
@@ -39,7 +39,7 @@ export async function createCategory(body?: { [key: string]: any }, options?: Re
 
 export async function updateCategory(
   id: number,
-  body?: { [key: string]: any },
+  body?: Record<string, any>,
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
@@ -54,7 +54,7 @@ export async function updateCategory(
 
 export async function deleteCategory(
   id: number,
-  body?: { [key: string]: any },
+  body?: Record<string, any>,
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {

@@ -58,7 +58,7 @@ const TableList: React.FC = () => {
       render: (_, record) => [
         <Link to={`/pages/${record.id}`} key="edit">
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-            <Button type="primary" icon={<EditOutlined />}></Button>
+            <Button type="primary" icon={<EditOutlined />} />
           </Tooltip>
         </Link>,
         <Popconfirm
@@ -81,7 +81,7 @@ const TableList: React.FC = () => {
           cancelText={<FormattedMessage id="no" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+            <Button type="primary" icon={<DeleteOutlined />} danger />
           </Tooltip>
         </Popconfirm>,
       ],
@@ -103,7 +103,7 @@ const TableList: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link to="/pages/new">
+          <Link to="/pages/new" key="new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>

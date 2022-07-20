@@ -64,7 +64,7 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     dataIndex: 'is_active',
     hideInSearch: true,
     render: (_, record) => [
-      <Tag color={record.is_active ? 'green' : 'red'}>
+      <Tag key="is_active" color={record.is_active ? 'green' : 'red'}>
         {record.is_active ? <FormattedMessage id="Active" /> : <FormattedMessage id="Inactive" />}
       </Tag>,
     ],
@@ -75,7 +75,7 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     dataIndex: 'email_verified',
     hideInSearch: true,
     render: (_, record) => [
-      <Tag color={record.email_verified ? 'green' : 'red'}>
+      <Tag key="email_verified" color={record.email_verified ? 'green' : 'red'}>
         {record.email_verified ? (
           <FormattedMessage id="verified" />
         ) : (
@@ -207,6 +207,7 @@ const TableList: React.FC = () => {
             }
             toolBarRender={() => [
               <SecureUpload
+                key="upload"
                 title={intl.formatMessage({
                   id: 'import_users',
                 })}
@@ -237,7 +238,7 @@ const TableList: React.FC = () => {
                 <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
               </Button>,
 
-              <Link to="/users/list/new">
+              <Link to="/users/list/new" key="link">
                 <Button type="primary" key="primary">
                   <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
                 </Button>
@@ -294,7 +295,7 @@ const TableList: React.FC = () => {
                 render: (_, record) => [
                   <Link to={`/users/${record.id}/user_info`} key="edit">
                     <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                      <Button type="primary" icon={<EditOutlined />}></Button>
+                      <Button type="primary" icon={<EditOutlined />} />
                     </Tooltip>
                   </Link>,
                   <Popconfirm
@@ -317,7 +318,7 @@ const TableList: React.FC = () => {
                     cancelText={<FormattedMessage id="no" />}
                   >
                     <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                      <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                      <Button type="primary" icon={<DeleteOutlined />} danger />
                     </Tooltip>
                   </Popconfirm>,
                 ],
@@ -325,10 +326,7 @@ const TableList: React.FC = () => {
             ]}
           />
         </ProCard.TabPane>
-        <ProCard.TabPane
-          key={'fields'}
-          tab={<FormattedMessage id="ModelFields" />}
-        ></ProCard.TabPane>
+        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />} />
       </ProCard>
     </PageContainer>
   );

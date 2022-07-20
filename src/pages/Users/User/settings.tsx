@@ -105,7 +105,7 @@ const TableList: React.FC<{ user: string; isProfile: boolean }> = ({ user, isPro
             }
           }
         }}
-      ></UserSettingForm>
+      />
     </React.Fragment>
   );
 };
