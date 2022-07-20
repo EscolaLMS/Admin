@@ -61,6 +61,7 @@
         access: 'courseDetailsPermission',
         component: './Courses/form',
         hideInMenu: true,
+        exact: false,
       },
       {
         path: '/courses/h5ps',
@@ -449,6 +450,7 @@
     ],
   },
   {
+    access: 'dashboardPermission',
     path: '/',
     redirect: '/welcome',
   },

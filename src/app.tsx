@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
@@ -39,6 +40,7 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.UserItem;
   fetchUserInfo?: () => Promise<API.UserItem | undefined>;
+  collapsed: boolean;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -48,7 +50,8 @@ export async function getInitialState(): Promise<{
       }
       return undefined;
     } catch (error) {
-      history.push('/user/login');
+      const url = history.location.pathname + history.location.search;
+      history.push(`/user/login?redirect=${url}`);
     }
     return undefined;
   };
@@ -58,40 +61,58 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       settings: {},
+      collapsed: false,
     };
   }
   return {
     fetchUserInfo,
     settings: {},
+    collapsed: false,
   };
 }
 
 // https://umijs.org/zh-CN/plugins/plugin-layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
-    history.push('/');
+    if (history.location.query?.redirect) {
+      history.push(history.location.query.redirect.toString());
+    } else {
+      history.push('/');
+    }
   }
   if (!initialState?.currentUser && !authpaths.includes(history.location.pathname)) {
-    history.push('/user/login');
+    const url = history.location.pathname + history.location.search;
+    history.push(`/user/login?redirect=${url}`);
   }
 
+  let collapsed = initialState?.collapsed;
+
   return {
+    collapsed,
+    onCollapse: (collapsed: boolean) => {
+      setInitialState({
+        ...initialState,
+        collapsed: !initialState?.collapsed,
+      });
+    },
     rightContentRender: () => <RightContent />,
-    disableContentMargin: false,
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // login;
 
       if (!initialState?.currentUser && !authpaths.includes(location.pathname)) {
-        history.push('/user/login');
+        const url = history.location.pathname + history.location.search;
+        history.push(`/user/login?redirect=${url}`);
       }
     },
     links: [
       <>
         <BookOutlined />
         <span>
-          <a href="http://docs.wellms.io/" target="_blank">Documentation</a>
+          <a href="http://docs.wellms.io/" target="_blank">
+            Documentation
+          </a>
         </span>
       </>,
     ],

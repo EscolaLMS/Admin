@@ -7,7 +7,7 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage, useAccess } from 'umi';
+import { useParams, history, useIntl, FormattedMessage, useAccess, useModel } from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -39,6 +39,15 @@ export default () => {
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
+
+  const { setInitialState, initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    setInitialState({
+      ...initialState,
+      collapsed: true,
+    });
+  }, []);
 
   useEffect(() => {
     if (course === 'new') {
