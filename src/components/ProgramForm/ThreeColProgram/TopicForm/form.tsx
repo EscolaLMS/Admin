@@ -22,7 +22,6 @@ export const TopicForm: React.FC<{
       initialValues={{ ...initialValues }}
     >
       <ProFormText
-        width="md"
         name="title"
         label={<FormattedMessage id="title" />}
         tooltip={<FormattedMessage id="title" />}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Embed from 'react-tiny-oembed';
-import { Row, Col, Input, Button } from 'antd';
+import { Row, Input, Button } from 'antd';
 import { FormattedMessage } from 'umi';
 
 export const Oembed: React.FC<{ text: string; onChange: (value: string) => void }> = ({

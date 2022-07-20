@@ -85,7 +85,6 @@ export const LessonForm: React.FC<{
         <Col span={8}>
           {' '}
           <ProFormText
-            width="sm"
             name="duration"
             label={<FormattedMessage id="duration" />}
             tooltip={<FormattedMessage id="duration" />}

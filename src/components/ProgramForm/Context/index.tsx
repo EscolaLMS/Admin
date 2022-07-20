@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
-import { getLocale, FormattedMessage, useLocation } from 'umi';
+import { useLocation } from 'umi';
 import type { Location } from 'history';
 
 import {
@@ -24,7 +24,7 @@ type CurrentEditMode =
   | { mode: 'init' };
 
 type ProgramContext = {
-  currentEditMode: CurrentEditMode;
+  currentEditMode?: CurrentEditMode;
   state?: API.CourseProgram;
   h5ps?: any[];
   // token: credentials.token,
@@ -95,22 +95,12 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     [state],
   );
 
-  const getLessonByTopicId = useCallback(
-    (topic_id: number) => {
-      const lesson = state?.lessons.find((lesson_item) =>
-        lesson_item?.topics?.find((topic) => topic.id === topic_id),
-      );
-      return lesson ? lesson : null;
-    },
-    [state],
-  );
-
   const getTopicByTopicId = useCallback(
     (topic_id: number) => {
       const topic = state?.lessons
         .map((lesson) => lesson.topics)
         .flat()
-        .find((topic) => topic && topic.id == topic_id);
+        .find((fTopic) => fTopic && fTopic.id == topic_id);
       return topic ? topic : null;
     },
     [state],

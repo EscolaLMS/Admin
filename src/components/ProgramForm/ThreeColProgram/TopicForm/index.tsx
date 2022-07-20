@@ -2,11 +2,9 @@ import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
 import { Alert, Row, Col, Space } from 'antd';
-import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import MediaUpload from './media/upload';
-import { Popconfirm } from 'antd';
 import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/enums';
 
@@ -52,27 +50,6 @@ export const getTypeIcon = (type: string | undefined) => {
     }
   }
   return <ExclamationCircleOutlined />;
-};
-
-const TopicButtons: React.FC<{ onDelete: () => void; loading: boolean }> = ({
-  onDelete,
-  loading,
-}) => {
-  return (
-    <React.Fragment>
-      <Divider type="vertical" />
-      <Popconfirm
-        onConfirm={onDelete}
-        title={<FormattedMessage id="deleteQuestion" />}
-        okText={<FormattedMessage id="yes" />}
-        cancelText={<FormattedMessage id="no" />}
-      >
-        <Button loading={loading} size="small" danger>
-          <FormattedMessage id="delete" />
-        </Button>
-      </Popconfirm>
-    </React.Fragment>
-  );
 };
 
 export const Topic: React.FC<{

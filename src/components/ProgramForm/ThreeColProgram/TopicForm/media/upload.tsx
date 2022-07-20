@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Col, Row, Button, Pagination, Spin, Typography } from 'antd';
+import { Row, Button, Pagination, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { TopicType } from '@/services/escola-lms/enums';
 import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
