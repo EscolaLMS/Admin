@@ -461,4 +461,8 @@ export default {
   active_from_extra: 'Wybierz datę rozpoczęcia sprzedaży',
   active_to_extra: 'Wybierz datę zakończenia sprzedaży',
   duration_extra: 'Określ czas trwania sprzedaży w minutach',
+  course_success_modal_title: 'Gratulacje!',
+  course_success_modal_content: 'Utworzyłeś kurs. Teraz możesz tworzyć lekcje dla swojego kursu.',
+  course_success_modal_button_ok: 'Stwórz moduły',
+  course_success_modal_button_cancel: 'Idź do strony kursu',
 };

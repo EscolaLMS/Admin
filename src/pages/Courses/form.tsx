@@ -29,6 +29,7 @@ import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
+import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -39,6 +40,10 @@ export default () => {
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
+  const [manageSuccessModal, setManageSuccessModal] = useState({
+    showModal: false,
+    courseId: 0,
+  });
 
   const { setInitialState, initialState } = useModel('@@initialState');
 
@@ -105,9 +110,12 @@ export default () => {
         let response: API.DefaultResponse<API.Course>;
         if (course === 'new') {
           response = await createCourse(postData);
-          if (response.success) {
+          if (response.success && response.data.id) {
             setUnsavedChanges(false);
-            history.push(`/courses/list/${response.data.id}/attributes`);
+            setManageSuccessModal({
+              showModal: true,
+              courseId: response.data.id,
+            });
           }
         } else {
           response = await updateCourse(Number(course), postData);
@@ -204,7 +212,15 @@ export default () => {
           )}
           <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
-
+          <CourseSuccessModal
+            visible={manageSuccessModal.showModal}
+            handleOk={() => {
+              history.push(`/courses/list/${manageSuccessModal.courseId}/program`);
+            }}
+            handleCancel={() =>
+              history.push(`/courses/list/${manageSuccessModal.courseId}/attributes`)
+            }
+          />
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
