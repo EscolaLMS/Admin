@@ -23,7 +23,7 @@ const UserFields: React.FC = () => {
           },
         }}
       >
-        <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}></ProCard.TabPane>
+        <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />} />
 
         <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />}>
           <ModelFields class_type="EscolaLms\Auth\Models\User" />

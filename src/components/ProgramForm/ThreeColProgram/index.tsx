@@ -1,29 +1,23 @@
-import React, { useState, useContext, useCallback, useMemo } from 'react';
-import { Collapse, Button, Divider, Tag, Spin, Tooltip, Col, Row } from 'antd';
+import { useContext } from 'react';
+import { Divider, Spin, Col, Row } from 'antd';
 
-import Lesson from '@/components/ProgramForm/Lesson';
 import { Context } from '@/components/ProgramForm/Context';
-import { PlusOutlined, CopyOutlined } from '@ant-design/icons';
-import SortingButtons from '@/components/sortingbuttons';
-import { getLocale, FormattedMessage, useLocation } from 'umi';
+
 import List from './List/index';
-import type { Location } from 'history';
 import LessonForm from './LessonForm/index';
 import TopicForm from './TopicForm/index';
 
-const { Panel } = Collapse;
-
 export const Curriculum = () => {
-  const { state, addNewLesson, sortLesson, cloneLesson, currentEditMode } = useContext(Context);
+  const { state /*, sortLesson */, currentEditMode } = useContext(Context);
 
-  const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
-
+  /*
   const onSort = useCallback(
     (lesson: API.Lesson, up: boolean) => {
       return lesson.id && sortLesson && sortLesson(lesson.id, up);
     },
     [sortLesson],
   );
+  */
 
   if (state && state.lessons) {
     return (
@@ -33,7 +27,7 @@ export const Curriculum = () => {
             <List />
           </Col>
           <Col span={24 - 4}>
-            {currentEditMode.mode === 'lesson' && currentEditMode.value && (
+            {currentEditMode && currentEditMode.mode === 'lesson' && currentEditMode.value && (
               <LessonForm
                 key={currentEditMode.id}
                 // TODO refactor this you shoundn't need to pass any props here
@@ -42,7 +36,7 @@ export const Curriculum = () => {
                 courseId={state.id}
               />
             )}
-            {currentEditMode.mode === 'topic' && currentEditMode.value && (
+            {currentEditMode && currentEditMode.mode === 'topic' && currentEditMode.value && (
               <TopicForm
                 key={currentEditMode.id}
                 // TODO refactor this you shoundn't need to pass any props here
@@ -52,10 +46,10 @@ export const Curriculum = () => {
                 courseId={state.id}
               />
             )}
-            {currentEditMode.mode === 'init' && <p>Init screen</p>}
+            {currentEditMode && currentEditMode.mode === 'init' && <p>Init screen</p>}
           </Col>
         </Row>
-        <div className="curriculum-lessons-wrapper"></div>
+        <div className="curriculum-lessons-wrapper" />
         <Divider />
       </div>
     );

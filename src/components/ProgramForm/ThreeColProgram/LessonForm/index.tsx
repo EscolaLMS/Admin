@@ -1,23 +1,17 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import { Button, Divider, Card, Popconfirm } from 'antd';
-import { FormattedMessage, useParams } from 'umi';
+import { useParams } from 'umi';
 import LessonForm from './form';
-
-// DNDEDITOR
-import { DndEditorContainer } from '@/components/ProgramForm/DndEditor/index';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export const Lesson: React.FC<{
   // TODO refactor this as you shouldn't pass this but fetch from `{ currentEditMode } = useContext(Context);`
   lesson: API.Lesson;
   courseLessons: API.Lesson[];
   courseId?: number;
-}> = ({ lesson, courseLessons, courseId }) => {
+}> = ({ lesson }) => {
   const [state, setState] = useState<API.Lesson>(lesson);
-  const [topicList, setTopicList] = useState<API.Topic[]>([]);
+  const [, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
   const { updateLesson, deleteLesson } = useContext(Context);
 
@@ -57,26 +51,7 @@ export const Lesson: React.FC<{
   }, [deleteLesson, state.id]);
 
   return (
-    <Card
-      title={
-        <>
-          <FormattedMessage id="lesson" />
-          {`: ${state.title}`}
-        </>
-      }
-      extra={
-        <Popconfirm
-          title={<FormattedMessage id="deleteQuestion" />}
-          onConfirm={handleDelete}
-          okText={<FormattedMessage id="yes" />}
-          cancelText={<FormattedMessage id="no" />}
-        >
-          <Button loading={loading} size="small" danger>
-            <FormattedMessage id="delete" />
-          </Button>
-        </Popconfirm>
-      }
-    >
+    <React.Fragment>
       <LessonForm
         loading={loading}
         lesson={state}
@@ -90,23 +65,7 @@ export const Lesson: React.FC<{
           }));
         }}
       />
-
-      {!lesson.isNew && (
-        <Divider>
-          <FormattedMessage id="topics" />
-        </Divider>
-      )}
-
-      <DndProvider backend={HTML5Backend}>
-        <DndEditorContainer
-          courseId={courseId}
-          courseLessons={courseLessons}
-          state={state}
-          setState={setState}
-          topicList={topicList as (API.TopicNew | API.TopicNotEmpty)[]}
-        />
-      </DndProvider>
-    </Card>
+    </React.Fragment>
   );
 };
 

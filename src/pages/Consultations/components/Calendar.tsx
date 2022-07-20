@@ -1,6 +1,7 @@
 import { getSchedule } from '@/services/escola-lms/consultations';
 import { Badge, Calendar, message, Tooltip, Spin, DatePicker } from 'antd';
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns } from '@ant-design/pro-table';

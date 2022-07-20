@@ -4,7 +4,7 @@ import { Column } from '@ant-design/charts';
 import { Spin, Alert } from 'antd';
 import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { QuestionnaireRaportState } from './Raports';
+import type { QuestionnaireRaportState } from './Raports';
 
 const config = {
   isGroup: true,

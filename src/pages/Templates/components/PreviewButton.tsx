@@ -83,7 +83,7 @@ const PreviewButton: React.FC<{
           type="success"
           closable
           onClose={() => setState({ state: 'ready' })}
-        ></Alert>
+        />
       )}
       {state.state === 'error' && (
         <Alert
@@ -91,7 +91,7 @@ const PreviewButton: React.FC<{
           type="error"
           closable
           onClose={() => setState({ state: 'ready' })}
-        ></Alert>
+        />
       )}
     </React.Fragment>
   );

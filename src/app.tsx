@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
@@ -40,7 +39,7 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.UserItem;
   fetchUserInfo?: () => Promise<API.UserItem | undefined>;
-  collapsed: boolean;
+  collapsed?: boolean;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -85,11 +84,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     history.push(`/user/login?redirect=${url}`);
   }
 
-  let collapsed = initialState?.collapsed;
-
   return {
-    collapsed,
-    onCollapse: (collapsed: boolean) => {
+    collapsed: initialState?.collapsed,
+    onCollapse: (/*collapsed: boolean*/) => {
       setInitialState({
         ...initialState,
         collapsed: !initialState?.collapsed,
@@ -110,7 +107,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       <>
         <BookOutlined />
         <span>
-          <a href="http://docs.wellms.io/" target="_blank">
+          <a href="http://docs.wellms.io/" target="_blank" rel="noreferrer">
             Documentation
           </a>
         </span>

@@ -294,7 +294,7 @@ const TableList: React.FC = () => {
                 render: (_, record) => [
                   <Link to={`/users/${record.id}/user_info`} key="edit">
                     <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                      <Button type="primary" icon={<EditOutlined />}></Button>
+                      <Button type="primary" icon={<EditOutlined />} />
                     </Tooltip>
                   </Link>,
                   <Popconfirm
@@ -317,7 +317,7 @@ const TableList: React.FC = () => {
                     cancelText={<FormattedMessage id="no" />}
                   >
                     <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                      <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                      <Button type="primary" icon={<DeleteOutlined />} danger />
                     </Tooltip>
                   </Popconfirm>,
                 ],
@@ -325,10 +325,7 @@ const TableList: React.FC = () => {
             ]}
           />
         </ProCard.TabPane>
-        <ProCard.TabPane
-          key={'fields'}
-          tab={<FormattedMessage id="ModelFields" />}
-        ></ProCard.TabPane>
+        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />} />
       </ProCard>
     </PageContainer>
   );

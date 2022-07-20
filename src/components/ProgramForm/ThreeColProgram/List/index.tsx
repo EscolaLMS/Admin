@@ -1,39 +1,37 @@
-import React, { useState, useContext, useCallback } from 'react';
-import { Collapse, Button, Divider, Tag, Spin, Tooltip, Col, Row } from 'antd';
+import { useContext, useCallback } from 'react';
+import { Button, Spin } from 'antd';
 
-import { Link, NavLink, history } from 'umi';
+import { NavLink, history } from 'umi';
 
-import Lesson from '@/components/ProgramForm/Lesson';
 import { Context } from '@/components/ProgramForm/Context';
-import { PlusOutlined, CopyOutlined } from '@ant-design/icons';
-import SortingButtons from '@/components/sortingbuttons';
-import { getLocale, FormattedMessage } from 'umi';
+import { PlusOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'umi';
 import { getTypeIcon } from './../TopicForm/index';
 import { getTypeName } from './../TopicForm/media';
-import { TopicType } from '@/services/escola-lms/enums';
+import type { TopicType } from '@/services/escola-lms/enums';
 import { TopicTypesSelector } from './types';
-const { Panel } = Collapse;
 
 export const CurriculumList = () => {
-  const { state, addNewLesson, sortLesson, cloneLesson, currentEditMode, addNewTopic } =
+  const { state, addNewLesson /*, sortLesson , cloneLesson */, currentEditMode, addNewTopic } =
     useContext(Context);
 
-  const [activeKeys, setActiveKeys] = useState<string | string[]>([]);
+  // TODO, there should be clone lesson button
 
   const onNew = useCallback(() => {
     if (addNewLesson && state) {
       const newLesson = addNewLesson();
       history.push(`/courses/list/${state.id}/program/?lesson=${newLesson.id}`);
-      //setActiveKeys(String(newLesson.id));
     }
   }, [addNewLesson, state]);
 
+  /*
   const onSort = useCallback(
     (lesson: API.Lesson, up: boolean) => {
       return lesson.id && sortLesson && sortLesson(lesson.id, up);
     },
     [sortLesson],
   );
+  */
 
   const addNewTopicToLesson = useCallback(
     (lesson_id: number, topic_type: TopicType) => {
@@ -55,7 +53,9 @@ export const CurriculumList = () => {
               <li
                 key={lesson.id}
                 className={
-                  currentEditMode.mode === 'lesson' && currentEditMode.id === lesson.id
+                  currentEditMode &&
+                  currentEditMode.mode === 'lesson' &&
+                  currentEditMode.id === lesson.id
                     ? 'active'
                     : ''
                 }
@@ -76,7 +76,9 @@ export const CurriculumList = () => {
                       <li
                         key={topic.id}
                         className={
-                          currentEditMode.mode === 'topic' && currentEditMode.id === topic.id
+                          currentEditMode &&
+                          currentEditMode.mode === 'topic' &&
+                          currentEditMode.id === topic.id
                             ? 'active'
                             : ''
                         }

@@ -1,4 +1,4 @@
-import PERMISSIONS from '@/consts/permissions';
+import type PERMISSIONS from '@/consts/permissions';
 
 export const isUserHavePermissions =
   (currentUser: API.UserItem) =>

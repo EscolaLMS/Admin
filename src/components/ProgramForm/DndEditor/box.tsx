@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
+import React from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './itemtypes';
 import { Button } from 'antd';

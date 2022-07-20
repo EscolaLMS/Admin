@@ -60,7 +60,7 @@ export const CategoryCheckboxTree: React.FC<{
       }}
       treeData={treeData}
       disabled={categories.length === 0}
-    ></Tree>
+    />
   );
 };
 

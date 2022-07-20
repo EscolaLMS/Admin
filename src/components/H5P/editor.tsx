@@ -1,4 +1,5 @@
-import { useEffect, useState, FunctionComponent, useMemo, useRef, useContext } from 'react';
+import type { FunctionComponent } from 'react';
+import { useEffect, useState, useMemo, useRef, useContext } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { unescape } from 'html-escaper';
 import { EditorContext } from '@escolalms/h5p-react';
@@ -171,10 +172,10 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
             }}
           />
           {settings.core.scripts.map((script: string) => (
-            <script key={script} src={script}></script>
+            <script key={script} src={script} />
           ))}
           {settings.core.styles.map((style: string) => (
-            <link type="text/css" rel="stylesheet" key={style} href={style}></link>
+            <link type="text/css" rel="stylesheet" key={style} href={style} />
           ))}
         </head>
         <body>
@@ -182,7 +183,7 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
             <div id="h5p-editor" className="height-observer">
               loading
             </div>
-            <p></p>
+            <p />
             <button className="h5p-core-button" id="h5p-editor-submit">
               submit data
             </button>
@@ -239,7 +240,7 @@ export const Editor: FunctionComponent<EditorProps> = ({ id, onSubmit }) => {
             padding: 0,
             border: 'none',
           }}
-        ></iframe>
+        />
       )}
     </div>
   );

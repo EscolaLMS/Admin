@@ -4,7 +4,7 @@ import { Select, Spin } from 'antd';
 import { users as fetchUsers, user as fetchUser } from '@/services/escola-lms/user';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import { DefaultOptionType } from 'antd/lib/select';
+import type { DefaultOptionType } from 'antd/lib/select';
 
 export const UserSelect: React.FC<{
   state?: {

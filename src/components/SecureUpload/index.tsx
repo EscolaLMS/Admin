@@ -2,7 +2,7 @@ import { ProFormUploadButton } from '@ant-design/pro-form';
 import { Form } from 'antd';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import type { UploadFile } from 'antd/lib/upload/interface';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import ConditionalWrap from 'conditional-wrap';
 import type { FormProps } from 'antd';

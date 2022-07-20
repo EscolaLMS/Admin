@@ -89,7 +89,7 @@ const PreviewPDF: React.FC<{
       doc.save('myPDF.pdf');
     });
   }, [svgDef]);
-  return <div></div>;
+  return <div />;
 };
 
 export const FabricPreview: React.FC<{

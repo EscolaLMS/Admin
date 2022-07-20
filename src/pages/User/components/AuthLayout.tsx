@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import Footer from '@/components/Footer';
 import styles from './index.less';
 import { Link, SelectLang } from 'umi';

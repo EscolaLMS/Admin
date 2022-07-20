@@ -148,7 +148,7 @@ const TableList: React.FC = () => {
             type="primary"
             icon={<EditOutlined />}
             onClick={() => setModalVisible(record.id)}
-          ></Button>
+          />
         </Tooltip>,
 
         <Popconfirm
@@ -172,7 +172,7 @@ const TableList: React.FC = () => {
           cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
           <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+            <Button type="primary" icon={<DeleteOutlined />} danger />
           </Tooltip>
         </Popconfirm>,
       ],
@@ -238,7 +238,7 @@ const TableList: React.FC = () => {
             }
           }
         }}
-      ></SettingsModalForm>
+      />
     </React.Fragment>
   );
 };

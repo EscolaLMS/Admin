@@ -107,7 +107,7 @@ const TableList: React.FC = () => {
       render: (_, record) => [
         <Link to={`/courses/h5ps/${record.id}`}>
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-            <Button type="primary" icon={<EditOutlined />}></Button>
+            <Button type="primary" icon={<EditOutlined />} />
           </Tooltip>
         </Link>,
 
@@ -129,12 +129,12 @@ const TableList: React.FC = () => {
               type="primary"
               icon={<DeleteOutlined />}
               danger
-            ></Button>
+            />
           </Tooltip>
         </Popconfirm>,
         <Link to={`/h5ps/preview/${record.id}`}>
           <Tooltip title={<FormattedMessage id="preview" defaultMessage="preview" />}>
-            <Button icon={<BookOutlined />}></Button>
+            <Button icon={<BookOutlined />} />
           </Tooltip>
         </Link>,
         <a
@@ -144,7 +144,7 @@ const TableList: React.FC = () => {
           download
         >
           <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
-            <Button icon={<ExportOutlined />}></Button>
+            <Button icon={<ExportOutlined />} />
           </Tooltip>
         </a>,
       ],

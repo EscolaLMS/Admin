@@ -66,9 +66,7 @@ type Tokens = {
   class: string;
   required_variables: string[];
   variables: string[];
-  sections: {
-    [key: string]: API.TemplateField;
-  };
+  sections: Record<string, API.TemplateField>;
 };
 
 const channels = TemplateChannelValue;

@@ -7,7 +7,7 @@ import request from 'umi-request';
 import type { RequestOptionsInit } from 'umi-request';
 import { FormattedMessage } from 'umi';
 import { FolderOpenOutlined } from '@ant-design/icons';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { SecureUploadType } from './index';
 
 type AnyResponse = API.DefaultResponse<any>;

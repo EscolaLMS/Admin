@@ -1,7 +1,7 @@
 declare module '*.less';
 
 declare namespace API {
-  import * as Enum from './enums';
+  import type * as Enum from './enums';
 
   /// ---- ENUMS ----- ///
 
@@ -147,9 +147,7 @@ declare namespace API {
   type DefaultResponseError = {
     success: false;
     message: string;
-    errors: {
-      [key: string]: string[]; // list of errors
-    };
+    errors: Record<string, string[]>;
   };
 
   type DefaultMetaResponse<Model> =
@@ -310,9 +308,7 @@ declare namespace API {
 
   type CourseStats = {
     EscolaLmsReportsStatsCourseAverageTime: number;
-    EscolaLmsReportsStatsCourseAverageTimePerTopic: {
-      [key: string]: number;
-    };
+    EscolaLmsReportsStatsCourseAverageTimePerTopic: Record<string, number>;
     EscolaLmsReportsStatsCourseMoneyEarned: number;
     EscolaLmsReportsStatsCoursePeopleBought: number;
     EscolaLmsReportsStatsCoursePeopleFinished: number;
@@ -848,7 +844,7 @@ declare namespace API {
 
   type ReportList = DefaultResponse<Report>;
 
-  type UserSetting = { [name: string]: string };
+  type UserSetting = Record<string, string>;
 
   type UserGroup = {
     id: number;

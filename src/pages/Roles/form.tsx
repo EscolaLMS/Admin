@@ -10,7 +10,7 @@ import { useParams, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 import './index.css';
-import { CheckboxValueType, CheckboxOptionType } from 'antd/lib/checkbox/Group';
+import type { CheckboxValueType, CheckboxOptionType } from 'antd/lib/checkbox/Group';
 
 export default () => {
   const params = useParams<{ name: string }>();

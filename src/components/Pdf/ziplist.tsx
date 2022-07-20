@@ -106,7 +106,7 @@ export const PdfZipList: React.FC<{
     );
   }
 
-  return <Fragment></Fragment>;
+  return <Fragment />;
 };
 
 export default PdfZipList;
