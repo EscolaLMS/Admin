@@ -453,4 +453,7 @@ export default {
   active_from_extra: 'Select a sales activation date',
   active_to_extra: 'Select a sales deactivation date',
   duration_extra: 'Specify duration in minutes',
+  course_success_modal_title: 'Congratulations!',
+  course_success_modal_content:
+    'You have created a course. Now you can create lessons for your course.',
 };
