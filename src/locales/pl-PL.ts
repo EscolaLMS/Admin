@@ -395,7 +395,7 @@ export default {
   number: 'number',
   boolean: 'boolean',
   editModelField: 'Edycja Dodatkowych Attrybutów',
-  ModelFields: 'Dodatkowe Attrybuty',
+  ModelFields: 'Dodatkowe Atrybuty',
   list: 'Lista',
   newModelField: 'Nowy Dodatkowy Attrybut',
   notPowerOfTwo: 'To nie jest potęga 2',
