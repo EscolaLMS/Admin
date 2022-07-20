@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
 
 interface CourseSuccessModalProps {
@@ -22,6 +22,20 @@ export const CourseSuccessModal: React.FC<CourseSuccessModalProps> = (props) => 
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
+      footer={[
+        <Button key="link" onClick={handleCancel}>
+          <FormattedMessage
+            id="course_success_modal_button_cancel"
+            defaultMessage="course_success_modal_button_cancel"
+          />
+        </Button>,
+        <Button key="link" type="primary" onClick={handleOk}>
+          <FormattedMessage
+            id="course_success_modal_button_ok"
+            defaultMessage="course_success_modal_button_ok"
+          />
+        </Button>,
+      ]}
     >
       <p>
         <FormattedMessage

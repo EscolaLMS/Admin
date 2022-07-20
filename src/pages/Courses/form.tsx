@@ -206,9 +206,11 @@ export default () => {
           <CourseSuccessModal
             visible={manageSuccessModal.showModal}
             handleOk={() => {
-              history.push(`/courses/list/${manageSuccessModal.courseId}/attributes`);
+              history.push(`/courses/list/${manageSuccessModal.courseId}/program`);
             }}
-            handleCancel={() => history.push('/courses/list')}
+            handleCancel={() =>
+              history.push(`/courses/list/${manageSuccessModal.courseId}/attributes`)
+            }
           />
           <ProForm
             {...formProps}
