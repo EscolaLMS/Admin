@@ -4,7 +4,7 @@ import { AppContext } from '@/components/ProgramForm/Context';
 import Program from '@/components/ProgramForm/Program';
 import ThreeColProgram from '@/components/ProgramForm/ThreeColProgram';
 
-const NEW_PROGRAM = true;
+const NEW_PROGRAM = false;
 
 export const ProgramForm: React.FC<{
   id: number | string;
