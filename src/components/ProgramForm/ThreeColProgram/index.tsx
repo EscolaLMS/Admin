@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Divider, Spin, Col, Row } from 'antd';
+import { Spin, Col, Row } from 'antd';
 
 import { Context } from '@/components/ProgramForm/Context';
 
@@ -50,7 +50,6 @@ export const Curriculum = () => {
           </Col>
         </Row>
         <div className="curriculum-lessons-wrapper" />
-        <Divider />
       </div>
     );
   }

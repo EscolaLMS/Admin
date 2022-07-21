@@ -20,6 +20,7 @@ export const TopicForm: React.FC<{
       submitter={false}
       onValuesChange={onValuesChange}
       initialValues={{ ...initialValues }}
+      layout={'horizontal'}
     >
       <ProFormText
         name="title"
