@@ -4,12 +4,13 @@ import { Button, Spin } from 'antd';
 import { NavLink, history } from 'umi';
 
 import { Context } from '@/components/ProgramForm/Context';
-import { PlusOutlined } from '@ant-design/icons';
+import { FolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';
 import { getTypeIcon } from './../TopicForm/index';
 import { getTypeName } from './../TopicForm/media';
 import type { TopicType } from '@/services/escola-lms/enums';
 import { TopicTypesSelector } from './types';
+import './index.css';
 
 export const CurriculumList = () => {
   const { state, addNewLesson /*, sortLesson , cloneLesson */, currentEditMode, addNewTopic } =
@@ -45,30 +46,24 @@ export const CurriculumList = () => {
 
   if (state && state.lessons) {
     return (
-      <div>
-        <ul>
+      <aside className={'program-sidebar program-sidebar--left'}>
+        <ul className={'program-sidebar__list'}>
           {state.lessons
             .sort((lessonA, lessonB) => (lessonA.order || 0) - (lessonB.order || 0))
             .map((lesson) => (
-              <li
-                key={lesson.id}
-                className={
-                  currentEditMode &&
-                  currentEditMode.mode === 'lesson' &&
-                  currentEditMode.id === lesson.id
-                    ? 'active'
-                    : ''
-                }
-              >
-                <NavLink to={`/courses/list/${state.id}/program/?lesson=${lesson.id}`}>
-                  {lesson.title}
-                </NavLink>
+              <li key={lesson.id}>
+                <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
+                  <NavLink to={`/courses/list/${state.id}/program/?lesson=${lesson.id}`}>
+                    <FolderOutlined />
+                    {lesson.title}
+                  </NavLink>
 
-                <TopicTypesSelector
-                  onSelected={(topic_type) =>
-                    lesson.id && addNewTopicToLesson(lesson.id, topic_type)
-                  }
-                />
+                  <TopicTypesSelector
+                    onSelected={(topic_type) =>
+                      lesson.id && addNewTopicToLesson(lesson.id, topic_type)
+                    }
+                  />
+                </div>
 
                 {lesson.topics && lesson.topics?.length > 0 && (
                   <ul>
@@ -79,8 +74,8 @@ export const CurriculumList = () => {
                           currentEditMode &&
                           currentEditMode.mode === 'topic' &&
                           currentEditMode.id === topic.id
-                            ? 'active'
-                            : ''
+                            ? 'program-sidebar__list-item program-sidebar__list-item--active'
+                            : 'program-sidebar__list-item'
                         }
                       >
                         <NavLink to={`/courses/list/${state.id}/program/?topic=${topic.id}`}>
@@ -93,10 +88,17 @@ export const CurriculumList = () => {
               </li>
             ))}
         </ul>
-        <Button onClick={onNew} type="primary" className="green" icon={<PlusOutlined />}>
-          <FormattedMessage id="add_new_lesson" />
+        <Button
+          onClick={onNew}
+          type="primary"
+          className="program-sidebar__add-btn"
+          icon={<PlusOutlined />}
+        >
+          <span>
+            <FormattedMessage id="add_new_lesson" />
+          </span>
         </Button>
-      </div>
+      </aside>
     );
   }
 

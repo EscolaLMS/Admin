@@ -137,7 +137,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
     setState((prevState) => ({
       ...prevState,
-      lessons: [newLesson, ...(prevState ? prevState.lessons : [])] as API.Lesson[],
+      lessons: [...(prevState ? prevState.lessons : []), newLesson] as API.Lesson[],
     }));
 
     return newLesson;

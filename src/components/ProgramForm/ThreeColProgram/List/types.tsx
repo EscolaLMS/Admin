@@ -9,6 +9,7 @@ import {
   AudioOutlined,
   YoutubeOutlined,
   InteractionOutlined,
+  EllipsisOutlined,
 } from '@ant-design/icons';
 
 import './types.css';
@@ -28,9 +29,12 @@ export const TopicTypesSelector: React.FC<{
   return (
     <div className="topic-types-selector">
       <Tooltip placement="top" title={<FormattedMessage id="add_new_topic" />}>
-        <Button type="primary" size="small" onClick={() => setOpen((prev) => !prev)}>
-          +
-        </Button>
+        <Button
+          type="text"
+          size="small"
+          onClick={() => setOpen((prev) => !prev)}
+          icon={<EllipsisOutlined />}
+        />
       </Tooltip>
       {open && (
         <div className="topic-types-selector__list">

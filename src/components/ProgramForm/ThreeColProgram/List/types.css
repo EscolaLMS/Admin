@@ -5,7 +5,8 @@
 
 .topic-types-selector__list {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 100%;
   min-width: 48px;
+  z-index: 1050; /* zindex equal to @zindex-dropdown */
 }

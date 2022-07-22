@@ -547,6 +547,11 @@ export default () => {
             key="program"
             tab={<FormattedMessage id="program" />}
             disabled={manageCourseEdit.disableEdit}
+            cardProps={{
+              bodyStyle: {
+                padding: 0,
+              },
+            }}
           >
             {course && <ProgramForm id={course} />}
           </ProCard.TabPane>
