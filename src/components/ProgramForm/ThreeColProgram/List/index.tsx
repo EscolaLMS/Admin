@@ -1,5 +1,5 @@
 import { useContext, useCallback } from 'react';
-import { Button, Spin } from 'antd';
+import { Button, Empty, Spin } from 'antd';
 
 import { NavLink, history } from 'umi';
 
@@ -46,48 +46,56 @@ export const CurriculumList = () => {
 
   if (state && state.lessons) {
     return (
-      <aside className={'program-sidebar program-sidebar--left'}>
-        <ul className={'program-sidebar__list'}>
-          {state.lessons
-            .sort((lessonA, lessonB) => (lessonA.order || 0) - (lessonB.order || 0))
-            .map((lesson) => (
-              <li key={lesson.id}>
-                <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
-                  <NavLink to={`/courses/list/${state.id}/program/?lesson=${lesson.id}`}>
-                    <FolderOutlined />
-                    {lesson.title}
-                  </NavLink>
+      <aside
+        className={`program-sidebar program-sidebar--left ${
+          state.lessons.length > 0 ? '' : 'program-sidebar--empty'
+        }`}
+      >
+        {state.lessons.length > 0 ? (
+          <ul className={'program-sidebar__list'}>
+            {state.lessons
+              .sort((lessonA, lessonB) => (lessonA.order || 0) - (lessonB.order || 0))
+              .map((lesson) => (
+                <li key={lesson.id}>
+                  <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
+                    <NavLink to={`/courses/list/${state.id}/program/?lesson=${lesson.id}`}>
+                      <FolderOutlined />
+                      {lesson.title}
+                    </NavLink>
 
-                  <TopicTypesSelector
-                    onSelected={(topic_type) =>
-                      lesson.id && addNewTopicToLesson(lesson.id, topic_type)
-                    }
-                  />
-                </div>
+                    <TopicTypesSelector
+                      onSelected={(topic_type) =>
+                        lesson.id && addNewTopicToLesson(lesson.id, topic_type)
+                      }
+                    />
+                  </div>
 
-                {lesson.topics && lesson.topics?.length > 0 && (
-                  <ul>
-                    {lesson.topics?.map((topic) => (
-                      <li
-                        key={topic.id}
-                        className={
-                          currentEditMode &&
-                          currentEditMode.mode === 'topic' &&
-                          currentEditMode.id === topic.id
-                            ? 'program-sidebar__list-item program-sidebar__list-item--active'
-                            : 'program-sidebar__list-item'
-                        }
-                      >
-                        <NavLink to={`/courses/list/${state.id}/program/?topic=${topic.id}`}>
-                          {getTypeIcon(getTypeName(topic))} {topic.title}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-        </ul>
+                  {lesson.topics && lesson.topics?.length > 0 && (
+                    <ul>
+                      {lesson.topics?.map((topic) => (
+                        <li
+                          key={topic.id}
+                          className={
+                            currentEditMode &&
+                            currentEditMode.mode === 'topic' &&
+                            currentEditMode.id === topic.id
+                              ? 'program-sidebar__list-item program-sidebar__list-item--active'
+                              : 'program-sidebar__list-item'
+                          }
+                        >
+                          <NavLink to={`/courses/list/${state.id}/program/?topic=${topic.id}`}>
+                            {getTypeIcon(getTypeName(topic))} {topic.title}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+          </ul>
+        ) : (
+          <Empty />
+        )}
         <Button
           onClick={onNew}
           type="primary"

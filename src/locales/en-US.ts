@@ -461,4 +461,7 @@ export default {
     'You have created a course. Now you can create lessons for your course.',
   course_success_modal_button_ok: 'Create modules',
   course_success_modal_button_cancel: 'Go to course page',
+  program_form_empty_list_message:
+    'You have no content to view yet. Create your first lesson to get started.',
+  program_form_not_selected_list_message: 'Select a lesson or topic to edit.',
 };
