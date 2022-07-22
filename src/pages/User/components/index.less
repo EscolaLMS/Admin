@@ -13,6 +13,7 @@
   height: 40px;
   line-height: 44px;
   text-align: right;
+
   :global(.ant-dropdown-trigger) {
     margin-right: 24px;
   }
@@ -43,6 +44,7 @@
 .header {
   height: 44px;
   line-height: 44px;
+
   a {
     text-decoration: none;
   }
@@ -87,7 +89,7 @@
 
   .icon {
     margin-left: 16px;
-    color: rgba(0, 0, 0, 0.2);
+    color: rgb(0 0 0 / 20%);
     font-size: 24px;
     vertical-align: middle;
     cursor: pointer;
@@ -102,11 +104,13 @@
     margin-top: 24px;
     line-height: 22px;
     text-align: left;
+
     .register {
       float: right;
     }
   }
 
+  // stylelint-disable selector-class-pattern
   .prefixIcon {
     color: @primary-color;
     font-size: @font-size-base;
