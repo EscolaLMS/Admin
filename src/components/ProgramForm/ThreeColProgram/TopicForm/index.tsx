@@ -147,7 +147,12 @@ export const Topic: React.FC<{
 
   return (
     <React.Fragment>
-      <Row gutter={16}>
+      <Row
+        gutter={16}
+        style={{
+          height: '100%',
+        }}
+      >
         <Col span={24 - 8}>
           <Divider>
             {getTypeIcon(getTypeName(topic))}{' '}
@@ -224,20 +229,22 @@ export const Topic: React.FC<{
           </Row>
         </Col>
         <Col span={8}>
-          <TopicForm
-            courseId={Number(courseId)}
-            courseLessons={courseLessons}
-            initialValues={state}
-            onValuesChange={(values) => updateValues(values)}
-          />
-          {!state.isNew && (
-            <React.Fragment>
-              <Divider>
-                <FormattedMessage id="file_resources" />
-              </Divider>
-              <Resources topicId={Number(topic.id)} folder={`course/${courseId}`} />
-            </React.Fragment>
-          )}
+          <aside className={'program-sidebar program-sidebar--right'}>
+            <TopicForm
+              courseId={Number(courseId)}
+              courseLessons={courseLessons}
+              initialValues={state}
+              onValuesChange={(values) => updateValues(values)}
+            />
+            {!state.isNew && (
+              <React.Fragment>
+                <Divider>
+                  <FormattedMessage id="file_resources" />
+                </Divider>
+                <Resources topicId={Number(topic.id)} folder={`course/${courseId}`} />
+              </React.Fragment>
+            )}
+          </aside>
         </Col>
       </Row>
     </React.Fragment>
