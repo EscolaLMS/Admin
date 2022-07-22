@@ -55,13 +55,20 @@ export const LessonForm: React.FC<{
           );
         },
       }}
+      layout={'horizontal'}
       onFinish={onFinish}
       onValuesChange={(a, b) => {
         onValuesChange(a, b);
       }}
       initialValues={{ ...initialValues, summary: initialValues.summary || '' }}
+      style={{ height: '100%' }}
     >
-      <Row gutter={16}>
+      <Row
+        gutter={16}
+        style={{
+          height: '100%',
+        }}
+      >
         <Col span={24 - 8}>
           {' '}
           <ProFormText
@@ -83,16 +90,17 @@ export const LessonForm: React.FC<{
           </ProForm.Item>
         </Col>
         <Col span={8}>
-          {' '}
-          <ProFormText
-            name="duration"
-            label={<FormattedMessage id="duration" />}
-            tooltip={<FormattedMessage id="duration" />}
-            placeholder={intl.formatMessage({
-              id: 'duration',
-            })}
-          />
-          <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+          <aside className={'program-sidebar program-sidebar--right'}>
+            <ProFormText
+              name="duration"
+              label={<FormattedMessage id="duration" />}
+              tooltip={<FormattedMessage id="duration" />}
+              placeholder={intl.formatMessage({
+                id: 'duration',
+              })}
+            />
+            <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+          </aside>
         </Col>
       </Row>
     </ProForm>

@@ -338,6 +338,7 @@ export default {
   reset: 'Reset',
   reset_password: 'Reset password',
   search_file: 'Search file',
+  open_editor: 'Open editor',
   json: 'JSON Metadata',
   additional: 'Additional',
   json_tooltip: 'Additional metadata for rendering course',

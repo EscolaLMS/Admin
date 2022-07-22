@@ -16,6 +16,17 @@
    border-right: 1px solid #D9D9D9;
  }
 
+.program-sidebar--right {
+  padding-left: 25px;
+  padding-right: 25px;
+  border-left: 1px solid #D9D9D9;
+}
+
+.program-sidebar--right .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: end;
+}
+
 .program-sidebar__add-btn {
    position: absolute;
    bottom: 0;

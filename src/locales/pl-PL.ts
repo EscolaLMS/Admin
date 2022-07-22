@@ -364,6 +364,7 @@ export default {
   additional: 'Dodatkowe',
   json_tooltip:
     'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
+  open_editor: 'Otwórz edytor',
   json_editor: 'Otwórz edytor JSON',
   introduction: 'Wprowadzenie',
   introduction_tooltip:
