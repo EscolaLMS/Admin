@@ -30,7 +30,7 @@ export const TopicTypesSelector: React.FC<{
     <div className="topic-types-selector">
       <Tooltip placement="top" title={<FormattedMessage id="add_new_topic" />}>
         <Button
-          type="text"
+          type="primary"
           size="small"
           onClick={() => setOpen((prev) => !prev)}
           icon={<EllipsisOutlined />}
