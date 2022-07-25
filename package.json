@@ -23,7 +23,7 @@
         "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
         "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
         "lint:prettier": "prettier --check \"src/**/*\" --end-of-line auto",
-        "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
+        "lint:style": "stylelint --fix \"src/**/*.less\" --custom-syntax postcss-less",
         "openapi": "umi openapi",
         "precommit": "lint-staged",
         "prettier": "prettier -c --write \"src/**/*\"",
@@ -43,7 +43,7 @@
         "test": "jest"
     },
     "lint-staged": {
-        "**/*.less": "stylelint --syntax less",
+        "**/*.less": "stylelint --custom-syntax postcss-less",
         "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
         "**/*.{js,jsx,tsx,ts,less,md,json}": [
             "prettier --write"
@@ -159,7 +159,13 @@
         "lint-staged": "^13.0.3",
         "mockjs": "^1.1.0",
         "prettier": "^2.7.1",
+        "postcss": "^8.4.14",
+        "postcss-less": "^6.0.0",
         "stylelint": "^14.9.1",
+        "stylelint-config-standard": "^26.0.0",
+        "stylelint-config-css-modules": "^4.1.0",
+        "stylelint-config-prettier": "^9.0.3",
+        "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
         "typescript": "^4.7.4"
     },
     "engines": {

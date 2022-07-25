@@ -466,4 +466,7 @@ export default {
   course_success_modal_content: 'Utworzyłeś kurs. Teraz możesz tworzyć lekcje dla swojego kursu.',
   course_success_modal_button_ok: 'Stwórz moduły',
   course_success_modal_button_cancel: 'Idź do strony kursu',
+  program_form_empty_list_message:
+    'Nie masz wybranej żadnej treści. Stwórz pierwszą lekcję żeby zacząć.',
+  program_form_not_selected_list_message: 'Wybierz lekcję albo moduł do edytowania.',
 };

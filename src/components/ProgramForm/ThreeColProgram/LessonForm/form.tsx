@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Popconfirm, Col, Row, Space } from 'antd';
+import { Button, Popconfirm, Col, Row, Space, Affix } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import ProCard from '@ant-design/pro-card';
 
 export const LessonForm: React.FC<{
   lesson: API.Lesson;
@@ -21,34 +22,41 @@ export const LessonForm: React.FC<{
           return (
             <Row gutter={16}>
               <Col span={24 - 8}>
-                <Row justify="center">
-                  <Space size="large">
-                    <Button
-                      loading={loading}
-                      type="primary"
-                      key="submit"
-                      onClick={() => props.form?.submit()}
-                      {...props.submitButtonProps}
-                    >
-                      {lesson.isNew ? (
-                        <FormattedMessage id="create" />
-                      ) : (
-                        <FormattedMessage id="save" />
-                      )}
-                    </Button>
-
-                    <Popconfirm
-                      key="delete"
-                      onConfirm={onDelete}
-                      title={<FormattedMessage id="deleteQuestion" />}
-                      okText={<FormattedMessage id="yes" />}
-                      cancelText={<FormattedMessage id="no" />}
-                    >
-                      <Button type="primary" danger {...props.submitButtonProps} loading={loading}>
-                        <FormattedMessage id="delete" />
+                <Row justify="center" className={'program__cta-footer'}>
+                  <Affix offsetBottom={0}>
+                    <Space size="large">
+                      <Button
+                        loading={loading}
+                        type="primary"
+                        key="submit"
+                        onClick={() => props.form?.submit()}
+                        {...props.submitButtonProps}
+                      >
+                        {lesson.isNew ? (
+                          <FormattedMessage id="create" />
+                        ) : (
+                          <FormattedMessage id="save" />
+                        )}
                       </Button>
-                    </Popconfirm>
-                  </Space>
+
+                      <Popconfirm
+                        key="delete"
+                        onConfirm={onDelete}
+                        title={<FormattedMessage id="deleteQuestion" />}
+                        okText={<FormattedMessage id="yes" />}
+                        cancelText={<FormattedMessage id="no" />}
+                      >
+                        <Button
+                          type="primary"
+                          danger
+                          {...props.submitButtonProps}
+                          loading={loading}
+                        >
+                          <FormattedMessage id="delete" />
+                        </Button>
+                      </Popconfirm>
+                    </Space>
+                  </Affix>
                 </Row>
               </Col>
             </Row>
@@ -70,24 +78,33 @@ export const LessonForm: React.FC<{
         }}
       >
         <Col span={24 - 8}>
-          {' '}
-          <ProFormText
-            name="title"
-            label={<FormattedMessage id="title" />}
-            tooltip={<FormattedMessage id="title" />}
-            placeholder={intl.formatMessage({
-              id: 'title',
-            })}
-            required
-          />
-          <ProForm.Item
-            name="summary"
-            label={<FormattedMessage id="summary" />}
-            tooltip={<FormattedMessage id="summary_tooltip" />}
-            valuePropName="value"
-          >
-            <WysiwygMarkdown directory={`course/${lesson.course_id}/lesson/${lesson.id}/wysiwyg`} />
-          </ProForm.Item>
+          <ProCard>
+            <ProFormText
+              name="title"
+              label={<FormattedMessage id="title" />}
+              tooltip={<FormattedMessage id="title" />}
+              placeholder={intl.formatMessage({
+                id: 'title',
+              })}
+              required
+              labelCol={{
+                span: 5,
+              }}
+            />
+            <ProForm.Item
+              name="summary"
+              label={<FormattedMessage id="summary" />}
+              tooltip={<FormattedMessage id="summary_tooltip" />}
+              valuePropName="value"
+              labelCol={{
+                span: 5,
+              }}
+            >
+              <WysiwygMarkdown
+                directory={`course/${lesson.course_id}/lesson/${lesson.id}/wysiwyg`}
+              />
+            </ProForm.Item>
+          </ProCard>
         </Col>
         <Col span={8}>
           <aside className={'program-sidebar program-sidebar--right'}>

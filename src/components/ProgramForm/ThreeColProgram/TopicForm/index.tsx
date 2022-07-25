@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import { Alert, Row, Col, Space } from 'antd';
+import { Alert, Row, Col, Space, Affix } from 'antd';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import MediaUpload from './media/upload';
@@ -209,23 +209,25 @@ export const Topic: React.FC<{
             />
           )}
 
-          <Row justify="center">
-            <Space size="large">
-              <Button onClick={onClose} loading={loading}>
-                <FormattedMessage id="Cancel" />
-              </Button>
-              <Button
-                type="primary"
-                onClick={onFormSubmit}
-                disabled={saveIsDisabled}
-                loading={loading}
-              >
-                <FormattedMessage id="save" />
-              </Button>
-              <Button danger onClick={onDelete} loading={loading}>
-                <FormattedMessage id="Delete" />
-              </Button>
-            </Space>
+          <Row justify="center" className={'program__cta-footer'}>
+            <Affix offsetBottom={0}>
+              <Space size="large">
+                <Button onClick={onClose} loading={loading}>
+                  <FormattedMessage id="Cancel" />
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={onFormSubmit}
+                  disabled={saveIsDisabled}
+                  loading={loading}
+                >
+                  <FormattedMessage id="save" />
+                </Button>
+                <Button danger onClick={onDelete} loading={loading}>
+                  <FormattedMessage id="Delete" />
+                </Button>
+              </Space>
+            </Affix>
           </Row>
         </Col>
         <Col span={8}>
