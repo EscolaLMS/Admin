@@ -28,11 +28,7 @@ export const CurriculumList = () => {
           state.lessons.length > 0 ? '' : 'program-sidebar--empty'
         }`}
       >
-        {state.id && state.lessons.length > 0 ? (
-          <LessonList courseId={state.id} courseLessons={state.lessons} />
-        ) : (
-          <Empty />
-        )}
+          <LessonList  />    
         <Button
           onClick={onNew}
           type="primary"
