@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { NavLink } from 'umi';
 import { FolderOutlined } from '@ant-design/icons';
 import { TopicTypesSelector } from '@/components/ProgramForm/ThreeColProgram/List/types';
@@ -16,7 +16,7 @@ export const LessonList: React.FC<{
 }> = ({ courseId, courseLessons }) => {
   const { addNewTopic, currentEditMode } = useContext(Context);
 
-  const [list, setList] = useState<API.Lesson[]>(courseLessons);
+  const [list, setList] = React.useState<API.Lesson[]>(courseLessons);
 
   React.useEffect(() => {
     console.log(list);
@@ -101,7 +101,7 @@ export const LessonList: React.FC<{
         onDragEnd(result);
       }}
     >
-      {list.map((lesson) => {
+      {courseLessons.map((lesson) => {
         return (
           lesson.id && (
             <React.Fragment>
