@@ -1,12 +1,13 @@
 .topic-types-selector {
   position: relative;
   display: inline-block;
+  padding-left: 8px;
 }
 
 .topic-types-selector__list {
   position: absolute;
   top: 0;
   left: 100%;
-  min-width: 48px;
   z-index: 1050; /* zindex equal to @zindex-dropdown */
+  min-width: 48px;
 }

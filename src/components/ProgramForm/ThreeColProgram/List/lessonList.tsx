@@ -10,8 +10,21 @@ import type { TopicType } from '@/services/escola-lms/enums';
 import { history } from 'umi';
 import { Context } from '@/components/ProgramForm/Context';
 
+const getSortingMode = (i: number, len: number) => {
+  if (len === 1) {
+    return 'none';
+  }
+  if (i === 0) {
+    return 'down';
+  }
+  if (i === len - 1) {
+    return 'up';
+  }
+  return 'both';
+};
+
 export const LessonList: React.FC = () => {
-  const { state, addNewTopic, currentEditMode, sortTopics } = useContext(Context);
+  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson } = useContext(Context);
 
   const courseLessons = state?.lessons;
   const courseId = state?.id;
@@ -107,7 +120,7 @@ export const LessonList: React.FC = () => {
         onDragEnd(result);
       }}
     >
-      {courseLessons?.map((lesson) => {
+      {courseLessons?.map((lesson, cindex, lessons) => {
         return (
           lesson.id && (
             <React.Fragment>
@@ -117,6 +130,8 @@ export const LessonList: React.FC = () => {
                   {lesson.title}
                 </NavLink>
                 <TopicTypesSelector
+                  sortingMode={getSortingMode(cindex, lessons.length)}
+                  onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
                   onSelected={(topic_type) =>
                     lesson.id && addNewTopicToLesson(lesson.id, topic_type)
                   }
