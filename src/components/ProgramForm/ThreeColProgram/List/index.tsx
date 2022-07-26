@@ -1,5 +1,5 @@
 import { useContext, useCallback } from 'react';
-import { Button, Empty, Spin } from 'antd';
+import { Button, Spin } from 'antd';
 
 import { history } from 'umi';
 
@@ -28,7 +28,7 @@ export const CurriculumList = () => {
           state.lessons.length > 0 ? '' : 'program-sidebar--empty'
         }`}
       >
-          <LessonList  />    
+        <LessonList />
         <Button
           onClick={onNew}
           type="primary"

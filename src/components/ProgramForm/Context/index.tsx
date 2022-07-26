@@ -40,6 +40,7 @@ type ProgramContext = {
   addNewTopic?: (lesson_id: number, type: API.TopicType) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
   sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
+  sortTopics?: (lesson_id: number, new_order: API.Lesson[]) => void;
   updateTopicsOrder?: (lesson_id: number) => void;
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
   cloneTopic?: (topic_id: number) => void;
@@ -265,6 +266,34 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       });
     },
     [state, id],
+  );
+
+  const sortTopics = useCallback(
+    (lesson_id: number, new_order: API.Topic[]) => {
+      setState((prevState) => ({
+        ...prevState,
+        lessons: prevState
+          ? prevState.lessons.map((lesson_item) => {
+              if (lesson_item.id === lesson_id) {
+                return {
+                  ...lesson_item,
+                  topics: new_order,
+                };
+              }
+              return lesson_item;
+            })
+          : [],
+      }));
+
+      const orders = new_order.map((topic) => [topic.id, topic.order]);
+
+      sort({ class: 'Topic', orders, course_id: id }).then((response) => {
+        if (response.success) {
+          message.success(response.message);
+        }
+      });
+    },
+    [state],
   );
 
   const deleteLesson = useCallback(
@@ -653,6 +682,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     addNewTopic,
     deleteTopic,
     sortTopic,
+    sortTopics,
     updateTopicsOrder,
     onTopicUploaded,
     cloneTopic,

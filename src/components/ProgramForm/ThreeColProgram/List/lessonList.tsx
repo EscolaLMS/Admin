@@ -10,21 +10,34 @@ import type { TopicType } from '@/services/escola-lms/enums';
 import { history } from 'umi';
 import { Context } from '@/components/ProgramForm/Context';
 
-export const LessonList:React.FC = () => {
-  const { state, addNewTopic, currentEditMode } = useContext(Context);
-  const lessons = state.lessons; 
-  const courseId = state.id;
+export const LessonList: React.FC = () => {
+  const { state, addNewTopic, currentEditMode, sortTopics } = useContext(Context);
 
-  const [list, setList] = React.useState<API.Lesson[]>(courseLessons);
+  const courseLessons = state?.lessons;
+  const courseId = state?.id;
 
-  React.useEffect(() => {
-    console.log('Sync with backend', list);
-  }, [list]);
-if (! courseId) { return <React.Fragment /> } 
+  const [list, setList] = React.useState<API.Lesson[]>(courseLessons || []);
+
+  const addNewTopicToLesson = useCallback(
+    (lesson_id: number, topic_type: TopicType) => {
+      if (addNewTopic) {
+        const newTopic = addNewTopic(lesson_id, topic_type);
+        history.push(`/courses/list/${courseId}/program/?topic=${newTopic.id}`);
+      }
+    },
+    [addNewTopic, courseLessons],
+  );
+
+  if (!courseId) {
+    return <React.Fragment />;
+  }
   const reorderColumnList = (lessonSource: any, startIndex: number, endIndex: number) => {
     const newTopicsIds = lessonSource.topics;
     const [removed] = newTopicsIds.splice(startIndex, 1);
     newTopicsIds.splice(endIndex, 0, removed);
+    newTopicsIds.forEach((topicId: { order: number }, index: any) => {
+      topicId.order = index;
+    });
 
     return {
       ...lessonSource,
@@ -53,6 +66,10 @@ if (! courseId) { return <React.Fragment /> }
         newState[lessonIndex] = newColumn;
         return newState;
       });
+
+      if (sortTopics && lesson && lesson.id) {
+        sortTopics(lesson.id, newColumn.topics);
+      }
     } else {
       const lessonSource = list.find((item) => item.id === Number(source.droppableId));
       const lessonSourceIndex = list.findIndex((item) => item.id === Number(source.droppableId));
@@ -84,23 +101,13 @@ if (! courseId) { return <React.Fragment /> }
     }
   };
 
-  const addNewTopicToLesson = useCallback(
-    (lesson_id: number, topic_type: TopicType) => {
-      if (addNewTopic) {
-        const newTopic = addNewTopic(lesson_id, topic_type);
-        history.push(`/courses/list/${courseId}/program/?topic=${newTopic.id}`);
-      }
-    },
-    [addNewTopic, courseLessons],
-  );
-
   return (
     <DragDropContext
       onDragEnd={(result) => {
         onDragEnd(result);
       }}
     >
-      {courseLessons.map((lesson) => {
+      {courseLessons?.map((lesson) => {
         return (
           lesson.id && (
             <React.Fragment>
