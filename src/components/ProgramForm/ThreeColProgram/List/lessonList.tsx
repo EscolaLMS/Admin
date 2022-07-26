@@ -20,7 +20,7 @@ export const LessonList:React.FC = () => {
   React.useEffect(() => {
     console.log('Sync with backend', list);
   }, [list]);
-
+if (! courseId) { return <React.Fragment /> } 
   const reorderColumnList = (lessonSource: any, startIndex: number, endIndex: number) => {
     const newTopicsIds = lessonSource.topics;
     const [removed] = newTopicsIds.splice(startIndex, 1);
