@@ -11,7 +11,9 @@ import { history } from 'umi';
 import { Context } from '@/components/ProgramForm/Context';
 
 export const LessonList:React.FC = () => {
-  const { addNewTopic, currentEditMode } = useContext(Context);
+  const { state, addNewTopic, currentEditMode } = useContext(Context);
+  const lessons = state.lessons; 
+  const courseId = state.id;
 
   const [list, setList] = React.useState<API.Lesson[]>(courseLessons);
 
