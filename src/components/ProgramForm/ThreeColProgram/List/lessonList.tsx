@@ -18,7 +18,7 @@ export const LessonList:React.FC = () => {
   const [list, setList] = React.useState<API.Lesson[]>(courseLessons);
 
   React.useEffect(() => {
-    console.log(list);
+    console.log('Sync with backend', list);
   }, [list]);
 
   const reorderColumnList = (lessonSource: any, startIndex: number, endIndex: number) => {
