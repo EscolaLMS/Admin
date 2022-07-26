@@ -20,6 +20,7 @@ export const DescriptionModal: React.FC<DescriptionModalProps> = (props) => {
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleOk}
+      width={1000}
       footer={[
         <Button key="back" type={'primary'} onClick={handleOk}>
           Ok
