@@ -10,10 +10,7 @@ import type { TopicType } from '@/services/escola-lms/enums';
 import { history } from 'umi';
 import { Context } from '@/components/ProgramForm/Context';
 
-export const LessonList: React.FC<{
-  courseId: number;
-  courseLessons: API.Lesson[];
-}> = ({ courseId, courseLessons }) => {
+export const LessonList:React.FC = () => {
   const { addNewTopic, currentEditMode } = useContext(Context);
 
   const [list, setList] = React.useState<API.Lesson[]>(courseLessons);
