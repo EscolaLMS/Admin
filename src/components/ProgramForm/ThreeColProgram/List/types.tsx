@@ -35,7 +35,7 @@ export const TopicTypesSelector: React.FC<{
       {sortingMode !== 'none' && (
         <Space>
           {(sortingMode === 'both' || sortingMode === 'up') && (
-            <Tooltip placement="top" title={<FormattedMessage id="sort_up" />}>
+            <Tooltip placement="top" title={<FormattedMessage id="sort_element_up" />}>
               <Button
                 type="default"
                 size="small"
@@ -45,7 +45,7 @@ export const TopicTypesSelector: React.FC<{
             </Tooltip>
           )}
           {(sortingMode === 'both' || sortingMode === 'down') && (
-            <Tooltip placement="top" title={<FormattedMessage id="sort_down" />}>
+            <Tooltip placement="top" title={<FormattedMessage id="sort_element_down" />}>
               <Button
                 type="default"
                 size="small"
