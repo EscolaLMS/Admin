@@ -13,7 +13,7 @@ export const Lesson: React.FC<{
   const [state, setState] = useState<API.Lesson>(lesson);
   const [, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
-  const { updateLesson, deleteLesson } = useContext(Context);
+  const { updateLesson, deleteLesson, cloneLesson } = useContext(Context);
 
   const params = useParams<{ course?: string; tab?: string }>();
 
@@ -50,6 +50,10 @@ export const Lesson: React.FC<{
     return Promise.resolve();
   }, [deleteLesson, state.id]);
 
+  const handleClone = useCallback(() => {
+    return state.id && cloneLesson?.(state.id);
+  }, [cloneLesson, state.id]);
+
   return (
     <React.Fragment>
       <LessonForm
@@ -58,6 +62,7 @@ export const Lesson: React.FC<{
         initialValues={state}
         onDelete={handleDelete}
         onFinish={handleSave}
+        onClone={handleClone}
         onValuesChange={(changedValues) => {
           setState((prevState) => ({
             ...prevState,

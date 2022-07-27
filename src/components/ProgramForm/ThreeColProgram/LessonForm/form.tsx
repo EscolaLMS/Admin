@@ -10,9 +10,10 @@ export const LessonForm: React.FC<{
   onFinish: (values: Record<string, string>) => Promise<void>;
   onValuesChange: (changedValues: any, values: Record<string, string>) => void;
   onDelete: () => Promise<void>;
+  onClone: () => void;
   initialValues: any;
   loading: boolean;
-}> = ({ onFinish, onValuesChange, onDelete, initialValues, lesson, loading = false }) => {
+}> = ({ onFinish, onValuesChange, onDelete, onClone, initialValues, lesson, loading = false }) => {
   const intl = useIntl();
   return (
     <ProForm
@@ -38,7 +39,11 @@ export const LessonForm: React.FC<{
                           <FormattedMessage id="save" />
                         )}
                       </Button>
-
+                      {!lesson.isNew && (
+                        <Button onClick={onClone}>
+                          <FormattedMessage id="clone" />
+                        </Button>
+                      )}
                       <Popconfirm
                         key="delete"
                         onConfirm={onDelete}
