@@ -60,7 +60,7 @@ export const Topic: React.FC<{
   courseLessons: API.Lesson[];
   onClose: () => void;
 }> = ({ topic, courseId, courseLessons, onClose }) => {
-  const { updateTopic, deleteTopic, onTopicUploaded } = useContext(Context);
+  const { updateTopic, deleteTopic, onTopicUploaded, cloneTopic } = useContext(Context);
   const [saveIsDisabled, setSaveIsDisabled] = useState(false);
   const [state, setState] = useState<API.Topic>({
     ...topic,
@@ -145,6 +145,10 @@ export const Topic: React.FC<{
     return deleteTopic && state.id && deleteTopic(state.id);
   }, [state, deleteTopic, topic]);
 
+  const onCloneCart = useCallback(() => {
+    return topic.id && cloneTopic && cloneTopic(topic.id);
+  }, [state.id]);
+
   return (
     <React.Fragment>
       <Row
@@ -214,6 +218,9 @@ export const Topic: React.FC<{
               <Space size="large">
                 <Button onClick={onClose} loading={loading}>
                   <FormattedMessage id="Cancel" />
+                </Button>
+                <Button onClick={onCloneCart}>
+                  <FormattedMessage id="clone" />
                 </Button>
                 <Button
                   type="primary"
