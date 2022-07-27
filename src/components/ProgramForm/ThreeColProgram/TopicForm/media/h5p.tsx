@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, Divider, Button, Typography, Modal } from 'antd';
+import { Row, Col, Divider, Button, Typography } from 'antd';
 import H5PContentSelect from '@/components/H5PContentSelect';
 import { EditorContextProvider } from '@escolalms/h5p-react';
 
@@ -8,10 +8,11 @@ import { useIntl, FormattedMessage } from 'umi';
 
 import { H5PForm as H5PFormNew } from '@/components/H5PForm';
 import H5Player from '@/components/H5Player';
+import ProCard from '@ant-design/pro-card';
 
 declare const REACT_APP_API_URL: string;
 
-export const H5PFormNewModal: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
+export const H5PFormEdit: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
   onData,
   id,
 }) => {
@@ -36,7 +37,6 @@ export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
       defaultLang={lang}
       url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
     >
-      <Divider />
       <H5Player id={Number(id)} />
     </EditorContextProvider>
   );
@@ -47,7 +47,6 @@ export const H5PForm: React.FC<{
   onChange: (value: string) => void;
 }> = ({ id, onChange }) => {
   const intl = useIntl();
-  const [previewId, setPreviewId] = useState<number>();
   const [editId, setEditId] = useState<number | 'new'>();
   return (
     <React.Fragment>
@@ -63,23 +62,44 @@ export const H5PForm: React.FC<{
             value={id}
             onChange={(value) => {
               onChange(value);
+              setEditId(Number(id));
             }}
           />
         </Col>
+      </Row>
 
-        <Col span={8}>
-          <Button
-            disabled={!id}
-            onClick={() => {
-              setPreviewId(Number(id));
+      <Row
+        style={{
+          marginTop: '30px',
+        }}
+      >
+        <Col span={24}>
+          <ProCard
+            tabs={{
+              type: 'card',
+              defaultActiveKey: 'preview',
+              onChange: (key) => {
+                if (key === 'edit') {
+                  setEditId(Number(id));
+                }
+              },
             }}
           >
-            <FormattedMessage id="preview" />
-          </Button>
-
-          <Button type="primary" disabled={!id} onClick={() => setEditId(Number(id))}>
-            <FormattedMessage id="edit" />
-          </Button>
+            <ProCard.TabPane key="preview" disabled={!id} tab={<FormattedMessage id="preview" />}>
+              {id && <H5PTopicPlayer id={id} />}
+            </ProCard.TabPane>
+            <ProCard.TabPane key="edit" disabled={!id} tab={<FormattedMessage id="edit" />}>
+              {editId && (
+                <H5PFormEdit
+                  id={editId}
+                  onData={(hid) => {
+                    onChange(String(hid));
+                    setEditId(undefined);
+                  }}
+                />
+              )}
+            </ProCard.TabPane>
+          </ProCard>
         </Col>
       </Row>
 
@@ -115,31 +135,6 @@ export const H5PForm: React.FC<{
           </Button>
         </Col>
       </Row>
-      <Modal
-        okButtonProps={{ disabled: true, hidden: true }}
-        width="80vw"
-        onCancel={() => setEditId(undefined)}
-        visible={!!editId}
-      >
-        {editId && (
-          <H5PFormNewModal
-            id={editId}
-            onData={(hid) => {
-              onChange(String(hid));
-              setEditId(undefined);
-            }}
-          />
-        )}
-      </Modal>
-
-      <Modal
-        width="80vw"
-        onOk={() => setPreviewId(undefined)}
-        onCancel={() => setPreviewId(undefined)}
-        visible={!!previewId}
-      >
-        {previewId && <H5PTopicPlayer id={previewId} />}
-      </Modal>
     </React.Fragment>
   );
 };
