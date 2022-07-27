@@ -185,7 +185,7 @@ export const LessonList: React.FC = () => {
                                   <span className="title">{topic.title}</span>
                                   <Tooltip
                                     placement="bottom"
-                                    title={<FormattedMessage id="drag_program_tooltip" />}
+                                    title={<FormattedMessage id="drag_topic_tooltip" />}
                                   >
                                     <EllipsisOutlined />
                                   </Tooltip>
