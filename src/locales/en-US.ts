@@ -465,4 +465,5 @@ export default {
     'You have no content to view yet. Create your first lesson to get started.',
   program_form_not_selected_list_message: 'Select a lesson or topic to edit.',
   clone: 'Clone',
+  drag_program_tooltip: 'Click to edit or drag & drop to reorder topic.',
 };

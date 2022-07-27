@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { NavLink } from 'umi';
-import { FolderOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, FolderOutlined } from '@ant-design/icons';
 import { TopicTypesSelector } from '@/components/ProgramForm/ThreeColProgram/List/types';
 import type { DropResult } from 'react-beautiful-dnd';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
@@ -9,6 +9,9 @@ import { getTypeName } from '@/components/ProgramForm/ThreeColProgram/TopicForm/
 import type { TopicType } from '@/services/escola-lms/enums';
 import { history } from 'umi';
 import { Context } from '@/components/ProgramForm/Context';
+import { FormattedMessage } from '@@/plugin-locale/localeExports';
+import { Tooltip } from 'antd';
+import { getFormData } from '@/services/api';
 
 const getSortingMode = (i: number, len: number) => {
   if (len === 1) {
@@ -24,7 +27,8 @@ const getSortingMode = (i: number, len: number) => {
 };
 
 export const LessonList: React.FC = () => {
-  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson } = useContext(Context);
+  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic } =
+    useContext(Context);
 
   const courseLessons = state?.lessons;
   const courseId = state?.id;
@@ -59,7 +63,7 @@ export const LessonList: React.FC = () => {
   };
 
   const onDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
+    const { destination, source, draggableId } = result;
 
     if (!result.destination) {
       return;
@@ -110,6 +114,14 @@ export const LessonList: React.FC = () => {
           };
           return newState;
         });
+
+        const formData = getFormData({
+          lesson_id: lessonDestination.id,
+        });
+
+        if (updateTopic && lessonDestination.id) {
+          updateTopic(Number(draggableId), formData);
+        }
       }
     }
   };
@@ -164,7 +176,19 @@ export const LessonList: React.FC = () => {
                                 <NavLink
                                   to={`/courses/list/${courseId}/program/?topic=${topic.id}`}
                                 >
-                                  {getTypeIcon(getTypeName(topic))} {topic.title}
+                                  <Tooltip
+                                    placement="right"
+                                    title={<FormattedMessage id={getTypeName(topic)} />}
+                                  >
+                                    {getTypeIcon(getTypeName(topic))}
+                                  </Tooltip>
+                                  <span className="title">{topic.title}</span>
+                                  <Tooltip
+                                    placement="bottom"
+                                    title={<FormattedMessage id="drag_program_tooltip" />}
+                                  >
+                                    <EllipsisOutlined />
+                                  </Tooltip>
                                 </NavLink>
                               </li>
                             )}

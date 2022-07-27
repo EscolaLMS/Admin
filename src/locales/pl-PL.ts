@@ -470,4 +470,5 @@ export default {
     'Nie masz wybranej żadnej treści. Stwórz pierwszą lekcję żeby zacząć.',
   program_form_not_selected_list_message: 'Wybierz lekcję albo moduł do edytowania.',
   clone: 'Klonuj',
+  drag_program_tooltip: 'Przeciągnij aby zmienić kolejność lekcji',
 };
