@@ -8,7 +8,7 @@ export const Oembed: React.FC<{ text: string; onChange: (value: string) => void 
   onChange,
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(text);
-  const [previewValue, setPreviewValue] = useState<string>();
+  const [previewValue, setPreviewValue] = useState<string>(text);
 
   return (
     <React.Fragment>

@@ -178,7 +178,9 @@ export default {
   H5P_scorm_preview: 'H5P. Scorm content preview',
   H5P_uploaded: 'New file H5P uploaded successfully',
   H5P_preview_title: 'H5P. HTML Content preview',
-  H5P_new_content_title: 'H5p. Nowa treść HTML5',
+  H5P_new_content_title: 'H5p. New',
+  H5P_edit_content_title: 'H5p. Edit',
+
   H5P_select_content: 'Select content for H5P',
   upload_click_here: 'Click here to add file',
   upload: 'Add file',

@@ -201,6 +201,8 @@ export default {
   H5P_uploaded: 'Nowy plik H5P dodano prawidłowo',
   H5P_preview_title: 'H5P. Podgląd treści HTML',
   H5P_new_content_title: 'H5P. Nowa treść HTML5',
+  H5P_edit_content_title: 'H5p. Edycja',
+
   H5P_select_content: 'Wybierz treść H5P',
   upload_click_here: 'Kliknij tutaj żeby dodać',
   upload: 'Dodaj plik',
