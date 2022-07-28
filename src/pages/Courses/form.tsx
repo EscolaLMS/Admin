@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { message, Spin, Row, Col, Alert, Button } from 'antd';
 import ProForm, {
   ProFormText,
@@ -59,7 +59,7 @@ export default () => {
   const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
-  const formRef = useRef<any>(null);
+
   useEffect(() => {
     setInitialState({
       ...initialState,
@@ -235,7 +235,6 @@ export default () => {
             }
           />
           <ProForm
-            formRef={formRef}
             {...formProps}
             onValuesChange={(values) => {
               setUnsavedChanges(true);
