@@ -299,7 +299,7 @@ export default {
   new_payment: 'new',
   paid: 'paid',
   cancelled: 'cancelled',
-  cancel: 'cancel',
+  cancel: 'Cancel',
   failed: 'failed',
   clear_selection: 'clear selection',
   form: 'Form',
