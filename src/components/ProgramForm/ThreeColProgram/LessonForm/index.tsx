@@ -4,12 +4,10 @@ import { getFormData } from '@/services/api';
 import { useParams } from 'umi';
 import LessonForm from './form';
 
-export const Lesson: React.FC<{
-  // TODO refactor this as you shouldn't pass this but fetch from `{ currentEditMode } = useContext(Context);`
-  lesson: API.Lesson;
-  courseLessons: API.Lesson[];
-  courseId?: number;
-}> = ({ lesson }) => {
+export const Lesson: React.FC = () => {
+  const { currentEditMode } = useContext(Context);
+
+  const lesson = currentEditMode?.value;
   const [state, setState] = useState<API.Lesson>(lesson);
   const [, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
