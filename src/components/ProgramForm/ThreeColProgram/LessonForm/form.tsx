@@ -40,7 +40,7 @@ export const LessonForm: React.FC<{
                         )}
                       </Button>
                       {!lesson.isNew && (
-                        <Button onClick={onClone}>
+                        <Button onClick={onClone} loading={loading}>
                           <FormattedMessage id="clone" />
                         </Button>
                       )}
