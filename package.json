@@ -62,7 +62,7 @@
         "@ant-design/pro-form": "1.70.3",
         "@ant-design/pro-layout": "6.38.13",
         "@ant-design/pro-table": "2.77.3",
-        "@escolalms/h5p-react": "0.2.5",
+        "@escolalms/h5p-react": "^0.2.10",
         "@escolalms/ts-models": "^0.0.27",
         "@sentry/react": "^7.7.0",
         "@sentry/tracing": "^7.7.0",

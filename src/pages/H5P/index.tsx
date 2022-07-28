@@ -134,7 +134,7 @@ const TableList: React.FC = () => {
             />
           </Tooltip>
         </Popconfirm>,
-        <Link key={'preview'} to={`/h5ps/preview/${record.id}`}>
+        <Link key={'preview'} to={`/courses/h5ps/preview/${record.id}`}>
           <Tooltip title={<FormattedMessage id="preview" defaultMessage="preview" />}>
             <Button icon={<BookOutlined />} />
           </Tooltip>

@@ -1,58 +1,35 @@
 import React, { useState } from 'react';
 import { Row, Col, Divider, Button, Typography } from 'antd';
 import H5PContentSelect from '@/components/H5PContentSelect';
-import { EditorContextProvider } from '@escolalms/h5p-react';
 
 import UploadH5P from '@/components/H5P/upload';
 import { useIntl, FormattedMessage } from 'umi';
 
-import { H5PForm as H5PFormNew } from '@/components/H5PForm';
-import H5Player from '@/components/H5Player';
-import ProCard from '@ant-design/pro-card';
-
-declare const REACT_APP_API_URL: string;
-
-export const H5PFormEdit: React.FC<{ onData: (id: number) => void; id: 'new' | number }> = ({
-  onData,
-  id,
-}) => {
-  const intl = useIntl();
-  const lang = intl.locale.split('-')[0];
-
-  return (
-    <EditorContextProvider
-      defaultLang={lang}
-      url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
-    >
-      <H5PFormNew id={id === 'new' ? undefined : id} onSubmit={(hid) => onData(hid)} />
-    </EditorContextProvider>
-  );
-};
-
-export const H5PTopicPlayer: React.FC<{ id: string | number }> = ({ id }) => {
-  const intl = useIntl();
-  const lang = intl.locale.split('-')[0];
-  return (
-    <EditorContextProvider
-      defaultLang={lang}
-      url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
-    >
-      <H5Player id={Number(id)} />
-    </EditorContextProvider>
-  );
-};
+import H5PCard from '@/components/H5P/card';
 
 export const H5PForm: React.FC<{
   id: string;
   onChange: (value: string) => void;
 }> = ({ id, onChange }) => {
   const intl = useIntl();
-  const [editId, setEditId] = useState<number | 'new'>();
+  const [editId, setEditId] = useState<number | 'new'>(
+    id === 'new' || id === undefined ? 'new' : Number(id),
+  );
+
   return (
     <React.Fragment>
-      <Row gutter={16}>
+      <Row gutter={16} align="middle">
+        <Col span={4}>
+          <Button type="primary" onClick={() => setEditId('new')}>
+            {' '}
+            <FormattedMessage id="create_new" />
+          </Button>
+        </Col>
         <Col span={4}>
           <Typography>
+            <small>
+              <FormattedMessage id="or" />
+            </small>
             <FormattedMessage id="reuse_existing" />
           </Typography>
         </Col>
@@ -62,7 +39,8 @@ export const H5PForm: React.FC<{
             value={id}
             onChange={(value) => {
               onChange(value);
-              setEditId(Number(id));
+
+              setEditId(id === 'new' ? 'new' : Number(id));
             }}
           />
         </Col>
@@ -74,32 +52,7 @@ export const H5PForm: React.FC<{
         }}
       >
         <Col span={24}>
-          <ProCard
-            tabs={{
-              type: 'card',
-              defaultActiveKey: 'preview',
-              onChange: (key) => {
-                if (key === 'edit') {
-                  setEditId(Number(id));
-                }
-              },
-            }}
-          >
-            <ProCard.TabPane key="preview" disabled={!id} tab={<FormattedMessage id="preview" />}>
-              {id && <H5PTopicPlayer id={id} />}
-            </ProCard.TabPane>
-            <ProCard.TabPane key="edit" disabled={!id} tab={<FormattedMessage id="edit" />}>
-              {editId && (
-                <H5PFormEdit
-                  id={editId}
-                  onData={(hid) => {
-                    onChange(String(hid));
-                    setEditId(undefined);
-                  }}
-                />
-              )}
-            </ProCard.TabPane>
-          </ProCard>
+          <H5PCard key={editId} id={editId} onSubmit={(h5pId) => onChange(String(h5pId))} />
         </Col>
       </Row>
 
@@ -108,31 +61,27 @@ export const H5PForm: React.FC<{
       <Row gutter={16}>
         <Col span={4}>
           <Typography>
-            <FormattedMessage id="create_new" />
+            <FormattedMessage id="upload_new" />
           </Typography>
         </Col>
 
-        <Col span={12}>
-          <UploadH5P
-            onSuccess={(data) => {
-              if (data.data.id) {
-                onChange(String(data.data.id));
+        <Col span={24}>
+          <Row>
+            <UploadH5P
+              onSuccess={(data) => {
+                if (data.data.id) {
+                  onChange(String(data.data.id));
+                }
+              }}
+              onError={() =>
+                console.log(
+                  intl.formatMessage({
+                    id: 'error',
+                  }),
+                )
               }
-            }}
-            onError={() =>
-              console.log(
-                intl.formatMessage({
-                  id: 'error',
-                }),
-              )
-            }
-          />
-        </Col>
-
-        <Col span={8}>
-          <Button type="primary" onClick={() => setEditId('new')}>
-            <FormattedMessage id="open_new_content_editor" />
-          </Button>
+            />
+          </Row>
         </Col>
       </Row>
     </React.Fragment>
