@@ -55,11 +55,15 @@ export const getTypeIcon = (type: string | undefined) => {
 export const Topic: React.FC = () => {
   const { state, currentEditMode, updateTopic, deleteTopic, onTopicUploaded, cloneTopic } =
     useContext(Context);
-  const topic = currentEditMode?.value;
+
+  const topic =
+    currentEditMode && currentEditMode.mode === 'topic' && currentEditMode.value
+      ? currentEditMode.value
+      : {};
   const [saveIsDisabled, setSaveIsDisabled] = useState(false);
   const [topics, setTopics] = useState<API.Topic>({
     ...topic,
-    value: topic.topicable?.value,
+    value: topic?.topicable?.value,
   });
 
   const type = topics.topicable_type;
@@ -71,10 +75,10 @@ export const Topic: React.FC = () => {
     setTopics((prevState) => {
       return {
         ...prevState,
-        value: type === topic.topicable_type ? topic.topicable?.value : '',
+        value: type === topic?.topicable_type ? topic?.topicable?.value : '',
       };
     });
-    if (topic.isNew) {
+    if (topic?.isNew) {
       setSaveIsDisabled(true);
     }
   }, [type, topic]);
@@ -131,7 +135,7 @@ export const Topic: React.FC = () => {
   }, [topics, handleSave, sortOrder]);
 
   const onDelete = useCallback(() => {
-    if (topic.isNew) {
+    if (topic?.isNew) {
       return deleteTopic && topics.id && deleteTopic(topics.id);
     }
     setLoading(true);
@@ -139,7 +143,7 @@ export const Topic: React.FC = () => {
   }, [topics, deleteTopic, topic]);
 
   const onCloneCart = useCallback(() => {
-    return topic.id && cloneTopic && cloneTopic(topic.id);
+    return topic?.id && cloneTopic && cloneTopic(topic.id);
   }, [topics.id]);
 
   return (
@@ -152,21 +156,22 @@ export const Topic: React.FC = () => {
       >
         <Col span={24 - 8}>
           <Divider>
-            {getTypeIcon(getTypeName(topic))}{' '}
+            {topic && getTypeIcon(getTypeName(topic))}{' '}
             {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
             <FormattedMessage id="type" />
           </Divider>
           {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
           {type && type === TopicType?.RichText && (
             <RichTextEditor
-              directory={`course/${state?.id}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
+              directory={`course/${state?.id}/lesson/${topic?.lesson_id}/topic/${topic?.id}/wysiwyg`}
               text={
                 topic?.topicable_type === TopicType?.RichText ? topic?.topicable?.value || '' : ''
               }
               onChange={(value) => updateValue('value', value)}
             />
           )}
-          {type &&
+          {topic &&
+            type &&
             (type === TopicType.Video ||
               type === TopicType.Audio ||
               type === TopicType.Image ||
@@ -245,7 +250,7 @@ export const Topic: React.FC = () => {
                 <Divider>
                   <FormattedMessage id="file_resources" />
                 </Divider>
-                <Resources topicId={Number(topic.id)} folder={`course/${state?.id}`} />
+                <Resources topicId={Number(topic?.id)} folder={`course/${state?.id}`} />
               </React.Fragment>
             )}
           </aside>

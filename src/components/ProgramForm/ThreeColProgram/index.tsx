@@ -30,7 +30,7 @@ export const Curriculum = () => {
             <List />
           </Col>
           <Col span={24 - 4}>
-            {currentEditMode && currentEditMode.mode === 'lesson' && (
+            {currentEditMode && currentEditMode.mode === 'lesson' && currentEditMode.value && (
               <LessonForm key={currentEditMode.id} />
             )}
             {currentEditMode && currentEditMode.mode === 'topic' && currentEditMode.value && (

@@ -7,7 +7,10 @@ import LessonForm from './form';
 export const Lesson: React.FC = () => {
   const { currentEditMode } = useContext(Context);
 
-  const lesson = currentEditMode?.value;
+  const lesson =
+    currentEditMode && currentEditMode.mode === 'lesson' && currentEditMode.value
+      ? currentEditMode.value
+      : {};
   const [state, setState] = useState<API.Lesson>(lesson);
   const [, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
@@ -17,14 +20,14 @@ export const Lesson: React.FC = () => {
 
   useEffect(() => {
     setState(lesson);
-    return lesson.topics && setTopicList(lesson.topics);
+    return lesson?.topics && setTopicList(lesson.topics);
   }, [lesson]);
 
   const handleSave = useCallback(() => {
     setLoading(true);
 
     const formData = getFormData({
-      course_id: lesson.course_id || params.course,
+      course_id: lesson?.course_id || params.course,
       ...state,
       order: 0,
       active: state.active ? 1 : 0,
@@ -39,7 +42,7 @@ export const Lesson: React.FC = () => {
         });
     }
     return Promise.resolve();
-  }, [state, lesson.course_id, updateLesson]);
+  }, [state, lesson?.course_id, updateLesson]);
 
   const handleDelete = useCallback(() => {
     if (state.id && deleteLesson) {
