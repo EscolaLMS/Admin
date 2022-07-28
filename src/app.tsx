@@ -16,6 +16,7 @@ import jwt_decode from 'jwt-decode';
 import { differenceInMinutes } from 'date-fns';
 import '@/services/ybug';
 import '@/services/sentry.ts';
+import './app.css';
 
 declare const REACT_APP_API_URL: string;
 

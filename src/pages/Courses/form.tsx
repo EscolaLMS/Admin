@@ -7,7 +7,16 @@ import ProForm, {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage, useAccess, useModel } from 'umi';
+import {
+  useParams,
+  history,
+  useIntl,
+  FormattedMessage,
+  useAccess,
+  useModel,
+  getLocale,
+  getAllLocales,
+} from 'umi';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -30,6 +39,7 @@ import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
+import { isAfter } from 'date-fns';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -40,10 +50,13 @@ export default () => {
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
+  const [fromDateValidation, setFromDateValidation] = useState(null);
   const [manageSuccessModal, setManageSuccessModal] = useState({
     showModal: false,
     courseId: 0,
   });
+
+  const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
 
@@ -225,6 +238,10 @@ export default () => {
             {...formProps}
             onValuesChange={(values) => {
               setUnsavedChanges(true);
+
+              if (values.active_from) {
+                setFromDateValidation(values.active_from);
+              }
               return values.title && setData({ title: values.title });
             }}
           >
@@ -281,6 +298,12 @@ export default () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
                 extra={<FormattedMessage id="active_from_extra" />}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="templates.this_required" />,
+                  },
+                ]}
               />
               <ProFormDatePicker
                 width="md"
@@ -291,8 +314,32 @@ export default () => {
                   id: 'active_to',
                   defaultMessage: 'active_to',
                 })}
-                disabled={manageCourseEdit.disableEdit}
+                disabled={manageCourseEdit.disableEdit || !fromDateValidation}
                 extra={<FormattedMessage id="active_to_extra" />}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="templates.this_required" />,
+                  },
+                  {
+                    validator(_, value) {
+                      if (value) {
+                        if (
+                          fromDateValidation &&
+                          isAfter(new Date(value), new Date(fromDateValidation))
+                        ) {
+                          return Promise.resolve();
+                        } else {
+                          return Promise.reject(
+                            new Error(intl.formatMessage({ id: 'invalidDate' })),
+                          );
+                        }
+                      } else {
+                        return Promise.reject();
+                      }
+                    },
+                  },
+                ]}
               />
               <ProFormText
                 width="md"
@@ -306,6 +353,7 @@ export default () => {
                 disabled={manageCourseEdit.disableEdit}
                 extra={<FormattedMessage id="duration_extra" />}
               />
+
               <ProFormDigit
                 width="md"
                 name="hours_to_complete"
@@ -343,20 +391,25 @@ export default () => {
                   defaultMessage: 'level',
                 })}
               />
-              <ProFormText
-                width="sm"
+
+              <ProFormSelect
                 name="language"
+                width="xs"
                 label={<FormattedMessage id="language" />}
-                tooltip={<FormattedMessage id="language" />}
                 placeholder={intl.formatMessage({
                   id: 'language',
                   defaultMessage: 'language',
                 })}
+                valueEnum={locales
+                  .map((locale) => locale.split('-')[0])
+                  .reduce((a, v) => ({ ...a, [v]: v }), {})}
+                initialValue={getLocale().split('-')[0]}
                 disabled={manageCourseEdit.disableEdit}
               />
+
               <ProFormSelect
                 name="status"
-                width="xs"
+                width="md"
                 label={<FormattedMessage id="status" />}
                 valueEnum={{
                   draft: intl.formatMessage({

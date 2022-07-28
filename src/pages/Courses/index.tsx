@@ -248,6 +248,7 @@ const TableList: React.FC = () => {
             if (response.success) {
               return {
                 data: response.data,
+                total: response.meta.total,
                 success: true,
               };
             }
