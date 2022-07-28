@@ -330,6 +330,7 @@ export default {
   new_payment: 'nowe',
   paid: 'opłacone',
   cancelled: 'anulowane',
+  cancel: 'Anuluj',
   failed: 'nie powiodło się',
   clear_selection: 'wyczyść',
   form: 'Formularz',

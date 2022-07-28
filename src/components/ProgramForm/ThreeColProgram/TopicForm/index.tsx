@@ -215,7 +215,7 @@ export const Topic: React.FC = () => {
             <Affix offsetBottom={0}>
               <Space size="large">
                 <Button loading={loading}>
-                  <FormattedMessage id="Cancel" />
+                  <FormattedMessage id="cancel" />
                 </Button>
                 <Button onClick={onCloneCart}>
                   <FormattedMessage id="clone" />
@@ -229,7 +229,7 @@ export const Topic: React.FC = () => {
                   <FormattedMessage id="save" />
                 </Button>
                 <Button danger onClick={onDelete} loading={loading}>
-                  <FormattedMessage id="Delete" />
+                  <FormattedMessage id="delete" />
                 </Button>
               </Space>
             </Affix>
