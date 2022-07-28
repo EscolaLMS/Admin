@@ -45,7 +45,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          cd api  
+          cd api
           apt-get install unzip
           composer self-update && composer install --no-scripts
 
@@ -81,7 +81,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Node dependencies
-        run: npm i
+        run: npm i --legacy-peer-deps
 
       - name: Node dependencies serve
         run: npm i serve -g
