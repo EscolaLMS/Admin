@@ -52,41 +52,40 @@ export const getTypeIcon = (type: string | undefined) => {
   return <ExclamationCircleOutlined />;
 };
 
-export const Topic: React.FC<{
-  // TODO refactor this as you shouldn't pass this but fetch from `{ currentEditMode } = useContext(Context);`
-  topic: API.Topic;
-  itemsLength?: number;
-  courseId?: number;
-  courseLessons: API.Lesson[];
-  onClose: () => void;
-}> = ({ topic, courseId, courseLessons, onClose }) => {
-  const { updateTopic, deleteTopic, onTopicUploaded, cloneTopic } = useContext(Context);
+export const Topic: React.FC = () => {
+  const { state, currentEditMode, updateTopic, deleteTopic, onTopicUploaded, cloneTopic } =
+    useContext(Context);
+
+  const topic =
+    currentEditMode && currentEditMode.mode === 'topic' && currentEditMode.value
+      ? currentEditMode.value
+      : {};
   const [saveIsDisabled, setSaveIsDisabled] = useState(false);
-  const [state, setState] = useState<API.Topic>({
+  const [topics, setTopics] = useState<API.Topic>({
     ...topic,
-    value: topic.topicable?.value,
+    value: topic?.topicable?.value,
   });
 
-  const type = state.topicable_type;
+  const type = topics.topicable_type;
 
-  const [sortOrder /* , setSortOrder */] = useState(state.order);
+  const [sortOrder /* , setSortOrder */] = useState(topics.order);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setState((prevState) => {
+    setTopics((prevState) => {
       return {
         ...prevState,
-        value: type === topic.topicable_type ? topic.topicable?.value : '',
+        value: type === topic?.topicable_type ? topic?.topicable?.value : '',
       };
     });
-    if (topic.isNew) {
+    if (topic?.isNew) {
       setSaveIsDisabled(true);
     }
   }, [type, topic]);
 
   const updateValue = useCallback(
     (key: keyof API.Topic, value: any) => {
-      setState((prevState) => ({
+      setTopics((prevState) => ({
         ...prevState,
         [key]: value,
       }));
@@ -97,7 +96,7 @@ export const Topic: React.FC<{
 
   const updateValues = useCallback(
     (values: API.Topic) => {
-      setState((prevState) => ({
+      setTopics((prevState) => ({
         ...prevState,
         ...values,
       }));
@@ -107,47 +106,45 @@ export const Topic: React.FC<{
 
   const handleSave = useCallback(
     (formData: FormData) => {
-      if (updateTopic && state.id) {
+      if (updateTopic && topics.id) {
         setLoading(true);
 
-        updateTopic(state.id, formData)
+        updateTopic(topics.id, formData)
           .then(() => setLoading(false))
           .catch(() => {
             setLoading(false);
-          })
-          .finally(() => onClose());
+          });
       }
     },
-    [state, updateTopic, topic],
+    [topics, updateTopic, topic],
   );
 
   const onFormSubmit = useCallback(() => {
     const values = {
-      ...state,
-      active: state.active ? 1 : 0,
-      preview: state.preview ? 1 : 0,
-      can_skip: state.can_skip ? 1 : 0,
+      ...topics,
+      active: topics.active ? 1 : 0,
+      preview: topics.preview ? 1 : 0,
+      can_skip: topics.can_skip ? 1 : 0,
       order: sortOrder,
-      json: state.json ? JSON.stringify(state.json) : null,
+      json: topics.json ? JSON.stringify(topics.json) : null,
     };
 
     const formData = getFormData(values);
 
     handleSave(formData);
-  }, [state, handleSave, sortOrder]);
+  }, [topics, handleSave, sortOrder]);
 
   const onDelete = useCallback(() => {
-    if (topic.isNew) {
-      return deleteTopic && state.id && deleteTopic(state.id);
+    if (topic?.isNew) {
+      return deleteTopic && topics.id && deleteTopic(topics.id);
     }
     setLoading(true);
-    onClose();
-    return deleteTopic && state.id && deleteTopic(state.id);
-  }, [state, deleteTopic, topic]);
+    return deleteTopic && topics.id && deleteTopic(topics.id);
+  }, [topics, deleteTopic, topic]);
 
   const onCloneCart = useCallback(() => {
-    return topic.id && cloneTopic && cloneTopic(topic.id);
-  }, [state.id]);
+    return topic?.id && cloneTopic && cloneTopic(topic.id);
+  }, [topics.id]);
 
   return (
     <React.Fragment>
@@ -159,36 +156,37 @@ export const Topic: React.FC<{
       >
         <Col span={24 - 8}>
           <Divider>
-            {getTypeIcon(getTypeName(topic))}{' '}
+            {topic && getTypeIcon(getTypeName(topic))}{' '}
             {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
             <FormattedMessage id="type" />
           </Divider>
           {!type && <Alert message={<FormattedMessage id="select_type_topic" />} type="info" />}
           {type && type === TopicType?.RichText && (
             <RichTextEditor
-              directory={`course/${courseId}/lesson/${topic.lesson_id}/topic/${topic.id}/wysiwyg`}
+              directory={`course/${state?.id}/lesson/${topic?.lesson_id}/topic/${topic?.id}/wysiwyg`}
               text={
                 topic?.topicable_type === TopicType?.RichText ? topic?.topicable?.value || '' : ''
               }
               onChange={(value) => updateValue('value', value)}
             />
           )}
-          {type &&
+          {topic &&
+            type &&
             (type === TopicType.Video ||
               type === TopicType.Audio ||
               type === TopicType.Image ||
               type === TopicType.PDF) && (
               <MediaUpload
-                folder={`course/${courseId}`}
+                folder={`course/${state?.id}`}
                 type={type}
                 topic={topic}
-                currentState={state}
+                currentState={topics}
                 onChange={() => setLoading(true)}
                 onUpdate={(info) => {
                   if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
 
-                  setState({
-                    ...state,
+                  setTopics({
+                    ...topics,
                     id: info?.file?.response?.data?.id,
                     order: info.file.response.data?.order,
                     value: info?.file?.response.data?.topicable?.value,
@@ -201,14 +199,14 @@ export const Topic: React.FC<{
               />
             )}
           {type && type === TopicType.OEmbed && (
-            <Oembed text={state.value} onChange={(value) => updateValue('value', value)} />
+            <Oembed text={topics.value} onChange={(value) => updateValue('value', value)} />
           )}
           {type && type === TopicType.H5P && (
-            <H5PForm id={state.value} onChange={(value) => updateValue('value', value)} />
+            <H5PForm id={topics.value} onChange={(value) => updateValue('value', value)} />
           )}
           {type && type === TopicType.SCORM && (
             <ScormSelector
-              value={Number(state.value)}
+              value={Number(topics.value)}
               onChange={(value) => updateValue('value', value)}
             />
           )}
@@ -216,7 +214,7 @@ export const Topic: React.FC<{
           <Row justify="center" className={'program__cta-footer'}>
             <Affix offsetBottom={0}>
               <Space size="large">
-                <Button onClick={onClose} loading={loading}>
+                <Button loading={loading}>
                   <FormattedMessage id="cancel" />
                 </Button>
                 <Button onClick={onCloneCart}>
@@ -239,18 +237,20 @@ export const Topic: React.FC<{
         </Col>
         <Col span={8}>
           <aside className={'program-sidebar program-sidebar--right'}>
-            <TopicForm
-              courseId={Number(courseId)}
-              courseLessons={courseLessons}
-              initialValues={state}
-              onValuesChange={(values) => updateValues(values)}
-            />
-            {!state.isNew && (
+            {state?.lessons && (
+              <TopicForm
+                courseId={Number(state?.id)}
+                courseLessons={state?.lessons}
+                initialValues={topics}
+                onValuesChange={(values) => updateValues(values)}
+              />
+            )}
+            {!topics.isNew && (
               <React.Fragment>
                 <Divider>
                   <FormattedMessage id="file_resources" />
                 </Divider>
-                <Resources topicId={Number(topic.id)} folder={`course/${courseId}`} />
+                <Resources topicId={Number(topic?.id)} folder={`course/${state?.id}`} />
               </React.Fragment>
             )}
           </aside>
