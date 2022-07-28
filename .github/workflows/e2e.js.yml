@@ -81,7 +81,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Node dependencies
-        run: npm i --legacy-peer-deps
+        run: npm i
 
       - name: Node dependencies serve
         run: npm i serve -g
@@ -90,7 +90,7 @@ jobs:
         run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
 
       - name: Cypress.io
-        uses: cypress-io/github-action@v2.8.2
+        uses: cypress-io/github-action@v4
         with:
           record: true
           start: 'serve dist -l 8000'
@@ -111,13 +111,13 @@ jobs:
       # thus we store screenshots only on failures
       # Alternative: create and commit an empty cypress/screenshots folder
       # to always have something to upload
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         if: always()
         with:
           name: cypress-videos
