@@ -33,7 +33,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 1
 
@@ -81,7 +81,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Node dependencies
-        run: npm i
+        run: npm i --legacy-peer-deps
 
       - name: Node dependencies serve
         run: npm i serve -g
