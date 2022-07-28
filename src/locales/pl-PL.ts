@@ -330,6 +330,7 @@ export default {
   new_payment: 'nowe',
   paid: 'opłacone',
   cancelled: 'anulowane',
+  cancel: 'Anuluj',
   failed: 'nie powiodło się',
   clear_selection: 'wyczyść',
   form: 'Formularz',
@@ -470,4 +471,5 @@ export default {
     'Nie masz wybranej żadnej treści. Stwórz pierwszą lekcję żeby zacząć.',
   program_form_not_selected_list_message: 'Wybierz lekcję albo moduł do edytowania.',
   clone: 'Klonuj',
+  drag_topic_tooltip: 'Przeciągnij aby zmienić kolejność materiału',
 };

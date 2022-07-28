@@ -299,6 +299,7 @@ export default {
   new_payment: 'new',
   paid: 'paid',
   cancelled: 'cancelled',
+  cancel: 'Cancel',
   failed: 'failed',
   clear_selection: 'clear selection',
   form: 'Form',
@@ -448,6 +449,7 @@ export default {
   quantity: 'Quantity',
   gt_last_login_day: '>= Login last n days',
   lt_last_login_day: '<= Login last n days',
+  json_editor: 'Open JSON editor',
   created_before: 'Created before',
   created_after: 'Created after',
   redirect: 'redirect',
@@ -465,4 +467,5 @@ export default {
     'You have no content to view yet. Create your first lesson to get started.',
   program_form_not_selected_list_message: 'Select a lesson or topic to edit.',
   clone: 'Clone',
+  drag_topic_tooltip: 'Click to edit or drag & drop to reorder topic.',
 };

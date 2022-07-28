@@ -1,6 +1,6 @@
 import React from 'react';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
-import { Button, Select } from 'antd';
+import { Button } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import JsonEditor from '@/components/JsonEditor';
 import { DescriptionModal } from '@/components/ProgramForm/ThreeColProgram/TopicForm/descriptionModal';
@@ -10,7 +10,7 @@ export const TopicForm: React.FC<{
   initialValues: API.Topic;
   courseId: number;
   courseLessons: API.Lesson[];
-}> = ({ onValuesChange, initialValues, courseId, courseLessons }) => {
+}> = ({ onValuesChange, initialValues, courseId }) => {
   const intl = useIntl();
 
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
@@ -34,24 +34,12 @@ export const TopicForm: React.FC<{
       />
       <ProForm.Item label={<FormattedMessage id="description" />}>
         <Button type={'primary'} onClick={() => setVisibleModal(true)}>
-          <FormattedMessage id="Otwórz edytor" />
+          <FormattedMessage id="open_editor" />
         </Button>
       </ProForm.Item>
       <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
       <ProFormSwitch name="preview" label={<FormattedMessage id="able_to_preview" />} />
       <ProFormSwitch name="can_skip" label={<FormattedMessage id="can_skip" />} />
-      <ProForm.Item name="lesson_id" label={<FormattedMessage id="lesson" />}>
-        <Select style={{ width: '100%' }}>
-          {courseLessons.map(
-            (element) =>
-              element.id && (
-                <Select.Option key={element.id} value={element.id}>
-                  {element.title}
-                </Select.Option>
-              ),
-          )}
-        </Select>
-      </ProForm.Item>
       <ProForm.Item
         name="json"
         label={<FormattedMessage id="json" />}
