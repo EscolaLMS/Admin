@@ -34,7 +34,7 @@ export const TopicForm: React.FC<{
       />
       <ProForm.Item label={<FormattedMessage id="description" />}>
         <Button type={'primary'} onClick={() => setVisibleModal(true)}>
-          <FormattedMessage id="Otwórz edytor" />
+          <FormattedMessage id="open_editor" />
         </Button>
       </ProForm.Item>
       <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />

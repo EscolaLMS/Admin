@@ -135,7 +135,7 @@ export const LessonList: React.FC = () => {
       {courseLessons?.map((lesson, cindex, lessons) => {
         return (
           lesson.id && (
-            <React.Fragment>
+            <React.Fragment key={lesson.id}>
               <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
                 <NavLink to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}>
                   <FolderOutlined />
