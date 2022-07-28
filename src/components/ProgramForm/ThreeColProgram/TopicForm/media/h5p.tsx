@@ -29,7 +29,7 @@ export const H5PForm: React.FC<{
           <Typography>
             <small>
               <FormattedMessage id="or" />
-            </small>
+            </small>{' '}
             <FormattedMessage id="reuse_existing" />
           </Typography>
         </Col>
