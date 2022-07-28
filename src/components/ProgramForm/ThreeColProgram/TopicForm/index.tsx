@@ -144,7 +144,7 @@ export const Topic: React.FC = () => {
 
   const onClone = useCallback(() => {
     return topic.id && cloneTopic && cloneTopic(topic.id);
-  }, [state.id]);
+  }, [topic, cloneTopic]);
 
   return (
     <React.Fragment>
@@ -218,7 +218,7 @@ export const Topic: React.FC = () => {
                   <FormattedMessage id="cancel" />
                 </Button>
                 {!topic.isNew && (
-                  <Button onClick={onClone}>
+                  <Button onClick={onClone} loading={loading}>
                     <FormattedMessage id="clone" />
                   </Button>
                 )}
