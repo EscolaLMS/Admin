@@ -468,4 +468,5 @@ export default {
   program_form_not_selected_list_message: 'Select a lesson or topic to edit.',
   clone: 'Clone',
   drag_topic_tooltip: 'Click to edit or drag & drop to reorder topic.',
+  invalidDate: 'Invalid date',
 };

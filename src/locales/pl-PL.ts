@@ -472,4 +472,5 @@ export default {
   program_form_not_selected_list_message: 'Wybierz lekcję albo moduł do edytowania.',
   clone: 'Klonuj',
   drag_topic_tooltip: 'Przeciągnij aby zmienić kolejność materiału',
+  invalidDate: 'Błędna data',
 };
