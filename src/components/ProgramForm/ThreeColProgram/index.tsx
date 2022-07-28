@@ -31,23 +31,10 @@ export const Curriculum = () => {
           </Col>
           <Col span={24 - 4}>
             {currentEditMode && currentEditMode.mode === 'lesson' && currentEditMode.value && (
-              <LessonForm
-                key={currentEditMode.id}
-                // TODO refactor this you shoundn't need to pass any props here
-                lesson={currentEditMode.value}
-                courseLessons={state.lessons}
-                courseId={state.id}
-              />
+              <LessonForm key={currentEditMode.id} />
             )}
             {currentEditMode && currentEditMode.mode === 'topic' && currentEditMode.value && (
-              <TopicForm
-                key={currentEditMode.id}
-                // TODO refactor this you shoundn't need to pass any props here
-                onClose={() => console.log('close')}
-                topic={currentEditMode.value}
-                courseLessons={state.lessons}
-                courseId={state.id}
-              />
+              <TopicForm key={currentEditMode.id} />
             )}
             {currentEditMode && currentEditMode.mode === 'init' && (
               <Row
