@@ -142,9 +142,9 @@ export const Topic: React.FC = () => {
     return deleteTopic && topics.id && deleteTopic(topics.id);
   }, [topics, deleteTopic, topic]);
 
-  const onCloneCart = useCallback(() => {
-    return topic?.id && cloneTopic && cloneTopic(topic.id);
-  }, [topics.id]);
+  const onClone = useCallback(() => {
+    return topic.id && cloneTopic && cloneTopic(topic.id);
+  }, [topic, cloneTopic]);
 
   return (
     <React.Fragment>
@@ -215,11 +215,13 @@ export const Topic: React.FC = () => {
             <Affix offsetBottom={0}>
               <Space size="large">
                 <Button loading={loading}>
-                  <FormattedMessage id="Cancel" />
+                  <FormattedMessage id="cancel" />
                 </Button>
-                <Button onClick={onCloneCart}>
-                  <FormattedMessage id="clone" />
-                </Button>
+                {!topic.isNew && (
+                  <Button onClick={onClone} loading={loading}>
+                    <FormattedMessage id="clone" />
+                  </Button>
+                )}
                 <Button
                   type="primary"
                   onClick={onFormSubmit}
@@ -229,7 +231,7 @@ export const Topic: React.FC = () => {
                   <FormattedMessage id="save" />
                 </Button>
                 <Button danger onClick={onDelete} loading={loading}>
-                  <FormattedMessage id="Delete" />
+                  <FormattedMessage id="delete" />
                 </Button>
               </Space>
             </Affix>
