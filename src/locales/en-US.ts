@@ -471,4 +471,7 @@ export default {
   clone: 'Clone',
   drag_topic_tooltip: 'Click to edit or drag & drop to reorder topic.',
   invalidDate: 'Invalid date',
+  badPassword: 'min. 8 characters, 1 capital letter, 1 special character (!@#$%^&*))',
+  product_widget_title: 'Product Attibutes',
+  product_widget_tooltip: 'All attributes below are related only to product',
 };
