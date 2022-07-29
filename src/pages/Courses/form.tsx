@@ -162,7 +162,7 @@ export default () => {
         breadcrumb: {
           routes: [
             {
-              path: 'courses',
+              path: 'courses/list',
               breadcrumbName: intl.formatMessage({
                 id: 'menu.Courses',
               }),
