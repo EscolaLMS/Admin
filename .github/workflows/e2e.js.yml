@@ -82,7 +82,7 @@ jobs:
     steps:
 
       - run: | 
-          docker exec api echo "APP_NAME=Wellms \
+          docker exec api echo "APP_NAME=Wellms Cypress Demo \
           APP_ENV=local \
           APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
           APP_DEBUG=true \
