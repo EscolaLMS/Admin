@@ -139,7 +139,7 @@ export const QuestionareForm = () => {
         breadcrumb: {
           routes: [
             {
-              path: 'questionnaire',
+              path: 'other/questionnaire',
               breadcrumbName: intl.formatMessage({
                 id: 'menu.Other activities.Questionnaire',
               }),

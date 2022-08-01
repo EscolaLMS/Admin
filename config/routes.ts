@@ -38,6 +38,7 @@
       {
         path: '/courses',
         redirect: '/courses/list',
+        access: 'coursesPermission',
       },
       {
         path: '/courses/list',
@@ -138,6 +139,7 @@
       {
         path: '/sales',
         redirect: '/sales/orders',
+        access: 'salesPermission',
       },
       {
         path: '/sales/orders',
@@ -177,6 +179,7 @@
       {
         path: '/users',
         redirect: '/users/list',
+        access: 'usersPermission',
       },
       {
         path: '/users/list',
@@ -263,6 +266,7 @@
       {
         path: '/analytics',
         redirect: '/analytics/notifications',
+        access: 'analyticsPermission',
       },
       {
         name: 'Notifications',
@@ -296,6 +300,7 @@
       {
         path: '/configuration',
         redirect: '/configuration/files',
+        access: 'configurationPermission',
       },
       {
         path: '/configuration/files',
@@ -360,6 +365,7 @@
       {
         path: '/other',
         redirect: '/other/consultations',
+        access: 'otherPermission',
       },
       {
         path: '/other/consultations',

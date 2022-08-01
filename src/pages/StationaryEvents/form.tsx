@@ -116,7 +116,7 @@ const StationaryEventForm = () => {
         breadcrumb: {
           routes: [
             {
-              path: 'stationary-events',
+              path: 'other/stationary-events',
               breadcrumbName: intl.formatMessage({
                 id: 'menu.Other activities.StationaryEvents',
               }),

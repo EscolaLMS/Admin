@@ -125,7 +125,7 @@ const ConsultationForm = () => {
         breadcrumb: {
           routes: [
             {
-              path: 'consultations',
+              path: 'other/consultations',
               breadcrumbName: intl.formatMessage({
                 id: 'menu.Other activities.Consultations',
               }),
