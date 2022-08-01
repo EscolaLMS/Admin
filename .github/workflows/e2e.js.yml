@@ -73,8 +73,8 @@ jobs:
 
     steps:
 
-      - run: docker exec -it api ls
-      
+      - run: docker exec api ls
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
