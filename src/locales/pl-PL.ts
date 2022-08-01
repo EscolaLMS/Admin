@@ -475,4 +475,7 @@ export default {
   clone: 'Klonuj',
   drag_topic_tooltip: 'Przeciągnij aby zmienić kolejność materiału',
   invalidDate: 'Błędna data',
+  badPassword: 'min. 8 znaków, 1 duża litera, 1 znak specjalny (!@#$%^&*))',
+  product_widget_title: 'Atrybuty produktu',
+  product_widget_tooltip: 'Wszystkie poniższe atrybuty są związane tylko z produktem',
 };
