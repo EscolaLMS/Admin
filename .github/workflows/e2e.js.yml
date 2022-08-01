@@ -60,17 +60,31 @@ jobs:
         ports:
           - 5432:5432
 
-      api: 
-        image: escolalms/api:latest
-        ports:
-          - 80:80
+      #api: 
+#        image: escolalms/api:latest
+#        ports:
+#          - 80:80
 
     steps:
+
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: escolalms/api:latest
+          shell: bash
+          run: |
+            echo "first line"
+            ls"
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
 
+          
+
+          
+
            # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
+
+      #- name: Cypress run
+      #  uses: cypress-io/github-action@v4
