@@ -110,6 +110,8 @@ jobs:
           TRACKER_ENABLED=false" >> .env
 
       # populate API with essential data 
+      - run: docker exec api php artisan config:cache 
+      - run: docker exec api echo .env
       - run: docker exec api composer dumpautoload
       - run: docker exec api php artisan key:generate --force --no-interaction
       - run: docker exec api php artisan passport:keys --force --no-interaction
