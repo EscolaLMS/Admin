@@ -147,7 +147,6 @@ const errorHandler = (error: ResponseError) => {
   const { response, data } = error;
 
   if (error.name === 'AbortError') {
-    console.log('jest blad');
     return;
   }
 
