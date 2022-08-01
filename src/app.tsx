@@ -147,11 +147,16 @@ const errorHandler = (error: ResponseError) => {
   const { response, data } = error;
 
   if (error.name === 'AbortError') {
+    console.log('jest blad');
     return;
   }
 
   if (data && (data as API.DefaultResponseError)) {
     const { message, errors } = data;
+
+    if (response.status >= 404 && response.status < 422) {
+      history.push('/404');
+    }
 
     if (message && errors) {
       notification.error({
