@@ -78,8 +78,6 @@ jobs:
         options: >-
           --name api 
 
-
-
     steps:
 
       - run: | 
@@ -101,7 +99,6 @@ jobs:
           QUEUE_DRIVER=redis \
           QUEUE_CONNECTION=redis \
           REDIS_HOST=redis \
-          REDIS_PASSWORD=escola_lms \
           REDIS_PORT=6379 \
           MAIL_DRIVER=smtp \
           MAIL_HOST=mailhog \
@@ -112,6 +109,7 @@ jobs:
           MJML_BINARY_PATH=/usr/bin/mjml \
           TRACKER_ENABLED=false" >> .env
 
+      # populate API with essential data 
       - run: docker exec api composer dumpautoload
       - run: docker exec api php artisan key:generate --force --no-interaction
       - run: docker exec api php artisan passport:keys --force --no-interaction
