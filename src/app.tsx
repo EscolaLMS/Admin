@@ -153,6 +153,10 @@ const errorHandler = (error: ResponseError) => {
   if (data && (data as API.DefaultResponseError)) {
     const { message, errors } = data;
 
+    if (response.status >= 404 && response.status < 422) {
+      history.push('/404');
+    }
+
     if (message && errors) {
       notification.error({
         message,
