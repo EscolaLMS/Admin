@@ -60,21 +60,21 @@ jobs:
         ports:
           - 5432:5432
 
-      #api: 
-#        image: escolalms/api:latest
-#        ports:
-#          - 80:80
+      
+      api: 
+        image: escolalms/api:latest
+        ports:
+          - 80:80
+
+        options: >-
+          --name api 
+
+
 
     steps:
 
-      - uses: addnab/docker-run-action@v3
-        with:
-          image: escolalms/api:latest
-          shell: bash
-          run: |
-            echo "first line"
-            ls
-
+      - run: docker exec -it api ls
+      
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
