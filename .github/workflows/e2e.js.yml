@@ -37,11 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     #container: cypress/browsers:node12.18.3-chrome87-ff82
     #needs: install
-    strategy:
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1]
 
     services:
       mailhog:
@@ -70,6 +65,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
       
       api: 
         image: escolalms/api:latest
