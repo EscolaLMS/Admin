@@ -73,7 +73,7 @@ jobs:
           shell: bash
           run: |
             echo "first line"
-            ls"
+            ls
 
       - uses: actions/checkout@v2
         with:
