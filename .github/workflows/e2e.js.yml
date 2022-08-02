@@ -60,12 +60,10 @@ jobs:
         image: redis
         # Set health checks to wait until redis has started
         options: >-
-          -e REDIS_PASSWORD=escola_lms 
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --entrypoint="redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}"
          
       
       api: 
@@ -75,6 +73,7 @@ jobs:
 
         options: >-
           --name api 
+          --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
 
     steps:
 
