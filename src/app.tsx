@@ -12,6 +12,7 @@ import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
 import Reqs from 'umi-request';
 import { refreshToken } from './services/escola-lms/auth';
+import { settings } from './services/escola-lms/settings';
 import jwt_decode from 'jwt-decode';
 import { differenceInMinutes } from 'date-fns';
 import '@/services/ybug';
@@ -41,6 +42,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.UserItem;
   fetchUserInfo?: () => Promise<API.UserItem | undefined>;
   collapsed?: boolean;
+  config?: API.Setting[];
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -55,16 +57,21 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+
+  const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+
   if (!authpaths.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
+      config: config.success ? config.data : [],
       currentUser,
       settings: {},
       collapsed: false,
     };
   }
   return {
+    config: config.success ? config.data : [],
     fetchUserInfo,
     settings: {},
     collapsed: false,
@@ -85,7 +92,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     history.push(`/user/login?redirect=${url}`);
   }
 
+  let logo = 'logo.svg';
+
+  const configLogo = initialState?.config?.find((row) => row.key === 'logo');
+
+  if (configLogo) {
+    logo = configLogo.data;
+  }
+
   return {
+    logo: logo,
     collapsed: initialState?.collapsed,
     onCollapse: (/*collapsed: boolean*/) => {
       setInitialState({
