@@ -92,7 +92,7 @@ export async function updateConfig(
   },
   options?: RequestOptionsInit,
 ) {
-  return request<API.ConfigsList>(`/api/admin/config`, {
+  return request<API.DefaultResponse<API.Setting>>(`/api/admin/config`, {
     method: 'POST',
     data: {
       config: [
