@@ -458,8 +458,7 @@
   {
     access: 'dashboardPermission',
     path: '/',
-    // redirect: '/welcome',
-    component: '../layouts/BaseLayout',
+    redirect: '/welcome',
   },
   {
     component: './404',
