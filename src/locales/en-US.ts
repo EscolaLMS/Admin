@@ -475,4 +475,6 @@ export default {
   badPassword: 'min. 8 characters, 1 capital letter, 1 special character (!@#$%^&*))',
   product_widget_title: 'Product Attibutes',
   product_widget_tooltip: 'All attributes below are related only to product',
+  course_guide_title: 'Not sure how to create a course?',
+  course_guide_text: 'Check out our guide and learn how to do it.',
 };
