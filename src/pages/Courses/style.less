@@ -1,0 +1,39 @@
+@import '~antd/es/style/themes/default.less';
+
+.course-upload {
+  label {
+    display: none;
+  }
+
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+
+  .ant-btn-default {
+    display: flex;
+    align-items: center;
+    height: auto;
+    border: 0;
+    box-shadow: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .anticon + span {
+    margin-left: 16px;
+    color: @heading-color;
+    font-weight: bold;
+    font-size: 16px;
+
+    &:hover {
+      color: @heading-color;
+    }
+  }
+
+  .anticon-upload {
+    color: @primary-color;
+    font-size: 36px;
+  }
+}
