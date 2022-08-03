@@ -331,6 +331,7 @@ export default {
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
   pages: 'Pages',
   import_users: 'Import users',
+  import_file: 'Import file',
   new_page: 'New static page',
   edit_page: 'Edit static page',
   example_json: 'JSON Example',

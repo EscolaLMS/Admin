@@ -137,6 +137,7 @@ export default {
   parent_id_group: 'Nadrzędna grupa',
   parent_id_group_tooltip: 'Szukaj po id',
   registerable: 'Pokaż w rejestracji',
+  import_file: 'Importuj plik',
   edit: 'Edytuj',
   delete: 'Usuń',
   deleteQuestion: 'Czy na pewno chcesz usunąć ten rekord?',

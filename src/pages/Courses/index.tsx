@@ -1,5 +1,5 @@
-import { CopyOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Tag, Tooltip, Popconfirm, message } from 'antd';
+import { CopyOutlined, PlusCircleFilled } from '@ant-design/icons';
+import { Button, Tag, Tooltip, Popconfirm, message, Typography } from 'antd';
 import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -10,6 +10,9 @@ import { cloneCourse, course, exportCourse, removeCourse } from '@/services/esco
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
 import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
+import ProCard from '@ant-design/pro-card';
+import SecureUpload from '@/components/SecureUpload';
+import './style.less';
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
@@ -135,6 +138,8 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
   },
 ];
 
+const { Title, Text } = Typography;
+
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -206,6 +211,90 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
+      <ProCard
+        ghost
+        gutter={20}
+        style={{
+          marginBottom: 20,
+        }}
+      >
+        <ProCard
+          layout="center"
+          style={{
+            height: '100%',
+          }}
+        >
+          <Link
+            key={'new'}
+            to="/courses/list/new"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+            }}
+          >
+            <PlusCircleFilled
+              style={{
+                fontSize: '32px',
+              }}
+            />
+            <Title
+              level={5}
+              style={{
+                marginBottom: 0,
+              }}
+            >
+              <FormattedMessage id="create_new" defaultMessage="Create new" />
+            </Title>
+          </Link>
+        </ProCard>
+        <ProCard
+          layout="center"
+          style={{
+            height: '100%',
+          }}
+        >
+          <div className={'course-upload'}>
+            <SecureUpload
+              key="upload"
+              title={intl.formatMessage({
+                id: 'import_file',
+              })}
+              url="/api/admin/courses/zip/import"
+              name="file"
+              accept=".zip"
+              onChange={(info) => {
+                if (info.file.status === 'done') {
+                  if (info.file.response && info.file.response.success) {
+                    message.success(info.file.response.message);
+                  }
+                }
+                if (info.file.response && info.file.status === 'error') {
+                  message.error(info.file.response.message);
+                  console.error(info.file.response);
+                }
+              }}
+            />
+          </div>
+        </ProCard>
+        <ProCard
+          layout="center"
+          style={{
+            backgroundColor: '#FFED8E',
+          }}
+        >
+          <Link
+            key={'guide'}
+            to="#"
+            style={{
+              textAlign: 'center',
+            }}
+          >
+            <Title level={5}>Not sure how to create a course?</Title>
+            <Text>Check out our guide and learn how to do it.</Text>
+          </Link>
+        </ProCard>
+      </ProCard>
       <ProTable<API.CourseListItem, API.CourseParams>
         loading={loading}
         headerTitle={intl.formatMessage({
@@ -219,13 +308,6 @@ const TableList: React.FC = () => {
             // labelWidth: 120,
           }
         }
-        toolBarRender={() => [
-          <Link key={'new'} to="/courses/list/new">
-            <Button type="primary" key="primary">
-              <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
-            </Button>
-          </Link>,
-        ]}
         request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
