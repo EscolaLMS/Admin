@@ -283,16 +283,27 @@ const TableList: React.FC = () => {
             backgroundColor: '#FFED8E',
           }}
         >
-          <Link
-            key={'guide'}
-            to="#"
+          <a
+            href={'https://docs.wellms.io/app-guide/'}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               textAlign: 'center',
             }}
           >
-            <Title level={5}>Not sure how to create a course?</Title>
-            <Text>Check out our guide and learn how to do it.</Text>
-          </Link>
+            <Title level={5}>
+              <FormattedMessage
+                id="course_guide_title"
+                defaultMessage="Not sure how to create a course?"
+              />
+            </Title>
+            <Text>
+              <FormattedMessage
+                id="course_guide_text"
+                defaultMessage="Check out our guide and learn how to do it."
+              />
+            </Text>
+          </a>
         </ProCard>
       </ProCard>
       <ProTable<API.CourseListItem, API.CourseParams>
