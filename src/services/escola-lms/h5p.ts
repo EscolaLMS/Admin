@@ -45,7 +45,7 @@ export const contentSettings = (
   lang: string = 'en',
   options?: RequestOptionsInit,
 ) => {
-  let url: string = `/api/hh5p/content/${id}`;
+  let url: string = `/api/admin/hh5p/content/${id}`;
   url = lang ? `${url}?lang=${lang}` : url;
   return request<API.DefaultResponse<API.H5PObject>>(url, {
     method: 'GET',
