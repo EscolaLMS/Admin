@@ -5,7 +5,7 @@ describe('Auth', () => {
     const login = new LoginCypressObject();
     login
       .navigateToPage()
-      .fillCredentials('admin@escola-lms.com', 'secret')
+      .fillCredentials('admin@escolalms.com', 'secret')
       .clickLoginButton()
       .roleCheck();
   });

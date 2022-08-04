@@ -1,3 +1,4 @@
+/*
 import { UserGroupObject } from '../../objects/UserGroupObject';
 
 describe('User Groups', () => {
@@ -52,3 +53,4 @@ describe('User Groups', () => {
       .itemShouldNotExist();
   });
 });
+*/
