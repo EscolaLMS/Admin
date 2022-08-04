@@ -53,11 +53,10 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
 
-  const config = await settings({ current: 1, pageSize: 100, group: 'global' });
-
   const currentUser = await fetchUserInfo();
 
   if (currentUser) {
+    const config = await settings({ current: 1, pageSize: 100, group: 'global' });
     return {
       fetchUserInfo,
       config: config.success ? config.data : [],
@@ -67,7 +66,7 @@ export async function getInitialState(): Promise<{
     };
   }
   return {
-    config: config.success ? config.data : [],
+    config: [],
     fetchUserInfo,
     settings: {},
     collapsed: false,
@@ -80,7 +79,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     if (history.location.query?.redirect) {
       history.push(history.location.query.redirect.toString());
     } else {
-      history.push('/');
+      history.push('/welcome');
     }
   }
   if (!initialState?.currentUser && !authpaths.includes(history.location.pathname)) {
