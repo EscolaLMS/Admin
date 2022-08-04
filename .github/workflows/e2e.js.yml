@@ -126,7 +126,7 @@ jobs:
         run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
 
       - name: Cypress.io
-        uses: cypress-io/github-action@v2.8.2
+        uses: cypress-io/github-action@v4
         with:
           record: true
           start: 'serve dist -l 8000'
