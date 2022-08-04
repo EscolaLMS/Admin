@@ -83,6 +83,7 @@ export default {
   'menu.Other activities.Consultations': 'Konsultacje',
   'menu.Analytics.Logs': 'Logi',
   user_settings: 'Ustawienia użytkownika',
+  global_settings: 'Ustawienia globalne',
   'user.settings': 'Ustawienia użytkownika',
   'user.settings.overwrite': 'Nadpisz wszystko',
   'menu.Sales.Vouchers': 'Vouchery',
@@ -479,4 +480,7 @@ export default {
   badPassword: 'min. 8 znaków, 1 duża litera, 1 znak specjalny (!@#$%^&*))',
   product_widget_title: 'Atrybuty produktu',
   product_widget_tooltip: 'Wszystkie poniższe atrybuty są związane tylko z produktem',
+  global_settings_alert_title: 'Dodaj ustawienia globalne',
+  global_settings_alert_description:
+    'Globalne ustawienia są udostępniane dla całego LMS. Możesz dodać globalne ustawienia klikając przycisk poniżej.',
 };

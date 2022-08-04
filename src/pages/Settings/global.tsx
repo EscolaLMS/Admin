@@ -5,19 +5,16 @@ import { useIntl, FormattedMessage } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { useModel } from 'umi';
 
 import {
   settings,
   createSettings,
   updateSettings,
   deleteSettings,
-  settingGroups,
 } from '@/services/escola-lms/settings';
 
 import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
 
 const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
   const hide = message.loading(
@@ -74,32 +71,10 @@ const handleRemove = async (intl: IntlShape, id: number) => {
 
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | false>(false);
-
-  const [groups, setGroups] = useState<string[]>([]);
-
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
-  const { setInitialState } = useModel('@@initialState');
-
-  useEffect(() => {
-    settingGroups().then((response) => {
-      if (response.success) {
-        setGroups(response.data.filter((group) => group !== 'global'));
-      }
-    });
-  }, []);
-
   const columns: ProColumns<API.Setting>[] = [
-    {
-      title: <FormattedMessage id="group" defaultMessage="group" />,
-      dataIndex: 'group',
-      hideInSearch: false,
-      key: 'group',
-      valueType: 'select',
-      width: 100,
-      valueEnum: groups.sort().reduce((acc, group) => ({ ...acc, [group]: group }), {}),
-    },
     {
       title: <FormattedMessage id="key" defaultMessage="key" />,
       dataIndex: 'key',
@@ -140,7 +115,6 @@ const TableList: React.FC = () => {
         </Tag>
       ),
     },
-
     {
       hideInSearch: true,
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
@@ -191,11 +165,6 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
         toolBarRender={() => [
           <Button
             type="primary"
@@ -207,15 +176,15 @@ const TableList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" />
           </Button>,
         ]}
-        request={({ pageSize, current, group }) => {
+        request={({ pageSize, current }) => {
           return settings({
             pageSize,
             current,
-            group,
+            group: 'global',
           }).then((response) => {
             if (response.success) {
               return {
-                data: response.data.filter((item) => item.group !== 'global'),
+                data: response.data,
                 total: response.meta.total,
                 success: true,
               };
@@ -227,7 +196,7 @@ const TableList: React.FC = () => {
       />
 
       <SettingsModalForm
-        groups={groups}
+        groups={[]}
         id={modalVisible}
         visible={Number.isInteger(modalVisible)}
         onVisibleChange={(value) => {
@@ -240,13 +209,6 @@ const TableList: React.FC = () => {
             setModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
-            }
-            if (fields.group === 'global') {
-              const config = await settings({ current: 1, pageSize: 100, group: 'global' });
-              setInitialState((prevState) => ({
-                ...prevState,
-                config: config.success ? config.data : prevState?.config,
-              }));
             }
           }
         }}

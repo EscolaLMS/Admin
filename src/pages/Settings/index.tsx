@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Spin } from 'antd';
+import { Alert, Spin } from 'antd';
 
 import ProCard from '@ant-design/pro-card';
 import { useParams, history } from 'umi';
@@ -10,6 +10,8 @@ import { configs as fetchConfigs } from '@/services/escola-lms/settings';
 
 import UserSettings from './user';
 import PackageForm from './package';
+import GlobalSettings from './global';
+import { useModel } from '@@/plugin-model/useModel';
 
 const sanitizePackageName = (name: string) => name.replaceAll('escolalms', '').split('_').join('');
 
@@ -27,6 +29,12 @@ export default () => {
       }
     });
   }, []);
+
+  const { initialState } = useModel('@@initialState');
+
+  const checkGlobalConfigs = useCallback(() => {
+    return initialState?.config?.length !== 0;
+  }, [initialState]);
 
   useEffect(() => {
     refetchConfigs();
@@ -57,6 +65,25 @@ export default () => {
         },
       }}
     >
+      {!checkGlobalConfigs() && (
+        <Alert
+          message={
+            <FormattedMessage
+              id="global_settings_alert_title"
+              defaultMessage="Add global settings"
+            />
+          }
+          description={
+            <FormattedMessage
+              id="global_settings_alert_description"
+              defaultMessage="Global settings are used to configure the entire LMS. You can add global settings by clicking the button below."
+            />
+          }
+          type="warning"
+          showIcon
+          style={{ marginBottom: '20px' }}
+        />
+      )}
       <ProCard
         tabs={{
           type: 'card',
@@ -66,6 +93,10 @@ export default () => {
       >
         <ProCard.TabPane key="user_settings" tab={<FormattedMessage id="user.settings" />}>
           <UserSettings />
+        </ProCard.TabPane>
+
+        <ProCard.TabPane key={'global_settings'} tab={<FormattedMessage id="global_settings" />}>
+          <GlobalSettings />
         </ProCard.TabPane>
 
         {Object.keys(configs).map((pkg) => (
