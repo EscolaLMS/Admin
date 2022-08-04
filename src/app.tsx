@@ -10,11 +10,9 @@ import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
-import Reqs from 'umi-request';
-import { refreshToken } from './services/escola-lms/auth';
 import { settings } from './services/escola-lms/settings';
-import jwt_decode from 'jwt-decode';
-import { differenceInMinutes } from 'date-fns';
+import { refreshTokenCallback } from './services/token_refresh';
+
 import '@/services/ybug';
 import '@/services/sentry.ts';
 import './app.css';
@@ -22,10 +20,6 @@ import './app.css';
 declare const REACT_APP_API_URL: string;
 
 const langParser = (lang: string) => lang.split('-')[0];
-
-type Token = {
-  exp: number;
-};
 
 const authpaths = ['/user/login', '/user/reset-password'];
 
@@ -44,6 +38,7 @@ export async function getInitialState(): Promise<{
   collapsed?: boolean;
   config?: API.Setting[];
 }> {
+  refreshTokenCallback();
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
@@ -60,8 +55,9 @@ export async function getInitialState(): Promise<{
 
   const config = await settings({ current: 1, pageSize: 100, group: 'global' });
 
-  if (!authpaths.includes(history.location.pathname)) {
-    const currentUser = await fetchUserInfo();
+  const currentUser = await fetchUserInfo();
+
+  if (currentUser) {
     return {
       fetchUserInfo,
       config: config.success ? config.data : [],
@@ -242,60 +238,8 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
     },
   };
 };
-const { cancel } = Reqs.CancelToken.source();
-let refreshTokenRequest: Promise<API.DefaultResponse<{ token: string }>> | null = null;
-const responseInterceptor = async (response: Response, options: RequestOptionsInit) => {
-  const token = localStorage.getItem('TOKEN');
-  const now = new Date();
-  const tokenRefreshTime = 2;
-
-  if (token) {
-    const decode = jwt_decode<Token>(token);
-
-    const accessTokenExpired = differenceInMinutes(new Date(decode.exp * 1000), now);
-
-    if (accessTokenExpired <= tokenRefreshTime) {
-      if (!refreshTokenRequest) {
-        refreshTokenRequest = refreshToken();
-      }
-
-      refreshTokenRequest
-        .then((res) => {
-          if (res.success) {
-            localStorage.setItem('TOKEN', res.data.token);
-            refreshTokenRequest = null;
-            return {
-              url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${response.url}`,
-              options: {
-                ...options,
-                interceptors: true,
-                headers: token
-                  ? {
-                      ...options.headers,
-                      Accept: 'application/json',
-                      Authorization: `Bearer ${res.data.token}`,
-                    }
-                  : options.headers,
-              },
-            };
-          }
-          return null;
-        })
-        .catch(() => {
-          refreshTokenRequest = null;
-          window.location.reload();
-          localStorage.removeItem('TOKEN');
-          cancel();
-          return;
-        });
-    }
-  }
-
-  return response;
-};
 
 export const request: RequestConfig = {
   errorHandler,
   requestInterceptors: [authHeaderInterceptor],
-  responseInterceptors: [responseInterceptor],
 };

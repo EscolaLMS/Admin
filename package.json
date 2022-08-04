@@ -116,9 +116,7 @@
         "umi": "^3.5.30",
         "umi-request": "^1.4.0"
     },
-    "resolutions": {
-        "@ant-design/pro-utils": "1.35.1"
-    },
+   
     "devDependencies": {
         "@ant-design/pro-cli": "^3.0.0",
         "@types/classnames": "^2.3.0",
