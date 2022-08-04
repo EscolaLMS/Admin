@@ -17,7 +17,7 @@ const ProductsFormPage = () => {
         breadcrumb: {
           routes: [
             {
-              path: 'products',
+              path: 'other/products',
               breadcrumbName: intl.formatMessage({
                 id: 'menu.Other activities.Products',
               }),

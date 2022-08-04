@@ -240,7 +240,7 @@ const ProductsForm: React.FC<{
       subTitle={
         type === 'line' ? (
           <FormattedMessage
-            id="product_widget_subtitle"
+            id="product_widget_tooltip"
             defaultMessage="All attributes below are related only to product"
           />
         ) : null

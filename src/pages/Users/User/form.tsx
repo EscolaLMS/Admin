@@ -121,6 +121,7 @@ export default ({
           required
         />
         <ProFormText.Password
+          shouldUpdate
           width="md"
           name="password"
           label={<FormattedMessage id="password" />}
@@ -129,6 +130,16 @@ export default ({
             id: 'password',
           })}
           required={isNew}
+          rules={[
+            {
+              validator(_, value) {
+                if (!/(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/i.test(value)) {
+                  return Promise.reject(new Error(intl.formatMessage({ id: 'badPassword' })));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
         />
         {additionalFields.state === 'loaded' &&
           additionalFields.list.map((field: API.ModelField) => (

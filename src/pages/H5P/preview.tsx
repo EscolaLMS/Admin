@@ -1,33 +1,29 @@
-import React, { useContext } from 'react';
+import { useState } from 'react';
 import { useParams } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
+
+import H5Player from '@/components/H5P/player';
 import { PageContainer } from '@ant-design/pro-layout';
-import { EditorContextProvider, EditorContext } from '@escolalms/h5p-react';
-import H5Player from '@/components/H5Player';
-import { Divider, Row, Col } from 'antd';
-declare const REACT_APP_API_URL: string;
+import { Row, Col } from 'antd';
 
 import ProCard from '@ant-design/pro-card';
-import { useIntl, FormattedMessage } from 'umi';
-import './preview.css';
 
-const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
+export default () => {
+  const params = useParams<{ h5p?: string }>();
   const intl = useIntl();
 
-  const { state } = useContext(EditorContext);
-
-  const cid = `cid-${id}`;
-
-  const content =
-    state.value === 'loaded' && state.settings?.contents && state.settings?.contents[cid];
-
-  // eslint-disable-next-line no-nested-ternary
-  const title = content ? content.title : id ? 'Loading Content...' : 'Preview Content';
-
+  const { h5p } = params;
+  const [title, setTitle] = useState<string>('');
   return (
     <PageContainer
       title={
         <>
-          <FormattedMessage id="H5P_preview_title" />
+          {title ? (
+            <FormattedMessage id="H5P_edit_content_title" />
+          ) : (
+            <FormattedMessage id="H5P_new_content_title" />
+          )}
+
           {` ${title}`}
         </>
       }
@@ -43,7 +39,7 @@ const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
             {
               path: title,
               breadcrumbName: intl.formatMessage({
-                id: 'preview',
+                id: 'form',
               }),
             },
           ],
@@ -53,26 +49,18 @@ const H5PPreviewPage: React.FC<{ id: number | string }> = ({ id }) => {
       <ProCard direction="column">
         <Row>
           <Col span={24}>
-            <Divider />
-            <H5Player id={Number(id)} />
+            <H5Player
+              onLoaded={(data) => {
+                const contents = data.contents && data.contents[`cid-${h5p}`];
+                if (contents && contents.title) {
+                  setTitle(contents.title);
+                }
+              }}
+              id={Number(h5p)}
+            />{' '}
           </Col>
         </Row>
       </ProCard>
     </PageContainer>
-  );
-};
-
-export default () => {
-  const params = useParams<{ h5p?: string }>();
-  const { h5p } = params;
-  const intl = useIntl();
-  const lang = intl.locale.split('-')[0];
-  return (
-    <EditorContextProvider
-      defaultLang={lang}
-      url={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p`}
-    >
-      {h5p ? <H5PPreviewPage id={h5p} /> : <React.Fragment />}
-    </EditorContextProvider>
   );
 };

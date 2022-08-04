@@ -5,6 +5,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { useModel } from 'umi';
 
 import {
   settings,
@@ -32,6 +33,7 @@ const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) =
         id: 'success',
       }),
     );
+
     return true;
   } catch (error) {
     hide();
@@ -77,6 +79,8 @@ const TableList: React.FC = () => {
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+
+  const { setInitialState } = useModel('@@initialState');
 
   useEffect(() => {
     settingGroups().then((response) => {
@@ -230,11 +234,19 @@ const TableList: React.FC = () => {
           return value === false && setModalVisible(false);
         }}
         onFinish={async (value) => {
-          const success = await handleUpdate(intl, value as API.Setting, Number(modalVisible));
+          const fields = value as API.Setting;
+          const success = await handleUpdate(intl, fields, Number(modalVisible));
           if (success) {
             setModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
+            }
+            if (fields.group === 'global') {
+              const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+              setInitialState((prevState) => ({
+                ...prevState,
+                config: config.success ? config.data : prevState?.config,
+              }));
             }
           }
         }}

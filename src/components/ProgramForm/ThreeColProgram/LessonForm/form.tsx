@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Popconfirm, Col, Row, Space, Affix } from 'antd';
+import { Button, Popconfirm, Col, Row, Space, Affix, Divider } from 'antd';
 import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -83,6 +83,9 @@ export const LessonForm: React.FC<{
         }}
       >
         <Col span={24 - 8}>
+          <Divider>
+            <FormattedMessage id="lesson" />
+          </Divider>
           <ProCard>
             <ProFormText
               name="title"

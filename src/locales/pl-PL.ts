@@ -137,6 +137,7 @@ export default {
   parent_id_group: 'Nadrzędna grupa',
   parent_id_group_tooltip: 'Szukaj po id',
   registerable: 'Pokaż w rejestracji',
+  import_file: 'Importuj plik',
   edit: 'Edytuj',
   delete: 'Usuń',
   deleteQuestion: 'Czy na pewno chcesz usunąć ten rekord?',
@@ -201,6 +202,8 @@ export default {
   H5P_uploaded: 'Nowy plik H5P dodano prawidłowo',
   H5P_preview_title: 'H5P. Podgląd treści HTML',
   H5P_new_content_title: 'H5P. Nowa treść HTML5',
+  H5P_edit_content_title: 'H5p. Edycja',
+
   H5P_select_content: 'Wybierz treść H5P',
   upload_click_here: 'Kliknij tutaj żeby dodać',
   upload: 'Dodaj plik',
@@ -472,4 +475,10 @@ export default {
   program_form_not_selected_list_message: 'Wybierz lekcję albo moduł do edytowania.',
   clone: 'Klonuj',
   drag_topic_tooltip: 'Przeciągnij aby zmienić kolejność materiału',
+  invalidDate: 'Błędna data',
+  badPassword: 'min. 8 znaków, 1 duża litera, 1 znak specjalny (!@#$%^&*))',
+  product_widget_title: 'Atrybuty produktu',
+  product_widget_tooltip: 'Wszystkie poniższe atrybuty są związane tylko z produktem',
+  course_guide_title: 'Nie wiesz jak tworzyć kurs?',
+  course_guide_text: 'Sprawdź nasz poradnik i dowiedz się jak tworzyć kurs.',
 };
