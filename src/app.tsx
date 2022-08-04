@@ -47,8 +47,12 @@ export async function getInitialState(): Promise<{
       }
       return undefined;
     } catch (error) {
-      const url = history.location.pathname + history.location.search;
-      history.push(`/user/login?redirect=${url}`);
+      if (authpaths.includes(history.location.pathname)) {
+        history.push(`/user/login`);
+      } else {
+        const url = history.location.pathname + history.location.search;
+        history.push(`/user/login?redirect=${url}`);
+      }
     }
     return undefined;
   };
