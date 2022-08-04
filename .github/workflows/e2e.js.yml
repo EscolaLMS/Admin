@@ -118,6 +118,28 @@ jobs:
 
       - name: Node dependencies
         run: npm i  --legacy-peer-deps
+
+      - name: Node dependencies serve
+        run: npm i serve -g
+
+      - name: Node build
+        run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
+
+      - name: Cypress.io
+        uses: cypress-io/github-action@v2.8.2
+        with:
+          record: true
+          start: 'serve dist -l 8000'
+          wait-on: http://localhost:8000
+          wait-on-timeout: 120
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_PATH: /
+          BASE_URL: http://localhost:8000
+          PORT: 8000
+          REACT_APP_API_URL: http://localhost
+          VERIFY_TEST_RUNNER_TIMEOUT_MS: 100000
           
 
           
