@@ -8,6 +8,8 @@ import { forgot, login } from '@/services/escola-lms/auth';
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
 
+import { refreshTokenCallback } from '@/services/token_refresh';
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -43,6 +45,7 @@ const Login: React.FC = () => {
       const msg = await login({ ...values });
       if (msg.success) {
         localStorage.setItem('TOKEN', msg.data.token);
+        refreshTokenCallback();
         await fetchUserInfo();
         message.success(msg.message);
         return;

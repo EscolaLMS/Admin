@@ -480,6 +480,8 @@ export default {
   badPassword: 'min. 8 znaków, 1 duża litera, 1 znak specjalny (!@#$%^&*))',
   product_widget_title: 'Atrybuty produktu',
   product_widget_tooltip: 'Wszystkie poniższe atrybuty są związane tylko z produktem',
+  course_guide_title: 'Nie wiesz jak tworzyć kurs?',
+  course_guide_text: 'Sprawdź nasz poradnik i dowiedz się jak tworzyć kurs.',
   global_settings_alert_title: 'Dodaj ustawienia globalne',
   global_settings_alert_description:
     'Globalne ustawienia są udostępniane dla całego LMS. Możesz dodać globalne ustawienia klikając przycisk poniżej.',
