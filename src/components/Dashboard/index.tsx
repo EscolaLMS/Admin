@@ -8,7 +8,7 @@ import Tutorial from './Tutorial';
 import YourCourses from './YourCourses';
 import PieChart from './PieChart';
 import { FormattedMessage } from 'umi';
-import { PlusSquareOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
 
 import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
 
@@ -22,13 +22,15 @@ import { Button, Row, Space, Typography } from 'antd';
 const COLS = 2;
 const ROW_HEIGHT = 150;
 
-const components: Record<
+type DashBoardComponent = Record<
   string,
   Omit<Layout, 'i' | 'x' | 'y'> & {
     component: React.FC<any>;
     props?: any;
   }
-> = {
+>;
+
+const components: DashBoardComponent = {
   'current-users': { component: CurrentUsers, w: 1, h: 1, maxH: 1 },
   customers: { component: Customers, w: 1, h: 1, maxH: 1 },
   'hall-of-fame': { component: HallOfFame, w: 1, h: 1, maxH: 1 },
@@ -48,7 +50,11 @@ const components: Record<
     h: 4,
     maxH: 4,
     component: PieChart,
-    props: { metric: 'EscolaLms\\Reports\\Metrics\\CoursesPopularityMetric', header: false },
+    props: {
+      metric: 'EscolaLms\\Reports\\Metrics\\CoursesPopularityMetric',
+      header: false,
+      foo: 'bar',
+    },
   },
   'pie-chart-CoursesSecondsSpentMetric': {
     w: 1,
@@ -72,10 +78,8 @@ const components: Record<
     component: PieChart,
   },
 };
-// ALL
-// const defaultStageComponents =  Object.keys(components) as Array<keyof typeof components>
 
-const defaultStageComponents = [
+const defaultStageComponents: (keyof typeof components)[] = [
   'pie-chart-CoursesMoneySpentMetric',
   'pie-chart-CoursesPopularityMetric',
   'pie-chart-CoursesSecondsSpentMetric',
@@ -84,10 +88,9 @@ const defaultStageComponents = [
 
 export const Dashdoard: React.FC = () => {
   const [stageComponents, setStageComponents] =
-    useState<Array<keyof typeof components>>(defaultStageComponents);
+    useState<(keyof typeof components)[]>(defaultStageComponents);
   const onRemove = useCallback((key: keyof typeof components) => {
     setStageComponents((prevStageComponents) => {
-      console.log(key, prevStageComponents);
       return prevStageComponents.filter((k) => k !== key);
     });
   }, []);
@@ -100,13 +103,7 @@ export const Dashdoard: React.FC = () => {
     let x = 1;
     let y = 0;
 
-    /*
-
-    const l = Object.keys(components)
-      .filter((key) => stageComponents.includes(key))
-      */
-
-    const l = stageComponents.map((key, i, arr) => {
+    const l = stageComponents.map((key /*, i, arr */) => {
       // const prevItem = i > 0 ? components[arr[i - 1]] : null;
       const currItem = components[key];
       x = (x + currItem.w) % COLS;
@@ -141,9 +138,13 @@ export const Dashdoard: React.FC = () => {
           .map((key) => (
             <div key={key}>
               {components[key].component({ ...components[key].props })}
-              <button className="dashboard-draggable__remove_btn" onClick={() => onRemove(key)}>
-                x
-              </button>
+              <Button
+                size="small"
+                type="default"
+                icon={<CloseSquareOutlined />}
+                className="dashboard-draggable__remove_btn"
+                onClick={() => onRemove(key)}
+              />
             </div>
           ))}
         {keysToAdd.length > 0 && (
@@ -156,7 +157,7 @@ export const Dashdoard: React.FC = () => {
                   </Typography.Title>
                 </Row>
                 <Row align="middle" justify="center">
-                  <Space>
+                  <Space wrap style={{ justifyContent: 'center' }}>
                     {keysToAdd.map((key) => (
                       <Button
                         icon={<PlusSquareOutlined />}

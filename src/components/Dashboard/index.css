@@ -6,19 +6,6 @@
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0 0 24px 24px;
-
-  color: #828282;
-  font-weight: 400;
-  font-size: 13px;
-  font-style: normal;
-  line-height: 13px;
-  background: none;
-  border: none;
-
-  cursor: pointer;
-
-  appearance: none;
 }
 
 .dashboard-draggable__remove_btn:hover {
