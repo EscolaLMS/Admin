@@ -163,14 +163,7 @@ const TableList: React.FC = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
-                setModalVisible(-1);
-                setStaticData(
-                  record.key === 'logo'
-                    ? [staticLogo]
-                    : record.key === 'frontURL'
-                    ? [staticFrontURL]
-                    : [],
-                );
+                setModalVisible(initialData[record.key] || -1);
               }}
             />
           </Tooltip>
