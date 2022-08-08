@@ -47,7 +47,7 @@ export const SettingsModalForm: React.FC<{
 }> = (props) => {
   const intl = useIntl();
 
-  const { visible, onVisibleChange, onFinish, id, staticData, groups } = props;
+  const { visible, onVisibleChange, onFinish, id, initialData, groups } = props;
 
   const [form] = Form.useForm();
 
@@ -56,8 +56,8 @@ export const SettingsModalForm: React.FC<{
   const [type, setType] = useState<API.SettingType>('text');
 
   const isGlobalGroup = useCallback(() => {
-    return !!(form.getFieldValue('group') === 'global' || staticData);
-  }, [form, staticData]);
+    return !!(form.getFieldValue('group') === 'global' || initialData);
+  }, [form, initialData]);
 
   const [selectedGroup, setSelectedGroup] = useState<string>('');
 
@@ -73,14 +73,14 @@ export const SettingsModalForm: React.FC<{
     } else {
       form.resetFields();
 
-      if (staticData && staticData[0]) {
-        form.setFieldsValue(staticData[0]);
-        setType(staticData[0].type);
+      if (initialData && initialData[0]) {
+        form.setFieldsValue(initialData[0]);
+        setType(initialData[0].type);
       }
 
       setType('text');
     }
-  }, [id, form, staticData]);
+  }, [id, form, initialData]);
 
   const onValuesChange = useCallback(
     (values: API.Setting) => {
@@ -105,7 +105,7 @@ export const SettingsModalForm: React.FC<{
       onValuesChange={onValuesChange}
     >
       <ProForm.Group>
-        {staticData ? (
+        {initialData ? (
           <ProFormText
             label={<FormattedMessage id="group" defaultMessage="group" />}
             rules={[
@@ -174,7 +174,7 @@ export const SettingsModalForm: React.FC<{
       </ProForm.Group>
       <ProForm.Group>
         <ProFormRadio.Group
-          disabled={!!(!isNew || staticData)}
+          disabled={!!(!isNew || initialData)}
           name="type"
           label={<FormattedMessage id="type" />}
           options={[
