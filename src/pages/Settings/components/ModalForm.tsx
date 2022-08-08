@@ -43,7 +43,7 @@ export const SettingsModalForm: React.FC<{
   onVisibleChange: (visible: boolean) => void;
   onFinish: (formData: API.Setting) => Promise<boolean | void>;
   groups: string[];
-  staticData?: API.Setting[];
+  initialData?: API.Setting[];
 }> = (props) => {
   const intl = useIntl();
 
