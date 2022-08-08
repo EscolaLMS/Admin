@@ -44,7 +44,10 @@ type State =
       value: API.Report;
     };
 
-const PieChart: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
+const PieChart: React.FC<{ metric: API.ReportType; header?: boolean }> = ({
+  metric,
+  header = true,
+}) => {
   const [state, setState] = useState<State>({ mode: 'init' });
   const intl = useIntl();
 
@@ -86,14 +89,21 @@ const PieChart: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
   return (
     <ProCard
       title={
-        <FormattedMessage id={metric.split('\\').pop()} defaultMessage={metric.split('\\').pop()} />
+        header && (
+          <FormattedMessage
+            id={metric.split('\\').pop()}
+            defaultMessage={metric.split('\\').pop()}
+          />
+        )
       }
       extra={
-        <Button icon={<FileExcelOutlined />} size="small" onClick={() => onDownload()}>
-          {' '}
-          <FormattedMessage id={'download'} />
-          {'\u00A0'}CSV
-        </Button>
+        header && (
+          <Button icon={<FileExcelOutlined />} size="small" onClick={() => onDownload()}>
+            {' '}
+            <FormattedMessage id={'download'} />
+            {'\u00A0'}CSV
+          </Button>
+        )
       }
       headerBordered
     >
