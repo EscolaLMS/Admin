@@ -43,16 +43,21 @@ export const SettingsModalForm: React.FC<{
   onVisibleChange: (visible: boolean) => void;
   onFinish: (formData: API.Setting) => Promise<boolean | void>;
   groups: string[];
+  staticData?: API.Setting[];
 }> = (props) => {
   const intl = useIntl();
 
-  const { visible, onVisibleChange, onFinish, id } = props;
+  const { visible, onVisibleChange, onFinish, id, staticData } = props;
 
   const [form] = Form.useForm();
 
   const isNew = !id || id === -1;
 
   const [type, setType] = useState<API.SettingType>('text');
+
+  const isGlobalGroup = useCallback(() => {
+    return !!(form.getFieldValue('group') === 'global' || staticData);
+  }, [form, staticData]);
 
   useEffect(() => {
     if (id && id !== -1) {
@@ -64,9 +69,13 @@ export const SettingsModalForm: React.FC<{
       });
     } else {
       form.resetFields();
-      setType('text');
+
+      if (staticData && staticData[0]) {
+        form.setFieldsValue(staticData[0]);
+      }
+      setType(staticData && staticData[0] ? staticData[0].type : 'text');
     }
-  }, [id, form]);
+  }, [id, form, staticData]);
 
   const onValuesChange = useCallback(
     (values: API.Setting) => {
@@ -100,6 +109,7 @@ export const SettingsModalForm: React.FC<{
           ]}
           width="md"
           name="group"
+          disabled={isGlobalGroup()}
         />{' '}
         {/** TODO add autocomplete  */}
         <ProFormText
@@ -111,15 +121,18 @@ export const SettingsModalForm: React.FC<{
           ]}
           width="md"
           name="key"
+          disabled={isGlobalGroup()}
         />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSwitch
           name="enumerable"
+          disabled={isGlobalGroup()}
           label={<FormattedMessage id="enumerable" defaultMessage="enumerable" />}
         />
         <ProFormSwitch
           name="public"
+          disabled={isGlobalGroup()}
           label={<FormattedMessage id="public" defaultMessage="public" />}
         />
       </ProForm.Group>

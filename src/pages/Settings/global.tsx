@@ -69,10 +69,36 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
+const staticLogo: API.Setting = {
+  id: -1,
+  key: 'logo',
+  group: 'global',
+  value: '',
+  public: true,
+  enumerable: true,
+  sort: 0,
+  type: 'image',
+  data: 'EscolaLMS',
+};
+
+const staticFrontURL: API.Setting = {
+  id: 0,
+  key: 'frontURL',
+  group: 'global',
+  value: '',
+  public: true,
+  enumerable: true,
+  sort: 0,
+  type: 'text',
+  data: 'EscolaLMS',
+};
+
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | false>(false);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+
+  const [staticData, setStaticData] = useState<API.Setting[]>([]);
 
   const columns: ProColumns<API.Setting>[] = [
     {
@@ -121,13 +147,32 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => setModalVisible(record.id)}
-          />
-        </Tooltip>,
+        record.id > 0 ? (
+          <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => setModalVisible(record.id)}
+            />
+          </Tooltip>
+        ) : (
+          <Tooltip key="create" title={<FormattedMessage id="create" defaultMessage="create" />}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setModalVisible(-1);
+                setStaticData(
+                  record.key === 'logo'
+                    ? [staticLogo]
+                    : record.key === 'frontURL'
+                    ? [staticFrontURL]
+                    : [],
+                );
+              }}
+            />
+          </Tooltip>
+        ),
 
         <Popconfirm
           key="delete"
@@ -149,9 +194,11 @@ const TableList: React.FC = () => {
           okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
           cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger />
-          </Tooltip>
+          {record.id > 0 ? (
+            <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+              <Button type="primary" icon={<DeleteOutlined />} danger />
+            </Tooltip>
+          ) : null}
         </Popconfirm>,
       ],
     },
@@ -165,17 +212,6 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setModalVisible(-1);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" />
-          </Button>,
-        ]}
         request={({ pageSize, current }) => {
           return settings({
             pageSize,
@@ -184,7 +220,10 @@ const TableList: React.FC = () => {
           }).then((response) => {
             if (response.success) {
               return {
-                data: response.data,
+                data: [
+                  response.data.find((item) => item.key === 'logo') || staticLogo,
+                  response.data.find((item) => item.key === 'frontURL') || staticFrontURL,
+                ],
                 total: response.meta.total,
                 success: true,
               };
@@ -199,6 +238,7 @@ const TableList: React.FC = () => {
         groups={[]}
         id={modalVisible}
         visible={Number.isInteger(modalVisible)}
+        staticData={staticData}
         onVisibleChange={(value) => {
           return !value && setModalVisible(false);
         }}
