@@ -125,8 +125,8 @@ export const SettingsModalForm: React.FC<{
             }}
           >
             <div className="ant-col ant-form-item-label">
-              <label htmlFor="key" className="ant-form-item-required" title="">
-                Key
+              <label htmlFor="group" className="ant-form-item-required" title="">
+                <FormattedMessage id="group" defaultMessage="group" />
               </label>
             </div>
             <AutoComplete
