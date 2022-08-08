@@ -215,11 +215,11 @@ const TableList: React.FC = () => {
           }).then((response) => {
             if (response.success) {
               return {
-                data: [
-                  response.data.find((item) => item.key === 'logo') || staticLogo,
-                  response.data.find((item) => item.key === 'frontURL') || staticFrontURL,
-                ],
-                total: response.meta.total,
+              
+              const rows:API.Settings[] = [...Object.keys(initialData).map(key => response.data.find((item) => item.key === key) || initialData[key]), ...(response.data.filter((item) => !Object.keys(initialData).includes(item.key))];
+              
+                data: rows, 
+                total:  rows.length,
                 success: true,
               };
             }
