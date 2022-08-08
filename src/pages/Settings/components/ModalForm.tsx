@@ -38,12 +38,12 @@ export const FilesSelector: React.FC<{
 };
 
 export const SettingsModalForm: React.FC<{
-  id?: number | false;
-  visible: boolean;
+  id?: number | Partial<API.Setting> | false;
+  visible: number | boolean | Partial<API.Setting>;
   onVisibleChange: (visible: boolean) => void;
   onFinish: (formData: API.Setting) => Promise<boolean | void>;
   groups: string[];
-  initialData?: API.Setting[];
+  initialData?: Partial<API.Setting>;
 }> = (props) => {
   const intl = useIntl();
 
@@ -62,8 +62,12 @@ export const SettingsModalForm: React.FC<{
   const [selectedGroup, setSelectedGroup] = useState<string>('');
 
   useEffect(() => {
-    if (id && id !== -1) {
-      setting(id).then((response) => {
+    // if id id && id !== -1
+
+    if (typeof id === 'object') {
+      form.setFieldsValue(id);
+    } else if (id && id !== -1) {
+      setting(Number(id)).then((response) => {
         if (response.success) {
           form.setFieldsValue(response.data);
           setType(response.data.type);
@@ -72,12 +76,6 @@ export const SettingsModalForm: React.FC<{
       });
     } else {
       form.resetFields();
-
-      if (initialData && initialData[0]) {
-        form.setFieldsValue(initialData[0]);
-        setType(initialData[0].type);
-      }
-
       setType('text');
     }
   }, [id, form, initialData]);
@@ -99,7 +97,7 @@ export const SettingsModalForm: React.FC<{
         defaultMessage: id ? 'editSetting' : 'newSetting',
       })}
       width="60vw"
-      visible={visible}
+      visible={!!visible}
       onVisibleChange={onVisibleChange}
       onFinish={onFinish}
       onValuesChange={onValuesChange}
@@ -118,17 +116,7 @@ export const SettingsModalForm: React.FC<{
             disabled={isGlobalGroup()}
           />
         ) : (
-          <ProForm.Group
-            labelLayout={'twoLine'}
-            style={{
-              paddingTop: 0,
-            }}
-          >
-            <div className="ant-col ant-form-item-label">
-              <label htmlFor="group" className="ant-form-item-required" title="">
-                <FormattedMessage id="group" defaultMessage="group" />
-              </label>
-            </div>
+          <ProForm.Item label={<FormattedMessage id="group" defaultMessage="group" />} name="group">
             <AutoComplete
               style={{
                 width: '300px',
@@ -146,7 +134,7 @@ export const SettingsModalForm: React.FC<{
                 </AutoComplete.Option>
               ))}
             </AutoComplete>
-          </ProForm.Group>
+          </ProForm.Item>
         )}
         <ProFormText
           label={<FormattedMessage id="key" defaultMessage="key" />}

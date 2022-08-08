@@ -69,38 +69,37 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
-type InitialDataRecords = Record<"logo" | "frontURL" | string, API.Settings>
+type InitialDataRecords = Record<'logo' | 'frontURL' | string, API.Setting>;
+
 const initialData: InitialDataRecords = {
-'logo':  {
-  id: -1,
-  key: 'logo',
-  group: 'global',
-  value: '',
-  public: true,
-  enumerable: true,
-  sort: 0,
-  type: 'image',
-  data: 'EscolaLMS',
-},
-'frontURL': {
-  id: 0,
-  key: 'frontURL',
-  group: 'global',
-  value: '',
-  public: true,
-  enumerable: true,
-  sort: 0,
-  type: 'text',
-  data: 'EscolaLMS',
+  logo: {
+    id: -1,
+    key: 'logo',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'image',
+    data: 'EscolaLMS',
+  },
+  frontURL: {
+    id: 0,
+    key: 'frontURL',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'text',
+    data: 'EscolaLMS',
+  },
 };
-}
 
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  const [staticData, setStaticData] = useState<API.Setting[]>([]);
 
   const columns: ProColumns<API.Setting>[] = [
     {
@@ -214,12 +213,16 @@ const TableList: React.FC = () => {
             group: 'global',
           }).then((response) => {
             if (response.success) {
+              const rows: API.Setting[] = [
+                ...Object.keys(initialData).map(
+                  (key) => response.data.find((item) => item.key === key) || initialData[key],
+                ),
+                ...response.data.filter((item) => !Object.keys(initialData).includes(item.key)),
+              ];
+
               return {
-              
-              const rows:API.Settings[] = [...Object.keys(initialData).map(key => response.data.find((item) => item.key === key) || initialData[key]), ...(response.data.filter((item) => !Object.keys(initialData).includes(item.key))];
-              
-                data: rows, 
-                total:  rows.length,
+                data: rows,
+                total: rows.length,
                 success: true,
               };
             }
@@ -232,8 +235,8 @@ const TableList: React.FC = () => {
       <SettingsModalForm
         groups={[]}
         id={modalVisible}
-        visible={Number.isInteger(modalVisible)}
-        staticData={staticData}
+        visible={modalVisible}
+        initialData={initialData}
         onVisibleChange={(value) => {
           return !value && setModalVisible(false);
         }}
