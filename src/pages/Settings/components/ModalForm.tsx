@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, AutoComplete } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormSwitch,
@@ -47,7 +47,7 @@ export const SettingsModalForm: React.FC<{
 }> = (props) => {
   const intl = useIntl();
 
-  const { visible, onVisibleChange, onFinish, id, staticData } = props;
+  const { visible, onVisibleChange, onFinish, id, staticData, groups } = props;
 
   const [form] = Form.useForm();
 
@@ -59,12 +59,15 @@ export const SettingsModalForm: React.FC<{
     return !!(form.getFieldValue('group') === 'global' || staticData);
   }, [form, staticData]);
 
+  const [selectedGroup, setSelectedGroup] = useState<string>('');
+
   useEffect(() => {
     if (id && id !== -1) {
       setting(id).then((response) => {
         if (response.success) {
           form.setFieldsValue(response.data);
           setType(response.data.type);
+          setSelectedGroup(response.data.group);
         }
       });
     } else {
@@ -72,8 +75,10 @@ export const SettingsModalForm: React.FC<{
 
       if (staticData && staticData[0]) {
         form.setFieldsValue(staticData[0]);
+        setType(staticData[0].type);
       }
-      setType(staticData && staticData[0] ? staticData[0].type : 'text');
+
+      setType('text');
     }
   }, [id, form, staticData]);
 
@@ -100,18 +105,49 @@ export const SettingsModalForm: React.FC<{
       onValuesChange={onValuesChange}
     >
       <ProForm.Group>
-        <ProFormText
-          label={<FormattedMessage id="group" defaultMessage="group" />}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-          width="md"
-          name="group"
-          disabled={isGlobalGroup()}
-        />{' '}
-        {/** TODO add autocomplete  */}
+        {staticData ? (
+          <ProFormText
+            label={<FormattedMessage id="group" defaultMessage="group" />}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            width="md"
+            name="group"
+            disabled={isGlobalGroup()}
+          />
+        ) : (
+          <ProForm.Group
+            labelLayout={'twoLine'}
+            style={{
+              paddingTop: 0,
+            }}
+          >
+            <div className="ant-col ant-form-item-label">
+              <label htmlFor="key" className="ant-form-item-required" title="">
+                Key
+              </label>
+            </div>
+            <AutoComplete
+              style={{
+                width: '300px',
+              }}
+              autoFocus={true}
+              value={selectedGroup}
+              onChange={(value) => setSelectedGroup(value)}
+              filterOption={(inputValue, option) =>
+                option?.children?.toString().toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
+              }
+            >
+              {groups.map((group) => (
+                <AutoComplete.Option key={group} value={group}>
+                  {group}
+                </AutoComplete.Option>
+              ))}
+            </AutoComplete>
+          </ProForm.Group>
+        )}
         <ProFormText
           label={<FormattedMessage id="key" defaultMessage="key" />}
           rules={[
@@ -138,7 +174,7 @@ export const SettingsModalForm: React.FC<{
       </ProForm.Group>
       <ProForm.Group>
         <ProFormRadio.Group
-          disabled={!isNew}
+          disabled={!!(!isNew || staticData)}
           name="type"
           label={<FormattedMessage id="type" />}
           options={[
