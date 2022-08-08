@@ -69,7 +69,9 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
-const staticLogo: API.Setting = {
+type InitialDataRecords = Record<"logo" | "frontURL" | string, API.Settings>
+const initialData: InitialDataRecords = {
+'logo':  {
   id: -1,
   key: 'logo',
   group: 'global',
@@ -79,9 +81,8 @@ const staticLogo: API.Setting = {
   sort: 0,
   type: 'image',
   data: 'EscolaLMS',
-};
-
-const staticFrontURL: API.Setting = {
+},
+'frontURL': {
   id: 0,
   key: 'frontURL',
   group: 'global',
@@ -92,6 +93,7 @@ const staticFrontURL: API.Setting = {
   type: 'text',
   data: 'EscolaLMS',
 };
+}
 
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
