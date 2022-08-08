@@ -94,7 +94,7 @@ const staticFrontURL: API.Setting = {
 };
 
 const TableList: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<number | false>(false);
+  const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
