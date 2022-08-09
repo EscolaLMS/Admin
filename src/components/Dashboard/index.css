@@ -1,0 +1,33 @@
+.dashboard-draggable {
+  overflow-x: hidden;
+}
+
+.dashboard-draggable__remove_btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.dashboard-draggable__remove_btn:hover {
+  color: #333;
+}
+
+.dashboard-draggable__component h3 {
+  margin: 0 0 25px 0;
+  /* Gray 3 */
+
+  color: #828282;
+  font-weight: 400;
+  font-size: 13px;
+  font-style: normal;
+  line-height: 16px;
+  /* identical to box height */
+
+  text-transform: uppercase;
+}
+
+.dashboard-draggable__component article {
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 10px;
+}

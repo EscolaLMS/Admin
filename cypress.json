@@ -1,7 +1,0 @@
-{
-  "projectId": "diinyp",
-  "env": {
-    "router": "hash"
-  },
-  "defaultCommandTimeout": 10000
-}
