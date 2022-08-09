@@ -5,19 +5,16 @@ import { useIntl, FormattedMessage } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { useModel } from 'umi';
 
 import {
   settings,
   createSettings,
   updateSettings,
   deleteSettings,
-  settingGroups,
 } from '@/services/escola-lms/settings';
 
 import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
 
 const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
   const hide = message.loading(
@@ -72,34 +69,39 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
+type InitialDataRecords = Record<'logo' | 'frontURL' | string, API.Setting>;
+
+const initialData: InitialDataRecords = {
+  logo: {
+    id: -1,
+    key: 'logo',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'image',
+    data: 'EscolaLMS',
+  },
+  frontURL: {
+    id: 0,
+    key: 'frontURL',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'text',
+    data: 'EscolaLMS',
+  },
+};
+
 const TableList: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<number | false>(false);
-
-  const [groups, setGroups] = useState<string[]>([]);
-
+  const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
-  const { setInitialState } = useModel('@@initialState');
-
-  useEffect(() => {
-    settingGroups().then((response) => {
-      if (response.success) {
-        setGroups(response.data.filter((group) => group !== 'global'));
-      }
-    });
-  }, []);
-
   const columns: ProColumns<API.Setting>[] = [
-    {
-      title: <FormattedMessage id="group" defaultMessage="group" />,
-      dataIndex: 'group',
-      hideInSearch: false,
-      key: 'group',
-      valueType: 'select',
-      width: 100,
-      valueEnum: groups.sort().reduce((acc, group) => ({ ...acc, [group]: group }), {}),
-    },
     {
       title: <FormattedMessage id="key" defaultMessage="key" />,
       dataIndex: 'key',
@@ -140,20 +142,31 @@ const TableList: React.FC = () => {
         </Tag>
       ),
     },
-
     {
       hideInSearch: true,
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => setModalVisible(record.id)}
-          />
-        </Tooltip>,
+        record.id > 0 ? (
+          <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => setModalVisible(record.id)}
+            />
+          </Tooltip>
+        ) : (
+          <Tooltip key="create" title={<FormattedMessage id="create" defaultMessage="create" />}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setModalVisible(initialData[record.key] || -1);
+              }}
+            />
+          </Tooltip>
+        ),
 
         <Popconfirm
           key="delete"
@@ -175,9 +188,11 @@ const TableList: React.FC = () => {
           okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
           cancelText={<FormattedMessage id="no" defaultMessage="No" />}
         >
-          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-            <Button type="primary" icon={<DeleteOutlined />} danger />
-          </Tooltip>
+          {record.id > 0 ? (
+            <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+              <Button type="primary" icon={<DeleteOutlined />} danger />
+            </Tooltip>
+          ) : null}
         </Popconfirm>,
       ],
     },
@@ -191,32 +206,23 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setModalVisible(-1);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" />
-          </Button>,
-        ]}
-        request={({ pageSize, current, group }) => {
+        request={({ pageSize, current }) => {
           return settings({
             pageSize,
             current,
-            group,
+            group: 'global',
           }).then((response) => {
             if (response.success) {
+              const rows: API.Setting[] = [
+                ...Object.keys(initialData).map(
+                  (key) => response.data.find((item) => item.key === key) || initialData[key],
+                ),
+                ...response.data.filter((item) => !Object.keys(initialData).includes(item.key)),
+              ];
+
               return {
-                data: response.data.filter((item) => item.group !== 'global'),
-                total: response.meta.total,
+                data: rows,
+                total: rows.length,
                 success: true,
               };
             }
@@ -227,9 +233,10 @@ const TableList: React.FC = () => {
       />
 
       <SettingsModalForm
-        groups={groups}
+        groups={[]}
         id={modalVisible}
-        visible={Number.isInteger(modalVisible)}
+        visible={modalVisible}
+        initialData={initialData}
         onVisibleChange={(value) => {
           return !value && setModalVisible(false);
         }}
@@ -240,13 +247,6 @@ const TableList: React.FC = () => {
             setModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
-            }
-            if (fields.group === 'global') {
-              const config = await settings({ current: 1, pageSize: 100, group: 'global' });
-              setInitialState((prevState) => ({
-                ...prevState,
-                config: config.success ? config.data : prevState?.config,
-              }));
             }
           }
         }}

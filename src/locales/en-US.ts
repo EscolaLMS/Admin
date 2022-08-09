@@ -97,6 +97,7 @@ export default {
   edit_user_group: 'Edit User Group',
   add_person_to_group: 'Add person to group',
   user_settings: 'User settings',
+  global_settings: 'Global settings',
   'user.settings': 'User settings',
   'user.settings.overwrite': 'Overwrite all',
   Active: 'Active',
@@ -477,4 +478,7 @@ export default {
   product_widget_tooltip: 'All attributes below are related only to product',
   course_guide_title: 'Not sure how to create a course?',
   course_guide_text: 'Check out our guide and learn how to do it.',
+  global_settings_alert_title: 'Add global settings',
+  global_settings_alert_description:
+    'Global settings are used to share data in entire LMS. You can add global settings by clicking the button below.',
 };

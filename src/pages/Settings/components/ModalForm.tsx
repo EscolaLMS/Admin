@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, AutoComplete } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormSwitch,
@@ -38,15 +38,16 @@ export const FilesSelector: React.FC<{
 };
 
 export const SettingsModalForm: React.FC<{
-  id?: number | false;
-  visible: boolean;
+  id?: number | Partial<API.Setting> | false;
+  visible: number | boolean | Partial<API.Setting>;
   onVisibleChange: (visible: boolean) => void;
   onFinish: (formData: API.Setting) => Promise<boolean | void>;
   groups: string[];
+  initialData?: Partial<API.Setting>;
 }> = (props) => {
   const intl = useIntl();
 
-  const { visible, onVisibleChange, onFinish, id } = props;
+  const { visible, onVisibleChange, onFinish, id, initialData, groups } = props;
 
   const [form] = Form.useForm();
 
@@ -54,19 +55,30 @@ export const SettingsModalForm: React.FC<{
 
   const [type, setType] = useState<API.SettingType>('text');
 
+  const isGlobalGroup = useCallback(() => {
+    return !!(form.getFieldValue('group') === 'global' || initialData);
+  }, [form, initialData]);
+
+  const [selectedGroup, setSelectedGroup] = useState<string>('');
+
   useEffect(() => {
-    if (id && id !== -1) {
-      setting(id).then((response) => {
+    // if id id && id !== -1
+
+    if (typeof id === 'object') {
+      form.setFieldsValue(id);
+    } else if (id && id !== -1) {
+      setting(Number(id)).then((response) => {
         if (response.success) {
           form.setFieldsValue(response.data);
           setType(response.data.type);
+          setSelectedGroup(response.data.group);
         }
       });
     } else {
       form.resetFields();
       setType('text');
     }
-  }, [id, form]);
+  }, [id, form, initialData]);
 
   const onValuesChange = useCallback(
     (values: API.Setting) => {
@@ -85,23 +97,45 @@ export const SettingsModalForm: React.FC<{
         defaultMessage: id ? 'editSetting' : 'newSetting',
       })}
       width="60vw"
-      visible={visible}
+      visible={!!visible}
       onVisibleChange={onVisibleChange}
       onFinish={onFinish}
       onValuesChange={onValuesChange}
     >
       <ProForm.Group>
-        <ProFormText
-          label={<FormattedMessage id="group" defaultMessage="group" />}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-          width="md"
-          name="group"
-        />{' '}
-        {/** TODO add autocomplete  */}
+        {initialData ? (
+          <ProFormText
+            label={<FormattedMessage id="group" defaultMessage="group" />}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            width="md"
+            name="group"
+            disabled={isGlobalGroup()}
+          />
+        ) : (
+          <ProForm.Item label={<FormattedMessage id="group" defaultMessage="group" />} name="group">
+            <AutoComplete
+              style={{
+                width: '300px',
+              }}
+              autoFocus={true}
+              value={selectedGroup}
+              onChange={(value) => setSelectedGroup(value)}
+              filterOption={(inputValue, option) =>
+                option?.children?.toString().toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
+              }
+            >
+              {groups.map((group) => (
+                <AutoComplete.Option key={group} value={group}>
+                  {group}
+                </AutoComplete.Option>
+              ))}
+            </AutoComplete>
+          </ProForm.Item>
+        )}
         <ProFormText
           label={<FormattedMessage id="key" defaultMessage="key" />}
           rules={[
@@ -111,21 +145,24 @@ export const SettingsModalForm: React.FC<{
           ]}
           width="md"
           name="key"
+          disabled={isGlobalGroup()}
         />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSwitch
           name="enumerable"
+          disabled={isGlobalGroup()}
           label={<FormattedMessage id="enumerable" defaultMessage="enumerable" />}
         />
         <ProFormSwitch
           name="public"
+          disabled={isGlobalGroup()}
           label={<FormattedMessage id="public" defaultMessage="public" />}
         />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormRadio.Group
-          disabled={!isNew}
+          disabled={!!(!isNew || initialData)}
           name="type"
           label={<FormattedMessage id="type" />}
           options={[
