@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["cypress"],
     "outDir": "build/dist",
     "module": "esnext",
     "target": "esnext",
