@@ -485,4 +485,5 @@ export default {
   global_settings_alert_title: 'Dodaj ustawienia globalne',
   global_settings_alert_description:
     'Globalne ustawienia są udostępniane dla całego LMS. Możesz dodać globalne ustawienia klikając przycisk poniżej.',
+  manage_course: 'Zarządzaj kursem',
 };

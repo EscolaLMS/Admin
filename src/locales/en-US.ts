@@ -481,4 +481,5 @@ export default {
   global_settings_alert_title: 'Add global settings',
   global_settings_alert_description:
     'Global settings are used to share data in entire LMS. You can add global settings by clicking the button below.',
+  manage_course: 'Manage course',
 };
