@@ -1,0 +1,37 @@
+.dashboard {
+  &__card {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 240px;
+    text-align: center;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    h4.ant-typography {
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin-top: 35px;
+    }
+
+    &-img {
+      max-width: 100%;
+      height: auto;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+    }
+
+    .ant-pro-card {
+      flex: 1;
+    }
+  }
+
+  &__card-group {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+  }
+}

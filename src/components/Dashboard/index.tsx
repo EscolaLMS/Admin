@@ -10,7 +10,8 @@ import PieChart from './PieChart';
 import { FormattedMessage } from 'umi';
 import { PlusSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
 
-import { Responsive, WidthProvider, Layout } from 'react-grid-layout';
+import type { Layout } from 'react-grid-layout';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -37,7 +38,7 @@ const components: DashBoardComponent = {
   ratings: { component: Ratings, w: 1, h: 1, maxH: 1 },
   sales: { component: Sales, w: 1, h: 1, maxH: 1 },
   tutorial: { component: Tutorial, w: 1, h: 1, maxH: 1 },
-  'your-courses': { component: YourCourses, w: 1, h: 1, maxH: 1 },
+  'your-courses': { component: YourCourses, w: 2, h: 3, maxH: 3 },
   'pie-chart-CoursesMoneySpentMetric': {
     w: 1,
     h: 4,
@@ -84,6 +85,7 @@ const defaultStageComponents: (keyof typeof components)[] = [
   'pie-chart-CoursesPopularityMetric',
   'pie-chart-CoursesSecondsSpentMetric',
   'pie-chart-TutorsPopularityMetric',
+  'your-courses',
 ];
 
 export const Dashdoard: React.FC = () => {
