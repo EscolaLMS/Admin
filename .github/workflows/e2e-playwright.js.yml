@@ -1,4 +1,4 @@
-name: Cypress end-to-end Tests
+name: End-to-end Tests
 
 on:
   # Trigger the workflow on push or pull request,
