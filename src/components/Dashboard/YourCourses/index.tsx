@@ -44,7 +44,7 @@ export const DashdoardComponent: React.FC = () => {
       </h3>
       <div className={'dashboard__card-group'}>
         <div className={'dashboard__card'}>
-          <ProCard layout="center" bordered>
+          <ProCard layout="center">
             <Link to={`/courses/list/new`} key={'new_course'}>
               <PlusCircleFilled
                 style={{
