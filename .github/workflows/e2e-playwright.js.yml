@@ -1,0 +1,115 @@
+name: Cypress end-to-end Tests
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+
+jobs:
+
+  playwright-e2e:
+    runs-on: ubuntu-latest
+
+    services:
+      mailhog:
+        image: mailhog/mailhog
+        ports:
+          - 1025:1025 # smtp server
+          - 8025:8025 # web ui
+
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: default
+          POSTGRES_USER: default
+          POSTGRES_PASSWORD: secret
+          TZ:  Europe/Warsaw
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis
+
+      api: 
+        image: escolalms/api:latest
+        ports:
+          - 80:80
+
+        options: >-
+          --name api 
+          --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
+
+    steps:
+
+      - run: | 
+          docker exec api echo "APP_NAME=Wellms Cypress Demo \
+          APP_ENV=local \
+          APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
+          APP_DEBUG=true \
+          APP_LOG_LEVEL=debug \
+          APP_URL=http://localhost:1000 \
+          DB_CONNECTION=pgsql \
+          DB_HOST=postgres \ 
+          DB_PORT=5432 \
+          DB_DATABASE=default \
+          DB_USERNAME=default \
+          DB_PASSWORD=secret \
+          BROADCAST_DRIVER=log \
+          CACHE_DRIVER=redis \
+          SESSION_DRIVER=cookie \
+          QUEUE_DRIVER=redis \
+          QUEUE_CONNECTION=redis \
+          REDIS_HOST=redis \
+          REDIS_PASSWORD= \
+          REDIS_PORT=6379 \
+          MAIL_DRIVER=smtp \
+          MAIL_HOST=mailhog \
+          MAIL_PORT=1025 \
+          MAIL_USERNAME=null \
+          MAIL_PASSWORD=null \
+          MAIL_ENCRYPTION= \
+          MJML_BINARY_PATH=/usr/bin/mjml \
+          TRACKER_ENABLED=false" >> .env
+
+      - run: docker exec api cat .env
+      - run: docker exec api php artisan config:cache 
+      - run: docker exec api composer dumpautoload
+      - run: docker exec api php artisan key:generate --force --no-interaction
+      - run: docker exec api php artisan passport:keys --force --no-interaction
+      - run: docker exec api php artisan migrate --force --no-interaction
+      - run: docker exec api php artisan passport:client --personal --no-interaction
+      - run: docker exec api php artisan db:seed --force --no-interaction
+
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+#      - name: Cypress dependencies
+#        run: sudo apt-get update && sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb -y --fix-missing
+
+      - name: Node dependencies
+        run: npm i 
+
+#      - name: Node dependencies serve
+#        run: npm i serve -g
+
+#      - name: Node build
+#        run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - name: Run your tests
+        run: npm test:e2e
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: playwright-report
+          path: playwright-report
+

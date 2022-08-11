@@ -2,6 +2,10 @@
 
 import ReactDOM from 'react-dom';
 import Footer from './index';
+import { shallow } from 'enzyme';
+import DefaultFooter from '@ant-design/pro-layout/lib/Footer';
+
+import { expect } from '@jest/globals';
 
 // import "babel-polyfill";
 
@@ -14,5 +18,12 @@ describe('footer', () => {
     const div = document.createElement('div');
     ReactDOM.render(<Footer />, div);
     ReactDOM.unmountComponentAtNode(div);
+  });
+});
+
+describe('<Avatar/>', function () {
+  it('should have an image to display the gravatar', function () {
+    const wrapper = shallow(<Footer />);
+    expect(wrapper.find(DefaultFooter).exists()).toBe(true);
   });
 });
