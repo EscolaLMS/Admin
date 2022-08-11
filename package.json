@@ -36,11 +36,11 @@
         "start:test": "cross-env REACT_APP_ENV=test MOCK=none UMI_ENV=dev umi dev",
         "test:component": "umi test ./src/components",
         "tsc:noemit": "tsc --noEmit",
-        "cypress": "cypress open",
-        "cypress-run": "cypress run",
-        "cypress-test": "start-server-and-test start:mock http://localhost:8000 cypress-run",
-        "cypress-ci": "start-server-and-test start:mock http://localhost:8000 cypress-run",
-        "test": "jest"
+        "test": "jest",
+        "test:e2e": "node ./tests/run-tests.js",
+        "serve": "umi-serve",
+        "playwright": "playwright install && playwright test",
+        "playwright:debug": "playwright install && playwright test --debug"
     },
     "lint-staged": {
         "**/*.less": "stylelint --custom-syntax postcss-less",
@@ -55,8 +55,8 @@
         "not ie <= 10"
     ],
     "dependencies": {
-        "@ant-design/plots": "^1.2.1",
         "@ant-design/icons": "^4.7.0",
+        "@ant-design/plots": "^1.2.1",
         "@ant-design/pro-card": "^1.20.13",
         "@ant-design/pro-descriptions": "1.11.10",
         "@ant-design/pro-form": "1.70.3",
@@ -119,6 +119,7 @@
     },
     "devDependencies": {
         "@ant-design/pro-cli": "^3.0.0",
+        "@playwright/test": "^1.25.0",
         "@types/classnames": "^2.3.0",
         "@types/express": "^4.17.13",
         "@types/fabric": "^4.5.11",
@@ -141,13 +142,10 @@
         "babel-preset-react-app": "^10.0.1",
         "carlo": "^0.9.46",
         "cross-port-killer": "^1.4.0",
-        "cypress": "^10.3.0",
-        "cypress-localstorage-commands": "^2.1.0",
         "detect-installer": "^1.0.2",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
         "eslint": "^8.20.0",
-        "eslint-plugin-cypress": "^2.12.1",
         "eslint-plugin-jest": "^26.6.0",
         "eslint-plugin-react": "^7.30.1",
         "eslint-plugin-react-hooks": "^4.6.0",
@@ -165,7 +163,8 @@
         "stylelint-config-prettier": "^9.0.3",
         "stylelint-config-standard": "^26.0.0",
         "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
-        "typescript": "^4.7.4"
+        "typescript": "^4.7.4",
+        "umi-serve": "^1.9.11"
     },
     "engines": {
         "node": ">=14.x"

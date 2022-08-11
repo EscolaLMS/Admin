@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["cypress"],
     "outDir": "build/dist",
     "module": "esnext",
     "target": "esnext",
@@ -38,6 +37,7 @@
     ".stylelintrc.js",
     ".prettierrc.js",
     "jest.config.js",
+    "playwright.config.ts",
     "mock/*",
     "node_modules/@escolalms/ts-types"
   ],

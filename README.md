@@ -1,6 +1,6 @@
 # Escola LMS
 
-![end-to-end tests](https://github.com/EscolaLMS/Admin/actions/workflows/e2e.js.yml/badge.svg) [![Admin Panel](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/diinyp&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/diinyp/runs) [![Maintainability](https://api.codeclimate.com/v1/badges/4391383cac54bdb7727d/maintainability)](https://codeclimate.com/github/EscolaLMS/Admin/maintainability)
+[![End-to-end Tests](https://github.com/EscolaLMS/Admin/actions/workflows/e2e-playwright.js.yml/badge.svg)](https://github.com/EscolaLMS/Admin/actions/workflows/e2e-playwright.js.yml)
 
 This project is initialized with [Ant.design PRO](https://pro.ant.design). Follow is the quick guide for how to use.
 
@@ -52,10 +52,18 @@ There are tests in this repo. See badges above.
 yarn test
 ```
 
-#### Cypress e2e tests
+#### e2e tests
+
+Locally
 
 ```bash
-yarn cypress-test
+yarn start:test
+```
+
+CI
+
+```bash
+yarn e2e:test
 ```
 
 ## More

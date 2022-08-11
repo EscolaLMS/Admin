@@ -1,4 +1,4 @@
-name: Cypress end-to-end Tests
+name: End-to-end Tests
 
 on:
   # Trigger the workflow on push or pull request,
@@ -12,31 +12,8 @@ on:
 
 jobs:
 
-  # install:
-  #   runs-on: ubuntu-latest
-  #   container: cypress/browsers:node12.18.3-chrome87-ff82
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     - name: Cypress install
-  #       uses: cypress-io/github-action@v4
-  #       with:
-  #         # Disable running of tests within install job
-  #         runTests: false
-  #         build: yarn build
-
-  #     - name: Save build folder
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: build
-  #         if-no-files-found: error
-  #         path: build
-
-  cypress-e2e:
+  playwright-e2e:
     runs-on: ubuntu-latest
-    #container: cypress/browsers:node12.18.3-chrome87-ff82
-    #needs: install
 
     services:
       mailhog:
@@ -70,7 +47,7 @@ jobs:
     steps:
 
       - run: | 
-          docker exec api echo "APP_NAME=Wellms Cypress Demo \
+          docker exec api echo "APP_NAME=Wellms Playwright Demo \
           APP_ENV=local \
           APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
           APP_DEBUG=true \
@@ -113,52 +90,17 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Cypress dependencies
-        run: sudo apt-get update && sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb -y --fix-missing
-
       - name: Node dependencies
-        run: npm i  --legacy-peer-deps
+        run: npm i --legacy-peer-deps
 
-      - name: Node dependencies serve
-        run: npm i serve -g
-
-      - name: Node build
-        run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
-
-      - name: Cypress.io
-        uses: cypress-io/github-action@v4
-        with:
-#          record: true
-          start: 'serve dist -l 8000'
-          wait-on: http://localhost:8000
-          wait-on-timeout: 120
-          install: false
-        env:
-#          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_PATH: /
-          BASE_URL: http://localhost:8000
-          PORT: 8000
-          REACT_APP_API_URL: http://localhost
-          VERIFY_TEST_RUNNER_TIMEOUT_MS: 100000
-          
-          
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-      # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v2
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - name: Run your tests
+        run: npm run test:e2e
+      - name: Upload test results
         if: always()
+        uses: actions/upload-artifact@v2
         with:
-          name: cypress-videos
-          path: cypress/videos
+          name: playwright-report
+          path: playwright-report
 
-          
-
-           # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-
-      #- name: Cypress run
-      #  uses: cypress-io/github-action@v4
