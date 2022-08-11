@@ -482,4 +482,5 @@ export default {
   global_settings_alert_description:
     'Global settings are used to share data in entire LMS. You can add global settings by clicking the button below.',
   go_to_platform: 'Go to the your platform',
+  manage_course: 'Manage course',
 };
