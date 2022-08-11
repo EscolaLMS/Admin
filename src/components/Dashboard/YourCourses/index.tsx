@@ -2,8 +2,15 @@ import { FormattedMessage } from 'umi';
 import ProCard from '@ant-design/pro-card';
 import { Button, Typography } from 'antd';
 import './index.less';
+import { useEffect } from 'react';
 
 export const DashdoardComponent: React.FC = () => {
+  // const [list, setList] = useState<API.Lesson[]>([]);
+
+  useEffect(() => {
+    console.log('useEffect');
+  }, []);
+
   const { Text, Title } = Typography;
 
   return (
