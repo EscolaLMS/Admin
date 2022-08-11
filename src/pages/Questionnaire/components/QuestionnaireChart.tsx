@@ -1,5 +1,5 @@
 import React from 'react';
-import { Column } from '@ant-design/charts';
+import { Column } from '@ant-design/plots';
 
 import { Spin, Alert } from 'antd';
 import { FormattedMessage, useIntl } from 'umi';
