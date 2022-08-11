@@ -85,7 +85,6 @@ const defaultStageComponents: (keyof typeof components)[] = [
   'pie-chart-CoursesPopularityMetric',
   'pie-chart-CoursesSecondsSpentMetric',
   'pie-chart-TutorsPopularityMetric',
-  'your-courses',
 ];
 
 export const Dashdoard: React.FC = () => {
