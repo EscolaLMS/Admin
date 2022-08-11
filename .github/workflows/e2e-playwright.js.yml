@@ -47,7 +47,7 @@ jobs:
     steps:
 
       - run: | 
-          docker exec api echo "APP_NAME=Wellms Cypress Demo \
+          docker exec api echo "APP_NAME=Wellms Playwright Demo \
           APP_ENV=local \
           APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
           APP_DEBUG=true \
@@ -90,17 +90,8 @@ jobs:
         with:
           fetch-depth: 1
 
-#      - name: Cypress dependencies
-#        run: sudo apt-get update && sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb -y --fix-missing
-
       - name: Node dependencies
         run: npm i --legacy-peer-deps
-
-#      - name: Node dependencies serve
-#        run: npm i serve -g
-
-#      - name: Node build
-#        run: BASE_PATH=/ REACT_APP_API_URL='http://localhost' npm run build
 
       - name: Install Playwright
         run: npx playwright install --with-deps
