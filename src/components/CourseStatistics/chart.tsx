@@ -1,6 +1,6 @@
 import React from 'react';
 import ProCard from '@ant-design/pro-card';
-import { Column } from '@ant-design/charts';
+import { Column } from '@ant-design/plots';
 
 const Chart: React.FC<{
   config: any;

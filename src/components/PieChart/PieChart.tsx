@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Pie } from '@ant-design/charts';
+import { Pie } from '@ant-design/plots';
 import { reports } from '@/services/escola-lms/reports';
 import { Spin, Alert, Button } from 'antd';
 import { FormattedMessage, useIntl } from 'umi';
