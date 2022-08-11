@@ -56,7 +56,6 @@ export default function (initialState: { currentUser: API.UserItem }) {
     otherPermission: havePermissionsInDashboard(
       PERMISSIONS.ConsultationList ||
         PERMISSIONS.StationaryEventsList ||
-        PERMISSIONS.ProductsManage ||
         PERMISSIONS.QuestionnaireList ||
         PERMISSIONS.PageList,
     ),
@@ -76,6 +75,7 @@ export default function (initialState: { currentUser: API.UserItem }) {
 
     salesPermission: havePermissionsInDashboard(
       PERMISSIONS.CartOrderList || PERMISSIONS.PaymentList || PERMISSIONS.VoucherList,
+      PERMISSIONS.ProductsManage,
     ),
 
     settingListPermission: havePermissionsInDashboard(PERMISSIONS.SettingsList),
