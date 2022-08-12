@@ -13,25 +13,39 @@ export const DashdoardComponent: React.FC = () => {
       <article>
         <Row align={'middle'}>
           <Col span={12}>
-            <Title level={4}>You’re ready to share your knowledge.</Title>
+            <Title level={4}>
+              <FormattedMessage id="tutorial_card_left_title" />
+            </Title>
             <Text>
-              Use our best practices and recommendations to plan, produce, and publish a
-              substantive, high-quality course.
+              <FormattedMessage id="tutorial_card_left_description" />
             </Text>
           </Col>
           <Col span={12}>
             <ProCard
               bodyStyle={{
                 background: '#FFED8E',
+                borderRadius: '8px',
               }}
             >
-              <div>
-                <Title level={5}>Not sure how to create a course? </Title>
-                <Text>Check out our guide and learn how to do it.</Text>
-              </div>
-              <div>
-                <Button type="primary">Learn more</Button>
-              </div>
+              <Row align={'middle'} justify={'space-evenly'}>
+                <div>
+                  <Title level={5}>
+                    <FormattedMessage id="tutorial_card_right_title" />
+                  </Title>
+                  <Text>
+                    <FormattedMessage id="tutorial_card_right_description" />
+                  </Text>
+                </div>
+                <div>
+                  <Button
+                    type="primary"
+                    href={'https://docs.wellms.io/app-guide/'}
+                    target={'_blank'}
+                  >
+                    <FormattedMessage id="learn_more" />
+                  </Button>
+                </div>
+              </Row>
             </ProCard>
           </Col>
         </Row>

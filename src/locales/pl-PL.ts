@@ -487,4 +487,11 @@ export default {
     'Globalne ustawienia są udostępniane dla całego LMS. Możesz dodać globalne ustawienia klikając przycisk poniżej.',
   go_to_platform: 'Przejdź do Twojej platformy',
   manage_course: 'Zarządzaj kursem',
+  tutorial: 'Poradnik',
+  tutorial_card_left_title: 'Jesteś gotowy aby współdzielić swoje wiedzę.',
+  tutorial_card_left_description:
+    'Użyj naszych wskazówek i poradników aby zaplanować, stworzyć i opublikować wysokiej jakości kurs.',
+  tutorial_card_right_title: 'Nie wiesz jak tworzyć kurs?',
+  tutorial_card_right_description: 'Sprawdź nasz poradnik i dowiedz się jak stworzyć kurs.',
+  learn_more: 'Dowiedz się więcej',
 };
