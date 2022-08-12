@@ -168,6 +168,25 @@
         component: './Vouchers/form',
         hideInMenu: true,
       },
+      {
+        path: '/sales/products',
+        name: 'Products',
+        icon: 'shopping-cart',
+        access: 'productsListPermission',
+        component: './Products',
+      },
+      {
+        path: '/sales/products/:id',
+        access: 'productsDetailsPermission',
+        component: './Products/form',
+        hideInMenu: true,
+      },
+      {
+        path: '/sales/products/:id/:tab',
+        access: 'productsDetailsPermission',
+        component: './Products/form',
+        hideInMenu: true,
+      },
     ],
   },
   {
@@ -403,25 +422,6 @@
         path: '/other/stationary-events/:id/:tab',
         access: 'stationaryEventsDetailsPermission',
         component: './StationaryEvents/form',
-        hideInMenu: true,
-      },
-      {
-        path: '/other/products',
-        name: 'Products',
-        icon: 'shopping-cart',
-        access: 'productsListPermission',
-        component: './Products',
-      },
-      {
-        path: '/other/products/:id',
-        access: 'productsDetailsPermission',
-        component: './Products/form',
-        hideInMenu: true,
-      },
-      {
-        path: '/other/products/:id/:tab',
-        access: 'productsDetailsPermission',
-        component: './Products/form',
         hideInMenu: true,
       },
       {

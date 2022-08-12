@@ -490,4 +490,5 @@ export default {
   tutorial_card_right_title: 'Not sure how to create a course?',
   tutorial_card_right_description: 'Check out our guide and learn how to do it.',
   learn_more: 'Learn more',
+  your_courses: 'Your courses',
 };

@@ -17,7 +17,7 @@ const ProductsFormPage = () => {
         breadcrumb: {
           routes: [
             {
-              path: 'other/products',
+              path: 'sales/products',
               breadcrumbName: intl.formatMessage({
                 id: 'menu.Other activities.Products',
               }),
@@ -48,11 +48,11 @@ const ProductsFormPage = () => {
         <ProductsForm
           id={id}
           tab={tab}
-          onTabChange={(newTab) => history.push(`/other/products/${id}/${newTab}`)}
+          onTabChange={(newTab) => history.push(`/sales/products/${id}/${newTab}`)}
           onProductSaved={(model) => {
             return isNew
-              ? history.push(`/other/products/${model.id}`)
-              : history.push(`/other/products/${model.id}/${tab}`);
+              ? history.push(`/sales/products/${model.id}`)
+              : history.push(`/sales/products/${model.id}/${tab}`);
           }}
         />
       )}

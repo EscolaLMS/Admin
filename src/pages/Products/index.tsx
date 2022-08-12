@@ -190,7 +190,7 @@ const Products: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={() => [
-          <Link key="addnew" to="/other/products/new">
+          <Link key="addnew" to="/sales/products/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
@@ -236,7 +236,7 @@ const Products: React.FC = () => {
             valueType: 'option',
             width: '10%',
             render: (_, record) => [
-              <Link key="edit" to={`/other/products/${record.id}`}>
+              <Link key="edit" to={`/sales/products/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
                   <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>

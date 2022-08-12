@@ -494,4 +494,5 @@ export default {
   tutorial_card_right_title: 'Nie wiesz jak tworzyć kurs?',
   tutorial_card_right_description: 'Sprawdź nasz poradnik i dowiedz się jak stworzyć kurs.',
   learn_more: 'Dowiedz się więcej',
+  your_courses: 'Twoje kursy',
 };
