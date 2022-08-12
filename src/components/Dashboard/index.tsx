@@ -81,6 +81,8 @@ const components: DashBoardComponent = {
 };
 
 const defaultStageComponents: (keyof typeof components)[] = [
+  'tutorial',
+  'your-courses',
   'pie-chart-CoursesMoneySpentMetric',
   'pie-chart-CoursesPopularityMetric',
   'pie-chart-CoursesSecondsSpentMetric',
