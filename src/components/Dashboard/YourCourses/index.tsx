@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { course } from '@/services/escola-lms/course';
 import { PlusCircleFilled } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
+import ResponsiveImage from '@/components/ResponsiveImage';
 
 const truncate = (str: string, n: number) => {
   return str.length > n ? str.substring(0, n - 1) + '...' : str;
@@ -43,7 +44,14 @@ export const DashdoardComponent: React.FC = () => {
         <FormattedMessage id="your_courses" />
       </h3>
       <div className={'dashboard__card-group'}>
-        <div className={'dashboard__card'}>
+        <div
+          className={'dashboard__card'}
+          style={{
+            position: 'sticky',
+            left: 0,
+            zIndex: 1,
+          }}
+        >
           <ProCard layout="center">
             <Link to={`/courses/list/new`} key={'new_course'}>
               <PlusCircleFilled
@@ -60,7 +68,15 @@ export const DashdoardComponent: React.FC = () => {
         </div>
         {list.map((item) => (
           <div className={'dashboard__card'} key={item.id}>
-            <img src={item.image_url} alt={item.title} className={'dashboard__card-img'} />
+            {item.image_path && (
+              <ResponsiveImage
+                path={item.image_path}
+                size={240}
+                width={240}
+                alt={item.title}
+                className={'dashboard__card-img'}
+              />
+            )}
             <ProCard
               actions={[
                 <Link to={`/courses/list/${item.id}`} key={item.id}>
