@@ -37,7 +37,7 @@ const components: DashBoardComponent = {
   'hall-of-fame': { component: HallOfFame, w: 1, h: 1, maxH: 1 },
   ratings: { component: Ratings, w: 1, h: 1, maxH: 1 },
   sales: { component: Sales, w: 1, h: 1, maxH: 1 },
-  tutorial: { component: Tutorial, w: 1, h: 1, maxH: 1 },
+  tutorial: { component: Tutorial, w: 2, h: 2, maxH: 2 },
   'your-courses': { component: YourCourses, w: 2, h: 3, maxH: 3, props: {} },
   'pie-chart-CoursesMoneySpentMetric': {
     w: 1,

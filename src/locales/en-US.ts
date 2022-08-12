@@ -483,5 +483,12 @@ export default {
     'Global settings are used to share data in entire LMS. You can add global settings by clicking the button below.',
   go_to_platform: 'Go to the your platform',
   manage_course: 'Manage course',
+  tutorial: 'Tutorial',
+  tutorial_card_left_title: 'You’re ready to share your knowledge.',
+  tutorial_card_left_description:
+    'Use our best practices and recommendations to plan, produce, and publish a substantive, high-quality course.',
+  tutorial_card_right_title: 'Not sure how to create a course?',
+  tutorial_card_right_description: 'Check out our guide and learn how to do it.',
+  learn_more: 'Learn more',
   your_courses: 'Your courses',
 };
