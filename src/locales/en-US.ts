@@ -484,4 +484,6 @@ export default {
   go_to_platform: 'Go to the your platform',
   manage_course: 'Manage course',
   your_courses: 'Your courses',
+  ratings: 'Ratings',
+  ratings_description: 'Measure the rating given to your courses',
 };

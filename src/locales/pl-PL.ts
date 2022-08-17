@@ -488,4 +488,6 @@ export default {
   go_to_platform: 'Przejdź do Twojej platformy',
   manage_course: 'Zarządzaj kursem',
   your_courses: 'Twoje kursy',
+  ratings: 'Oceny',
+  ratings_description: 'Zmierz oceny dla Twoich kursów',
 };
