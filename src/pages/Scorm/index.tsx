@@ -106,7 +106,7 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.SCORM, API.PageParams & { search: string; role: string }>
         headerTitle={intl.formatMessage({
-          id: 'scorms',
+          id: 'menu.Courses.SCORMs',
           defaultMessage: 'scorms',
         })}
         actionRef={actionRef}

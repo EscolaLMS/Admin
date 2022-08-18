@@ -159,7 +159,7 @@ const TableList: React.FC = () => {
       <ProTable<API.H5PContentListItem, API.H5PListParams>
         loading={loading}
         headerTitle={intl.formatMessage({
-          id: 'H5Ps',
+          id: 'menu.Courses.H5Ps',
           defaultMessage: 'H5Ps List',
         })}
         actionRef={actionRef}

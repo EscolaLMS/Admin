@@ -195,7 +195,7 @@ const TableList: React.FC = () => {
               }
           >
             headerTitle={intl.formatMessage({
-              id: 'users',
+              id: 'menu.Users',
               defaultMessage: 'users',
             })}
             actionRef={actionRef}

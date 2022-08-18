@@ -80,7 +80,7 @@ const Translations: React.FC = () => {
           }
       >
         headerTitle={intl.formatMessage({
-          id: 'Translations',
+          id: 'menu.Configuration.Translations',
           defaultMessage: 'Translations',
         })}
         loading={loading}
