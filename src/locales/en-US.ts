@@ -69,6 +69,7 @@ export default {
   'menu.Other activities.Pages': 'Pages',
   'menu.Sales.Payments': 'Payments',
   'menu.Sales.Orders': 'Orders',
+  'menu.Sales.Products': 'Products',
   'menu.Courses.SCORMs': 'SCORMs',
   'menu.Configuration.settings': 'Settings',
   'menu.Analytics.reports': 'Reports',
@@ -491,4 +492,8 @@ export default {
   tutorial_card_right_description: 'Check out our guide and learn how to do it.',
   learn_more: 'Learn more',
   your_courses: 'Your courses',
+  unverified: 'Unverified',
+  download: 'Download',
+  newTranslation: 'New Translation',
+  documentation: 'Documentation',
 };

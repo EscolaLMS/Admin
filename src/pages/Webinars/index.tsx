@@ -181,7 +181,7 @@ const Webinars: React.FC = () => {
     <PageContainer>
       <ProTable<API.Webinar, API.ConsultationsParams>
         headerTitle={intl.formatMessage({
-          id: 'Webinars',
+          id: 'menu.Courses.Webinars',
           defaultMessage: 'Webinars',
         })}
         loading={loading}

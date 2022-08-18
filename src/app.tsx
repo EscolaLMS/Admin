@@ -16,6 +16,7 @@ import { refreshTokenCallback } from './services/token_refresh';
 import '@/services/ybug';
 import '@/services/sentry.ts';
 import './app.css';
+import { FormattedMessage } from '@@/plugin-locale/localeExports';
 
 declare const REACT_APP_API_URL: string;
 
@@ -124,7 +125,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         <BookOutlined />
         <span>
           <a href="http://docs.wellms.io/" target="_blank" rel="noreferrer">
-            Documentation
+            <FormattedMessage id="documentation" />
           </a>
         </span>
       </>,
