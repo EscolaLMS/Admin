@@ -40,7 +40,9 @@
         "test:e2e": "node ./tests/run-tests.js",
         "serve": "umi-serve",
         "playwright": "playwright install && playwright test",
-        "playwright:debug": "playwright install && playwright test --debug"
+        "playwright:headed": "playwright install && playwright test --headed --project=chromium",
+        "playwright:debug": "playwright install && playwright test --debug",
+        "playwright:local": "PORT=8000 playwright test"
     },
     "lint-staged": {
         "**/*.less": "stylelint --custom-syntax postcss-less",

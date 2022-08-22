@@ -57,7 +57,7 @@ yarn test
 Locally
 
 ```bash
-yarn start:test
+yarn playwright:headed
 ```
 
 CI
