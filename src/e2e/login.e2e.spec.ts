@@ -7,7 +7,7 @@ export const ADMIN_CREDENTIALS = {
 };
 
 test(`test route page login`, async ({ page }) => {
-  await page.goto(`${BASE_URL}/user/login`);
+  await page.goto(`${BASE_URL}/#/user/login`);
   await page.waitForSelector('#email');
 
   await page.locator('text=Login').click();

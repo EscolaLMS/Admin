@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 const RouterConfig = require('../../config/routes').default;
 
-const BASE_URL = `http://localhost:${process.env.PORT || 8001}`;
+const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 
 function formatter(routes: any, parentPath = ''): string[] {
   const fixedParentPath = parentPath.replace(/\/{1,}/g, '/');
