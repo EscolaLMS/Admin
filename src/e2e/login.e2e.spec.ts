@@ -1,10 +1,5 @@
 import { expect, test } from '@playwright/test';
-
-const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
-export const ADMIN_CREDENTIALS = {
-  email: 'admin@escolalms.com',
-  password: 'secret',
-};
+import { BASE_URL, ADMIN_CREDENTIALS } from './consts';
 
 test(`test route page login`, async ({ page }) => {
   await page.goto(`${BASE_URL}/#/user/login`);
