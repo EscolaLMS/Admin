@@ -35,6 +35,10 @@ test(`test rlogout`, async ({ page }) => {
   await page.locator('button:has-text("Login")').click();
   await page.waitForURL(`${BASE_URL}/#/welcome`);
 
+  // document.querySelector('.avatar-dropdown').dispatchEvent(new MouseEvent('mouseover', { bubbles: true}));
+
+  await page.locator('.avatar-dropdown').dispatchEvent('mouseover', { bubbles: true });
+
   // Click text=Logout
   await page.locator('text=Logout').click();
   await page.waitForURL(`${BASE_URL}/#/user/login?redirect=/welcome`);
