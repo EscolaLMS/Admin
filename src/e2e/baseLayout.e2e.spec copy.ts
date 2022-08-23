@@ -1,3 +1,4 @@
+/*
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 const RouterConfig = require('../../config/routes').default;
@@ -42,3 +43,4 @@ routers.forEach((route) => {
     await testPage(route, page);
   });
 });
+*/
