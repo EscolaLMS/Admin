@@ -105,7 +105,7 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.UserGroup, API.UserGroupsParams>
         headerTitle={intl.formatMessage({
-          id: 'user_groups',
+          id: 'menu.Users.User Groups',
           defaultMessage: 'User Groups',
         })}
         actionRef={actionRef}

@@ -37,10 +37,12 @@
         "test:component": "umi test ./src/components",
         "tsc:noemit": "tsc --noEmit",
         "test": "jest",
-        "test:e2e": "node ./tests/run-tests.js",
-        "serve": "umi-serve",
-        "playwright": "playwright install && playwright test",
-        "playwright:debug": "playwright install && playwright test --debug"
+        "test:e2e": "PORT=8000 node ./tests/run-tests.js",
+        "serve": "REACT_APP_API_URL=http://localhost PORT=8000 umi-serve",
+        "playwright": "PORT=8000 playwright install && playwright test",
+        "playwright:headed": "PORT=8000 playwright install && playwright test --headed --project=chromium",
+        "playwright:debug": "PORT=8000 playwright install && playwright test --debug",
+        "playwright:local": "PORT=8000 playwright test"
     },
     "lint-staged": {
         "**/*.less": "stylelint --custom-syntax postcss-less",

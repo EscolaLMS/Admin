@@ -183,7 +183,7 @@ const Products: React.FC = () => {
           }
       >
         headerTitle={intl.formatMessage({
-          id: 'Products',
+          id: 'menu.Sales.Products',
           defaultMessage: 'Products',
         })}
         loading={loading}

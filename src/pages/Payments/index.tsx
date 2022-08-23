@@ -100,7 +100,7 @@ const TableList: React.FC = () => {
         API.PageParams & { dateRange: [string, string]; status: API.PaymentStatus }
       >
         headerTitle={intl.formatMessage({
-          id: 'payments',
+          id: 'menu.Sales.Payments',
           defaultMessage: 'payments',
         })}
         actionRef={actionRef}

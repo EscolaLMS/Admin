@@ -108,7 +108,7 @@ const Vouchers: React.FC = () => {
         EscolaLms.Vouchers.Http.Requests.ListCouponsRequest
       >
         headerTitle={intl.formatMessage({
-          id: 'Vouchers',
+          id: 'menu.Sales.Vouchers',
           defaultMessage: 'Vouchers',
         })}
         loading={loading}

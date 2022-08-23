@@ -33,7 +33,7 @@ const RolesPage: React.FC = () => {
     <PageContainer>
       <ProTable<API.Role>
         headerTitle={intl.formatMessage({
-          id: 'roles',
+          id: 'menu.Users.Roles',
           defaultMessage: 'roles',
         })}
         actionRef={actionRef}

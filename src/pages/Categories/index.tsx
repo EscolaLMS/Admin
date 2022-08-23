@@ -203,7 +203,7 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.CategoryListItem, API.PageParams>
         headerTitle={intl.formatMessage({
-          id: 'categories',
+          id: 'menu.Courses.Categories',
           defaultMessage: 'categories',
         })}
         actionRef={actionRef}
