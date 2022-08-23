@@ -503,4 +503,6 @@ export default {
   download: 'Pobierz',
   newTranslation: 'Nowe tłumaczenie',
   documentation: 'Dokumentacja',
+  ratings: 'Oceny',
+  ratings_description: 'Zmierz oceny dla Twoich kursów',
 };

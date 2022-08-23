@@ -1,0 +1,45 @@
+.dashboard-ratings-list {
+  min-height: 306px;
+  margin-top: 24px;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding: 0;
+
+  &--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid #e0e0e0;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &-key {
+    margin-left: auto;
+  }
+
+  &-percentage {
+    flex-shrink: 0;
+    width: 40px;
+    margin-left: 24px;
+    text-align: right;
+  }
+
+  .ant-rate {
+    margin-left: 12px;
+  }
+
+  .ant-typography,
+  .ant-typography + h5.ant-typography {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}

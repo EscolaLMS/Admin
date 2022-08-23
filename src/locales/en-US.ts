@@ -492,6 +492,8 @@ export default {
   tutorial_card_right_description: 'Check out our guide and learn how to do it.',
   learn_more: 'Learn more',
   your_courses: 'Your courses',
+  ratings: 'Ratings',
+  ratings_description: 'Measure the rating given to your courses',
   unverified: 'Unverified',
   download: 'Download',
   newTranslation: 'New Translation',

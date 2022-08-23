@@ -751,6 +751,13 @@ declare namespace API {
     title: string;
   };
 
+  type QuestionnaireStars = {
+    rates: object;
+    sum_rates: number;
+    count_answers: number;
+    avg_rate: string;
+  };
+
   type Notification = {
     id: string;
     type: string;
