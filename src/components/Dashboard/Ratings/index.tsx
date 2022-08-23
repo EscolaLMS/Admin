@@ -6,6 +6,15 @@ import { questionnaireStars } from '@/services/escola-lms/questionnaire';
 import { useEffect, useState } from 'react';
 import { useModel } from '@@/plugin-model/useModel';
 import './index.less';
+import { roundPercentageList } from '@/utils/utils';
+
+interface Rates {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+}
 
 export const DashdoardComponent: React.FC = () => {
   const { Text, Title } = Typography;
@@ -49,6 +58,16 @@ export const DashdoardComponent: React.FC = () => {
     value: item.id,
   }));
 
+  const ratingsPercentage = Object.keys(ratings?.rates || {})
+    .sort()
+    .map((key) => {
+      const rate = ratings?.rates[key as unknown as keyof Rates];
+      if (rate === 0) {
+        return 0;
+      }
+      return (rate / (ratings?.sum_rates as number)) * 100;
+    });
+
   return (
     <div className="dashboard-draggable__component">
       <h3>
@@ -89,20 +108,22 @@ export const DashdoardComponent: React.FC = () => {
                     <Rate disabled defaultValue={Number(ratings.avg_rate)} />
                   </Row>
                   <ul className={'dashboard-ratings-list'}>
-                    {Object.keys(ratings.rates)
-                      .reverse()
-                      .map((key) => (
-                        <li key={key} className={'dashboard-ratings-list-item'}>
-                          <Title level={5}>{key}</Title>
-                          <Rate disabled defaultValue={Number(key)} />
-                          <Title level={5} className={'dashboard-ratings-list-key'}>
-                            {ratings.rates[key]}
-                          </Title>
-                          <Title level={5} className={'dashboard-ratings-list-percentage'}>
-                            {((ratings.rates[key] / ratings.count_answers) * 100).toFixed(0)}%
-                          </Title>
-                        </li>
-                      ))}
+                    {roundPercentageList(ratingsPercentage)
+                      .map((rate, index) => {
+                        return (
+                          <li key={rate} className={'dashboard-ratings-list-item'}>
+                            <Title level={5}>{index + 1}</Title>
+                            <Rate disabled defaultValue={Number(index + 1)} />
+                            <Title level={5} className={'dashboard-ratings-list-key'}>
+                              {ratings.rates[index + 1]}
+                            </Title>
+                            <Title level={5} className={'dashboard-ratings-list-percentage'}>
+                              {rate}%
+                            </Title>
+                          </li>
+                        );
+                      })
+                      .reverse()}
                   </ul>
                 </>
               ) : (
