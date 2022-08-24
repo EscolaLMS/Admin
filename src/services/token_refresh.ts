@@ -5,7 +5,7 @@ import { differenceInSeconds } from 'date-fns';
 const logout = (reason: string = 'noReason') => {
   localStorage.removeItem('TOKEN');
   console.log('logout', reason);
-  //window.location.reload();
+  window.location.reload();
 };
 
 export const refreshTokenCallback = () => {
