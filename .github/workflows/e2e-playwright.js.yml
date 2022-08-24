@@ -47,7 +47,7 @@ jobs:
     steps:
 
       - run: | 
-          docker exec api echo "APP_NAME=Wellms Playwright Demo \
+          docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
           APP_ENV=local \
           APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
           APP_DEBUG=true \
@@ -76,14 +76,14 @@ jobs:
           MJML_BINARY_PATH=/usr/bin/mjml \
           TRACKER_ENABLED=false" >> .env
 
-      - run: docker exec api cat .env
-      - run: docker exec api php artisan config:cache 
-      - run: docker exec api composer dumpautoload
-      - run: docker exec api php artisan key:generate --force --no-interaction
-      - run: docker exec api php artisan passport:keys --force --no-interaction
-      - run: docker exec api php artisan migrate --force --no-interaction
-      - run: docker exec api php artisan passport:client --personal --no-interaction
-      - run: docker exec api php artisan db:seed --force --no-interaction
+      - run: docker exec -u 1000 api cat .env
+      - run: docker exec -u 1000 api php artisan config:cache 
+      - run: docker exec -u 1000 api composer dumpautoload
+      - run: docker exec -u 1000 api php artisan key:generate --force --no-interaction
+      - run: docker exec -u 1000 api php artisan passport:keys --force --no-interaction
+      - run: docker exec -u 1000 api php artisan migrate --force --no-interaction
+      - run: docker exec -u 1000 api php artisan passport:client --personal --no-interaction
+      - run: docker exec -u 1000 api php artisan db:seed --force --no-interaction
 
 
       - uses: actions/checkout@v2
