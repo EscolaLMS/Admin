@@ -29,6 +29,7 @@ test.describe('New course', () => {
       .click();
     await page.locator('text=Draft').nth(1).click();
     await page.locator('button:has-text("Submit")').click();
+    await page.waitForSelector('text=Go to course page', { state: 'visible' });
     await page.locator('text=Go to course page').click();
 
     const courseSavedAlert = await page.locator('.ant-message-notice');
