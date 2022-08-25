@@ -82,12 +82,12 @@ const components: DashBoardComponent = {
 
 const defaultStageComponents: (keyof typeof components)[] = [
   'tutorial',
+  'ratings',
   'your-courses',
   'pie-chart-CoursesMoneySpentMetric',
   'pie-chart-CoursesPopularityMetric',
   'pie-chart-CoursesSecondsSpentMetric',
   'pie-chart-TutorsPopularityMetric',
-  'ratings',
 ];
 
 export const Dashdoard: React.FC = () => {
