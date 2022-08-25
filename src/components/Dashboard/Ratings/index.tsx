@@ -3,7 +3,7 @@ import { Empty, Rate, Row, Spin, Typography } from 'antd';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import { course } from '@/services/escola-lms/course';
 import { questionnaireStars } from '@/services/escola-lms/questionnaire';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useModel } from '@@/plugin-model/useModel';
 import './index.less';
 import { roundPercentageList } from '@/utils/utils';
@@ -40,12 +40,14 @@ export const DashdoardComponent: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     const fetchQuestionnaireStars = async () => {
       const request = await questionnaireStars('Course', Number(courseId));
 
       if (request.success) {
         setRatings(request.data);
       }
+      setLoading(false);
     };
 
     if (courseId) {
@@ -78,21 +80,19 @@ export const DashdoardComponent: React.FC = () => {
           <FormattedMessage id="ratings_description" />
         </Text>
 
-        {loading ? (
-          <div>
-            <Spin />
-          </div>
-        ) : (
-          <ProForm
-            name={'ratings'}
-            onValuesChange={(_, values) => {
-              setCourseId(values.courses);
-            }}
-            style={{ marginTop: '32px' }}
-            submitter={false}
-          >
-            <ProFormSelect name="courses" options={listOptions} />
-            {courseId &&
+        <ProForm
+          name={'ratings'}
+          onValuesChange={(_, values) => {
+            setCourseId(values.courses);
+          }}
+          style={{ marginTop: '32px' }}
+          submitter={false}
+        >
+          <React.Fragment>
+            <ProFormSelect name="courses" options={listOptions} fieldProps={{ loading }} />
+            {loading && <Spin />}
+            {!loading &&
+              courseId &&
               (ratings?.count_answers && ratings?.count_answers > 0 ? (
                 <>
                   <Row align={'middle'}>
@@ -131,8 +131,8 @@ export const DashdoardComponent: React.FC = () => {
                   <Empty />
                 </ul>
               ))}
-          </ProForm>
-        )}
+          </React.Fragment>
+        </ProForm>
       </article>
     </div>
   );

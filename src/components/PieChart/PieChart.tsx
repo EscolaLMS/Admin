@@ -1,11 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Pie } from '@ant-design/plots';
 import { reports } from '@/services/escola-lms/reports';
-import { Spin, Alert, Button } from 'antd';
+import { Spin, Alert, Button, Table } from 'antd';
 import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
 import { FileExcelOutlined } from '@ant-design/icons';
 import { ExportToCsv } from 'export-to-csv';
+
+const columns = [
+  {
+    title: <FormattedMessage id="label" defaultMessage="label" />,
+    dataIndex: 'label',
+    key: 'label',
+  },
+  {
+    title: <FormattedMessage id="value" defaultMessage="value" />,
+    dataIndex: 'value',
+    key: 'value',
+  },
+];
 
 const config = {
   appendPadding: 10,
@@ -111,6 +124,9 @@ const PieChart: React.FC<{ metric: API.ReportType; header?: boolean }> = ({
       {state.mode === 'loaded' && (
         <div>
           <Pie {...config} data={state.value} />
+          {header && (
+            <Table pagination={false} size="small" dataSource={state.value} columns={columns} />
+          )}
         </div>
       )}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}
