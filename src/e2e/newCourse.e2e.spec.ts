@@ -18,10 +18,10 @@ test.describe('New course', () => {
     await page.locator('text=Create new').click();
     await expect(page).toHaveURL(`${BASE_URL}/#/courses/list/new`);
     await page.locator('#title').fill('new course abc');
-    await page.locator('#active_from').click();
-    await page.locator('text=24').click();
-    await page.locator('#active_to').click();
-    await page.locator('text=31').nth(3).click();
+    await page.type('#active_from', '2022-08-01');
+    await page.keyboard.press('Enter');
+    await page.type('#active_to', '2022-12-31');
+    await page.keyboard.press('Enter');
     await page
       .locator(
         'div:nth-child(4) > .ant-form-item > .ant-row > div:nth-child(2) > .ant-form-item-control-input > .ant-form-item-control-input-content > .ant-select > .ant-select-selector > .ant-select-selection-item',
