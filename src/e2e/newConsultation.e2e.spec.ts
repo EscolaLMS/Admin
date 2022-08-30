@@ -23,8 +23,8 @@ test.describe('New consultation', () => {
     await page.type('#active_to', '2022-12-31');
     await page.keyboard.press('Enter');
     await page.locator('text=TutorSelect a person >> input[role="combobox"]').click();
-    await page.waitForSelector('text=Angela Yu', { state: 'visible' });
-    await page.locator('text=Angela Yu').click();
+    await page.waitForTimeout(6000);
+    await page.keyboard.press('Enter');
     await page.locator('.ProseMirror').fill('test description');
     await page.locator('button:has-text("Submit")').click();
 
