@@ -1,50 +1,23 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL, ADMIN_CREDENTIALS } from './consts';
+import { BASE_URL } from './consts';
+import { loginAsAdmin } from './helpers';
 
-test(`test rlogout`, async ({ page }) => {
-  await page.goto(BASE_URL);
+test.describe('Logout test', () => {
+  test.beforeEach(async ({ page }) => {
+    await loginAsAdmin(page);
+  });
+  test(`test logout`, async ({ page }) => {
+    // document.querySelector('.avatar-dropdown').dispatchEvent(new MouseEvent('mouseover', { bubbles: true}));
 
-  // Go to https://admin-stage.escolalms.com/#/user/login?redirect=/
-  await page.waitForURL(`${BASE_URL}/#/user/login?redirect=/`);
+    await page.locator('.avatar-dropdown').dispatchEvent('mouseover', { bubbles: true });
 
-  // Click [placeholder="Username\: admin or user"]
-  await page.locator('[placeholder="Username\\: admin or user"]').click();
+    // Click text=Logout
+    await page.locator('text=Logout').click();
+    await page.waitForURL(`${BASE_URL}/#/user/login?redirect=/welcome`);
 
-  // Fill [placeholder="Username\: admin or user"]
-  await page.locator('[placeholder="Username\\: admin or user"]').fill('admin');
+    await expect(page).toHaveURL(/.*login/);
 
-  // Press Tab
-  await page.locator('[placeholder="Username\\: admin or user"]').press('Tab');
-
-  // Click [placeholder="Username\: admin or user"]
-  await page.locator('[placeholder="Username\\: admin or user"]').click();
-
-  // Fill [placeholder="Username\: admin or user"]
-  await page.locator('[placeholder="Username\\: admin or user"]').fill(ADMIN_CREDENTIALS.email);
-
-  // Press Tab
-  await page.locator('[placeholder="Username\\: admin or user"]').press('Tab');
-
-  // Fill [placeholder="Password\: ant\.design"]
-  await page.locator('[placeholder="Password\\: ant\\.design"]').fill(ADMIN_CREDENTIALS.password);
-
-  // Click text=Remember me
-  await page.locator('text=Remember me').click();
-
-  // Click button:has-text("Login")
-  await page.locator('button:has-text("Login")').click();
-  await page.waitForURL(`${BASE_URL}/#/welcome`);
-
-  // document.querySelector('.avatar-dropdown').dispatchEvent(new MouseEvent('mouseover', { bubbles: true}));
-
-  await page.locator('.avatar-dropdown').dispatchEvent('mouseover', { bubbles: true });
-
-  // Click text=Logout
-  await page.locator('text=Logout').click();
-  await page.waitForURL(`${BASE_URL}/#/user/login?redirect=/welcome`);
-
-  await expect(page).toHaveURL(/.*login/);
-
-  // Close page
-  await page.close();
+    // Close page
+    await page.close();
+  });
 });

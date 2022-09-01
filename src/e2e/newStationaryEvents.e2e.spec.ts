@@ -1,16 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL, ADMIN_CREDENTIALS } from './consts';
+import { BASE_URL } from './consts';
+import { loginAsAdmin } from './helpers';
 
 test.describe('New stationary events', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}/#/user/login`);
-    await page.waitForSelector('#email');
-
-    await page.locator('input[id="email"]').fill(ADMIN_CREDENTIALS.email);
-    await page.locator('input[id="password"]').fill(ADMIN_CREDENTIALS.password);
-    await page.locator('form button').click();
-
-    await expect(page).toHaveURL(/.*welcome/);
+    await loginAsAdmin(page);
   });
 
   test('create new stationary events', async ({ page }) => {
