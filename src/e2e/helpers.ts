@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-
+import { expect } from '@playwright/test';
 import { BASE_URL, ADMIN_CREDENTIALS } from './consts';
 
 export const loginAsAdmin = async (page: Page) => {
