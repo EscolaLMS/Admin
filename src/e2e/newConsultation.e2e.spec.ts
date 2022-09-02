@@ -7,7 +7,7 @@ test.describe('New consultation', () => {
     await loginAsAdmin(page);
   });
 
-  test('create new consultation', async ({ page }) => {
+  test('create and delete consultation', async ({ page }) => {
     await page.goto(`${BASE_URL}/#/other/consultations`);
     await page.locator('text=new').click();
     await expect(page).toHaveURL(`${BASE_URL}/#/other/consultations/new`);
@@ -28,5 +28,15 @@ test.describe('New consultation', () => {
     });
 
     await page.waitForSelector('text=Consultation saved successfully', { state: 'visible' });
+
+    await page.goto(`${BASE_URL}/#/other/consultations`);
+    await page.waitForTimeout(3500);
+    await page.locator('#name').fill('new consultation');
+    await page.locator('button:has-text("Query")').click();
+    await page.locator('text=new consultationDraft >> button').nth(1).click();
+    const ConfirmDeleteConsultation = await page.locator('.ant-popover-message');
+    await expect(ConfirmDeleteConsultation).toContainText('Are you sure to delete this record?');
+    await page.locator('button:has-text("Yes")').click();
+    await page.waitForSelector('text=Consultation deleted successfully', { state: 'visible' });
   });
 });
