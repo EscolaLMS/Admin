@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { BASE_URL } from './consts';
 import { loginAsAdmin } from './helpers';
 
-test.describe.only('New stationary events', () => {
+test.describe('New stationary events', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
   });
