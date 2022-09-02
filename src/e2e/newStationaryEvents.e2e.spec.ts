@@ -34,8 +34,8 @@ test.describe.only('New stationary events', () => {
     await page.locator('#name').fill('new event');
     await page.locator('button:has-text("Query")').click();
     await page.locator('text=new event2022 >> button').nth(1).click();
-    const ConfirmDeleteCourse = await page.locator('.ant-popover-message');
-    await expect(ConfirmDeleteCourse).toContainText('Are you sure to delete this record?');
+    const ConfirmDeleteStationaryEvent = await page.locator('.ant-popover-message');
+    await expect(ConfirmDeleteStationaryEvent).toContainText('Are you sure to delete this record?');
     await page.locator('button:has-text("Yes")').click();
     await page.waitForSelector('text=Stationary event deleted successfully', { state: 'visible' });
   });
