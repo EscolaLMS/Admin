@@ -8,7 +8,7 @@ test.describe('New user', () => {
   });
 
   test('create new user', async ({ page }) => {
-    const email = 'newuser' + getDateTicks() + '@test.pl';
+    const email = 'newuser' + getDateTicks() + '@pwtest.pl';
 
     await page.goto(`${BASE_URL}/#/users/list`);
     await page.locator('text=new').click();
@@ -17,8 +17,20 @@ test.describe('New user', () => {
     await page.type('#last_name', 'user');
     await page.type('#email', email);
     await page.type('#password', 'Testowanie1!');
+    await page.locator('#is_active').click();
+    await page.locator('text=student').click();
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=Created user', { state: 'visible' });
+
+    await page.goto(`${BASE_URL}/#/users/list`);
+    await page.waitForTimeout(6000);
+    await page.locator('#search').fill(email);
+    await page.locator('button:has-text("Query")').click();
+    await page.locator('text=@pwtest.plActiveUnverifiedstudent- >> button').nth(1).click();
+    const ConfirmDeleteUser = await page.locator('.ant-popover-message');
+    await expect(ConfirmDeleteUser).toContainText('Are you sure to delete this record?');
+    await page.locator('button:has-text("Yes")').click();
+    await page.waitForSelector('text=No Data', { state: 'visible' });
   });
 });
 
