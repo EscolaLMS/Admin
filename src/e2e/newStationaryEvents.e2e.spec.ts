@@ -7,7 +7,7 @@ test.describe('New stationary events', () => {
     await loginAsAdmin(page);
   });
 
-  test('create new stationary events', async ({ page }) => {
+  test('create and delete stationary events', async ({ page }) => {
     await page.goto(`${BASE_URL}/#/other/stationary-events`);
     await page.locator('text=new').click();
     await expect(page).toHaveURL(`${BASE_URL}/#/other/stationary-events/new`);
@@ -28,5 +28,15 @@ test.describe('New stationary events', () => {
     });
 
     await page.waitForSelector('text=Stationary event saved successfully', { state: 'visible' });
+
+    await page.goto(`${BASE_URL}/#/other/stationary-events`);
+    await page.waitForTimeout(3500);
+    await page.locator('#name').fill('new event');
+    await page.locator('button:has-text("Query")').click();
+    await page.locator('text=new event2022 >> button').nth(1).click();
+    const ConfirmDeleteStationaryEvent = await page.locator('.ant-popover-message');
+    await expect(ConfirmDeleteStationaryEvent).toContainText('Are you sure to delete this record?');
+    await page.locator('button:has-text("Yes")').click();
+    await page.waitForSelector('text=Stationary event deleted successfully', { state: 'visible' });
   });
 });
