@@ -62,7 +62,7 @@ const TableList: React.FC = () => {
             <Tooltip title={<FormattedMessage id="preview" defaultMessage="preview" />}>
               <Button size="small" icon={<SendOutlined />} type="primary">
                 {sco.title}
-              </Button>
+              </Button>{' '}
             </Tooltip>
           </Link>
         )),
