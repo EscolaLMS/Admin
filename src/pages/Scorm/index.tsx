@@ -58,11 +58,11 @@ const TableList: React.FC = () => {
       hideInSearch: true,
       render: (_, record) => [
         record.scos.map((sco) => (
-          <Link key={sco.uuid} to={`/scorms/preview/${sco.uuid}`}>
+          <Link key={sco.uuid} to={`/courses/scorms/preview/${sco.uuid}`}>
             <Tooltip title={<FormattedMessage id="preview" defaultMessage="preview" />}>
               <Button size="small" icon={<SendOutlined />} type="primary">
                 {sco.title}
-              </Button>
+              </Button>{' '}
             </Tooltip>
           </Link>
         )),
