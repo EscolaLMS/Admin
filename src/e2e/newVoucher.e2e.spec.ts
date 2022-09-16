@@ -7,13 +7,13 @@ test.describe('New voucher', () => {
     await loginAsAdmin(page);
   });
 
-  test('create new voucher', async ({ page }) => {
+  test('create and delete new voucher', async ({ page }) => {
     const code = 'code' + getDateTicks();
 
     await page.goto(`${BASE_URL}/#/sales/vouchers`);
     await page.locator('text=new').click();
     await expect(page).toHaveURL(`${BASE_URL}/#/sales/vouchers/new`);
-    await page.locator('#name').fill('new voucher');
+    await page.locator('#name').fill('new pwvoucher');
     await page.type('#code', code);
     await page.locator('input[type="radio"]').first().check();
     await page.locator('#active').click();
@@ -29,6 +29,12 @@ test.describe('New voucher', () => {
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=success', { state: 'visible' });
     await page.goto(`${BASE_URL}/#/sales/vouchers`);
+    await page.locator('text=new pwvoucherCODE >> button').nth(1).click();
+
+    const ConfirmDeleteVoucher = await page.locator('.ant-popover-message');
+    await expect(ConfirmDeleteVoucher).toContainText('Are you sure to delete this record?');
+    await page.locator('button:has-text("Yes")').click();
+    await page.waitForSelector('text=Coupon was deleted', { state: 'visible' });
   });
 });
 
