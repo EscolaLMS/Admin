@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
 import { useLocation } from 'umi';
+import { history } from 'umi';
 import type { Location } from 'history';
 
 import {
@@ -381,6 +382,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                   })
                 : [],
             }));
+
+            history.push(`/courses/list/${id}/program/?topic=${data.data.id}`);
           }
         },
       );
