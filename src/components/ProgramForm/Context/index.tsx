@@ -383,6 +383,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                   })
                 : [],
             }));
+
+            history.push(`/courses/list/${id}/program/?topic=${data.data.id}`);
           }
         },
       );
