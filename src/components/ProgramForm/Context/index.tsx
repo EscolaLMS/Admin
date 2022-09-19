@@ -371,7 +371,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                                   ...data.data,
                                   isNew: false,
                                 };
-                                history.push(`/courses/list/${id}/program/?topic=${newTopic.id}`);
                                 return newTopic;
                               }
                             }
