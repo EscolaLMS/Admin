@@ -32,38 +32,37 @@ export const TopicTypesSelector: React.FC<{
 
   return (
     <div className="topic-types-selector">
-      {sortingMode !== 'none' && (
-        <Space>
-          {(sortingMode === 'both' || sortingMode === 'up') && (
-            <Tooltip placement="top" title={<FormattedMessage id="sort_element_up" />}>
-              <Button
-                type="default"
-                size="small"
-                onClick={() => onSort(true)}
-                icon={<CaretUpOutlined />}
-              />
-            </Tooltip>
-          )}
-          {(sortingMode === 'both' || sortingMode === 'down') && (
-            <Tooltip placement="top" title={<FormattedMessage id="sort_element_down" />}>
-              <Button
-                type="default"
-                size="small"
-                onClick={() => onSort(false)}
-                icon={<CaretDownOutlined />}
-              />
-            </Tooltip>
-          )}
-          <Tooltip placement="top" title={<FormattedMessage id="add_new_topic" />}>
+      <Space>
+        {(sortingMode === 'both' || sortingMode === 'up') && (
+          <Tooltip placement="top" title={<FormattedMessage id="sort_element_up" />}>
             <Button
-              type="primary"
+              type="default"
               size="small"
-              onClick={() => setOpen((prev) => !prev)}
-              icon={<PlusOutlined />}
+              onClick={() => onSort(true)}
+              icon={<CaretUpOutlined />}
             />
           </Tooltip>
-        </Space>
-      )}
+        )}
+        {(sortingMode === 'both' || sortingMode === 'down') && (
+          <Tooltip placement="top" title={<FormattedMessage id="sort_element_down" />}>
+            <Button
+              type="default"
+              size="small"
+              onClick={() => onSort(false)}
+              icon={<CaretDownOutlined />}
+            />
+          </Tooltip>
+        )}
+        <Tooltip placement="top" title={<FormattedMessage id="add_new_topic" />}>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => setOpen((prev) => !prev)}
+            icon={<PlusOutlined />}
+          />
+        </Tooltip>
+      </Space>
+
       {open && (
         <div className="topic-types-selector__list">
           <Tooltip placement="right" title={<FormattedMessage id="RichText" />}>
