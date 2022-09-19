@@ -12,6 +12,7 @@ import { Context } from '@/components/ProgramForm/Context';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
 import { Tooltip } from 'antd';
 import { getFormData } from '@/services/api';
+import { NewLessonListItem } from './newLesson';
 
 const getSortingMode = (i: number, len: number) => {
   if (len === 1) {
@@ -27,13 +28,29 @@ const getSortingMode = (i: number, len: number) => {
 };
 
 export const LessonList: React.FC = () => {
-  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic } =
+  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic, updateLesson } =
     useContext(Context);
 
   const courseLessons = state?.lessons;
   const courseId = state?.id;
 
   const [list, setList] = React.useState<API.Lesson[]>(courseLessons || []);
+
+  const createNewTopic = useCallback(
+    (id: number, title: string) => {
+      const lesson = state?.lessons.find((l) => l.id === id);
+      if (lesson && updateLesson) {
+        const formData = getFormData({
+          ...lesson,
+          title,
+          active: lesson.active ? 1 : 0,
+        });
+
+        updateLesson(id, formData);
+      }
+    },
+    [state],
+  );
 
   const addNewTopicToLesson = useCallback(
     (lesson_id: number, topic_type: TopicType) => {
@@ -137,17 +154,28 @@ export const LessonList: React.FC = () => {
           lesson.id && (
             <React.Fragment key={lesson.id}>
               <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
-                <NavLink to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}>
-                  <FolderOutlined />
-                  {lesson.title}
-                </NavLink>
-                <TopicTypesSelector
-                  sortingMode={getSortingMode(cindex, lessons.length)}
-                  onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
-                  onSelected={(topic_type) =>
-                    lesson.id && addNewTopicToLesson(lesson.id, topic_type)
-                  }
-                />
+                {lesson.isNew ? (
+                  <NewLessonListItem
+                    initialValue={lesson}
+                    onCreate={(title) => {
+                      createNewTopic(Number(lesson.id), title);
+                    }}
+                  />
+                ) : (
+                  <React.Fragment>
+                    <NavLink to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}>
+                      <FolderOutlined />
+                      {lesson.title}
+                    </NavLink>
+                    <TopicTypesSelector
+                      sortingMode={getSortingMode(cindex, lessons.length)}
+                      onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
+                      onSelected={(topic_type) =>
+                        lesson.id && addNewTopicToLesson(lesson.id, topic_type)
+                      }
+                    />
+                  </React.Fragment>
+                )}
               </div>
               <Droppable droppableId={lesson.id.toString()}>
                 {(provided) => (

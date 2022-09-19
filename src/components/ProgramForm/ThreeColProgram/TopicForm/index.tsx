@@ -212,7 +212,7 @@ export const Topic: React.FC = () => {
           )}
 
           <Row justify="center" className={'program__cta-footer'}>
-            <Affix offsetBottom={0}>
+            <Affix offsetBottom={4}>
               <Space size="large">
                 <Button loading={loading}>
                   <FormattedMessage id="cancel" />
