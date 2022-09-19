@@ -1,16 +1,16 @@
 .program-sidebar {
   position: relative;
-  padding: 24px 0 50px;
-  background-color: #FAFAFA;
-  box-shadow: inset 0 7px 9px -7px rgb(0 0 0 / 10%);
   height: 100%;
   min-height: 70vh;
+  padding: 24px 0 50px;
+  background-color: #fafafa;
+  box-shadow: inset 0 7px 9px -7px rgb(0 0 0 / 10%);
 }
 
 .program-sidebar ul {
-  list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .program-sidebar--empty {
@@ -20,13 +20,13 @@
 }
 
 .program-sidebar--left {
-   border-right: 1px solid #D9D9D9;
- }
+  border-right: 1px solid #d9d9d9;
+}
 
 .program-sidebar--right {
-  padding-left: 25px;
   padding-right: 25px;
-  border-left: 1px solid #D9D9D9;
+  padding-left: 25px;
+  border-left: 1px solid #d9d9d9;
 }
 
 .program-sidebar--right .ant-form-item-control-input-content {
@@ -35,16 +35,16 @@
 }
 
 .program-sidebar__add-btn {
-   position: absolute;
-   bottom: 0;
-   right: 0;
- }
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}
 
 .program-sidebar__list-item {
-  padding: 9px 18px;
+  margin-bottom: 8px;
+  padding: 9px 0px 9px 18px;
   border: 1px solid transparent;
   transition: background-color 0.3s ease;
-  margin-bottom: 8px;
 }
 
 .program-sidebar__list-item a span:last-child {
@@ -56,13 +56,13 @@
 }
 
 .program-sidebar__list-item:hover {
-   background-color: rgb(0 0 0 / 5%);
- }
+  background-color: rgb(0 0 0 / 5%);
+}
 
 .program-sidebar__list-item a {
-  color: #000;
   display: flex;
   align-items: center;
+  color: #000;
 }
 
 .program-sidebar__list-item svg {
@@ -70,8 +70,8 @@
 }
 
 .program-sidebar__list-item--active {
-  border-color: #1890ff;
   background-color: rgb(24 144 255 / 10%);
+  border-color: #1890ff;
 }
 
 .program-sidebar__list-item--active a {
@@ -79,17 +79,23 @@
 }
 
 .program-sidebar__list-item--active:hover {
-   background-color: rgb(24 144 255 / 10%);
- }
+  background-color: rgb(24 144 255 / 10%);
+}
 
 .program-sidebar__list-item--lesson {
   display: flex;
   align-items: center;
+  padding-right: 9px;
+  padding-left: 9px;
 }
 
 .program-sidebar__list-item--lesson a {
   margin-right: auto;
   color: rgb(0 0 0 / 45%);
+}
+
+.program-sidebar__list-item--lesson .btn-create-lesson {
+  margin-left: 8px;
 }
 
 .program-sidebar__list-item--lesson button svg {
@@ -98,7 +104,7 @@
 
 .program__cta-footer {
   position: absolute;
-  bottom: 0;
+  bottom: 4px;
   width: 100%;
 }
 
@@ -106,6 +112,6 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   text-align: center;
+  transform: translate(-50%, -50%);
 }

@@ -24,7 +24,7 @@ export const LessonForm: React.FC<{
             <Row gutter={16}>
               <Col span={24 - 8}>
                 <Row justify="center" className={'program__cta-footer'}>
-                  <Affix offsetBottom={0}>
+                  <Affix offsetBottom={4}>
                     <Space size="large">
                       <Button
                         loading={loading}
