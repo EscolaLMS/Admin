@@ -186,6 +186,7 @@ export default () => {
       }}
     >
       <ProCard
+        bodyStyle={{ padding: '24px' }}
         tabs={{
           type: 'card',
           activeKey: tab,
@@ -597,6 +598,7 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane
+            className="program"
             key="program"
             tab={<FormattedMessage id="program" />}
             disabled={manageCourseEdit.disableEdit}
