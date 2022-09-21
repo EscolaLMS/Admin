@@ -28,7 +28,9 @@ test.describe('New voucher', () => {
     await page.type('#amount', '5');
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=success', { state: 'visible' });
+
     await page.goto(`${BASE_URL}/#/sales/vouchers`);
+    await page.waitForSelector('.ant-table-tbody', { state: 'visible' });
     await page.locator('text=new pwvoucherCODE >> button').nth(1).click();
 
     const ConfirmDeleteVoucher = await page.locator('.ant-popover-message');
