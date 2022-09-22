@@ -248,7 +248,7 @@ export default {
   short_description: 'Krótki opis',
   summary: 'Podsumowanie',
   summary_tooltip:
-    'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
+    'lfkdjfldskjfdskljlkjfdslkjfdslkj Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
   description: 'Opis',
   description_tooltip:
     'Dany edytor WYSIWYG zawiera narzędzia do formatowania, zachowując jednocześnie możliwość pisania Markdown z klawiatury oraz wyświetlania zwykłego Markdown.',
