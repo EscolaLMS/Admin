@@ -40,7 +40,7 @@ export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
   {
     title: <FormattedMessage id="path" defaultMessage="path" />,
     dataIndex: 'path',
-    hideInSearch: true,
+    hideInSearch: false,
   },
 ];
 
@@ -54,7 +54,12 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
   return (
     <ProTable<
       EscolaLms.Tracker.Models.TrackRoute,
-      API.PageParams & { user_id?: number; method: 'string'; dateRange: [string, string] }
+      API.PageParams & {
+        user_id?: number;
+        method: 'string';
+        dateRange: [string, string];
+        path: string;
+      }
     >
       headerTitle={intl.formatMessage({
         id: 'menu.Analytics.Logs',
@@ -68,7 +73,7 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
           // labelWidth: 120,
         }
       }
-      request={({ user_id, method, dateRange, pageSize, current }) => {
+      request={({ user_id, method, dateRange, path, pageSize, current }) => {
         setLoading(true);
         const date_from =
           dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
@@ -80,6 +85,7 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
           method,
           pageSize,
           current,
+          path,
           date_from,
           date_to,
         }).then((response) => {
