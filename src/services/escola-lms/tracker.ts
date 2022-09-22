@@ -7,6 +7,7 @@ export async function track(
     date_from?: string;
     date_to?: string;
     user_id?: number;
+    path?: string;
     method: 'string';
   },
   options?: RequestOptionsInit,
