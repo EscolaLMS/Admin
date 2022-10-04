@@ -368,20 +368,6 @@ export default () => {
               />
             </ProForm.Group>
             <ProForm.Group label={<FormattedMessage id="additional" />}>
-              <ProFormDigit
-                width="md"
-                name="base_price"
-                label={<FormattedMessage id="base_price" />}
-                tooltip={<FormattedMessage id="base_price_tooltip" />}
-                placeholder={intl.formatMessage({
-                  id: 'base_price',
-                  defaultMessage: 'base_price',
-                })}
-                min={0}
-                max={9999}
-                disabled={manageCourseEdit.disableEdit}
-                fieldProps={{ step: 1 }}
-              />
               <ProFormText
                 width="xs"
                 name="level"
