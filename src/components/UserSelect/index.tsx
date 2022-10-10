@@ -65,6 +65,10 @@ export const UserSelect: React.FC<{
     [fetch],
   );
 
+  const onDeselect = useCallback(() => {
+    setCurrUsers([]);
+  }, []);
+
   useEffect(() => {
     const controller = new AbortController();
     if (value) {
@@ -103,6 +107,7 @@ export const UserSelect: React.FC<{
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}
+      onDeselect={onDeselect}
       placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
       optionFilterProp="children"
       filterOption={(input, option) => {
