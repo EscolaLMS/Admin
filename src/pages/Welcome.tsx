@@ -15,7 +15,7 @@ export default (): React.ReactNode => {
   return (
     <PageContainer
       extra={
-        url && (
+        baseUrl && (
           <Button type="primary" href={url} target="_blank">
             <FormattedMessage id="go_to_platform" />
           </Button>
