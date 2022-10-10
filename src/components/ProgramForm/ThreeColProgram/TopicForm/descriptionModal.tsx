@@ -27,42 +27,42 @@ export const DescriptionModal: React.FC<DescriptionModalProps> = (props) => {
         </Button>,
       ]}
     >
-      <ProForm.Group>
-        <ProForm.Item
-          name="introduction"
-          label={<FormattedMessage id="introduction" />}
-          tooltip={<FormattedMessage id="introduction_tooltip" />}
-          valuePropName="value"
-        >
-          <WysiwygMarkdown
-            directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
-          />
-        </ProForm.Item>
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProForm.Item
-          name="description"
-          label={<FormattedMessage id="description" />}
-          tooltip={<FormattedMessage id="description_tooltip" />}
-          valuePropName="value"
-        >
-          <WysiwygMarkdown
-            directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
-          />
-        </ProForm.Item>
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProForm.Item
-          name="summary"
-          label={<FormattedMessage id="summary" />}
-          tooltip={<FormattedMessage id="summary_tooltip" />}
-          valuePropName="value"
-        >
-          <WysiwygMarkdown
-            directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
-          />
-        </ProForm.Item>
-      </ProForm.Group>
+      <ProForm.Item
+        name="introduction"
+        label={<FormattedMessage id="introduction" />}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
+        tooltip={<FormattedMessage id="introduction_tooltip" />}
+        valuePropName="value"
+      >
+        <WysiwygMarkdown
+          directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
+        />
+      </ProForm.Item>
+      <ProForm.Item
+        name="description"
+        label={<FormattedMessage id="description" />}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
+        tooltip={<FormattedMessage id="description_tooltip" />}
+        valuePropName="value"
+      >
+        <WysiwygMarkdown
+          directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
+        />
+      </ProForm.Item>
+      <ProForm.Item
+        name="summary"
+        label={<FormattedMessage id="summary" />}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
+        tooltip={<FormattedMessage id="summary_tooltip" />}
+        valuePropName="value"
+      >
+        <WysiwygMarkdown
+          directory={`course/${courseId}/lesson/${initialValues.lesson_id}/topic/${initialValues.id}/wysiwyg`}
+        />
+      </ProForm.Item>
     </Modal>
   );
 };
