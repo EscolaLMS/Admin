@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
 import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -23,7 +23,10 @@ const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) =
     }),
   );
   try {
-    await (id && id !== -1 ? updateSettings(id, { ...fields }) : createSettings({ ...fields }));
+    const updatedSettings = await (id && id !== -1
+      ? updateSettings(id, { ...fields })
+      : createSettings({ ...fields }));
+
     hide();
     message.success(
       intl.formatMessage({
@@ -31,7 +34,10 @@ const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) =
       }),
     );
 
-    return true;
+    return {
+      success: true,
+      updatedSettings,
+    };
   } catch (error) {
     hide();
     message.error(
@@ -39,7 +45,7 @@ const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) =
         id: 'error',
       }),
     );
-    return false;
+    return { success: false, updateSettings: null };
   }
 };
 
@@ -100,6 +106,8 @@ const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+
+  const { setInitialState, initialState } = useModel('@@initialState');
 
   const columns: ProColumns<API.Setting>[] = [
     {
@@ -198,6 +206,24 @@ const TableList: React.FC = () => {
     },
   ];
 
+  const updateConfigDynamically = (value: API.Setting) => {
+    if (!value) return;
+    if (!initialState?.config?.length && value) {
+      setInitialState({ ...initialState, config: [value] });
+    }
+    if (!initialState?.config) return;
+    const config = initialState?.config.map((setting) => {
+      if (setting.key === value.key) {
+        return {
+          ...setting,
+          ...value,
+        };
+      }
+      return setting;
+    });
+    setInitialState({ ...initialState, config });
+  };
+
   return (
     <React.Fragment>
       <ProTable<API.Setting, API.PageParams & { group: string }>
@@ -242,8 +268,13 @@ const TableList: React.FC = () => {
         }}
         onFinish={async (value) => {
           const fields = value as API.Setting;
-          const success = await handleUpdate(intl, fields, Number(modalVisible));
+          const { success, updatedSettings } = await handleUpdate(
+            intl,
+            fields,
+            Number(modalVisible),
+          );
           if (success) {
+            if (updatedSettings?.success) updateConfigDynamically(updatedSettings.data);
             setModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
