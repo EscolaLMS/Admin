@@ -36,7 +36,7 @@ const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) =
 
     return {
       success: true,
-      updatedSettings: updatedSettings as API.DefaultResponseSuccess<API.Setting>,
+      updatedSettings,
     };
   } catch (error) {
     hide();
@@ -206,7 +206,7 @@ const TableList: React.FC = () => {
     },
   ];
 
-  const updateConfigDynamically = (value: API.Setting | undefined) => {
+  const updateConfigDynamically = (value: API.Setting) => {
     if (!value) return;
     if (!initialState?.config?.length && value) {
       setInitialState({ ...initialState, config: [value] });
@@ -274,7 +274,7 @@ const TableList: React.FC = () => {
             Number(modalVisible),
           );
           if (success) {
-            updateConfigDynamically(updatedSettings?.data);
+            if (updatedSettings?.success) updateConfigDynamically(updatedSettings.data);
             setModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
