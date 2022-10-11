@@ -275,6 +275,9 @@ export default () => {
                 label={<FormattedMessage id="summary" />}
                 tooltip={<FormattedMessage id="summary_tooltip" />}
                 valuePropName="value"
+                style={{
+                  width: 697,
+                }}
               >
                 <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
               </ProForm.Item>
@@ -283,6 +286,9 @@ export default () => {
                 label={<FormattedMessage id="description" />}
                 tooltip={<FormattedMessage id="description_tooltip" />}
                 valuePropName="value"
+                style={{
+                  width: 697,
+                }}
               >
                 <WysiwygMarkdown directory={`course/${course}/wysiwyg`} />
               </ProForm.Item>
