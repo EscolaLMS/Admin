@@ -38,6 +38,40 @@ const TableList: React.FC = () => {
     [actionRef],
   );
 
+  const handleExport = useCallback(async (id: number, title: string) => {
+    setLoading(true);
+    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
+    try {
+      const file = await fetch(
+        `${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p/content/${id}/export`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
+        },
+      );
+      if (!file.ok) throw Error('Error occured');
+
+      hide();
+      setLoading(false);
+      message.success(<FormattedMessage id="downloading" defaultMessage="Downloading" />);
+
+      const blob = await file.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+
+      a.href = url;
+      a.download = `${title.split(' ').join('-').toLocaleLowerCase()}`;
+      a.click();
+      a.remove();
+    } catch (error) {
+      hide();
+      setLoading(false);
+      message.error(
+        <FormattedMessage id="cant-download-file" defaultMessage="Can't download file" />,
+      );
+      return;
+    }
+  }, []);
+
   const columns: ProColumns<API.H5PContentListItem>[] = [
     {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -139,17 +173,9 @@ const TableList: React.FC = () => {
             <Button icon={<BookOutlined />} />
           </Tooltip>
         </Link>,
-        <a
-          key={'export'}
-          href={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p/content/${
-            record.id
-          }/export`}
-          download
-        >
-          <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
-            <Button icon={<ExportOutlined />} />
-          </Tooltip>
-        </a>,
+        <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />} key={'export'}>
+          <Button icon={<ExportOutlined />} onClick={() => handleExport(record.id, record.title)} />
+        </Tooltip>,
       ],
     },
   ];
