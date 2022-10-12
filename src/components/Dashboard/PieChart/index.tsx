@@ -1,7 +1,10 @@
 import { FormattedMessage } from 'umi';
 
 import PieChart from '@/components/PieChart/PieChart';
-export const DashdoardComponent: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
+export const DashdoardComponent: React.FC<{ metric: API.ReportType; asDonut: boolean }> = ({
+  metric,
+  asDonut,
+}) => {
   return (
     <div className="dashboard-draggable__component">
       <h3>
@@ -9,7 +12,7 @@ export const DashdoardComponent: React.FC<{ metric: API.ReportType }> = ({ metri
       </h3>
 
       <article>
-        <PieChart metric={metric} header={false} />
+        <PieChart metric={metric} header={false} asDonut={asDonut} />
       </article>
     </div>
   );

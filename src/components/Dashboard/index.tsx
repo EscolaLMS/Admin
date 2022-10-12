@@ -62,7 +62,24 @@ const components: DashBoardComponent = {
     h: 4,
     maxH: 4,
     component: PieChart,
-    props: { metric: 'EscolaLms\\Reports\\Metrics\\CoursesSecondsSpentMetric', header: false },
+    props: {
+      metric: 'EscolaLms\\Reports\\Metrics\\CoursesSecondsSpentMetric',
+      header: false,
+      asDonut: true,
+      customLabelContent: (x: API.ReportItem) => 'test ' + x.value,
+    },
+  },
+  'pie-chart-CoursesSecondsSpentMetric____': {
+    w: 1,
+    h: 4,
+    maxH: 4,
+    component: PieChart,
+    props: {
+      metric: 'EscolaLms\\Reports\\Metrics\\CurrentUserStatus',
+      header: false,
+      asDonut: true,
+      // customLabelContent: (x: API.ReportItem) => 'test ' + x.value,
+    },
   },
   'pie-chart-TutorsPopularityMetric': {
     w: 1,
