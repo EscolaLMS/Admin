@@ -91,7 +91,7 @@ declare namespace API {
     scorm_sco_id?: number;
     status?: string;
     active_from?: Date;
-    active_to?: string;
+    active_to?: Date;
     hours_to_complete?: number;
     purchasable?: boolean;
     boolean?: boolean;
