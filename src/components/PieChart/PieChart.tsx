@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import type { PieConfig } from '@ant-design/plots';
 import { Pie } from '@ant-design/plots';
 import { reports } from '@/services/escola-lms/reports';
 import { Spin, Alert, Button, Table } from 'antd';
@@ -20,27 +21,6 @@ const columns = [
   },
 ];
 
-const config = {
-  appendPadding: 10,
-  angleField: 'value',
-  colorField: 'label',
-  radius: 0.9,
-  label: {
-    type: 'inner',
-    offset: '-30%',
-
-    content: function content(_ref: Record<string, any>) {
-      const percent = _ref.percent as number;
-      return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
-    },
-    style: {
-      fontSize: 14,
-      textAlign: 'center',
-    },
-  },
-  interactions: [{ type: 'element-active' }],
-};
-
 type State =
   | {
       mode: 'init';
@@ -57,15 +37,82 @@ type State =
       value: API.Report;
     };
 
-const PieChart: React.FC<{ metric: API.ReportType; header?: boolean }> = ({
-  metric,
-  header = true,
-}) => {
+const PieChart: React.FC<{
+  metric: API.ReportType;
+  header?: boolean;
+  asDonut?: boolean;
+  customLabelTitle?: (text: string) => string;
+  customLabelContent?: (value: API.ReportItem) => string;
+}> = ({ metric, header = true, asDonut = false, customLabelTitle, customLabelContent }) => {
   const [state, setState] = useState<State>({ mode: 'init' });
   const intl = useIntl();
 
+  const config: Omit<PieConfig, 'data'> = {
+    appendPadding: 10,
+    angleField: 'value',
+    colorField: 'label',
+    radius: 0.9,
+    label: {
+      type: 'inner',
+      offset: '-30%',
+
+      content: function content(_ref: Record<string, any>) {
+        const percent = _ref.percent as number;
+        return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
+      },
+      style: {
+        fontSize: 14,
+        textAlign: 'center',
+      },
+    },
+    interactions: [{ type: 'element-active' }],
+    legend: {
+      itemValue: {
+        alignRight: true,
+        formatter: (text, item) => {
+          if (customLabelContent && 'value' in state) {
+            const value = state.value.find(({ label }) => label === item.name);
+            return value ? customLabelContent(value) : text;
+          }
+          return text;
+        },
+      },
+    },
+  };
+
+  const donutConfig: Pick<PieConfig, 'innerRadius' | 'label' | 'appendPadding' | 'legend'> = {
+    appendPadding: 20,
+    innerRadius: 0.6,
+    label: {
+      ...config.label,
+      offset: '-50%',
+    },
+    legend: {
+      itemWidth: undefined,
+      itemName: {
+        formatter: (text) => (customLabelTitle ? customLabelTitle(text) : text),
+      },
+      offsetX: -24,
+      itemValue: {
+        formatter: (_, item) => {
+          if (customLabelContent && 'value' in state) {
+            const value = state.value.find(({ label }) => label === item.value);
+            return value ? customLabelContent(value) : undefined;
+          }
+          return undefined;
+        },
+      },
+    },
+  };
+
+  const completeConfig: Omit<PieConfig, 'data'> = {
+    ...config,
+    ...(asDonut ? donutConfig : {}),
+  };
+
   useEffect(() => {
     setState({ mode: 'loading' });
+
     reports({ metric })
       .then((response) => {
         if (response.success) {
@@ -123,7 +170,7 @@ const PieChart: React.FC<{ metric: API.ReportType; header?: boolean }> = ({
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <div>
-          <Pie {...config} data={state.value} />
+          <Pie {...completeConfig} data={state.value} />
           {header && (
             <Table pagination={false} size="small" dataSource={state.value} columns={columns} />
           )}
