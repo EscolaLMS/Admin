@@ -1,3 +1,4 @@
+import Statistics from '@/components/Statistics';
 import { FormattedMessage } from 'umi';
 
 export const DashdoardComponent: React.FC = () => {
@@ -7,7 +8,9 @@ export const DashdoardComponent: React.FC = () => {
         <FormattedMessage id="hall_of_fame" />
       </h3>
       <article>
-        <div>This Dashboard component is not yet implemented. Sorry</div>
+        <div>
+          <Statistics metric="EscolaLms\Reports\Metrics\CoursesPopularityMetric" />
+        </div>
       </article>
     </div>
   );

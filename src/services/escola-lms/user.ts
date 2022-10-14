@@ -145,3 +145,18 @@ export async function updateUserInterests(
     ...(options || {}),
   });
 }
+
+/**  GET /api/admin/stats/date-range */
+export async function dataRangeStats(
+  params?: {
+    date_from: string;
+    date_to: string;
+  },
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.DataRangeStats>>(`/api/admin/stats/date-range`, {
+    params,
+    method: 'GET',
+    ...(options || {}),
+  });
+}

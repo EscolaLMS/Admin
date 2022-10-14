@@ -1,13 +1,14 @@
+import DemoColumn from '@/components/Columns';
 import { FormattedMessage } from 'umi';
 
-export const DashdoardComponent: React.FC = () => {
+export const DashdoardComponent: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
   return (
     <div className="dashboard-draggable__component">
       <h3>
         <FormattedMessage id="current_users" />
       </h3>
       <article>
-        <div>This Dashboard component is not yet implemented. Sorry</div>
+        <DemoColumn metric={metric} />
       </article>
     </div>
   );

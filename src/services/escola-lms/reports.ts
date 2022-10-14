@@ -10,6 +10,8 @@ export async function reports(
   },
   options?: RequestOptionsInit,
 ) {
+  console.clear();
+  console.log(params);
   return request<API.ReportList>('/api/admin/reports/report', {
     params,
     method: 'GET',

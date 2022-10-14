@@ -32,7 +32,13 @@ type DashBoardComponent = Record<
 >;
 
 const components: DashBoardComponent = {
-  'current-users': { component: CurrentUsers, w: 1, h: 1, maxH: 1 },
+  'current-users': {
+    component: CurrentUsers,
+    w: 1,
+    h: 1,
+    maxH: 1,
+    props: { metric: 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric', header: false },
+  },
   customers: { component: Customers, w: 1, h: 1, maxH: 1 },
   'hall-of-fame': { component: HallOfFame, w: 1, h: 1, maxH: 1 },
   ratings: { component: Ratings, w: 1, h: 4, maxH: 4, props: {} },
@@ -82,7 +88,9 @@ const components: DashBoardComponent = {
 
 const defaultStageComponents: (keyof typeof components)[] = [
   'tutorial',
+  'hall-of-fame',
   'ratings',
+  'current-users',
   'your-courses',
   'pie-chart-CoursesMoneySpentMetric',
   'pie-chart-CoursesPopularityMetric',

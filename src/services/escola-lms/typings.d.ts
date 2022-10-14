@@ -315,6 +315,13 @@ declare namespace API {
     EscolaLmsReportsStatsCoursePeopleStarted: number;
   };
 
+  type DataRangeStats = {
+    EscolaLmsReportsStatsUserNewUsers: Record<string, number>;
+    EscolaLmsReportsStatsUserActiveUsers: Record<string, number>;
+    EscolaLmsReportsStatsCourseStarted: any[];
+    EscolaLmsReportsStatsCourseFinished: any[];
+  };
+
   type TopicBase = {
     lesson_id?: number;
     created_at?: string;

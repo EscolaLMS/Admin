@@ -68,6 +68,7 @@ const PieChart: React.FC<{ metric: API.ReportType; header?: boolean }> = ({
     setState({ mode: 'loading' });
     reports({ metric })
       .then((response) => {
+        console.log(metric, response);
         if (response.success) {
           setState({ mode: 'loaded', value: response.data });
         } else {
