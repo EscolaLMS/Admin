@@ -1,17 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
 import { Form } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormSwitch,
-  ModalForm,
-  ProFormTextArea,
-} from '@ant-design/pro-form';
+import ProForm, { ProFormSwitch, ModalForm, ProFormTextArea } from '@ant-design/pro-form';
 import { Typography } from 'antd';
 
 import { FormattedMessage } from 'umi';
 import { updateConfig } from '@/services/escola-lms/settings';
 import ReactJson from 'react-json-view';
 import { useIntl } from '@@/plugin-locale/localeExports';
+import SettingsValue from '@/pages/Settings/components/SettingsValue';
 
 const { Text } = Typography;
 
@@ -124,17 +120,7 @@ export const SettingsPackageModalForm: React.FC<{
       ) : (
         <>
           <ProForm.Item shouldUpdate label={<FormattedMessage id="value" />}>
-            {() =>
-              form.getFieldValue('rules')?.includes('boolean') ? (
-                <ProFormSwitch
-                  name="value"
-                  checkedChildren={<FormattedMessage id={'true'} />}
-                  unCheckedChildren={<FormattedMessage id={'false'} />}
-                />
-              ) : (
-                <ProFormText width="lg" name="value" label={<FormattedMessage id="value" />} />
-              )
-            }
+            {() => <SettingsValue field={form.getFieldValue('rules')} name={'value'} />}
           </ProForm.Item>
         </>
       )}
