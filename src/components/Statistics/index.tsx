@@ -5,6 +5,11 @@ import { reports } from '@/services/escola-lms/reports';
 import { TrophyOutlined } from '@ant-design/icons';
 import './index.less';
 
+interface LoadedValue {
+  bestRated: API.Report;
+  bestSelling: API.Report;
+}
+
 type State =
   | {
       mode: 'init';
@@ -18,21 +23,36 @@ type State =
     }
   | {
       mode: 'loaded';
-      value: API.ReportItem[];
+      value: LoadedValue;
     };
 
-const Statistics: React.FC<{ metric: API.ReportType; header?: boolean }> = ({ metric }) => {
+const Statistics: React.FC<{
+  metric: Record<'bestRated' | 'bestSelling', API.ReportType>;
+}> = ({ metric }) => {
   const [state, setState] = useState<State>({ mode: 'init' });
 
   useEffect(() => {
     setState({ mode: 'loading' });
 
-    reports({ metric })
+    const bestRatedRequest = reports({ metric: metric.bestRated });
+    const bestSellingRequest = reports({ metric: metric.bestSelling });
+
+    Promise.all([bestRatedRequest, bestSellingRequest])
       .then((response) => {
-        if (response.success) {
-          setState({ mode: 'loaded', value: response.data });
-        } else {
-          setState({ mode: 'error', error: response.message });
+        if (response.length) {
+          const [bestRated, bestSelling] = response;
+
+          if (bestRated.success && bestSelling.success) {
+            setState({
+              mode: 'loaded',
+              value: {
+                bestRated: bestRated.data,
+                bestSelling: bestSelling.data,
+              },
+            });
+          } else {
+            setState({ mode: 'error', error: bestRated.message ?? bestSelling.message });
+          }
         }
       })
       .catch((err) => setState({ mode: 'error', error: err.toString() }));
@@ -43,7 +63,7 @@ const Statistics: React.FC<{ metric: API.ReportType; header?: boolean }> = ({ me
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <div className="statistics">
-          {state.value.slice(0, 3).map(({ label }, idx) => (
+          {state.value.bestSelling.slice(0, 2).map(({ label }, idx) => (
             <Statistic
               key={label}
               title={`${idx > 0 ? 'Top' : 'Best'} selling course`}
@@ -51,6 +71,11 @@ const Statistics: React.FC<{ metric: API.ReportType; header?: boolean }> = ({ me
               value={label}
             />
           ))}
+          <Statistic
+            title={`Best rated course`}
+            prefix={<TrophyOutlined style={{ fontSize: '45px', color: '#FAD337' }} />}
+            value={state.value.bestRated[0].label}
+          />
         </div>
       )}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}

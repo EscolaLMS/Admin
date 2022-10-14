@@ -40,19 +40,12 @@ type State =
 const PieChart: React.FC<{
   metric: API.ReportType;
   header?: boolean;
-  asDonut: boolean;
+  asDonut?: boolean;
+  customLabelTitle?: (text: string) => string;
   customLabelContent?: (value: API.ReportItem) => string;
-}> = ({ metric, header = true, asDonut = false, customLabelContent }) => {
+}> = ({ metric, header = true, asDonut = false, customLabelTitle, customLabelContent }) => {
   const [state, setState] = useState<State>({ mode: 'init' });
   const intl = useIntl();
-
-  // const getValueOfSingleData = (searchLabel: string) => {
-  //   if ('value' in state) {
-  //     // const value = state.value.find((x) => label === searchLabel);
-  //     // return value;
-  //     // console.log(value);
-  //   }
-  // };
 
   const config: Omit<PieConfig, 'data'> = {
     appendPadding: 10,
@@ -74,43 +67,41 @@ const PieChart: React.FC<{
     },
     interactions: [{ type: 'element-active' }],
     legend: {
-      // itemSpacing: 20,
-      itemWidth: 80,
-      itemName: {
-        // spacing: 40,
-        style: {
-          width: 10,
-        },
-      },
       itemValue: {
+        alignRight: true,
         formatter: (text, item) => {
-          // return 'halo' + text;
-          // console.log(item);
-          // const x = getValueOfSingleData(item.id ?? item.name);
-          // console.log('text __ ', x);
-          // return text;
           if (customLabelContent && 'value' in state) {
-            // const a = state.value.find(customLabelContent);
-            // console.log(a);
-            console.log(item.id);
             const value = state.value.find(({ label }) => label === item.name);
-            if (value) console.log('func ', customLabelContent(value));
-            return value ? customLabelContent(value) : '__' + text;
-            // return value;
-            // console.log(value);
+            return value ? customLabelContent(value) : text;
           }
-          // return customLabelContent(item.id) ?? text;
-          return '00 ' + text;
+          return text;
         },
       },
     },
   };
 
-  const donutConfig: Pick<PieConfig, 'innerRadius' | 'label'> = {
+  const donutConfig: Pick<PieConfig, 'innerRadius' | 'label' | 'appendPadding' | 'legend'> = {
+    appendPadding: 20,
     innerRadius: 0.6,
     label: {
       ...config.label,
       offset: '-50%',
+    },
+    legend: {
+      itemWidth: undefined,
+      itemName: {
+        formatter: (text) => (customLabelTitle ? customLabelTitle(text) : text),
+      },
+      offsetX: -24,
+      itemValue: {
+        formatter: (_, item) => {
+          if (customLabelContent && 'value' in state) {
+            const value = state.value.find(({ label }) => label === item.value);
+            return value ? customLabelContent(value) : undefined;
+          }
+          return undefined;
+        },
+      },
     },
   };
 
@@ -121,9 +112,9 @@ const PieChart: React.FC<{
 
   useEffect(() => {
     setState({ mode: 'loading' });
+
     reports({ metric })
       .then((response) => {
-        console.log(metric, response);
         if (response.success) {
           setState({ mode: 'loaded', value: response.data });
         } else {
@@ -154,8 +145,6 @@ const PieChart: React.FC<{
       csvExporter.generateCsv(state.value);
     }
   }, [state]);
-
-  console.log('state', state);
 
   return (
     <ProCard

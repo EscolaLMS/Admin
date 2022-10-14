@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import CurrentUsers from './CurrentUsers';
 import Customers from './Customers';
 import HallOfFame from './HallOfFame';
@@ -9,8 +9,6 @@ import YourCourses from './YourCourses';
 import PieChart from './PieChart';
 import { FormattedMessage } from 'umi';
 import { PlusSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
-
-import type { Layout } from 'react-grid-layout';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -23,84 +21,93 @@ import { Button, Row, Space, Typography } from 'antd';
 const COLS = 2;
 const ROW_HEIGHT = 150;
 
-type DashBoardComponent = Record<
-  string,
-  Omit<Layout, 'i' | 'x' | 'y'> & {
-    component: React.FC<any>;
-    props?: any;
-  }
->;
+type Props = Record<string, any>;
+type Component<P extends Props> = (props: P) => React.ReactElement | null;
+type DashboardComponent<P extends Props> = {
+  component: Component<P>;
+  props?: P;
+  [key: string]: any;
+};
+type Dashboard = Record<string, DashboardComponent<any>>;
 
-const components: DashBoardComponent = {
-  'current-users': {
+const wrap = <P extends Props>(component: DashboardComponent<P>) => {
+  return component;
+};
+
+const components: Dashboard = {
+  'current-users': wrap({
     component: CurrentUsers,
     w: 1,
     h: 1,
     maxH: 1,
-    props: { metric: 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric', header: false },
-  },
-  customers: { component: Customers, w: 1, h: 1, maxH: 1 },
-  'hall-of-fame': { component: HallOfFame, w: 1, h: 1, maxH: 1 },
-  ratings: { component: Ratings, w: 1, h: 4, maxH: 4, props: {} },
-  sales: { component: Sales, w: 1, h: 1, maxH: 1 },
-  tutorial: { component: Tutorial, w: 2, h: 2, maxH: 2 },
-  'your-courses': { component: YourCourses, w: 2, h: 3, maxH: 3, props: {} },
-  'pie-chart-CoursesMoneySpentMetric': {
+    props: {
+      metric: 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric',
+    },
+  }),
+  customers: wrap({ component: Customers, w: 1, h: 1, maxH: 1 }),
+  'hall-of-fame': wrap({
+    component: HallOfFame,
+    w: 1,
+    h: 1,
+    maxH: 1,
+    props: {
+      metric: {
+        bestSelling: 'EscolaLms\\Reports\\Metrics\\CoursesTopSellingMetric',
+        bestRated: 'EscolaLms\\Reports\\Metrics\\CoursesBestRatedMetric',
+      },
+    },
+  }),
+  ratings: wrap({ component: Ratings, w: 1, h: 4, maxH: 4, props: {} }),
+  sales: wrap({ component: Sales, w: 1, h: 1, maxH: 1 }),
+  tutorial: wrap({ component: Tutorial, w: 2, h: 2, maxH: 2 }),
+  'your-courses': wrap({ component: YourCourses, w: 2, h: 3, maxH: 3, props: {} }),
+  'pie-chart-CoursesMoneySpentMetric': wrap({
     w: 1,
     h: 4,
     maxH: 4,
     component: PieChart,
-    props: { metric: 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric', header: false },
-  },
-  'pie-chart-CoursesPopularityMetric': {
+    props: {
+      metric: 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric',
+      asDonut: true,
+      customLabelTitle: (text: string) => text.slice(0, 8) + (text.length > 8 ? '...' : ''),
+      customLabelContent: (item: API.ReportItem) => {
+        return `PLN ${item.value}`;
+      },
+    },
+  }),
+  'pie-chart-CoursesPopularityMetric': wrap({
     w: 1,
     h: 4,
     maxH: 4,
     component: PieChart,
     props: {
       metric: 'EscolaLms\\Reports\\Metrics\\CoursesPopularityMetric',
-      header: false,
-      foo: 'bar',
     },
-  },
-  'pie-chart-CoursesSecondsSpentMetric': {
+  }),
+  'pie-chart-CoursesSecondsSpentMetric': wrap({
     w: 1,
     h: 4,
     maxH: 4,
     component: PieChart,
     props: {
       metric: 'EscolaLms\\Reports\\Metrics\\CoursesSecondsSpentMetric',
-      header: false,
       asDonut: true,
-      customLabelContent: (x: API.ReportItem) => 'test ' + x.value,
     },
-  },
-  'pie-chart-CoursesSecondsSpentMetric____': {
+  }),
+  'pie-chart-TutorsPopularityMetric': wrap({
     w: 1,
     h: 4,
     maxH: 4,
     component: PieChart,
-    props: {
-      metric: 'EscolaLms\\Reports\\Metrics\\CurrentUserStatus',
-      header: false,
-      asDonut: true,
-      // customLabelContent: (x: API.ReportItem) => 'test ' + x.value,
-    },
-  },
-  'pie-chart-TutorsPopularityMetric': {
-    w: 1,
-    h: 4,
-    maxH: 4,
-    component: PieChart,
-    props: { metric: 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric', header: false },
-  },
+    props: { metric: 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric' },
+  }),
 
-  add: {
+  add: wrap({
     w: 1,
     h: 1,
     maxH: 1,
     component: PieChart,
-  },
+  }),
 };
 
 const defaultStageComponents: (keyof typeof components)[] = [

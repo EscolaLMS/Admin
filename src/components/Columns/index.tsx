@@ -25,8 +25,7 @@ type State =
     }
   | {
       mode: 'loaded';
-      //   value: API.DataRangeStats;
-      value: any | any[];
+      value: Record<string, any>;
     };
 
 const Columns: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
