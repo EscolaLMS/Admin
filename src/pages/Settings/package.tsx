@@ -48,6 +48,17 @@ const columns: ProColumns<API.ConfigEntry>[] = [
     dataIndex: 'value',
     hideInForm: true,
     hideInSearch: true,
+    render: (_, record) =>
+      typeof record.value === 'boolean' ? (
+        <Tag color={record.value ? 'success' : 'error'}>
+          <FormattedMessage
+            id={record.value ? 'true' : 'false'}
+            defaultMessage={record.value ? 'true' : 'false'}
+          />
+        </Tag>
+      ) : (
+        record.value
+      ),
   },
 ];
 

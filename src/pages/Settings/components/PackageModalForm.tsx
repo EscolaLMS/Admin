@@ -122,7 +122,21 @@ export const SettingsPackageModalForm: React.FC<{
           </ProForm.Item>
         </>
       ) : (
-        <ProFormText width="lg" name="value" label={<FormattedMessage id="value" />} />
+        <>
+          <ProForm.Item shouldUpdate label={<FormattedMessage id="value" />}>
+            {() =>
+              form.getFieldValue('rules')?.includes('boolean') ? (
+                <ProFormSwitch
+                  name="value"
+                  checkedChildren={<FormattedMessage id={'true'} />}
+                  unCheckedChildren={<FormattedMessage id={'false'} />}
+                />
+              ) : (
+                <ProFormText width="lg" name="value" label={<FormattedMessage id="value" />} />
+              )
+            }
+          </ProForm.Item>
+        </>
       )}
     </ModalForm>
   );
