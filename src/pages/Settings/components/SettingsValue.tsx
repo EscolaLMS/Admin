@@ -19,9 +19,9 @@ export const SettingsValue: React.FC<SettingsValueProps> = (props) => {
         unCheckedChildren={<FormattedMessage id={'false'} />}
       />
     );
-  } else {
-    return <ProFormText width="lg" name={name} />;
   }
+
+  return <ProFormText width="lg" name={name} />;
 };
 
 export default SettingsValue;
