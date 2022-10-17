@@ -1,13 +1,18 @@
+import Statistics from '@/components/Statistics';
 import { FormattedMessage } from 'umi';
 
-export const DashdoardComponent: React.FC = () => {
+export const DashdoardComponent: React.FC<{
+  metric: Record<string, API.ReportType>;
+}> = ({ metric }) => {
   return (
     <div className="dashboard-draggable__component">
       <h3>
-        <FormattedMessage id="hall_of_fame" />
+        <FormattedMessage id="hall_of_fame" defaultMessage="Hall of fame" />
       </h3>
       <article>
-        <div>This Dashboard component is not yet implemented. Sorry</div>
+        <div>
+          <Statistics metric={metric} />
+        </div>
       </article>
     </div>
   );

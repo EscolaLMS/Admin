@@ -39,7 +39,7 @@ import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
-import { isAfter } from 'date-fns';
+import { isAfter, isBefore } from 'date-fns';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -50,7 +50,8 @@ export default () => {
   const [data, setData] = useState<Partial<API.Course>>();
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
-  const [fromDateValidation, setFromDateValidation] = useState(null);
+  const [fromDateValidation, setFromDateValidation] = useState<Date | undefined | null>(null);
+  const [toDateValidation, setToDateValidation] = useState<Date | undefined | null>(null);
   const [manageSuccessModal, setManageSuccessModal] = useState({
     showModal: false,
     courseId: 0,
@@ -89,6 +90,9 @@ export default () => {
           tags: response.data.tags?.map(tagsArrToIds),
           summary: response.data.summary || '',
         });
+
+        setFromDateValidation(response.data.active_from);
+        setToDateValidation(response.data.active_to);
       }
     };
     fetch();
@@ -108,6 +112,8 @@ export default () => {
 
         const postData = {
           ...values,
+          active_from: values.active_from || null,
+          active_to: values.active_to || null,
           authors:
             values.authors &&
             values.authors.map((author) => (typeof author === 'object' ? author.id : author)),
@@ -243,6 +249,10 @@ export default () => {
               if (values.active_from) {
                 setFromDateValidation(values.active_from);
               }
+
+              if (values.active_to) {
+                setToDateValidation(values.active_to);
+              }
               return values.title && setData({ title: values.title });
             }}
           >
@@ -303,14 +313,23 @@ export default () => {
                   id: 'active_from',
                   defaultMessage: 'active_from',
                 })}
-                disabled={manageCourseEdit.disableEdit}
-                extra={<FormattedMessage id="active_from_extra" />}
                 rules={[
                   {
-                    required: true,
-                    message: <FormattedMessage id="templates.this_required" />,
+                    validator: (_, value) => {
+                      if (
+                        value &&
+                        toDateValidation &&
+                        isAfter(new Date(value), new Date(toDateValidation))
+                      ) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'invalidDate' })));
+                      }
+
+                      return Promise.resolve();
+                    },
                   },
                 ]}
+                disabled={manageCourseEdit.disableEdit}
+                extra={<FormattedMessage id="active_from_extra" />}
               />
               <ProFormDatePicker
                 width="md"
@@ -325,25 +344,16 @@ export default () => {
                 extra={<FormattedMessage id="active_to_extra" />}
                 rules={[
                   {
-                    required: true,
-                    message: <FormattedMessage id="templates.this_required" />,
-                  },
-                  {
                     validator(_, value) {
-                      if (value) {
-                        if (
-                          fromDateValidation &&
-                          isAfter(new Date(value), new Date(fromDateValidation))
-                        ) {
-                          return Promise.resolve();
-                        } else {
-                          return Promise.reject(
-                            new Error(intl.formatMessage({ id: 'invalidDate' })),
-                          );
-                        }
-                      } else {
-                        return Promise.reject();
+                      if (
+                        value &&
+                        fromDateValidation &&
+                        isBefore(new Date(value), new Date(fromDateValidation))
+                      ) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'invalidDate' })));
                       }
+
+                      return Promise.resolve();
                     },
                   },
                 ]}

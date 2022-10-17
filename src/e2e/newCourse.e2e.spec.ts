@@ -16,11 +16,10 @@ test.describe('New course', () => {
     await page.keyboard.press('Enter');
     await page.type('#active_to', '2022-12-31');
     await page.keyboard.press('Enter');
-    await page
-      .locator(
-        'div:nth-child(4) > .ant-form-item > .ant-row > div:nth-child(2) > .ant-form-item-control-input > .ant-form-item-control-input-content > .ant-select > .ant-select-selector > .ant-select-selection-item',
-      )
-      .click();
+    await page.type('#level', 'test');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter');
     await page.locator('text=Draft').nth(1).click();
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=Go to course page', { state: 'visible' });
@@ -32,6 +31,7 @@ test.describe('New course', () => {
     await page.goto(`${BASE_URL}/#/courses/list`);
     await page.type('#title', 'new course abc');
     await page.locator('button:has-text("Query")').click();
+    await page.waitForSelector('text=new course abc', { state: 'visible' });
     await page.locator('text=new course abcDraft- >> button').nth(1).click();
 
     const ConfirmDeleteCourse = await page.locator('.ant-popover-message');
