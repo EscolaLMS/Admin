@@ -9,6 +9,7 @@ import YourCourses from './YourCourses';
 import PieChart from './PieChart';
 import { FormattedMessage } from 'umi';
 import { PlusSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import type { Layout } from 'react-grid-layout';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -122,9 +123,26 @@ const defaultStageComponents: (keyof typeof components)[] = [
   'pie-chart-TutorsPopularityMetric',
 ];
 
+interface LayoutConfig {
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  maxH: number | undefined;
+}
+
+interface LayoutConfigObject {
+  lg: LayoutConfig[];
+  md: LayoutConfig[];
+  sm: LayoutConfig[];
+  xs: LayoutConfig[];
+}
+
 export const Dashdoard: React.FC = () => {
   const [stageComponents, setStageComponents] =
     useState<(keyof typeof components)[]>(defaultStageComponents);
+
   const onRemove = useCallback((key: keyof typeof components) => {
     setStageComponents((prevStageComponents) => {
       return prevStageComponents.filter((k) => k !== key);
@@ -138,6 +156,15 @@ export const Dashdoard: React.FC = () => {
   const layouts = useMemo(() => {
     let x = 1;
     let y = 0;
+
+    if ('layout' in localStorage) {
+      const layoutFromLS = localStorage.getItem('layout');
+
+      if (layoutFromLS) {
+        const layout = JSON.parse(layoutFromLS);
+        return layout.value;
+      }
+    }
 
     const l = stageComponents.map((key /*, i, arr */) => {
       // const prevItem = i > 0 ? components[arr[i - 1]] : null;
@@ -160,6 +187,36 @@ export const Dashdoard: React.FC = () => {
     return Object.keys(components).filter((key) => !stageComponents.includes(key) && key !== 'add');
   }, [stageComponents]);
 
+  function saveToLS(key: string, value: any) {
+    if (localStorage) {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          value,
+        }),
+      );
+    }
+  }
+
+  const onLayoutChange = (layout: Layout[]) => {
+    const data = layout.reduce<LayoutConfig[]>(
+      (acc, { i, x, y, w, h, maxH }) => [
+        ...acc,
+        {
+          i,
+          x,
+          y,
+          w,
+          h,
+          maxH: maxH,
+        },
+      ],
+      [],
+    );
+    const changedLayouts: LayoutConfigObject = { lg: data, md: data, sm: data, xs: data };
+    saveToLS('layout', changedLayouts);
+  };
+
   return (
     <main>
       <ResponsiveGridLayout
@@ -168,6 +225,7 @@ export const Dashdoard: React.FC = () => {
         cols={{ lg: 2, md: 2, sm: 2 }}
         className="layout dashboard-draggable"
         layouts={layouts}
+        onLayoutChange={(layout) => onLayoutChange(layout)}
       >
         {stageComponents
           .filter((key) => key !== 'add')
