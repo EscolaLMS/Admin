@@ -9,6 +9,7 @@ import YourCourses from './YourCourses';
 import PieChart from './PieChart';
 import { FormattedMessage } from 'umi';
 import { PlusSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import type { Layout } from 'react-grid-layout';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
