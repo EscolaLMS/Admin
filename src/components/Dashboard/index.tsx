@@ -7,8 +7,7 @@ import Sales from './Sales';
 import Tutorial from './Tutorial';
 import YourCourses from './YourCourses';
 import PieChart from './PieChart';
-import { FormattedMessage } from 'umi';
-import { PlusSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import { CloseSquareOutlined } from '@ant-design/icons';
 import type { Layout } from 'react-grid-layout';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
@@ -17,7 +16,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
 import './index.css';
-import { Button, Row, Space, Typography } from 'antd';
+import { Button } from 'antd';
 
 const COLS = 2;
 const ROW_HEIGHT = 150;
@@ -39,8 +38,8 @@ const components: Dashboard = {
   'current-users': wrap({
     component: CurrentUsers,
     w: 1,
-    h: 1,
-    maxH: 1,
+    h: 4,
+    maxH: 4,
     props: {
       metric: 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric',
     },
@@ -49,8 +48,8 @@ const components: Dashboard = {
   'hall-of-fame': wrap({
     component: HallOfFame,
     w: 1,
-    h: 1,
-    maxH: 1,
+    h: 3,
+    maxH: 3,
     props: {
       metric: {
         bestSelling: 'EscolaLms\\Reports\\Metrics\\CoursesTopSellingMetric',
@@ -149,10 +148,6 @@ export const Dashdoard: React.FC = () => {
     });
   }, []);
 
-  const onAdd = useCallback((key: keyof typeof components) => {
-    setStageComponents((prevStageComponents) => [...prevStageComponents, key]);
-  }, []);
-
   const layouts = useMemo(() => {
     let x = 1;
     let y = 0;
@@ -181,10 +176,6 @@ export const Dashdoard: React.FC = () => {
     });
 
     return { lg: l, md: l, sm: l, xs: l };
-  }, [stageComponents]);
-
-  const keysToAdd = useMemo(() => {
-    return Object.keys(components).filter((key) => !stageComponents.includes(key) && key !== 'add');
   }, [stageComponents]);
 
   function saveToLS(key: string, value: any) {
@@ -244,35 +235,6 @@ export const Dashdoard: React.FC = () => {
               </div>
             );
           })}
-        {keysToAdd.length > 0 && (
-          <div key="add">
-            <div className="dashboard-draggable__component">
-              <article>
-                <Row align="middle" justify="center">
-                  <Typography.Title level={3}>
-                    <FormattedMessage id="add_new_component" />
-                  </Typography.Title>
-                </Row>
-                <Row align="middle" justify="center">
-                  <Space wrap style={{ justifyContent: 'center' }}>
-                    {keysToAdd.map((key) => (
-                      <Button
-                        icon={<PlusSquareOutlined />}
-                        size="small"
-                        type="primary"
-                        key={key}
-                        onClick={() => onAdd(key)}
-                      >
-                        {' '}
-                        <FormattedMessage id={key} />
-                      </Button>
-                    ))}
-                  </Space>
-                </Row>
-              </article>
-            </div>
-          </div>
-        )}
       </ResponsiveGridLayout>
     </main>
   );
