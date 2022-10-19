@@ -170,7 +170,11 @@ const errorHandler = (error: ResponseError) => {
     const { message, errors } = data;
 
     if (response.status >= 404 && response.status < 422) {
-      history.push('/404');
+      //
+
+      if (!response.url.includes('productable_id=')) {
+        history.push('/404');
+      }
     }
 
     if (message && errors) {
