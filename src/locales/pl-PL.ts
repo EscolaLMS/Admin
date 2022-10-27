@@ -506,4 +506,6 @@ export default {
   documentation: 'Dokumentacja',
   ratings: 'Oceny',
   ratings_description: 'Zmierz oceny dla Twoich kursów',
+  hall_of_fame: 'Galeria sław',
+  current_user_status: 'Obecny status użytkownika',
 };

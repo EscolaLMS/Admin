@@ -91,7 +91,7 @@ declare namespace API {
     scorm_sco_id?: number;
     status?: string;
     active_from?: Date;
-    active_to?: string;
+    active_to?: Date;
     hours_to_complete?: number;
     purchasable?: boolean;
     boolean?: boolean;
@@ -313,6 +313,13 @@ declare namespace API {
     EscolaLmsReportsStatsCoursePeopleBought: number;
     EscolaLmsReportsStatsCoursePeopleFinished: number;
     EscolaLmsReportsStatsCoursePeopleStarted: number;
+  };
+
+  type DataRangeStats = {
+    EscolaLmsReportsStatsUserNewUsers: Record<string, number>;
+    EscolaLmsReportsStatsUserActiveUsers: Record<string, number>;
+    EscolaLmsReportsStatsCourseStarted: any[];
+    EscolaLmsReportsStatsCourseFinished: any[];
   };
 
   type TopicBase = {
@@ -838,7 +845,9 @@ declare namespace API {
     | 'EscolaLms\\Reports\\Metrics\\CoursesMoneySpentMetric'
     | 'EscolaLms\\Reports\\Metrics\\CoursesPopularityMetric'
     | 'EscolaLms\\Reports\\Metrics\\CoursesSecondsSpentMetric'
-    | 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric';
+    | 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric'
+    | 'EscolaLms\\Reports\\Metrics\\CoursesBestRatedMetric'
+    | 'EscolaLms\\Reports\\Metrics\\CoursesTopSellingMetric';
 
   type ReportItem = {
     label: string;

@@ -499,4 +499,6 @@ export default {
   download: 'Download',
   newTranslation: 'New Translation',
   documentation: 'Documentation',
+  hall_of_fame: 'Hall of fame',
+  current_user_status: 'Current user status',
 };
