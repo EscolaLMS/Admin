@@ -455,6 +455,7 @@ export default {
   select_template: 'Select template',
   product_categories_and_tags: 'Kategorie i Tagi produktu',
   cart_media: 'Media do koszyka',
+  agenda: 'Agenda',
   users_attached: 'Dołączenie użytkownika',
   generate_token: 'Generuj token dla youtube',
   browse: 'Przeglądaj pliki',

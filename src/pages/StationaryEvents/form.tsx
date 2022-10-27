@@ -30,20 +30,39 @@ import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
+import Agenda from '@/components/Agenda';
 
-type StationaryEventType = Omit<EscolaLms.StationaryEvents.Models.StationaryEvent, 'categories'> & {
+export type StationaryEventType = Omit<
+  EscolaLms.StationaryEvents.Models.StationaryEvent,
+  'categories'
+> & {
   image_url: string;
   categories: (number | string)[];
+  agenda: AgendaType[] | undefined;
 };
+
+export interface AgendaType {
+  id: number;
+  title: string;
+  subtitle: string;
+  hour: string;
+  tutors: number[];
+  description?: string;
+  asCandidate?: boolean;
+}
 
 const StationaryEventForm = () => {
   const intl = useIntl();
   const params = useParams<{ id?: string; tab?: string }>();
   const { id, tab = 'attributes' } = params;
   const isNew = id === 'new';
+  const [agendaData, setAgendaData] = useState<string | null>(null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<StationaryEventType>>();
   const [form] = ProForm.useForm();
+
+  //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
+  //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
 
   const fetchData = useCallback(async () => {
     const response = await getStationaryEvent(Number(id));
@@ -69,10 +88,16 @@ const StationaryEventForm = () => {
   const formProps = useMemo(
     () => ({
       onFinish: async (
-        values: Partial<EscolaLms.StationaryEvents.Models.StationaryEvent & { image_url: string }>,
+        values: Partial<
+          EscolaLms.StationaryEvents.Models.StationaryEvent & {
+            image_url: string;
+            agenda: AgendaType;
+          }
+        >,
       ) => {
         const postData = {
           ...values,
+          agenda: agendaData,
           authors: values.authors && values.authors.map(categoriesArrToIds),
           categories: values.categories && values.categories.map(categoriesArrToIds),
           image_url: data && data.image_url,
@@ -89,6 +114,10 @@ const StationaryEventForm = () => {
           response = await updateStationaryEvent(Number(id), postData);
           if (response.success) {
             setUnsavedChanges(false);
+            setData({
+              ...response.data,
+              categories: response?.data?.categories?.map(mapper),
+            });
             history.push(`/other/stationary-events/${response.data.id}/${tab}`);
           }
         }
@@ -96,7 +125,7 @@ const StationaryEventForm = () => {
       },
       initialValues: data,
     }),
-    [data, id, tab],
+    [data, id, tab, agendaData],
   );
 
   if (!data) {
@@ -256,6 +285,7 @@ const StationaryEventForm = () => {
                 })}
               />
             </ProForm.Group>
+
             <ProForm.Group>
               <ProFormTextArea
                 width="lg"
@@ -264,6 +294,7 @@ const StationaryEventForm = () => {
                 tooltip={<FormattedMessage id="short_description" />}
               />
             </ProForm.Group>
+
             <ProForm.Item
               name="program"
               label={<FormattedMessage id="program" />}
@@ -283,6 +314,13 @@ const StationaryEventForm = () => {
             </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>{' '}
+        {!isNew && (
+          <ProCard.TabPane key="agenda" tab={<FormattedMessage id="agenda" />}>
+            <ProForm {...formProps}>
+              <Agenda data={data.agenda ?? []} onCreate={(agenda) => setAgendaData(agenda)} />
+            </ProForm>
+          </ProCard.TabPane>
+        )}
         {!isNew && (
           <ProCard.TabPane key="product" tab={<FormattedMessage id="product" />}>
             {id && (
