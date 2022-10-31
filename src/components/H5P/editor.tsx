@@ -79,6 +79,7 @@ export const Editor: React.FC<{
           allowSameOrigin
           onSubmit={onSubmit}
           loading={loading}
+          lang={lang}
         />
       )}
     </React.Fragment>
