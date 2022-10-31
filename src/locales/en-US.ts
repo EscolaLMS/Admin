@@ -446,6 +446,7 @@ export default {
   select_template: 'Wybierz szablon',
   product_categories_and_tags: 'Product Categories & Tags',
   cart_media: 'Cart Media',
+  agenda: 'Agenda',
   users_attached: 'Users Attached',
   generate_token: 'Generate youtube token',
   browse: 'Browse files',
