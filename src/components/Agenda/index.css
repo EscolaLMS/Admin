@@ -1,0 +1,47 @@
+.row-dragging {
+  display: grid;
+  grid-template-columns: 5% 20% 20% 10% 15% 18% 12%;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+.row-dragging > * {
+  padding: 12px 8px;
+}
+
+.row-dragging .drag-visible {
+  visibility: visible;
+}
+
+.agenda-container .ant-pro-page-container-children-content {
+  margin: 0;
+}
+
+.agenda-table .ant-pro-card-body {
+  padding-inline: 0;
+}
+
+tr.agenda-row-candidate td {
+  background-color: rgb(144 238 144 / 50%);
+}
+tr.agenda-row-candidate td {
+  background-color: rgb(144 238 144 20%);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.legend .legend__dot {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  background-color: rgb(144, 238, 144, 50%);
+  border-radius: 50%;
+}
+
+.legend .legend__label {
+  margin: 0;
+}

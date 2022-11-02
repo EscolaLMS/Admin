@@ -2,7 +2,7 @@ import type { ComponentClass } from 'react';
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import React, { useState } from 'react';
-import './index.less';
+import './index.css';
 
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { arrayMoveImmutable } from 'array-move';
