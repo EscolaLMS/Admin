@@ -130,10 +130,6 @@ const Login: React.FC = () => {
               size: 'large',
               prefix: <UserOutlined className={styles.prefixIcon} />,
             }}
-            placeholder={intl.formatMessage({
-              id: 'pages.login.username.placeholder',
-              defaultMessage: 'admin or user',
-            })}
             rules={[
               {
                 required: true,
@@ -150,10 +146,6 @@ const Login: React.FC = () => {
                 size: 'large',
                 prefix: <LockOutlined className={styles.prefixIcon} />,
               }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.password.placeholder',
-                defaultMessage: ' ant.design',
-              })}
               rules={[
                 {
                   required: true,
