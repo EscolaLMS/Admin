@@ -97,6 +97,7 @@ declare namespace API {
     boolean?: boolean;
     target_group?: string;
     product?: EscolaLms.Cart.Models.Product;
+    public?: boolean;
   };
 
   type PaginatedList<Model> = {

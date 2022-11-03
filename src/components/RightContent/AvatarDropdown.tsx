@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Menu, Spin, message } from 'antd';
+import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
+import { Spin, message, MenuProps } from 'antd';
 import { history, useModel, FormattedMessage } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -11,7 +11,7 @@ export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
 
-const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
+const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const loginOut = useCallback(async () => {
@@ -64,35 +64,34 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
 
-  const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={(info) => onMenuClick(info)}>
-      {menu && (
-        <Menu.Item key="center">
-          <UserOutlined />
-        </Menu.Item>
-      )}
-      {menu && (
-        <Menu.Item key="settings">
-          <SettingOutlined />
-        </Menu.Item>
-      )}
-      {menu && <Menu.Divider />}
+  const menu2: MenuProps = {
+    selectedKeys: [],
+    onClick: (info) => onMenuClick(info),
+    items: [
+      {
+        label: (
+          <React.Fragment>
+            <SettingOutlined /> <FormattedMessage id="my_profile" />
+          </React.Fragment>
+        ),
+        key: 'me',
+      },
+      {
+        type: 'divider',
+      },
+      {
+        label: (
+          <React.Fragment>
+            <LogoutOutlined /> <FormattedMessage id="logout" />
+          </React.Fragment>
+        ),
+        key: 'logout',
+      },
+    ],
+  };
 
-      <Menu.Item key="me">
-        <SettingOutlined />
-        <FormattedMessage id="my_profile" />
-      </Menu.Item>
-
-      <Menu.Divider />
-
-      <Menu.Item key="logout">
-        <LogoutOutlined />
-        <FormattedMessage id="logout" />
-      </Menu.Item>
-    </Menu>
-  );
   return (
-    <HeaderDropdown overlay={menuHeaderDropdown} className="avatar-dropdown">
+    <HeaderDropdown menu={menu2} className="avatar-dropdown">
       <span className={`${styles.action} ${styles.account}`}>
         <span className={`${styles.name} anticon`}>{currentUser.name}</span>
       </span>
