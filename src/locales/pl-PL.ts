@@ -82,6 +82,7 @@ export default {
   'menu.Configuration.Translations': 'Tłumaczenia',
   'menu.Other activities.Questionnaire': 'Ankiety',
   'menu.Other activities.Consultations': 'Konsultacje',
+  'menu.Other activities.Form': 'Formularz',
   'menu.Analytics.Logs': 'Logi',
   user_settings: 'Ustawienia użytkownika',
   global_settings: 'Ustawienia globalne',
@@ -508,4 +509,8 @@ export default {
   ratings_description: 'Zmierz oceny dla Twoich kursów',
   hall_of_fame: 'Galeria sław',
   current_user_status: 'Obecny status użytkownika',
+  public_course: 'Publiczny',
+  no_pricing: 'Brak ceny',
+  public_label: ' Publiczny ',
+  public_tooltip: ' Kursy jest dostępny publicznie bez potrzeby posiadania konta ',
 };

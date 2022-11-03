@@ -1,4 +1,4 @@
-import { CopyOutlined, PlusCircleFilled } from '@ant-design/icons';
+import { CopyOutlined, FireOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { Button, Tag, Tooltip, Popconfirm, message, Typography } from 'antd';
 import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
@@ -9,7 +9,7 @@ import ProTable from '@ant-design/pro-table';
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
-import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined, DollarOutlined } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import SecureUpload from '@/components/SecureUpload';
 import './style.less';
@@ -58,13 +58,33 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     },
   },
   {
-    title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
-    dataIndex: 'base_price',
+    title: <FormattedMessage id="product" defaultMessage="base_price" />,
+    dataIndex: 'product',
     sorter: true,
     valueType: 'textarea',
     search: false,
     render: (_, record) => {
-      return record.product && record.product.price;
+      if (record.product && record.product.price) {
+        return (
+          <Link to={`/courses/list/${record.id}/product`}>
+            <Button type="primary" icon={<DollarOutlined />}>
+              {(record.product.price / 100).toFixed(2)}
+            </Button>
+          </Link>
+        );
+      }
+      if (record.public) {
+        return (
+          <Typography>
+            <FireOutlined /> <FormattedMessage id="public_course" defaultMessage="public course" />
+          </Typography>
+        );
+      }
+      return (
+        <Typography>
+          <FireOutlined /> <FormattedMessage id="no_pricing" defaultMessage="no pricing" />
+        </Typography>
+      );
     },
   },
   {

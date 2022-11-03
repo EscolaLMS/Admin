@@ -368,6 +368,7 @@ export default {
   product: 'Product',
   'product.edit': 'Edit Product',
   'menu.Other activities.Products': 'Products',
+  'menu.Other activities.Form': 'Form',
   H5P: 'H5P',
   'webinar.edit': 'Webinar Edit',
   role: 'Role',
@@ -501,4 +502,8 @@ export default {
   documentation: 'Documentation',
   hall_of_fame: 'Hall of fame',
   current_user_status: 'Current user status',
+  public_course: 'Public',
+  no_pricing: 'No Price/Access',
+  public_label: ' Is public ',
+  public_tooltip: ' Course is accessible to anyone without having account ',
 };
