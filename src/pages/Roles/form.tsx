@@ -60,34 +60,46 @@ export default () => {
     return <Spin />;
   }
 
+  const groups = useMemo(() => {
+    return data
+      .reduce((acc, curr) => {
+        const gName = curr?.name.split('_')[0];
+        return gName && !acc.includes(gName) ? [...acc, gName] : acc;
+      }, [] as string[])
+      .sort();
+  }, [data]);
+
   return (
     <PageContainer title={<FormattedMessage id="permissions" />}>
       <ProCard>
         <ProForm {...formProps} form={form}>
-          <ProForm.Group>
-            {!!data.length && (
-              <Checkbox.Group
-                name="checkbox"
-                defaultValue={
-                  data
-                    .filter((item) => item?.assigned)
-                    .map((item) => item?.name) as CheckboxValueType[]
-                }
-                onChange={handleChange}
-                options={
-                  data &&
-                  (data.map((item) => {
-                    return {
-                      value: item?.name,
-                      label: item?.name,
-                    };
-                  }) as CheckboxOptionType[])
-                }
-              />
-            )}
-          </ProForm.Group>
-
-          <Divider />
+          {groups.map((group) => (
+            <ProForm.Group title={group}>
+              {!!data.length && (
+                <Checkbox.Group
+                  name="checkbox"
+                  defaultValue={
+                    data
+                      .filter((item) => item?.assigned)
+                      .map((item) => item?.name) as CheckboxValueType[]
+                  }
+                  onChange={handleChange}
+                  options={
+                    data &&
+                    (data
+                      .filter((item) => item && item.name.split('_')[0] === group)
+                      .map((item) => {
+                        return {
+                          value: item?.name,
+                          label: item?.name,
+                        };
+                      }) as CheckboxOptionType[])
+                  }
+                />
+              )}
+              <Divider />
+            </ProForm.Group>
+          ))}
         </ProForm>
       </ProCard>
     </PageContainer>

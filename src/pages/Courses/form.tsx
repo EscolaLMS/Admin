@@ -5,6 +5,7 @@ import ProForm, {
   ProFormDigit,
   ProFormDatePicker,
   ProFormSelect,
+  ProFormSwitch,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import {
@@ -60,13 +61,6 @@ export default () => {
   const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
-
-  useEffect(() => {
-    setInitialState({
-      ...initialState,
-      collapsed: true,
-    });
-  }, []);
 
   useEffect(() => {
     if (course === 'new') {
@@ -196,7 +190,14 @@ export default () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/courses/list/${course}/${key}`),
+          onChange: (key) => {
+            setInitialState({
+              ...initialState,
+              collapsed: key === 'program',
+            });
+
+            history.push(`/courses/list/${course}/${key}`);
+          },
         }}
       >
         <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
@@ -384,6 +385,16 @@ export default () => {
               />
             </ProForm.Group>
             <ProForm.Group label={<FormattedMessage id="additional" />}>
+              <ProFormSwitch
+                width="xs"
+                name="public"
+                label={<FormattedMessage id="public_label" />}
+                tooltip={<FormattedMessage id="public_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'public',
+                  defaultMessage: 'public',
+                })}
+              />
               <ProFormText
                 width="xs"
                 name="level"
