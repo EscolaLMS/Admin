@@ -55,6 +55,7 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
   const [source, setSource] = useState<RenderAgendaType[]>([]);
   const [fields, setFields] = useState<AgendaType | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [receivedData, setReceivedData] = useState<AgendaType[]>(data);
   const [candidateData, setCandidateData] = useState<AgendaType[]>([]);
   const [wasOrderChanged, setWasOrderChanged] = useState(false);
 
@@ -156,6 +157,7 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
 
   useEffect(() => {
     setCandidateData([]);
+    setReceivedData(data);
     setFields(null);
     setWasOrderChanged(false);
     agendaOrder.current = null;
@@ -163,9 +165,9 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
 
   useEffect(() => {
     (async () => {
-      if (!data || !candidateData) return;
+      if (!receivedData || !candidateData) return;
 
-      const dataRequests: Promise<RenderAgendaType>[] = [...data, ...candidateData].map(
+      const dataRequests: Promise<RenderAgendaType>[] = [...receivedData, ...candidateData].map(
         async (element) => {
           const results = await getUsersFullNames(element.tutors);
           return {
@@ -204,9 +206,9 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
 
       const mergedData = [...sortedData, ...newItems];
 
-      setSource(mergedData);
+      setSource(mergedData.filter(Boolean));
     })();
-  }, [data, candidateData]);
+  }, [receivedData, candidateData]);
 
   useEffect(() => {
     const a = source.map((item) => {
@@ -296,7 +298,7 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
                     setCandidateData((current) => current.filter(({ id }) => id !== record.id));
                     return;
                   }
-                  setSource((current) => current.filter(({ id }) => id !== record.id));
+                  setReceivedData((current) => current.filter(({ id }) => id !== record.id));
                 }}
                 okText={<FormattedMessage id="yes" />}
                 cancelText={<FormattedMessage id="no" />}
@@ -319,14 +321,18 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
       {!!candidateData.length && (
         <div className="legend">
           <div className="legend__dot" />
-          <p className="legend__label">Changes ready to update</p>
+          <p className="legend__label">
+            <FormattedMessage id="changesToBeApproved" defaultMessage="Changes to be approved" />
+          </p>
         </div>
       )}
 
       {wasOrderChanged && (
         <div className="legend">
           <SwapOutlined className="legend__icon" />
-          <p className="legend__label">Order was changed</p>
+          <p className="legend__label">
+            <FormattedMessage id="orderHasBeenChanged" defaultMessage="Order has been changed" />
+          </p>
         </div>
       )}
 

@@ -212,6 +212,7 @@ export default {
   error: 'Error',
   loading: 'Loading',
   subtitle: 'Subtitle',
+  hour: 'Hour',
   language: 'Language',
   level: 'Level',
   active_from: 'Active from',
@@ -506,4 +507,6 @@ export default {
   no_pricing: 'No Price/Access',
   public_label: ' Is public ',
   public_tooltip: ' Course is accessible to anyone without having account ',
+  changesToBeApproved: 'Changes to be approved',
+  orderHasBeenChanged: 'The order has been changed',
 };
