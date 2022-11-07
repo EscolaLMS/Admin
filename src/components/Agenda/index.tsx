@@ -8,7 +8,13 @@ import { Button, Popconfirm, Tooltip } from 'antd';
 import { arrayMoveImmutable } from 'array-move';
 import type { SortableContainerProps, SortableElementProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  MenuOutlined,
+  PlusOutlined,
+  SwapOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { FormattedMessage, useIntl } from 'umi';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
@@ -43,12 +49,14 @@ interface RenderAgendaType extends Omit<AgendaType, 'tutors'> {
 
 const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: string) => void }) => {
   const actionRef = useRef<ActionType>();
+  const agendaOrder = useRef<number[] | null>(null);
   const intl = useIntl();
 
   const [source, setSource] = useState<RenderAgendaType[]>([]);
   const [fields, setFields] = useState<AgendaType | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [candidateData, setCandidateData] = useState<AgendaType[]>([]);
+  const [wasOrderChanged, setWasOrderChanged] = useState(false);
 
   const TableColumns: ProColumns[] = [
     {
@@ -93,7 +101,11 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
       dataIndex: 'description',
       hideInSearch: true,
       renderText: (description: string) =>
-        description.length > 80 ? `${description.trim().slice(0, 77)}...` : description.trim(),
+        !description
+          ? '-'
+          : description.length > 80
+          ? `${description.trim().slice(0, 77)}...`
+          : description.trim(),
     },
   ];
 
@@ -145,6 +157,8 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
   useEffect(() => {
     setCandidateData([]);
     setFields(null);
+    setWasOrderChanged(false);
+    agendaOrder.current = null;
   }, [data]);
 
   useEffect(() => {
@@ -188,7 +202,9 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
           })
         : uniqueData;
 
-      setSource([...sortedData, ...newItems]);
+      const mergedData = [...sortedData, ...newItems];
+
+      setSource(mergedData);
     })();
   }, [data, candidateData]);
 
@@ -205,6 +221,26 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
       };
     });
     onCreate(JSON.stringify(a));
+
+    const sortedSource = source.map(({ id }) => id);
+
+    if (agendaOrder.current === null) {
+      if (!sortedSource.length) return;
+      agendaOrder.current = sortedSource;
+    }
+
+    if (sortedSource.length > agendaOrder.current.length) {
+      const checkIfOrderWasChanged =
+        JSON.stringify(sortedSource.slice(0, agendaOrder.current.length)) !==
+        JSON.stringify(agendaOrder.current);
+      setWasOrderChanged(checkIfOrderWasChanged);
+      if (!checkIfOrderWasChanged) {
+        agendaOrder.current = sortedSource;
+        return;
+      }
+    }
+
+    setWasOrderChanged(JSON.stringify(sortedSource) !== JSON.stringify(agendaOrder.current));
   }, [source]);
 
   return (
@@ -284,6 +320,13 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
         <div className="legend">
           <div className="legend__dot" />
           <p className="legend__label">Changes ready to update</p>
+        </div>
+      )}
+
+      {wasOrderChanged && (
+        <div className="legend">
+          <SwapOutlined className="legend__icon" />
+          <p className="legend__label">Order was changed</p>
         </div>
       )}
 
