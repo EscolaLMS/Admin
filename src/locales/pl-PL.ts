@@ -237,6 +237,7 @@ export default {
   error: 'Wystąpił błąd',
   loading: 'Ładowanie',
   subtitle: 'Podtytuł',
+  hour: 'Godzina',
   language: 'Język',
   level: 'Poziom',
   active_from: 'Aktywny od',
@@ -513,4 +514,6 @@ export default {
   no_pricing: 'Brak ceny',
   public_label: ' Publiczny ',
   public_tooltip: ' Kursy jest dostępny publicznie bez potrzeby posiadania konta ',
+  changesToBeApproved: 'Zmiany do zatwierdzenia',
+  orderHasBeenChanged: 'Kolejność została zmieniona',
 };
