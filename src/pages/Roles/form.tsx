@@ -1,5 +1,5 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Divider, Checkbox } from 'antd';
+import { useMemo, useState, useEffect, useRef } from 'react';
+import { message, Spin, Divider, Card, Row } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import { Form } from 'antd';
 import ProCard from '@ant-design/pro-card';
@@ -10,7 +10,9 @@ import { useParams, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 import './index.css';
-import type { CheckboxValueType, CheckboxOptionType } from 'antd/lib/checkbox/Group';
+import type { CheckboxValueType } from 'antd/lib/checkbox/Group';
+
+import CustomCheckbox from './components/CustomCheckbox';
 
 export default () => {
   const params = useParams<{ name: string }>();
@@ -19,11 +21,15 @@ export default () => {
   const [data, setData] = useState<Partial<API.Role[]>>([]);
   const [selectedPermisions, setSelectedPermisions] = useState<CheckboxValueType[]>([]);
   const [form] = Form.useForm();
+  const initiallySelected = useRef<null | CheckboxValueType[]>(null);
 
   const fetchData = useCallback(async () => {
     const response = await permisions(name);
     if (response.success) {
+      const assignedItems = response.data.filter((item) => item.assigned).map((item) => item.name);
+      initiallySelected.current = assignedItems;
       setData(response.data);
+      setSelectedPermisions(assignedItems);
     }
   }, [name]);
 
@@ -39,67 +45,64 @@ export default () => {
           const response = await request;
           if (response.success) {
             message.success(response.message);
+            initiallySelected.current = selectedPermisions;
           }
         } catch (error: any) {
           message.error(error.data.message);
         }
       },
+      onReset: () => initiallySelected.current && setSelectedPermisions(initiallySelected.current),
       initialValues: data,
     }),
     [data, name, selectedPermisions],
   );
 
   const handleChange = useCallback(
-    (checkedValues: CheckboxValueType[]) => {
-      setSelectedPermisions(checkedValues);
+    (toggledValue: CheckboxValueType) => {
+      setSelectedPermisions((values) =>
+        values.includes(toggledValue)
+          ? values.filter((value) => value !== toggledValue)
+          : [...values, toggledValue],
+      );
     },
     [name],
+  );
+
+  const splittedData = data.reduce<Record<string, API.Role[]>>((acc, item) => {
+    if (typeof item === 'undefined') return acc;
+    acc[item.name.split('_')[0]] = [...(acc[item.name.split('_')[0]] ?? []), item];
+    return acc;
+  }, {});
+
+  const renderData = Object.entries(splittedData).sort(
+    ([, first], [, second]) => first.length - second.length,
   );
 
   if (!data) {
     return <Spin />;
   }
 
-  const groups = useMemo(() => {
-    return data
-      .reduce((acc, curr) => {
-        const gName = curr?.name.split('_')[0];
-        return gName && !acc.includes(gName) ? [...acc, gName] : acc;
-      }, [] as string[])
-      .sort();
-  }, [data]);
-
   return (
     <PageContainer title={<FormattedMessage id="permissions" />}>
       <ProCard>
-        <ProForm {...formProps} form={form}>
-          {groups.map((group) => (
-            <ProForm.Group title={group}>
-              {!!data.length && (
-                <Checkbox.Group
-                  name="checkbox"
-                  defaultValue={
-                    data
-                      .filter((item) => item?.assigned)
-                      .map((item) => item?.name) as CheckboxValueType[]
-                  }
-                  onChange={handleChange}
-                  options={
-                    data &&
-                    (data
-                      .filter((item) => item && item.name.split('_')[0] === group)
-                      .map((item) => {
-                        return {
-                          value: item?.name,
-                          label: item?.name,
-                        };
-                      }) as CheckboxOptionType[])
-                  }
-                />
-              )}
-              <Divider />
-            </ProForm.Group>
-          ))}
+        <ProForm {...formProps} form={form} className="permissions-form">
+          {renderData.length &&
+            renderData.map(([key, value]) => (
+              <Card title={key} key={key} size="small" className="permissions-cart">
+                {value.map((al) => (
+                  <Row key={al.id}>
+                    <CustomCheckbox
+                      nameKey={key}
+                      name={al.name}
+                      assigned={selectedPermisions.includes(al.name)}
+                      onChange={handleChange}
+                    />
+                  </Row>
+                ))}
+              </Card>
+            ))}
+
+          <Divider />
         </ProForm>
       </ProCard>
     </PageContainer>
