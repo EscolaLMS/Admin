@@ -8,10 +8,12 @@ test.describe('New course', () => {
   });
 
   test('create and delete new course', async ({ page }) => {
+    const COURSE_NAME = 'new course abc' + Math.round(Math.random() * 10000);
+
     await page.goto(`${BASE_URL}/#/courses/list`);
     await page.locator('text=Create new').click();
     await expect(page).toHaveURL(`${BASE_URL}/#/courses/list/new`);
-    await page.locator('#title').fill('new course abc');
+    await page.locator('#title').fill(COURSE_NAME);
     await page.type('#active_from', '2022-08-01');
     await page.keyboard.press('Enter');
     await page.type('#active_to', '2022-12-31');
@@ -29,10 +31,12 @@ test.describe('New course', () => {
     await expect(courseSavedAlert).toContainText('Course saved successfully');
 
     await page.goto(`${BASE_URL}/#/courses/list`);
-    await page.type('#title', 'new course abc');
+    await page.waitForSelector('.ant-table-tbody .ant-table-row-level-0', { state: 'visible' }); // w8 for initial list before querying
+    await page.type('#title', COURSE_NAME);
     await page.locator('button:has-text("Query")').click();
-    await page.waitForSelector('text=new course abc', { state: 'visible' });
-    await page.locator('text=new course abcDraft- >> button').nth(1).click();
+    await page.waitForSelector(`text=${COURSE_NAME}`, { state: 'visible' });
+    //await page.locator('text=new course abcDraft- >> button').nth(1).click();
+    await page.locator(`tr:has-text("${COURSE_NAME}")`).locator('.ant-btn-dangerous').click();
 
     const ConfirmDeleteCourse = await page.locator('.ant-popover-message');
     await expect(ConfirmDeleteCourse).toContainText('Are you sure to delete this record?');

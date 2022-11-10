@@ -147,8 +147,6 @@
         "carlo": "^0.9.46",
         "cross-port-killer": "^1.4.0",
         "detect-installer": "^1.0.2",
-        "enzyme": "^3.11.0",
-        "enzyme-adapter-react-16": "^1.15.6",
         "eslint": "^8.20.0",
         "eslint-plugin-jest": "^26.6.0",
         "eslint-plugin-react": "^7.30.1",
