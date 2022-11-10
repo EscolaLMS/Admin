@@ -183,7 +183,8 @@ export const Topic: React.FC = () => {
                 currentState={topics}
                 onChange={() => setLoading(true)}
                 onUpdate={(info) => {
-                  if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
+                  if (topic.id && onTopicUploaded)
+                    onTopicUploaded(info.file.response.data.id, info);
 
                   setTopics({
                     ...topics,

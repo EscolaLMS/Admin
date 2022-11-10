@@ -5,6 +5,7 @@ import { TopicType } from '@/services/escola-lms/enums';
 import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import { Document, pdfjs, Page } from 'react-pdf';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
+import './index.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 const CONFIG = {
@@ -38,7 +39,7 @@ const PDFPreview: React.FC<{ file: string }> = ({ file }) => {
         </React.Fragment>
       )}
       <Document file={file} onLoadSuccess={({ numPages }) => setNumPages(numPages)}>
-        <Page pageNumber={pageNumber} />
+        <Page pageNumber={pageNumber} className="pdf-preview" />
       </Document>
     </div>
   );
@@ -95,6 +96,7 @@ export const MediaUploadForm: React.FC<{
       if (info.file.status === 'done') {
         return onUpdate && onUpdate(info);
       }
+
       return onChange && onChange(info);
     },
     [onUpdate, onChange],
