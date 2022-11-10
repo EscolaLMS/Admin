@@ -56,7 +56,7 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Link to={`/pages/${record.id}`} key="edit">
+        <Link to={`/other/pages/${record.id}`} key="edit">
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
             <Button type="primary" icon={<EditOutlined />} />
           </Tooltip>
@@ -103,7 +103,7 @@ const TableList: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link to="/pages/new" key="new">
+          <Link to="/other/pages/new" key="new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
