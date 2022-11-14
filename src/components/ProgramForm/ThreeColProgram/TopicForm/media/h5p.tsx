@@ -18,13 +18,14 @@ export const H5PForm: React.FC<{
 
   return (
     <React.Fragment>
-      <Row gutter={16} align="middle">
-        <Col span={4}>
+      <Row gutter={16} align="middle" className="create-new">
+        <Col>
           <Button type="primary" onClick={() => setEditId('new')}>
             {' '}
             <FormattedMessage id="create_new" />
           </Button>
         </Col>
+
         <Col span={4}>
           <Typography>
             <small>
@@ -59,12 +60,6 @@ export const H5PForm: React.FC<{
       <Divider />
 
       <Row gutter={16}>
-        <Col span={4}>
-          <Typography>
-            <FormattedMessage id="upload_new" />
-          </Typography>
-        </Col>
-
         <Col span={24}>
           <Row>
             <UploadH5P

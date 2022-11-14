@@ -115,3 +115,18 @@
   text-align: center;
   transform: translate(-50%, -50%);
 }
+
+.program-sidebar__list-item a.program-sidebar__link {
+  display: grid;
+  grid-auto-flow: column;
+  width: auto;
+}
+
+.program-sidebar__title {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-inline: 0 auto;
+}

@@ -163,10 +163,15 @@ export const LessonList: React.FC = () => {
                   />
                 ) : (
                   <React.Fragment>
-                    <NavLink to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}>
-                      <FolderOutlined />
-                      {lesson.title}
-                    </NavLink>
+                    <Tooltip placement="top" title={lesson.title}>
+                      <NavLink
+                        to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}
+                        className="program-sidebar__link"
+                      >
+                        <FolderOutlined />
+                        <span className="program-sidebar__title">{lesson.title}</span>
+                      </NavLink>
+                    </Tooltip>
                     <TopicTypesSelector
                       sortingMode={getSortingMode(cindex, lessons.length)}
                       onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}

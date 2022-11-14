@@ -516,4 +516,5 @@ export default {
   public_tooltip: ' Kursy jest dostępny publicznie bez potrzeby posiadania konta ',
   changesToBeApproved: 'Zmiany do zatwierdzenia',
   orderHasBeenChanged: 'Kolejność została zmieniona',
+  or: 'lub',
 };
