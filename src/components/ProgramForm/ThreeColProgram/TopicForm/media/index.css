@@ -8,3 +8,7 @@
   width: inherit;
   height: inherit;
 }
+
+.create-new {
+  justify-content: space-around;
+}

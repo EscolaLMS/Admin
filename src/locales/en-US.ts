@@ -509,4 +509,5 @@ export default {
   public_tooltip: ' Course is accessible to anyone without having account ',
   changesToBeApproved: 'Changes to be approved',
   orderHasBeenChanged: 'The order has been changed',
+  or: 'or',
 };
