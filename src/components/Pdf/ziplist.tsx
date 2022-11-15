@@ -1,8 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { message } from 'antd';
 
 import { useCallback } from 'react';
-import { FabricPreview } from '@/components/FabricEditor/preview';
 
 import { pdf } from '@/services/escola-lms/pdfs';
 import { saveAs } from 'file-saver';
@@ -36,7 +34,7 @@ export const PdfZipList: React.FC<{
   filename?: string;
 }> = ({ pdfIds, onProgress, onFinished, filename = 'package.zip' }) => {
   const [state, setState] = useState<State>({ state: 'init' });
-  const [blobs, setBlobs] = useState<Blob[]>([]);
+  const [blobs] = useState<Blob[]>([]);
 
   const onFinishedLocal = useCallback(() => {
     const zip = new JSZip();
@@ -87,23 +85,7 @@ export const PdfZipList: React.FC<{
   }, [state, pdfIds]);
 
   if (state.state === 'start') {
-    return (
-      <FabricPreview
-        mode="blob"
-        initialValue={state.pdfs[state.pdfs.length - 1].content}
-        onError={(err) => {
-          message.error(err.toString());
-          setState({ state: 'processing', pdfs: state.pdfs.slice(0, -1) });
-        }}
-        onRendered={(blob) => {
-          if (blob && blob instanceof Blob) {
-            setBlobs((prevBlobs) => [...prevBlobs, blob]);
-          }
-
-          setState({ state: 'processing', pdfs: state.pdfs.slice(0, -1) });
-        }}
-      />
-    );
+    return <p>fabric preview</p>;
   }
 
   return <Fragment />;

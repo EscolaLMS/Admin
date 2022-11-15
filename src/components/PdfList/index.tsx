@@ -3,7 +3,6 @@ import { Spin, List, Alert, Button } from 'antd';
 
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import { FabricPreview } from '@/components/FabricEditor/preview';
 
 import { pdfs, pdf } from '@/services/escola-lms/pdfs';
 
@@ -108,12 +107,7 @@ export const PdfList: React.FC<Request> = ({ user_id, template_id }) => {
           </List.Item>
         )}
       />
-      {previewState.state === 'loaded' && (
-        <FabricPreview
-          initialValue={previewState.data}
-          onRendered={() => setPreviewState({ state: 'initial' })}
-        />
-      )}
+      {previewState.state === 'loaded' && <p>fabric preview</p>}
     </Fragment>
   );
 };

@@ -13,7 +13,6 @@ import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 import TemplateFields from '@/components/TemplateFields';
 import { variables as fetchVariables } from '@/services/escola-lms/templates';
-import { FabricPreview } from '@/components/FabricEditor/preview';
 import PdfList from '@/components/Pdf/list';
 import { TemplateChannelValue, TemplateEvents } from '@/services/escola-lms/enums';
 import { Collapse } from 'antd';
@@ -306,9 +305,7 @@ export default () => {
           <Divider />
         </ProForm>
       </ProCard>
-      {previewData && (
-        <FabricPreview initialValue={previewData} onRendered={() => setPreviewData(undefined)} />
-      )}
+      {previewData && <p>fabric preview</p>}
     </PageContainer>
   );
 };
