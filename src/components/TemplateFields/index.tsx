@@ -105,8 +105,9 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
               {(form) => {
                 return (
                   <PdfEditor
+                    variables={variables}
+                    field={field}
                     onTemplateSaved={(tpl) => {
-                      //onUpdate={(obj) => form.setFieldsValue({ [name]: JSON.stringify(obj) })}
                       form.setFieldsValue({ [name]: JSON.stringify(tpl) });
                       form.submit();
                     }}
