@@ -4,7 +4,6 @@ import { differenceInSeconds } from 'date-fns';
 
 const logout = (reason: string = 'noReason') => {
   localStorage.removeItem('TOKEN');
-  console.log('logout', reason);
   window.location.reload();
 };
 
@@ -19,7 +18,9 @@ export const refreshTokenCallback = () => {
           const { exp } = jwt_decode(newToken) as JwtPayload;
           if (exp) {
             const diffInSecs = differenceInSeconds(new Date(exp * 1000), new Date()) - 60;
-            setTimeout(refreshTokenCallback, (diffInSecs < 0 ? 0 : diffInSecs) * 1000);
+            if (diffInSecs < 3600) {
+              setTimeout(refreshTokenCallback, (diffInSecs < 0 ? 0 : diffInSecs) * 1000);
+            }
           }
         } else {
           logout('r1');
