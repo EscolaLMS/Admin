@@ -56,7 +56,7 @@ export const Curriculum = () => {
                   </div>
                 </Col>
                 <Col span={8}>
-                  <aside className="program-sidebar program-sidebar--right"></aside>
+                  <aside className="program-sidebar program-sidebar--right" />
                 </Col>
               </Row>
             )}

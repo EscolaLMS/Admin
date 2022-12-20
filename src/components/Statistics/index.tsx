@@ -71,11 +71,13 @@ const Statistics: React.FC<{
               value={label}
             />
           ))}
-          <Statistic
-            title={`Best rated course`}
-            prefix={<TrophyOutlined style={{ fontSize: '45px', color: '#FAD337' }} />}
-            value={state.value.bestRated[0].label}
-          />
+          {state.value.bestRated.length > 0 && (
+            <Statistic
+              title={`Best rated course`}
+              prefix={<TrophyOutlined style={{ fontSize: '45px', color: '#FAD337' }} />}
+              value={state.value.bestRated[0].label}
+            />
+          )}
         </div>
       )}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}

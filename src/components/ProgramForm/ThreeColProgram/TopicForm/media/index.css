@@ -1,0 +1,14 @@
+.pdf-preview .react-pdf__Page__canvas,
+.pdf-preview .react-pdf__Page__svg {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.pdf-preview svg {
+  width: inherit;
+  height: inherit;
+}
+
+.create-new {
+  justify-content: space-around;
+}

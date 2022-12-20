@@ -22,10 +22,8 @@
 }
 
 tr.agenda-row-candidate td {
-  background-color: rgb(144 238 144 / 50%);
-}
-tr.agenda-row-candidate td {
-  background-color: rgb(144 238 144 20%);
+  background-color: #d9f7be;
+  transition: color 0.1s ease-in-out;
 }
 
 .legend {
@@ -38,10 +36,19 @@ tr.agenda-row-candidate td {
   width: 16px;
   height: 16px;
   margin-right: 8px;
-  background-color: rgb(144, 238, 144, 50%);
+  background-color: #d9f7be;
   border-radius: 50%;
 }
 
 .legend .legend__label {
   margin: 0;
+}
+
+.legend .legend__icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.legend .legend__icon > svg {
+  fill: #69c0ff;
 }
