@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
-import { message, Spin, Divider, Card, Row } from 'antd';
+import { message, Spin, Card, Row, Tooltip } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import { Form } from 'antd';
 import ProCard from '@ant-design/pro-card';
@@ -13,12 +13,14 @@ import './index.css';
 import type { CheckboxValueType } from 'antd/lib/checkbox/Group';
 
 import CustomCheckbox from './components/CustomCheckbox';
+import { getTranslationRetrieve } from '@/services/escola-lms/translations';
 
 export default () => {
   const params = useParams<{ name: string }>();
   const { name } = params;
 
   const [data, setData] = useState<Partial<API.Role[]>>([]);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
   const [selectedPermisions, setSelectedPermisions] = useState<CheckboxValueType[]>([]);
   const [form] = Form.useForm();
   const initiallySelected = useRef<null | CheckboxValueType[]>(null);
@@ -34,7 +36,26 @@ export default () => {
   }, [name]);
 
   useEffect(() => {
+    const fetchTranslations = async () => {
+      try {
+        const request = await getTranslationRetrieve('permissions');
+        if (!request.success) {
+          throw new Error('Failed to download translations of the permissions!');
+        }
+        const translationsObject = request.data.reduce(
+          (acc, { key, value }) => ({
+            ...acc,
+            [key.split('.')[1]]: value,
+          }),
+          {},
+        );
+        setTranslations(translationsObject);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchData();
+    fetchTranslations();
   }, [name, fetchData]);
 
   const formProps = useMemo(
@@ -78,7 +99,7 @@ export default () => {
     ([, first], [, second]) => first.length - second.length,
   );
 
-  if (!data) {
+  if (!data.length) {
     return <Spin />;
   }
 
@@ -86,23 +107,23 @@ export default () => {
     <PageContainer title={<FormattedMessage id="permissions" />}>
       <ProCard>
         <ProForm {...formProps} form={form} className="permissions-form">
-          {renderData.length &&
+          {!!renderData.length &&
             renderData.map(([key, value]) => (
               <Card title={key} key={key} size="small" className="permissions-cart">
                 {value.map((al) => (
-                  <Row key={al.id}>
-                    <CustomCheckbox
-                      nameKey={key}
-                      name={al.name}
-                      assigned={selectedPermisions.includes(al.name)}
-                      onChange={handleChange}
-                    />
-                  </Row>
+                  <Tooltip key={al.id} title={translations[al.name]} placement="topLeft">
+                    <Row>
+                      <CustomCheckbox
+                        nameKey={key}
+                        name={al.name}
+                        assigned={selectedPermisions.includes(al.name)}
+                        onChange={handleChange}
+                      />
+                    </Row>
+                  </Tooltip>
                 ))}
               </Card>
             ))}
-
-          <Divider />
         </ProForm>
       </ProCard>
     </PageContainer>

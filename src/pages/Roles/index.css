@@ -28,6 +28,10 @@
   align-items: start;
 }
 
+.permissions-form .ant-space {
+  grid-column: 1/-1;
+}
+
 .permission-checkbox {
   width: 100%;
 }
