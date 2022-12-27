@@ -85,7 +85,7 @@ const FabricEditor: React.FC<{
         {editorController?.canvas && (
           <FabricEditorActiveElementForm
             editorController={editorController}
-            activeObject={editorController.activeObject}
+            activeObject={editorController.activeObject ?? undefined}
           />
         )}
       </div>
