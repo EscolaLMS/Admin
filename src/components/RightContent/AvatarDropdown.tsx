@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
-import { Spin, message, MenuProps } from 'antd';
+import { Spin, message } from 'antd';
+import type { MenuProps } from 'antd';
 import { history, useModel, FormattedMessage } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
