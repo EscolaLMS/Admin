@@ -1,0 +1,25 @@
+.custom-checkbox {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2px;
+  padding: 3px 6px;
+}
+
+.custom-checkbox > span:last-child {
+  padding-right: 0;
+}
+
+.custom-checkbox .ant-checkbox ~ span {
+  width: 100%;
+}
+
+.custom-checkbox .custom-checkbox__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-checkbox .custom-checkbox__content .anticon {
+  margin-left: 12px;
+}

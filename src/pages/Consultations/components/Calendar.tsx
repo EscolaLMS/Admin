@@ -121,7 +121,7 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
           {appointments.map((item: API.ConsultationAppointment) => {
             if (value.format('yyyy-MM-DD') === moment(item.date).format('yyyy-MM-DD')) {
               return (
-                <li>
+                <li key={item.consultation_term_id}>
                   <Badge
                     status={consultationStatus[item.status]}
                     text={
