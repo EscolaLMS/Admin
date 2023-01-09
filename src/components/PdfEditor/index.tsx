@@ -9,12 +9,13 @@ const certificateData = require('./cerificate.json');
 import type { ReportBroTemplate } from './types';
 
 const getMockedValueForVariable = (varname: string) => {
+  console.log(varname.toLocaleLowerCase());
   switch (varname.toLocaleLowerCase()) {
-    case '@varusername':
+    case 'varusername':
       return 'John Doe';
-    case '@varcoursetitle':
+    case 'varcoursetitle':
       return 'How to be an LMS Expert';
-    case '@varappname':
+    case 'varappname':
       return 'Wellms Headless LMS';
     default:
       return 'Lorem Ipsum';
@@ -28,10 +29,11 @@ const addVariablesToTemplate = (
 ): ReportBroTemplate => {
   console.log('addVariablesToTemplate', template, variables, required_variables);
 
-  const maxId = Math.max.apply(
-    null,
-    template.parameters.map((p) => p.id),
-  );
+  const maxId =
+    Math.max.apply(
+      null,
+      [template.parameters.map((p) => p.id), template.docElements.map((p) => p.id)].flat(),
+    ) + 1;
 
   const dict: Record<string, ReportBroTemplate['parameters'][number]> = template.parameters.reduce(
     (acc, curr) => {
@@ -42,13 +44,16 @@ const addVariablesToTemplate = (
 
   const tpl: Record<string, ReportBroTemplate['parameters'][number]> = variables
     .map((varname) => varname.replace('@', ''))
-    .map((varname) => {
-      console.log('c', varname);
-      return varname;
-    })
+
     .reduce((acc, curr, index) => {
       if (acc[curr]) {
-        return acc;
+        return {
+          ...acc,
+          [curr]: {
+            ...acc[curr],
+            id: maxId + index,
+          },
+        };
       }
       return {
         ...acc,
@@ -67,8 +72,6 @@ const addVariablesToTemplate = (
       };
     }, dict);
 
-  console.log('Object.values(tpl)', Object.values(tpl), dict);
-
   return Object.assign({}, template, { parameters: Object.values(tpl) });
 };
 
@@ -81,8 +84,15 @@ export const PdfEditor: React.FC<{
   const ref = useRef<HTMLDivElement>(null);
 
   const stopPropagation = (e: SyntheticEvent) => {
-    e.nativeEvent.stopPropagation();
-    e.nativeEvent.preventDefault();
+    const tagName = (e.nativeEvent.target as HTMLElement).tagName.toLowerCase();
+    switch (tagName) {
+      case 'span':
+      case 'button':
+        e.nativeEvent.stopPropagation();
+        e.nativeEvent.preventDefault();
+      default:
+        return;
+    }
   };
 
   useEffect(() => {
@@ -90,13 +100,11 @@ export const PdfEditor: React.FC<{
       const rb = new ReportBro(ref.current, {
         enableSpreadsheet: false,
         additionalFonts: [{ name: 'Tangerine', value: 'tangerine' }],
-        reportServerUrl: 'https://reportbro.stage.etd24.pl/reportbro/report/run',
+        reportServerUrl: 'https://reportbro.stage.etd24.pl/reportbro/report/run', // TODO use env vars
         saveCallback: () => {
           onTemplateSaved(rb.getReport());
         },
       });
-
-      console.log('start', reportBroTemplate, certificateData);
 
       rb.load(
         addVariablesToTemplate(
@@ -107,6 +115,8 @@ export const PdfEditor: React.FC<{
       );
     }
   }, [ref]);
+
+  console.log('PdfEditor', field);
 
   return (
     <div ref={ref} className="pdf-editor" onClick={stopPropagation}>
