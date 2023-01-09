@@ -14,7 +14,6 @@ function configSentry() {
     true
     //window.location.hostname.indexOf('localhost') === -1
   ) {
-    console.log('trace?');
     Sentry.init({
       dsn: window.REACT_APP_SENTRYDSN || REACT_APP_SENTRYDSN,
       integrations: [new BrowserTracing()],
