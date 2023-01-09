@@ -11,8 +11,7 @@ declare global {
 function configSentry() {
   if (
     (window.REACT_APP_SENTRYDSN || REACT_APP_SENTRYDSN) &&
-    true
-    //window.location.hostname.indexOf('localhost') === -1
+    window.location.hostname.indexOf('localhost') === -1
   ) {
     Sentry.init({
       dsn: window.REACT_APP_SENTRYDSN || REACT_APP_SENTRYDSN,
