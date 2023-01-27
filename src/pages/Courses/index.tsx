@@ -5,10 +5,6 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { IntlProvider, createIntl } from '@ant-design/pro-table';
-import ConfigProvider from '@ant-design/pro-provider';
-// import { ConfigProvider } from 'antd';
-
-import pl_PL from '@/locales/pl-PL';
 
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
@@ -53,7 +49,7 @@ const enLocale = {
 };
 
 const enUSIntl = createIntl('en_US', enLocale);
-const plPLIntl = createIntl('pl_pl', enLocale);
+// const plPLIntl = createIntl('pl_pl', enLocale);
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
@@ -207,8 +203,6 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
 
   const intl = useIntl();
-
-  console.log(intl);
 
   const handleRemove = useCallback(
     async (id: number) => {
