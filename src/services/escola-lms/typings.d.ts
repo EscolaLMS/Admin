@@ -555,7 +555,7 @@ declare namespace API {
   };
 
   type TemplateField = {
-    type: string;
+    type: 'mjml' | 'url' | 'fabric.js' | 'text' | 'html';
     required_variables: string[];
     required: boolean;
     default_content: string;
@@ -564,7 +564,15 @@ declare namespace API {
 
   type TemplateVariable = string;
 
-  type TemplateVariables = Record<string, Record<string, TemplateVariable[]>>;
+  type TemplateChannelVariable = {
+    assignable_class: '';
+    class: '';
+    required_variables: string[];
+    variables: string[];
+    sections: Record<string, TemplateField>;
+  };
+
+  type TemplateVariables = Record<string, Record<string, TemplateChannelVariable>>;
 
   type File = {
     name: string;

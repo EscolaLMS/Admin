@@ -4,7 +4,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import ProTable, { IntlProvider, createIntl } from '@ant-design/pro-table';
 
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
@@ -13,6 +13,43 @@ import { DeleteOutlined, EditOutlined, ExportOutlined, DollarOutlined } from '@a
 import ProCard from '@ant-design/pro-card';
 import SecureUpload from '@/components/SecureUpload';
 import './style.less';
+
+const enLocale = {
+  tableFrom: {
+    search: 'Query',
+    reset: 'Reset',
+    submit: 'Submit',
+    collapsed: 'Expand',
+    expand: 'Collapse',
+    inputPlaceholder: 'Please enter',
+    selectPlaceholder: 'Please select',
+  },
+  alert: {
+    clear: 'Clear',
+  },
+  tableToolBar: {
+    leftPin: 'Pin to left',
+    rightPin: 'Pin to right',
+    noPin: 'Unpinned',
+    leftFixedTitle: 'Fixed the left',
+    rightFixedTitle: 'Fixed the right',
+    noFixedTitle: 'Not Fixed',
+    reset: 'Reset',
+    columnDisplay: 'Column Display',
+    columnSetting: 'Settings',
+    fullScreen: 'Full Screen',
+    exitFullScreen: 'Exit Full Screen',
+    reload: 'Refresh',
+    density: 'Density',
+    densityDefault: 'Default1',
+    densityLarger: 'Larger1',
+    densityMiddle: 'Middle1',
+    densitySmall: 'Compact1',
+  },
+};
+
+const enUSIntl = createIntl('en_US', enLocale);
+// const plPLIntl = createIntl('pl_pl', enLocale);
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
@@ -325,93 +362,95 @@ const TableList: React.FC = () => {
             </Text>
           </a>
         </ProCard>
-      </ProCard>
-      <ProTable<API.CourseListItem, API.CourseParams>
-        loading={loading}
-        headerTitle={intl.formatMessage({
-          id: 'menu.Courses',
-          defaultMessage: 'Courses List',
-        })}
-        actionRef={actionRef}
-        rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
-        request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
-          setLoading(true);
-          return course({
-            title,
-            status,
-            pageSize,
-            current,
-            category_id,
-            tag,
-            active: active && active,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
-          }).then((response) => {
-            setLoading(false);
-            if (response.success) {
-              return {
-                data: response.data,
-                total: response.meta.total,
-                success: true,
-              };
+      </ProCard>{' '}
+      <IntlProvider value={{ intl: enUSIntl, valueTypeMap: {} }}>
+        <ProTable<API.CourseListItem, API.CourseParams>
+          loading={loading}
+          headerTitle={intl.formatMessage({
+            id: 'menu.Courses',
+            defaultMessage: 'Courses List',
+          })}
+          actionRef={actionRef}
+          rowKey="id"
+          search={
+            {
+              // labelWidth: 120,
             }
-            return [];
-          });
-        }}
-        columns={[
-          ...TableColumns,
-          {
-            title: <FormattedMessage id="options" defaultMessage="options" />,
-            dataIndex: 'option',
-            valueType: 'option',
-            render: (_, record) => [
-              <Link to={`/courses/list/${record.id}`}>
-                <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                  <Button type="primary" icon={<EditOutlined />}></Button>
-                </Tooltip>
-              </Link>,
-              <Popconfirm
-                title={
-                  <FormattedMessage
-                    id="deleteQuestion"
-                    defaultMessage="Are you sure to delete this record?"
-                  />
-                }
-                onConfirm={() => record.id && handleRemove(record.id)}
-                okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
-                cancelText={<FormattedMessage id="no" defaultMessage="No" />}
-              >
-                <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                  <Button type="primary" icon={<DeleteOutlined />} danger></Button>
-                </Tooltip>
-              </Popconfirm>,
+          }
+          request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
+            const sortArr = sort && Object.entries(sort)[0];
+            setLoading(true);
+            return course({
+              title,
+              status,
+              pageSize,
+              current,
+              category_id,
+              tag,
+              active: active && active,
+              order_by: sortArr && sortArr[0], // i like nested ternary
+              /* eslint-disable */ order: sortArr
+                ? sortArr[1] === 'ascend'
+                  ? 'ASC'
+                  : 'DESC'
+                : undefined,
+            }).then((response) => {
+              setLoading(false);
+              if (response.success) {
+                return {
+                  data: response.data,
+                  total: response.meta.total,
+                  success: true,
+                };
+              }
+              return [];
+            });
+          }}
+          columns={[
+            ...TableColumns,
+            {
+              title: <FormattedMessage id="options" defaultMessage="options" />,
+              dataIndex: 'option',
+              valueType: 'option',
+              render: (_, record) => [
+                <Link to={`/courses/list/${record.id}`}>
+                  <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                    <Button type="primary" icon={<EditOutlined />}></Button>
+                  </Tooltip>
+                </Link>,
+                <Popconfirm
+                  title={
+                    <FormattedMessage
+                      id="deleteQuestion"
+                      defaultMessage="Are you sure to delete this record?"
+                    />
+                  }
+                  onConfirm={() => record.id && handleRemove(record.id)}
+                  okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+                  cancelText={<FormattedMessage id="no" defaultMessage="No" />}
+                >
+                  <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                    <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                  </Tooltip>
+                </Popconfirm>,
 
-              <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
-                <Button
-                  onClick={() => handleExport(Number(record.id))}
-                  icon={<ExportOutlined />}
-                ></Button>
-              </Tooltip>,
-              <Tooltip title={<FormattedMessage id="clone" defaultMessage="clone" />}>
-                <Button
-                  onClick={() => record.id && handleClone(record.id)}
-                  icon={<CopyOutlined />}
-                ></Button>
-              </Tooltip>,
-            ],
-          },
-        ]}
-      />
+                <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
+                  <Button
+                    onClick={() => handleExport(Number(record.id))}
+                    icon={<ExportOutlined />}
+                  ></Button>
+                </Tooltip>,
+                <Tooltip title={<FormattedMessage id="clone" defaultMessage="clone" />}>
+                  <Button
+                    onClick={() => record.id && handleClone(record.id)}
+                    icon={<CopyOutlined />}
+                  ></Button>
+                </Tooltip>,
+              ],
+            },
+          ]}
+        />
+      </IntlProvider>
     </PageContainer>
   );
 };

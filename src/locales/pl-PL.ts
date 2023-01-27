@@ -12,6 +12,10 @@ import fabric from './pl-PL/fabric';
 import vouchers from './pl-PL/vouchers';
 
 export default {
+  tableToolBar: {
+    densitySmall: 'aaaa',
+  },
+  'tableToolBar.densitySmall': 'aaaa',
   file_resources: 'Załączniki (pliki)',
   select_user_role: 'Wybierz rolę',
   select_user_group: 'Wybierz Grupę',

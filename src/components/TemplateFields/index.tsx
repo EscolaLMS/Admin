@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { Space, Typography, Tag } from 'antd';
 import ProForm, { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
-import FabricEditor from '../FabricEditor';
 import AutoCompleteArea from '../AutoCompleteArea';
+import PdfEditor from '../PdfEditor';
 import './index.css';
 
 interface FormWysiwygProps {
@@ -104,10 +104,16 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
             <ProForm.Item shouldUpdate>
               {(form) => {
                 return (
-                  <FabricEditor
-                    initialValue={form.getFieldValue(name)}
+                  <PdfEditor
+                    reportBroTemplate={
+                      form.getFieldValue(name) && JSON.parse(form.getFieldValue(name))
+                    }
                     variables={variables}
-                    onUpdate={(obj) => form.setFieldsValue({ [name]: JSON.stringify(obj) })}
+                    field={field}
+                    onTemplateSaved={(tpl) => {
+                      form.setFieldsValue({ [name]: JSON.stringify(tpl) });
+                      form.submit();
+                    }}
                   />
                 );
               }}
