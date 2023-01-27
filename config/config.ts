@@ -4,7 +4,8 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV, REACT_APP_API_URL, BASE_PATH } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_URL, REACT_APP_YBUG, REACT_APP_SENTRYDSN, BASE_PATH } =
+  process.env;
 
 export default defineConfig({
   history: { type: 'hash' },
@@ -55,6 +56,8 @@ export default defineConfig({
   define: {
     REACT_APP_API_URL:
       typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : 'http://localhost:1000', // API address,
+    REACT_APP_SENTRYDSN: typeof REACT_APP_SENTRYDSN !== 'undefined' ? REACT_APP_SENTRYDSN : '',
+    REACT_APP_YBUG: typeof REACT_APP_YBUG !== 'undefined' ? REACT_APP_YBUG : '',
   },
   base: BASE_PATH || '/',
   publicPath: BASE_PATH || '/',

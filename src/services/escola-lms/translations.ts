@@ -46,6 +46,23 @@ export async function getTranslation(id: number, options?: RequestOptionsInit) {
   });
 }
 
+/**  GET /api/admin/translations/retrieve */
+export async function getTranslationRetrieve(key: string, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.TranslationRetrieve[]>>(
+    `/api/admin/translations/retrieve`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        key,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
 /**  PUT /api/admin/translations */
 export async function updateTranslation(
   id: number,

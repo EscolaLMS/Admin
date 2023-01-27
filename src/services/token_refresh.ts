@@ -1,8 +1,9 @@
 import { refreshToken } from './escola-lms/auth';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
+import type { JwtPayload } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { differenceInSeconds } from 'date-fns';
 
-const logout = (reason: string = 'noReason') => {
+const logout = () => {
   localStorage.removeItem('TOKEN');
   window.location.reload();
 };
@@ -23,11 +24,11 @@ export const refreshTokenCallback = () => {
             }
           }
         } else {
-          logout('r1');
+          logout();
         }
       })
       .catch(() => {
-        logout('r2');
+        logout();
       });
   }
 };

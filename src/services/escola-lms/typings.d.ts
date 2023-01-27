@@ -1034,6 +1034,11 @@ declare namespace API {
     text: Record<string, string>;
     id?: number;
   };
+
+  export type TranslationRetrieve = {
+    key: string;
+    value: string;
+  };
 }
 
 declare module 'jsoneditor-react' {

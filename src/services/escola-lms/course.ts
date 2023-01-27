@@ -240,7 +240,7 @@ export async function exportCourse(id: number, options?: RequestOptionsInit) {
 
 /**  POST /api/admin/lessons/:id/clone */
 export async function cloneLesson(id: number, options?: RequestOptionsInit) {
-  return request<API.CourseAccessList>(`/api/admin/lessons/${id}/clone`, {
+  return request<API.DefaultResponse<API.Lesson>>(`/api/admin/lessons/${id}/clone`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
