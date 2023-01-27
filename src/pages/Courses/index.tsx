@@ -363,7 +363,7 @@ const TableList: React.FC = () => {
           </a>
         </ProCard>
       </ProCard>{' '}
-      <IntlProvider value={{ intl: enUSIntl }}>
+      <IntlProvider value={{ intl: enUSIntl, valueTypeMap: {} }}>
         <ProTable<API.CourseListItem, API.CourseParams>
           loading={loading}
           headerTitle={intl.formatMessage({
