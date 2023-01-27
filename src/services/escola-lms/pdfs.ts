@@ -26,3 +26,12 @@ export async function pdf(id: number, options?: RequestOptionsInit) {
     ...(options || {}),
   });
 }
+
+/**  GET /api/pdf/generate/{id} */
+
+export async function generatedPdf(id: number, options?: RequestOptionsInit) {
+  return request<Response>(`/api/pdfs/generate/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

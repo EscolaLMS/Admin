@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import type { SyntheticEvent } from 'react';
+declare const REACT_APP_API_URL: string;
+
 // @ts-ignore
 import { ReportBro } from 'reportbro-designer';
 import '../../../node_modules/reportbro-designer/dist/reportbro.css';
 import './index.css';
-const certificateData = require('./cerificate.json');
 
 import type { ReportBroTemplate } from './types';
 
 const getMockedValueForVariable = (varname: string) => {
-  console.log(varname.toLocaleLowerCase());
   switch (varname.toLocaleLowerCase()) {
     case 'varusername':
       return 'John Doe';
@@ -27,20 +27,19 @@ const addVariablesToTemplate = (
   variables: string[],
   required_variables: string[],
 ): ReportBroTemplate => {
-  console.log('addVariablesToTemplate', template, variables, required_variables);
-
   const maxId =
     Math.max.apply(
       null,
-      [template.parameters.map((p) => p.id), template.docElements.map((p) => p.id)].flat(),
+      template.parameters
+        ? [template.parameters.map((p) => p.id), template.docElements.map((p) => p.id)].flat()
+        : [1],
     ) + 1;
 
-  const dict: Record<string, ReportBroTemplate['parameters'][number]> = template.parameters.reduce(
-    (acc, curr) => {
-      return { ...acc, [curr.name]: curr };
-    },
-    {},
-  );
+  const dict: Record<string, ReportBroTemplate['parameters'][number]> = template.parameters
+    ? template.parameters.reduce((acc, curr) => {
+        return { ...acc, [curr.name]: curr };
+      }, {})
+    : {};
 
   const tpl: Record<string, ReportBroTemplate['parameters'][number]> = variables
     .map((varname) => varname.replace('@', ''))
@@ -79,7 +78,7 @@ export const PdfEditor: React.FC<{
   field: API.TemplateField;
   variables: string[];
   onTemplateSaved: (tpl: object) => void;
-  reportBroTemplate?: object;
+  reportBroTemplate?: ReportBroTemplate;
 }> = ({ onTemplateSaved, reportBroTemplate = null, field, variables }) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -100,23 +99,21 @@ export const PdfEditor: React.FC<{
       const rb = new ReportBro(ref.current, {
         enableSpreadsheet: false,
         additionalFonts: [{ name: 'Tangerine', value: 'tangerine' }],
-        reportServerUrl: 'https://reportbro.stage.etd24.pl/reportbro/report/run', // TODO use env vars
+        // src={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/scorm/play/${uuid}`}
+        //reportServerUrl: 'https://reportbro.stage.etd24.pl/reportbro/report/run', // TODO use env vars
+        reportServerUrl: `${
+          window.REACT_APP_API_URL || REACT_APP_API_URL
+        }/api/pdfs/reportbro/report/run`, // TODO use env vars
         saveCallback: () => {
           onTemplateSaved(rb.getReport());
         },
       });
 
-      rb.load(
-        addVariablesToTemplate(
-          reportBroTemplate || certificateData,
-          variables,
-          field.required_variables,
-        ),
-      );
+      if (reportBroTemplate) {
+        rb.load(addVariablesToTemplate(reportBroTemplate, variables, field.required_variables));
+      }
     }
   }, [ref]);
-
-  console.log('PdfEditor', field);
 
   return (
     <div ref={ref} className="pdf-editor" onClick={stopPropagation}>

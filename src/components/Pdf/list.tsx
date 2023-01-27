@@ -9,6 +9,7 @@ import PdfZipList from '@/components/Pdf/ziplist';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DownloadOutlined } from '@ant-design/icons';
+import AuthenticatedLinkButton from '../AuthenticatedLinkButton';
 
 type Request = EscolaLms.TemplatesPdf.Http.Requests.PdfListingAdminRequest & {
   template_id?: number;
@@ -120,7 +121,9 @@ export const PdfList: React.FC<Request> = ({ user_id, template_id, title }) => {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button
+              <AuthenticatedLinkButton
+                url={`/api/pdfs/generate/${item.id}`}
+                filename={`generated-${item.id}.pdf`}
                 key="download"
                 size="small"
                 icon={<DownloadOutlined />}
@@ -129,7 +132,7 @@ export const PdfList: React.FC<Request> = ({ user_id, template_id, title }) => {
                 loading={previewState.state === 'loading'}
               >
                 <FormattedMessage id="download_pdf" defaultMessage="Download PDFs" />
-              </Button>,
+              </AuthenticatedLinkButton>,
             ]}
           >
             {item.title} <TypeButtonDrawer type="App\Models\User" type_id={item.user_id} />

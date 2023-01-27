@@ -227,7 +227,7 @@ export default () => {
             </ProForm.Item>
           </ProForm.Group>
 
-          {!isNew && (
+          {!isNew && template !== 'pdf' && (
             <ProForm.Group>
               <ProForm.Item label={<FormattedMessage id="preview" />}>
                 <PreviewButton
@@ -280,7 +280,7 @@ export default () => {
 
               return (
                 <React.Fragment key={section}>
-                  {index === 0 && (
+                  {index === 0 && template !== 'pdf' && (
                     <React.Fragment>
                       <Divider>
                         <FormattedMessage id="templates.tokens" />
