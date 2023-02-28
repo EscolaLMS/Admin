@@ -211,6 +211,22 @@ enum PERMISSIONS {
   TranslationRead = 'translation_read',
   TranslationUpdate = 'translation_update',
   TranslationDelete = 'translation_delete',
+
+  /* -------- EscolaLMS/Tasks -------- */
+
+  TaskCreateOwn = 'task_create-own',
+  TaskUpdateOwn = 'task_update-own',
+  TaskDeleteOwn = 'task_delete-own',
+  TaskListOwn = 'task_list-own',
+  TaskFindOwn = 'task_find-own',
+  TaskCreate = 'task_create',
+  TaskUpdate = 'task_update',
+  TaskDelete = 'task_delete',
+  TaskList = 'task_list',
+  TaskFind = 'task_find',
+  TaskNoteCreate = 'task-note_create',
+  TaskNoteUpdate = 'task-note_update',
+  TaskNoteDelete = 'task-note_delete',
 }
 
 export default PERMISSIONS;
