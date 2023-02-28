@@ -34,9 +34,9 @@ import Agenda from '@/components/Agenda';
 
 export type StationaryEventType = Omit<
   EscolaLms.StationaryEvents.Models.StationaryEvent,
-  'categories'
+  'categories' | 'agenda' | 'image_url'
 > & {
-  image_url: string;
+  image_url?: string;
   categories: (number | string)[];
   agenda: AgendaType[] | undefined;
 };
@@ -68,7 +68,7 @@ const StationaryEventForm = () => {
     const response = await getStationaryEvent(Number(id));
     if (response.success) {
       setData({
-        ...response.data,
+        ...(response.data as Omit<StationaryEventType, 'categories' | 'agenda'>),
         categories: response?.data?.categories?.map(mapper),
       });
     }
@@ -115,7 +115,7 @@ const StationaryEventForm = () => {
           if (response.success) {
             setUnsavedChanges(false);
             setData({
-              ...response.data,
+              ...(response.data as Omit<StationaryEventType, 'categories' | 'agenda'>),
               categories: response?.data?.categories?.map(mapper),
             });
             history.push(`/other/stationary-events/${response.data.id}/${tab}`);
