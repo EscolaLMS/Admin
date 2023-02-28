@@ -115,5 +115,10 @@ export default function (initialState: { currentUser: API.UserItem }) {
     translationDetailPermission: havePermissionsInDashboard(PERMISSIONS.TranslationRead),
 
     loggedOut: !currentUser,
+
+    taskListPermission: havePermissionsInDashboard(PERMISSIONS.TaskList),
+    taskDetailsPermission: havePermissionsInDashboard(PERMISSIONS.TaskList),
+
+    tasksPermission: () => true,
   };
 }

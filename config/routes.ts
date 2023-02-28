@@ -453,6 +453,22 @@
         component: './Pages/form',
         hideInMenu: true,
       },
+
+      {
+        path: '/other/tasks',
+        name: 'Tasks',
+        icon: 'read',
+        access: 'taskListPermission',
+        component: './Tasks',
+      },
+      {
+        path: '/other/tasks/:task',
+        name: 'Form',
+        icon: 'read',
+        access: 'taskDetailsPermission',
+        component: './Tasks/form',
+        hideInMenu: true,
+      },
     ],
   },
   {
