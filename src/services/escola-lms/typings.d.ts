@@ -320,6 +320,7 @@ declare namespace API {
     summary?: string;
     topics?: Topic[];
     isNew?: boolean;
+    lessons?: Lesson[];
   };
 
   type CourseStats = {

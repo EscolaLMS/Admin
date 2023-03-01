@@ -10,7 +10,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 
 import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
-import { slugify } from '@/services/escola-lms/slug';
+import { Related } from '@/components/RelatedCourseTopicLesson';
 
 export default () => {
   const intl = useIntl();
@@ -81,15 +81,9 @@ export default () => {
       title={isNew ? <FormattedMessage id="new_task" /> : <FormattedMessage id="edit_task" />}
     >
       <ProCard>
-        <ProForm
-          {...formProps}
-          form={form}
-          onValuesChange={(values) => {
-            if (values.title) {
-              form.setFieldsValue({ slug: slugify(values.title) });
-            }
-          }}
-        >
+        <ProForm {...formProps} form={form}>
+          <Related />
+
           <ProForm.Group>
             <ProFormText
               width="md"
