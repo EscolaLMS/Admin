@@ -129,25 +129,31 @@ export default () => {
               </ProForm.Item>
             )}
 
-            <ProFormSwitch
-              name="completed_at"
-              label={<FormattedMessage id="completed_at" defaultMessage="Completed" />}
-              tooltip={<FormattedMessage id="completed_at_tooltip" defaultMessage="Completed" />}
-              fieldProps={{
-                onChange: (v) => {
-                  (v ? completeTask(Number(task)) : incompleteTask(Number(task))).then(
-                    (response) => {
-                      message.success(response.message);
-                    },
-                  );
-                },
-              }}
-            />
+            {!isNew && (
+              <ProFormSwitch
+                name="completed_at"
+                label={<FormattedMessage id="completed_at" defaultMessage="Completed" />}
+                tooltip={<FormattedMessage id="completed_at_tooltip" defaultMessage="Completed" />}
+                fieldProps={{
+                  onChange: (v) => {
+                    (v ? completeTask(Number(task)) : incompleteTask(Number(task))).then(
+                      (response) => {
+                        message.success(response.message);
+                      },
+                    );
+                  },
+                }}
+              />
+            )}
           </ProForm.Group>
 
           <ProFormText name={'related'} shouldUpdate hidden />
 
-          <ProForm.Item shouldUpdate>
+          <ProForm.Item
+            label={<FormattedMessage id="relates_to" defaultMessage="Relates to" />}
+            tooltip={<FormattedMessage id="relates_to_tooltip" defaultMessage="Relates to" />}
+            shouldUpdate
+          >
             {(formRef) => {
               return (
                 <Related
@@ -168,17 +174,19 @@ export default () => {
               id: 'description',
             })}
           />
-          <ProCard title="notes" bordered>
-            {data.notes && (
-              <TaskNotes
-                notes={data.notes}
-                taskId={Number(task)}
-                onAdded={() => fetchData()}
-                onEdited={() => fetchData()}
-                onRemoved={() => fetchData()}
-              />
-            )}
-          </ProCard>
+          {!isNew && (
+            <ProCard title="notes" bordered>
+              {data.notes && (
+                <TaskNotes
+                  notes={data.notes}
+                  taskId={Number(task)}
+                  onAdded={() => fetchData()}
+                  onEdited={() => fetchData()}
+                  onRemoved={() => fetchData()}
+                />
+              )}
+            </ProCard>
+          )}
           {loading && <Spin />}
         </ProForm>
       </ProCard>
