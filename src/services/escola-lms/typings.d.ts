@@ -194,7 +194,9 @@ declare namespace API {
 
   type TaskListItem = EscolaLms.Tasks.Models.Task;
 
-  type Task = EscolaLms.Tasks.Models.Task;
+  type Task = EscolaLms.Tasks.Models.Task & {
+    notes: TaskNote[];
+  };
 
   type TaskListParams = EscolaLms.Tasks.Http.Requests.Admin.AdminListTaskRequest &
     PageParams & {
@@ -204,6 +206,10 @@ declare namespace API {
       related_type?: string;
       related_id?: number;
     };
+
+  type TaskNote = EscolaLms.Tasks.Models.TaskNote & {
+    note: string;
+  };
 
   type TemplateList = DefaultMetaResponse<Template>;
 

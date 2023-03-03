@@ -5,6 +5,11 @@ import type { DefaultOptionType } from 'antd/es/select';
 
 type TreeData = Omit<DefaultOptionType, 'label'>;
 
+export type RelatedValue =
+  | `EscolaLms\\Courses\\Course:${number}`
+  | `EscolaLms\\Courses\\Lesson:${number}`
+  | `EscolaLms\\Courses\\Topic:${number}`;
+
 const traverse = (lessons: API.Lesson[]): TreeData[] => {
   return lessons.reduce(
     (acc, lesson) => [
@@ -27,8 +32,13 @@ const traverse = (lessons: API.Lesson[]): TreeData[] => {
   );
 };
 
-export const Related: React.FC = () => {
-  const [value, setValue] = useState<string>();
+export const Related: React.FC<{
+  value?: RelatedValue;
+  onChange?: (value: RelatedValue) => void;
+  state?: {
+    type: number;
+  };
+}> = ({ value, onChange }) => {
   const [treeData, setTreeData] = useState<TreeData[]>([]);
 
   useEffect(() => {
@@ -57,14 +67,11 @@ export const Related: React.FC = () => {
         setTreeData(tree);
       }
     })();
-  });
-
-  const onChange = (newValue: string) => {
-    setValue(newValue);
-  };
+  }, []);
 
   return (
     <TreeSelect
+      loading={treeData.length === 0}
       treeLine
       showSearch
       style={{ width: '100%' }}
@@ -73,7 +80,7 @@ export const Related: React.FC = () => {
       placeholder="Please select"
       allowClear
       treeDefaultExpandAll
-      onChange={onChange}
+      onChange={(val) => onChange && onChange(val)}
       treeData={treeData}
     />
   );
