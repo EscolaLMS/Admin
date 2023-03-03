@@ -18,7 +18,8 @@ export const UserSelect: React.FC<{
     option: DefaultOptionType | DefaultOptionType[],
   ) => void;
   showEmail?: boolean;
-}> = ({ value, onChange, multiple = false, role, showEmail }) => {
+  disabled?: boolean;
+}> = ({ value, onChange, multiple = false, role, showEmail, disabled }) => {
   const [users, setUsers] = useState<API.UserItem[]>([]);
   const [fetching, setFetching] = useState(false);
   const [currUsers, setCurrUsers] = useState<number[]>([]);
@@ -99,6 +100,7 @@ export const UserSelect: React.FC<{
 
   return (
     <Select
+      disabled={disabled}
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%', minWidth: '150px' }}

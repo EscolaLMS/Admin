@@ -48,40 +48,47 @@ export async function updateTask(
   });
 }
 
-// /**  POST /api/tasks/complete/:id */
-// export async function completeTask(
-//   apiUrl: string,
-//   token: string,
-//   id: number,
-//   options?: RequestOptionsInit,
-// ) {
-//   return request<API.DefaultResponse<API.Task>>(`${apiUrl}/api/tasks/complete/${id}`, {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${token}`,
-//       'Current-timezone': currentTimezone(),
-//     },
-//     ...(options || {}),
-//   });
-// }
+/**  POST /api/admin/tasks/complete/:id */
+export async function completeTask(id: number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/complete/${id}`, {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
 
-// /**  POST /api/tasks/incomplete/:id */
-// export async function incompleteTask(
-//   apiUrl: string,
-//   token: string,
-//   id: number,
-//   options?: RequestOptionsInit,
-// ) {
-//   return request<API.DefaultResponse<API.Task>>(`${apiUrl}/api/tasks/incomplete/${id}`, {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${token}`,
-//       'Current-timezone': currentTimezone(),
-//     },
-//     ...(options || {}),
-//   });
-// }
+/**  POST /api/admin/tasks/incomplete/:id */
+export async function incompleteTask(id: number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/incomplete/${id}`, {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+/** POST /api/admin/task/notes */
+export async function createTaskNote(
+  // TODO replace with admin Request
+  body: EscolaLms.Tasks.Http.Requests.CreateTaskNoteRequest,
+) {
+  return request<API.DefaultResponse<API.TaskNote>>(`/api/admin/tasks/notes`, {
+    method: 'POST',
+    data: body,
+  });
+}
+
+/** PATCH /api/admin/task/notes */
+export async function updateTaskNote(
+  id: number,
+  body: EscolaLms.Tasks.Http.Requests.UpdateTaskNoteRequest,
+) {
+  return request<API.DefaultResponse<API.TaskNote>>(`/api/admin/tasks/notes/${id}`, {
+    method: 'PATCH',
+    data: body,
+  });
+}
+
+/** DELETE /api/admin/task/notes */
+export async function deleteTaskNote(id: number) {
+  return request<API.DefaultResponse<API.TaskNote>>(`/api/admin/tasks/notes/${id}`, {
+    method: 'DELETE',
+  });
+}

@@ -1,11 +1,13 @@
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Tag } from 'antd';
 import React, { useRef } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import UserSelect from '@/components/UserSelect';
+import { format } from 'date-fns';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 import { tasks, deleteTask } from '@/services/escola-lms/tasks';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
@@ -84,6 +86,19 @@ const TableList: React.FC = () => {
             type="EscolaLms\Core\Models\User"
             type_id={record.user?.id}
           />
+        ),
+    },
+    {
+      title: <FormattedMessage id="completed_at" defaultMessage="Completed at" />,
+      dataIndex: 'completed_at',
+      hideInSearch: true,
+      render: (_, record) =>
+        record.completed_at ? (
+          format(new Date(record.completed_at), DATETIME_FORMAT)
+        ) : (
+          <Tag>
+            <FormattedMessage id="uncompleted" defaultMessage="uncompleted" />
+          </Tag>
         ),
     },
     {
