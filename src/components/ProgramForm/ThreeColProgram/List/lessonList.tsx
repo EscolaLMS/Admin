@@ -27,6 +27,122 @@ const getSortingMode = (i: number, len: number) => {
   return 'both';
 };
 
+const RecursiveLessonList: React.FC<{
+  courseId: number;
+  courseLessons: API.Lesson[];
+  onLessonCreate: (lessonId: number, title: string) => void;
+  onTopicCreate: (lessonId: number, topicType: TopicType) => void;
+}> = ({ courseId, courseLessons, onLessonCreate, onTopicCreate }) => {
+  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic, updateLesson } =
+    useContext(Context);
+
+  return (
+    <React.Fragment>
+      {courseLessons.map((lesson, cindex, lessons) => {
+        return lesson.id ? (
+          <React.Fragment key={lesson.id}>
+            <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
+              {lesson.isNew ? (
+                <NewLessonListItem
+                  initialValue={lesson}
+                  onCreate={(title) => {
+                    onLessonCreate(Number(lesson.id), title);
+                    //createNewTopic(Number(lesson.id), title);
+                  }}
+                />
+              ) : (
+                <React.Fragment>
+                  <div className="program-sidebar__lesson--actions">
+                    <Tooltip placement="top" title={lesson.title}>
+                      <NavLink
+                        to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}
+                        className="program-sidebar__link"
+                      >
+                        <FolderOutlined />
+                        <span className="program-sidebar__title">{lesson.title}</span>
+                      </NavLink>
+                    </Tooltip>
+                    <TopicTypesSelector
+                      sortingMode={getSortingMode(cindex, lessons.length)}
+                      onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
+                      onSelected={
+                        (topic_type) => lesson.id && onTopicCreate(lesson.id, topic_type)
+                        //lesson.id && addNewTopicToLesson(lesson.id, topic_type)
+                      }
+                    />
+                  </div>
+
+                  {lesson.lessons && lesson.lessons.length > 0 && (
+                    <div className="program-sidebar__lessons">
+                      <RecursiveLessonList
+                        courseLessons={lesson.lessons}
+                        courseId={courseId}
+                        onLessonCreate={onLessonCreate}
+                        onTopicCreate={onTopicCreate}
+                      />
+                    </div>
+                  )}
+                </React.Fragment>
+              )}
+            </div>
+            <Droppable droppableId={lesson.id.toString()}>
+              {(provided) => (
+                <ul className={`characters`} {...provided.droppableProps} ref={provided.innerRef}>
+                  {lesson.topics?.map((topic, index) => {
+                    return (
+                      topic.id && (
+                        <Draggable
+                          draggableId={topic.id.toString()}
+                          index={index}
+                          key={topic.id.toString()}
+                        >
+                          {(providedDraggable) => (
+                            <li
+                              ref={providedDraggable.innerRef}
+                              {...providedDraggable.draggableProps}
+                              {...providedDraggable.dragHandleProps}
+                              className={
+                                currentEditMode &&
+                                currentEditMode.mode === 'topic' &&
+                                currentEditMode.id === topic.id
+                                  ? 'program-sidebar__list-item program-sidebar__list-item--active'
+                                  : 'program-sidebar__list-item'
+                              }
+                            >
+                              <NavLink to={`/courses/list/${courseId}/program/?topic=${topic.id}`}>
+                                <Tooltip
+                                  placement="right"
+                                  title={<FormattedMessage id={getTypeName(topic)} />}
+                                >
+                                  {getTypeIcon(getTypeName(topic))}
+                                </Tooltip>
+                                <span className="title">{topic.title}</span>
+                                <Tooltip
+                                  placement="bottom"
+                                  title={<FormattedMessage id="drag_topic_tooltip" />}
+                                >
+                                  <EllipsisOutlined />
+                                </Tooltip>
+                              </NavLink>
+                            </li>
+                          )}
+                        </Draggable>
+                      )
+                    );
+                  })}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </React.Fragment>
+        ) : (
+          <React.Fragment />
+        );
+      })}
+    </React.Fragment>
+  );
+};
+
 export const LessonList: React.FC = () => {
   const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic, updateLesson } =
     useContext(Context);
@@ -149,94 +265,14 @@ export const LessonList: React.FC = () => {
         onDragEnd(result);
       }}
     >
-      {courseLessons?.map((lesson, cindex, lessons) => {
-        return (
-          lesson.id && (
-            <React.Fragment key={lesson.id}>
-              <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
-                {lesson.isNew ? (
-                  <NewLessonListItem
-                    initialValue={lesson}
-                    onCreate={(title) => {
-                      createNewTopic(Number(lesson.id), title);
-                    }}
-                  />
-                ) : (
-                  <React.Fragment>
-                    <Tooltip placement="top" title={lesson.title}>
-                      <NavLink
-                        to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}
-                        className="program-sidebar__link"
-                      >
-                        <FolderOutlined />
-                        <span className="program-sidebar__title">{lesson.title}</span>
-                      </NavLink>
-                    </Tooltip>
-                    <TopicTypesSelector
-                      sortingMode={getSortingMode(cindex, lessons.length)}
-                      onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
-                      onSelected={(topic_type) =>
-                        lesson.id && addNewTopicToLesson(lesson.id, topic_type)
-                      }
-                    />
-                  </React.Fragment>
-                )}
-              </div>
-              <Droppable droppableId={lesson.id.toString()}>
-                {(provided) => (
-                  <ul className={`characters`} {...provided.droppableProps} ref={provided.innerRef}>
-                    {lesson.topics?.map((topic, index) => {
-                      return (
-                        topic.id && (
-                          <Draggable
-                            draggableId={topic.id.toString()}
-                            index={index}
-                            key={topic.id.toString()}
-                          >
-                            {(providedDraggable) => (
-                              <li
-                                ref={providedDraggable.innerRef}
-                                {...providedDraggable.draggableProps}
-                                {...providedDraggable.dragHandleProps}
-                                className={
-                                  currentEditMode &&
-                                  currentEditMode.mode === 'topic' &&
-                                  currentEditMode.id === topic.id
-                                    ? 'program-sidebar__list-item program-sidebar__list-item--active'
-                                    : 'program-sidebar__list-item'
-                                }
-                              >
-                                <NavLink
-                                  to={`/courses/list/${courseId}/program/?topic=${topic.id}`}
-                                >
-                                  <Tooltip
-                                    placement="right"
-                                    title={<FormattedMessage id={getTypeName(topic)} />}
-                                  >
-                                    {getTypeIcon(getTypeName(topic))}
-                                  </Tooltip>
-                                  <span className="title">{topic.title}</span>
-                                  <Tooltip
-                                    placement="bottom"
-                                    title={<FormattedMessage id="drag_topic_tooltip" />}
-                                  >
-                                    <EllipsisOutlined />
-                                  </Tooltip>
-                                </NavLink>
-                              </li>
-                            )}
-                          </Draggable>
-                        )
-                      );
-                    })}
-                    {provided.placeholder}
-                  </ul>
-                )}
-              </Droppable>
-            </React.Fragment>
-          )
-        );
-      })}
+      {courseLessons && (
+        <RecursiveLessonList
+          courseId={courseId}
+          courseLessons={courseLessons}
+          onLessonCreate={(lessonId, title) => createNewTopic(lessonId, title)}
+          onTopicCreate={(lessonId, topicType) => addNewTopicToLesson(lessonId, topicType)}
+        />
+      )}
     </DragDropContext>
   );
 };

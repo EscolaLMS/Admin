@@ -18,6 +18,7 @@ import {
 } from '@/services/escola-lms/course';
 
 import type { UploadChangeParam } from 'antd/lib/upload';
+import Lesson from '../ThreeColProgram/LessonForm';
 
 type CurrentEditMode =
   | { mode: 'lesson'; id: number; value?: API.Lesson | null }
@@ -52,11 +53,68 @@ export const Context = React.createContext<ProgramContext>({});
 
 const getRandomId = () => Math.round(Math.random() * 99999);
 
+const getFlatLessons = (lessons: API.Lesson[]): API.Lesson[] => {
+  return lessons.reduce((acc, curr) => {
+    return [...acc, ...(curr.lessons ? getFlatLessons(curr.lessons) : []), curr];
+  }, [] as API.Lesson[]) as API.Lesson[];
+};
+
+const getFlatTopics = (lessons: API.Lesson[]): API.Topic[] => {
+  return lessons.reduce((acc, curr) => {
+    return [...acc, ...(curr.lessons ? getFlatTopics(curr.lessons) : []), ...(curr.topics ?? [])];
+  }, [] as API.Topic[]) as API.Topic[];
+};
+
+const recursiveAddTopicToLessons = (
+  lessons: API.Lesson[],
+  lessonId: number,
+  topic: API.Topic,
+): API.Lesson[] => {
+  return lessons.map((lesson) => ({
+    ...lesson,
+    lessons: lesson.lessons ? recursiveAddTopicToLessons(lesson.lessons, lessonId, topic) : [],
+    topics: lesson.id === lessonId ? [...(lesson.topics ?? []), topic] : lesson.topics ?? [],
+  }));
+};
+
+const recursiveEditTopic = (
+  lessons: API.Lesson[],
+  topicId: number,
+  updatedTopic: API.Topic,
+): API.Lesson[] => {
+  return lessons.map((lesson) => ({
+    ...lesson,
+    lessons: lesson.lessons ? recursiveEditTopic(lesson.lessons, topicId, updatedTopic) : [],
+    topics: lesson.topics
+      ? lesson.topics.map((topic) => (topic.id === topicId ? updatedTopic : topic))
+      : [],
+  }));
+};
+
+const recursiveEditLesson = (
+  lessons: API.Lesson[],
+  lessonId: number,
+  updatedLesson: API.Lesson,
+): API.Lesson[] => {
+  return lessons.map((lesson) => ({
+    ...(lesson.id === lessonId ? updatedLesson : lesson),
+    lessons: lesson.lessons ? recursiveEditLesson(lesson.lessons, lessonId, updatedLesson) : [],
+  }));
+};
+
 export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = ({
   children,
   id,
 }) => {
   const [state, setState] = useState<API.CourseProgram>();
+
+  const flatTopics: API.Topic[] = useMemo(() => {
+    return state && state.lessons ? getFlatTopics(state.lessons) : [];
+  }, [state]);
+
+  const flatLessons: API.Topic[] = useMemo(() => {
+    return state && state.lessons ? getFlatLessons(state.lessons) : [];
+  }, [state]);
 
   const [h5ps, setH5ps] = useState([]);
 
@@ -79,7 +137,12 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
   const getLessons = useCallback(() => {
     program(id).then((data) => {
-      return data.success && setState(data.data);
+      return (
+        data.success &&
+        setState({
+          ...data.data,
+        })
+      );
     });
   }, [id]);
 
@@ -97,34 +160,23 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     [state],
   );
 
-  const getTopicByTopicId = useCallback(
-    (topic_id: number) => {
-      const topic = state?.lessons
-        .map((lesson) => lesson.topics)
-        .flat()
-        .find((fTopic) => fTopic && fTopic.id == topic_id);
-      return topic ? topic : null;
-    },
-    [state],
-  );
-
   const currentEditMode = useMemo<CurrentEditMode>(() => {
     if (l.query?.lesson) {
       return {
         mode: 'lesson',
         id: Number(l.query.lesson),
-        value: state?.lessons.find((lesson) => lesson.id === Number(l.query.lesson)),
+        value: flatLessons.find((lesson) => lesson.id === Number(l.query.lesson)),
       };
     }
     if (l.query?.topic) {
       return {
         mode: 'topic',
         id: Number(l.query.topic),
-        value: getTopicByTopicId(Number(l.query.topic)),
+        value: flatTopics.find((t) => t.id === Number(l.query.topic)),
       };
     }
     return { mode: 'init' };
-  }, [l.query, state]);
+  }, [l.query, state, flatLessons, flatTopics]);
 
   const addNewLesson = useCallback(() => {
     const newLesson: API.Lesson = {
@@ -157,6 +209,11 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
             data.success &&
             setState((prevState) => ({
               ...prevState,
+              lessons: recursiveEditLesson(prevState?.lessons ?? [], lesson_id, {
+                ...data.data,
+                isNew: false,
+              }),
+              /*
               lessons: prevState?.lessons
                 ? prevState.lessons.map((lesson) => {
                     if (lesson.id === lesson_id) {
@@ -169,6 +226,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
                     return lesson;
                   })
                 : [data.data],
+                */
             }))
           );
         },
@@ -588,19 +646,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
     setState((prevState) => ({
       ...prevState,
-      lessons: prevState
-        ? prevState.lessons?.map((lesson) => {
-            if (lesson.id === lesson_id) {
-              const topics = lesson.topics || [];
-
-              return {
-                ...lesson,
-                topics: [...topics, newTopic],
-              };
-            }
-            return lesson;
-          })
-        : [],
+      lessons: recursiveAddTopicToLessons(prevState?.lessons ?? [], lesson_id, newTopic),
     }));
     return newTopic;
   }, []);
