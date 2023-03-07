@@ -113,7 +113,7 @@ jobs:
         run: npm i --legacy-peer-deps
 
       - name: Build 
-        run: cp .env.ci .env && REACT_APP_API_URL=http://localhost npm run build
+        run: cp .env.ci .env && REACT_APP_API_URL=http://localhost npm run --openssl-legacy-provider build 
 
       - name: Install Playwright
         run: npx playwright install --with-deps

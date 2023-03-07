@@ -13,6 +13,10 @@
   list-style: none;
 }
 
+.program-sidebar .topic-types-selector {
+  padding-right: 2px;
+}
+
 .program-sidebar--empty {
   display: flex;
   align-items: center;
@@ -34,6 +38,10 @@
   justify-content: end;
 }
 
+.program-sidebar--right .tree-select .ant-form-item-control-input-content {
+  display: block;
+}
+
 .program-sidebar__add-btn {
   position: absolute;
   right: 4px;
@@ -41,9 +49,10 @@
 }
 
 .program-sidebar__list-item {
-  margin-bottom: 8px;
+  margin-bottom: 0px;
   padding: 9px 0px 9px 18px;
   border: 1px solid transparent;
+  border-right: none;
   transition: background-color 0.3s ease;
 }
 
@@ -55,7 +64,7 @@
   margin-right: 8px;
 }
 
-.program-sidebar__list-item:hover {
+.program-sidebar__list-item:hover > a {
   background-color: rgb(0 0 0 / 5%);
 }
 
@@ -83,13 +92,39 @@
 }
 
 .program-sidebar__list-item--lesson {
-  display: flex;
-  align-items: center;
-  padding-right: 9px;
+  display: block;
+  padding-right: 0px;
   padding-left: 9px;
 }
 
-.program-sidebar__list-item--lesson a {
+.program-sidebar__list-item--lesson-new {
+  display: flex;
+  align-items: center;
+  padding-right: 3px;
+}
+
+.program-sidebar__lesson--actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.program-sidebar__lesson--actions > a {
+  flex-basis: 100%;
+}
+
+.program-sidebar__lesson--actions .topic-types-selector {
+  opacity: 0;
+}
+
+.program-sidebar__lesson--actions:hover .topic-types-selector {
+  opacity: 1;
+}
+
+.program-sidebar__list-item--lesson .program-sidebar__lesson--actions > a {
   margin-right: auto;
   color: rgb(0 0 0 / 45%);
 }
@@ -117,9 +152,15 @@
 }
 
 .program-sidebar__list-item a.program-sidebar__link {
+  /*
   display: grid;
   grid-auto-flow: column;
   width: auto;
+  */
+}
+
+.program-sidebar__list-item a.program-sidebar__link--active {
+  color: #000;
 }
 
 .program-sidebar__title {

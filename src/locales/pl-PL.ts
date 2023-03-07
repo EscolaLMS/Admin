@@ -12,6 +12,9 @@ import fabric from './pl-PL/fabric';
 import vouchers from './pl-PL/vouchers';
 
 export default {
+  parent: 'Nadrzedny',
+  parent_lesson: 'Nadrzedna Lekcja',
+  'menu.Other activities.Tasks': 'Zadania',
   tableToolBar: {
     densitySmall: 'aaaa',
   },

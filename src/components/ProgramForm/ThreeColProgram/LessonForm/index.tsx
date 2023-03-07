@@ -31,6 +31,7 @@ export const Lesson: React.FC = () => {
       ...state,
       order: 0,
       active: state.active ? 1 : 0,
+      parent_lesson_id: state.parent_id,
     });
 
     if (updateLesson && state.id) {

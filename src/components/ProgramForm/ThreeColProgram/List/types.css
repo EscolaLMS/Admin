@@ -4,6 +4,10 @@
   padding-left: 8px;
 }
 
+.topic-types-selector .ant-divider-horizontal {
+  margin: 2px 0;
+}
+
 .topic-types-selector__list {
   position: absolute;
   top: 0;

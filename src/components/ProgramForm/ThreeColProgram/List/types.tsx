@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Button, Tooltip, Space } from 'antd';
+import { Button, Tooltip, Space, Divider } from 'antd';
 import {
   FundOutlined,
   FileTextOutlined,
@@ -9,9 +9,10 @@ import {
   AudioOutlined,
   YoutubeOutlined,
   InteractionOutlined,
-  CaretUpOutlined,
-  CaretDownOutlined,
+  //CaretUpOutlined,
+  //CaretDownOutlined,
   PlusOutlined,
+  PicCenterOutlined,
 } from '@ant-design/icons';
 
 import './types.css';
@@ -21,8 +22,9 @@ import { FormattedMessage } from 'umi';
 export const TopicTypesSelector: React.FC<{
   sortingMode: 'none' | 'up' | 'down' | 'both';
   onSelected: (type: TopicType) => void;
+  onNewLesson: () => void;
   onSort: (up: boolean) => void;
-}> = ({ onSelected, onSort, sortingMode = 'both' }) => {
+}> = ({ onSelected, /*onSort, sortingMode = 'both',*/ onNewLesson }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const setSelected = useCallback((type: TopicType) => {
@@ -33,6 +35,8 @@ export const TopicTypesSelector: React.FC<{
   return (
     <div className="topic-types-selector">
       <Space>
+        {/* TODO add sorting */}
+        {/** 
         {(sortingMode === 'both' || sortingMode === 'up') && (
           <Tooltip placement="top" title={<FormattedMessage id="sort_element_up" />}>
             <Button
@@ -53,6 +57,7 @@ export const TopicTypesSelector: React.FC<{
             />
           </Tooltip>
         )}
+         */}
         <Tooltip placement="top" title={<FormattedMessage id="add_new_topic" />}>
           <Button
             type="primary"
@@ -65,6 +70,17 @@ export const TopicTypesSelector: React.FC<{
 
       {open && (
         <div className="topic-types-selector__list">
+          <Tooltip placement="right" title={<FormattedMessage id="Lesson" />}>
+            <Button
+              block
+              onClick={() => {
+                setOpen(false);
+                onNewLesson();
+              }}
+              icon={<PicCenterOutlined />}
+            />
+          </Tooltip>
+          <Divider />
           <Tooltip placement="right" title={<FormattedMessage id="RichText" />}>
             <Button
               block
