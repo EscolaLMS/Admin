@@ -18,7 +18,6 @@ import {
 } from '@/services/escola-lms/course';
 
 import type { UploadChangeParam } from 'antd/lib/upload';
-import Lesson from '../ThreeColProgram/LessonForm';
 
 type CurrentEditMode =
   | { mode: 'lesson'; id: number; value?: API.Lesson | null }
