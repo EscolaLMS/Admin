@@ -38,6 +38,10 @@
   justify-content: end;
 }
 
+.program-sidebar--right .tree-select .ant-form-item-control-input-content {
+  display: block;
+}
+
 .program-sidebar__add-btn {
   position: absolute;
   right: 4px;
@@ -93,6 +97,12 @@
   padding-left: 9px;
 }
 
+.program-sidebar__list-item--lesson-new {
+  display: flex;
+  align-items: center;
+  padding-right: 3px;
+}
+
 .program-sidebar__lesson--actions {
   display: flex;
   flex-direction: row;
@@ -114,7 +124,7 @@
   opacity: 1;
 }
 
-.program-sidebar__list-item--lesson a {
+.program-sidebar__list-item--lesson .program-sidebar__lesson--actions > a {
   margin-right: auto;
   color: rgb(0 0 0 / 45%);
 }
@@ -147,6 +157,10 @@
   grid-auto-flow: column;
   width: auto;
   */
+}
+
+.program-sidebar__list-item a.program-sidebar__link--active {
+  color: #000;
 }
 
 .program-sidebar__title {

@@ -125,6 +125,14 @@ export const LessonForm: React.FC<{
               })}
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+            <ProFormText
+              name="order"
+              label={<FormattedMessage id="order" />}
+              tooltip={<FormattedMessage id="order" />}
+              placeholder={intl.formatMessage({
+                id: 'order',
+              })}
+            />
           </aside>
         </Col>
       </Row>

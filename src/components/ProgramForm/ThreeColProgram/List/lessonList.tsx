@@ -33,21 +33,30 @@ const RecursiveLessonList: React.FC<{
   onLessonCreate: (lessonId: number, title: string) => void;
   onTopicCreate: (lessonId: number, topicType: TopicType) => void;
 }> = ({ courseId, courseLessons, onLessonCreate, onTopicCreate }) => {
-  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic, updateLesson } =
-    useContext(Context);
+  const { currentEditMode, sortLesson, updateLesson, addNewLesson } = useContext(Context);
 
   return (
     <React.Fragment>
       {courseLessons.map((lesson, cindex, lessons) => {
         return lesson.id ? (
           <React.Fragment key={lesson.id}>
-            <div className={'program-sidebar__list-item program-sidebar__list-item--lesson'}>
+            <div
+              className={`program-sidebar__list-item program-sidebar__list-item--lesson ${
+                lesson.isNew ? 'program-sidebar__list-item--lesson-new' : ''
+              }`}
+            >
               {lesson.isNew ? (
                 <NewLessonListItem
                   initialValue={lesson}
                   onCreate={(title) => {
-                    onLessonCreate(Number(lesson.id), title);
-                    //createNewTopic(Number(lesson.id), title);
+                    const formData = getFormData({
+                      ...lesson,
+                      title,
+                      active: lesson.active ? 1 : 0,
+                    });
+                    if (lesson.id && updateLesson) {
+                      updateLesson(lesson.id, formData);
+                    }
                   }}
                 />
               ) : (
@@ -56,19 +65,25 @@ const RecursiveLessonList: React.FC<{
                     <Tooltip placement="top" title={lesson.title}>
                       <NavLink
                         to={`/courses/list/${courseId}/program/?lesson=${lesson.id}`}
-                        className="program-sidebar__link"
+                        className={`program-sidebar__link ${
+                          currentEditMode?.mode === 'lesson' && currentEditMode.id === lesson.id
+                            ? 'program-sidebar__link--active'
+                            : ''
+                        }`}
                       >
                         <FolderOutlined />
                         <span className="program-sidebar__title">{lesson.title}</span>
                       </NavLink>
                     </Tooltip>
                     <TopicTypesSelector
+                      onNewLesson={() => {
+                        if (addNewLesson) {
+                          addNewLesson(lesson.id);
+                        }
+                      }}
                       sortingMode={getSortingMode(cindex, lessons.length)}
                       onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
-                      onSelected={
-                        (topic_type) => lesson.id && onTopicCreate(lesson.id, topic_type)
-                        //lesson.id && addNewTopicToLesson(lesson.id, topic_type)
-                      }
+                      onSelected={(topic_type) => lesson.id && onTopicCreate(lesson.id, topic_type)}
                     />
                   </div>
 
@@ -79,6 +94,7 @@ const RecursiveLessonList: React.FC<{
                         courseId={courseId}
                         onLessonCreate={onLessonCreate}
                         onTopicCreate={onTopicCreate}
+                        //onNewLesson={onNewLesson}
                       />
                     </div>
                   )}
@@ -144,7 +160,7 @@ const RecursiveLessonList: React.FC<{
 };
 
 export const LessonList: React.FC = () => {
-  const { state, addNewTopic, currentEditMode, sortTopics, sortLesson, updateTopic, updateLesson } =
+  const { state, addNewTopic, sortTopics, /* sortLesson,*/ updateTopic, updateLesson } =
     useContext(Context);
 
   const courseLessons = state?.lessons;

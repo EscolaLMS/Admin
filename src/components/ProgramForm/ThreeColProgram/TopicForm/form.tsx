@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import JsonEditor from '@/components/JsonEditor';
 import { DescriptionModal } from '@/components/ProgramForm/ThreeColProgram/TopicForm/descriptionModal';
+import { ParentLesson } from '../ParentLesson';
 
 export const TopicForm: React.FC<{
   onValuesChange: (changedValues: API.Topic, values: API.Topic) => void;
@@ -32,6 +33,8 @@ export const TopicForm: React.FC<{
         })}
         required
       />
+
+      <ParentLesson name="lesson_id" />
       <ProForm.Item label={<FormattedMessage id="description" />}>
         <Button type={'primary'} onClick={() => setVisibleModal(true)}>
           <FormattedMessage id="open_editor" />
