@@ -254,6 +254,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       return (isNew ? apiCreateLesson(formData) : apiUpdateLesson(lesson_id, formData)).then(
         (data) => {
           message.success(data.message);
+          getLessons();
           return (
             data.success &&
             setState((prevState) => ({

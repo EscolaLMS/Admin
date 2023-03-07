@@ -4,6 +4,7 @@ import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import ProCard from '@ant-design/pro-card';
+import { ParentLesson } from '../ParentLesson';
 
 export const LessonForm: React.FC<{
   lesson: API.Lesson;
@@ -125,6 +126,7 @@ export const LessonForm: React.FC<{
               })}
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+            <ParentLesson name="parent_id" />
             <ProFormText
               name="order"
               label={<FormattedMessage id="order" />}

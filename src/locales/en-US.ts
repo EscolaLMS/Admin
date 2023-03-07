@@ -13,6 +13,7 @@ import vouchers from './en-US/vouchers';
 
 export default {
   parent: 'Parent',
+  parent_lesson: 'Parent Lesson',
   'menu.Other activities.Tasks': 'Tasks',
 
   file_resources: 'File resources',

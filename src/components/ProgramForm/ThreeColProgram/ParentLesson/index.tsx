@@ -30,7 +30,7 @@ export const ParentLesson: React.FC<{ name: string }> = ({ name }) => {
     <div className="tree-select">
       <ProFormTreeSelect
         name={name}
-        label={<FormattedMessage id="parent" />}
+        label={<FormattedMessage id="parent_lesson" />}
         fieldProps={{ treeData, treeDefaultExpandAll: true, treeLine: true }}
       />
     </div>
