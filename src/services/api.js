@@ -19,7 +19,6 @@ export const API = (action, token, method = 'GET', data = null) => {
 };
 
 export const getFormData = (data) => {
-  console.log('getFromData', data);
   const formData = new FormData();
 
   for (let key in data) {
