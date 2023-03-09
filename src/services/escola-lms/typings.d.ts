@@ -922,7 +922,7 @@ declare namespace API {
       parent_id?: number;
     };
 
-  type CourseAccessList = DefaultMetaResponse<CourseAccess>;
+  type CourseAccessList = DefaultResponse<CourseAccess>;
 
   type Resource = {
     id: number;
