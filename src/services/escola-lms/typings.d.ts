@@ -1062,6 +1062,25 @@ declare namespace API {
     key: string;
     value: string;
   };
+
+  type CourseAccessEnquiryList =
+    DefaultMetaResponse<EscolaLms.CourseAccess.Models.CourseAccessEnquiry>;
+
+  type CourseAccessEnquiryListItem = EscolaLms.CourseAccess.Models.CourseAccessEnquiry;
+
+  type CourseAccessEnquiry = EscolaLms.CourseAccess.Models.CourseAccessEnquiry & {
+    data: object;
+  };
+
+  type CourseAccessEnquiryStatus = 'pending' | 'approved';
+
+  type CourseAccessEnquiryListParams =
+    EscolaLms.CourseAccess.Http.Requests.Admin.AdminListCourseAccessEnquiryRequest &
+      PageParams & {
+        user_id?: number;
+        course_id?: number;
+        status?: CourseAccessStatus;
+      };
 }
 
 declare module 'jsoneditor-react' {

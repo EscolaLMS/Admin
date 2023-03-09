@@ -6,7 +6,11 @@ import type { RequestOptionsInit } from 'umi-request';
 export async function tasks(params: API.TaskListParams, options?: RequestOptionsInit) {
   return request<API.TaskList>(`/api/admin/tasks`, {
     method: 'GET',
-    params,
+    params: {
+      ...params,
+      per_page: params.pageSize,
+      page: params.current,
+    },
     ...(options || {}),
   });
 }

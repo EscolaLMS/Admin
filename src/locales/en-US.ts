@@ -14,6 +14,7 @@ import vouchers from './en-US/vouchers';
 export default {
   parent: 'Parent',
   parent_lesson: 'Parent Lesson',
+  courseAccessEnquiries: 'Course Access Enquiries',
   'menu.Other activities.Tasks': 'Tasks',
 
   file_resources: 'File resources',
