@@ -12,6 +12,7 @@ import fabric from './pl-PL/fabric';
 import vouchers from './pl-PL/vouchers';
 
 export default {
+  courseAccessEnquiries: 'Zapytania od dostęp do kursu',
   parent: 'Nadrzedny',
   parent_lesson: 'Nadrzedna Lekcja',
   'menu.Other activities.Tasks': 'Zadania',

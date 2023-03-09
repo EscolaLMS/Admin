@@ -128,6 +128,13 @@
         component: './Webinars/form',
         hideInMenu: true,
       },
+      {
+        path: '/courses/access',
+        name: 'Access Requests',
+        icon: 'experiment',
+        access: 'courseAccessListPermission',
+        component: './CourseAccess',
+      },
     ],
   },
   {

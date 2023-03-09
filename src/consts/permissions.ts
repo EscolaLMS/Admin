@@ -227,6 +227,13 @@ enum PERMISSIONS {
   TaskNoteCreate = 'task-note_create',
   TaskNoteUpdate = 'task-note_update',
   TaskNoteDelete = 'task-note_delete',
+
+  CourseAccessCreateOwn = 'course-access_create-own',
+  CourseAccessDeleteOwn = 'course-access_delete-own',
+  CourseAccessListOwn = 'course-access_list-own',
+  CourseAccessList = 'course-access_list',
+  CourseAccessDelete = 'course-access_delete',
+  CourseAccessApprove = 'course-access_approve',
 }
 
 export default PERMISSIONS;

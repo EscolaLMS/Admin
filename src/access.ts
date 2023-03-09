@@ -119,6 +119,8 @@ export default function (initialState: { currentUser: API.UserItem }) {
     taskListPermission: havePermissionsInDashboard(PERMISSIONS.TaskList),
     taskDetailsPermission: havePermissionsInDashboard(PERMISSIONS.TaskList),
 
+    courseAccessListPermission: havePermissionsInDashboard(PERMISSIONS.CourseAccessList),
+
     tasksPermission: () => true,
   };
 }
