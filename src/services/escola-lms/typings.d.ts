@@ -1079,7 +1079,7 @@ declare namespace API {
       PageParams & {
         user_id?: number;
         course_id?: number;
-        status?: CourseAccessStatus;
+        status?: CourseAccessEnquiryStatus;
       };
 }
 
