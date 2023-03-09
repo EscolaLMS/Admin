@@ -232,6 +232,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         order: 0,
         title: 'Add title here',
         active: true,
+        parent_id: parentId,
       };
 
       setState((prevState) => ({

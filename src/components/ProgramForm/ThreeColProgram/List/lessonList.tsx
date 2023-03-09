@@ -51,6 +51,7 @@ const RecursiveLessonList: React.FC<{
                   onCreate={(title) => {
                     const formData = getFormData({
                       ...lesson,
+                      parent_lesson_id: lesson.parent_id,
                       title,
                       active: lesson.active ? 1 : 0,
                     });
