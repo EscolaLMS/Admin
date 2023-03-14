@@ -719,6 +719,7 @@ declare namespace API {
     user: API.UserItem;
     date: Date | string;
     user: UserItem;
+    busy_terms?: string[];
   };
 
   type TemplateItem = {
@@ -1062,6 +1063,26 @@ declare namespace API {
     key: string;
     value: string;
   };
+
+  type ConsultationAccessEnquiry = EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiry & {
+    consultation_term: ConsultationAppointment;
+    proposed_terms: EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiryProposedTerm[];
+  };
+
+  type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
+
+  type ConsultationAccessEnquiryListParams =
+    EscolaLms.ConsultationAccess.Http.Requests.Admin.AdminListConsultationAccessEnquiryRequest &
+      PageParams & {
+        user_id?: number;
+        consultation_id?: number;
+        status?: CourseAccessEnquiryStatus;
+        proposed_at_from?: string;
+        proposed_at_to?: string;
+        is_coming?: boolean | 1 | 0;
+      };
+
+  type ConsultationAccessEnquiryListItem = ConsultationAccessEnquiry;
 
   type CourseAccessEnquiryList =
     DefaultMetaResponse<EscolaLms.CourseAccess.Models.CourseAccessEnquiry>;
