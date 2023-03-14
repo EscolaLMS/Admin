@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 
 import TypeButton from '@/components/TypeButton';
 import TypeDrawer from '@/components/TypeDrawer';
+import { Space } from 'antd';
 
 export type PossibleType =
   | 'App\\Models\\User'
@@ -13,18 +14,24 @@ export type PossibleType =
   | 'EscolaLms\\Cart\\Models\\Course'
   | 'EscolaLms\\Webinars\\Models\\Webinar'
   | 'EscolaLms\\Auth\\Models\\UserGroup'
+  | 'EscolaLms\\Consultations\\Models\\Consultation'
   | 'Questionnaire'
   | 'Product';
 
-export const TypeButtonDrawer: React.FC<{
-  type: PossibleType;
-  type_id: number;
-}> = ({ type, type_id }) => {
+export const TypeButtonDrawer: React.FC<
+  PropsWithChildren<{
+    type: PossibleType;
+    type_id: number;
+  }>
+> = ({ type, type_id, children }) => {
   const [currentRow, setCurrentRow] = useState<API.LinkedType>({ type: '', value: null });
 
   return (
     <React.Fragment>
-      <TypeButton type={type} type_id={type_id} onData={(data) => setCurrentRow(data)} />
+      <Space direction="vertical">
+        {children}
+        <TypeButton type={type} type_id={type_id} onData={(data) => setCurrentRow(data)} />
+      </Space>
       <TypeDrawer
         data={currentRow}
         visible={!!currentRow.type}

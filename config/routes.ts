@@ -401,6 +401,13 @@
         component: './Consultations',
       },
       {
+        path: '/other/consultation-access',
+        name: 'Consultation Requests',
+        icon: 'experiment',
+        access: 'consultationAccessListPermission',
+        component: './ConsultationsAccess',
+      },
+      {
         path: '/other/consultations/:consultation',
         access: 'consultationDetailsPermission',
         component: './Consultations/form',

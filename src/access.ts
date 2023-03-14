@@ -121,6 +121,10 @@ export default function (initialState: { currentUser: API.UserItem }) {
 
     courseAccessListPermission: havePermissionsInDashboard(PERMISSIONS.CourseAccessList),
 
+    consultationAccessListPermission: havePermissionsInDashboard(
+      PERMISSIONS.ConsultationAccessList,
+    ),
+
     tasksPermission: () => true,
   };
 }

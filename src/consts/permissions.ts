@@ -234,6 +234,14 @@ enum PERMISSIONS {
   CourseAccessList = 'course-access_list',
   CourseAccessDelete = 'course-access_delete',
   CourseAccessApprove = 'course-access_approve',
+
+  ConsultationAccessCreateOwn = 'consultation-access_create-own',
+  ConsultationAccessListOwn = 'consultation-access_list-own',
+  ConsultationAccessList = 'consultation-access_list',
+  ConsultationAccessApprove = 'consultation-access_approve',
+  ConsultationAccessDisapprove = 'consultation-access_disapprove',
+  ConsultationAccessDeleteOwn = 'consultation-access_delete-own',
+  ConsultationAccessUpdateOwn = 'consultation-access_update-own',
 }
 
 export default PERMISSIONS;
