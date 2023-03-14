@@ -6,7 +6,7 @@
     "description": "Headless LMS Admin panel",
     "scripts": {
         "analyze": "cross-env ANALYZE=1 umi build",
-        "build": "umi build",
+        "build": "set NODE_OPTIONS=--openssl-legacy-provider && umi build",
         "deploy": "npm run site && npm run gh-pages",
         "dev": "env-cmd -f .env npm run start:dev",
         "dev-stage": "env-cmd -f .env.staging yarn start:dev",
