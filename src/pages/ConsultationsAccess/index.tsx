@@ -1,17 +1,5 @@
-import { DeleteOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Tooltip,
-  Popconfirm,
-  message,
-  Typography,
-  Drawer,
-  Tag,
-  Descriptions,
-  Space,
-  Input,
-} from 'antd';
-import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { Button, Drawer, Tag, Space, Input } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -27,24 +15,6 @@ import {
 } from '@/services/escola-lms/consultations_access';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import CourseSelect from '@/components/CourseSelect';
-
-const DataDisplay: React.FC<{ data: unknown }> = ({ data }) => {
-  const [visible, setVisible] = useState(false);
-  return data && typeof data === 'object' && Object.keys(data).length > 0 ? (
-    <React.Fragment>
-      <Button size="small" onClick={() => setVisible(true)}>
-        <FormattedMessage id="show" defaultMessage="show" />
-      </Button>
-      <Drawer width={700} open={visible} onClose={() => setVisible(false)}>
-        <Typography.Paragraph>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-        </Typography.Paragraph>
-      </Drawer>
-    </React.Fragment>
-  ) : (
-    <React.Fragment />
-  );
-};
 
 const Disapprove: React.FC<{ id: number; onChange: () => void }> = ({ id, onChange }) => {
   const [txt, setTxt] = useState<string>('');
