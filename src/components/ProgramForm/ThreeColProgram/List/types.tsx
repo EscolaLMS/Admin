@@ -9,6 +9,7 @@ import {
   AudioOutlined,
   YoutubeOutlined,
   InteractionOutlined,
+  CarryOutOutlined,
   //CaretUpOutlined,
   //CaretDownOutlined,
   PlusOutlined,
@@ -124,6 +125,14 @@ export const TopicTypesSelector: React.FC<{
           </Tooltip>
           <Tooltip placement="right" title={<FormattedMessage id="SCORM" />}>
             <Button block onClick={() => setSelected(TopicType.SCORM)} icon={<FundOutlined />} />
+          </Tooltip>
+
+          <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
+            <Button
+              block
+              onClick={() => setSelected(TopicType.Project)}
+              icon={<CarryOutOutlined />}
+            />
           </Tooltip>
         </div>
       )}

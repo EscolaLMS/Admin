@@ -8,6 +8,7 @@ export enum TopicType {
   Image = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\Image',
   PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
   SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
+  Project = 'EscolaLms\\TopicTypeProject\\Models\\Project',
 }
 
 export enum EventTypes {

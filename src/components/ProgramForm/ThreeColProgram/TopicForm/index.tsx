@@ -25,8 +25,10 @@ import {
   YoutubeOutlined,
   InteractionOutlined,
   ExclamationCircleOutlined,
+  CarryOutOutlined,
 } from '@ant-design/icons';
 import ScormSelector from '@/components/Scorm';
+import Project from './media/project';
 
 export const getTypeIcon = (type: string | undefined) => {
   if (type) {
@@ -47,6 +49,8 @@ export const getTypeIcon = (type: string | undefined) => {
         return <VideoCameraAddOutlined />;
       case 'RichText':
         return <FileTextOutlined />;
+      case 'Project':
+        return <CarryOutOutlined />;
     }
   }
   return <ExclamationCircleOutlined />;
@@ -79,7 +83,7 @@ export const Topic: React.FC = () => {
       };
     });
     if (topic?.isNew) {
-      setSaveIsDisabled(true);
+      setSaveIsDisabled(true && topic.topicable_type !== TopicType.Project);
     }
   }, [type, topic]);
 
@@ -128,6 +132,10 @@ export const Topic: React.FC = () => {
       order: sortOrder,
       json: topics.json ? JSON.stringify(topics.json) : null,
     };
+
+    if (values.topicable_type === TopicType.Project && !values.value) {
+      values.value = 'theProject';
+    }
 
     const formData = getFormData(values);
 
@@ -201,6 +209,9 @@ export const Topic: React.FC = () => {
             )}
           {type && type === TopicType.OEmbed && (
             <Oembed text={topics.value} onChange={(value) => updateValue('value', value)} />
+          )}
+          {type && type === TopicType.Project && (
+            <Project onChange={(value) => updateValue('value', value)} />
           )}
           {type && type === TopicType.H5P && (
             <H5PForm id={topics.value} onChange={(value) => updateValue('value', value)} />

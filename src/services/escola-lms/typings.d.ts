@@ -391,6 +391,11 @@ declare namespace API {
     topicable: TopicableBase;
   };
 
+  type TopicProject = TopicBase & {
+    topicable_type: TopicType.Project;
+    topicable: TopicableBase;
+  };
+
   type TopicAudio = TopicBase & {
     topicable_type: TopicType.Audio;
     topicable: TopicableBase & {
@@ -1102,6 +1107,24 @@ declare namespace API {
         course_id?: number;
         status?: CourseAccessEnquiryStatus;
       };
+
+  type ProjectSolution = EscolaLms.TopicTypeProject.Models.ProjectSolution & {
+    file_url: string;
+  };
+
+  type ProjectSolutionList = DefaultMetaResponse<ProjectSolution>;
+
+  type ProjectSolutionListParams =
+    EscolaLms.TopicTypeProject.Http.Requests.Admin.AdminListProjectSolutionRequest &
+      PageParams & {
+        user_id?: number;
+        course_id?: number;
+        topic_id?: number;
+        order_by?: 'created_at' | 'id' | 'user_id' | 'topic_id';
+        order?: 'ASC' | 'DESC';
+      };
+
+  type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 }
 
 declare module 'jsoneditor-react' {
