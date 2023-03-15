@@ -1,8 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Typography, Drawer } from 'antd';
+import { Button, Tooltip, Popconfirm, message } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import UserSelect from '@/components/UserSelect';
@@ -13,14 +12,7 @@ import { program } from '@/services/escola-lms/course';
 import { projectSolutions, deleteProjectSolution } from '@/services/escola-lms/projects';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import CourseSelect from '@/components/CourseSelect';
 import { TopicType } from '@/services/escola-lms/enums';
-
-// TODO
-
-// add select to fetch by topic
-
-// add ordering
 
 const handleRemove = async (id: number) => {
   return deleteProjectSolution(id).then((response) => {
@@ -37,29 +29,24 @@ const getFlatTopics = (lessons: API.Lesson[]): API.Topic[] => {
   }, [] as API.Topic[]) as API.Topic[];
 };
 
-const DataDisplay: React.FC<{ data: unknown }> = ({ data }) => {
-  const [visible, setVisible] = useState(false);
-  return data && typeof data === 'object' && Object.keys(data).length > 0 ? (
-    <React.Fragment>
-      <Button size="small" onClick={() => setVisible(true)}>
-        <FormattedMessage id="show" defaultMessage="show" />
-      </Button>
-      <Drawer width={700} open={visible} onClose={() => setVisible(false)}>
-        <Typography.Paragraph>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-        </Typography.Paragraph>
-      </Drawer>
-    </React.Fragment>
-  ) : (
-    <React.Fragment />
-  );
-};
-
 export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
   const [projectTopics, setProjectTopics] = useState<API.TopicProject[]>([]);
+
+  const enumsProjectTopics = useMemo(() => {
+    return projectTopics.reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr.id ?? -1]: {
+          text: curr.title,
+          status: curr.id,
+        },
+      }),
+      {},
+    );
+  }, [projectTopics]);
 
   useEffect(() => {
     if (courseId) {
@@ -80,11 +67,14 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="topic" defaultMessage="topic" />,
-      dataIndex: 'id',
-      hideInSearch: true,
+      dataIndex: 'topic_id',
+      hideInSearch: false,
+      sorter: true,
+      valueEnum: enumsProjectTopics,
       render: (_, record) => {
         return (
           <Link to={`/courses/list/4/program/?topic=${record.topic_id}`}>
@@ -94,6 +84,7 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
       },
     },
     {
+      sorter: true,
       title: <FormattedMessage id="user" defaultMessage="user" />,
       dataIndex: 'user_id',
       renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
@@ -120,6 +111,7 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
         ),
     },
     {
+      sorter: true,
       title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
       dataIndex: 'created_at',
       hideInSearch: true,
@@ -178,13 +170,17 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
       })}
       actionRef={actionRef}
       rowKey="id"
-      request={({ pageSize, current, user_id, topic_id }) => {
+      request={({ pageSize, current, user_id, topic_id }, sort) => {
+        const sortArr = sort && Object.entries(sort)[0];
+        const order_by = sortArr && (sortArr[0] as API.ProjectSolutionListParams['order_by']);
         return projectSolutions({
           pageSize,
           current,
           course_id: courseId,
           user_id,
           topic_id,
+          order_by,
+          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
         }).then((response) => {
           if (response.success) {
             return {

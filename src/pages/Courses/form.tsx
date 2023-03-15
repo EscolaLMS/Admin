@@ -691,7 +691,7 @@ export default () => {
         )}
 
         {!isNew && (
-          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="user_projects" />}>
+          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="Uploaded Projects" />}>
             <ProjectsList courseId={Number(course)} />
           </ProCard.TabPane>
         )}
