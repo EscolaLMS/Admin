@@ -20,6 +20,7 @@ jobs:
           REACT_APP_SENTRYDSN: https://ded0d6568b9744a5bcdbedb734946671@sentry.etd24.pl/63
           REACT_APP_YBUG: 01m1nn5zqystt1qq5n11
         run: |
+          node -v 
           yarn
           yarn build
 
