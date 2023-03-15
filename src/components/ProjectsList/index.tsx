@@ -16,6 +16,12 @@ import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import CourseSelect from '@/components/CourseSelect';
 import { TopicType } from '@/services/escola-lms/enums';
 
+// TODO
+
+// add select to fetch by topic
+
+// add ordering
+
 const handleRemove = async (id: number) => {
   return deleteProjectSolution(id).then((response) => {
     if (response.success) {
