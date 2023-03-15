@@ -41,6 +41,7 @@ import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
 import { isAfter, isBefore } from 'date-fns';
+import { ProjectsList } from '@/components/ProjectsList';
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -686,6 +687,12 @@ export default () => {
                 {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
               </Col>
             </Row>
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && (
+          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="Uploaded Projects" />}>
+            <ProjectsList courseId={Number(course)} />
           </ProCard.TabPane>
         )}
       </ProCard>
