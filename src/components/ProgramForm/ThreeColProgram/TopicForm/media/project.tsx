@@ -10,8 +10,6 @@ export const Project: React.FC<{ onChange: (value: string) => void }> = ({ onCha
   useLayoutEffect(() => {
     onChange('theProject');
   }, []);
-  // const [currentValue, setCurrentValue] = useState<string>(text);
-  // const [previewValue, setPreviewValue] = useState<string>(text);
 
   return (
     <React.Fragment>
