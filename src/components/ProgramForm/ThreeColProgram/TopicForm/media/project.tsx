@@ -1,6 +1,5 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import Embed from 'react-tiny-oembed';
-import { Row, Input, Button } from 'antd';
+import React, { useEffect, useLayoutEffect } from 'react';
+import { Row } from 'antd';
 import { FormattedMessage } from 'umi';
 
 export const Project: React.FC<{ onChange: (value: string) => void }> = ({ onChange }) => {
@@ -16,7 +15,12 @@ export const Project: React.FC<{ onChange: (value: string) => void }> = ({ onCha
 
   return (
     <React.Fragment>
-      <Row>Project</Row>
+      <Row>
+        <FormattedMessage
+          id="project_description"
+          defaultMessage="Project has nothing to setup here. Add title and description in the right side panel"
+        />
+      </Row>
     </React.Fragment>
   );
 };
