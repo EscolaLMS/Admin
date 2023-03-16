@@ -37,6 +37,11 @@ const TableList: React.FC = () => {
     },
 
     {
+      title: <FormattedMessage id="type" defaultMessage="type" />,
+      dataIndex: 'type',
+    },
+
+    {
       title: <FormattedMessage id="author" defaultMessage="author" />,
       dataIndex: 'created_by_id',
       renderFormItem: (item, { type, defaultRender, ...rest }, form) => {

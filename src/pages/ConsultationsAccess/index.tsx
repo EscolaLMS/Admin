@@ -1,5 +1,5 @@
-import { Button, Drawer, Tag, Space, Input } from 'antd';
-import React, { useCallback, useRef, useState } from 'react';
+import { Button, Tag, Space } from 'antd';
+import React, { useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -7,35 +7,20 @@ import ProTable from '@ant-design/pro-table';
 import UserSelect from '@/components/UserSelect';
 import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { ApproveForm } from './approveForm';
+import { DisapproveForm } from './disapproveForm';
 
-import {
-  consultationAccess,
-  approveConsultationAccessTerm,
-  disapproveConsultationAccess,
-} from '@/services/escola-lms/consultations_access';
+import { consultationAccess } from '@/services/escola-lms/consultations_access';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import CourseSelect from '@/components/CourseSelect';
-
-const Disapprove: React.FC<{ id: number; onChange: () => void }> = ({ id, onChange }) => {
-  const [txt, setTxt] = useState<string>('');
-  const onDisapprove = useCallback(() => {
-    disapproveConsultationAccess(id, { message: txt }).finally(() => onChange());
-  }, [txt]);
-  return (
-    <Space direction="vertical" style={{ display: 'flex' }}>
-      <Input.TextArea placeholder="reason" value={txt} onChange={(e) => setTxt(e.target.value)} />
-      <Button type="primary" danger onClick={() => onDisapprove()}>
-        <FormattedMessage id="Disapprove" defaultMessage="Disapprove" />
-      </Button>
-    </Space>
-  );
-};
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
   const [disapproveId, setDisapproveId] = useState<number>();
+  const [approveTerm, setApproveTerm] =
+    useState<EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiryProposedTerm>();
 
   const columns: ProColumns<API.ConsultationAccessEnquiryListItem>[] = [
     {
@@ -105,39 +90,46 @@ const TableList: React.FC = () => {
         ),
     },
     {
-      title: <FormattedMessage id="consultation_term" defaultMessage="Term" />,
+      title: <FormattedMessage id="consultation_term_date" defaultMessage="Term Date" />,
       dataIndex: 'consultation_term',
       hideInSearch: true,
       render: (_, record) => {
-        return (
+        return record.consultation_term ? (
+          <>
+            <FormattedMessage id="approved_date" defaultMessage="Approved Date" />:
+            {format(new Date(record.consultation_term.date), DATETIME_FORMAT)}
+          </>
+        ) : (
           <Space direction="vertical">
-            {record.consultation_term
-              ? record.consultation_term.busy_terms &&
-                record.consultation_term.busy_terms.map((term) => (
-                  <Tag>
-                    <FormattedMessage id="busy_term" defaultMessage="Busy Term" />:
-                    {format(new Date(term), DATETIME_FORMAT)}
-                  </Tag>
-                ))
-              : record.proposed_terms.map((term) => (
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      approveConsultationAccessTerm(term.id).finally(() => {
-                        if (actionRef.current) {
-                          actionRef.current.reload();
-                        }
-                      });
-                    }}
-                  >
-                    <FormattedMessage id="approve" defaultMessage="Approve Term" />
-                    {' : '}
-                    {format(new Date(term.proposed_at), DATETIME_FORMAT)}
-                  </Button>
-                ))}
+            {record.proposed_terms.map((term) => (
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => {
+                  setApproveTerm(term);
+                }}
+              >
+                <FormattedMessage id="approve" defaultMessage="Approve Term" />
+                {':'}
+                {format(new Date(term.proposed_at), DATETIME_FORMAT)}
+              </Button>
+            ))}
           </Space>
         );
       },
+    },
+    {
+      title: <FormattedMessage id="meeting_link" defaultMessage="Meeting Link" />,
+      dataIndex: 'meeting_link',
+      hideInSearch: true,
+      render: (_, record) =>
+        record.meeting_link ? (
+          <Button target="_blank" type="primary" href={record.meeting_link}>
+            {new URL(record.meeting_link).host}
+          </Button>
+        ) : (
+          <React.Fragment />
+        ),
     },
     {
       title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
@@ -180,24 +172,17 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <Drawer
-        title={<FormattedMessage id="disapprove" defaultMessage="Disapprove" />}
-        placement="right"
+      <ApproveForm
+        term={approveTerm}
+        onClose={() => setApproveTerm(undefined)}
+        onSuccess={() => actionRef && actionRef.current?.reload()}
+      />
+      <DisapproveForm
+        id={disapproveId}
         onClose={() => setDisapproveId(undefined)}
-        open={!!disapproveId}
-      >
-        {disapproveId && (
-          <Disapprove
-            id={disapproveId}
-            onChange={() => {
-              setDisapproveId(undefined);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }}
-          />
-        )}
-      </Drawer>
+        onSuccess={() => actionRef && actionRef.current?.reload()}
+      />
+
       <ProTable<API.ConsultationAccessEnquiryListItem, API.ConsultationAccessEnquiryListParams>
         headerTitle={intl.formatMessage({
           id: 'consultationAccessEnquiries',

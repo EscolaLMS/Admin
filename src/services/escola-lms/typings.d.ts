@@ -1072,6 +1072,7 @@ declare namespace API {
   type ConsultationAccessEnquiry = EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiry & {
     consultation_term: ConsultationAppointment;
     proposed_terms: EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiryProposedTerm[];
+    meeting_link?: string;
   };
 
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
