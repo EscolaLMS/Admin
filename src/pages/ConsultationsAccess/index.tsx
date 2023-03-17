@@ -28,9 +28,13 @@ const TableList: React.FC = () => {
       dataIndex: 'id',
       hideInSearch: true,
     },
-
     {
-      title: <FormattedMessage id="user" defaultMessage="user" />,
+      title: <FormattedMessage id="description" defaultMessage="Description" />,
+      dataIndex: 'description',
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="user" defaultMessage="User" />,
       dataIndex: 'user_id',
       renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
         if (type === 'form') {
