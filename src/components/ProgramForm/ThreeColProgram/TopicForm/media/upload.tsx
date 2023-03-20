@@ -19,6 +19,28 @@ const CONFIG = {
   },
 };
 
+const prepareObject = (data: Record<string, string | number | boolean | object | undefined>) => {
+  const result: Record<string, string | number> = {};
+  let key: string;
+  for (key in data) {
+    switch (typeof data[key]) {
+      case 'boolean':
+        result[key] = data[key] ? 1 : 0;
+        break;
+      case 'object':
+        result[key] = JSON.stringify(data[key]);
+        break;
+      case 'string':
+      case 'number':
+        result[key] = data[key] as string | number;
+        break;
+      default:
+        break;
+    }
+  }
+  return result;
+};
+
 const PDFPreview: React.FC<{ file: string }> = ({ file }) => {
   const [nPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
@@ -125,6 +147,8 @@ export const MediaUploadForm: React.FC<{
     delete data?.json;
   }
 
+  console.log('data', prepareObject(data));
+
   return (
     <React.Fragment>
       <Row>
@@ -134,7 +158,7 @@ export const MediaUploadForm: React.FC<{
           name="value"
           url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
           accept={CONFIG.acceptedTypes[type]}
-          data={data}
+          data={prepareObject(data)}
         >
           <Button disabled={disabled} icon={<UploadOutlined />}>
             Click to upload {type}
