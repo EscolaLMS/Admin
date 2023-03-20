@@ -82,6 +82,7 @@ const VideoProgress: React.FC<{ topic: API.TopicVideo }> = ({ topic }) => {
       }, 5000);
       return () => clearTimeout(t);
     }
+    return;
   }, []);
 
   if (topic.json?.ffmpeg.state === 'coding') {
@@ -172,8 +173,6 @@ export const MediaUploadForm: React.FC<{
   if (!data.json) {
     delete data?.json;
   }
-
-  console.log('data', prepareObject(data));
 
   return (
     <React.Fragment>
