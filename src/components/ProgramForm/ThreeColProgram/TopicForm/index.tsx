@@ -57,8 +57,15 @@ export const getTypeIcon = (type: string | undefined) => {
 };
 
 export const Topic: React.FC = () => {
-  const { state, currentEditMode, updateTopic, deleteTopic, onTopicUploaded, cloneTopic } =
-    useContext(Context);
+  const {
+    state,
+    currentEditMode,
+    updateTopic,
+    deleteTopic,
+    onTopicUploaded,
+    cloneTopic,
+    getLessons,
+  } = useContext(Context);
 
   const topic =
     currentEditMode && currentEditMode.mode === 'topic' && currentEditMode.value
@@ -193,6 +200,15 @@ export const Topic: React.FC = () => {
                 onUpdate={(info) => {
                   if (topic.id && onTopicUploaded)
                     onTopicUploaded(info.file.response.data.id, info);
+
+                  // refetch lessons to get if video is being transcoded
+                  if (topic.topicable_type === TopicType.Video) {
+                    setTimeout(() => {
+                      if (getLessons) {
+                        getLessons();
+                      }
+                    }, 5000);
+                  }
 
                   setTopics({
                     ...topics,

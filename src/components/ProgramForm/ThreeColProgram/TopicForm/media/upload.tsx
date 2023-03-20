@@ -1,11 +1,14 @@
-import React, { useCallback, useState } from 'react';
-import { Row, Button, Pagination, Spin, Typography } from 'antd';
+import React, { useCallback, useState, useContext, useEffect } from 'react';
+import { Row, Button, Pagination, Spin, Typography, Progress } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { TopicType } from '@/services/escola-lms/enums';
 import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import { Document, pdfjs, Page } from 'react-pdf';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import './index.css';
+import { FormattedMessage } from 'umi';
+
+import { Context } from '@/components/ProgramForm/Context';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 const CONFIG = {
@@ -65,6 +68,29 @@ const PDFPreview: React.FC<{ file: string }> = ({ file }) => {
       </Document>
     </div>
   );
+};
+
+const VideoProgress: React.FC<{ topic: API.TopicVideo }> = ({ topic }) => {
+  const { getLessons } = useContext(Context);
+
+  useEffect(() => {
+    if (topic.json?.ffmpeg.state === 'coding') {
+      const t = setTimeout(() => {
+        if (getLessons) {
+          getLessons();
+        }
+      }, 5000);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  if (topic.json?.ffmpeg.state === 'coding') {
+    <Typography>
+      <FormattedMessage id="encoding_progress" defaultMessage="Encoding progress:" />
+      <Progress percent={topic.json?.ffmpeg?.percentage} />
+    </Typography>;
+  }
+  return <React.Fragment></React.Fragment>;
 };
 
 export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }> = ({
@@ -167,6 +193,9 @@ export const MediaUploadForm: React.FC<{
       </Row>
       <Row>
         <div style={{ padding: '0 12px' }}>
+          {topic.topicable_type === TopicType.Video && (
+            <VideoProgress topic={topic as API.TopicVideo} />
+          )}
           <MediaUploadPreview type={type} topic={currentState} />
         </div>
       </Row>

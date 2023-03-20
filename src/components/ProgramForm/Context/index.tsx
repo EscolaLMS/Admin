@@ -18,6 +18,7 @@ import {
 } from '@/services/escola-lms/course';
 
 import type { UploadChangeParam } from 'antd/lib/upload';
+import { TopicType } from '@/services/escola-lms/enums';
 
 type CurrentEditMode =
   | { mode: 'lesson'; id: number; value?: API.Lesson | null }
@@ -46,6 +47,7 @@ type ProgramContext = {
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
   cloneTopic?: (topic_id: number) => void;
   cloneLesson?: (lesson_id: number) => void;
+  getLessons?: () => void;
 };
 
 export const Context = React.createContext<ProgramContext>({});
@@ -447,16 +449,25 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
       return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then(
         (data) => {
+          console.log('topic-->', data);
           if (data.success) {
             message.success(data.message);
             getLessons();
 
             history.push(`/courses/list/${id}/program/?topic=${data.data.id}`);
+
+            console.log('topic', topic);
+            if (topic?.topicable_type === TopicType.Video) {
+              setTimeout(() => {
+                console.log('timeout');
+                getLessons();
+              }, 5000);
+            }
           }
         },
       );
     },
-    [getLessonIdByTopicId, state],
+    [getLessonIdByTopicId, state, getLessons],
   );
 
   const deleteTopic = useCallback(
@@ -724,6 +735,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     cloneTopic,
     cloneLesson,
     currentEditMode,
+    getLessons,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
