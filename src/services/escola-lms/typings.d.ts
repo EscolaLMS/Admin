@@ -359,7 +359,18 @@ declare namespace API {
     active?: boolean;
     preview?: boolean;
     can_skip?: boolean;
-    json?: object;
+    json?: object &
+      ?{
+        ffmpeg:
+          | {
+              state: 'coding';
+              percentage: number;
+            }
+          | {
+              state: 'finished';
+              path: string;
+            };
+      };
     introduction?: string;
     description?: string;
     summary?: string;
