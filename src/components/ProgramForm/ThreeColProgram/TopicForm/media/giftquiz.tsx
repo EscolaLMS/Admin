@@ -1,6 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
-import { Row } from 'antd';
-import { FormattedMessage } from 'umi';
+import React from 'react';
 import { GiftQuestions } from '@/components/GiftQuizQuestions';
 
 export const GiftQuiz: React.FC<{
