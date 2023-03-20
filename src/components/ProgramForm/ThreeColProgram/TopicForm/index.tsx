@@ -26,9 +26,11 @@ import {
   InteractionOutlined,
   ExclamationCircleOutlined,
   CarryOutOutlined,
+  PercentageOutlined,
 } from '@ant-design/icons';
 import ScormSelector from '@/components/Scorm';
 import Project from './media/project';
+import GiftQuiz from './media/giftquiz';
 
 export const getTypeIcon = (type: string | undefined) => {
   if (type) {
@@ -51,6 +53,8 @@ export const getTypeIcon = (type: string | undefined) => {
         return <FileTextOutlined />;
       case 'Project':
         return <CarryOutOutlined />;
+      case 'GiftQuiz':
+        return <PercentageOutlined />;
     }
   }
   return <ExclamationCircleOutlined />;
@@ -86,11 +90,16 @@ export const Topic: React.FC = () => {
     setTopics((prevState) => {
       return {
         ...prevState,
+        ...topic,
         value: type === topic?.topicable_type ? topic?.topicable?.value : '',
       };
     });
     if (topic?.isNew) {
-      setSaveIsDisabled(true && topic.topicable_type !== TopicType.Project);
+      setSaveIsDisabled(
+        true &&
+          (topic.topicable_type !== TopicType.Project ||
+            topic.topicable_type !== TopicType.GiftQuiz),
+      );
     }
   }, [type, topic]);
 
@@ -140,7 +149,11 @@ export const Topic: React.FC = () => {
       json: topics.json ? JSON.stringify(topics.json) : null,
     };
 
-    if (values.topicable_type === TopicType.Project && !values.value) {
+    if (
+      (values.topicable_type === TopicType.Project ||
+        values.topicable_type === TopicType.GiftQuiz) &&
+      !values.value
+    ) {
       values.value = 'theProject';
     }
 
@@ -228,6 +241,21 @@ export const Topic: React.FC = () => {
           )}
           {type && type === TopicType.Project && (
             <Project onChange={(value) => updateValue('value', value)} />
+          )}
+          {type && type === TopicType.GiftQuiz && (
+            <GiftQuiz
+              topicable={topics.topicable as API.TopicQuiz['topicable']}
+              onAdded={() => {
+                if (getLessons) {
+                  getLessons();
+                }
+              }}
+              onRemoved={() => {
+                if (getLessons) {
+                  getLessons();
+                }
+              }}
+            />
           )}
           {type && type === TopicType.H5P && (
             <H5PForm id={topics.value} onChange={(value) => updateValue('value', value)} />
