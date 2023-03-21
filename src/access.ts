@@ -9,8 +9,9 @@ export default function (initialState: { currentUser: API.UserItem }) {
 
   const havePermissions = isUserHavePermissions(currentUser);
   const dashboardPermission = havePermissions(PERMISSIONS.CoreDashboardAccess);
-  const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) =>
-    dashboardPermission && havePermissions(...permissions);
+  const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) => {
+    return dashboardPermission && havePermissions(...permissions);
+  };
 
   return {
     dashboardPermission,
@@ -25,14 +26,16 @@ export default function (initialState: { currentUser: API.UserItem }) {
     userGroupDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupRead),
 
     analyticsPermission: havePermissionsInDashboard(
-      PERMISSIONS.NotificationListAll || PERMISSIONS.ReportList || PERMISSIONS.TrackerList,
+      PERMISSIONS.NotificationListAll,
+      PERMISSIONS.ReportList,
+      PERMISSIONS.TrackerList,
     ),
 
     configurationPermission: havePermissionsInDashboard(
-      PERMISSIONS.FileList ||
-        PERMISSIONS.SettingsList ||
-        PERMISSIONS.TemplateRead ||
-        PERMISSIONS.TranslationList,
+      PERMISSIONS.FileList,
+      PERMISSIONS.SettingsList,
+      PERMISSIONS.TemplateRead,
+      PERMISSIONS.TranslationList,
     ),
 
     orderListPermission: havePermissionsInDashboard(PERMISSIONS.CartOrderList),
@@ -40,11 +43,11 @@ export default function (initialState: { currentUser: API.UserItem }) {
     paymentListPermission: havePermissionsInDashboard(PERMISSIONS.PaymentList),
 
     coursesPermission: havePermissionsInDashboard(
-      PERMISSIONS.CourseList ||
-        PERMISSIONS.H5PList ||
-        PERMISSIONS.ScormList ||
-        PERMISSIONS.CategoryList ||
-        PERMISSIONS.WebinarList,
+      PERMISSIONS.CourseList,
+      PERMISSIONS.H5PList,
+      PERMISSIONS.ScormList,
+      PERMISSIONS.CategoryList,
+      PERMISSIONS.WebinarList,
     ),
 
     courseListPermission: havePermissionsInDashboard(PERMISSIONS.CourseList),
@@ -54,10 +57,10 @@ export default function (initialState: { currentUser: API.UserItem }) {
     h5pDetailsPermission: havePermissionsInDashboard(PERMISSIONS.H5PRead),
 
     otherPermission: havePermissionsInDashboard(
-      PERMISSIONS.ConsultationList ||
-        PERMISSIONS.StationaryEventsList ||
-        PERMISSIONS.QuestionnaireList ||
-        PERMISSIONS.PageList,
+      PERMISSIONS.ConsultationList,
+      PERMISSIONS.StationaryEventsList,
+      PERMISSIONS.QuestionnaireList,
+      PERMISSIONS.PageList,
     ),
 
     scormListPermission: havePermissionsInDashboard(PERMISSIONS.ScormList),
@@ -74,7 +77,9 @@ export default function (initialState: { currentUser: API.UserItem }) {
     categoryListPermission: havePermissionsInDashboard(PERMISSIONS.CategoryList),
 
     salesPermission: havePermissionsInDashboard(
-      PERMISSIONS.CartOrderList || PERMISSIONS.PaymentList || PERMISSIONS.VoucherList,
+      PERMISSIONS.CartOrderList,
+      PERMISSIONS.PaymentList,
+      PERMISSIONS.VoucherList,
       PERMISSIONS.ProductsManage,
     ),
 
@@ -88,7 +93,9 @@ export default function (initialState: { currentUser: API.UserItem }) {
     reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
 
     usersPermission: havePermissionsInDashboard(
-      PERMISSIONS.UserList || PERMISSIONS.PermisionRoleList || PERMISSIONS.UserGroupList,
+      PERMISSIONS.UserList,
+      PERMISSIONS.PermisionRoleList,
+      PERMISSIONS.UserGroupList,
     ),
 
     questionnaireListPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireList),

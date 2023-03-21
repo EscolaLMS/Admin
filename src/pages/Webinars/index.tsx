@@ -193,7 +193,7 @@ const Webinars: React.FC = () => {
           }
         }
         toolBarRender={() => [
-          <Link key="addnew" to="/webinars/new">
+          <Link key="addnew" to="/courses/webinars/new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
             </Button>
