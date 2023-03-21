@@ -449,17 +449,14 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
       return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then(
         (data) => {
-          console.log('topic-->', data);
           if (data.success) {
             message.success(data.message);
             getLessons();
 
             history.push(`/courses/list/${id}/program/?topic=${data.data.id}`);
 
-            console.log('topic', topic);
             if (topic?.topicable_type === TopicType.Video) {
               setTimeout(() => {
-                console.log('timeout');
                 getLessons();
               }, 5000);
             }

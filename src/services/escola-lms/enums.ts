@@ -9,6 +9,7 @@ export enum TopicType {
   PDF = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\PDF',
   SCORM = 'EscolaLms\\TopicTypes\\Models\\TopicContent\\ScormSco',
   Project = 'EscolaLms\\TopicTypeProject\\Models\\Project',
+  GiftQuiz = 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz',
 }
 
 export enum EventTypes {
