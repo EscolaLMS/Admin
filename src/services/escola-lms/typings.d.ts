@@ -925,6 +925,7 @@ declare namespace API {
     parent_id: null | number;
     registerable: boolean;
     users: UserItem[];
+    subgroups: UserGroup[];
   };
 
   type CourseAccess = {
