@@ -1,13 +1,15 @@
-import { Button, Tooltip, Popconfirm, Tag } from 'antd';
-import React, { useRef, useState, useCallback } from 'react';
+import { Button, Tooltip, Popconfirm, Tag, Spin, Modal } from 'antd';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { userGroups, deleteUserGroup } from '@/services/escola-lms/user_groups';
+import { userGroups, deleteUserGroup, userGroupsTree } from '@/services/escola-lms/user_groups';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import UserGroupSelect from '../../components/UserGroupSelect';
 import TypeButtonDrawer from '../../components/TypeButtonDrawer';
+
+import { Tree } from '@/components/Tree';
 
 const handleRemove = async (id: number) => {
   await deleteUserGroup(id);
@@ -89,9 +91,40 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
   },
 ];
 
+const TreeModal: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const [userGroupsWithChildren, setUserGroupsWithChildren] = useState<API.UserGroup[]>([]);
+
+  useEffect(() => {
+    setLoading(true);
+    userGroupsTree()
+      .then((data) => {
+        if (data.success) {
+          setUserGroupsWithChildren(data.data);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <Spin />;
+  }
+
+  return (
+    <Tree
+      branch={userGroupsWithChildren}
+      titlePropName="name"
+      childrenPropName="subgroups"
+      keyPropName="id"
+    />
+  );
+};
+
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [data, setData] = useState<API.UserGroup[]>([]);
+  const [showTree, setShowTree] = useState(false);
+
   const intl = useIntl();
 
   const groupHasChildren = useCallback(
@@ -103,6 +136,9 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
+      <Modal open={showTree} onCancel={() => setShowTree(false)} onOk={() => setShowTree(false)}>
+        {showTree && <TreeModal />}
+      </Modal>
       <ProTable<API.UserGroup, API.UserGroupsParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Users.User Groups',
@@ -116,6 +152,9 @@ const TableList: React.FC = () => {
           }
         }
         toolBarRender={() => [
+          <Button key={'show_tree'} onClick={() => setShowTree(true)}>
+            <FormattedMessage id="show_tree" defaultMessage="Show Tree" />
+          </Button>,
           <Link to="/users/groups/new" key="new">
             <Button type="primary" key="primary">
               <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />

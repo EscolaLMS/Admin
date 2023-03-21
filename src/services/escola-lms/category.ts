@@ -3,7 +3,7 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/currentUser */
 export async function categoryTree(options?: RequestOptionsInit) {
-  return request<API.DataResponseSuccess<API.Category[]>>('/api/admin/categories/tree', {
+  return request<API.DefaultResponse<API.Category[]>>('/api/admin/categories/tree', {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
