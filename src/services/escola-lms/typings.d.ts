@@ -407,6 +407,13 @@ declare namespace API {
     topicable: TopicableBase;
   };
 
+  type TopicQuiz = TopicBase & {
+    topicable_type: TopicType.GiftQuiz;
+    topicable: TopicableBase & {
+      questions: GiftQuestion[];
+    };
+  };
+
   type TopicAudio = TopicBase & {
     topicable_type: TopicType.Audio;
     topicable: TopicableBase & {
@@ -1137,6 +1144,8 @@ declare namespace API {
       };
 
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
+
+  type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion;
 }
 
 declare module 'jsoneditor-react' {
