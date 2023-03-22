@@ -1,5 +1,5 @@
 import { createQuestion, updateQuestion, deleteQuestion } from '@/services/escola-lms/gift_quiz';
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Button, Input, List, Tag, InputNumber, Typography } from 'antd';
 import { FormattedMessage } from 'umi';
 
@@ -7,18 +7,22 @@ export const QuestionItemList: React.FC<{
   quizId: number;
   question: API.GiftQuestion;
   onRemoved: () => void;
+  onLoading: () => void;
   onEdited: () => void;
-}> = ({ question, onRemoved, onEdited, quizId }) => {
+  loading: boolean;
+}> = ({ question, onRemoved, onEdited, quizId, loading = false, onLoading }) => {
   const [value, setValue] = useState(question.value);
   const [score, setScore] = useState(question.score);
   return (
     <List.Item
       actions={[
         <Button
+          loading={loading}
           key={'update'}
           size="small"
           type="primary"
           onClick={() => {
+            onLoading();
             updateQuestion(question.id, {
               ...question,
               topic_gift_quiz_id: quizId,
@@ -34,10 +38,12 @@ export const QuestionItemList: React.FC<{
           <FormattedMessage id="Questions.edit" defaultMessage="Edit Question" />
         </Button>,
         <Button
+          loading={loading}
           key={'delete'}
           size="small"
           danger
           onClick={() => {
+            onLoading();
             deleteQuestion(question.id).then(() => {
               if (onRemoved) {
                 onRemoved();
@@ -58,10 +64,21 @@ export const QuestionItemList: React.FC<{
             <Typography>
               <FormattedMessage id="Questions.score" defaultMessage="Score" />:
             </Typography>
-            <InputNumber size="small" value={score} onChange={(v) => v && setScore(v)} />
+            <InputNumber
+              disabled={loading}
+              size="small"
+              value={score}
+              onChange={(v) => v && setScore(v)}
+            />
           </Fragment>
         }
-        description={<Input.TextArea value={value} onChange={(e) => setValue(e.target.value)} />}
+        description={
+          <Input.TextArea
+            disabled={loading}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+        }
       />
     </List.Item>
   );
@@ -76,8 +93,11 @@ export const GiftQuestions: React.FC<{
 }> = ({ questions, onAdded, onRemoved, onEdited, quizId }) => {
   const [newQuestionValue, setNewQuestionValue] = useState('');
   const [newQuestionScore, setNewQuestionScore] = useState(1);
-
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [questions]);
 
   const onNew = useCallback(() => {
     setLoading(true);
@@ -111,6 +131,7 @@ export const GiftQuestions: React.FC<{
               <List.Item
                 actions={[
                   <Button
+                    loading={loading}
                     key={'new'}
                     size="small"
                     type="primary"
@@ -131,6 +152,7 @@ export const GiftQuestions: React.FC<{
                         <FormattedMessage id="Questions.score" defaultMessage="Score" />:
                       </Typography>
                       <InputNumber
+                        disabled={loading}
                         size="small"
                         value={newQuestionScore}
                         onChange={(v) => v && setNewQuestionScore(v)}
@@ -150,10 +172,22 @@ export const GiftQuestions: React.FC<{
           return (
             typeof item === 'object' && (
               <QuestionItemList
+                onLoading={() => setLoading(true)}
+                loading={loading}
                 quizId={quizId}
                 question={item}
-                onRemoved={() => onRemoved && onRemoved()}
-                onEdited={() => onEdited && onEdited()}
+                onRemoved={() => {
+                  if (onRemoved) {
+                    onRemoved();
+                  }
+                  setLoading(false);
+                }}
+                onEdited={() => {
+                  if (onEdited) {
+                    onEdited();
+                  }
+                  setLoading(false);
+                }}
               />
             )
           );

@@ -244,6 +244,9 @@ export const Topic: React.FC = () => {
           )}
           {type && type === TopicType.GiftQuiz && (
             <GiftQuiz
+              onChange={(key, value) => {
+                updateValue(key as keyof API.Topic, value);
+              }}
               topicable={topics.topicable as API.TopicQuiz['topicable']}
               onAdded={() => {
                 if (getLessons) {

@@ -411,6 +411,8 @@ declare namespace API {
     topicable_type: TopicType.GiftQuiz;
     topicable: TopicableBase & {
       questions: GiftQuestion[];
+      max_attempts?: number;
+      max_execution_time?: number;
     };
   };
 
