@@ -244,8 +244,6 @@ export const Topic: React.FC = () => {
           )}
           {type && type === TopicType.GiftQuiz && (
             <GiftQuiz
-              maxAttempts={(topics.topicable as API.TopicQuiz).topicable?.max_attempts}
-              maxExecutionTime={(topics.topicable as API.TopicQuiz).topicable?.max_execution_time}
               onChange={(key, value) => {
                 updateValue(key as keyof API.Topic, value);
               }}
