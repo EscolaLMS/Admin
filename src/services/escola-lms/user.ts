@@ -91,11 +91,12 @@ export async function deleteUser(id: number, options?: RequestOptionsInit) {
   });
 }
 /**  POST /api/auth/email/resend */
-export async function resendEmail(email: string, options?: RequestOptionsInit) {
+export async function resendEmail(email: string, return_url: string, options?: RequestOptionsInit) {
   return request<API.UserRow>(`/api/auth/email/resend`, {
     method: 'POST',
     data: {
       email,
+      return_url,
     },
     ...(options || {}),
   });

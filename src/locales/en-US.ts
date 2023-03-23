@@ -515,4 +515,5 @@ export default {
   changesToBeApproved: 'Changes to be approved',
   orderHasBeenChanged: 'The order has been changed',
   or: 'or',
+  no_base_url: "Value of 'return_url' is not set. Go to: ",
 };
