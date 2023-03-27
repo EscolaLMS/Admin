@@ -411,6 +411,8 @@ declare namespace API {
     topicable_type: TopicType.GiftQuiz;
     topicable: TopicableBase & {
       questions: GiftQuestion[];
+      max_attempts?: number;
+      max_execution_time?: number;
     };
   };
 
@@ -925,6 +927,7 @@ declare namespace API {
     parent_id: null | number;
     registerable: boolean;
     users: UserItem[];
+    subgroups: UserGroup[];
   };
 
   type CourseAccess = {

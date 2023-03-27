@@ -525,4 +525,5 @@ export default {
   changesToBeApproved: 'Zmiany do zatwierdzenia',
   orderHasBeenChanged: 'Kolejność została zmieniona',
   or: 'lub',
+  no_base_url: "Wartość pola 'return_url' nie została ustawiona. Przejdź pod: ",
 };

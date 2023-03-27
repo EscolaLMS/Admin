@@ -4,7 +4,7 @@ import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-desig
 import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import ResponsiveImage from '@/components/ResponsiveImage';
-import { useParams, history } from 'umi';
+import { useParams, history, useModel, Link } from 'umi';
 import { useCallback } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { roles as getRoles } from '@/services/escola-lms/roles';
@@ -25,6 +25,9 @@ export default ({
   const params = useParams<{ user?: string }>();
   const { user } = params;
   const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
+  const { initialState } = useModel('@@initialState');
+  const baseUrl = initialState?.config?.filter((item) => item.key === 'frontURL')[0]?.data;
+
   const [roles, setRoles] = useState<API.Role[]>();
 
   const fetchRoles = useCallback(async () => {
@@ -70,7 +73,7 @@ export default ({
         if (isNew) {
           response = await createUser(postData);
           if (response.success) {
-            history.push(`/users/${response.data.id}/user_info`);
+            history.push(`/users/${response.data.id}#/user_info`);
           }
         } else {
           response = await updateUser(Number(user), postData);
@@ -163,20 +166,31 @@ export default ({
                 return form.getFieldValue('email_verified') ? (
                   <React.Fragment />
                 ) : (
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      resendEmail(form.getFieldValue('email')).then(() => {
-                        message.success(
-                          intl.formatMessage({
-                            id: 'email_resend',
-                          }),
+                  <>
+                    {!baseUrl && (
+                      <p>
+                        <FormattedMessage id="no_base_url" />
+                        <Link to="/configuration/settings/escola_auth">Settings</Link>
+                      </p>
+                    )}
+                    <Button
+                      disabled={!baseUrl}
+                      size="small"
+                      onClick={() => {
+                        resendEmail(form.getFieldValue('email'), `${baseUrl}email-verify`).then(
+                          () => {
+                            message.success(
+                              intl.formatMessage({
+                                id: 'email_resend',
+                              }),
+                            );
+                          },
                         );
-                      });
-                    }}
-                  >
-                    <FormattedMessage id="resend" />
-                  </Button>
+                      }}
+                    >
+                      <FormattedMessage id="resend" />
+                    </Button>
+                  </>
                 );
               }}
             </Form.Item>
