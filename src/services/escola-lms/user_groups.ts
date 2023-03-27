@@ -91,7 +91,7 @@ export async function userGroupsTree(
   params?: {
     search?: string;
     parent_id?: number;
-  },
+  } & API.PaginationParams,
   options?: RequestOptionsInit,
 ) {
   return request<API.UserGroupList>('/api/admin/user-groups/tree', {
