@@ -453,7 +453,9 @@ declare namespace API {
 
   type TopicH5P = TopicBase & {
     topicable_type: TopicType.H5P;
-    topicable: TopicableBase;
+    topicable: TopicableBase & {
+      content: H5PObject;
+    };
   };
 
   type TopicScorm = TopicBase & {
