@@ -21,7 +21,7 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
   topics,
   stats,
 }) => {
-  const [showSeconds, setShowSeconds] = useState(true);
+  const [showSeconds, setShowSeconds] = useState(false);
   const columns: ColumnsType<UserStatColumn> = useMemo(() => {
     return [
       {
