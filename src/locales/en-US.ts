@@ -516,4 +516,6 @@ export default {
   orderHasBeenChanged: 'The order has been changed',
   or: 'or',
   no_base_url: "Value of 'return_url' is not set. Go to: ",
+  max_attempts: 'Max attempts',
+  max_execution_time: 'Max execution time',
 };

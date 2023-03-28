@@ -526,4 +526,6 @@ export default {
   orderHasBeenChanged: 'Kolejność została zmieniona',
   or: 'lub',
   no_base_url: "Wartość pola 'return_url' nie została ustawiona. Przejdź pod: ",
+  max_attempts: 'Maksymalna liczba prób',
+  max_execution_time: 'Maksymalny czas trwania',
 };
