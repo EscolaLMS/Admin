@@ -30,7 +30,8 @@ export const TypeButton: React.FC<{
   type: PossibleType;
   type_id: number;
   onData: (data: DataProps) => void;
-}> = ({ type, type_id, onData }) => {
+  text?: string;
+}> = ({ type, type_id, onData, text }) => {
   switch (type) {
     case 'App\\Models\\StationaryEvent':
     case 'EscolaLms\\StationaryEvents\\Models\\StationaryEvent':
@@ -71,6 +72,7 @@ export const TypeButton: React.FC<{
         <QuestionnaireRow
           id={type_id}
           onLoaded={(questionnaire) => onData({ type, value: questionnaire })}
+          text={text}
         />
       );
 

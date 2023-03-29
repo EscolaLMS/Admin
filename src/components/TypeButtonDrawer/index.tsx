@@ -22,15 +22,21 @@ export const TypeButtonDrawer: React.FC<
   PropsWithChildren<{
     type: PossibleType;
     type_id: number;
+    text?: string;
   }>
-> = ({ type, type_id, children }) => {
+> = ({ type, type_id, text, children }) => {
   const [currentRow, setCurrentRow] = useState<API.LinkedType>({ type: '', value: null });
 
   return (
     <React.Fragment>
       <Space direction="vertical">
         {children}
-        <TypeButton type={type} type_id={type_id} onData={(data) => setCurrentRow(data)} />
+        <TypeButton
+          type={type}
+          type_id={type_id}
+          onData={(data) => setCurrentRow(data)}
+          text={text}
+        />
       </Space>
       <TypeDrawer
         data={currentRow}
