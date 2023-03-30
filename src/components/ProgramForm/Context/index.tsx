@@ -449,7 +449,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
       return (isNew ? apiCreateTopic(formData) : apiUpdateTopic(topic_id, formData)).then(
         (data) => {
-          console.log('topic-->', data);
           if (data.success) {
             message.success(data.message);
             getLessons();
