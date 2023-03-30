@@ -2,6 +2,8 @@ import { createQuestion, updateQuestion, deleteQuestion } from '@/services/escol
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Button, Input, List, Tag, InputNumber, Typography } from 'antd';
 import { FormattedMessage } from 'umi';
+// import { parser } from 'gift-parser-ide';
+import { GiftQuizQuestionEditor } from './editor';
 
 export const QuestionItemList: React.FC<{
   quizId: number;
@@ -13,6 +15,12 @@ export const QuestionItemList: React.FC<{
 }> = ({ question, onRemoved, onEdited, quizId, loading = false, onLoading }) => {
   const [value, setValue] = useState(question.value);
   const [score, setScore] = useState(question.score);
+
+  // render stuff based on this
+  // const output = parser.parse(value);
+
+  //console.log(output);
+
   return (
     <List.Item
       actions={[
@@ -121,6 +129,7 @@ export const GiftQuestions: React.FC<{
   }, [newQuestionValue, quizId]);
   return (
     <div>
+      <GiftQuizQuestionEditor />
       <List
         loading={loading}
         itemLayout="horizontal"
