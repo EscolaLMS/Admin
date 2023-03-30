@@ -1,17 +1,19 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef, useCallback } from 'react';
+import { Button, message, Tag, Tooltip, Popconfirm, Spin, Modal } from 'antd';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import type { IntlShape } from 'react-intl';
+import { Tree } from '@/components/Tree';
 
 import {
   categories,
   createCategory,
   updateCategory,
   deleteCategory,
+  categoryTree,
 } from '@/services/escola-lms/category';
 import CategoryModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -70,11 +72,41 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
+const TreeModal: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const [categoriesWithChildren, setCategoriesWithChildren] = useState<API.Category[]>([]);
+
+  useEffect(() => {
+    setLoading(true);
+    categoryTree()
+      .then((data) => {
+        if (data.success) {
+          setCategoriesWithChildren(data.data);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <Spin />;
+  }
+
+  return (
+    <Tree
+      branch={categoriesWithChildren}
+      titlePropName="name"
+      childrenPropName="subcategories"
+      keyPropName="id"
+    />
+  );
+};
+
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | false>(false);
   const [data, setData] = useState<API.CategoryListItem[]>([]);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+  const [showTree, setShowTree] = useState(false);
 
   const categoryHasChildren = useCallback(
     (id: number) => {
@@ -126,7 +158,10 @@ const TableList: React.FC = () => {
       hideInSearch: true,
       title: <FormattedMessage id="parent_id" defaultMessage="parent_id" />,
       dataIndex: 'parent_id',
-      tip: 'name key',
+      tip: intl.formatMessage({
+        id: 'parent_id_tooltip',
+        defaultMessage: 'Parent category',
+      }),
       render: (_, record) => {
         const parentCat = data.find((cat) => cat.id === record.parent_id);
         if (parentCat) {
@@ -201,6 +236,9 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
+      <Modal open={showTree} onCancel={() => setShowTree(false)} onOk={() => setShowTree(false)}>
+        {showTree && <TreeModal />}
+      </Modal>
       <ProTable<API.CategoryListItem, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.Categories',
@@ -214,6 +252,9 @@ const TableList: React.FC = () => {
           }
         }
         toolBarRender={() => [
+          <Button key={'show_tree'} onClick={() => setShowTree(true)}>
+            <FormattedMessage id="show_tree" defaultMessage="Show Tree" />
+          </Button>,
           <Button
             type="primary"
             key="primary"

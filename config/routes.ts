@@ -118,13 +118,13 @@
       },
       {
         path: '/courses/webinars/:webinar',
-        access: 'consultationDetailsPermission',
+        access: 'webinarDetailsPermission',
         component: './Webinars/form',
         hideInMenu: true,
       },
       {
         path: '/courses/webinars/:webinar/:tab',
-        access: 'consultationDetailsPermission',
+        access: 'webinarDetailsPermission',
         component: './Webinars/form',
         hideInMenu: true,
       },

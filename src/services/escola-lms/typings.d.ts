@@ -407,6 +407,15 @@ declare namespace API {
     topicable: TopicableBase;
   };
 
+  type TopicQuiz = TopicBase & {
+    topicable_type: TopicType.GiftQuiz;
+    topicable: TopicableBase & {
+      questions: GiftQuestion[];
+      max_attempts?: number;
+      max_execution_time?: number;
+    };
+  };
+
   type TopicAudio = TopicBase & {
     topicable_type: TopicType.Audio;
     topicable: TopicableBase & {
@@ -444,7 +453,9 @@ declare namespace API {
 
   type TopicH5P = TopicBase & {
     topicable_type: TopicType.H5P;
-    topicable: TopicableBase;
+    topicable: TopicableBase & {
+      content: H5PObject;
+    };
   };
 
   type TopicScorm = TopicBase & {
@@ -918,6 +929,7 @@ declare namespace API {
     parent_id: null | number;
     registerable: boolean;
     users: UserItem[];
+    subgroups: UserGroup[];
   };
 
   type CourseAccess = {
@@ -1137,6 +1149,8 @@ declare namespace API {
       };
 
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
+
+  type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion;
 }
 
 declare module 'jsoneditor-react' {

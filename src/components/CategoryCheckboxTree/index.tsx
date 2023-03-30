@@ -33,7 +33,11 @@ export const CategoryCheckboxTree: React.FC<{
   const [categories, setCategories] = useState<API.Category[]>([]);
 
   useEffect(() => {
-    categoryTree().then((response) => setCategories(response.data));
+    categoryTree().then((response) => {
+      if (response.success) {
+        setCategories(response.data);
+      }
+    });
   }, []);
 
   const treeData = useMemo(() => {

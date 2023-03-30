@@ -58,10 +58,18 @@ export default () => {
     showModal: false,
     courseId: 0,
   });
+  const [isFirstTimeEdit, setIsFirstTimeEdit] = useState(true);
 
   const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    if (tab === 'attributes' && data && isFirstTimeEdit) {
+      validateCourseEdit(data);
+      setIsFirstTimeEdit(false);
+    }
+  }, [data, tab, isFirstTimeEdit]);
 
   useEffect(() => {
     if (course === 'new') {
@@ -75,10 +83,6 @@ export default () => {
       const response = await getCourse(Number(course));
 
       if (response.success) {
-        if (tab === 'attributes') {
-          validateCourseEdit(response.data);
-        }
-
         setData({
           ...response.data,
           categories: response.data.categories?.map(categoriesArrToIds),
@@ -107,8 +111,8 @@ export default () => {
 
         const postData = {
           ...values,
-          active_from: values.active_from || null,
-          active_to: values.active_to || null,
+          active_from: values.active_from || data?.active_from || null,
+          active_to: values.active_to || data?.active_to || null,
           authors:
             values.authors &&
             values.authors.map((author) => (typeof author === 'object' ? author.id : author)),
@@ -135,8 +139,6 @@ export default () => {
           response = await updateCourse(Number(course), postData);
           if (response.success) {
             setUnsavedChanges(false);
-            validateCourseEdit(response.data);
-            history.push(`/courses/list/${response.data.id}/attributes`);
           }
         }
         message.success(response.message);

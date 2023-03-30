@@ -60,7 +60,7 @@ const getFlatLessons = (lessons: API.Lesson[]): API.Lesson[] => {
   }, [] as API.Lesson[]) as API.Lesson[];
 };
 
-const getFlatTopics = (lessons: API.Lesson[]): API.Topic[] => {
+export const getFlatTopics = (lessons: API.Lesson[]): API.Topic[] => {
   return lessons.reduce((acc, curr) => {
     return [...acc, ...(curr.lessons ? getFlatTopics(curr.lessons) : []), ...(curr.topics ?? [])];
   }, [] as API.Topic[]) as API.Topic[];
@@ -456,10 +456,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
             history.push(`/courses/list/${id}/program/?topic=${data.data.id}`);
 
-            console.log('topic', topic);
             if (topic?.topicable_type === TopicType.Video) {
               setTimeout(() => {
-                console.log('timeout');
                 getLessons();
               }, 5000);
             }

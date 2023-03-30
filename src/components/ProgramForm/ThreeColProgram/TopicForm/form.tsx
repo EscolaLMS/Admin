@@ -33,7 +33,14 @@ export const TopicForm: React.FC<{
         })}
         required
       />
-
+      <ProFormText
+        name="duration"
+        label={<FormattedMessage id="duration" />}
+        tooltip={<FormattedMessage id="duration" />}
+        placeholder={intl.formatMessage({
+          id: 'duration',
+        })}
+      />
       <ParentLesson name="lesson_id" />
       <ProForm.Item label={<FormattedMessage id="description" />}>
         <Button type={'primary'} onClick={() => setVisibleModal(true)}>
