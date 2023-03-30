@@ -1,4 +1,14 @@
-﻿export default [
+﻿import { useModel } from 'umi';
+
+const { initialState } = useModel('@@initialState');
+const showAccessRequestsInMenu = initialState?.config?.filter(
+  (item) => item.key === 'showAccessRequestsInMenu',
+)[0]?.data;
+const showConsultationRequestsInMenu = initialState?.config?.filter(
+  (item) => item.key === 'showConsultationRequestsInMenu',
+)[0]?.data;
+
+export default [
   {
     path: '/user',
     layout: false,
@@ -134,6 +144,7 @@
         icon: 'experiment',
         access: 'courseAccessListPermission',
         component: './CourseAccess',
+        hideInMenu: !showAccessRequestsInMenu,
       },
     ],
   },
@@ -406,6 +417,7 @@
         icon: 'experiment',
         access: 'consultationAccessListPermission',
         component: './ConsultationsAccess',
+        hideInMenu: !showConsultationRequestsInMenu,
       },
       {
         path: '/other/consultations/:consultation',

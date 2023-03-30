@@ -1,5 +1,5 @@
-import React, { useCallback, useContext } from 'react';
-import { NavLink } from 'umi';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { NavLink, useModel } from 'umi';
 import { EllipsisOutlined, FolderOutlined } from '@ant-design/icons';
 import { TopicTypesSelector } from '@/components/ProgramForm/ThreeColProgram/List/types';
 import type { DropResult } from 'react-beautiful-dnd';
@@ -28,12 +28,26 @@ const getSortingMode = (i: number, len: number) => {
 };
 
 const RecursiveLessonList: React.FC<{
+  level: number;
   courseId: number;
   courseLessons: API.Lesson[];
   onLessonCreate: (lessonId: number, title: string) => void;
   onTopicCreate: (lessonId: number, topicType: TopicType) => void;
-}> = ({ courseId, courseLessons, onLessonCreate, onTopicCreate }) => {
+}> = ({ level, courseId, courseLessons, onLessonCreate, onTopicCreate }) => {
   const { currentEditMode, sortLesson, updateLesson, addNewLesson } = useContext(Context);
+
+  const [hiddenNewTopicOptions, setHiddenNewTopicOptions] = useState<string[]>([]);
+
+  const { initialState } = useModel('@@initialState');
+  const maxLessonsNestingInProgram = initialState?.config?.filter(
+    (item) => item.key === 'maxLessonsNestingInProgram',
+  )[0]?.data;
+
+  useEffect(() => {
+    if (Number.isInteger(maxLessonsNestingInProgram) && level > maxLessonsNestingInProgram) {
+      setHiddenNewTopicOptions((prev) => [...prev, 'lesson']);
+    }
+  }, []);
 
   return (
     <React.Fragment>
@@ -85,12 +99,14 @@ const RecursiveLessonList: React.FC<{
                       sortingMode={getSortingMode(cindex, lessons.length)}
                       onSort={(up) => lesson.id && sortLesson && sortLesson(lesson.id, up)}
                       onSelected={(topic_type) => lesson.id && onTopicCreate(lesson.id, topic_type)}
+                      positionsToHide={hiddenNewTopicOptions}
                     />
                   </div>
 
                   {lesson.lessons && lesson.lessons.length > 0 && (
                     <div className="program-sidebar__lessons">
                       <RecursiveLessonList
+                        level={level + 1}
                         courseLessons={lesson.lessons}
                         courseId={courseId}
                         onLessonCreate={onLessonCreate}
@@ -284,6 +300,7 @@ export const LessonList: React.FC = () => {
     >
       {courseLessons && (
         <RecursiveLessonList
+          level={1}
           courseId={courseId}
           courseLessons={courseLessons}
           onLessonCreate={(lessonId, title) => createNewTopic(lessonId, title)}
