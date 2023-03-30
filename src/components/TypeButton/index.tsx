@@ -30,7 +30,7 @@ export const TypeButton: React.FC<{
   type: PossibleType;
   type_id: number;
   onData: (data: DataProps) => void;
-  text?: string;
+  text?: React.ReactNode;
 }> = ({ type, type_id, onData, text }) => {
   switch (type) {
     case 'App\\Models\\StationaryEvent':

@@ -6,7 +6,7 @@ import { getQuestionnaire } from '@/services/escola-lms/questionnaire';
 export const QuestionnaireRow: React.FC<{
   id: number;
   onLoaded: (questionnaire: API.Questionnaire) => void;
-  text?: string;
+  text?: React.ReactNode;
 }> = ({ id, text, onLoaded }) => {
   const [loading, setLoading] = useState(false);
   const intl = useIntl();

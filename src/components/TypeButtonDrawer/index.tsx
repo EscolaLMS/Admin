@@ -22,7 +22,7 @@ export const TypeButtonDrawer: React.FC<
   PropsWithChildren<{
     type: PossibleType;
     type_id: number;
-    text?: string;
+    text?: React.ReactNode;
   }>
 > = ({ type, type_id, text, children }) => {
   const [currentRow, setCurrentRow] = useState<API.LinkedType>({ type: '', value: null });
