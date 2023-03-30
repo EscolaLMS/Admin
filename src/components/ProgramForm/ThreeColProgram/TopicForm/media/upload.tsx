@@ -86,10 +86,12 @@ const VideoProgress: React.FC<{ topic: API.TopicVideo }> = ({ topic }) => {
   }, []);
 
   if (topic.json?.ffmpeg.state === 'coding') {
-    <Typography>
-      <FormattedMessage id="encoding_progress" defaultMessage="Encoding progress:" />
-      <Progress percent={topic.json?.ffmpeg?.percentage} />
-    </Typography>;
+    return (
+      <Typography>
+        <FormattedMessage id="encoding_progress" defaultMessage="Encoding progress:" />
+        <Progress percent={topic.json?.ffmpeg?.percentage} />
+      </Typography>
+    );
   }
   return <React.Fragment></React.Fragment>;
 };
