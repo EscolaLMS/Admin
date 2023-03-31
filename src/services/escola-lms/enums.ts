@@ -49,3 +49,14 @@ export type BuyableTypes =
   | 'EscolaLms\\Consultations\\Models\\Consultation'
   | 'EscolaLms\\Webinars\\Models\\Webinar'
   | 'EscolaLms\\StationaryEvents\\Models\\StationaryEvent';
+
+export enum QuestionType {
+  MULTIPLE_CHOICE = 'multiple_choice',
+  MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS = 'multiple_choice_with_multiple_right_answers',
+  TRUE_FALSE = 'true_false',
+  SHORT_ANSWERS = 'short_answers',
+  MATCHING = 'matching',
+  NUMERICAL_QUESTION = 'numerical_question',
+  ESSAY = 'essay',
+  DESCRIPTION = 'description',
+}

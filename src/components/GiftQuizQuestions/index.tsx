@@ -1,9 +1,8 @@
 import { createQuestion, updateQuestion, deleteQuestion } from '@/services/escola-lms/gift_quiz';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { Button, Input, List, Tag, InputNumber, Typography } from 'antd';
+import { Button, Input, List, InputNumber, Typography, Divider, Space, Switch } from 'antd';
 import { FormattedMessage } from 'umi';
-// import { parser } from 'gift-parser-ide';
-import { GiftQuizQuestionEditor } from './editor';
+import { GiftQuizQuestionEditor } from './editor/index';
 
 export const QuestionItemList: React.FC<{
   quizId: number;
@@ -12,80 +11,80 @@ export const QuestionItemList: React.FC<{
   onLoading: () => void;
   onEdited: () => void;
   loading: boolean;
-}> = ({ question, onRemoved, onEdited, quizId, loading = false, onLoading }) => {
+  debug?: boolean;
+}> = ({ question, onRemoved, onEdited, quizId, loading = false, onLoading, debug = false }) => {
   const [value, setValue] = useState(question.value);
   const [score, setScore] = useState(question.score);
-
-  // render stuff based on this
-  // const output = parser.parse(value);
-
-  //console.log(output);
 
   return (
     <List.Item
       actions={[
-        <Button
-          loading={loading}
-          key={'update'}
-          size="small"
-          type="primary"
-          onClick={() => {
-            onLoading();
-            updateQuestion(question.id, {
-              ...question,
-              topic_gift_quiz_id: quizId,
-              value,
-              score,
-            }).then(() => {
-              if (onEdited) {
-                onEdited();
-              }
-            });
-          }}
-        >
-          <FormattedMessage id="Questions.edit" defaultMessage="Edit Question" />
-        </Button>,
-        <Button
-          loading={loading}
-          key={'delete'}
-          size="small"
-          danger
-          onClick={() => {
-            onLoading();
-            deleteQuestion(question.id).then(() => {
-              if (onRemoved) {
-                onRemoved();
-              }
-            });
-          }}
-        >
-          <FormattedMessage id="Questions.delete" defaultMessage="Delete Question" />
-        </Button>,
+        <Space key="action" direction="vertical" align="end">
+          <Button
+            loading={loading}
+            key={'update'}
+            size="small"
+            type="primary"
+            onClick={() => {
+              onLoading();
+              updateQuestion(question.id, {
+                ...question,
+                topic_gift_quiz_id: quizId,
+                value,
+                score,
+              }).then(() => {
+                if (onEdited) {
+                  onEdited();
+                }
+              });
+            }}
+          >
+            <FormattedMessage id="Questions.edit" defaultMessage="Edit Question" />
+          </Button>
+          <Button
+            loading={loading}
+            key={'delete'}
+            size="small"
+            danger
+            onClick={() => {
+              onLoading();
+              deleteQuestion(question.id).then(() => {
+                if (onRemoved) {
+                  onRemoved();
+                }
+              });
+            }}
+          >
+            <FormattedMessage id="Questions.delete" defaultMessage="Delete Question" />
+          </Button>
+        </Space>,
       ]}
     >
       <List.Item.Meta
-        avatar={
-          <Fragment>
-            <FormattedMessage id="Questions.type" defaultMessage="Type" />:
-            <Tag>{question.type}</Tag>
-            <br />
-            <Typography>
-              <FormattedMessage id="Questions.score" defaultMessage="Score" />:
-            </Typography>
-            <InputNumber
-              disabled={loading}
-              size="small"
-              value={score}
-              onChange={(v) => v && setScore(v)}
-            />
-          </Fragment>
-        }
         description={
-          <Input.TextArea
-            disabled={loading}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          <Space direction="vertical" style={{ display: 'flex' }}>
+            <Divider>
+              <FormattedMessage id={question.type} />
+            </Divider>
+            <GiftQuizQuestionEditor
+              type={question.type}
+              loading={loading}
+              value={value}
+              onChange={(v) => setValue(v)}
+            />
+            <Space>
+              <Typography>
+                <FormattedMessage id="Questions.score" defaultMessage="Score" />:
+              </Typography>
+              <InputNumber
+                disabled={loading}
+                size="small"
+                value={score}
+                onChange={(v) => v && setScore(v)}
+              />
+            </Space>
+            {debug && <Typography.Paragraph code>{value}</Typography.Paragraph>}
+          </Space>
         }
       />
     </List.Item>
@@ -102,6 +101,7 @@ export const GiftQuestions: React.FC<{
   const [newQuestionValue, setNewQuestionValue] = useState('');
   const [newQuestionScore, setNewQuestionScore] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [debug, setDebug] = useState(true);
 
   useEffect(() => {
     setLoading(false);
@@ -129,7 +129,6 @@ export const GiftQuestions: React.FC<{
   }, [newQuestionValue, quizId]);
   return (
     <div>
-      <GiftQuizQuestionEditor />
       <List
         loading={loading}
         itemLayout="horizontal"
@@ -168,8 +167,11 @@ export const GiftQuestions: React.FC<{
                       />
                     </Fragment>
                   }
+                  //
                   description={
+                    // TODO: replace with selection of type of new
                     <Input.TextArea
+                      placeholder="gift code"
                       value={newQuestionValue}
                       onChange={(e) => setNewQuestionValue(e.target.value)}
                     />
@@ -181,6 +183,7 @@ export const GiftQuestions: React.FC<{
           return (
             typeof item === 'object' && (
               <QuestionItemList
+                debug={debug}
                 onLoading={() => setLoading(true)}
                 loading={loading}
                 quizId={quizId}
@@ -202,6 +205,9 @@ export const GiftQuestions: React.FC<{
           );
         }}
       />
+      <Typography>
+        Debug GIFT: <Switch checked={debug} onChange={(v) => setDebug(v)} />
+      </Typography>
     </div>
   );
 };
