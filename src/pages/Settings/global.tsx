@@ -75,7 +75,16 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
-type InitialDataRecords = Record<'logo' | 'frontURL' | string, API.Setting>;
+type InitialDataRecords = Record<
+  | 'logo'
+  | 'frontURL'
+  | 'showAccessRequestsInMenu'
+  | 'showConsultationRequestsInMenu'
+  | 'showProjectTypeInProgram'
+  | 'maxLessonsNestingInProgram'
+  | string,
+  API.Setting
+>;
 
 const initialData: InitialDataRecords = {
   logo: {
@@ -99,6 +108,50 @@ const initialData: InitialDataRecords = {
     sort: 0,
     type: 'text',
     data: 'EscolaLMS',
+  },
+  showAccessRequestsInMenu: {
+    id: 0,
+    key: 'showAccessRequestsInMenu',
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  },
+  showConsultationRequestsInMenu: {
+    id: 0,
+    key: 'showConsultationRequestsInMenu',
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  },
+  showProjectTypeInProgram: {
+    id: 0,
+    key: 'showProjectTypeInProgram',
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  },
+  maxLessonsNestingInProgram: {
+    id: 0,
+    key: 'maxLessonsNestingInProgram',
+    group: 'global',
+    value: '0',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'number',
+    data: 0,
   },
 };
 
@@ -267,7 +320,16 @@ const TableList: React.FC = () => {
           return !value && setModalVisible(false);
         }}
         onFinish={async (value) => {
-          const fields = value as API.Setting;
+          let fields = value as API.Setting;
+
+          if (fields.type === 'number') {
+            fields = { ...fields, value: String(fields.data) };
+          }
+
+          if (fields.type === 'boolean') {
+            fields = { ...fields, value: fields.data };
+          }
+
           const { success, updatedSettings } = await handleUpdate(
             intl,
             fields,

@@ -754,7 +754,7 @@ declare namespace API {
     assignable_id: number;
   };
 
-  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
+  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image' | 'boolean' | 'number';
   type SettingBase = {
     id: number;
     key: string;
@@ -768,6 +768,14 @@ declare namespace API {
   };
 
   type Setting =
+    | (SettingBase & {
+        type: 'number';
+        data: number;
+      })
+    | (SettingBase & {
+        type: 'boolean';
+        data: boolean;
+      })
     | (SettingBase & {
         type: 'text';
         data: string;
