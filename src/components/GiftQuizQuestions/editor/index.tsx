@@ -9,13 +9,14 @@ import { GiftQuizQuestionNumericalEditor } from './numerical';
 import { GiftQuizQuestionShortEditor } from './short_answers';
 
 import { QuestionType } from '@/services/escola-lms/enums';
+import { memo } from 'react';
 
 export const GiftQuizQuestionEditor: React.FC<{
   type: API.GiftQuestion['type'];
   value: string;
   onChange: (value: string) => void;
   loading?: boolean;
-}> = ({ type, value, onChange, loading = false }) => {
+}> = memo(({ type, value, onChange, loading = false }) => {
   switch (type) {
     case QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS:
     case QuestionType.MULTIPLE_CHOICE:
@@ -48,4 +49,4 @@ export const GiftQuizQuestionEditor: React.FC<{
         />
       );
   }
-};
+});

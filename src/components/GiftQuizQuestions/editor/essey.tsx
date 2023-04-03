@@ -1,18 +1,18 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, memo } from 'react';
 import { parse, GIFTQuestion, Essay } from 'gift-pegjs';
 import { Space } from 'antd';
 
 export const GiftQuizQuestionEsseyEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
+}> = memo(({ value, onChange }) => {
+  //const [output, setOutput] = useState<GIFTQuestion[]>();
 
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
 
@@ -27,17 +27,22 @@ export const GiftQuizQuestionEsseyEditor: React.FC<{
     onChange(`${title}{}`);
   }, []);
 
+  const textValue = useMemo(() => {
+    return question?.stem.text;
+  }, [question]);
+
   return (
     <div>
       {question && (
         <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
           <Input.TextArea
+            defaultValue={textValue}
             size="small"
-            value={question.stem.text}
+            value={textValue}
             onChange={(e) => setNewValue(e.target.value)}
           />
         </Space>
       )}
     </div>
   );
-};
+});

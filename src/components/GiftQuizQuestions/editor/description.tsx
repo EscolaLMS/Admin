@@ -1,18 +1,16 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { parse, GIFTQuestion, Description } from 'gift-pegjs';
+import { useCallback, useMemo } from 'react';
+import { parse, Description } from 'gift-pegjs';
 import { Space } from 'antd';
 
 export const GiftQuizQuestionDescriptionEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
-
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
 

@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { parse, GIFTQuestion, TextChoice, ShortAnswer } from 'gift-pegjs';
+import { useCallback, useMemo } from 'react';
+import { parse, TextChoice, ShortAnswer } from 'gift-pegjs';
 import { Button, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
@@ -12,15 +12,12 @@ export const GiftQuizQuestionShortEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
-
-  const intl = useIntl();
-
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
+  const intl = useIntl();
 
   const question: ShortAnswer | undefined = useMemo(() => {
     if (output && output[0].type === 'Short') {

@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { parse, GIFTQuestion, MultipleChoice, TextChoice } from 'gift-pegjs';
+import { useCallback, useMemo } from 'react';
+import { parse, MultipleChoice, TextChoice } from 'gift-pegjs';
 import { Button, Checkbox, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Tooltip, InputNumber } from 'antd';
@@ -12,15 +12,13 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
-
-  const intl = useIntl();
-
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
+
+  const intl = useIntl();
 
   const question: MultipleChoice | undefined = useMemo(() => {
     if (output && output[0].type === 'MC') {
@@ -154,7 +152,6 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<{
                     min={1}
                     max={100}
                     onChange={(n) => {
-                      console.log('weight', n ?? null);
                       onMCChoiceChange({ ...choice, weight: n ?? null }, i);
                     }}
                   />

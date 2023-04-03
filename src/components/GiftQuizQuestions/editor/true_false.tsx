@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { parse, GIFTQuestion, TrueFalse } from 'gift-pegjs';
+import { useCallback, useMemo } from 'react';
+import { parse, TrueFalse } from 'gift-pegjs';
 import { Checkbox, Space } from 'antd';
 import { Tooltip } from 'antd';
 import { useIntl } from '@@/plugin-locale/localeExports';
@@ -10,15 +10,13 @@ export const GiftQuizQuestionTrueFalseEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
-
-  const intl = useIntl();
-
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
+
+  const intl = useIntl();
 
   const question: TrueFalse | undefined = useMemo(() => {
     if (output && output[0].type === 'TF') {

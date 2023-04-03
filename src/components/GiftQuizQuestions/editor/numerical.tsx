@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { parse, GIFTQuestion, Numerical, NumericalFormat } from 'gift-pegjs';
+import { useCallback, useMemo } from 'react';
+import { parse, Numerical, NumericalFormat } from 'gift-pegjs';
 import { Space, Tooltip, InputNumber } from 'antd';
 import { useIntl } from '@@/plugin-locale/localeExports';
 
@@ -9,15 +9,13 @@ export const GiftQuizQuestionNumericalEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
-
-  const intl = useIntl();
-
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
+
+  const intl = useIntl();
 
   const question: Numerical | undefined = useMemo(() => {
     if (output && output[0].type === 'Numerical') {

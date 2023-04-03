@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { parse, GIFTQuestion, Matching, Match } from 'gift-pegjs';
+import { useCallback, useMemo } from 'react';
+import { parse, Matching, Match } from 'gift-pegjs';
 import { Button, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';
@@ -10,11 +10,9 @@ export const GiftQuizQuestionMatchingEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const [output, setOutput] = useState<GIFTQuestion[]>();
-
-  useEffect(() => {
+  const output = useMemo(() => {
     if (value) {
-      setOutput(parse(value));
+      return parse(value);
     }
   }, [value]);
 
