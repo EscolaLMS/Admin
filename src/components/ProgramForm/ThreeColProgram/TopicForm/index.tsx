@@ -182,7 +182,12 @@ export const Topic: React.FC = () => {
           height: '100%',
         }}
       >
-        <Col span={24 - 8}>
+        <Col
+          span={24 - 8}
+          style={{
+            marginBottom: '46px',
+          }}
+        >
           <Divider>
             {topic && getTypeIcon(getTypeName(topic))}{' '}
             {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
@@ -209,10 +214,14 @@ export const Topic: React.FC = () => {
                 type={type}
                 topic={topic}
                 currentState={topics}
-                onChange={() => setLoading(true)}
+                onChange={(info) => {
+                  setLoading(true);
+                  if (info.file.status === 'removed') {
+                    setLoading(false);
+                  }
+                }}
                 onUpdate={(info) => {
-                  if (topic.id && onTopicUploaded)
-                    onTopicUploaded(info.file.response.data.id, info);
+                  if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
 
                   // refetch lessons to get if video is being transcoded
                   if (topic.topicable_type === TopicType.Video) {
@@ -234,6 +243,8 @@ export const Topic: React.FC = () => {
                   setLoading(false);
                 }}
                 disabled={false}
+                maxFiles={1}
+                clearListAfterUpload={true}
               />
             )}
           {type && type === TopicType.OEmbed && (
