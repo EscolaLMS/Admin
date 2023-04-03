@@ -12,6 +12,7 @@ export const GiftQuizQuestionDescriptionEditor: React.FC<{
     if (value) {
       return parse(value);
     }
+    return;
   }, [value]);
 
   const question: Description | undefined = useMemo(() => {

@@ -14,6 +14,7 @@ export const GiftQuizQuestionMatchingEditor: React.FC<{
     if (value) {
       return parse(value);
     }
+    return;
   }, [value]);
 
   const question: Matching | undefined = useMemo(() => {

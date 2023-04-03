@@ -16,7 +16,9 @@ export const GiftQuizQuestionShortEditor: React.FC<{
     if (value) {
       return parse(value);
     }
+    return;
   }, [value]);
+
   const intl = useIntl();
 
   const question: ShortAnswer | undefined = useMemo(() => {

@@ -13,6 +13,7 @@ export const GiftQuizQuestionNumericalEditor: React.FC<{
     if (value) {
       return parse(value);
     }
+    return;
   }, [value]);
 
   const intl = useIntl();

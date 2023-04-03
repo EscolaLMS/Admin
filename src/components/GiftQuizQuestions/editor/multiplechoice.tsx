@@ -16,6 +16,7 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<{
     if (value) {
       return parse(value);
     }
+    return;
   }, [value]);
 
   const intl = useIntl();

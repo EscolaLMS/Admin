@@ -14,6 +14,7 @@ export const GiftQuizQuestionTrueFalseEditor: React.FC<{
     if (value) {
       return parse(value);
     }
+    return;
   }, [value]);
 
   const intl = useIntl();
