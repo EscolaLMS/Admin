@@ -46,3 +46,11 @@ export async function getQuizAttempts(
     params,
   });
 }
+
+/** GET /api/admin/quiz-attempts/{id} */
+export async function getQuizAttempt(id: string | number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.QuizAttempt>>(`/api/admin/quiz-attempts/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

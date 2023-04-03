@@ -144,6 +144,14 @@
         access: 'coursesPermission',
         component: './QuizReports',
       },
+      {
+        path: '/courses/quiz-reports/:reportId',
+        hideInMenu: true,
+        name: 'Details',
+        icon: 'read',
+        access: 'coursesPermission',
+        component: './QuizReports/details',
+      },
     ],
   },
   {
