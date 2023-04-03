@@ -315,6 +315,7 @@ export default {
   consultation_id: 'Consultation ID: ',
   webinar_id: 'Webinar ID: ',
   stationary_event_id: 'Stationary Event ID: ',
+  gift_quiz_id: 'GIFT Quiz ID: ',
   count_h5p: 'H5P count',
   library_id: 'Library ID',
   new_payment: 'new',

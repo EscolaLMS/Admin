@@ -356,6 +356,7 @@ export default {
   stationary_event_id: 'ID Wydarzenia Stacjonarnego: ',
   course_id: 'ID Kursu: ',
   consultation_id: 'ID Konsultacji: ',
+  gift_quiz_id: 'ID GIFT Quizu: ',
   new_payment: 'nowe',
   paid: 'opłacone',
   cancelled: 'anulowane',

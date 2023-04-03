@@ -28,8 +28,10 @@ const QuizAttempts: React.FC = () => {
         dataIndex: 'topic_gift_quiz_id',
         hideInSearch: true,
         render: (_, record) => (
-          // TODO add type
-          <TypeButtonDrawer type="EscolaLms\Core\Models\User" type_id={record.topic_gift_quiz_id} />
+          <TypeButtonDrawer
+            type="EscolaLms\TopicTypeGift\Models\GiftQuiz"
+            type_id={record.topic_gift_quiz_id}
+          />
         ),
       },
       {
