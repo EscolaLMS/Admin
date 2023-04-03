@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { getCourseStats } from '@/services/escola-lms/course';
+import { getCourseStats, program as fetchProgram } from '@/services/escola-lms/course';
 import { Spin, Alert, Typography } from 'antd';
 import Chart from './chart';
 import { useIntl, FormattedMessage } from 'umi';
+import { getFlatTopics } from '@/components/ProgramForm/Context';
+import { UserProgress } from './userProgress';
+
+export type FinishedTopicsUserStat = {
+  id: number;
+  finished_at: string;
+  started_at: string;
+  title: string;
+  seconds: number;
+};
+
+export type FinishedTopicsUserStats = {
+  email: string;
+  id: number;
+  topics: FinishedTopicsUserStat[];
+};
 
 type State =
   | {
@@ -25,12 +41,8 @@ const config = {
   xField: 'type',
   yField: 'value',
   seriesField: 'type',
-  legend: false,
-  isRange: true,
+  isRange: false,
   title: null,
-  tooltip: {
-    showTitle: false,
-  },
   xAxis: {
     label: {
       autoHide: true,
@@ -43,6 +55,7 @@ const config = {
       enable: false,
     },
   ],
+
   columnBackground: { style: { fill: 'rgba(0,0,0,0.1)' } },
 };
 
@@ -53,30 +66,32 @@ interface courseStats {
 
 const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
   const [state, setState] = useState<State>({ mode: 'init' });
+  const [topics, setTopics] = useState<API.Topic[]>([]);
   const { Text } = Typography;
   const intl = useIntl();
 
   useEffect(() => {
     setState({ mode: 'loading' });
-    getCourseStats(Number(courseId))
-      .then((response) => {
-        if (response.success) {
+
+    Promise.all([fetchProgram(Number(courseId)), getCourseStats(Number(courseId))]).then(
+      ([programResponse, statsResponse]) => {
+        if (programResponse.success && statsResponse.success) {
+          setTopics(getFlatTopics(programResponse.data.lessons));
           setState({
             mode: 'loaded',
-            value: Object.entries(response.data).map((element) => {
+            value: Object.entries(statsResponse.data).map((element) => {
+              const type = intl.formatMessage({
+                id: element[0].split('\\').pop(),
+              });
               return {
-                type: intl.formatMessage({
-                  id: element[0].split('\\').pop(),
-                }),
+                type,
                 value: element[1],
               };
             }),
           });
-        } else {
-          setState({ mode: 'error', error: response.message });
         }
-      })
-      .catch((err) => setState({ mode: 'error', error: err.toString() }));
+      },
+    );
   }, []);
 
   return (
@@ -84,6 +99,14 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <>
+          <UserProgress
+            topics={topics}
+            stats={
+              state.value.find((element: courseStats) => element.type.includes('FinishedTopics'))
+                ?.value as FinishedTopicsUserStats[]
+            }
+          />
+
           <Text>
             <FormattedMessage id="MoneyEarned" />
             {`: ${
@@ -112,6 +135,7 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
             <Chart
               config={config}
               title={<FormattedMessage id="AverageTimePerTopic" />}
+              valueLabel={intl.formatMessage({ id: 'seconds', defaultMessage: 'seconds' })}
               value={Object.entries(
                 state.value.find(
                   (element: courseStats) =>
@@ -119,7 +143,11 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
                     intl.formatMessage({ id: 'AverageTimePerTopic' }),
                 ).value,
               ).map((element) => {
-                return { type: element[0], value: element[1] };
+                return {
+                  type: element[0],
+                  value: element[1],
+                  topic: topics.find((topic) => topic.id === Number(element[0])),
+                };
               })}
             >
               <Text>

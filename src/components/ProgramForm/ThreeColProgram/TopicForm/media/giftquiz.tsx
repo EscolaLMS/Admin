@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { GiftQuestions } from '@/components/GiftQuizQuestions';
+import { Table } from '@/components/GiftQuizQuestions/table';
 import { Divider } from 'antd';
 import ProForm, { ProFormText, ProFormGroup } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
@@ -50,7 +50,7 @@ export const GiftQuiz: React.FC<{
 
       <Divider />
 
-      <GiftQuestions
+      <Table
         questions={topicable.questions}
         quizId={topicable.id}
         onAdded={onAdded}

@@ -97,7 +97,7 @@ const TreeModal: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    userGroupsTree()
+    userGroupsTree({ per_page: -1, page: -1 })
       .then((data) => {
         if (data.success) {
           setUserGroupsWithChildren(data.data);

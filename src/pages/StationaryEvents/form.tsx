@@ -278,7 +278,7 @@ const StationaryEventForm = () => {
                 width="sm"
                 name="finished_at"
                 label={<FormattedMessage id="finished_at" />}
-                tooltip={<FormattedMessage id="finished_att_tooltip" />}
+                tooltip={<FormattedMessage id="finished_at_tooltip" />}
                 placeholder={intl.formatMessage({
                   id: 'finished_at',
                   defaultMessage: 'finished_at',

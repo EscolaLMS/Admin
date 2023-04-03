@@ -60,7 +60,7 @@ const getFlatLessons = (lessons: API.Lesson[]): API.Lesson[] => {
   }, [] as API.Lesson[]) as API.Lesson[];
 };
 
-const getFlatTopics = (lessons: API.Lesson[]): API.Topic[] => {
+export const getFlatTopics = (lessons: API.Lesson[]): API.Topic[] => {
   return lessons.reduce((acc, curr) => {
     return [...acc, ...(curr.lessons ? getFlatTopics(curr.lessons) : []), ...(curr.topics ?? [])];
   }, [] as API.Topic[]) as API.Topic[];

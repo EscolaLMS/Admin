@@ -26,7 +26,9 @@ const TableColumns: ProColumns<API.Questionnaire>[] = [
     dataIndex: 'title',
     hideInSearch: true,
     width: '80%',
-    render: (_, record) => <TypeButtonDrawer type={'Questionnaire'} type_id={Number(record.id)} />,
+    render: (_, record) => (
+      <TypeButtonDrawer type={'Questionnaire'} type_id={Number(record.id)} text={record.title} />
+    ),
   },
 ];
 

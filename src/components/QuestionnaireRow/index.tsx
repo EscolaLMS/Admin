@@ -6,7 +6,8 @@ import { getQuestionnaire } from '@/services/escola-lms/questionnaire';
 export const QuestionnaireRow: React.FC<{
   id: number;
   onLoaded: (questionnaire: API.Questionnaire) => void;
-}> = ({ id, onLoaded }) => {
+  text?: React.ReactNode;
+}> = ({ id, text, onLoaded }) => {
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
 
@@ -40,8 +41,12 @@ export const QuestionnaireRow: React.FC<{
 
   return (
     <Button loading={loading} onClick={fetch} size="small">
-      <FormattedMessage id="questionnaire" />
-      {id}
+      {text ?? (
+        <>
+          <FormattedMessage id="questionnaire" />
+          {id}
+        </>
+      )}
     </Button>
   );
 };

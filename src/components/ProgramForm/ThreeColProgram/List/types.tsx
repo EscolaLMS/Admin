@@ -18,15 +18,21 @@ import {
 
 import './types.css';
 import { TopicType } from '@/services/escola-lms/enums';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 
 export const TopicTypesSelector: React.FC<{
   sortingMode: 'none' | 'up' | 'down' | 'both';
   onSelected: (type: TopicType) => void;
   onNewLesson: () => void;
   onSort: (up: boolean) => void;
-}> = ({ onSelected, /*onSort, sortingMode = 'both',*/ onNewLesson }) => {
+  positionsToHide?: string[];
+}> = ({ onSelected, /*onSort, sortingMode = 'both',*/ onNewLesson, positionsToHide }) => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const { initialState } = useModel('@@initialState');
+  const showProjectTypeInProgram = initialState?.config?.filter(
+    (item) => item.key === 'showProjectTypeInProgram',
+  )[0]?.data;
 
   const setSelected = useCallback((type: TopicType) => {
     setOpen(false);
@@ -71,17 +77,21 @@ export const TopicTypesSelector: React.FC<{
 
       {open && (
         <div className="topic-types-selector__list">
-          <Tooltip placement="right" title={<FormattedMessage id="Lesson" />}>
-            <Button
-              block
-              onClick={() => {
-                setOpen(false);
-                onNewLesson();
-              }}
-              icon={<PicCenterOutlined />}
-            />
-          </Tooltip>
-          <Divider />
+          {!positionsToHide?.includes('lesson') && (
+            <>
+              <Tooltip placement="right" title={<FormattedMessage id="Lesson" />}>
+                <Button
+                  block
+                  onClick={() => {
+                    setOpen(false);
+                    onNewLesson();
+                  }}
+                  icon={<PicCenterOutlined />}
+                />
+              </Tooltip>
+              <Divider />
+            </>
+          )}
           <Tooltip placement="right" title={<FormattedMessage id="RichText" />}>
             <Button
               block
@@ -127,13 +137,15 @@ export const TopicTypesSelector: React.FC<{
             <Button block onClick={() => setSelected(TopicType.SCORM)} icon={<FundOutlined />} />
           </Tooltip>
 
-          <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
-            <Button
-              block
-              onClick={() => setSelected(TopicType.Project)}
-              icon={<CarryOutOutlined />}
-            />
-          </Tooltip>
+          {showProjectTypeInProgram && (
+            <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
+              <Button
+                block
+                onClick={() => setSelected(TopicType.Project)}
+                icon={<CarryOutOutlined />}
+              />
+            </Tooltip>
+          )}
         </div>
       )}
     </div>
