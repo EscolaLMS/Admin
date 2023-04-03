@@ -135,6 +135,15 @@
         access: 'courseAccessListPermission',
         component: './CourseAccess',
       },
+
+      // TODO correct access
+      {
+        path: '/courses/quiz-reports',
+        name: 'Quiz Reports',
+        icon: 'read',
+        access: 'coursesPermission',
+        component: './QuizReports',
+      },
     ],
   },
   {

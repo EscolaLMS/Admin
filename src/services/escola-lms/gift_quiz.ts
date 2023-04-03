@@ -34,3 +34,15 @@ export async function deleteQuestion(id: number, options?: RequestOptionsInit) {
     ...(options || {}),
   });
 }
+
+/** GET /api/admin/quiz-attempts */
+export async function getQuizAttempts(
+  params: API.QuizAttemptsParams,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultMetaResponse<API.QuizAttempt>>('/api/admin/quiz-attempts', {
+    method: 'GET',
+    ...(options || {}),
+    params,
+  });
+}

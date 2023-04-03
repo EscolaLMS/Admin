@@ -1151,6 +1151,11 @@ declare namespace API {
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
   type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion;
+
+  type QuizAttempt = EscolaLms.TopicTypeGift.Models.QuizAttempt;
+
+  type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &
+    PaginationParams & { topic_gift_quiz_id: number };
 }
 
 declare module 'jsoneditor-react' {
