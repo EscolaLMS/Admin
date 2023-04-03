@@ -60,6 +60,7 @@ const StationaryEventForm = () => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<StationaryEventType>>();
   const [form] = ProForm.useForm();
+  const [lastDataUpdateDate, setLastDataUpdateDate] = useState(new Date());
 
   //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
   //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
@@ -118,6 +119,7 @@ const StationaryEventForm = () => {
               ...(response.data as Omit<StationaryEventType, 'categories' | 'agenda'>),
               categories: response?.data?.categories?.map(mapper),
             });
+            setLastDataUpdateDate(new Date());
             history.push(`/other/stationary-events/${response.data.id}/${tab}`);
           }
         }
@@ -317,7 +319,11 @@ const StationaryEventForm = () => {
         {!isNew && (
           <ProCard.TabPane key="agenda" tab={<FormattedMessage id="agenda" />}>
             <ProForm {...formProps}>
-              <Agenda data={data.agenda ?? []} onCreate={(agenda) => setAgendaData(agenda)} />
+              <Agenda
+                data={data.agenda ?? []}
+                onCreate={(agenda) => setAgendaData(agenda)}
+                lastDataUpdateDate={lastDataUpdateDate}
+              />
             </ProForm>
           </ProCard.TabPane>
         )}

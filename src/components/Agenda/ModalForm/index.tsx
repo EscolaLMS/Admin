@@ -42,8 +42,14 @@ export const AgendaModalForm: React.FC<{
       })}
       width="40vw"
       visible={visible}
-      onVisibleChange={onVisibleChange}
-      onFinish={(formData) => onFinish({ ...formData, id: fields?.id || null })}
+      onVisibleChange={(newVisibleValue) => {
+        onVisibleChange(newVisibleValue);
+        form.resetFields();
+      }}
+      onFinish={(formData) => {
+        form.resetFields();
+        return onFinish({ ...formData, id: fields?.id || null });
+      }}
     >
       <ProForm.Group>
         <ProFormText

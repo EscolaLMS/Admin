@@ -47,7 +47,15 @@ interface RenderAgendaType extends Omit<AgendaType, 'tutors'> {
   tutors: (RenderAgendaTutor | null)[];
 }
 
-const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: string) => void }) => {
+const Agenda = ({
+  data,
+  onCreate,
+  lastDataUpdateDate,
+}: {
+  data: AgendaType[];
+  onCreate: (value: string) => void;
+  lastDataUpdateDate: Date;
+}) => {
   const actionRef = useRef<ActionType>();
   const agendaOrder = useRef<number[] | null>(null);
   const intl = useIntl();
@@ -161,7 +169,7 @@ const Agenda = ({ data, onCreate }: { data: AgendaType[]; onCreate: (value: stri
     setFields(null);
     setWasOrderChanged(false);
     agendaOrder.current = null;
-  }, [data]);
+  }, [lastDataUpdateDate]);
 
   useEffect(() => {
     (async () => {
