@@ -203,7 +203,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       );
       return lesson ? lesson.id : null;
     },
-    [state],
+    [flatLessons],
   );
 
   const currentEditMode = useMemo<CurrentEditMode>(() => {
@@ -472,7 +472,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       const lesson_id = getLessonIdByTopicId(topic_id);
 
       const lesson = flatLessons.find((lesson_item) => lesson_item.id === lesson_id);
-
       if (!lesson) {
         return;
       }
@@ -480,8 +479,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       const topic = flatTopics?.find((topic_item) => topic_item.id === topic_id);
 
       const isNew = topic?.isNew;
-
-      if (isNew) {
+      if (isNew && !topic.topicable) {
         setState((prevState) => ({
           ...prevState,
           lessons: recursiveDeleteTopic(prevState?.lessons ?? [], topic_id),
@@ -667,6 +665,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           })
         : [],
     }));
+    // Update topic id in params after receiving from server
+    history.push(`/courses/list/${id}/program/?topic=${info.file.response.data.id}`);
   };
 
   const cloneTopic = useCallback(

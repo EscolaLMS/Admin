@@ -141,7 +141,19 @@ export const MediaUploadForm: React.FC<{
   onChange: (info: UploadChangeParam) => void;
   disabled: boolean;
   folder: string;
-}> = ({ topic, type, onUpdate, disabled = false, currentState, onChange, folder }) => {
+  maxFiles?: number;
+  clearListAfterUpload?: boolean;
+}> = ({
+  topic,
+  type,
+  onUpdate,
+  disabled = false,
+  currentState,
+  onChange,
+  folder,
+  maxFiles,
+  clearListAfterUpload,
+}) => {
   const onInfoChange = useCallback(
     (info: UploadChangeParam<UploadFile<API.DefaultResponse<API.File>>>) => {
       if (info.file.status === 'done') {
@@ -186,6 +198,8 @@ export const MediaUploadForm: React.FC<{
           url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
           accept={CONFIG.acceptedTypes[type]}
           data={prepareObject(data)}
+          maxFiles={maxFiles}
+          clearListAfterUpload={clearListAfterUpload}
         >
           <Button disabled={disabled} icon={<UploadOutlined />}>
             Click to upload {type}
