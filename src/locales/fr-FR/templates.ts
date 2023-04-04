@@ -10,5 +10,5 @@ export default {
   'templates.this_required': 'Ce champ est obligatoire',
   'templates.mjml_tooltip': 'Collez le modèle mjml',
   'templates.is_default': 'Est le modèle par défaut',
-  'code.snippet': 'Essayez d\'entrer @ pour l\'auto-complétion',
+  'code.snippet': "Essayez d'entrer @ pour l'auto-complétion",
 };

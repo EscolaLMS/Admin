@@ -2,7 +2,7 @@ export default {
   vouchers: 'Bons de réduction',
   voucher: 'Bon de réduction',
   'vouchers.code': 'Code du bon',
-  'vouchers.limit_usage': 'Limitation d\'utilisation',
+  'vouchers.limit_usage': "Limitation d'utilisation",
   'vouchers.max_cart_price': 'Prix maximum du panier',
   'vouchers.min_cart_price': 'Prix minimum du panier',
   'vouchers.type': 'Type de bon',

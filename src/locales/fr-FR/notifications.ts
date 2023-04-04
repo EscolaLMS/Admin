@@ -27,7 +27,7 @@ export default {
   'notifications.PdfCreatedEvent': 'PDF créé',
   'notifications.CourseTutorUnassigned': 'Tuteur de cours non assigné',
   'notifications.CourseUnassigned': 'Cours non assigné',
-  'notifications.AccountMustBeEnableByAdmin': 'Le compte doit être activé par l\'administrateur',
+  'notifications.AccountMustBeEnableByAdmin': "Le compte doit être activé par l'administrateur",
   'notifications.SettingPackageConfigUpdated': 'Configuration de package de paramètres mise à jour',
   'notifications.CourseTutorAssigned': 'Tuteur de cours assigné',
   'notifications.AccountConfirmed': 'Compte confirmé',
