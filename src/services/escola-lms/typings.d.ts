@@ -754,7 +754,7 @@ declare namespace API {
     assignable_id: number;
   };
 
-  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image';
+  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image' | 'boolean' | 'number';
   type SettingBase = {
     id: number;
     key: string;
@@ -768,6 +768,14 @@ declare namespace API {
   };
 
   type Setting =
+    | (SettingBase & {
+        type: 'number';
+        data: number;
+      })
+    | (SettingBase & {
+        type: 'boolean';
+        data: boolean;
+      })
     | (SettingBase & {
         type: 'text';
         data: string;
@@ -1150,7 +1158,17 @@ declare namespace API {
 
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
-  type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion;
+  export type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion & {
+    type:
+      | Enum.QuestionType.MULTIPLE_CHOICE
+      | Enum.QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS
+      | Enum.QuestionType.TRUE_FALSE
+      | Enum.QuestionType.SHORT_ANSWERS
+      | Enum.QuestionType.MATCHING
+      | Enum.QuestionType.NUMERICAL_QUESTION
+      | Enum.QuestionType.ESSAY
+      | Enum.QuestionType.DESCRIPTION;
+  };
 
   type QuizAttempt = EscolaLms.TopicTypeGift.Models.QuizAttempt & {
     id: number;

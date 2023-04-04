@@ -4,7 +4,7 @@ import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function (initialState: { currentUser: API.UserItem }) {
+export default function (initialState: { currentUser: API.UserItem; config: API.Setting[] }) {
   const currentUser = initialState?.currentUser;
 
   const havePermissions = isUserHavePermissions(currentUser);
@@ -12,6 +12,9 @@ export default function (initialState: { currentUser: API.UserItem }) {
   const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) => {
     return dashboardPermission && havePermissions(...permissions);
   };
+
+  const haveSettingsInDashboard = (settingName: string, expectedValue: string | number | boolean) =>
+    initialState.config.find(({ key }) => key === settingName)?.data === expectedValue;
 
   return {
     dashboardPermission,
@@ -126,11 +129,13 @@ export default function (initialState: { currentUser: API.UserItem }) {
     taskListPermission: havePermissionsInDashboard(PERMISSIONS.TaskList),
     taskDetailsPermission: havePermissionsInDashboard(PERMISSIONS.TaskList),
 
-    courseAccessListPermission: havePermissionsInDashboard(PERMISSIONS.CourseAccessList),
+    courseAccessListPermission:
+      havePermissionsInDashboard(PERMISSIONS.CourseAccessList) &&
+      haveSettingsInDashboard('showAccessRequestsInMenu', true),
 
-    consultationAccessListPermission: havePermissionsInDashboard(
-      PERMISSIONS.ConsultationAccessList,
-    ),
+    consultationAccessListPermission:
+      havePermissionsInDashboard(PERMISSIONS.ConsultationAccessList) &&
+      haveSettingsInDashboard('showConsultationRequestsInMenu', true),
 
     tasksPermission: () => true,
   };

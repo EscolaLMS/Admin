@@ -6,6 +6,8 @@ import ProForm, {
   ModalForm,
   ProFormRadio,
   ProFormTextArea,
+  ProFormCheckbox,
+  ProFormDigit,
 } from '@ant-design/pro-form';
 
 import { useIntl, FormattedMessage } from 'umi';
@@ -14,6 +16,7 @@ import { setting } from '@/services/escola-lms/settings';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import FilesBrowser from '@/components/FilesBrowser';
 import ReactJson from 'react-json-view';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 export const FilesSelector: React.FC<{
   value?: string;
@@ -66,6 +69,7 @@ export const SettingsModalForm: React.FC<{
 
     if (typeof id === 'object') {
       form.setFieldsValue(id);
+      setType(id.type ?? 'text');
     } else if (id && id !== -1) {
       setting(Number(id)).then((response) => {
         if (response.success) {
@@ -186,6 +190,14 @@ export const SettingsModalForm: React.FC<{
               label: 'image',
               value: 'image',
             },
+            {
+              label: 'boolean',
+              value: 'boolean',
+            },
+            {
+              label: 'number',
+              value: 'number',
+            },
           ]}
         />
       </ProForm.Group>
@@ -236,6 +248,21 @@ export const SettingsModalForm: React.FC<{
             <WysiwygMarkdown directory={`settings/wysiwyg`} />
           </ProForm.Item>
         )}
+
+        {type === 'boolean' ? (
+          <ProFormSwitch
+            name="data"
+            label={<FormattedMessage id="value" />}
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+          />
+        ) : (
+          <ProForm.Item noStyle hidden>
+            <ProFormCheckbox name="data" valuePropName="data" />
+          </ProForm.Item>
+        )}
+
+        {type === 'number' && <ProFormDigit name="data" label={<FormattedMessage id="value" />} />}
       </div>
     </ModalForm>
   );

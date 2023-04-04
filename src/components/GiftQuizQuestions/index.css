@@ -1,0 +1,14 @@
+.row-dragging {
+  display: grid;
+  grid-template-columns: 5% 30% 35% 30%;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+.row-dragging > * {
+  padding: 12px 8px;
+}
+
+.row-dragging .drag-visible {
+  visibility: visible;
+}
