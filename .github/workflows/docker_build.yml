@@ -9,9 +9,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-#        with:
-#          platforms: 'arm64,arm'
+        uses: docker/setup-qemu-action@v2          
+        with:
+          image: tonistiigi/binfmt:master
+          platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to DockerHub
@@ -20,8 +21,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}      
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           push: true
-#          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           tags: escolalms/admin:${{github.ref_name}}, escolalms/admin:latest

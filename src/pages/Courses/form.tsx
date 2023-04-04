@@ -32,7 +32,6 @@ import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
 import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
-import UnsavedPrompt from '@/components/UnsavedPrompt';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
 import { ModelTypes } from '../Questionnaire/form';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
@@ -50,7 +49,6 @@ export default () => {
   const isNew = course === 'new';
   const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [fromDateValidation, setFromDateValidation] = useState<Date | undefined | null>(null);
   const [toDateValidation, setToDateValidation] = useState<Date | undefined | null>(null);
@@ -63,6 +61,7 @@ export default () => {
   const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
+  const [form] = ProForm.useForm();
 
   useEffect(() => {
     if (tab === 'attributes' && data && isFirstTimeEdit) {
@@ -129,7 +128,6 @@ export default () => {
         if (course === 'new') {
           response = await createCourse(postData);
           if (response.success && response.data.id) {
-            setUnsavedChanges(false);
             setManageSuccessModal({
               showModal: true,
               courseId: response.data.id,
@@ -137,15 +135,13 @@ export default () => {
           }
         } else {
           response = await updateCourse(Number(course), postData);
-          if (response.success) {
-            setUnsavedChanges(false);
-          }
         }
         message.success(response.message);
       },
       initialValues: data,
+      form,
     }),
-    [course, data, manageCourseEdit],
+    [course, data, manageCourseEdit, form],
   );
 
   if (!data) {
@@ -234,7 +230,6 @@ export default () => {
               }
             />
           )}
-          <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
           <CourseSuccessModal
             visible={manageSuccessModal.showModal}
@@ -248,8 +243,6 @@ export default () => {
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
-              setUnsavedChanges(true);
-
               if (values.active_from) {
                 setFromDateValidation(values.active_from);
               }
@@ -665,7 +658,7 @@ export default () => {
             tab={<FormattedMessage id="questionnaires" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            {course && <AssignQuestionnary modelType={ModelTypes.course} id={Number(course)} />}
+            {course && <AssignQuestionnary modelType={ModelTypes.COURSE} id={Number(course)} />}
           </ProCard.TabPane>
         )}
 
