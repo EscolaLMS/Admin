@@ -1158,19 +1158,82 @@ declare namespace API {
 
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
-  export type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion & {
-    type:
-      | Enum.QuestionType.MULTIPLE_CHOICE
-      | Enum.QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS
-      | Enum.QuestionType.TRUE_FALSE
-      | Enum.QuestionType.SHORT_ANSWERS
-      | Enum.QuestionType.MATCHING
-      | Enum.QuestionType.NUMERICAL_QUESTION
-      | Enum.QuestionType.ESSAY
-      | Enum.QuestionType.DESCRIPTION;
+  /** GIFT Quiz types */
+  type QuizQuestionBase = {
+    id: number;
+    question: string;
+    score: number;
+    title: string;
+    type: QuestionType;
   };
 
-  type QuizAttempt = EscolaLms.TopicTypeGift.Models.QuizAttempt & {
+  type QuizQuestion_MultipleChoice = QuizQuestionBase & {
+    options: { answers: string[] };
+    type: Enum.QuestionType.MULTIPLE_CHOICE;
+  };
+  type QuizQuestion_MultipleChoiceWithMultipleRightAnswers = QuizQuestionBase & {
+    options: { answers: string[] };
+    type: Enum.QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
+  };
+  type QuizQuestion_TrueFalse = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.TRUE_FALSE;
+  };
+  type QuizQuestion_ShortAnswers = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.SHORT_ANSWERS;
+  };
+  type QuizQuestion_Matching = QuizQuestionBase & {
+    options: {
+      sub_questions: string[];
+      sub_answers: string[];
+    };
+    type: Enum.QuestionType.MATCHING;
+  };
+  type QuizQuestion_NumericalQuestion = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.NUMERICAL_QUESTION;
+  };
+  type QuizQuestion_Essay = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.ESSAY;
+  };
+  type QuizQuestion_Description = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.DESCRIPTION;
+  };
+
+  export type GiftQuestion =
+    | QuizQuestion_MultipleChoice
+    | QuizQuestion_MultipleChoiceWithMultipleRightAnswers
+    | QuizQuestion_TrueFalse
+    | QuizQuestion_ShortAnswers
+    | QuizQuestion_Matching
+    | QuizQuestion_NumericalQuestion
+    | QuizQuestion_Essay
+    | QuizQuestion_Description;
+
+  type TextAnswer = { text: string };
+
+  type MultipleAnswer = {
+    multiple: string[];
+  };
+  type MatchingAnswer = { matching: Record<string, string> };
+  type NumericAnswer = { numeric: number };
+  type BooleanAnswer = { bool: boolean };
+
+  type GiftQuizAnswer =
+    | TextAnswer
+    | MultipleAnswer
+    | MatchingAnswer
+    | NumericAnswer
+    | BooleanAnswer;
+
+  type AttemptAnswer = Omit<EscolaLms.TopicTypeGift.Models.AttemptAnswer, 'answer'> & {
+    answer: GiftQuizAnswer;
+  };
+
+  type QuizAttempt = Omit<EscolaLms.TopicTypeGift.Models.QuizAttempt, 'questions' | 'answers'> & {
     id: number;
     user_id: number;
     topic_gift_quiz_id: number;
@@ -1182,10 +1245,8 @@ declare namespace API {
   };
 
   type QuizAttemptDetails = QuizAttempt & {
-    // TODO add type
-    questions: [];
-    // TODO add type
-    answers: [];
+    questions: GiftQuestion[];
+    answers: AttemptAnswer[];
   };
 
   type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &

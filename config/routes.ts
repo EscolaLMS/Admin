@@ -144,6 +144,7 @@
         access: 'coursesPermission',
         component: './QuizReports',
       },
+      // TODO correct access
       {
         path: '/courses/quiz-reports/:reportId',
         hideInMenu: true,
