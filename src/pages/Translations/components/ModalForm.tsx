@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import ProForm, { ProFormText, ModalForm } from '@ant-design/pro-form';
 import { slugify } from '@/services/escola-lms/slug';
 import { useIntl, FormattedMessage } from 'umi';
-import JsonEditor from '@/components/JsonEditor';
+import { JsonLangEditor } from './JsonLangEditor';
 import { getTranslation } from '@/services/escola-lms/translations';
 
 export const TranslationModalForm: React.FC<{
@@ -35,7 +35,7 @@ export const TranslationModalForm: React.FC<{
         id: typeof id === 'number' && id > 0 ? 'editTranslation' : 'newTranslation',
         defaultMessage: typeof id === 'number' && id > 0 ? 'editTranslation' : 'newTranslation',
       })}
-      width="400px"
+      width="700px"
       visible={visible}
       onVisibleChange={onVisibleChange}
       onFinish={(values) => onFinish({ ...values })}
@@ -62,11 +62,11 @@ export const TranslationModalForm: React.FC<{
       />
       <ProForm.Item
         name={'text'}
-        label={<FormattedMessage id={'text'} />}
-        tooltip={<FormattedMessage id={'text'} />}
+        label={<FormattedMessage id={'translationJsonText'} />}
+        tooltip={<FormattedMessage id={'translationJsonText_tooltip'} />}
         valuePropName="value"
       >
-        <JsonEditor />
+        <JsonLangEditor />
       </ProForm.Item>
     </ModalForm>
   );
