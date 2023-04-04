@@ -42,6 +42,7 @@ export async function getInitialState(): Promise<{
   config?: API.Setting[];
   translations?: API.Translation[];
 }> {
+  refreshTokenCallback();
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
