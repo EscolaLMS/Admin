@@ -5,7 +5,7 @@ FROM node:16-buster AS base
 WORKDIR /home/node/app
 COPY / /home/node/app
 RUN apt-get update && apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
-RUN yarn install && yarn run build && cp dist/index.html dist/tpl.html
+RUN yarn install --network-timeout 1000000000 && yarn run build && cp dist/index.html dist/tpl.html
 
 FROM httpd:latest AS httpd
 ENV API_URL="http://localhost:1000"

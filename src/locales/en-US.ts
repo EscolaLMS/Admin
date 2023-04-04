@@ -12,11 +12,15 @@ import fabric from './en-US/fabric';
 import vouchers from './en-US/vouchers';
 
 export default {
+  translationJsonText: 'Translation Object',
+  translationJsonText_tooltip: 'Translation Object_tooltip',
+  editTranslation: 'Edit Translation',
   parent: 'Parent',
   parent_lesson: 'Parent Lesson',
   courseAccessEnquiries: 'Course Access Enquiries',
   'menu.Other activities.Tasks': 'Tasks',
-
+  'menu.Configuration.Panel Translations': 'Panel Translations',
+  lang: 'Language',
   file_resources: 'File resources',
   select_user_role: 'Select role',
   select_user_group: 'Select User Group',

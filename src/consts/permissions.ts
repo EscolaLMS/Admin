@@ -205,7 +205,7 @@ enum PERMISSIONS {
   VoucherDelete = 'coupon_delete',
   VoucherUse = 'coupon_use',
 
-  /* -------- EscolaLMS/Transaltions -------- */
+  /* -------- EscolaLMS/translations -------- */
   TranslationList = 'translation_list',
   TranslationCreate = 'translation_create',
   TranslationRead = 'translation_read',

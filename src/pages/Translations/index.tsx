@@ -1,8 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Tag, Typography } from 'antd';
 
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
@@ -35,6 +36,16 @@ export const TableColumns: ProColumns<API.Translation>[] = [
     dataIndex: 'text',
     sorter: true,
     hideInSearch: true,
+    render: (_, record) => (
+      <Fragment>
+        {Object.entries(record.text).map((txt) => (
+          <Typography.Paragraph key={txt[0]}>
+            <Tag>{txt[0]}</Tag>
+            {txt[1]}
+          </Typography.Paragraph>
+        ))}
+      </Fragment>
+    ),
   },
 ];
 
