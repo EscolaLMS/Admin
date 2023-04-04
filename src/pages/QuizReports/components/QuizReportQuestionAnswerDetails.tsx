@@ -21,7 +21,7 @@ function isNumericAnswer(answer: API.GiftQuizAnswer): answer is API.NumericAnswe
 }
 
 function isBooleanAnswer(answer: API.GiftQuizAnswer): answer is API.BooleanAnswer {
-  return typeof (answer as API.NumericAnswer)?.numeric === 'number';
+  return typeof (answer as API.BooleanAnswer)?.bool === 'boolean';
 }
 
 const QuizReportQuestionAnswerDetails: React.FC<Props> = ({ answerObj }) => {
