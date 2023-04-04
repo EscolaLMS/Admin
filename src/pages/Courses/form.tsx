@@ -665,7 +665,7 @@ export default () => {
             tab={<FormattedMessage id="questionnaires" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            {course && <AssignQuestionnary modelType={ModelTypes.course} id={Number(course)} />}
+            {course && <AssignQuestionnary modelType={ModelTypes.COURSE} id={Number(course)} />}
           </ProCard.TabPane>
         )}
 
