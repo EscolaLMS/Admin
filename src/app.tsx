@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, getLocale } from 'umi';
+import { history, getLocale, addLocale, localeInfo } from 'umi';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -11,6 +11,8 @@ import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
 import { settings } from './services/escola-lms/settings';
+import { translations } from './services/escola-lms/translations';
+
 import { refreshTokenCallback } from './services/token_refresh';
 
 import '@/services/ybug';
@@ -38,8 +40,8 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.UserItem | undefined>;
   collapsed?: boolean;
   config?: API.Setting[];
+  translations?: API.Translation[];
 }> {
-  refreshTokenCallback();
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
@@ -62,9 +64,19 @@ export async function getInitialState(): Promise<{
 
   if (currentUser) {
     const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+    const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
+
+    if (transl.success) {
+      transl.data.forEach((t) => {
+        Object.keys(t.text).forEach((key) => {
+          addLocale(key, { [t.key]: t.text[key] });
+        });
+      });
+    }
     return {
       fetchUserInfo,
       config: config.success ? config.data : [],
+      translations: transl.success ? transl.data : [],
       currentUser,
       settings: {},
       collapsed: false,
@@ -72,6 +84,7 @@ export async function getInitialState(): Promise<{
   }
   return {
     config: [],
+    translations: [],
     fetchUserInfo,
     settings: {},
     collapsed: false,

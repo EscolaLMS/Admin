@@ -380,6 +380,14 @@
         access: 'translationListPermission',
         component: './Translations',
       },
+
+      {
+        name: 'Panel Translations',
+        icon: 'translation',
+        path: '/configuration/admin_translations',
+        access: 'translationListPermission',
+        component: './Translations/admin',
+      },
     ],
   },
   {
