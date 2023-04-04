@@ -62,8 +62,8 @@ export const TranslationModalForm: React.FC<{
       />
       <ProForm.Item
         name={'text'}
-        label={<FormattedMessage id={'transaltionJsonText'} />}
-        tooltip={<FormattedMessage id={'transaltionJsonText_tooltip'} />}
+        label={<FormattedMessage id={'translationJsonText'} />}
+        tooltip={<FormattedMessage id={'translationJsonText_tooltip'} />}
         valuePropName="value"
       >
         <JsonLangEditor />

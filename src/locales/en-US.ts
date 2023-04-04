@@ -12,6 +12,9 @@ import fabric from './en-US/fabric';
 import vouchers from './en-US/vouchers';
 
 export default {
+  translationJsonText: 'Translation Object',
+  translationJsonText_tooltip: 'Translation Object_tooltip',
+  editTranslation: 'Edit Translation',
   parent: 'Parent',
   parent_lesson: 'Parent Lesson',
   courseAccessEnquiries: 'Course Access Enquiries',
