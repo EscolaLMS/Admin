@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, getLocale, addLocale, localeInfo } from 'umi';
+import { history, getLocale, addLocale } from 'umi';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
