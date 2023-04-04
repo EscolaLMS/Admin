@@ -1152,7 +1152,23 @@ declare namespace API {
 
   type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion;
 
-  type QuizAttempt = EscolaLms.TopicTypeGift.Models.QuizAttempt;
+  type QuizAttempt = EscolaLms.TopicTypeGift.Models.QuizAttempt & {
+    id: number;
+    user_id: number;
+    topic_gift_quiz_id: number;
+    started_at: Date | string;
+    end_at: Date | string | null;
+    max_score: number;
+    result_score: number | null;
+    is_ended: boolean;
+  };
+
+  type QuizAttemptDetails = QuizAttempt & {
+    // TODO add type
+    questions: [];
+    // TODO add type
+    answers: [];
+  };
 
   type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &
     PaginationParams & { topic_gift_quiz_id: number };
