@@ -1164,6 +1164,7 @@ declare namespace API {
     question: string;
     score: number;
     title: string;
+    value: string;
     type: QuestionType;
   };
 
