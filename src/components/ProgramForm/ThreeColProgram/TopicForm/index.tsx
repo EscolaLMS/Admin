@@ -60,6 +60,10 @@ export const getTypeIcon = (type: string | undefined) => {
   return <ExclamationCircleOutlined />;
 };
 
+const topicCanHaveEmptyValue = (type: TopicType) => {
+  return [TopicType.GiftQuiz, TopicType.Project, TopicType.GiftQuiz].includes(type);
+};
+
 export const Topic: React.FC = () => {
   const {
     state,
@@ -95,11 +99,7 @@ export const Topic: React.FC = () => {
       };
     });
     if (topic?.isNew) {
-      setSaveIsDisabled(
-        true &&
-          (topic.topicable_type !== TopicType.Project ||
-            topic.topicable_type !== TopicType.GiftQuiz),
-      );
+      setSaveIsDisabled(true && !topicCanHaveEmptyValue(topic.topicable_type));
     }
   }, [type, topic]);
 
@@ -149,11 +149,7 @@ export const Topic: React.FC = () => {
       json: topics.json ? JSON.stringify(topics.json) : null,
     };
 
-    if (
-      (values.topicable_type === TopicType.Project ||
-        values.topicable_type === TopicType.GiftQuiz) &&
-      !values.value
-    ) {
+    if (topicCanHaveEmptyValue(topic.topicable_type) && !values.value) {
       values.value = 'theProject';
     }
 
