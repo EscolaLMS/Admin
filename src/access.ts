@@ -82,7 +82,8 @@ export default function (initialState: {
 
     scormListPermission:
       havePermissionsInDashboard(PERMISSIONS.ScormList) &&
-      !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true),
+      !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true) &&
+      !haveSettingsInDashboard('disableTopicType-SCORM', true),
     scormDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ScormRead),
 
     pageListPermission: havePermissionsInDashboard(PERMISSIONS.PageList),
