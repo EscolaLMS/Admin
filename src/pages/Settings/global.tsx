@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
+import { Button, message, Tooltip, Popconfirm } from 'antd';
 import React, { useState, useRef } from 'react';
 import { useIntl, FormattedMessage, useModel } from 'umi';
 import type { IntlShape } from 'react-intl';

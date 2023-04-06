@@ -42,7 +42,7 @@ export async function getInitialState(): Promise<{
   collapsed?: boolean;
   config?: API.Setting[];
   translations?: API.Translation[];
-  packages: Record<string, string>;
+  packages?: Record<string, string>;
 }> {
   refreshTokenCallback();
   const fetchUserInfo = async () => {
