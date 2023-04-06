@@ -18,8 +18,8 @@ import { refreshTokenCallback } from './services/token_refresh';
 import '@/services/ybug';
 import '@/services/sentry.ts';
 import './app.css';
-import { FormattedMessage } from '@@/plugin-locale/localeExports';
 import { packages } from './services/escola-lms/packages';
+import { FormattedMessage, localeInfo } from '@@/plugin-locale/localeExports';
 
 declare const REACT_APP_API_URL: string;
 
@@ -71,11 +71,22 @@ export async function getInitialState(): Promise<{
     const packs = await packages();
 
     if (transl.success) {
+      const messages = {};
       transl.data.forEach((t) => {
         Object.keys(t.text).forEach((key) => {
-          addLocale(key, { [t.key]: t.text[key] });
+          if (!messages[key]) {
+            messages[key] = {};
+          }
+          messages[key][t.key] = t.text[key];
         });
       });
+
+      for (const lang in messages) {
+        addLocale(lang, messages[lang], {
+          antd: localeInfo[lang].antd,
+          momentLocale: localeInfo[lang].momentLocale,
+        });
+      }
     }
 
     return {
