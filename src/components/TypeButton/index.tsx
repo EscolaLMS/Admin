@@ -1,3 +1,4 @@
+import GiftQuizRow from '@/components/GiftQuizRow';
 import React from 'react';
 import UserRow from '@/components/UserRow';
 import OrderRow from '@/components/OrderRow';
@@ -22,6 +23,7 @@ type PossibleType =
   | 'EscolaLms\\Cart\\Models\\Order'
   | 'EscolaLms\\Cart\\Models\\Course'
   | 'EscolaLms\\Auth\\Models\\UserGroup'
+  | 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz'
   | 'Questionnaire'
   | 'Product';
 type DataProps = API.LinkedType;
@@ -75,7 +77,9 @@ export const TypeButton: React.FC<{
           text={text}
         />
       );
-
+    // TODO add onLoaded
+    case 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz':
+      return <GiftQuizRow id={type_id} />;
     case 'Product':
       return <ProductRow id={type_id} onLoaded={(product) => onData({ type, value: product })} />;
     default:

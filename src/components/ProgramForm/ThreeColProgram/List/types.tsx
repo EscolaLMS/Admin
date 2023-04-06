@@ -12,6 +12,7 @@ import {
   CarryOutOutlined,
   //CaretUpOutlined,
   //CaretDownOutlined,
+  PercentageOutlined,
   PlusOutlined,
   PicCenterOutlined,
 } from '@ant-design/icons';
@@ -146,6 +147,14 @@ export const TopicTypesSelector: React.FC<{
               />
             </Tooltip>
           )}
+
+          <Tooltip placement="right" title={<FormattedMessage id="Quiz" />}>
+            <Button
+              block
+              onClick={() => setSelected(TopicType.GiftQuiz)}
+              icon={<PercentageOutlined />}
+            />
+          </Tooltip>
         </div>
       )}
     </div>

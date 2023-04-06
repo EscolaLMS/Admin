@@ -135,6 +135,24 @@
         access: 'courseAccessListPermission',
         component: './CourseAccess',
       },
+
+      // TODO correct access
+      {
+        path: '/courses/quiz-reports',
+        name: 'Quiz Reports',
+        icon: 'read',
+        access: 'coursesPermission',
+        component: './QuizReports',
+      },
+      // TODO correct access
+      {
+        path: '/courses/quiz-reports/:reportId',
+        hideInMenu: true,
+        name: 'Details',
+        icon: 'read',
+        access: 'coursesPermission',
+        component: './QuizReports/details',
+      },
     ],
   },
   {
