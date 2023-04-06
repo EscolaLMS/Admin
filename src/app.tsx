@@ -19,6 +19,7 @@ import '@/services/ybug';
 import '@/services/sentry.ts';
 import './app.css';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
+import { packages } from './services/escola-lms/packages';
 
 declare const REACT_APP_API_URL: string;
 
@@ -41,6 +42,7 @@ export async function getInitialState(): Promise<{
   collapsed?: boolean;
   config?: API.Setting[];
   translations?: API.Translation[];
+  packages: Record<string, string>;
 }> {
   refreshTokenCallback();
   const fetchUserInfo = async () => {
@@ -66,6 +68,7 @@ export async function getInitialState(): Promise<{
   if (currentUser) {
     const config = await settings({ current: 1, pageSize: 100, group: 'global' });
     const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
+    const packs = await packages();
 
     if (transl.success) {
       transl.data.forEach((t) => {
@@ -74,6 +77,7 @@ export async function getInitialState(): Promise<{
         });
       });
     }
+
     return {
       fetchUserInfo,
       config: config.success ? config.data : [],
@@ -81,6 +85,7 @@ export async function getInitialState(): Promise<{
       currentUser,
       settings: {},
       collapsed: false,
+      packages: packs.success ? packs.data : {},
     };
   }
   return {
@@ -89,6 +94,7 @@ export async function getInitialState(): Promise<{
     fetchUserInfo,
     settings: {},
     collapsed: false,
+    packages: {},
   };
 }
 
