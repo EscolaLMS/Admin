@@ -4,13 +4,22 @@ import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function (initialState: { currentUser: API.UserItem; config: API.Setting[] }) {
+export default function (initialState: {
+  currentUser: API.UserItem;
+  config: API.Setting[];
+  packages: Record<string, string>;
+}) {
   const currentUser = initialState?.currentUser;
 
   const havePermissions = isUserHavePermissions(currentUser);
   const dashboardPermission = havePermissions(PERMISSIONS.CoreDashboardAccess);
   const havePermissionsInDashboard = (...permissions: PERMISSIONS[]) => {
     return dashboardPermission && havePermissions(...permissions);
+  };
+
+  // TODO implement minimal versions
+  const havePackageInstalled = (packageName: string, minVersion: string = '0.0.0') => {
+    return initialState.packages && initialState.packages[packageName];
   };
 
   const haveSettingsInDashboard = (settingName: string, expectedValue: string | number | boolean) =>
@@ -45,18 +54,23 @@ export default function (initialState: { currentUser: API.UserItem; config: API.
 
     paymentListPermission: havePermissionsInDashboard(PERMISSIONS.PaymentList),
 
-    coursesPermission: havePermissionsInDashboard(
-      PERMISSIONS.CourseList,
-      PERMISSIONS.H5PList,
-      PERMISSIONS.ScormList,
-      PERMISSIONS.CategoryList,
-      PERMISSIONS.WebinarList,
-    ),
+    coursesPermission:
+      havePermissionsInDashboard(
+        PERMISSIONS.CourseList,
+        PERMISSIONS.H5PList,
+        PERMISSIONS.ScormList,
+        PERMISSIONS.CategoryList,
+        PERMISSIONS.WebinarList,
+      ) && !haveSettingsInDashboard('hideInMenu-Courses', true),
 
-    courseListPermission: havePermissionsInDashboard(PERMISSIONS.CourseList),
+    courseListPermission:
+      havePermissionsInDashboard(PERMISSIONS.CourseList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesList', true),
     courseDetailsPermission: havePermissionsInDashboard(PERMISSIONS.CourseRead),
 
-    h5pListPermission: havePermissionsInDashboard(PERMISSIONS.H5PList),
+    h5pListPermission:
+      havePermissionsInDashboard(PERMISSIONS.H5PList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true),
     h5pDetailsPermission: havePermissionsInDashboard(PERMISSIONS.H5PRead),
 
     otherPermission: havePermissionsInDashboard(
@@ -66,7 +80,9 @@ export default function (initialState: { currentUser: API.UserItem; config: API.
       PERMISSIONS.PageList,
     ),
 
-    scormListPermission: havePermissionsInDashboard(PERMISSIONS.ScormList),
+    scormListPermission:
+      havePermissionsInDashboard(PERMISSIONS.ScormList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true),
     scormDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ScormRead),
 
     pageListPermission: havePermissionsInDashboard(PERMISSIONS.PageList),
@@ -77,7 +93,9 @@ export default function (initialState: { currentUser: API.UserItem; config: API.
 
     fileListPermission: havePermissionsInDashboard(PERMISSIONS.FileList),
 
-    categoryListPermission: havePermissionsInDashboard(PERMISSIONS.CategoryList),
+    categoryListPermission:
+      havePermissionsInDashboard(PERMISSIONS.CategoryList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesCategories', true),
 
     salesPermission: havePermissionsInDashboard(
       PERMISSIONS.CartOrderList,
@@ -93,7 +111,9 @@ export default function (initialState: { currentUser: API.UserItem; config: API.
 
     notificationListPermission: havePermissionsInDashboard(PERMISSIONS.NotificationListAll),
 
-    reportListPermission: havePermissionsInDashboard(PERMISSIONS.ReportList),
+    reportListPermission:
+      havePermissionsInDashboard(PERMISSIONS.ReportList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesCategories', true),
 
     usersPermission: havePermissionsInDashboard(
       PERMISSIONS.UserList,
@@ -104,7 +124,9 @@ export default function (initialState: { currentUser: API.UserItem; config: API.
     questionnaireListPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireList),
     questionnaireDetailPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireRead),
 
-    webinarListPermission: havePermissionsInDashboard(PERMISSIONS.WebinarList),
+    webinarListPermission:
+      havePermissionsInDashboard(PERMISSIONS.WebinarList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesWebinars', true),
     webinarDetailsPermission: havePermissionsInDashboard(PERMISSIONS.WebinarRead),
 
     consultationListPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationList),
@@ -131,11 +153,12 @@ export default function (initialState: { currentUser: API.UserItem; config: API.
 
     courseAccessListPermission:
       havePermissionsInDashboard(PERMISSIONS.CourseAccessList) &&
-      haveSettingsInDashboard('showAccessRequestsInMenu', true),
+      !haveSettingsInDashboard('hideInMenu-CoursesAccess', true) &&
+      havePackageInstalled('escolalms/course-access'),
 
     consultationAccessListPermission:
       havePermissionsInDashboard(PERMISSIONS.ConsultationAccessList) &&
-      haveSettingsInDashboard('showConsultationRequestsInMenu', true),
+      !haveSettingsInDashboard('hideInMenu-OtherConsultation-access', true),
 
     tasksPermission: () => true,
   };
