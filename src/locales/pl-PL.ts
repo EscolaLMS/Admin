@@ -475,7 +475,7 @@ export default {
   download_all: 'Pobierz wszystkie',
   download_pdf: 'Pobierz PDF',
   select_content: 'Wybierz kontent',
-  exclude_promotions: 'Czy łaczy sie z innymi promocjami',
+  exclude_promotions: 'Nie łącz z innymi promocjami',
 
   generate: 'Generuj',
   generate_pdf: 'Generuj PDF(y)',

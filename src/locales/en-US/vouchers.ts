@@ -13,4 +13,7 @@ export default {
   'vouchers.product_fixed': 'Product fixed',
   'vouchers.product_percent': 'Product percentage',
   'voucher.edit': 'Edit voucher',
+  'voucher.excluded_categories': 'Excluded categories',
+  'voucher.included_categories': 'Included categories',
+  'voucher.only_for_users': 'Only for users',
 };
