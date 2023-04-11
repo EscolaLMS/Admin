@@ -158,7 +158,8 @@ export default {
   parent_id: 'Nadrzędna kategoria',
   parent_id_tooltip: 'Nadrzędna kategoria, do której będzie przypisana nowa kategoria',
   parent_id_group: 'Nadrzędna grupa',
-  parent_id_group_tooltip: 'Szukaj po id',
+  parent_id_group_tooltip:
+    'Wynik wyszukiwania zwróci wszystkie kategorie, które są podpięte do nadrzędnej kategorii',
   registerable: 'Pokaż w rejestracji',
   import_file: 'Importuj plik',
   edit: 'Edytuj',
@@ -188,7 +189,7 @@ export default {
   change_password: 'Zmień hasło',
   search: 'Wyszukaj',
   search_tooltip_1: 'Szukanie odbywa się po imieniu, nazwisku oraz emailu',
-  search_tooltip_user_groups: 'Szukanie odbywa się po nazwie',
+  search_tooltip_user_groups: 'Wyszukiwanie odbywa się po nazwie',
   roles: 'Role',
   rodo: 'Polityka prywatności',
   regulations: 'Regulamin serwisu',
