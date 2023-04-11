@@ -38,6 +38,7 @@ const VoucherForm = () => {
 
   const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
+  const isProductType = voucherType === 'product_fixed' || voucherType === 'product_percent';
 
   const [form] = ProForm.useForm();
 
@@ -274,17 +275,11 @@ const VoucherForm = () => {
                 <ProForm.Item
                   shouldUpdate
                   style={{ minWidth: 104 * 3 }}
-                  name={
-                    voucherType === 'product_fixed' || voucherType === 'product_percent'
-                      ? 'included_products'
-                      : 'excluded_products'
-                  }
+                  name={isProductType ? 'included_products' : 'excluded_products'}
                   label={
                     <FormattedMessage
                       id={
-                        voucherType === 'product_fixed' || voucherType === 'product_percent'
-                          ? 'vouchers.included_products'
-                          : 'vouchers.excluded_products'
+                        isProductType ? 'vouchers.included_products' : 'vouchers.excluded_products'
                       }
                     />
                   }
@@ -298,7 +293,7 @@ const VoucherForm = () => {
                   shouldUpdate
                   style={{ minWidth: 104 * 3 }}
                   name={'users'}
-                  label={<FormattedMessage id={'users'} />}
+                  label={<FormattedMessage id={'voucher.only_for_users'} />}
                   valuePropName="value"
                 >
                   <UserSelect multiple showEmail />
@@ -306,12 +301,21 @@ const VoucherForm = () => {
               </ProForm.Group>
               <ProForm.Group>
                 <ProForm.Item
-                  name={
-                    voucherType === 'product_fixed' || voucherType === 'product_percent'
-                      ? 'included_categories'
-                      : 'excluded_categories'
+                  name={isProductType ? 'included_categories' : 'excluded_categories'}
+                  label={
+                    <FormattedMessage
+                      id={
+                        isProductType
+                          ? 'voucher.included_categories'
+                          : 'voucher.excluded_categories'
+                      }
+                      defaultMessage={
+                        isProductType
+                          ? 'voucher.included_categories'
+                          : 'voucher.excluded_categories'
+                      }
+                    />
                   }
-                  label={<FormattedMessage id="categories" defaultMessage="categories" />}
                   valuePropName="value"
                 >
                   <CategoryTree multiple />
