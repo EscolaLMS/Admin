@@ -29,7 +29,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
-    sorter: false,
+    sorter: true,
     valueEnum: {
       draft: {
         text: (
