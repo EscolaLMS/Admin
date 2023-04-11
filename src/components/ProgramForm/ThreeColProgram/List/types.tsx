@@ -28,7 +28,7 @@ export const TopicTypesSelector: React.FC<{
   onSelected: (type: TopicType) => void;
   onNewLesson: () => void;
   onSort: (up: boolean) => void;
-  positionsToHide?: string[];
+  positionsToHide?: (TopicType | 'lesson')[];
 }> = ({ onSelected, /*onSort, sortingMode = 'both',*/ onNewLesson, positionsToHide }) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -120,31 +120,33 @@ export const TopicTypesSelector: React.FC<{
               <Divider />
             </>
           )}
-          {!topicTypeIsDisabled(TopicType.RichText) && (
-            <Tooltip placement="right" title={<FormattedMessage id="RichText" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.RichText)}
-                icon={<FileTextOutlined />}
-              />
-            </Tooltip>
-          )}
-          {!topicTypeIsDisabled(TopicType.OEmbed) && (
-            <Tooltip placement="right" title={<FormattedMessage id="OEmbed" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.OEmbed)}
-                icon={<YoutubeOutlined />}
-              />
-            </Tooltip>
-          )}
+          {!positionsToHide?.includes(TopicType.RichText) &&
+            !topicTypeIsDisabled(TopicType.RichText) && (
+              <Tooltip placement="right" title={<FormattedMessage id="RichText" />}>
+                <Button
+                  block
+                  onClick={() => setSelected(TopicType.RichText)}
+                  icon={<FileTextOutlined />}
+                />
+              </Tooltip>
+            )}
+          {!positionsToHide?.includes(TopicType.OEmbed) &&
+            !topicTypeIsDisabled(TopicType.OEmbed) && (
+              <Tooltip placement="right" title={<FormattedMessage id="OEmbed" />}>
+                <Button
+                  block
+                  onClick={() => setSelected(TopicType.OEmbed)}
+                  icon={<YoutubeOutlined />}
+                />
+              </Tooltip>
+            )}
 
-          {!topicTypeIsDisabled(TopicType.Audio) && (
+          {!positionsToHide?.includes(TopicType.Audio) && !topicTypeIsDisabled(TopicType.Audio) && (
             <Tooltip placement="right" title={<FormattedMessage id="Audio" />}>
               <Button block onClick={() => setSelected(TopicType.Audio)} icon={<AudioOutlined />} />
             </Tooltip>
           )}
-          {!topicTypeIsDisabled(TopicType.Video) && (
+          {!positionsToHide?.includes(TopicType.Video) && !topicTypeIsDisabled(TopicType.Video) && (
             <Tooltip placement="right" title={<FormattedMessage id="Video" />}>
               <Button
                 block
@@ -153,7 +155,7 @@ export const TopicTypesSelector: React.FC<{
               />
             </Tooltip>
           )}
-          {!topicTypeIsDisabled(TopicType.H5P) && (
+          {!positionsToHide?.includes(TopicType.H5P) && !topicTypeIsDisabled(TopicType.H5P) && (
             <Tooltip placement="right" title={<FormattedMessage id="H5P" />}>
               <Button
                 block
@@ -162,7 +164,7 @@ export const TopicTypesSelector: React.FC<{
               />
             </Tooltip>
           )}
-          {!topicTypeIsDisabled(TopicType.Image) && (
+          {!positionsToHide?.includes(TopicType.Image) && !topicTypeIsDisabled(TopicType.Image) && (
             <Tooltip placement="right" title={<FormattedMessage id="Image" />}>
               <Button
                 block
@@ -171,36 +173,38 @@ export const TopicTypesSelector: React.FC<{
               />
             </Tooltip>
           )}
-          {!topicTypeIsDisabled(TopicType.PDF) && (
+          {!positionsToHide?.includes(TopicType.PDF) && !topicTypeIsDisabled(TopicType.PDF) && (
             <Tooltip placement="right" title={<FormattedMessage id="PDF" />}>
               <Button block onClick={() => setSelected(TopicType.PDF)} icon={<FilePdfOutlined />} />
             </Tooltip>
           )}
-          {!topicTypeIsDisabled(TopicType.SCORM) && (
+          {!positionsToHide?.includes(TopicType.SCORM) && !topicTypeIsDisabled(TopicType.SCORM) && (
             <Tooltip placement="right" title={<FormattedMessage id="SCORM" />}>
               <Button block onClick={() => setSelected(TopicType.SCORM)} icon={<FundOutlined />} />
             </Tooltip>
           )}
 
-          {!topicTypeIsDisabled(TopicType.Project) && (
-            <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.Project)}
-                icon={<CarryOutOutlined />}
-              />
-            </Tooltip>
-          )}
+          {!positionsToHide?.includes(TopicType.Project) &&
+            !topicTypeIsDisabled(TopicType.Project) && (
+              <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
+                <Button
+                  block
+                  onClick={() => setSelected(TopicType.Project)}
+                  icon={<CarryOutOutlined />}
+                />
+              </Tooltip>
+            )}
 
-          {!topicTypeIsDisabled(TopicType.GiftQuiz) && (
-            <Tooltip placement="right" title={<FormattedMessage id="Quiz" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.GiftQuiz)}
-                icon={<PercentageOutlined />}
-              />
-            </Tooltip>
-          )}
+          {!positionsToHide?.includes(TopicType.GiftQuiz) &&
+            !topicTypeIsDisabled(TopicType.GiftQuiz) && (
+              <Tooltip placement="right" title={<FormattedMessage id="Quiz" />}>
+                <Button
+                  block
+                  onClick={() => setSelected(TopicType.GiftQuiz)}
+                  icon={<PercentageOutlined />}
+                />
+              </Tooltip>
+            )}
         </div>
       )}
     </div>
