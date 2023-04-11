@@ -5,6 +5,7 @@ import { useIntl, FormattedMessage, useModel } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { TopicType } from '@/services/escola-lms/enums';
 
 import {
   settings,
@@ -78,7 +79,7 @@ const handleRemove = async (intl: IntlShape, id: number) => {
 };
 
 type InitialDataRecords = Record<
-  'logo' | 'frontURL' | 'showProjectTypeInProgram' | 'maxLessonsNestingInProgram' | string,
+  'logo' | 'frontURL' | 'maxLessonsNestingInProgram' | string,
   API.Setting
 >;
 
@@ -103,7 +104,20 @@ const flatRoutes = (routes: Route[]): Route[] => {
 export const pathToSettingName = (path: string) =>
   `hideInMenu-${snakeToCamel(path.split('/').join('_'))}`;
 
+export const topicTypeToSettingName = (type: string) => `disableTopicType-${type}`;
+
 const booleanSettings = [
+  ...Object.keys(TopicType).map((type, i) => ({
+    id: -1 * (i + 200),
+    key: topicTypeToSettingName(type),
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
   ...flatRoutes(getRoutes())
     .filter((route) => route.path && route.path !== '/')
     .map((route, i) => ({
@@ -118,7 +132,7 @@ const booleanSettings = [
       type: 'boolean',
       data: false,
     })),
-].reduce((acc, curr) => ({ ...acc, [curr.key]: curr }), {});
+].reduce((acc, curr, index) => ({ ...acc, [curr.key]: curr }), {});
 
 const initialData: InitialDataRecords = {
   logo: {
@@ -143,17 +157,7 @@ const initialData: InitialDataRecords = {
     type: 'text',
     data: 'EscolaLMS',
   },
-  showProjectTypeInProgram: {
-    id: -3,
-    key: 'showProjectTypeInProgram',
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  },
+
   maxLessonsNestingInProgram: {
     id: -4,
     key: 'maxLessonsNestingInProgram',

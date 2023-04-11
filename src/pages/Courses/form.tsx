@@ -579,9 +579,9 @@ export default () => {
             tab={<FormattedMessage id="categories_tags" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <Row>
-              <Col span={12}>
-                <ProForm {...formProps}>
+            <ProForm {...formProps}>
+              <Row>
+                <Col span={12}>
                   <ProForm.Item
                     label={<FormattedMessage id="categories" />}
                     name="categories"
@@ -589,10 +589,8 @@ export default () => {
                   >
                     <CategoryCheckboxTree />
                   </ProForm.Item>
-                </ProForm>
-              </Col>
-              <Col span={12}>
-                <ProForm {...formProps}>
+                </Col>
+                <Col span={12}>
                   <ProForm.Item
                     label={<FormattedMessage id="tags" />}
                     name="tags"
@@ -600,9 +598,9 @@ export default () => {
                   >
                     <TagsInput />
                   </ProForm.Item>
-                </ProForm>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </ProForm>
           </ProCard.TabPane>
         )}
         {!isNew && (
