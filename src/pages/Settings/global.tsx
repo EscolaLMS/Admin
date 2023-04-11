@@ -79,7 +79,7 @@ const handleRemove = async (intl: IntlShape, id: number) => {
 };
 
 type InitialDataRecords = Record<
-  'logo' | 'frontURL' | 'maxLessonsNestingInProgram' | string,
+  'logo' | 'frontURL' | 'maxLessonsNestingInProgram' | 'minTopicNestingInProgram' | string,
   API.Setting
 >;
 
@@ -161,6 +161,18 @@ const initialData: InitialDataRecords = {
   maxLessonsNestingInProgram: {
     id: -4,
     key: 'maxLessonsNestingInProgram',
+    group: 'global',
+    value: '0',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'number',
+    data: 0,
+  },
+
+  minTopicNestingInProgram: {
+    id: -5,
+    key: 'minTopicNestingInProgram',
     group: 'global',
     value: '0',
     public: true,

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { NavLink, useModel } from 'umi';
 import { EllipsisOutlined, FolderOutlined } from '@ant-design/icons';
 import { TopicTypesSelector } from '@/components/ProgramForm/ThreeColProgram/List/types';
@@ -6,7 +6,7 @@ import type { DropResult } from 'react-beautiful-dnd';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { getTypeIcon } from '@/components/ProgramForm/ThreeColProgram/TopicForm';
 import { getTypeName } from '@/components/ProgramForm/ThreeColProgram/TopicForm/media';
-import type { TopicType } from '@/services/escola-lms/enums';
+import { TopicType } from '@/services/escola-lms/enums';
 import { history } from 'umi';
 import { Context } from '@/components/ProgramForm/Context';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
@@ -36,18 +36,27 @@ const RecursiveLessonList: React.FC<{
 }> = ({ level, courseId, courseLessons, onLessonCreate, onTopicCreate }) => {
   const { currentEditMode, sortLesson, updateLesson, addNewLesson } = useContext(Context);
 
-  const [hiddenNewTopicOptions, setHiddenNewTopicOptions] = useState<string[]>([]);
-
   const { initialState } = useModel('@@initialState');
-  const maxLessonsNestingInProgram = initialState?.config?.filter(
-    (item) => item.key === 'maxLessonsNestingInProgram',
-  )[0]?.data;
 
-  useEffect(() => {
+  const hiddenNewTopicOptions = useMemo(() => {
+    const hiddenOptions: (TopicType | 'lesson')[] = [];
+
+    const maxLessonsNestingInProgram = initialState?.config?.filter(
+      (item) => item.key === 'maxLessonsNestingInProgram',
+    )[0]?.data;
+
+    const minTopicNestingInProgram = initialState?.config?.filter(
+      (item) => item.key === 'minTopicNestingInProgram',
+    )[0]?.data;
+
     if (Number.isInteger(maxLessonsNestingInProgram) && level > maxLessonsNestingInProgram) {
-      setHiddenNewTopicOptions((prev) => [...prev, 'lesson']);
+      hiddenOptions.push('lesson');
     }
-  }, []);
+    if (Number.isInteger(minTopicNestingInProgram) && level < minTopicNestingInProgram) {
+      Object.values(TopicType).forEach((topicType) => hiddenOptions.push(topicType));
+    }
+    return hiddenOptions;
+  }, [level, initialState]);
 
   return (
     <React.Fragment>
