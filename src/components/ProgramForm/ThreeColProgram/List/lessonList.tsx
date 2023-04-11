@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { NavLink, useModel } from 'umi';
 import { EllipsisOutlined, FolderOutlined } from '@ant-design/icons';
 import { TopicTypesSelector } from '@/components/ProgramForm/ThreeColProgram/List/types';
