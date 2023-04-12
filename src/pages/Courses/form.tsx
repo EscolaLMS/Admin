@@ -497,7 +497,7 @@ export default () => {
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>
-        {!isNew && (
+        {!isNew && access.salesPermission && (
           <ProCard.TabPane
             key="product"
             tab={<FormattedMessage id="product" />}
@@ -641,7 +641,7 @@ export default () => {
             {course && <CourseAccess id={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {!isNew && access.certificatesPermission && (
           <ProCard.TabPane
             key="certificates"
             tab={<FormattedMessage id="certificates" />}
@@ -651,7 +651,7 @@ export default () => {
           </ProCard.TabPane>
         )}
 
-        {!isNew && (
+        {!isNew && access.questionnaireListPermission && (
           <ProCard.TabPane
             key="questionnaires"
             tab={<FormattedMessage id="questionnaires" />}
