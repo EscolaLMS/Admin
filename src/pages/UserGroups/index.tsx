@@ -6,8 +6,8 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { userGroups, deleteUserGroup, userGroupsTree } from '@/services/escola-lms/user_groups';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import UserGroupSelect from '../../components/UserGroupSelect';
-import TypeButtonDrawer from '../../components/TypeButtonDrawer';
+import UserGroupSelect from '@/components/UserGroupSelect';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 import { Tree } from '@/components/Tree';
 
@@ -18,7 +18,7 @@ const handleRemove = async (id: number) => {
 
 export const TableColumns: ProColumns<API.UserGroup>[] = [
   {
-    title: <FormattedMessage id="search" defaultMessage="search" />,
+    title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'search',
     hideInSearch: false,
     hideInTable: true,
@@ -56,6 +56,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
   },
   {
     hideInSearch: false,
+    hideInTable: true,
     title: <FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />,
     tooltip: <FormattedMessage id="parent_id_group_tooltip" />,
     dataIndex: 'parent_id',
@@ -73,6 +74,11 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
         />
       );
     },
+  },
+  {
+    hideInSearch: true,
+    title: <FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />,
+    dataIndex: 'parent_id',
     render: (_, record) => {
       if (record.parent_id) {
         return (

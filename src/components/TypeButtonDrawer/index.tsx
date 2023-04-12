@@ -16,7 +16,8 @@ export type PossibleType =
   | 'EscolaLms\\Consultations\\Models\\Consultation'
   | 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz'
   | 'Questionnaire'
-  | 'Product';
+  | 'Product'
+  | 'EscolaLms\\Vouchers\\Models\\Order';
 
 export const TypeButtonDrawer: React.FC<
   PropsWithChildren<{

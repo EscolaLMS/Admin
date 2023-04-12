@@ -3,7 +3,7 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/vouchers */
 export async function vouchers(
-  params?: API.PageParams & Partial<EscolaLms.Vouchers.Http.Requests.ListCouponsRequest>,
+  params?: API.PageParams & API.PaginationParams,
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {

@@ -22,26 +22,31 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="vouchers.code" defaultMessage="vouchers.code" />,
     dataIndex: 'code',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="amount" defaultMessage="amount" />,
     dataIndex: 'amount',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="limit_per_user" defaultMessage="limit_per_user" />,
     dataIndex: 'limit_per_user',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="vouchers.limit_usage" defaultMessage="vouchers.limit_usage" />,
     dataIndex: 'limit_usage',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: (
@@ -49,6 +54,7 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
     ),
     dataIndex: 'max_cart_price',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: (
@@ -56,17 +62,20 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
     ),
     dataIndex: 'min_cart_price',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="active_from" defaultMessage="active_from" />,
     dataIndex: 'active_from',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => record.active_from && format(new Date(record.active_from), DAY_FORMAT),
   },
   {
     title: <FormattedMessage id="active_to" defaultMessage="active_to" />,
     dataIndex: 'active_to',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => record.active_to && format(new Date(record.active_to), DAY_FORMAT),
   },
 ];
@@ -122,10 +131,20 @@ const Vouchers: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current }) => {
+        request={({ pageSize, current }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
 
-          return vouchers({ pageSize, current }).then((response) => {
+          return vouchers({
+            pageSize,
+            current,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
+          }).then((response) => {
             setLoading(false);
             if (response.success) {
               return {

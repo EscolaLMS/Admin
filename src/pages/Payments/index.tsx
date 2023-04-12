@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { roundTo } from '@/utils/utils';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -47,10 +48,10 @@ const TableList: React.FC = () => {
       render: (_, record) => format(new Date(record.updated_at), DATETIME_FORMAT),
     },
     {
-      title: <FormattedMessage id="amount" defaultMessage="amount" />,
+      title: <FormattedMessage id="total" defaultMessage="total" />,
       dataIndex: 'amount',
       hideInSearch: true,
-      render: (_, record) => (record.amount / 100).toFixed(2),
+      render: (_, record) => roundTo(record.amount),
       sorter: true,
     },
     {
@@ -72,16 +73,16 @@ const TableList: React.FC = () => {
         redirect: <FormattedMessage id="redirect" />,
       },
     },
-
-    {
-      title: <FormattedMessage id="billable" defaultMessage="Billable to" />,
-      dataIndex: 'billable',
-      hideInSearch: false,
-      sorter: true,
-      render: (_, record) => (
-        <TypeButtonDrawer type={record.billable_type} type_id={record.billable_id} />
-      ),
-    },
+    // TODO: Remove this or uncomment if we will have billable_type from BE
+    // {
+    //   title: <FormattedMessage id="billable" defaultMessage="Billable to" />,
+    //   dataIndex: 'billable',
+    //   hideInSearch: false,
+    //   sorter: true,
+    //   render: (_, record) => (
+    //     <TypeButtonDrawer type={record.billable_type} type_id={record.user_id} />
+    //   ),
+    // },
     {
       title: <FormattedMessage id="payable" defaultMessage="Payable to" />,
       dataIndex: 'payable',

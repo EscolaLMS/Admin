@@ -378,6 +378,7 @@ export default () => {
                   defaultMessage: 'hours_to_complete',
                 })}
                 disabled={manageCourseEdit.disableEdit}
+                extra={<></>}
               />
             </ProForm.Group>
             <ProForm.Group label={<FormattedMessage id="additional" />}>

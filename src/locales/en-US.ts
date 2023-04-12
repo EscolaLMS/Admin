@@ -136,7 +136,8 @@ export default {
   parent_id: 'Parent category',
   parent_id_tooltip: 'The parent category to which the new category will be assigned',
   parent_id_group: 'Parent group',
-  parent_id_group_tooltip: 'Search by id',
+  parent_id_group_tooltip:
+    'The search result will return all categories that are linked to the parent category',
   registerable: 'Registerable',
   edit: 'Edit',
   delete: 'Delete',
@@ -576,4 +577,5 @@ export default {
   matching_questions: 'Matching questions',
   matching_answers: 'Matching answers',
   student_didnt_answer: "Student didn't answer this question",
+  'User Not Found': 'User not found',
 };
