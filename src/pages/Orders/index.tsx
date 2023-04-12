@@ -3,15 +3,16 @@ import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { Space } from 'antd';
+import { format } from 'date-fns';
 
 import { orders } from '@/services/escola-lms/orders';
 import UserSelect from '@/components/UserSelect';
-import { format } from 'date-fns';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import { Space } from 'antd';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import ProductsSelect from '@/components/ProductsSelect';
+import { roundTo } from '@/utils/utils';
 
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
@@ -52,19 +53,19 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
     dataIndex: 'subtotal',
     hideInSearch: true,
-    render: (_, record) => Number(record.subtotal) / 100,
+    render: (_, record) => roundTo(record.subtotal),
   },
   {
     title: <FormattedMessage id="tax" defaultMessage="Tax" />,
     dataIndex: 'tax',
     hideInSearch: true,
-    render: (_, record) => Number(record.tax) / 100,
+    render: (_, record) => roundTo(record.tax),
   },
   {
     title: <FormattedMessage id="total" defaultMessage="total" />,
     dataIndex: 'total',
     hideInSearch: true,
-    render: (_, record) => Number(record.total) / 100,
+    render: (_, record) => roundTo(record.total),
   },
   {
     title: <FormattedMessage id="items" defaultMessage="items" />,

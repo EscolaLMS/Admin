@@ -70,7 +70,8 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
         />
       )}
 
-      {data.type === 'EscolaLms\\Cart\\Models\\Order' && (
+      {(data.type === 'EscolaLms\\Cart\\Models\\Order' ||
+        data.type === 'EscolaLms\\Vouchers\\Models\\Order') && (
         <ProDescriptions<API.Order>
           {...descrProps}
           title={<FormattedMessage id="order" />}
