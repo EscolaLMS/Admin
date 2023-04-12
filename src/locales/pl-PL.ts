@@ -582,4 +582,5 @@ export default {
   matching_questions: 'Pytania do dopasowania',
   matching_answers: 'Odpowiedzi do dopasowania',
   student_didnt_answer: 'Uczeń nie odpowiedział na to pytanie',
+  'User Not Found': 'Użytkownik nie został znaleziony',
 };
