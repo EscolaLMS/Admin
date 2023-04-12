@@ -569,6 +569,7 @@ declare namespace API {
       | 'EscolaLms\\Core\\Models\\User';
     status: PaymentStatus;
     updated_at: string;
+    user_id: number;
   };
 
   type Page = {
@@ -875,7 +876,10 @@ declare namespace API {
         value: API.UserItem;
       }
     | {
-        type: 'App\\Models\\Order' | 'EscolaLms\\Cart\\Models\\Order';
+        type:
+          | 'App\\Models\\Order'
+          | 'EscolaLms\\Cart\\Models\\Order'
+          | 'EscolaLms\\Vouchers\\Models\\Order';
         value: API.Order;
       }
     | {
