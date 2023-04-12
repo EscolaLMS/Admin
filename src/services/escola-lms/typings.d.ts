@@ -166,7 +166,7 @@ declare namespace API {
 
   type CourseListItem = Course;
 
-  type CategoryList = DataResponseSuccess<Category[]>;
+  type CategoryList = DefaultMetaResponse<Category>;
 
   type CategoryListItem = Category;
 
@@ -242,6 +242,12 @@ declare namespace API {
       tag?: string;
       active?: boolean;
       status?: string;
+    };
+
+  type CategoryParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      is_active?: string;
     };
 
   type ConsultationsParams = PageParams & {
