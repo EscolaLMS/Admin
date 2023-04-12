@@ -289,6 +289,7 @@ const TableList: React.FC = () => {
               : undefined,
           }).then((response) => {
             if (response.success) {
+              setData(response.data);
               return {
                 data: response.data,
                 total: response.meta.total,
