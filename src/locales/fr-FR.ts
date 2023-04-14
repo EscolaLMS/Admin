@@ -403,6 +403,7 @@ export default {
   extra_fees: 'Frais supplémentaires',
   extra_fees_tooltip: "Frais supplémentaires qui seront facturés lors de l'achat du produit",
   price_old: 'Prix ancien (barré)',
+  price_old: 'Prix ancien',
   price_old_tooltip: 'Ancien prix qui sera affiché barré à côté du prix actuel',
   tax_value: 'Valeur de la taxe',
   tax_value_tooltip: 'Valeur de la taxe, calculée automatiquement',
