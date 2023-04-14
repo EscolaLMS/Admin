@@ -414,7 +414,7 @@ export default {
     'Limit kupna na osobę. Przykładowo wartość 1 pozwoli użytkownikowi na zakup jednego produktu',
   extra_fees: 'Extra opłaty',
   extra_fees_tooltip: 'Dodatkowe opłaty, które będą pobrane przy zakupie produktu',
-  price_old: 'Stara cena (przekreslenie)',
+  price_old: 'Stara cena',
   price_old_tooltip: 'Stara cena, która będzie wyświetlana jako przekreślona obok aktualnej ceny',
   tax_value: 'Podatek wartość',
   tax_value_tooltip: 'Wartość podatku, obliczana automatycznie',

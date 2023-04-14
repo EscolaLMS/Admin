@@ -409,7 +409,7 @@ export default {
     'Purchase limit per person. For example, a value of 1 will allow the user to purchase one product',
   extra_fees: 'Extra fees',
   extra_fees_tooltip: 'Additional fees that will be charged when purchasing the product',
-  price_old: 'Price old (strikethrough)',
+  price_old: 'Price old',
   price_old_tooltip: 'Old price which will be displayed as crossed out next to the current price',
   tax_value: 'Tax value',
   tax_value_tooltip: 'Tax value, calculated automatically',
