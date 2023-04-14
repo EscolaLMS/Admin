@@ -3,7 +3,7 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/questionnaire */
 export async function questionnaire(
-  params: API.PageParams &
+  params?: API.PageParams &
     API.PaginationParams & {
       title?: string;
     },
