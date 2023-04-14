@@ -352,7 +352,7 @@ export default {
   back_home: 'Wróć do strony głównej',
   '403_subtitle': 'Nie masz dostępu do tej strony.',
   '404_subtitle': 'Przepraszamy, ta strona nie istnieje.',
-  user_id: 'ID Użytkownika: ',
+  user_id: 'ID Użytkownika',
   order_id: 'ID Zamówienia: ',
   webinar_id: 'ID Webinaru: ',
   stationary_event_id: 'ID Wydarzenia Stacjonarnego: ',
