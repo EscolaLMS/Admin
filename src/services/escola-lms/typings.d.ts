@@ -39,6 +39,8 @@ declare namespace API {
   type PageParams = {
     current?: number;
     pageSize?: number;
+    title?: string;
+    slug?: string;
   };
 
   /// ----- Ant Design Pro Types ----- ///
