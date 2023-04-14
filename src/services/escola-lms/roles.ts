@@ -2,11 +2,23 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/roles */
-export async function roles(options?: RequestOptionsInit) {
+export async function roles(
+  params: API.CourseParams & {
+    // query
+    current?: number;
+    pageSize?: number;
+    name?: string;
+  },
+  options?: RequestOptionsInit,
+) {
   return request<API.RolesList>(`/api/admin/roles`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-
+    params: {
+      ...params,
+      per_page: params.pageSize,
+      page: params.current,
+    },
     ...(options || {}),
   });
 }
