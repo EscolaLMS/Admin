@@ -402,7 +402,6 @@ export default {
     "Limite d'achat par personne. Par exemple, une valeur de 1 permettra à l'utilisateur d'acheter un produit",
   extra_fees: 'Frais supplémentaires',
   extra_fees_tooltip: "Frais supplémentaires qui seront facturés lors de l'achat du produit",
-  price_old: 'Prix ancien (barré)',
   price_old: 'Prix ancien',
   price_old_tooltip: 'Ancien prix qui sera affiché barré à côté du prix actuel',
   tax_value: 'Valeur de la taxe',
