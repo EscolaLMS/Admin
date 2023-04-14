@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, useParams, history } from 'umi';
+import { FormattedMessage, useParams, history, useAccess } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 
@@ -14,6 +14,7 @@ export enum channelType {
 const Templates: React.FC = () => {
   const params = useParams<{ template?: string }>();
   const { template } = params;
+  const access = useAccess();
 
   return (
     <PageContainer>
@@ -24,13 +25,16 @@ const Templates: React.FC = () => {
           onChange: (key) => history.push(`/configuration/templates/${key}`),
         }}
       >
+        {/** TODO check here if all essential access is given */}
         <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
           <ConfigList templateType={'email'} channel={channelType.email} />
         </ProCard.TabPane>
 
-        <ProCard.TabPane key={'pdf'} tab={<FormattedMessage id="PDF" />}>
-          <ConfigList templateType={'pdf'} channel={channelType.pdf} />
-        </ProCard.TabPane>
+        {access.certificatesPermission && (
+          <ProCard.TabPane key={'pdf'} tab={<FormattedMessage id="PDF" />}>
+            <ConfigList templateType={'pdf'} channel={channelType.pdf} />
+          </ProCard.TabPane>
+        )}
         <ProCard.TabPane
           disabled
           key={'Push'}

@@ -132,7 +132,18 @@ const booleanSettings = [
       type: 'boolean',
       data: false,
     })),
-].reduce((acc, curr, index) => ({ ...acc, [curr.key]: curr }), {});
+  ...['ECommerce', 'Certificates'].map((feature, i) => ({
+    id: -1 * (i + 100),
+    key: `disable-${feature}`,
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
+].reduce((acc, curr, index) => ({ ...acc, [curr.key]: { ...curr, id: -1 * index } }), {});
 
 const initialData: InitialDataRecords = {
   logo: {
