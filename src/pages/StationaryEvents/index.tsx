@@ -9,9 +9,10 @@ import { Button, Tooltip, Popconfirm, message } from 'antd';
 
 export const TableColumns: ProColumns<EscolaLms.StationaryEvents.Models.StationaryEvent>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
 
   {

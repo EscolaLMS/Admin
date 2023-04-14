@@ -25,7 +25,8 @@ export default {
   'app.setting.othersettings': 'Autres réglages',
   'app.setting.weakmode': 'Mode faible',
   'app.setting.copy': 'Copier les réglages',
-  'app.setting.copyinfo': 'Copie réussie, veuillez remplacer defaultSettings dans src/models/setting.js',
+  'app.setting.copyinfo':
+    'Copie réussie, veuillez remplacer defaultSettings dans src/models/setting.js',
   'app.setting.production.hint':
     "Le panneau de réglages n'apparaît que dans l'environnement de développement. Veuillez le modifier manuellement.",
 };
