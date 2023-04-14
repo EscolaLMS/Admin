@@ -18,7 +18,8 @@ export default {
   'menu.form.basic-form': 'Formulaire de base',
   'menu.form.step-form': 'Formulaire étape par étape',
   'menu.form.step-form.info': 'Formulaire étape par étape (informations de transfert)',
-  'menu.form.step-form.confirm': 'Formulaire étape par étape (confirmer les informations de transfert)',
+  'menu.form.step-form.confirm':
+    'Formulaire étape par étape (confirmer les informations de transfert)',
   'menu.form.step-form.result': 'Formulaire étape par étape (terminé)',
   'menu.form.advanced-form': 'Formulaire avancé',
   'menu.list': 'Liste',

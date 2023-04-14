@@ -2,8 +2,9 @@ export default {
   'pages.layouts.userLayout.title':
     'Ant Design est la spécification de conception web la plus influente dans le district de Xihu',
   'pages.login.accountLogin.tab': 'Connexion avec un compte',
-  'pages.login.accountLogin.errorMessage': 'Nom d’utilisateur/mot de passe incorrect (admin/ant.design)',
-  'pages.login.username.placeholder': 'Nom d\'utilisateur : admin ou utilisateur',
+  'pages.login.accountLogin.errorMessage':
+    'Nom d’utilisateur/mot de passe incorrect (admin/ant.design)',
+  'pages.login.username.placeholder': "Nom d'utilisateur : admin ou utilisateur",
   'pages.login.username.required': "Veuillez entrer votre nom d'utilisateur !",
   'pages.login.password.placeholder': 'Mot de passe : ant.design',
   'pages.login.password.required': 'Veuillez entrer votre mot de passe !',
@@ -35,7 +36,8 @@ export default {
   'pages.searchTable.updateForm.ruleName.nameLabel': 'Nom de la règle',
   'pages.searchTable.updateForm.ruleName.nameRules': 'Veuillez entrer le nom de la règle !',
   'pages.searchTable.updateForm.ruleDesc.descLabel': 'Description de la règle',
-  'pages.searchTable.updateForm.ruleDesc.descPlaceholder': 'Veuillez entrer au moins cinq caractères',
+  'pages.searchTable.updateForm.ruleDesc.descPlaceholder':
+    'Veuillez entrer au moins cinq caractères',
   'pages.searchTable.updateForm.ruleDesc.descRules':
     "Veuillez entrer une description de règle d'au moins cinq caractères !",
   'pages.searchTable.updateForm.ruleProps.title': 'Configurer les propriétés',
@@ -44,13 +46,14 @@ export default {
   'pages.searchTable.updateForm.ruleProps.typeLabel': 'Type de Règle',
   'pages.searchTable.updateForm.schedulingPeriod.title': 'Définir la Période de Planification',
   'pages.searchTable.updateForm.schedulingPeriod.timeLabel': 'Heure de Début',
-  'pages.searchTable.updateForm.schedulingPeriod.timeRules': 'Veuillez choisir une heure de début !',
+  'pages.searchTable.updateForm.schedulingPeriod.timeRules':
+    'Veuillez choisir une heure de début !',
   'pages.searchTable.titleDesc': 'Description',
   'pages.searchTable.ruleName': 'Nom de la règle requis',
-  'pages.searchTable.titleCallNo': 'Nombre d\'Appels de Service',
+  'pages.searchTable.titleCallNo': "Nombre d'Appels de Service",
   'pages.searchTable.titleStatus': 'Statut',
   'pages.searchTable.nameStatus.default': 'par défaut',
-  'pages.searchTable.nameStatus.running': 'en cours d\'exécution',
+  'pages.searchTable.nameStatus.running': "en cours d'exécution",
   'pages.searchTable.nameStatus.online': 'en ligne',
   'pages.searchTable.nameStatus.abnormal': 'anormal',
   'pages.searchTable.titleUpdatedAt': 'Dernière Planification le',
@@ -67,5 +70,5 @@ export default {
   'pages.searchTable.batchDeletion': 'suppression en lot',
   'pages.searchTable.batchApproval': 'approbation en lot',
   'pages.files.content': 'Liste des fichiers',
-  'pages.files.filesBrowser': 'Le répertoire courant est :'
-}
+  'pages.files.filesBrowser': 'Le répertoire courant est :',
+};

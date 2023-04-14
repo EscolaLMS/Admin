@@ -29,11 +29,13 @@ export default {
   'app.settings.security.phone': 'Téléphone de sécurité',
   'app.settings.security.phone-description': 'Téléphone lié',
   'app.settings.security.question': 'Question de sécurité',
-  'app.settings.security.question-description': "La question de sécurité n'est pas définie. Une politique de sécurité efficace peut protéger votre compte.",
+  'app.settings.security.question-description':
+    "La question de sécurité n'est pas définie. Une politique de sécurité efficace peut protéger votre compte.",
   'app.settings.security.email': 'E-mail de sauvegarde',
   'app.settings.security.email-description': 'E-mail lié',
   'app.settings.security.mfa': 'Appareil MFA',
-  'app.settings.security.mfa-description': 'Appareil MFA non lié. Une fois lié, il pourra être confirmé deux fois.',
+  'app.settings.security.mfa-description':
+    'Appareil MFA non lié. Une fois lié, il pourra être confirmé deux fois.',
   'app.settings.security.modify': 'Modifier',
   'app.settings.security.set': 'Définir',
   'app.settings.security.bind': 'Lier',
@@ -45,11 +47,14 @@ export default {
   'app.settings.binding.dingding-description': 'Compte DingTalk actuellement non lié',
   'app.settings.binding.bind': 'Lier',
   'app.settings.notification.password': 'Mot de passe du compte',
-  'app.settings.notification.password-description': "Les messages d'autres utilisateurs seront notifiés sous forme de lettre de station",
+  'app.settings.notification.password-description':
+    "Les messages d'autres utilisateurs seront notifiés sous forme de lettre de station",
   'app.settings.notification.messages': 'Messages système',
-  'app.settings.notification.messages-description': 'Les messages système seront notifiés sous forme de lettre de la station',
+  'app.settings.notification.messages-description':
+    'Les messages système seront notifiés sous forme de lettre de la station',
   'app.settings.notification.todo': 'Notification de tâche à accomplir',
-  'app.settings.notification.todo-description': 'La liste de tâches à accomplir sera notifiée sous forme de lettre de la station',
+  'app.settings.notification.todo-description':
+    'La liste de tâches à accomplir sera notifiée sous forme de lettre de la station',
   'app.settings.open': 'Ouvrir',
   'app.settings.close': 'Fermer',
 };
