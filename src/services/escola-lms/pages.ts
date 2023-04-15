@@ -2,11 +2,11 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 export async function pages(
-  params: {
-    // query
-    current?: number;
-    pageSize?: number;
-  },
+  params: API.PageParams &
+    API.PaginationParams & {
+      title?: string;
+      slug?: string;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
