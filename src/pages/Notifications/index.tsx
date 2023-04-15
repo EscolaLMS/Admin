@@ -15,12 +15,14 @@ export const TableColumns: ProColumns<API.Notification>[] = [
     title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
     dataIndex: 'created_at',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => format(new Date(record.created_at), DATETIME_FORMAT),
   },
   {
     title: <FormattedMessage id="user_id" defaultMessage="user_id" />,
     dataIndex: 'notifiable_id',
     hideInSearch: false,
+    sorter: true,
     valueType: 'select',
     renderFormItem: (item, { type, defaultRender, ...rest }) => {
       return <UserSelect {...rest} />;
@@ -84,7 +86,8 @@ const NotificationsPage: React.FC = () => {
             // labelWidth: 120,
           }
         }
-        request={({ pageSize, current, event, notifiable_id, dateRange }) => {
+        request={({ pageSize, current, event, notifiable_id, dateRange }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
@@ -97,6 +100,8 @@ const NotificationsPage: React.FC = () => {
               event,
               date_from,
               date_to,
+              order_by: sortArr && sortArr[0],
+              order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
             },
             notifiable_id,
           ).then((response) => {
@@ -116,6 +121,7 @@ const NotificationsPage: React.FC = () => {
             title: <FormattedMessage id="event" defaultMessage="event" />,
             dataIndex: 'event',
             hideInSearch: false,
+            sorter: true,
             render: (_, record) => (
               <FormattedMessage id={`notifications.${getEventType(record.event)}`} />
             ),
