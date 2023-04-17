@@ -6,8 +6,8 @@ import type { DefaultOptionType } from 'antd/es/select';
 
 type TreeData = Omit<DefaultOptionType, 'label'>;
 
-const traverse = (lessons: API.Lesson[]): TreeData[] => {
-  return lessons.reduce(
+const traverse = (lessons: API.Lesson[]): TreeData[] =>
+  lessons.reduce<TreeData[]>(
     (acc, lesson) => [
       ...acc,
       {
@@ -17,14 +17,24 @@ const traverse = (lessons: API.Lesson[]): TreeData[] => {
         children: lesson.lessons ? traverse(lesson.lessons) : [],
       },
     ],
-    [] as TreeData[],
+    [],
   );
-};
 
 export const ParentLesson: React.FC<{ name: string }> = ({ name }) => {
   const { state } = useContext(Context);
 
-  const treeData = useMemo(() => traverse(state?.lessons ?? []), [state]);
+  const treeData: TreeData[] = useMemo(
+    () => [
+      {
+        // This have to be empty string
+        value: '',
+        title: state?.title ?? 'Root',
+        label: state?.title ?? 'Root',
+        children: traverse(state?.lessons ?? []),
+      },
+    ],
+    [state],
+  );
 
   return (
     <div className="tree-select">
