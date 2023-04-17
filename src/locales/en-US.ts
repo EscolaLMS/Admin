@@ -578,4 +578,6 @@ export default {
   matching_answers: 'Matching answers',
   student_didnt_answer: "Student didn't answer this question",
   'User Not Found': 'User not found',
+  notify_users: 'Users to notify',
+  notify_users_tooltip: 'Indicate which users should be notified about project upload',
 };

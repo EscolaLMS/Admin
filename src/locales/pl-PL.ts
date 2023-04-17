@@ -584,4 +584,7 @@ export default {
   matching_answers: 'Odpowiedzi do dopasowania',
   student_didnt_answer: 'Uczeń nie odpowiedział na to pytanie',
   'User Not Found': 'Użytkownik nie został znaleziony',
+  notify_users: 'Użytkownicy do powiadomienia',
+  notify_users_tooltip:
+    'Wskaż którzy użytkownicy powinni być powiadomieni o tym, że uczeń wgrał projekt',
 };
