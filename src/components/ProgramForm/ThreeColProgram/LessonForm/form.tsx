@@ -5,9 +5,10 @@ import { useIntl, FormattedMessage } from 'umi';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import ProCard from '@ant-design/pro-card';
 import { ParentLesson } from '../ParentLesson';
+import { StateLesson } from './types';
 
 export const LessonForm: React.FC<{
-  lesson: API.Lesson;
+  lesson: StateLesson;
   onFinish: (values: Record<string, string>) => Promise<void>;
   onValuesChange: (changedValues: any, values: Record<string, string>) => void;
   onDelete: () => Promise<void>;
