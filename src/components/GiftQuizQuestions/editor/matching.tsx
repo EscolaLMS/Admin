@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
-import { parse, Matching, Match } from 'gift-pegjs';
+import { parse, Matching, Match } from '@escolalms/gift-pegjs';
 import { Button, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';

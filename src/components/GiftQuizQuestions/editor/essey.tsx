@@ -1,13 +1,13 @@
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo, memo } from 'react';
-import { parse, Essay } from 'gift-pegjs';
+import { parse, Essay } from '@escolalms/gift-pegjs';
 import { Space } from 'antd';
 
 export const GiftQuizQuestionEsseyEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
-}> = memo(({ value, onChange }) => {
+}> = ({ value, onChange }) => {
   const output = useMemo(() => {
     if (value) {
       return parse(value);
@@ -44,4 +44,4 @@ export const GiftQuizQuestionEsseyEditor: React.FC<{
       )}
     </div>
   );
-});
+};
