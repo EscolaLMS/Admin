@@ -412,7 +412,7 @@ declare namespace API {
 
   type TopicProject = TopicBase & {
     topicable_type: TopicType.Project;
-    topicable: TopicableBase;
+    topicable: TopicableBase & { notify_users?: string[] };
   };
 
   type TopicQuiz = TopicBase & {
@@ -485,7 +485,8 @@ declare namespace API {
     | TopicH5P
     | TopicImage
     | TopicPDF
-    | TopicScorm;
+    | TopicScorm
+    | TopicProject;
 
   type TopicNotEmpty =
     | TopicRichText
