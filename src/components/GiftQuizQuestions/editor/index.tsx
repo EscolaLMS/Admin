@@ -9,7 +9,7 @@ import { GiftQuizQuestionNumericalEditor } from './numerical';
 import { GiftQuizQuestionShortEditor } from './short_answers';
 
 import { QuestionType } from '@/services/escola-lms/enums';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 
 export const GiftQuizQuestionEditor: React.FC<{
   type: API.GiftQuestion['type'];

@@ -1,5 +1,5 @@
 import { updateQuestion, deleteQuestion } from '@/services/escola-lms/gift_quiz';
-import { useState, memo } from 'react';
+import { useState } from 'react';
 import { Button, InputNumber, Typography, Divider, Space } from 'antd';
 import { FormattedMessage } from 'umi';
 import { GiftQuizQuestionEditor } from './index';

@@ -1,6 +1,6 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useMemo, memo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { parse, Essay } from '@escolalms/gift-pegjs';
 import { Space } from 'antd';
 
