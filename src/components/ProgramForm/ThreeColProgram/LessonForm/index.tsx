@@ -3,6 +3,12 @@ import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
 import { useParams } from 'umi';
 import LessonForm from './form';
+import { StateLesson } from './types';
+
+const getStateLesson = (lesson: API.Lesson): StateLesson => ({
+  ...lesson,
+  parent_id: lesson.parent_id ?? '',
+});
 
 export const Lesson: React.FC = () => {
   const { currentEditMode } = useContext(Context);
@@ -11,7 +17,7 @@ export const Lesson: React.FC = () => {
     currentEditMode && currentEditMode.mode === 'lesson' && currentEditMode.value
       ? currentEditMode.value
       : {};
-  const [state, setState] = useState<API.Lesson>(lesson);
+  const [state, setState] = useState<StateLesson>(getStateLesson(lesson));
   const [, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
   const { updateLesson, deleteLesson, cloneLesson } = useContext(Context);
@@ -19,7 +25,7 @@ export const Lesson: React.FC = () => {
   const params = useParams<{ course?: string; tab?: string }>();
 
   useEffect(() => {
-    setState(lesson);
+    setState(getStateLesson(lesson));
     return lesson?.topics && setTopicList(lesson.topics);
   }, [lesson]);
 
