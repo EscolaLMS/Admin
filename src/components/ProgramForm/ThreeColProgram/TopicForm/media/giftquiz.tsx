@@ -12,6 +12,7 @@ export const GiftQuiz: React.FC<{
   onChange: (key: 'max_attempts' | 'max_execution_time', value: number | null) => void;
 }> = ({ topicable, onAdded, onRemoved, onChange }) => {
   const intl = useIntl();
+
   return (
     <Fragment>
       <ProForm

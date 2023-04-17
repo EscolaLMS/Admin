@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
-import { parse, Description } from 'gift-pegjs';
+import { parse, Description } from '@escolalms/gift-pegjs';
 import { Space } from 'antd';
 
 export const GiftQuizQuestionDescriptionEditor: React.FC<{

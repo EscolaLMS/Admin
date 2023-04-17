@@ -1,16 +1,17 @@
 import { MenuOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-table';
-import { Fragment, useState, useCallback } from 'react';
+import { Fragment, useState, useCallback, useRef, useEffect } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
 import './index.css';
-import { parse } from 'gift-pegjs';
+import { parse } from '@escolalms/gift-pegjs';
 import { Button, Space, Drawer, Typography, Switch } from 'antd';
 import { FormattedMessage } from 'umi';
-import { createQuestion, deleteQuestion } from '@/services/escola-lms/gift_quiz';
+import { createQuestion, deleteQuestion, updateQuestion } from '@/services/escola-lms/gift_quiz';
 import { EditQuestion } from './editor/edit_question';
 import { GiftQuizNewQuestionEditor } from './editor/new_question';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import type { ActionType } from '@ant-design/pro-table';
 
 const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
@@ -25,22 +26,37 @@ export const Table: React.FC<{
   const [loading, setLoading] = useState(false);
   const [showNew, setShowNew] = useState(false);
 
-  const [debug, setDebug] = useState(true);
+  const [debug, setDebug] = useState(false);
 
   const [newQuestion, setNewQuestion] = useState<{ score: number; value: string }>({
     score: 1,
     value: '',
   });
 
-  const [dataSource, setDataSource] = useState(questions.map((q, i) => ({ ...q, sort: i })));
+  const [dataSource, setDataSource] = useState(questions);
+
+  const actionRef = useRef<ActionType>();
+
+  useEffect(() => {
+    actionRef.current?.reload();
+    setDataSource(questions);
+  }, [questions]);
+
   const SortableItem = SortableElement((props: any) => <tr {...props} />);
   const SortContainer = SortableContainer((props: any) => <tbody {...props} />);
 
   const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
     if (oldIndex !== newIndex) {
-      const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(Boolean);
-      // TODO send this to backend when ready !!
-      console.log(oldIndex, newIndex, newData);
+      const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex)
+        .filter(Boolean)
+        .map((row, index) => ({ ...row, order: index }));
+
+      newData.forEach((newRow, index) => {
+        if (newRow.id !== dataSource[index].id) {
+          updateQuestion(newRow.id, { ...newRow, order: index + 1, topic_gift_quiz_id: quizId });
+        }
+      });
+
       setDataSource(newData);
     }
   };
@@ -213,7 +229,7 @@ export const Table: React.FC<{
           },
         }}
       />
-      <Typography>
+      <Typography style={{ marginTop: '3em' }}>
         Debug GIFT: <Switch checked={debug} onChange={(v) => setDebug(v)} />
       </Typography>
     </Fragment>

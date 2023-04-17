@@ -48,9 +48,6 @@ export const GiftQuizNewQuestionEditor: React.FC<{
 
   useEffect(() => {
     onChange({ value: type ? DEFAULT_VALUES[type] : '', score: value.score });
-    if (type) {
-      console.log(type, DEFAULT_VALUES[type]);
-    }
   }, [type]);
 
   return (
@@ -139,6 +136,7 @@ export const GiftQuizNewQuestionEditor: React.FC<{
           type="primary"
           onClick={() => {
             onCreate();
+            setType(undefined);
           }}
         >
           <FormattedMessage id="Questions.create" defaultMessage="Create Question" />

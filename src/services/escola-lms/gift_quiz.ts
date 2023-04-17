@@ -17,7 +17,9 @@ export async function createQuestion(
 /** PUT /api/admin/gift-questions */
 export async function updateQuestion(
   id: number,
-  body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminUpdateGiftQuestionRequest,
+  body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminUpdateGiftQuestionRequest & {
+    order?: number;
+  },
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.GiftQuestion>>(`/api/admin/gift-questions/${id}`, {

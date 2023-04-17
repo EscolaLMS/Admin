@@ -9,44 +9,50 @@ import { GiftQuizQuestionNumericalEditor } from './numerical';
 import { GiftQuizQuestionShortEditor } from './short_answers';
 
 import { QuestionType } from '@/services/escola-lms/enums';
-import { memo } from 'react';
+import { useCallback } from 'react';
 
 export const GiftQuizQuestionEditor: React.FC<{
   type: API.GiftQuestion['type'];
   value: string;
   onChange: (value: string) => void;
   loading?: boolean;
-}> = memo(({ type, value, onChange, loading = false }) => {
+}> = ({ type, value, onChange, loading = false }) => {
+  const onLocalChange = useCallback((newValue: string) => {
+    if (newValue !== value) {
+      onChange(newValue);
+    }
+  }, []);
+
   switch (type) {
     case QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS:
     case QuestionType.MULTIPLE_CHOICE:
-      return <GiftQuizQuestionMultipleChoiceEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionMultipleChoiceEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.ESSAY:
-      return <GiftQuizQuestionEsseyEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionEsseyEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.DESCRIPTION:
-      return <GiftQuizQuestionDescriptionEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionDescriptionEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.TRUE_FALSE:
-      return <GiftQuizQuestionTrueFalseEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionTrueFalseEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.MATCHING:
-      return <GiftQuizQuestionMatchingEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionMatchingEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.NUMERICAL_QUESTION:
-      return <GiftQuizQuestionNumericalEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionNumericalEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.SHORT_ANSWERS:
-      return <GiftQuizQuestionShortEditor value={value} onChange={(v) => onChange(v)} />;
+      return <GiftQuizQuestionShortEditor value={value} onChange={onLocalChange} />;
 
     default:
       return (
         <Input.TextArea
           disabled={loading}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onLocalChange(e.target.value)}
         />
       );
   }
-});
+};
