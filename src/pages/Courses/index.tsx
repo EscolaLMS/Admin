@@ -5,13 +5,14 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import ProCard from '@ant-design/pro-card';
+import { DeleteOutlined, EditOutlined, ExportOutlined, DollarOutlined } from '@ant-design/icons';
 
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
-import { DeleteOutlined, EditOutlined, ExportOutlined, DollarOutlined } from '@ant-design/icons';
-import ProCard from '@ant-design/pro-card';
 import SecureUpload from '@/components/SecureUpload';
+import { roundTo } from '@/utils/utils';
 import './style.less';
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
@@ -68,7 +69,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
         return (
           <Link to={`/courses/list/${record.id}/product`}>
             <Button type="primary" icon={<DollarOutlined />}>
-              {(record.product.price / 100).toFixed(2)}
+              <span>{roundTo(record.product.price)}</span>
             </Button>
           </Link>
         );
