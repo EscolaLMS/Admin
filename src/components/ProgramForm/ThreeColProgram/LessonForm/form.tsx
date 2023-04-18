@@ -127,7 +127,7 @@ export const LessonForm: React.FC<{
               })}
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
-            <ParentLesson name="parent_id" />
+            <ParentLesson name="parent_id" currentLessonId={lesson?.id} />
             <ProFormText
               name="order"
               label={<FormattedMessage id="order" />}

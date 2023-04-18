@@ -6,21 +6,32 @@ import type { DefaultOptionType } from 'antd/es/select';
 
 type TreeData = Omit<DefaultOptionType, 'label'>;
 
-const traverse = (lessons: API.Lesson[]): TreeData[] =>
-  lessons.reduce<TreeData[]>(
-    (acc, lesson) => [
+const traverse = (
+  lessons: API.Lesson[],
+  disabledLessonId?: number,
+  disableNested?: boolean,
+): TreeData[] =>
+  lessons.reduce<TreeData[]>((acc, lesson) => {
+    const disabled = disabledLessonId === lesson.id;
+
+    return [
       ...acc,
       {
         value: lesson.id,
         title: lesson.title,
         label: lesson.title,
-        children: lesson.lessons ? traverse(lesson.lessons) : [],
+        disabled: disableNested || disabled,
+        children: traverse(lesson?.lessons ?? [], disabledLessonId, disabled || disableNested),
       },
-    ],
-    [],
-  );
+    ];
+  }, []);
 
-export const ParentLesson: React.FC<{ name: string }> = ({ name }) => {
+interface Props {
+  name: string;
+  currentLessonId?: number;
+}
+
+export const ParentLesson: React.FC<Props> = ({ name, currentLessonId }) => {
   const { state } = useContext(Context);
 
   const treeData: TreeData[] = useMemo(
@@ -30,10 +41,10 @@ export const ParentLesson: React.FC<{ name: string }> = ({ name }) => {
         value: '',
         title: state?.title ?? 'Root',
         label: state?.title ?? 'Root',
-        children: traverse(state?.lessons ?? []),
+        children: traverse(state?.lessons ?? [], currentLessonId),
       },
     ],
-    [state],
+    [state, currentLessonId],
   );
 
   return (
