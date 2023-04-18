@@ -21,6 +21,9 @@ export const DashdoardComponent: React.FC = () => {
     const fetchCourses = async () => {
       const request = await course({
         author_id: initialState?.currentUser?.id,
+        // Default get courses by latest
+        order: 'DESC',
+        order_by: 'created_at',
       });
 
       if (request.success) {
