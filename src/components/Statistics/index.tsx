@@ -59,7 +59,7 @@ const Statistics: React.FC<{
   }, [metric]);
 
   return (
-    <ProCard headerBordered>
+    <>
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <div className="statistics">
@@ -81,7 +81,7 @@ const Statistics: React.FC<{
         </div>
       )}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}
-    </ProCard>
+    </>
   );
 };
 
