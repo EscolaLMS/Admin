@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { Button } from 'antd';
 import CurrentUsers from './CurrentUsers';
 import Customers from './Customers';
 import HallOfFame from './HallOfFame';
@@ -16,7 +17,6 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
 import './index.css';
-import { Button } from 'antd';
 
 const COLS = 2;
 const ROW_HEIGHT = 150;
@@ -136,6 +136,7 @@ interface LayoutConfigObject {
   md: LayoutConfig[];
   sm: LayoutConfig[];
   xs: LayoutConfig[];
+  xxs: LayoutConfig[];
 }
 
 export const Dashdoard: React.FC = () => {
@@ -204,7 +205,13 @@ export const Dashdoard: React.FC = () => {
       ],
       [],
     );
-    const changedLayouts: LayoutConfigObject = { lg: data, md: data, sm: data, xs: data };
+    const changedLayouts: LayoutConfigObject = {
+      lg: data,
+      md: data,
+      sm: data,
+      xs: data,
+      xxs: data,
+    };
     saveToLS('layout', changedLayouts);
   };
 
@@ -213,7 +220,7 @@ export const Dashdoard: React.FC = () => {
       <ResponsiveGridLayout
         rowHeight={ROW_HEIGHT}
         autoSize={true}
-        cols={{ lg: 2, md: 2, sm: 2, xs: 1 }}
+        cols={{ lg: 2, md: 2, sm: 2, xs: 1, xxs: 1 }}
         className="layout dashboard-draggable"
         layouts={layouts}
         onLayoutChange={(layout) => onLayoutChange(layout)}
