@@ -135,22 +135,19 @@
         access: 'courseAccessListPermission',
         component: './CourseAccess',
       },
-
-      // TODO correct access
       {
         path: '/courses/quiz-reports',
         name: 'Quiz Reports',
         icon: 'read',
-        access: 'coursesPermission',
+        access: 'coursesQuizReportsListPermission',
         component: './QuizReports',
       },
-      // TODO correct access
       {
         path: '/courses/quiz-reports/:reportId',
         hideInMenu: true,
         name: 'Details',
         icon: 'read',
-        access: 'coursesPermission',
+        access: 'coursesQuizReportsListPermission',
         component: './QuizReports/details',
       },
     ],
@@ -403,7 +400,7 @@
         name: 'Panel Translations',
         icon: 'translation',
         path: '/configuration/admin_translations',
-        access: 'translationListPermission',
+        access: 'adminTranslationListPermission',
         component: './Translations/admin',
       },
     ],
