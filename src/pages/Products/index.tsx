@@ -193,6 +193,9 @@ const Products: React.FC = () => {
           id: 'menu.Sales.Products',
           defaultMessage: 'Products',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         loading={loading}
         actionRef={actionRef}
         rowKey="id"

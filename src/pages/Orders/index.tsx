@@ -157,6 +157,9 @@ const TableList: React.FC = () => {
           id: 'orders',
           defaultMessage: 'orders',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         actionRef={actionRef}
         rowKey="id"
         request={({ pageSize, current, user_id, product_id, dateRange, status }, sort) => {

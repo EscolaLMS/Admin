@@ -95,6 +95,9 @@ const Translations: React.FC = () => {
           id: 'menu.Configuration.Translations',
           defaultMessage: 'Translations',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         loading={loading}
         actionRef={actionRef}
         rowKey="id"

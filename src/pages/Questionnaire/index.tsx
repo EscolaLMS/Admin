@@ -61,7 +61,9 @@ const Questionnaire: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{}}
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Link to="/other/questionnaire/new" key="addnew">
             <Button type="primary" key="primary">
