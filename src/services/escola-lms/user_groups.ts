@@ -91,6 +91,7 @@ export async function userGroupsTree(
   params?: {
     search?: string;
     parent_id?: number;
+    user_id?: number;
   } & API.PaginationParams,
   options?: RequestOptionsInit,
 ) {

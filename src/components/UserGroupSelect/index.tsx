@@ -16,7 +16,12 @@ export const UserGroupSelect: React.FC<{
   multiple?: boolean;
   value?: string | string[] | number | number[];
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  onSelect?: (value: string | number) => void;
+  onDeselect?: (value: string | number) => void;
+  onClear?: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+}> = ({ value, onChange, onSelect, onDeselect, onClear, loading, disabled, multiple = false }) => {
   const [userGroups, setUserGroups] = useState<API.UserGroup[]>([]);
   const [fetching, setFetching] = useState(false);
 
@@ -86,6 +91,11 @@ export const UserGroupSelect: React.FC<{
 
   return (
     <Select
+      onSelect={onSelect}
+      onDeselect={onDeselect}
+      onClear={onClear}
+      loading={loading}
+      disabled={disabled}
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%' }}

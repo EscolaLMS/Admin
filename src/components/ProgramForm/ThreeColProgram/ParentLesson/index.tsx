@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
+import { useIntl, FormattedMessage } from 'umi';
 import { ProFormTreeSelect } from '@ant-design/pro-form';
-import { FormattedMessage } from '@@/plugin-locale/localeExports';
 import { Context } from '@/components/ProgramForm/Context';
 import type { DefaultOptionType } from 'antd/es/select';
 
@@ -32,6 +32,7 @@ interface Props {
 }
 
 export const ParentLesson: React.FC<Props> = ({ name, currentLessonId }) => {
+  const intl = useIntl();
   const { state } = useContext(Context);
 
   const treeData: TreeData[] = useMemo(
@@ -39,8 +40,14 @@ export const ParentLesson: React.FC<Props> = ({ name, currentLessonId }) => {
       {
         // This have to be empty string
         value: '',
-        title: state?.title ?? 'Root',
-        label: state?.title ?? 'Root',
+        title: intl.formatMessage({
+          id: 'root',
+          defaultMessage: 'Root',
+        }),
+        label: intl.formatMessage({
+          id: 'root',
+          defaultMessage: 'Root',
+        }),
         children: traverse(state?.lessons ?? [], currentLessonId),
       },
     ],
