@@ -178,7 +178,8 @@ export default function (initialState: {
 
     coursesQuizReportsListPermission:
       havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
-      !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true),
+      !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
+      havePackageInstalled('escolalms/topic-type-gift'),
 
     tasksPermission: () => true,
   };
