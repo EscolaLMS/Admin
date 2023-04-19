@@ -152,8 +152,15 @@ export default function (initialState: {
     voucherListPermission: havePermissionsInDashboard(PERMISSIONS.VoucherList),
     voucherDetailPermission: havePermissionsInDashboard(PERMISSIONS.VoucherRead),
 
-    translationListPermission: havePermissionsInDashboard(PERMISSIONS.TranslationList),
+    translationListPermission:
+      havePermissionsInDashboard(PERMISSIONS.TranslationList) &&
+      !haveSettingsInDashboard('hideInMenu-ConfigurationTranslations', true) &&
+      havePackageInstalled('escolalms/translations'),
     translationDetailPermission: havePermissionsInDashboard(PERMISSIONS.TranslationRead),
+    adminTranslationListPermission:
+      havePermissionsInDashboard(PERMISSIONS.TranslationList) &&
+      !haveSettingsInDashboard('hideInMenu-ConfigurationAdminTranslations', true) &&
+      havePackageInstalled('escolalms/translations'),
 
     loggedOut: !currentUser,
 
@@ -168,6 +175,11 @@ export default function (initialState: {
     consultationAccessListPermission:
       havePermissionsInDashboard(PERMISSIONS.ConsultationAccessList) &&
       !haveSettingsInDashboard('hideInMenu-OtherConsultation-access', true),
+
+    coursesQuizReportsListPermission:
+      havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
+      havePackageInstalled('escolalms/topic-type-gift'),
 
     tasksPermission: () => true,
   };

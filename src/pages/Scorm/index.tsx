@@ -111,11 +111,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         request={({ pageSize, current }) => {
           return scorms({ pageSize, current }).then((response) => {
             if (response.success) {

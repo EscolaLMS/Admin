@@ -28,7 +28,6 @@ export const Tags: React.FC<{
     <Select
       loading={tags.length === 0}
       showSearch
-      style={{ width: 200 }}
       placeholder={<FormattedMessage id="select_tags" defaultMessage="Select tags" />}
       optionFilterProp="children"
       onChange={onChange}

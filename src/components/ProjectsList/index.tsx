@@ -169,6 +169,9 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
         defaultMessage: 'Project Uploaded Solutions',
       })}
       actionRef={actionRef}
+      search={{
+        layout: 'vertical',
+      }}
       rowKey="id"
       request={({ pageSize, current, user_id, topic_id }, sort) => {
         const sortArr = sort && Object.entries(sort)[0];

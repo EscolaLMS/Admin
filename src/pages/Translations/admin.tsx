@@ -83,6 +83,9 @@ const Translations: React.FC = () => {
           defaultMessage: 'Translations',
         })}
         actionRef={actionRef}
+        search={{
+          layout: 'vertical',
+        }}
         rowKey="id"
         request={({ lang, key, value }) => {
           return new Promise((resolve) => {

@@ -69,6 +69,9 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
         id: 'answers',
         defaultMessage: 'answers',
       })}
+      search={{
+        layout: 'vertical',
+      }}
       rowKey="id"
       request={({ pageSize, current, question_id }) => {
         return getQuestionAnswers(questionnaireId, { pageSize, current, question_id }).then(
