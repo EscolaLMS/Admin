@@ -71,11 +71,9 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
       loading={loading}
       actionRef={actionRef}
       rowKey="id"
-      search={
-        {
-          // labelWidth: 120,
-        }
-      }
+      search={{
+        layout: 'vertical',
+      }}
       request={({ user_id, method, dateRange, path, pageSize, current }, sort) => {
         const sortArr = sort && Object.entries(sort)[0];
         setLoading(true);

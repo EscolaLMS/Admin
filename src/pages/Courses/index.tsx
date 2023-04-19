@@ -335,11 +335,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);

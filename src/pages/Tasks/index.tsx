@@ -153,11 +153,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Link to="/other/tasks/new" key="new">
             <Button type="primary" key="primary">
