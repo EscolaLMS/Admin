@@ -42,6 +42,7 @@ test.describe('New course', () => {
     await expect(ConfirmDeleteCourse).toContainText('Are you sure to delete this record?');
     await page.locator('button:has-text("Yes")').click();
 
+    // await expect (page.getByText('Course deleted successfully')).toBeVisible();
     await page.waitForSelector('text=Course deleted successfully', { state: 'visible' });
   });
 });
