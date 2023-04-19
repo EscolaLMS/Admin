@@ -191,11 +191,9 @@ const TableList: React.FC = () => {
             })}
             actionRef={actionRef}
             rowKey="key"
-            search={
-              {
-                // labelWidth: 120,
-              }
-            }
+            search={{
+              layout: 'vertical',
+            }}
             toolBarRender={() => [
               <SecureUpload
                 key="upload"

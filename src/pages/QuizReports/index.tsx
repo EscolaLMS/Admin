@@ -112,6 +112,9 @@ const QuizAttempts: React.FC = () => {
           id: 'quiz_reports',
           defaultMessage: 'Quiz Reports',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         actionRef={actionRef}
         rowKey="id"
         request={({ current, pageSize, topic_gift_quiz_id }) => {

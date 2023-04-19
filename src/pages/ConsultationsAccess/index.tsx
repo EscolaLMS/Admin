@@ -192,6 +192,9 @@ const TableList: React.FC = () => {
           id: 'consultationAccessEnquiries',
           defaultMessage: 'consultation Access Enquiries',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         actionRef={actionRef}
         rowKey="id"
         request={({

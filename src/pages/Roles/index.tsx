@@ -40,7 +40,9 @@ const RolesPage: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={{}}
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Button type="primary" key="primary" onClick={() => setModalVisible(true)}>
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />

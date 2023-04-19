@@ -56,11 +56,9 @@ export const CategoryModalForm: React.FC<{
             required: true,
           },
         ]}
-        width="md"
         name="name"
       />
       <ProFormText
-        width="md"
         name="slug"
         label={<FormattedMessage id="slug" />}
         placeholder={intl.formatMessage({

@@ -62,11 +62,9 @@ export const UserSubmissions: React.FC<{
       >
         defaultSize="small"
         loading={loading}
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         headerTitle={intl.formatMessage({
           id: 'user_submission',
           defaultMessage: 'user_submission',

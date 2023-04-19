@@ -81,11 +81,9 @@ const NotificationsPage: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         request={({ pageSize, current, event, notifiable_id, dateRange }, sort) => {
           const sortArr = sort && Object.entries(sort)[0];
           const date_from =

@@ -152,11 +152,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Button key={'show_tree'} onClick={() => setShowTree(true)}>
             <FormattedMessage id="show_tree" defaultMessage="Show Tree" />
