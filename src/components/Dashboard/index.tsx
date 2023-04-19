@@ -213,7 +213,7 @@ export const Dashdoard: React.FC = () => {
       <ResponsiveGridLayout
         rowHeight={ROW_HEIGHT}
         autoSize={true}
-        cols={{ lg: 2, md: 2, sm: 2 }}
+        cols={{ lg: 2, md: 2, sm: 2, xs: 1 }}
         className="layout dashboard-draggable"
         layouts={layouts}
         onLayoutChange={(layout) => onLayoutChange(layout)}
