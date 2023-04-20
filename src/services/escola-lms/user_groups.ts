@@ -3,23 +3,16 @@ import type { RequestOptionsInit } from 'umi-request';
 import { request } from 'umi';
 
 export async function userGroups(
-  params: {
-    // query
-    current?: number;
-    pageSize?: number;
-    search?: string;
-    parent_id?: number;
-  },
+  params: API.PageParams &
+    API.PaginationParams & {
+      // query
+      search?: string;
+      parent_id?: number;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.UserGroupList>('/api/admin/user-groups', {
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-      search: params.search ? params.search : undefined,
-      parent_id: params.parent_id,
-    },
+    params,
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
