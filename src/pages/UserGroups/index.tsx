@@ -29,6 +29,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
@@ -39,6 +40,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="registerable" defaultMessage="registerable" />,
@@ -165,8 +167,16 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, search, parent_id }) => {
-          return userGroups({ pageSize, current, search, parent_id }).then((response) => {
+        request={({ pageSize, current, search, parent_id }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return userGroups({
+            per_page: pageSize,
+            page: current,
+            search: search || undefined,
+            parent_id,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+          }).then((response) => {
             if (response.success) {
               setData(response.data);
               return {
