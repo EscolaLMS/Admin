@@ -17,14 +17,16 @@ const ModelNames = {
 
 const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="title" defaultMessage="title" />,
     dataIndex: 'title',
     hideInSearch: true,
+    sorter: true,
     width: '80%',
     render: (_, record) => (
       <TypeButtonDrawer type={'Questionnaire'} type_id={Number(record.id)} text={record.title} />
@@ -74,8 +76,12 @@ const AssignQuestionnary: React.FC<{ modelType: ModelTypes; id: number }> = ({ m
       actionRef={actionRef}
       rowKey="id"
       search={false}
-      request={() => {
-        return questionnaire().then((response) => {
+      request={({}, sort) => {
+        const sortArr = sort && Object.entries(sort)[0];
+        return questionnaire({
+          order_by: sortArr && sortArr[0],
+          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+        }).then((response) => {
           if (response.success) {
             return {
               data: response.data,
