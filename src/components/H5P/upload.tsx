@@ -4,12 +4,14 @@ import React from 'react';
 export const UploadH5P: React.FC<{
   onSuccess: (response: any) => void;
   onError: () => void;
-}> = ({ onSuccess, onError }) => {
+  hideLabel?: boolean;
+}> = ({ onSuccess, onError, hideLabel }) => {
   return (
     <SecureUpload
       url="/api/admin/hh5p/content/upload"
       name="h5p_file"
       accept=".h5p"
+      hideLabel={hideLabel}
       onChange={(info) => {
         if (info.file.status === 'done') {
           if (info.file.response) {
