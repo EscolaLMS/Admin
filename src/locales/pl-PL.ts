@@ -592,4 +592,5 @@ export default {
   'Consultation Not Found': 'Konsultacja nie została znaleziona',
   'Order Not Found': 'Zamówienie nie zostało znalezione',
   field_required: 'Pole jest wymagane',
+  add_title_here: 'Dodaj tytuł',
 };

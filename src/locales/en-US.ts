@@ -605,4 +605,5 @@ export default {
   'Consultation Not Found': 'Consultation Not Found',
   'Order Not Found': 'Order Not Found',
   field_required: 'Field is required',
+  add_title_here: 'Add title here',
 };

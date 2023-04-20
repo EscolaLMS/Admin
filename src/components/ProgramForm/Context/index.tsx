@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
-import { useLocation } from 'umi';
+import { useIntl, useLocation } from 'umi';
 import { history } from 'umi';
 import type { Location } from 'history';
 
@@ -152,6 +152,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   id,
 }) => {
   const [state, setState] = useState<API.CourseProgram>();
+  const intl = useIntl();
 
   const flatTopics: API.Topic[] = useMemo(() => {
     return state && state.lessons ? getFlatTopics(state.lessons) : [];
@@ -232,7 +233,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         isNew: true,
         id: state ? state.lessons.length + 1 : getRandomId(), // New Lesson
         order: 0,
-        title: 'Add title here',
+        title: intl.formatMessage({ id: 'add_title_here' }),
         active: true,
         parent_id: parentId,
       };
@@ -632,7 +633,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       lesson_id,
       isNew: true,
       id: getRandomId(),
-      title: 'Add new title here',
+      title: intl.formatMessage({ id: 'add_title_here' }),
       active: true,
       topicable_type: type,
     };
