@@ -22,6 +22,7 @@ export type SecureUploadType<T = API.File> = {
   formProps?: FormProps;
   maxFiles?: number;
   clearListAfterUpload?: boolean;
+  hideLabel?: boolean;
 };
 
 function SecureUpload<Type = API.File>({
@@ -37,6 +38,7 @@ function SecureUpload<Type = API.File>({
   formProps,
   maxFiles,
   clearListAfterUpload,
+  hideLabel,
 }: PropsWithChildren<SecureUploadType<Type>>) {
   const [infoState, setInfoState] = useState<UploadChangeParam<UploadFile<any>>>();
   const intl = useIntl();
@@ -77,7 +79,7 @@ function SecureUpload<Type = API.File>({
           }
         }}
         // name={name}
-        label={<FormattedMessage id="upload" />}
+        label={!hideLabel && <FormattedMessage id="upload" />}
         max={maxFiles ?? 2}
         fieldProps={{
           data,
