@@ -26,11 +26,13 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
     dataIndex: 'created_at',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) =>
       record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
   },
@@ -38,16 +40,19 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     title: <FormattedMessage id="first_name" defaultMessage="first_name" />,
     dataIndex: 'first_name',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="last_name" defaultMessage="last_name" />,
     dataIndex: 'last_name',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="email" defaultMessage="email" />,
     dataIndex: 'email',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="search" defaultMessage="search" />,
@@ -62,6 +67,7 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     title: <FormattedMessage id="is_active" />,
     dataIndex: 'is_active',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => [
       <Tag key="is_active" color={record.is_active ? 'green' : 'red'}>
         {record.is_active ? <FormattedMessage id="Active" /> : <FormattedMessage id="Inactive" />}
@@ -178,6 +184,7 @@ const TableList: React.FC = () => {
           <ProTable<
             API.UserListItem,
             API.PageParams &
+              API.PaginationParams &
               EscolaLms.Auth.Http.Requests.Admin.UsersListRequest & {
                 search: string;
                 role: string;
@@ -233,16 +240,10 @@ const TableList: React.FC = () => {
                 </Button>
               </Link>,
             ]}
-            request={({
-              pageSize,
-              current,
-              search,
-              role,
-              from,
-              to,
-              gt_last_login_day,
-              lt_last_login_day,
-            }) => {
+            request={(
+              { pageSize, current, search, role, from, to, gt_last_login_day, lt_last_login_day },
+              sort,
+            ) => {
               setParams({
                 pageSize,
                 current,
@@ -253,16 +254,19 @@ const TableList: React.FC = () => {
                 gt_last_login_day,
                 lt_last_login_day,
               });
+              const sortArr = sort && Object.entries(sort)[0];
               const requestRole = role && role.toString() === 'all' ? undefined : role;
               return users({
-                pageSize,
-                current,
+                per_page: pageSize,
+                page: current,
                 search,
                 role: requestRole,
                 from,
                 to,
                 gt_last_login_day,
                 lt_last_login_day,
+                order_by: sortArr && sortArr[0],
+                order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
               }).then((response) => {
                 if (response.success) {
                   return {

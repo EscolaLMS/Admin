@@ -4,23 +4,19 @@ import { request } from 'umi';
 
 /**  GET /api/admin/users */
 export async function users(
-  params: EscolaLms.Auth.Http.Requests.Admin.UsersListRequest & {
-    // query
-    current?: number;
-    pageSize?: number;
-    search?: string;
-    role?: string;
-    gt_last_login_day?: number;
-    lt_last_login_day?: number;
-  },
+  params: API.PaginationParams &
+    API.PageParams &
+    EscolaLms.Auth.Http.Requests.Admin.UsersListRequest & {
+      // query
+      search?: string;
+      role?: string;
+      gt_last_login_day?: number;
+      lt_last_login_day?: number;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.UserList>('/api/admin/users', {
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
