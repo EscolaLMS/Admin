@@ -28,8 +28,15 @@ export const QuestionnaireRow: React.FC<{
           hide();
         }
       })
-      .catch(() => {
+      .catch((error) => {
         setLoading(false);
+        if (error?.data?.message) {
+          message.error(
+            intl.formatMessage({
+              id: error.data.message,
+            }),
+          );
+        }
         hide();
       });
 
