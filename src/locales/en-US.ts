@@ -601,5 +601,8 @@ export default {
   notify_users: 'Users to notify',
   notify_users_tooltip: 'Indicate which users should be notified about project upload',
   root: 'Root',
+  'Product Not Found': 'Produkt nie został znaleziony',
+  'Consultation Not Found': 'Consultation Not Found',
+  'Order Not Found': 'Order Not Found',
   field_required: 'Field is required',
 };

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Button } from 'antd';
-import { FormattedMessage } from 'umi';
+import { Button, message } from 'antd';
+import { FormattedMessage, useIntl } from 'umi';
 import { order as fetchOrder } from '@/services/escola-lms/orders';
 
 export const OrderRow: React.FC<{
@@ -8,6 +8,7 @@ export const OrderRow: React.FC<{
   onLoaded: (order: API.Order) => void;
 }> = ({ id, onLoaded }) => {
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
 
   const fetch = useCallback(() => {
     setLoading(true);
@@ -20,7 +21,16 @@ export const OrderRow: React.FC<{
           onLoaded(response.data);
         }
       })
-      .catch(() => setLoading(false));
+      .catch((error) => {
+        setLoading(false);
+        if (error?.data?.message) {
+          message.error(
+            intl.formatMessage({
+              id: error.data.message,
+            }),
+          );
+        }
+      });
 
     return () => {
       controller.abort();
