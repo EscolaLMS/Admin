@@ -23,11 +23,13 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="version" defaultMessage="version" />,
       dataIndex: 'version',
       hideInSearch: true,
+      sorter: true,
     },
 
     {
@@ -39,6 +41,7 @@ const TableList: React.FC = () => {
       renderFormItem: () => [
         <UploadScorm
           key="upload"
+          hideLabel
           onSuccess={() => {
             if (actionRef.current) {
               actionRef.current.reload();
