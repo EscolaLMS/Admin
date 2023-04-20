@@ -3,20 +3,13 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/consultations */
 export async function consultations(
-  params?: API.ConsultationsParams & {
-    date_from?: string;
-    date_to?: string;
-  },
+  params?: API.ConsultationsParams,
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<API.Consultation>>(`/api/admin/consultations`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
-    },
+    params,
     ...(options || {}),
   });
 }

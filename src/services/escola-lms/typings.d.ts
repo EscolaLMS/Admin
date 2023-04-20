@@ -252,12 +252,16 @@ declare namespace API {
       is_active?: string;
     };
 
-  type ConsultationsParams = PageParams & {
-    name?: string;
-    category_id?: number;
-    status?: string | string[];
-    dateRange?: [string, string];
-  };
+  type ConsultationsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+    };
 
   type H5PListParams = PageParams &
     PaginationParams & {
