@@ -10,21 +10,18 @@ const config: PlaywrightTestConfig = {
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
-
     headless: true,
-    viewport: { width: 1920, height: 1080},
-    actionTimeout:60000,
+    viewport: { width: 1920, height: 1080 },
+    actionTimeout: 60000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    
+    video: 'retain-on-failure',
   },
   projects: [
     {
       name: 'chromium',
-      
-       
-      use: { ...devices['Desktop Chrome'] },
 
+      use: { ...devices['Desktop Chrome'] },
     },
     /*
     {
