@@ -27,21 +27,25 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
-      hideInSearch: true,
+      hideInSearch: false,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="slug" defaultMessage="slug" />,
       dataIndex: 'slug',
-      hideInSearch: true,
+      hideInSearch: false,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="author" defaultMessage="author" />,
       dataIndex: 'author_id',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) => (
         <TypeButtonDrawer
           key={'user'}
@@ -97,11 +101,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Link to="/other/pages/new" key="new">
             <Button type="primary" key="primary">
@@ -109,10 +111,15 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current }) => {
+        request={({ pageSize, current, title, slug }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           return pages({
             pageSize,
             current,
+            title,
+            slug,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           }).then((response) => {
             if (response.success) {
               return {

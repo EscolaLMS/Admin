@@ -10,9 +10,10 @@ import UserSelect from '@/components/UserSelect';
 
 export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
@@ -29,6 +30,7 @@ export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
     title: <FormattedMessage id="http_method" defaultMessage="http_method" />,
     dataIndex: 'method',
     hideInSearch: false,
+    sorter: true,
     valueEnum: {
       GET: 'GET',
       POST: 'POST',
@@ -40,6 +42,7 @@ export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
   {
     title: <FormattedMessage id="path" defaultMessage="path" />,
     dataIndex: 'path',
+    sorter: true,
     hideInSearch: false,
   },
 ];
@@ -68,12 +71,11 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
       loading={loading}
       actionRef={actionRef}
       rowKey="id"
-      search={
-        {
-          // labelWidth: 120,
-        }
-      }
-      request={({ user_id, method, dateRange, path, pageSize, current }) => {
+      search={{
+        layout: 'vertical',
+      }}
+      request={({ user_id, method, dateRange, path, pageSize, current }, sort) => {
+        const sortArr = sort && Object.entries(sort)[0];
         setLoading(true);
         const date_from =
           dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
@@ -88,6 +90,8 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
           path,
           date_from,
           date_to,
+          order_by: sortArr && sortArr[0],
+          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
         }).then((response) => {
           setLoading(false);
           if (response.success) {

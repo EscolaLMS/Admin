@@ -25,7 +25,8 @@ type PossibleType =
   | 'EscolaLms\\Auth\\Models\\UserGroup'
   | 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz'
   | 'Questionnaire'
-  | 'Product';
+  | 'Product'
+  | 'EscolaLms\\Vouchers\\Models\\Order';
 type DataProps = API.LinkedType;
 
 export const TypeButton: React.FC<{
@@ -56,6 +57,8 @@ export const TypeButton: React.FC<{
     case 'EscolaLms\\Core\\Models\\User':
       return <UserRow id={type_id} onLoaded={(user) => onData({ type, value: user })} />;
     case 'EscolaLms\\Cart\\Models\\Order':
+      return <OrderRow id={type_id} onLoaded={(order) => onData({ type, value: order })} />;
+    case 'EscolaLms\\Vouchers\\Models\\Order':
       return <OrderRow id={type_id} onLoaded={(order) => onData({ type, value: order })} />;
     case 'EscolaLms\\Cart\\Models\\Course':
     case 'App\\Models\\Course':

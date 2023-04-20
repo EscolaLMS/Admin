@@ -3,7 +3,9 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/track/routes */
 export async function track(
-  params: API.PageParams & {
+  params: API.PaginationParams & {
+    current?: number;
+    pageSize?: number;
     date_from?: string;
     date_to?: string;
     user_id?: number;

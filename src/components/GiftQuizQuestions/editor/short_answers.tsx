@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
-import { parse, TextChoice, ShortAnswer } from 'gift-pegjs';
+import { parse, TextChoice, ShortAnswer } from '@escolalms/gift-pegjs';
 import { Button, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';

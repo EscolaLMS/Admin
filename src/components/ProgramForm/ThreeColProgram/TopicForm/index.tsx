@@ -247,7 +247,10 @@ export const Topic: React.FC = () => {
             <Oembed text={topics.value} onChange={(value) => updateValue('value', value)} />
           )}
           {type && type === TopicType.Project && (
-            <Project onChange={(value) => updateValue('value', value)} />
+            <Project
+              onChange={(value) => updateValue('notify_users' as keyof API.Topic, value)}
+              topicable={topic.topicable as API.TopicProject['topicable']}
+            />
           )}
           {type && type === TopicType.GiftQuiz && (
             <GiftQuiz

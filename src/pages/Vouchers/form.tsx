@@ -183,7 +183,7 @@ const VoucherForm = () => {
           </ProForm.Group>
           <ProForm.Group>
             <ProFormDatePicker
-              width="sm"
+              width="md"
               name="active_from"
               label={<FormattedMessage id="active_from" />}
               tooltip={<FormattedMessage id="active_from" />}
@@ -195,7 +195,7 @@ const VoucherForm = () => {
               required
             />
             <ProFormDatePicker
-              width="sm"
+              width="md"
               name="active_to"
               label={<FormattedMessage id="active_to" />}
               tooltip={<FormattedMessage id="active_to" />}
@@ -302,6 +302,7 @@ const VoucherForm = () => {
               <ProForm.Group>
                 <ProForm.Item
                   name={isProductType ? 'included_categories' : 'excluded_categories'}
+                  style={{ minWidth: 104 * 3 }}
                   label={
                     <FormattedMessage
                       id={

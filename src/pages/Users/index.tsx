@@ -12,7 +12,6 @@ import { usersCsvExport } from '@/services/escola-lms/csv';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import SecureUpload from '@/components/SecureUpload';
-import UserRoleSelect from '../../components/UserRoleSelect';
 import ProCard from '@ant-design/pro-card';
 
 import './index.css';
@@ -127,14 +126,6 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     hideInSearch: true,
     render: (_, record) => record.roles.map((role) => <Tag key={role}>{role}</Tag>),
   },
-  {
-    hideInSearch: false,
-    title: <FormattedMessage id="role" defaultMessage="role" />,
-    dataIndex: 'role',
-    renderFormItem: (item, { type, defaultRender, ...rest }) => {
-      return <UserRoleSelect {...rest} />;
-    },
-  },
 ];
 
 const TableList: React.FC = () => {
@@ -200,11 +191,9 @@ const TableList: React.FC = () => {
             })}
             actionRef={actionRef}
             rowKey="key"
-            search={
-              {
-                // labelWidth: 120,
-              }
-            }
+            search={{
+              layout: 'vertical',
+            }}
             toolBarRender={() => [
               <SecureUpload
                 key="upload"

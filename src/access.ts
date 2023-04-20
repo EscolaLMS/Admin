@@ -98,12 +98,15 @@ export default function (initialState: {
       havePermissionsInDashboard(PERMISSIONS.CategoryList) &&
       !haveSettingsInDashboard('hideInMenu-CoursesCategories', true),
 
-    salesPermission: havePermissionsInDashboard(
-      PERMISSIONS.CartOrderList,
-      PERMISSIONS.PaymentList,
-      PERMISSIONS.VoucherList,
-      PERMISSIONS.ProductsManage,
-    ),
+    salesPermission:
+      havePermissionsInDashboard(
+        PERMISSIONS.CartOrderList,
+        PERMISSIONS.PaymentList,
+        PERMISSIONS.VoucherList,
+        PERMISSIONS.ProductsManage,
+      ) && !haveSettingsInDashboard('disable-ECommerce', true),
+
+    certificatesPermission: !haveSettingsInDashboard('disable-Certificates', true),
 
     settingListPermission: havePermissionsInDashboard(PERMISSIONS.SettingsList),
 
@@ -122,7 +125,9 @@ export default function (initialState: {
       PERMISSIONS.UserGroupList,
     ),
 
-    questionnaireListPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireList),
+    questionnaireListPermission:
+      havePermissionsInDashboard(PERMISSIONS.QuestionnaireList) &&
+      !haveSettingsInDashboard('hideInMenu-OtherQuestionnaire', true),
     questionnaireDetailPermission: havePermissionsInDashboard(PERMISSIONS.QuestionnaireRead),
 
     webinarListPermission:
@@ -133,7 +138,10 @@ export default function (initialState: {
     consultationListPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationList),
     consultationDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ConsultationRead),
 
-    stationaryEventsListPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsList),
+    stationaryEventsListPermission:
+      havePermissionsInDashboard(PERMISSIONS.StationaryEventsList) &&
+      !haveSettingsInDashboard('hideInMenu-OtherStationary-events', true),
+
     stationaryEventsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.StationaryEventsRead),
 
     productsDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ProductsList),
@@ -144,8 +152,15 @@ export default function (initialState: {
     voucherListPermission: havePermissionsInDashboard(PERMISSIONS.VoucherList),
     voucherDetailPermission: havePermissionsInDashboard(PERMISSIONS.VoucherRead),
 
-    translationListPermission: havePermissionsInDashboard(PERMISSIONS.TranslationList),
+    translationListPermission:
+      havePermissionsInDashboard(PERMISSIONS.TranslationList) &&
+      !haveSettingsInDashboard('hideInMenu-ConfigurationTranslations', true) &&
+      havePackageInstalled('escolalms/translations'),
     translationDetailPermission: havePermissionsInDashboard(PERMISSIONS.TranslationRead),
+    adminTranslationListPermission:
+      havePermissionsInDashboard(PERMISSIONS.TranslationList) &&
+      !haveSettingsInDashboard('hideInMenu-ConfigurationAdminTranslations', true) &&
+      havePackageInstalled('escolalms/translations'),
 
     loggedOut: !currentUser,
 
@@ -160,6 +175,11 @@ export default function (initialState: {
     consultationAccessListPermission:
       havePermissionsInDashboard(PERMISSIONS.ConsultationAccessList) &&
       !haveSettingsInDashboard('hideInMenu-OtherConsultation-access', true),
+
+    coursesQuizReportsListPermission:
+      havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
+      !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
+      havePackageInstalled('escolalms/topic-type-gift'),
 
     tasksPermission: () => true,
   };

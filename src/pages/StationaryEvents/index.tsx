@@ -9,9 +9,10 @@ import { Button, Tooltip, Popconfirm, message } from 'antd';
 
 export const TableColumns: ProColumns<EscolaLms.StationaryEvents.Models.StationaryEvent>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
@@ -80,11 +81,9 @@ const StationaryEvents: React.FC = () => {
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Link key="addnew" to="/other/stationary-events/new">
             <Button type="primary" key="primary">

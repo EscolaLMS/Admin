@@ -39,6 +39,8 @@ declare namespace API {
   type PageParams = {
     current?: number;
     pageSize?: number;
+    title?: string;
+    slug?: string;
   };
 
   /// ----- Ant Design Pro Types ----- ///
@@ -166,7 +168,7 @@ declare namespace API {
 
   type CourseListItem = Course;
 
-  type CategoryList = DataResponseSuccess<Category[]>;
+  type CategoryList = DefaultMetaResponse<Category>;
 
   type CategoryListItem = Category;
 
@@ -244,12 +246,22 @@ declare namespace API {
       status?: string;
     };
 
-  type ConsultationsParams = PageParams & {
-    name?: string;
-    category_id?: number;
-    status?: string | string[];
-    dateRange?: [string, string];
-  };
+  type CategoryParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      is_active?: string;
+    };
+
+  type ConsultationsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+    };
 
   type H5PListParams = PageParams &
     PaginationParams & {
@@ -404,7 +416,7 @@ declare namespace API {
 
   type TopicProject = TopicBase & {
     topicable_type: TopicType.Project;
-    topicable: TopicableBase;
+    topicable: TopicableBase & { notify_users?: string[] };
   };
 
   type TopicQuiz = TopicBase & {
@@ -477,7 +489,8 @@ declare namespace API {
     | TopicH5P
     | TopicImage
     | TopicPDF
-    | TopicScorm;
+    | TopicScorm
+    | TopicProject;
 
   type TopicNotEmpty =
     | TopicRichText
@@ -569,6 +582,7 @@ declare namespace API {
       | 'EscolaLms\\Core\\Models\\User';
     status: PaymentStatus;
     updated_at: string;
+    user_id: number;
   };
 
   type Page = {
@@ -875,7 +889,10 @@ declare namespace API {
         value: API.UserItem;
       }
     | {
-        type: 'App\\Models\\Order' | 'EscolaLms\\Cart\\Models\\Order';
+        type:
+          | 'App\\Models\\Order'
+          | 'EscolaLms\\Cart\\Models\\Order'
+          | 'EscolaLms\\Vouchers\\Models\\Order';
         value: API.Order;
       }
     | {

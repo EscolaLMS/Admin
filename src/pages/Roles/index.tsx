@@ -14,12 +14,14 @@ export const TableColumns: ProColumns<API.Role>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     width: '80%',
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
-    hideInSearch: true,
+    hideInSearch: false,
+    sorter: true,
   },
 ];
 
@@ -38,18 +40,27 @@ const RolesPage: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={false}
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Button type="primary" key="primary" onClick={() => setModalVisible(true)}>
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>,
         ]}
-        request={() => {
-          return roles().then((response) => {
+        request={({ pageSize, current, name }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return roles({
+            pageSize,
+            current,
+            name,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+          }).then((response) => {
             if (response.success) {
               return {
                 data: response.data,
-                // total: response.meta.total,
+                total: response.meta.total,
                 success: true,
               };
             }

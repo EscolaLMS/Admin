@@ -59,7 +59,9 @@ export const TopicTypesSelector: React.FC<{
         case TopicType.SCORM:
           return !(initialState?.packages && initialState?.packages['escolalms/scorm']);
         case TopicType.Project:
-          return !(initialState?.packages && initialState?.packages['topic-type-project']);
+          return !(
+            initialState?.packages && initialState?.packages['escolalms/topic-type-project']
+          );
         default:
           return !(initialState?.packages && initialState?.packages['escolalms/topic-types']);
       }
@@ -71,7 +73,7 @@ export const TopicTypesSelector: React.FC<{
     <div className="topic-types-selector">
       <Space>
         {/* TODO add sorting */}
-        {/** 
+        {/**
         {(sortingMode === 'both' || sortingMode === 'up') && (
           <Tooltip placement="top" title={<FormattedMessage id="sort_element_up" />}>
             <Button

@@ -11,14 +11,16 @@ export const DashdoardComponent: React.FC = () => {
         <FormattedMessage id="tutorial" />
       </h3>
       <article>
-        <Row align={'middle'}>
+        <Row align={'top'} gutter={[8, 0]} wrap={true}>
           <Col span={12}>
-            <Title level={4}>
-              <FormattedMessage id="tutorial_card_left_title" />
-            </Title>
-            <Text>
-              <FormattedMessage id="tutorial_card_left_description" />
-            </Text>
+            <ProCard>
+              <Title level={5}>
+                <FormattedMessage id="tutorial_card_left_title" />
+              </Title>
+              <Text>
+                <FormattedMessage id="tutorial_card_left_description" />
+              </Text>
+            </ProCard>
           </Col>
           <Col span={12}>
             <ProCard
@@ -36,7 +38,7 @@ export const DashdoardComponent: React.FC = () => {
                     <FormattedMessage id="tutorial_card_right_description" />
                   </Text>
                 </div>
-                <div>
+                <div style={{ marginTop: '0.5em' }}>
                   <Button
                     type="primary"
                     href={'https://docs.wellms.io/app-guide/'}

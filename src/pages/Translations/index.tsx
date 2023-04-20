@@ -17,8 +17,9 @@ import TranslationModalForm from './components/ModalForm';
 
 export const TableColumns: ProColumns<API.Translation>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
+    sorter: true,
     hideInSearch: true,
   },
   {
@@ -94,6 +95,9 @@ const Translations: React.FC = () => {
           id: 'menu.Configuration.Translations',
           defaultMessage: 'Translations',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
@@ -108,13 +112,16 @@ const Translations: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
           </Button>,
         ]}
-        request={({ pageSize, current, group, key }) => {
+        request={({ pageSize, current, group, key }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return translations({
             pageSize,
             current,
             group,
             key,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           })
             .then((response) => {
               setLoading(false);

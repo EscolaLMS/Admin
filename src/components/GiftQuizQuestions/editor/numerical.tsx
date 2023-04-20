@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
-import { parse, Numerical, NumericalFormat } from 'gift-pegjs';
+import { parse, Numerical, NumericalFormat } from '@escolalms/gift-pegjs';
 import { Space, Tooltip, InputNumber } from 'antd';
 import { useIntl } from '@@/plugin-locale/localeExports';
 

@@ -1,7 +1,7 @@
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
-import { parse, MultipleChoice, TextChoice } from 'gift-pegjs';
+import { parse, MultipleChoice, TextChoice } from '@escolalms/gift-pegjs';
 import { Button, Checkbox, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Tooltip, InputNumber } from 'antd';
