@@ -5,11 +5,10 @@ import type { RequestOptionsInit } from 'umi-request';
 export async function payments(
   params: API.PaginationParams & {
     // query
-    current?: number;
-    pageSize?: number;
     date_from?: string;
     date_to?: string;
     status?: API.PaymentStatus;
+    order_id?: string;
     // user_id?: number;
     // author_id?: number;
     // course_id?: number;
@@ -17,11 +16,7 @@ export async function payments(
   options?: RequestOptionsInit,
 ) {
   return request<API.PaymentList>('/api/admin/payments', {
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),

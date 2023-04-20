@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { roundTo } from '@/utils/utils';
+import { Tag } from 'antd';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -66,11 +67,31 @@ const TableList: React.FC = () => {
       sorter: true,
       valueType: 'select',
       valueEnum: {
-        new: <FormattedMessage id="new_payment" />,
-        paid: <FormattedMessage id="paid" />,
-        cancelled: <FormattedMessage id="cancelled" />,
-        failed: <FormattedMessage id="failed" />,
-        redirect: <FormattedMessage id="redirect" />,
+        new: (
+          <Tag color="processing">
+            <FormattedMessage id="new_payment" />
+          </Tag>
+        ),
+        paid: (
+          <Tag color="success">
+            <FormattedMessage id="paid" />
+          </Tag>
+        ),
+        cancelled: (
+          <Tag color="warning">
+            <FormattedMessage id="cancelled" />
+          </Tag>
+        ),
+        failed: (
+          <Tag color="error">
+            <FormattedMessage id="failed" />
+          </Tag>
+        ),
+        redirect: (
+          <Tag>
+            <FormattedMessage id="redirect" />
+          </Tag>
+        ),
       },
     },
     // TODO: Remove this or uncomment if we will have billable_type from BE
@@ -86,8 +107,7 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="payable" defaultMessage="Payable to" />,
       dataIndex: 'payable',
-      hideInSearch: false,
-      sorter: true,
+      hideInSearch: true,
       render: (_, record) => (
         <TypeButtonDrawer type={record.payable_type} type_id={record.payable_id} />
       ),
@@ -119,11 +139,12 @@ const TableList: React.FC = () => {
             dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
           const sortArr = sort && Object.entries(sort)[0];
           return payments({
-            pageSize,
-            current,
+            per_page: pageSize,
+            page: current,
             date_from,
             date_to,
             status,
+            // order_id: 'G1JmH5Ue3D',
             order_by: sortArr && sortArr[0], // i like nested ternary
             /* eslint-disable */ order: sortArr
               ? sortArr[1] === 'ascend'
