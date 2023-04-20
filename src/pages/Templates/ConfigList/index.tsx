@@ -22,11 +22,13 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
       dataIndex: 'created_at',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) =>
         record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
     },
@@ -34,11 +36,13 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="event" defaultMessage="event" />,
       dataIndex: 'event',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="templates.is_default" />,
@@ -74,7 +78,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   );
 
   return (
-    <ProTable<API.TemplateListItem, API.PageParams>
+    <ProTable<API.TemplateListItem, API.PageParams & API.PaginationParams>
       headerTitle={intl.formatMessage({
         id: 'templates',
         defaultMessage: 'templates',
@@ -90,9 +94,16 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
           </Button>
         </Link>,
       ]}
-      request={({ pageSize, current }) => {
+      request={({ pageSize, current }, sort) => {
+        const sortArr = sort && Object.entries(sort)[0];
         setLoading(true);
-        return templates({ pageSize, current, channel }).then((response) => {
+        return templates({
+          per_page: pageSize,
+          page: current,
+          channel,
+          order_by: sortArr && sortArr[0],
+          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+        }).then((response) => {
           if (response.success) {
             setLoading(false);
             return {

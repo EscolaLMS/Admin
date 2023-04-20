@@ -2,21 +2,15 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 export async function templates(
-  params?: EscolaLms.Templates.Http.Requests.TemplateListingRequest & {
-    // query
-    current?: number;
-    pageSize?: number;
-  },
+  params?: EscolaLms.Templates.Http.Requests.TemplateListingRequest &
+    API.PaginationParams &
+    API.PageParams,
   options?: RequestOptionsInit,
 ) {
   return request<API.TemplateList>(`/api/admin/templates`, {
     method: 'GET',
     useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
