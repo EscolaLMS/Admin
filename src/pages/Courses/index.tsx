@@ -61,7 +61,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
     title: <FormattedMessage id="product" defaultMessage="base_price" />,
     dataIndex: 'product',
-    sorter: true,
+    sorter: false,
     valueType: 'textarea',
     search: false,
     render: (_, record) => {
