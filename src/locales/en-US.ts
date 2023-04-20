@@ -601,4 +601,5 @@ export default {
   notify_users: 'Users to notify',
   notify_users_tooltip: 'Indicate which users should be notified about project upload',
   root: 'Root',
+  field_required: 'Field is required',
 };

@@ -545,4 +545,5 @@ export default {
   status_consultation_tooltip: 'Statut',
   tutor_consultation_tooltip: 'Tuteur',
   proposed_terms_tooltip: 'Termes proposés',
+  field_required: 'Champ requis',
 };
