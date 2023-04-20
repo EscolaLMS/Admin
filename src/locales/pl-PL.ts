@@ -591,4 +591,5 @@ export default {
   'Product Not Found': 'Produkt nie został znaleziony',
   'Consultation Not Found': 'Konsultacja nie została znaleziona',
   'Order Not Found': 'Zamówienie nie zostało znalezione',
+  field_required: 'Pole jest wymagane',
 };

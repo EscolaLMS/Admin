@@ -16,7 +16,7 @@ import { translations } from './services/escola-lms/translations';
 import { refreshTokenCallback } from './services/token_refresh';
 
 import '@/services/ybug';
-import '@/services/sentry.ts';
+import '@/services/sentry';
 import './app.css';
 import { packages } from './services/escola-lms/packages';
 import { FormattedMessage, localeInfo } from '@@/plugin-locale/localeExports';
@@ -214,9 +214,11 @@ const errorHandler = (error: ResponseError) => {
     if (message && errors) {
       notification.error({
         message,
-        description: Object.keys(errors).map(
-          (errorKey) => `${errorKey}: ${errors[errorKey].join(', ')}`,
-        ),
+        description: Object.keys(errors).map((errorKey) => (
+          <p key={errorKey}>
+            {errorKey}: {errors[errorKey].join(', ')}
+          </p>
+        )),
       });
     }
     if (typeof data.error === 'string') {

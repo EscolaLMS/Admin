@@ -604,4 +604,5 @@ export default {
   'Product Not Found': 'Produkt nie został znaleziony',
   'Consultation Not Found': 'Consultation Not Found',
   'Order Not Found': 'Order Not Found',
+  field_required: 'Field is required',
 };

@@ -108,6 +108,7 @@ export default ({
   } = useUserGroups(data?.id ?? 0);
 
   const [roles, setRoles] = useState<API.Role[]>();
+  const [form] = ProForm.useForm();
 
   const fetchRoles = useCallback(async () => {
     const request = await getRoles();
@@ -142,6 +143,7 @@ export default ({
 
   const formProps = useMemo(
     () => ({
+      form,
       onFinish: async (values: Partial<API.UserItem>) => {
         let response: API.DefaultResponse<API.UserItem>;
 
@@ -181,6 +183,7 @@ export default ({
             id: 'first_name',
           })}
           required
+          rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
         />
         <ProFormText
           width="md"
@@ -191,6 +194,7 @@ export default ({
             id: 'last_name',
           })}
           required
+          rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
         />
         <ProFormText
           width="md"
@@ -201,6 +205,7 @@ export default ({
             id: 'email',
           })}
           required
+          rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
         />
         <ProFormText.Password
           shouldUpdate
@@ -241,7 +246,7 @@ export default ({
             )}
 
             <Form.Item noStyle shouldUpdate>
-              {(form) => {
+              {() => {
                 return form.getFieldValue('email_verified') ? (
                   <React.Fragment />
                 ) : (
