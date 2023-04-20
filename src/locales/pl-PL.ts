@@ -588,4 +588,7 @@ export default {
   notify_users_tooltip:
     'Wskaż którzy użytkownicy powinni być powiadomieni o tym, że uczeń wgrał projekt',
   root: 'Węzeł początkowy',
+  'Product Not Found': 'Produkt nie został znaleziony',
+  'Consultation Not Found': 'Konsultacja nie została znaleziona',
+  'Order Not Found': 'Zamówienie nie zostało znalezione',
 };
