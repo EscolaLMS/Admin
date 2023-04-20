@@ -588,4 +588,5 @@ export default {
   notify_users_tooltip:
     'Wskaż którzy użytkownicy powinni być powiadomieni o tym, że uczeń wgrał projekt',
   root: 'Węzeł początkowy',
+  field_required: 'Pole jest wymagane',
 };
