@@ -33,6 +33,21 @@
       aspect-ratio: 16/9;
     }
 
+    &-img-placeholder {
+      position: relative;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16/9;
+
+      img {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        width: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
     .ant-pro-card {
       flex: 1;
     }

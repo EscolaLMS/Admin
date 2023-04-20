@@ -1,6 +1,6 @@
 import { FormattedMessage, Link } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { Button, Spin, Typography } from 'antd';
+import { Button, Spin, Typography, Image } from 'antd';
 import './index.less';
 import { useEffect, useState } from 'react';
 import { course } from '@/services/escola-lms/course';
@@ -71,7 +71,7 @@ export const DashdoardComponent: React.FC = () => {
         </div>
         {list.map((item) => (
           <div className={'dashboard__card'} key={item.id}>
-            {item.image_path && (
+            {item.image_path ? (
               <ResponsiveImage
                 path={item.image_path}
                 size={240}
@@ -79,6 +79,10 @@ export const DashdoardComponent: React.FC = () => {
                 alt={item.title}
                 className={'dashboard__card-img'}
               />
+            ) : (
+              <div className="dashboard__card-img-placeholder">
+                <Image width={240} src={'image_placeholder.svg'} preview={false} alt="LMS Image" />
+              </div>
             )}
             <ProCard
               actions={[
