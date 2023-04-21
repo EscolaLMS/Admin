@@ -607,6 +607,8 @@ export default {
   'Order Not Found': 'Order Not Found',
   field_required: 'Field is required',
   add_title_here: 'Add title here',
+  user_projects: 'User projects',
+  project_solutions: 'User project solutions',
   'Course cloning started. This may take a while.': 'Course cloning started. This may take a while',
   'Course deleted successfully': 'Course deleted successfully',
   'Course imported successfully': 'Course imported successfully',
