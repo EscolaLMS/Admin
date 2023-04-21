@@ -116,8 +116,8 @@ const TableList: React.FC = () => {
           return pages({
             pageSize,
             current,
-            title,
-            slug,
+            title: title || undefined,
+            slug: slug || undefined,
             order_by: sortArr && sortArr[0],
             order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           }).then((response) => {
