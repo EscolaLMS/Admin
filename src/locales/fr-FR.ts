@@ -10,6 +10,7 @@ import templates from './fr-FR/templates';
 import consultations from './fr-FR/consultations';
 import fabric from './fr-FR/fabric';
 import vouchers from './fr-FR/vouchers';
+import courses from './fr-FR/courses';
 
 export default {
   parent: 'Parent',
@@ -41,7 +42,7 @@ export default {
   ...consultations,
   ...fabric,
   ...vouchers,
-
+  ...courses,
   branding: 'Image de marque',
   product_details: 'Détails du produit',
   title: 'Titre',
