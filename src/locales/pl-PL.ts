@@ -593,4 +593,9 @@ export default {
   'Order Not Found': 'Zamówienie nie zostało znalezione',
   field_required: 'Pole jest wymagane',
   add_title_here: 'Dodaj tytuł',
+  'Course cloning started. This may take a while.': 'Trwa klonowanie kursu. To może zająć chwilę',
+  'Course deleted successfully': 'Kurs został usunięty',
+  'Course imported successfully': 'Kurs został zaimportowany',
+  'Course updated successfully': 'Kurs został zaktualizowany',
+  'Export created': 'Poprawnie wyeksportowano plik',
 };

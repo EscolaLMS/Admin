@@ -136,7 +136,7 @@ export default () => {
         } else {
           response = await updateCourse(Number(course), postData);
         }
-        message.success(response.message);
+        message.success(intl.formatMessage({ id: response.message }));
       },
       initialValues: data,
       form,
