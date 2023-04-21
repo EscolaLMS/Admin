@@ -1284,6 +1284,12 @@ declare namespace API {
       active_from?: string;
       active_to?: string;
     };
+
+  type Templates = EscolaLms.Templates.Http.Requests.TemplateListingRequest &
+    API.PageParams &
+    API.PaginationParams & {
+      name?: string;
+    };
 }
 
 declare module 'jsoneditor-react' {

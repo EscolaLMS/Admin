@@ -22,23 +22,27 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="created_at" defaultMessage="created_at" />,
       dataIndex: 'created_at',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) =>
         record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
     },
     {
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
-      hideInSearch: true,
+      hideInSearch: false,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="event" defaultMessage="event" />,
       dataIndex: 'event',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="templates.is_default" />,
@@ -74,7 +78,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   );
 
   return (
-    <ProTable<API.TemplateListItem, API.PageParams>
+    <ProTable<API.TemplateListItem, API.Templates>
       headerTitle={intl.formatMessage({
         id: 'templates',
         defaultMessage: 'templates',
@@ -82,7 +86,9 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       loading={loading}
       actionRef={actionRef}
       rowKey="id"
-      search={false}
+      search={{
+        layout: 'vertical',
+      }}
       toolBarRender={() => [
         <Link key={'new'} to={`/configuration/templates/${templateType}/new`}>
           <Button type="primary" key="primary">
@@ -90,9 +96,17 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
           </Button>
         </Link>,
       ]}
-      request={({ pageSize, current }) => {
+      request={({ pageSize, current, name }, sort) => {
         setLoading(true);
-        return templates({ pageSize, current, channel }).then((response) => {
+        const sortArr = sort && Object.entries(sort)[0];
+        return templates({
+          pageSize,
+          current,
+          channel,
+          name: name || undefined,
+          order_by: sortArr && sortArr[0],
+          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+        }).then((response) => {
           if (response.success) {
             setLoading(false);
             return {
