@@ -258,7 +258,7 @@ export default () => {
                 width="xl"
                 name="title"
                 label={<FormattedMessage id="title" />}
-                tooltip={<FormattedMessage id="title" />}
+                tooltip={<FormattedMessage id="courses.tooltips.title" />}
                 placeholder={intl.formatMessage({
                   id: 'title',
                   defaultMessage: 'title',
@@ -270,7 +270,7 @@ export default () => {
                 width="xl"
                 name="subtitle"
                 label={<FormattedMessage id="subtitle" />}
-                tooltip={<FormattedMessage id="subtitle" />}
+                tooltip={<FormattedMessage id="courses.tooltips.subtitle" />}
                 placeholder={intl.formatMessage({
                   id: 'subtitle',
                   defaultMessage: 'subtitle',
@@ -280,7 +280,7 @@ export default () => {
               <ProForm.Item
                 name="summary"
                 label={<FormattedMessage id="summary" />}
-                tooltip={<FormattedMessage id="summary_tooltip" />}
+                tooltip={<FormattedMessage id="courses.tooltips.summary" />}
                 valuePropName="value"
                 style={{
                   width: 697,
@@ -291,7 +291,7 @@ export default () => {
               <ProForm.Item
                 name="description"
                 label={<FormattedMessage id="description" />}
-                tooltip={<FormattedMessage id="description_tooltip" />}
+                tooltip={<FormattedMessage id="courses.tooltips.description" />}
                 valuePropName="value"
                 style={{
                   width: 697,
@@ -305,7 +305,7 @@ export default () => {
                 width="md"
                 name="active_from"
                 label={<FormattedMessage id="active_from" />}
-                tooltip={<FormattedMessage id="active_from" />}
+                tooltip={<FormattedMessage id="courses.tooltips.active_from" />}
                 placeholder={intl.formatMessage({
                   id: 'active_from',
                   defaultMessage: 'active_from',
@@ -332,7 +332,7 @@ export default () => {
                 width="md"
                 name="active_to"
                 label={<FormattedMessage id="active_to" />}
-                tooltip={<FormattedMessage id="active_to" />}
+                tooltip={<FormattedMessage id="courses.tooltips.active_to" />}
                 placeholder={intl.formatMessage({
                   id: 'active_to',
                   defaultMessage: 'active_to',
@@ -359,7 +359,7 @@ export default () => {
                 width="md"
                 name="duration"
                 label={<FormattedMessage id="duration" />}
-                tooltip={<FormattedMessage id="duration" />}
+                tooltip={<FormattedMessage id="courses.tooltips.duration" />}
                 placeholder={intl.formatMessage({
                   id: 'duration',
                   defaultMessage: 'duration',
@@ -396,7 +396,7 @@ export default () => {
                 width="xs"
                 name="level"
                 label={<FormattedMessage id="level" />}
-                tooltip={<FormattedMessage id="level" />}
+                tooltip={<FormattedMessage id="courses.tooltips.level" />}
                 placeholder={intl.formatMessage({
                   id: 'level',
                   defaultMessage: 'level',
@@ -456,7 +456,7 @@ export default () => {
                 width="sm"
                 name="target_group"
                 label={<FormattedMessage id="target_group" />}
-                tooltip={<FormattedMessage id="target_group" />}
+                tooltip={<FormattedMessage id="courses.tooltips.target_group" />}
                 placeholder={intl.formatMessage({
                   id: 'target_group',
                   defaultMessage: 'target_group',
