@@ -474,3 +474,14 @@ export const roundTo = (val: number, places = 2): number => {
   if (!val || typeof val !== 'number') return 0;
   return Math.round(val * Math.pow(10, places)) / Math.pow(10, places);
 };
+
+// Use inside sort function
+// Example: array.sort(sortByKey<LangRow>(sortArr[0], sortArr[1] === 'ascend' ? false : true));
+export const sortByKey = <T>(myKey: string, reverse: boolean = false) => {
+  return function (a: T, b: T) {
+    const comparison = a[myKey].localeCompare(b[myKey], undefined, {
+      sensitivity: 'base',
+    });
+    return reverse ? comparison * -1 : comparison;
+  };
+};

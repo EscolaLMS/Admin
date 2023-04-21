@@ -12,13 +12,15 @@ import {
 } from '@/services/escola-lms/translations';
 import AdminModalForm from './components/AdminModalForm';
 import { getAllLocales, localeInfo, addLocale } from 'umi';
+import { sortByKey } from '@/utils/utils';
 
 type LangRow = { lang: string; key: string; value: string; id: string };
 
 export const TableColumns: ProColumns<LangRow>[] = [
   {
-    title: <FormattedMessage id="lang" defaultMessage="id" />,
+    title: <FormattedMessage id="language" defaultMessage="Language" />,
     dataIndex: 'lang',
+    sorter: true,
     valueType: 'select',
     valueEnum: getAllLocales().reduce(
       (acc, local) => ({ ...acc, [local]: local }),
@@ -28,10 +30,12 @@ export const TableColumns: ProColumns<LangRow>[] = [
   {
     title: <FormattedMessage id="key" defaultMessage="key" />,
     dataIndex: 'key',
+    sorter: true,
   },
   {
     title: <FormattedMessage id="value" defaultMessage="value" />,
     dataIndex: 'value',
+    sorter: true,
   },
 ];
 
@@ -87,9 +91,10 @@ const Translations: React.FC = () => {
           layout: 'vertical',
         }}
         rowKey="id"
-        request={({ lang, key, value }) => {
+        request={({ lang, key, value }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           return new Promise((resolve) => {
-            const rows = getRows.filter((row) => {
+            let rows = getRows.filter((row) => {
               let result = true;
               if (result && lang && row.lang !== lang) {
                 result = false;
@@ -108,6 +113,14 @@ const Translations: React.FC = () => {
               }
               return result;
             });
+
+            if (sortArr) {
+              console.log('rows: ', rows);
+              console.log('sortArr: ', sortArr);
+              rows = rows.sort(
+                sortByKey<LangRow>(sortArr[0], sortArr[1] === 'ascend' ? false : true),
+              );
+            }
 
             resolve({
               data: rows,

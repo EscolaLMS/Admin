@@ -1127,7 +1127,8 @@ declare namespace API {
 
   type ConsultationAccessEnquiryListParams =
     EscolaLms.ConsultationAccess.Http.Requests.Admin.AdminListConsultationAccessEnquiryRequest &
-      PageParams & {
+      PageParams &
+      PaginationParams & {
         user_id?: number;
         consultation_id?: number;
         status?: CourseAccessEnquiryStatus;
