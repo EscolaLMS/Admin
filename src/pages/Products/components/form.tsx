@@ -366,13 +366,13 @@ const ProductsForm: React.FC<{
               shouldUpdate
               label={<FormattedMessage id="price_brutto" />}
               tooltip={<FormattedMessage id="price_brutto_tooltip" />}
-              style={{ width: 104 }}
             >
               {(formRef) => {
                 return (
                   <Input
                     disabled
                     readOnly
+                    style={{ width: '104px' }}
                     value={
                       formRef.getFieldValue('price')
                         ? Math.round(
@@ -395,6 +395,7 @@ const ProductsForm: React.FC<{
                   <Input
                     disabled
                     readOnly
+                    style={{ width: '104px' }}
                     value={
                       formRef.getFieldValue('price')
                         ? Math.round(
@@ -438,7 +439,7 @@ const ProductsForm: React.FC<{
           </ProForm.Group>
           <ProForm.Group title={<FormattedMessage id="additional_fields" />}>
             <ProFormText
-              width="md"
+              width="sm"
               name="duration"
               label={<FormattedMessage id="duration" />}
               tooltip={<FormattedMessage id="duration_tooltip" />}
@@ -449,7 +450,7 @@ const ProductsForm: React.FC<{
             />
             <ProFormDigit
               initialValue={isNew ? null : undefined}
-              width="xs"
+              width="sm"
               name="limit_per_user"
               label={<FormattedMessage id="limit_per_user" />}
               tooltip={<FormattedMessage id="limit_per_user_tooltip" />}
@@ -463,7 +464,7 @@ const ProductsForm: React.FC<{
             />
             <ProFormDigit
               initialValue={isNew ? null : undefined}
-              width="xs"
+              width="sm"
               name="limit_total"
               label={<FormattedMessage id="limit_total" />}
               tooltip={<FormattedMessage id="limit_total_tooltip" />}
@@ -476,7 +477,7 @@ const ProductsForm: React.FC<{
               fieldProps={{ step: 1 }}
             />
             <ProFormText
-              width="md"
+              width="sm"
               name="teaser_url"
               label={<FormattedMessage id="teaser_url" />}
               tooltip={<FormattedMessage id="teaser_url_tooltip" />}

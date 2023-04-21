@@ -10,6 +10,7 @@ import templates from './fr-FR/templates';
 import consultations from './fr-FR/consultations';
 import fabric from './fr-FR/fabric';
 import vouchers from './fr-FR/vouchers';
+import courses from './fr-FR/courses';
 
 export default {
   parent: 'Parent',
@@ -41,7 +42,7 @@ export default {
   ...consultations,
   ...fabric,
   ...vouchers,
-
+  ...courses,
   branding: 'Image de marque',
   product_details: 'Détails du produit',
   title: 'Titre',
@@ -546,4 +547,9 @@ export default {
   tutor_consultation_tooltip: 'Tuteur',
   proposed_terms_tooltip: 'Termes proposés',
   field_required: 'Champ requis',
+  'Course cloning started. This may take a while.': 'Cela peut prendre un peu de temps',
+  'Course deleted successfully': 'Cours supprimé avec succès',
+  'Course imported successfully': 'Cours importé avec succès',
+  'Course updated successfully': 'Cours mis à jour avec succès',
+  'Export created': 'Fichier exporté avec succès',
 };

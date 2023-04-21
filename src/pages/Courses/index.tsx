@@ -176,7 +176,7 @@ const TableList: React.FC = () => {
         await removeCourse(id).then((response) => {
           setLoading(false);
           if (response.success) {
-            message.success(response.message);
+            message.success(intl.formatMessage({ id: response.message }));
           }
         });
         hide();
@@ -200,6 +200,7 @@ const TableList: React.FC = () => {
       const request = await exportCourse(id);
       const response = await request;
       if (response.success) {
+        message.success(intl.formatMessage({ id: request.message }));
         const url: string = response.data;
         window.open(url, '_blank');
       }
@@ -217,7 +218,7 @@ const TableList: React.FC = () => {
     try {
       const request = await cloneCourse(id);
       if (request.success) {
-        message.success(request.message);
+        message.success(intl.formatMessage({ id: request.message }));
         hide();
         setLoading(false);
         actionRef.current?.reload();
@@ -287,11 +288,11 @@ const TableList: React.FC = () => {
               onChange={(info) => {
                 if (info.file.status === 'done') {
                   if (info.file.response && info.file.response.success) {
-                    message.success(info.file.response.message);
+                    message.success(intl.formatMessage({ id: info.file.response.message }));
                   }
                 }
                 if (info.file.response && info.file.status === 'error') {
-                  message.error(info.file.response.message);
+                  message.error(intl.formatMessage({ id: info.file.response.message }));
                   console.error(info.file.response);
                 }
               }}
