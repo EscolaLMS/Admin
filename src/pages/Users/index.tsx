@@ -107,7 +107,37 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     hideInTable: true,
     hideInDescriptions: true,
   },
-
+  {
+    title: <FormattedMessage id="role" defaultMessage="role" />,
+    dataIndex: 'role',
+    hideInTable: true,
+    valueEnum: {
+      student: {
+        text: (
+          <Tag>
+            <FormattedMessage id="student" defaultMessage="student" />
+          </Tag>
+        ),
+        status: 'student',
+      },
+      admin: {
+        text: (
+          <Tag>
+            <FormattedMessage id="admin" defaultMessage="admin" />
+          </Tag>
+        ),
+        status: 'admin',
+      },
+      tutor: {
+        text: (
+          <Tag>
+            <FormattedMessage id="tutor" defaultMessage="tutor" />
+          </Tag>
+        ),
+        status: 'tutor',
+      },
+    },
+  },
   {
     title: <FormattedMessage id="gt_last_login_day" defaultMessage=">= Login last n days" />,
     key: 'gt_last_login_day',
@@ -255,12 +285,11 @@ const TableList: React.FC = () => {
                 lt_last_login_day,
               });
               const sortArr = sort && Object.entries(sort)[0];
-              const requestRole = role && role.toString() === 'all' ? undefined : role;
               return users({
                 per_page: pageSize,
                 page: current,
                 search,
-                role: requestRole,
+                role: role || undefined,
                 from,
                 to,
                 gt_last_login_day,

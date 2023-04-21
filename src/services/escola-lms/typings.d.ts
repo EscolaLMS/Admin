@@ -1268,7 +1268,22 @@ declare namespace API {
   };
 
   type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &
-    PaginationParams & { topic_gift_quiz_id: number };
+    PaginationParams & {
+      topic_gift_quiz_id: number;
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+    };
+
+  type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &
+    API.PageParams &
+    API.PaginationParams & {
+      name?: string;
+      code?: string;
+      dateRange?: [string, string];
+      active_from?: string;
+      active_to?: string;
+    };
 }
 
 declare module 'jsoneditor-react' {

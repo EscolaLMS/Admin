@@ -22,6 +22,7 @@ const QuizAttempts: React.FC = () => {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
         dataIndex: 'id',
         hideInSearch: true,
+        sorter: true,
       },
       {
         title: <FormattedMessage id="gift_quiz" defaultMessage="GIFT Quiz" />,
@@ -33,6 +34,17 @@ const QuizAttempts: React.FC = () => {
             type_id={record.topic_gift_quiz_id}
           />
         ),
+      },
+      {
+        title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
+        dataIndex: 'dateRange',
+        hideInSearch: false,
+        hideInForm: true,
+        hideInTable: true,
+        valueType: 'dateRange',
+        fieldProps: {
+          allowEmpty: [true, true],
+        },
       },
       {
         title: <FormattedMessage id="student" defaultMessage="Student" />,
@@ -63,22 +75,26 @@ const QuizAttempts: React.FC = () => {
         title: <FormattedMessage id="result_score" defaultMessage="Result score" />,
         dataIndex: 'result_score',
         hideInSearch: true,
+        sorter: true,
       },
       {
         title: <FormattedMessage id="max_score" defaultMessage="Max score" />,
         dataIndex: 'max_score',
         hideInSearch: true,
+        sorter: true,
       },
       {
         title: <FormattedMessage id="started_at" defaultMessage="Started at" />,
         dataIndex: 'started_at',
         hideInSearch: true,
+        sorter: true,
         render: (_, record) => format(new Date(record.started_at), DATETIME_FORMAT),
       },
       {
         title: <FormattedMessage id="end_at" defaultMessage="End at" />,
         dataIndex: 'end_at',
         hideInSearch: true,
+        sorter: true,
         render: (_, record) =>
           record.end_at ? (
             format(new Date(record.end_at), DATETIME_FORMAT)
@@ -117,11 +133,20 @@ const QuizAttempts: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="id"
-        request={({ current, pageSize, topic_gift_quiz_id }) => {
+        request={({ current, pageSize, topic_gift_quiz_id, dateRange }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          const date_from =
+            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
+          const date_to =
+            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
           return getQuizAttempts({
             per_page: pageSize,
             page: current,
             topic_gift_quiz_id,
+            date_from,
+            date_to,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           }).then((response) => {
             if (response.success) {
               return {
