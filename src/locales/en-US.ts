@@ -606,4 +606,6 @@ export default {
   'Order Not Found': 'Order Not Found',
   field_required: 'Field is required',
   add_title_here: 'Add title here',
+  user_projects: 'User projects',
+  project_solutions: 'User project solutions',
 };

@@ -178,7 +178,7 @@ export default () => {
             },
             {
               path: String(tab),
-              breadcrumbName: String(tab),
+              breadcrumbName: intl.formatMessage({ id: tab, defaultMessage: String(tab) }),
             },
           ],
         },
@@ -685,7 +685,7 @@ export default () => {
         )}
 
         {!isNew && (
-          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="Uploaded Projects" />}>
+          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="user_projects" />}>
             <ProjectsList courseId={Number(course)} />
           </ProCard.TabPane>
         )}

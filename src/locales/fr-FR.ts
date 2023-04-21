@@ -546,4 +546,6 @@ export default {
   tutor_consultation_tooltip: 'Tuteur',
   proposed_terms_tooltip: 'Termes proposés',
   field_required: 'Champ requis',
+  user_projects: 'Projets utilisateur',
+  project_solutions: 'Solutions de projet utilisateur',
 };

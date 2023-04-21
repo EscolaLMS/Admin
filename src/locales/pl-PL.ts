@@ -593,4 +593,6 @@ export default {
   'Order Not Found': 'Zamówienie nie zostało znalezione',
   field_required: 'Pole jest wymagane',
   add_title_here: 'Dodaj tytuł',
+  user_projects: 'Zadania użytkowników',
+  project_solutions: 'Rozwiązania zadań użytkowników',
 };
