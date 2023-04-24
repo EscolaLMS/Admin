@@ -2,18 +2,11 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/vouchers */
-export async function vouchers(
-  params?: API.PageParams & API.PaginationParams,
-  options?: RequestOptionsInit,
-) {
+export async function vouchers(params?: API.Vouchers, options?: RequestOptionsInit) {
   return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
-    },
+    params,
     ...(options || {}),
   });
 }

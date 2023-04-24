@@ -1127,7 +1127,8 @@ declare namespace API {
 
   type ConsultationAccessEnquiryListParams =
     EscolaLms.ConsultationAccess.Http.Requests.Admin.AdminListConsultationAccessEnquiryRequest &
-      PageParams & {
+      PageParams &
+      PaginationParams & {
         user_id?: number;
         consultation_id?: number;
         status?: CourseAccessEnquiryStatus;
@@ -1268,7 +1269,28 @@ declare namespace API {
   };
 
   type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &
-    PaginationParams & { topic_gift_quiz_id: number };
+    PaginationParams & {
+      topic_gift_quiz_id: number;
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+    };
+
+  type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &
+    API.PageParams &
+    API.PaginationParams & {
+      name?: string;
+      code?: string;
+      dateRange?: [string, string];
+      active_from?: string;
+      active_to?: string;
+    };
+
+  type TemplatesParams = EscolaLms.Templates.Http.Requests.TemplateListingRequest &
+    API.PageParams &
+    API.PaginationParams & {
+      name?: string;
+    };
 }
 
 declare module 'jsoneditor-react' {
