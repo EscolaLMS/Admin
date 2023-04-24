@@ -1286,7 +1286,7 @@ declare namespace API {
       active_to?: string;
     };
 
-  type Templates = EscolaLms.Templates.Http.Requests.TemplateListingRequest &
+  type TemplatesParams = EscolaLms.Templates.Http.Requests.TemplateListingRequest &
     API.PageParams &
     API.PaginationParams & {
       name?: string;

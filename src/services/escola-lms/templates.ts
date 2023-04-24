@@ -1,7 +1,7 @@
 import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
-export async function templates(params?: API.Templates, options?: RequestOptionsInit) {
+export async function templates(params?: API.TemplatesParams, options?: RequestOptionsInit) {
   return request<API.TemplateList>(`/api/admin/templates`, {
     method: 'GET',
     useCache: false,

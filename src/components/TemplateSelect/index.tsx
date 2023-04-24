@@ -5,7 +5,7 @@ import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
 export const TemplateSelect: React.FC<{
-  params?: API.Templates;
+  params?: API.TemplatesParams;
   state?: {
     type: number;
   };

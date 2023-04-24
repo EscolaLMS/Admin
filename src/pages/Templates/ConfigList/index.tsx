@@ -78,7 +78,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   );
 
   return (
-    <ProTable<API.TemplateListItem, API.Templates>
+    <ProTable<API.TemplateListItem, API.TemplatesParams>
       headerTitle={intl.formatMessage({
         id: 'templates',
         defaultMessage: 'templates',
