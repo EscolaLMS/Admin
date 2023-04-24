@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { BASE_URL, ADMIN_CREDENTIALS } from './consts';
 
 test(`test route page login`, async ({ page }) => {
@@ -10,5 +10,4 @@ test(`test route page login`, async ({ page }) => {
   await page.locator('form button').click();
   // await expect(page).toHaveURL(/.*welcome/);
   await page.waitForLoadState();
-  
 });
