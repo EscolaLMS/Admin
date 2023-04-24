@@ -285,6 +285,7 @@ const TableList: React.FC = () => {
                 lt_last_login_day,
               });
               const sortArr = sort && Object.entries(sort)[0];
+              // const requestRole = role && role.toString() === 'all' ? undefined : role;
               return users({
                 per_page: pageSize,
                 page: current,
