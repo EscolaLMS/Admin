@@ -436,16 +436,20 @@ export default {
   rules: 'Règles',
   visibility: 'Visibilité',
   name_tooltip: 'Nom',
-  type_tooltip: 'type de champ',
+  type_tooltip:
+    'Spécifiez le type de champ : champ à choix unique, champ numérique, champ varchar, champ de texte ou format JSON',
   rules_tooltip:
-    'une liste de règles de chaînes JSON utilisées lors de la création/mise à jour du modèle',
-  extra_tooltip: 'une description supplémentaire en JSON',
-  default_tooltip: "valeur par défaut, si le modèle n'a pas de valeur, celle-ci sera utilisée",
+    'une liste json de règles de chaîne utilisées sur le modèle de création/mise à jour',
+  extra: 'Valeurs supplémentaires',
+  extra_tooltip: `Valeurs JSON supplémentaires. Par exemple, si vous souhaitez créer des traductions de champs, vous devez saisir des valeurs dans l'éditeur: [{"pl": "Polskie tłumaczenie"},{"en": "English translation"}]`,
+  default_tooltip:
+    "La valeur par défaut du champ sélectionné, qui sera affichée si la valeur n'a pas encore été enregistrée dans la base de données",
+  visibility_tooltip:
+    "Visibilité des champs pour l'API. Valeur 1 - visible publiquement, 2 - visible pour les utilisateurs connectés, 4 - visible pour l'administrateur.",
+  'available-validation-rules': 'méthodes de validation disponibles',
+  'available-validation-rules-tooltip': `Validation du champ sélectionné. Par exemple, si vous souhaitez qu'un champ soit obligatoire, vous devez fournir une valeur dans l'éditeur JSON: ["required"]`,
   purchasable_tooltip:
     "L'utilisateur peut-il acheter ce produit ou est-il disponible uniquement par attribution manuelle ?",
-  visibility_tooltip:
-    "visibilité du champ. Doit être une puissance de 2. Utilisez 1 pour l'accès public, 2 pour les utilisateurs autorisés, 4 pour les administrateurs et le reste est à votre discrétion.",
-  'available-validation-rules': 'règles de validation disponibles',
   Products: 'Produits',
   free: 'gratuit',
   free_capi: 'Gratuit',
@@ -556,4 +560,9 @@ export default {
   'Course imported successfully': 'Cours importé avec succès',
   'Course updated successfully': 'Cours mis à jour avec succès',
   'Export created': 'Fichier exporté avec succès',
+  'model.boolean': 'Champ à choix unique',
+  'model.number': 'Champ numérique',
+  'model.varchar': 'Champ de texte (varchar)',
+  'model.text': 'Champ de texte',
+  'model.json': 'JSON',
 };

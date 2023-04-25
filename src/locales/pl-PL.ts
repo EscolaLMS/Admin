@@ -451,13 +451,19 @@ export default {
   rules: 'Zasady walidacji',
   visibility: 'Widoczność pola',
   name_tooltip: 'Nazwa',
-  type_tooltip: 'typ',
+  type_tooltip:
+    'Określ typ pola: pole jednokrotnego wyboru, pole numeryczne, pole varchar, pole tekstowe lub format JSON',
   rules_tooltip: 'a json list of string rules used on create/update model',
-  extra_tooltip: 'a json extra description',
-  default_tooltip: 'jezeli model nie ma zapisanej wartość pojawi się wartość domyślna ',
+  extra: 'Wartości dodatkowe',
+  extra_tooltip:
+    'Dodatkowe wartości w formacie JSON. Przykładowo, jeśli chcemy stworzyć tłumaczenia pól, musimy w edytorze wprowadzić wartości: [{"pl": "Polskie tłumaczenie"},{"en": "English translation"}]',
+  default_tooltip:
+    'Wartość domyślna dla wybranego pola, która będzie wyświetlana jeśli wartość nie została jeszcze zapisana w bazie danych',
   visibility_tooltip:
-    'Widoczność pola w API. Musi być potęgą 2. Use  1 to Public access, 2 for Authorized, 4 for Admin, and rest is up to you',
+    'Widoczność pola dla API. Wartość 1 - publicznie widoczne, 2 - widoczne dla zalogowanych, 4 - widoczne dla administratora.',
   'available-validation-rules': 'dostępne metody walidacji',
+  'available-validation-rules-tooltip':
+    'Walidacja wybranego pola. Przykładowo, jeśli chcemy, aby pole było wymagane to w edytorze JSON musimy podać wartość: ["required"]',
   Products: 'Produkty',
   free: 'darmowy',
   free_capi: 'Darmowy',
@@ -604,4 +610,9 @@ export default {
   'Course imported successfully': 'Kurs został zaimportowany',
   'Course updated successfully': 'Kurs został zaktualizowany',
   'Export created': 'Poprawnie wyeksportowano plik',
+  'model.boolean': 'Pole jednokrotnego wyboru',
+  'model.number': 'Pole numeryczne',
+  'model.varchar': 'Pole tekstowe (varchar)',
+  'model.text': 'Pole tekstowe',
+  'model.json': 'JSON',
 };
