@@ -326,7 +326,6 @@ export default () => {
                   },
                 ]}
                 disabled={manageCourseEdit.disableEdit}
-                extra={<FormattedMessage id="active_from_extra" />}
               />
               <ProFormDatePicker
                 width="md"
@@ -338,7 +337,6 @@ export default () => {
                   defaultMessage: 'active_to',
                 })}
                 disabled={manageCourseEdit.disableEdit || !fromDateValidation}
-                extra={<FormattedMessage id="active_to_extra" />}
                 rules={[
                   {
                     validator(_, value) {
@@ -365,7 +363,6 @@ export default () => {
                   defaultMessage: 'duration',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-                extra={<FormattedMessage id="duration_extra" />}
               />
 
               <ProFormDigit
@@ -378,7 +375,6 @@ export default () => {
                   defaultMessage: 'hours_to_complete',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-                extra={<></>}
               />
             </ProForm.Group>
             <ProForm.Group label={<FormattedMessage id="additional" />}>
