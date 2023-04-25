@@ -310,7 +310,7 @@ export default {
   back_home: "Retour à la page d'accueil",
   '403_subtitle': "Désolé, vous n'êtes pas autorisé à accéder à cette page.",
   '404_subtitle': "Désolé, la page que vous avez visitée n'existe pas.",
-  user_id: 'ID utilisateur',
+  user_id: 'ID utilisateur: ',
   order_id: 'ID de la commande : ',
   course_id: 'ID du cours : ',
   consultation_id: 'ID de consultation : ',
