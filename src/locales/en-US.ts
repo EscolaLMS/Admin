@@ -11,6 +11,7 @@ import consultations from './en-US/consultations';
 import fabric from './en-US/fabric';
 import vouchers from './en-US/vouchers';
 import courses from './en-US/courses';
+import events from './en-US/events';
 
 export default {
   actions: 'Actions',
@@ -67,6 +68,7 @@ export default {
   ...fabric,
   ...vouchers,
   ...courses,
+  ...events,
   branding: 'Branding',
   product_details: 'Product details',
   title: 'Title',

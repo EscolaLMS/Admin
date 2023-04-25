@@ -1,5 +1,5 @@
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Tag } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { format } from 'date-fns';
@@ -42,13 +42,25 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       title: <FormattedMessage id="event" defaultMessage="event" />,
       dataIndex: 'event',
       hideInSearch: true,
-      sorter: true,
+      sorter: false,
+      render: (_, record) => <FormattedMessage id={record.event} defaultMessage={record.event} />,
     },
     {
       title: <FormattedMessage id="templates.is_default" />,
       dataIndex: 'default',
       hideInSearch: true,
-      render: (_, record) => record.default && <FormattedMessage id="yes" />,
+      valueEnum: {
+        true: (
+          <Tag color="success">
+            <FormattedMessage id="yes" />
+          </Tag>
+        ),
+        false: (
+          <Tag color="error">
+            <FormattedMessage id="no" />
+          </Tag>
+        ),
+      },
     },
   ];
 

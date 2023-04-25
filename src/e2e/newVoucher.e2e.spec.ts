@@ -28,10 +28,10 @@ test.describe('New voucher', () => {
     await page.type('#amount', '5');
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=success', { state: 'visible' });
-    await page.waitForTimeout(10000)
+    await page.waitForTimeout(10000);
     await page.waitForLoadState();
     await page.goto(`${BASE_URL}/#/sales/orders`);
-    await page.waitForTimeout(3000)
+    await page.waitForTimeout(3000);
     await page.goto(`${BASE_URL}/#/sales/vouchers`);
     await page.waitForSelector('.ant-table-tbody', { state: 'visible' });
     await page.locator('text=new pwvoucherCODE >> button').nth(1).click();

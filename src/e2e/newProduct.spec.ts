@@ -22,14 +22,14 @@ test.describe('New product', () => {
 
     await page.goto(`${BASE_URL}/#/sales/products`);
     await page.waitForTimeout(4000);
-    await page.type('#name', 'playwright test product');  
+    await page.type('#name', 'playwright test product');
     await page.waitForTimeout(3000);
     await page.locator('button:has-text("Query")').click();
     // await page.waitForSelector('text=playwright test product255023Singletrue >> button', {
     //   state: 'visible',
     // });
     await page.waitForTimeout(5000);
-    await page.click('.anticon-delete>>nth=0')
+    await page.click('.anticon-delete>>nth=0');
     // await page.locator('text=playwright test product255023Singletrue >> button').nth(1).click();
     const ConfirmDeleteProduct = await page.locator('.ant-popover-message');
     await expect(ConfirmDeleteProduct).toContainText('Are you sure to delete this record?');

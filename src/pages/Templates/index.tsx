@@ -35,7 +35,8 @@ const Templates: React.FC = () => {
             <ConfigList templateType={'pdf'} channel={channelType.pdf} />
           </ProCard.TabPane>
         )}
-        <ProCard.TabPane
+        {/* This was disabled so remove comment when functionality will be ready */}
+        {/* <ProCard.TabPane
           disabled
           key={'Push'}
           tab={
@@ -45,7 +46,7 @@ const Templates: React.FC = () => {
           }
         >
           Push
-        </ProCard.TabPane>
+        </ProCard.TabPane> */}
         <ProCard.TabPane
           key={'sms'}
           tab={

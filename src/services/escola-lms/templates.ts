@@ -5,11 +5,7 @@ export async function templates(params?: API.TemplatesParams, options?: RequestO
   return request<API.TemplateList>(`/api/admin/templates`, {
     method: 'GET',
     useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
