@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ProCard from '@ant-design/pro-card';
 import { Alert, Spin, Statistic } from 'antd';
 import { reports } from '@/services/escola-lms/reports';
 import { TrophyOutlined } from '@ant-design/icons';
@@ -59,7 +58,7 @@ const Statistics: React.FC<{
   }, [metric]);
 
   return (
-    <ProCard headerBordered>
+    <>
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <div className="statistics">
@@ -81,7 +80,7 @@ const Statistics: React.FC<{
         </div>
       )}
       {state.mode === 'error' && <Alert message={state.error} type="error" />}
-    </ProCard>
+    </>
   );
 };
 

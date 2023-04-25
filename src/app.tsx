@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, getLocale } from 'umi';
+import { history, getLocale, addLocale } from 'umi';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -11,12 +11,15 @@ import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
 import { settings } from './services/escola-lms/settings';
+import { translations } from './services/escola-lms/translations';
+
 import { refreshTokenCallback } from './services/token_refresh';
 
 import '@/services/ybug';
-import '@/services/sentry.ts';
+import '@/services/sentry';
 import './app.css';
-import { FormattedMessage } from '@@/plugin-locale/localeExports';
+import { packages } from './services/escola-lms/packages';
+import { FormattedMessage, localeInfo } from '@@/plugin-locale/localeExports';
 
 declare const REACT_APP_API_URL: string;
 
@@ -38,6 +41,8 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.UserItem | undefined>;
   collapsed?: boolean;
   config?: API.Setting[];
+  translations?: API.Translation[];
+  packages?: Record<string, string>;
 }> {
   refreshTokenCallback();
   const fetchUserInfo = async () => {
@@ -62,19 +67,45 @@ export async function getInitialState(): Promise<{
 
   if (currentUser) {
     const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+    const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
+    const packs = await packages();
+
+    if (transl.success) {
+      const messages = {};
+      transl.data.forEach((t) => {
+        Object.keys(t.text).forEach((key) => {
+          if (!messages[key]) {
+            messages[key] = {};
+          }
+          messages[key][t.key] = t.text[key];
+        });
+      });
+
+      for (const lang in messages) {
+        addLocale(lang, messages[lang], {
+          antd: localeInfo[lang].antd,
+          momentLocale: localeInfo[lang].momentLocale,
+        });
+      }
+    }
+
     return {
       fetchUserInfo,
       config: config.success ? config.data : [],
+      translations: transl.success ? transl.data : [],
       currentUser,
       settings: {},
       collapsed: false,
+      packages: packs.success ? packs.data : {},
     };
   }
   return {
     config: [],
+    translations: [],
     fetchUserInfo,
     settings: {},
     collapsed: false,
+    packages: {},
   };
 }
 
@@ -98,6 +129,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
   if (configLogo) {
     logo = configLogo.data;
+    if (!logo.includes('http')) {
+      logo = `${REACT_APP_API_URL}/storage${logo}`;
+    }
   }
 
   return {
@@ -180,9 +214,11 @@ const errorHandler = (error: ResponseError) => {
     if (message && errors) {
       notification.error({
         message,
-        description: Object.keys(errors).map(
-          (errorKey) => `${errorKey}: ${errors[errorKey].join(', ')}`,
-        ),
+        description: Object.keys(errors).map((errorKey) => (
+          <p key={errorKey}>
+            {errorKey}: {errors[errorKey].join(', ')}
+          </p>
+        )),
       });
     }
     if (typeof data.error === 'string') {

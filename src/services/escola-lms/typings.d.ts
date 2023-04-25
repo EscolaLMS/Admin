@@ -39,6 +39,8 @@ declare namespace API {
   type PageParams = {
     current?: number;
     pageSize?: number;
+    title?: string;
+    slug?: string;
   };
 
   /// ----- Ant Design Pro Types ----- ///
@@ -166,7 +168,7 @@ declare namespace API {
 
   type CourseListItem = Course;
 
-  type CategoryList = DataResponseSuccess<Category[]>;
+  type CategoryList = DefaultMetaResponse<Category>;
 
   type CategoryListItem = Category;
 
@@ -244,12 +246,22 @@ declare namespace API {
       status?: string;
     };
 
-  type ConsultationsParams = PageParams & {
-    name?: string;
-    category_id?: number;
-    status?: string | string[];
-    dateRange?: [string, string];
-  };
+  type CategoryParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      is_active?: string;
+    };
+
+  type ConsultationsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+    };
 
   type H5PListParams = PageParams &
     PaginationParams & {
@@ -404,7 +416,7 @@ declare namespace API {
 
   type TopicProject = TopicBase & {
     topicable_type: TopicType.Project;
-    topicable: TopicableBase;
+    topicable: TopicableBase & { notify_users?: string[] };
   };
 
   type TopicQuiz = TopicBase & {
@@ -477,7 +489,8 @@ declare namespace API {
     | TopicH5P
     | TopicImage
     | TopicPDF
-    | TopicScorm;
+    | TopicScorm
+    | TopicProject;
 
   type TopicNotEmpty =
     | TopicRichText
@@ -569,6 +582,7 @@ declare namespace API {
       | 'EscolaLms\\Core\\Models\\User';
     status: PaymentStatus;
     updated_at: string;
+    user_id: number;
   };
 
   type Page = {
@@ -875,7 +889,10 @@ declare namespace API {
         value: API.UserItem;
       }
     | {
-        type: 'App\\Models\\Order' | 'EscolaLms\\Cart\\Models\\Order';
+        type:
+          | 'App\\Models\\Order'
+          | 'EscolaLms\\Cart\\Models\\Order'
+          | 'EscolaLms\\Vouchers\\Models\\Order';
         value: API.Order;
       }
     | {
@@ -1110,7 +1127,8 @@ declare namespace API {
 
   type ConsultationAccessEnquiryListParams =
     EscolaLms.ConsultationAccess.Http.Requests.Admin.AdminListConsultationAccessEnquiryRequest &
-      PageParams & {
+      PageParams &
+      PaginationParams & {
         user_id?: number;
         consultation_id?: number;
         status?: CourseAccessEnquiryStatus;
@@ -1158,7 +1176,121 @@ declare namespace API {
 
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
-  type GiftQuestion = EscolaLms.TopicTypeGift.Models.GiftQuestion;
+  /** GIFT Quiz types */
+  type QuizQuestionBase = {
+    id: number;
+    question: string;
+    score: number;
+    title: string;
+    value: string;
+    type: QuestionType;
+  };
+
+  type QuizQuestion_MultipleChoice = QuizQuestionBase & {
+    options: { answers: string[] };
+    type: Enum.QuestionType.MULTIPLE_CHOICE;
+  };
+  type QuizQuestion_MultipleChoiceWithMultipleRightAnswers = QuizQuestionBase & {
+    options: { answers: string[] };
+    type: Enum.QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
+  };
+  type QuizQuestion_TrueFalse = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.TRUE_FALSE;
+  };
+  type QuizQuestion_ShortAnswers = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.SHORT_ANSWERS;
+  };
+  type QuizQuestion_Matching = QuizQuestionBase & {
+    options: {
+      sub_questions: string[];
+      sub_answers: string[];
+    };
+    type: Enum.QuestionType.MATCHING;
+  };
+  type QuizQuestion_NumericalQuestion = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.NUMERICAL_QUESTION;
+  };
+  type QuizQuestion_Essay = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.ESSAY;
+  };
+  type QuizQuestion_Description = QuizQuestionBase & {
+    options: unknown[];
+    type: Enum.QuestionType.DESCRIPTION;
+  };
+
+  export type GiftQuestion =
+    | QuizQuestion_MultipleChoice
+    | QuizQuestion_MultipleChoiceWithMultipleRightAnswers
+    | QuizQuestion_TrueFalse
+    | QuizQuestion_ShortAnswers
+    | QuizQuestion_Matching
+    | QuizQuestion_NumericalQuestion
+    | QuizQuestion_Essay
+    | QuizQuestion_Description;
+
+  type TextAnswer = { text: string };
+
+  type MultipleAnswer = {
+    multiple: string[];
+  };
+  type MatchingAnswer = { matching: Record<string, string> };
+  type NumericAnswer = { numeric: number };
+  type BooleanAnswer = { bool: boolean };
+
+  type GiftQuizAnswer =
+    | TextAnswer
+    | MultipleAnswer
+    | MatchingAnswer
+    | NumericAnswer
+    | BooleanAnswer;
+
+  type AttemptAnswer = Omit<EscolaLms.TopicTypeGift.Models.AttemptAnswer, 'answer'> & {
+    answer: GiftQuizAnswer;
+  };
+
+  type QuizAttempt = Omit<EscolaLms.TopicTypeGift.Models.QuizAttempt, 'questions' | 'answers'> & {
+    id: number;
+    user_id: number;
+    topic_gift_quiz_id: number;
+    started_at: Date | string;
+    end_at: Date | string | null;
+    max_score: number;
+    result_score: number | null;
+    is_ended: boolean;
+  };
+
+  type QuizAttemptDetails = QuizAttempt & {
+    questions: GiftQuestion[];
+    answers: AttemptAnswer[];
+  };
+
+  type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &
+    PaginationParams & {
+      topic_gift_quiz_id: number;
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+    };
+
+  type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &
+    API.PageParams &
+    API.PaginationParams & {
+      name?: string;
+      code?: string;
+      dateRange?: [string, string];
+      active_from?: string;
+      active_to?: string;
+    };
+
+  type TemplatesParams = EscolaLms.Templates.Http.Requests.TemplateListingRequest &
+    API.PageParams &
+    API.PaginationParams & {
+      name?: string;
+    };
 }
 
 declare module 'jsoneditor-react' {

@@ -28,9 +28,10 @@ const ProductableItems: React.FC<{ items: API.ProductProductable[] }> = ({ items
 
 export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
@@ -43,10 +44,11 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     title: <FormattedMessage id="price" defaultMessage="price" />,
     dataIndex: 'price',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
-    title: <FormattedMessage id="productable" defaultMessage="productable" />,
+    title: <FormattedMessage id="items" defaultMessage="items" />,
     dataIndex: 'productable',
     key: 'productable',
     sorter: false,
@@ -62,20 +64,24 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   },
   {
     title: <FormattedMessage id="price_old" defaultMessage="price_old" />,
+    tooltip: <FormattedMessage id="price_old_tooltip" defaultMessage="price_old_tooltip" />,
     dataIndex: 'price_old',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
     title: <FormattedMessage id="tax_rate" defaultMessage="tax_rate" />,
     dataIndex: 'tax_rate',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
     title: <FormattedMessage id="type" defaultMessage="type" />,
     dataIndex: 'type',
     hideInSearch: false,
+    sorter: true,
     valueType: 'select',
     initialValue: 'all',
     valueEnum: {
@@ -94,6 +100,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     title: <FormattedMessage id="purchasable" defaultMessage="purchasable" />,
     dataIndex: 'purchasable',
     hideInSearch: false,
+    sorter: true,
     valueType: 'select',
     initialValue: 'all',
     valueEnum: {
@@ -186,6 +193,9 @@ const Products: React.FC = () => {
           id: 'menu.Sales.Products',
           defaultMessage: 'Products',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         loading={loading}
         actionRef={actionRef}
         rowKey="id"

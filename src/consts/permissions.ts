@@ -205,7 +205,7 @@ enum PERMISSIONS {
   VoucherDelete = 'coupon_delete',
   VoucherUse = 'coupon_use',
 
-  /* -------- EscolaLMS/Transaltions -------- */
+  /* -------- EscolaLMS/translations -------- */
   TranslationList = 'translation_list',
   TranslationCreate = 'translation_create',
   TranslationRead = 'translation_read',
@@ -242,6 +242,14 @@ enum PERMISSIONS {
   ConsultationAccessDisapprove = 'consultation-access_disapprove',
   ConsultationAccessDeleteOwn = 'consultation-access_delete-own',
   ConsultationAccessUpdateOwn = 'consultation-access_update-own',
+
+  /* -------- EscolaLMS/Quiz -------- */
+  QuizAttemptCreateOwn = 'quiz-attempt_create-own',
+  QuizAttemptListOwn = 'quiz-attempt_list-own',
+  QuizAttemptReadOwn = 'quiz-attempt_read-own',
+  QuizAttemptList = 'quiz-attempt_list',
+  QuizAttemptRead = 'quiz-attempt_read',
+  QuizAttemptUpdate = 'quiz-attempt_update',
 }
 
 export default PERMISSIONS;

@@ -32,7 +32,6 @@ import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
 import CourseStatistics from '@/components/CourseStatistics';
 import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
-import UnsavedPrompt from '@/components/UnsavedPrompt';
 import AssignQuestionnary from '@/components/AssignQuestionnary';
 import { ModelTypes } from '../Questionnaire/form';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
@@ -50,7 +49,6 @@ export default () => {
   const isNew = course === 'new';
   const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [fromDateValidation, setFromDateValidation] = useState<Date | undefined | null>(null);
   const [toDateValidation, setToDateValidation] = useState<Date | undefined | null>(null);
@@ -63,6 +61,7 @@ export default () => {
   const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
+  const [form] = ProForm.useForm();
 
   useEffect(() => {
     if (tab === 'attributes' && data && isFirstTimeEdit) {
@@ -129,7 +128,6 @@ export default () => {
         if (course === 'new') {
           response = await createCourse(postData);
           if (response.success && response.data.id) {
-            setUnsavedChanges(false);
             setManageSuccessModal({
               showModal: true,
               courseId: response.data.id,
@@ -137,15 +135,13 @@ export default () => {
           }
         } else {
           response = await updateCourse(Number(course), postData);
-          if (response.success) {
-            setUnsavedChanges(false);
-          }
         }
-        message.success(response.message);
+        message.success(intl.formatMessage({ id: response.message }));
       },
       initialValues: data,
+      form,
     }),
-    [course, data, manageCourseEdit],
+    [course, data, manageCourseEdit, form],
   );
 
   if (!data) {
@@ -182,7 +178,7 @@ export default () => {
             },
             {
               path: String(tab),
-              breadcrumbName: String(tab),
+              breadcrumbName: intl.formatMessage({ id: tab, defaultMessage: String(tab) }),
             },
           ],
         },
@@ -234,7 +230,6 @@ export default () => {
               }
             />
           )}
-          <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
           <CourseSuccessModal
             visible={manageSuccessModal.showModal}
@@ -248,8 +243,6 @@ export default () => {
           <ProForm
             {...formProps}
             onValuesChange={(values) => {
-              setUnsavedChanges(true);
-
               if (values.active_from) {
                 setFromDateValidation(values.active_from);
               }
@@ -265,7 +258,7 @@ export default () => {
                 width="xl"
                 name="title"
                 label={<FormattedMessage id="title" />}
-                tooltip={<FormattedMessage id="title" />}
+                tooltip={<FormattedMessage id="courses.tooltips.title" />}
                 placeholder={intl.formatMessage({
                   id: 'title',
                   defaultMessage: 'title',
@@ -277,7 +270,7 @@ export default () => {
                 width="xl"
                 name="subtitle"
                 label={<FormattedMessage id="subtitle" />}
-                tooltip={<FormattedMessage id="subtitle" />}
+                tooltip={<FormattedMessage id="courses.tooltips.subtitle" />}
                 placeholder={intl.formatMessage({
                   id: 'subtitle',
                   defaultMessage: 'subtitle',
@@ -287,7 +280,7 @@ export default () => {
               <ProForm.Item
                 name="summary"
                 label={<FormattedMessage id="summary" />}
-                tooltip={<FormattedMessage id="summary_tooltip" />}
+                tooltip={<FormattedMessage id="courses.tooltips.summary" />}
                 valuePropName="value"
                 style={{
                   width: 697,
@@ -298,7 +291,7 @@ export default () => {
               <ProForm.Item
                 name="description"
                 label={<FormattedMessage id="description" />}
-                tooltip={<FormattedMessage id="description_tooltip" />}
+                tooltip={<FormattedMessage id="courses.tooltips.description" />}
                 valuePropName="value"
                 style={{
                   width: 697,
@@ -312,7 +305,7 @@ export default () => {
                 width="md"
                 name="active_from"
                 label={<FormattedMessage id="active_from" />}
-                tooltip={<FormattedMessage id="active_from" />}
+                tooltip={<FormattedMessage id="courses.tooltips.active_from" />}
                 placeholder={intl.formatMessage({
                   id: 'active_from',
                   defaultMessage: 'active_from',
@@ -339,7 +332,7 @@ export default () => {
                 width="md"
                 name="active_to"
                 label={<FormattedMessage id="active_to" />}
-                tooltip={<FormattedMessage id="active_to" />}
+                tooltip={<FormattedMessage id="courses.tooltips.active_to" />}
                 placeholder={intl.formatMessage({
                   id: 'active_to',
                   defaultMessage: 'active_to',
@@ -366,7 +359,7 @@ export default () => {
                 width="md"
                 name="duration"
                 label={<FormattedMessage id="duration" />}
-                tooltip={<FormattedMessage id="duration" />}
+                tooltip={<FormattedMessage id="courses.tooltips.duration" />}
                 placeholder={intl.formatMessage({
                   id: 'duration',
                   defaultMessage: 'duration',
@@ -385,6 +378,7 @@ export default () => {
                   defaultMessage: 'hours_to_complete',
                 })}
                 disabled={manageCourseEdit.disableEdit}
+                extra={<></>}
               />
             </ProForm.Group>
             <ProForm.Group label={<FormattedMessage id="additional" />}>
@@ -402,7 +396,7 @@ export default () => {
                 width="xs"
                 name="level"
                 label={<FormattedMessage id="level" />}
-                tooltip={<FormattedMessage id="level" />}
+                tooltip={<FormattedMessage id="courses.tooltips.level" />}
                 placeholder={intl.formatMessage({
                   id: 'level',
                   defaultMessage: 'level',
@@ -462,7 +456,7 @@ export default () => {
                 width="sm"
                 name="target_group"
                 label={<FormattedMessage id="target_group" />}
-                tooltip={<FormattedMessage id="target_group" />}
+                tooltip={<FormattedMessage id="courses.tooltips.target_group" />}
                 placeholder={intl.formatMessage({
                   id: 'target_group',
                   defaultMessage: 'target_group',
@@ -503,7 +497,7 @@ export default () => {
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>
-        {!isNew && (
+        {!isNew && access.salesPermission && (
           <ProCard.TabPane
             key="product"
             tab={<FormattedMessage id="product" />}
@@ -586,9 +580,9 @@ export default () => {
             tab={<FormattedMessage id="categories_tags" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <Row>
-              <Col span={12}>
-                <ProForm {...formProps}>
+            <ProForm {...formProps}>
+              <Row>
+                <Col span={12}>
                   <ProForm.Item
                     label={<FormattedMessage id="categories" />}
                     name="categories"
@@ -596,10 +590,8 @@ export default () => {
                   >
                     <CategoryCheckboxTree />
                   </ProForm.Item>
-                </ProForm>
-              </Col>
-              <Col span={12}>
-                <ProForm {...formProps}>
+                </Col>
+                <Col span={12}>
                   <ProForm.Item
                     label={<FormattedMessage id="tags" />}
                     name="tags"
@@ -607,9 +599,9 @@ export default () => {
                   >
                     <TagsInput />
                   </ProForm.Item>
-                </ProForm>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </ProForm>
           </ProCard.TabPane>
         )}
         {!isNew && (
@@ -649,7 +641,7 @@ export default () => {
             {course && <CourseAccess id={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {!isNew && access.certificatesPermission && (
           <ProCard.TabPane
             key="certificates"
             tab={<FormattedMessage id="certificates" />}
@@ -659,13 +651,13 @@ export default () => {
           </ProCard.TabPane>
         )}
 
-        {!isNew && (
+        {!isNew && access.questionnaireListPermission && (
           <ProCard.TabPane
             key="questionnaires"
             tab={<FormattedMessage id="questionnaires" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            {course && <AssignQuestionnary modelType={ModelTypes.course} id={Number(course)} />}
+            {course && <AssignQuestionnary modelType={ModelTypes.COURSE} id={Number(course)} />}
           </ProCard.TabPane>
         )}
 
@@ -693,7 +685,7 @@ export default () => {
         )}
 
         {!isNew && (
-          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="Uploaded Projects" />}>
+          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="user_projects" />}>
             <ProjectsList courseId={Number(course)} />
           </ProCard.TabPane>
         )}

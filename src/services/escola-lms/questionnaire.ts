@@ -2,12 +2,17 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/questionnaire */
-export async function questionnaire(options?: RequestOptionsInit) {
+export async function questionnaire(
+  params?: API.PageParams &
+    API.PaginationParams & {
+      title?: string;
+    },
+  options?: RequestOptionsInit,
+) {
   return request<API.QuestionnaireList>(`/api/admin/questionnaire`, {
     method: 'GET',
-
     /* useCache: true */ useCache: false,
-
+    params,
     ...(options || {}),
   });
 }

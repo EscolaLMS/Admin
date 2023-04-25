@@ -27,11 +27,13 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="description" defaultMessage="Description" />,
       dataIndex: 'description',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="user" defaultMessage="User" />,
@@ -97,6 +99,7 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="consultation_term_date" defaultMessage="Term Date" />,
       dataIndex: 'consultation_term',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) => {
         return record.consultation_term ? (
           <>
@@ -107,6 +110,7 @@ const TableList: React.FC = () => {
           <Space direction="vertical">
             {record.proposed_terms.map((term) => (
               <Button
+                key={term.id}
                 size="small"
                 type="primary"
                 onClick={() => {
@@ -139,12 +143,14 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
       dataIndex: 'created_at',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) =>
         record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
     },
     {
       title: <FormattedMessage id="status" defaultMessage="Status" />,
       dataIndex: 'status',
+      sorter: true,
       valueType: 'select',
       valueEnum: {
         pending: {
@@ -192,18 +198,25 @@ const TableList: React.FC = () => {
           id: 'consultationAccessEnquiries',
           defaultMessage: 'consultation Access Enquiries',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         actionRef={actionRef}
         rowKey="id"
-        request={({
-          pageSize,
-          current,
-          consultation_id,
-          status,
-          user_id,
-          is_coming,
-          proposed_at_from,
-          proposed_at_to,
-        }) => {
+        request={(
+          {
+            pageSize,
+            current,
+            consultation_id,
+            status,
+            user_id,
+            is_coming,
+            proposed_at_from,
+            proposed_at_to,
+          },
+          sort,
+        ) => {
+          const sortArr = sort && Object.entries(sort)[0];
           return consultationAccess({
             pageSize,
             current,
@@ -213,6 +226,8 @@ const TableList: React.FC = () => {
             is_coming,
             proposed_at_from,
             proposed_at_to,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           }).then((response) => {
             if (response.success) {
               return {

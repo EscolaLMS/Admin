@@ -120,11 +120,12 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
-      hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
@@ -135,23 +136,31 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="slug" defaultMessage="slug" />,
       dataIndex: 'slug',
       hideInSearch: true,
+      sorter: true,
     },
 
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="状态" />,
+      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
       dataIndex: 'is_active',
-      hideInForm: true,
-      hideInSearch: true,
-      render: (_, record) =>
-        record.is_active ? (
-          <Tag color="success">
-            <FormattedMessage id="Active" defaultMessage="Active" />
-          </Tag>
-        ) : (
-          <Tag color="error">
-            <FormattedMessage id="Inactive" defaultMessage="Inactive" />
-          </Tag>
-        ),
+      sorter: true,
+      valueEnum: {
+        true: {
+          text: (
+            <Tag color="success">
+              <FormattedMessage id="Active" defaultMessage="Active" />
+            </Tag>
+          ),
+          status: 'true',
+        },
+        false: {
+          text: (
+            <Tag color="error">
+              <FormattedMessage id="Inactive" defaultMessage="Inactive" />
+            </Tag>
+          ),
+          status: 'false',
+        },
+      },
     },
 
     {
@@ -239,18 +248,16 @@ const TableList: React.FC = () => {
       <Modal open={showTree} onCancel={() => setShowTree(false)} onOk={() => setShowTree(false)}>
         {showTree && <TreeModal />}
       </Modal>
-      <ProTable<API.CategoryListItem, API.PageParams>
+      <ProTable<API.CategoryListItem, API.CategoryParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.Categories',
           defaultMessage: 'categories',
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Button key={'show_tree'} onClick={() => setShowTree(true)}>
             <FormattedMessage id="show_tree" defaultMessage="Show Tree" />
@@ -265,14 +272,32 @@ const TableList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
           </Button>,
         ]}
-        request={() => {
-          return categories().then((cats) => {
-            setData(cats.data);
-            return cats;
+        request={({ pageSize, current, name, is_active }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return categories({
+            pageSize,
+            current,
+            name,
+            is_active: is_active ? (is_active === 'true' ? 1 : 0) : undefined,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
+          }).then((response) => {
+            if (response.success) {
+              setData(response.data);
+              return {
+                data: response.data,
+                total: response.meta.total,
+                success: true,
+              };
+            }
+            return [];
           });
         }}
         columns={columns}
-        pagination={{ pageSize: 100 }}
       />
 
       <CategoryModalForm

@@ -165,10 +165,13 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
   return (
     <ProTable<API.ProjectSolution, API.ProjectSolutionListParams>
       headerTitle={intl.formatMessage({
-        id: 'projectSolutions',
+        id: 'project_solutions',
         defaultMessage: 'Project Uploaded Solutions',
       })}
       actionRef={actionRef}
+      search={{
+        layout: 'vertical',
+      }}
       rowKey="id"
       request={({ pageSize, current, user_id, topic_id }, sort) => {
         const sortArr = sort && Object.entries(sort)[0];

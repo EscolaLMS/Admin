@@ -3,7 +3,7 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/notifications/:id */
 export async function getNotifications(
-  params: {
+  params: API.PaginationParams & {
     current?: number;
     pageSize?: number;
     event?: string;

@@ -1,10 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
+import { Button, message, Tooltip, Popconfirm } from 'antd';
 import React, { useState, useRef } from 'react';
 import { useIntl, FormattedMessage, useModel } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { TopicType } from '@/services/escola-lms/enums';
 
 import {
   settings,
@@ -15,6 +16,8 @@ import {
 
 import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+
+import { getRoutes } from '@@/core/routes';
 
 const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
   const hide = message.loading(
@@ -76,15 +79,71 @@ const handleRemove = async (intl: IntlShape, id: number) => {
 };
 
 type InitialDataRecords = Record<
-  | 'logo'
-  | 'frontURL'
-  | 'showAccessRequestsInMenu'
-  | 'showConsultationRequestsInMenu'
-  | 'showProjectTypeInProgram'
-  | 'maxLessonsNestingInProgram'
-  | string,
+  'logo' | 'frontURL' | 'maxLessonsNestingInProgram' | 'minTopicNestingInProgram' | string,
   API.Setting
 >;
+
+type Route = {
+  path: string;
+  layout: boolean;
+  hideInMenu: boolean;
+  routes: Route[];
+} & any;
+
+const snakeToCamel = (str: string) =>
+  str.toLowerCase().replace(/(_\w)/g, (m) => m.toUpperCase().substr(1));
+
+const flatRoutes = (routes: Route[]): Route[] => {
+  return (
+    routes.reduce((acc, curr) => {
+      return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
+    }, [] as Route[]) as Route[]
+  ).filter((route) => route.layout !== false && route.hideInMenu !== true);
+};
+
+export const pathToSettingName = (path: string) =>
+  `hideInMenu-${snakeToCamel(path.split('/').join('_'))}`;
+
+export const topicTypeToSettingName = (type: string) => `disableTopicType-${type}`;
+
+const booleanSettings = [
+  ...Object.keys(TopicType).map((type, i) => ({
+    id: -1 * (i + 200),
+    key: topicTypeToSettingName(type),
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
+  ...flatRoutes(getRoutes())
+    .filter((route) => route.path && route.path !== '/')
+    .map((route, i) => ({
+      id: -1 * (i + 100),
+      path: route.path,
+      key: pathToSettingName(route.path),
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+  ...['ECommerce', 'Certificates'].map((feature, i) => ({
+    id: -1 * (i + 100),
+    key: `disable-${feature}`,
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
+].reduce((acc, curr, index) => ({ ...acc, [curr.key]: { ...curr, id: -1 * index } }), {});
 
 const initialData: InitialDataRecords = {
   logo: {
@@ -99,7 +158,7 @@ const initialData: InitialDataRecords = {
     data: 'EscolaLMS',
   },
   frontURL: {
-    id: 0,
+    id: -2,
     key: 'frontURL',
     group: 'global',
     value: '',
@@ -109,41 +168,9 @@ const initialData: InitialDataRecords = {
     type: 'text',
     data: 'EscolaLMS',
   },
-  showAccessRequestsInMenu: {
-    id: 0,
-    key: 'showAccessRequestsInMenu',
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  },
-  showConsultationRequestsInMenu: {
-    id: 0,
-    key: 'showConsultationRequestsInMenu',
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  },
-  showProjectTypeInProgram: {
-    id: 0,
-    key: 'showProjectTypeInProgram',
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  },
+
   maxLessonsNestingInProgram: {
-    id: 0,
+    id: -4,
     key: 'maxLessonsNestingInProgram',
     group: 'global',
     value: '0',
@@ -153,6 +180,20 @@ const initialData: InitialDataRecords = {
     type: 'number',
     data: 0,
   },
+
+  minTopicNestingInProgram: {
+    id: -5,
+    key: 'minTopicNestingInProgram',
+    group: 'global',
+    value: '0',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'number',
+    data: 0,
+  },
+
+  ...booleanSettings,
 };
 
 const TableList: React.FC = () => {
@@ -175,33 +216,11 @@ const TableList: React.FC = () => {
     },
 
     {
-      title: <FormattedMessage id="enumerable" defaultMessage="enumerable" />,
-      dataIndex: 'enumerable',
+      title: <FormattedMessage id="value" defaultMessage="value" />,
+      dataIndex: 'value',
       hideInForm: true,
       hideInSearch: true,
-      render: (_, record) => (
-        <Tag color={record.enumerable ? 'success' : 'error'}>
-          <FormattedMessage
-            id={record.enumerable ? 'true' : 'false'}
-            defaultMessage={record.enumerable ? 'true' : 'false'}
-          />
-        </Tag>
-      ),
-    },
-
-    {
-      title: <FormattedMessage id="public" defaultMessage="public" />,
-      dataIndex: 'public',
-      hideInForm: true,
-      hideInSearch: true,
-      render: (_, record) => (
-        <Tag color={record.public ? 'success' : 'error'}>
-          <FormattedMessage
-            id={record.public ? 'true' : 'false'}
-            defaultMessage={record.public ? 'true' : 'false'}
-          />
-        </Tag>
-      ),
+      render: (_, record) => record.value,
     },
     {
       hideInSearch: true,
@@ -283,6 +302,8 @@ const TableList: React.FC = () => {
         headerTitle={intl.formatMessage({
           id: 'menu.settings',
         })}
+        search={false}
+        toolBarRender={false}
         actionRef={actionRef}
         rowKey="id"
         request={({ pageSize, current }) => {

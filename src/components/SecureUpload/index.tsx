@@ -2,7 +2,7 @@ import { ProFormUploadButton } from '@ant-design/pro-form';
 import { Form } from 'antd';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import type { UploadFile } from 'antd/lib/upload/interface';
-import type { PropsWithChildren } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import ConditionalWrap from 'conditional-wrap';
 import type { FormProps } from 'antd';
@@ -20,6 +20,9 @@ export type SecureUploadType<T = API.File> = {
   wrapInForm?: boolean;
   title?: string;
   formProps?: FormProps;
+  maxFiles?: number;
+  clearListAfterUpload?: boolean;
+  hideLabel?: boolean;
 };
 
 function SecureUpload<Type = API.File>({
@@ -33,7 +36,11 @@ function SecureUpload<Type = API.File>({
   wrapInForm = true,
   title,
   formProps,
+  maxFiles,
+  clearListAfterUpload,
+  hideLabel,
 }: PropsWithChildren<SecureUploadType<Type>>) {
+  const [infoState, setInfoState] = useState<UploadChangeParam<UploadFile<any>>>();
   const intl = useIntl();
 
   if (data && data[name]) {
@@ -58,16 +65,22 @@ function SecureUpload<Type = API.File>({
           id: 'upload_click_here',
         })}
         onChange={(info) => {
+          setInfoState(info);
           if (onChange) {
             onChange(info);
           }
-          if (info.file.status === 'done' && onUpload) {
-            onUpload(info.file.response);
+          if (info.file.status === 'done') {
+            if (onUpload) {
+              onUpload(info.file.response);
+            }
+            if (clearListAfterUpload) {
+              setInfoState(undefined);
+            }
           }
         }}
         // name={name}
-        label={<FormattedMessage id="upload" />}
-        max={2}
+        label={!hideLabel && <FormattedMessage id="upload" />}
+        max={maxFiles ?? 2}
         fieldProps={{
           data,
           accept,
@@ -76,6 +89,7 @@ function SecureUpload<Type = API.File>({
         }}
         action={`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`}
         extra={extra}
+        fileList={infoState?.fileList}
       />
     </ConditionalWrap>
   );

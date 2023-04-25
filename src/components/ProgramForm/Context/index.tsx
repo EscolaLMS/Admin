@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
-import { useLocation } from 'umi';
+import { useIntl, useLocation } from 'umi';
 import { history } from 'umi';
 import type { Location } from 'history';
 
@@ -152,6 +152,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   id,
 }) => {
   const [state, setState] = useState<API.CourseProgram>();
+  const intl = useIntl();
 
   const flatTopics: API.Topic[] = useMemo(() => {
     return state && state.lessons ? getFlatTopics(state.lessons) : [];
@@ -203,7 +204,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       );
       return lesson ? lesson.id : null;
     },
-    [state],
+    [flatLessons],
   );
 
   const currentEditMode = useMemo<CurrentEditMode>(() => {
@@ -232,7 +233,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         isNew: true,
         id: state ? state.lessons.length + 1 : getRandomId(), // New Lesson
         order: 0,
-        title: 'Add title here',
+        title: intl.formatMessage({ id: 'add_title_here' }),
         active: true,
         parent_id: parentId,
       };
@@ -472,7 +473,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       const lesson_id = getLessonIdByTopicId(topic_id);
 
       const lesson = flatLessons.find((lesson_item) => lesson_item.id === lesson_id);
-
       if (!lesson) {
         return;
       }
@@ -480,8 +480,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       const topic = flatTopics?.find((topic_item) => topic_item.id === topic_id);
 
       const isNew = topic?.isNew;
-
-      if (isNew) {
+      if (isNew && !topic.topicable) {
         setState((prevState) => ({
           ...prevState,
           lessons: recursiveDeleteTopic(prevState?.lessons ?? [], topic_id),
@@ -634,7 +633,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
       lesson_id,
       isNew: true,
       id: getRandomId(),
-      title: 'Add new title here',
+      title: intl.formatMessage({ id: 'add_title_here' }),
       active: true,
       topicable_type: type,
     };
@@ -667,6 +666,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           })
         : [],
     }));
+    // Update topic id in params after receiving from server
+    history.push(`/courses/list/${id}/program/?topic=${info.file.response.data.id}`);
   };
 
   const cloneTopic = useCallback(

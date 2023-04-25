@@ -9,14 +9,16 @@ import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 export const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="title" defaultMessage="title" />,
     dataIndex: 'title',
-    hideInSearch: true,
+    hideInSearch: false,
+    sorter: true,
     width: '80%',
   },
 ];
@@ -59,7 +61,9 @@ const Questionnaire: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={false}
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Link to="/other/questionnaire/new" key="addnew">
             <Button type="primary" key="primary">
@@ -67,8 +71,19 @@ const Questionnaire: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={() => {
-          return questionnaire().then((response) => {
+        request={({ pageSize, current, title }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return questionnaire({
+            pageSize,
+            current,
+            title,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
+          }).then((response) => {
             if (response.success) {
               return {
                 data: response.data,

@@ -15,6 +15,7 @@ export const TableColumns: ProColumns<EscolaLms.ModelFields.Models.Metadata>[] =
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
@@ -96,11 +97,16 @@ export const ModelFields: React.FC<{
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
-        request={() => {
+        request={({ pageSize, current }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
 
           return fetchFields({
+            page: current,
+            per_page: pageSize,
             class_type,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {

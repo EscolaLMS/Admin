@@ -20,7 +20,7 @@ import './style.css';
 const { Title } = Typography;
 
 export enum ModelTypes {
-  course = 1,
+  COURSE = 1,
 }
 
 export const QuestionareForm = () => {

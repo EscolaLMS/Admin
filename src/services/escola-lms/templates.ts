@@ -1,14 +1,7 @@
 import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
-export async function templates(
-  params?: EscolaLms.Templates.Http.Requests.TemplateListingRequest & {
-    // query
-    current?: number;
-    pageSize?: number;
-  },
-  options?: RequestOptionsInit,
-) {
+export async function templates(params?: API.TemplatesParams, options?: RequestOptionsInit) {
   return request<API.TemplateList>(`/api/admin/templates`, {
     method: 'GET',
     useCache: false,

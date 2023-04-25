@@ -6,8 +6,8 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { userGroups, deleteUserGroup, userGroupsTree } from '@/services/escola-lms/user_groups';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import UserGroupSelect from '../../components/UserGroupSelect';
-import TypeButtonDrawer from '../../components/TypeButtonDrawer';
+import UserGroupSelect from '@/components/UserGroupSelect';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 import { Tree } from '@/components/Tree';
 
@@ -18,7 +18,7 @@ const handleRemove = async (id: number) => {
 
 export const TableColumns: ProColumns<API.UserGroup>[] = [
   {
-    title: <FormattedMessage id="search" defaultMessage="search" />,
+    title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'search',
     hideInSearch: false,
     hideInTable: true,
@@ -29,6 +29,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
@@ -39,6 +40,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="registerable" defaultMessage="registerable" />,
@@ -56,6 +58,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
   },
   {
     hideInSearch: false,
+    hideInTable: true,
     title: <FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />,
     tooltip: <FormattedMessage id="parent_id_group_tooltip" />,
     dataIndex: 'parent_id',
@@ -73,6 +76,11 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
         />
       );
     },
+  },
+  {
+    hideInSearch: true,
+    title: <FormattedMessage id="parent_id_group" defaultMessage="parent_id_group" />,
+    dataIndex: 'parent_id',
     render: (_, record) => {
       if (record.parent_id) {
         return (
@@ -146,11 +154,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Button key={'show_tree'} onClick={() => setShowTree(true)}>
             <FormattedMessage id="show_tree" defaultMessage="Show Tree" />
@@ -161,8 +167,16 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, search, parent_id }) => {
-          return userGroups({ pageSize, current, search, parent_id }).then((response) => {
+        request={({ pageSize, current, search, parent_id }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return userGroups({
+            per_page: pageSize,
+            page: current,
+            search: search || undefined,
+            parent_id,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+          }).then((response) => {
             if (response.success) {
               setData(response.data);
               return {

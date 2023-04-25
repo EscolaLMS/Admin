@@ -135,6 +135,21 @@
         access: 'courseAccessListPermission',
         component: './CourseAccess',
       },
+      {
+        path: '/courses/quiz-reports',
+        name: 'Quiz Reports',
+        icon: 'read',
+        access: 'coursesQuizReportsListPermission',
+        component: './QuizReports',
+      },
+      {
+        path: '/courses/quiz-reports/:reportId',
+        hideInMenu: true,
+        name: 'Details',
+        icon: 'read',
+        access: 'coursesQuizReportsListPermission',
+        component: './QuizReports/details',
+      },
     ],
   },
   {
@@ -379,6 +394,14 @@
         path: '/configuration/translations',
         access: 'translationListPermission',
         component: './Translations',
+      },
+
+      {
+        name: 'Panel Translations',
+        icon: 'translation',
+        path: '/configuration/admin_translations',
+        access: 'adminTranslationListPermission',
+        component: './Translations/admin',
       },
     ],
   },

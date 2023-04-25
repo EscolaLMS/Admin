@@ -1,8 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Tag, Typography } from 'antd';
 
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
@@ -16,8 +17,9 @@ import TranslationModalForm from './components/ModalForm';
 
 export const TableColumns: ProColumns<API.Translation>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
+    sorter: true,
     hideInSearch: true,
   },
   {
@@ -35,6 +37,16 @@ export const TableColumns: ProColumns<API.Translation>[] = [
     dataIndex: 'text',
     sorter: true,
     hideInSearch: true,
+    render: (_, record) => (
+      <Fragment>
+        {Object.entries(record.text).map((txt) => (
+          <Typography.Paragraph key={txt[0]}>
+            <Tag>{txt[0]}</Tag>
+            {txt[1]}
+          </Typography.Paragraph>
+        ))}
+      </Fragment>
+    ),
   },
 ];
 
@@ -83,6 +95,9 @@ const Translations: React.FC = () => {
           id: 'menu.Configuration.Translations',
           defaultMessage: 'Translations',
         })}
+        search={{
+          layout: 'vertical',
+        }}
         loading={loading}
         actionRef={actionRef}
         rowKey="id"
@@ -97,13 +112,16 @@ const Translations: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
           </Button>,
         ]}
-        request={({ pageSize, current, group, key }) => {
+        request={({ pageSize, current, group, key }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return translations({
             pageSize,
             current,
             group,
             key,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           })
             .then((response) => {
               setLoading(false);

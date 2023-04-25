@@ -5,8 +5,8 @@ import type { RequestOptionsInit } from 'umi-request';
 export async function translations(
   params?: API.PageParams &
     API.PaginationParams & {
-      group: string;
-      key: string;
+      group?: string;
+      key?: string;
     },
   options?: RequestOptionsInit,
 ) {

@@ -60,6 +60,10 @@ export const getTypeIcon = (type: string | undefined) => {
   return <ExclamationCircleOutlined />;
 };
 
+const topicCanHaveEmptyValue = (type: TopicType) => {
+  return [TopicType.GiftQuiz, TopicType.Project, TopicType.GiftQuiz].includes(type);
+};
+
 export const Topic: React.FC = () => {
   const {
     state,
@@ -95,11 +99,7 @@ export const Topic: React.FC = () => {
       };
     });
     if (topic?.isNew) {
-      setSaveIsDisabled(
-        true &&
-          (topic.topicable_type !== TopicType.Project ||
-            topic.topicable_type !== TopicType.GiftQuiz),
-      );
+      setSaveIsDisabled(true && !topicCanHaveEmptyValue(topic.topicable_type));
     }
   }, [type, topic]);
 
@@ -149,11 +149,7 @@ export const Topic: React.FC = () => {
       json: topics.json ? JSON.stringify(topics.json) : null,
     };
 
-    if (
-      (values.topicable_type === TopicType.Project ||
-        values.topicable_type === TopicType.GiftQuiz) &&
-      !values.value
-    ) {
+    if (topicCanHaveEmptyValue(topic.topicable_type) && !values.value) {
       values.value = 'theProject';
     }
 
@@ -182,7 +178,12 @@ export const Topic: React.FC = () => {
           height: '100%',
         }}
       >
-        <Col span={24 - 8}>
+        <Col
+          span={24 - 8}
+          style={{
+            marginBottom: '46px',
+          }}
+        >
           <Divider>
             {topic && getTypeIcon(getTypeName(topic))}{' '}
             {topic?.topicable_type && topic?.topicable_type.split('\\').pop()}{' '}
@@ -209,10 +210,14 @@ export const Topic: React.FC = () => {
                 type={type}
                 topic={topic}
                 currentState={topics}
-                onChange={() => setLoading(true)}
+                onChange={(info) => {
+                  setLoading(true);
+                  if (info.file.status === 'removed') {
+                    setLoading(false);
+                  }
+                }}
                 onUpdate={(info) => {
-                  if (topic.id && onTopicUploaded)
-                    onTopicUploaded(info.file.response.data.id, info);
+                  if (topic.id && onTopicUploaded) onTopicUploaded(topic.id, info);
 
                   // refetch lessons to get if video is being transcoded
                   if (topic.topicable_type === TopicType.Video) {
@@ -234,13 +239,18 @@ export const Topic: React.FC = () => {
                   setLoading(false);
                 }}
                 disabled={false}
+                maxFiles={1}
+                clearListAfterUpload={true}
               />
             )}
           {type && type === TopicType.OEmbed && (
             <Oembed text={topics.value} onChange={(value) => updateValue('value', value)} />
           )}
           {type && type === TopicType.Project && (
-            <Project onChange={(value) => updateValue('value', value)} />
+            <Project
+              onChange={(value) => updateValue('notify_users' as keyof API.Topic, value)}
+              topicable={topic.topicable as API.TopicProject['topicable']}
+            />
           )}
           {type && type === TopicType.GiftQuiz && (
             <GiftQuiz

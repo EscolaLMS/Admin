@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
-import { GiftQuestions } from '@/components/GiftQuizQuestions';
+import { Table } from '@/components/GiftQuizQuestions/table';
 import { Divider } from 'antd';
 import ProForm, { ProFormText, ProFormGroup } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
+import Typography from 'antd/lib/typography/Typography';
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
@@ -11,12 +12,13 @@ export const GiftQuiz: React.FC<{
   onChange: (key: 'max_attempts' | 'max_execution_time', value: number | null) => void;
 }> = ({ topicable, onAdded, onRemoved, onChange }) => {
   const intl = useIntl();
+
   return (
     <Fragment>
       <ProForm
         initialValues={{
-          max_attempts: topicable.max_attempts,
-          max_execution_time: topicable.max_execution_time,
+          max_attempts: topicable ? topicable.max_attempts : undefined,
+          max_execution_time: topicable ? topicable.max_execution_time : undefined,
         }}
         onValuesChange={(values) => {
           const key = Object.keys(values)[0] as 'max_attempts' | 'max_execution_time';
@@ -50,12 +52,21 @@ export const GiftQuiz: React.FC<{
 
       <Divider />
 
-      <GiftQuestions
-        questions={topicable.questions}
-        quizId={topicable.id}
-        onAdded={onAdded}
-        onRemoved={onRemoved}
-      />
+      {topicable ? (
+        <Table
+          questions={topicable.questions}
+          quizId={topicable.id}
+          onAdded={onAdded}
+          onRemoved={onRemoved}
+        />
+      ) : (
+        <Typography>
+          <FormattedMessage
+            id="pressSaveToCreateQuestions"
+            defaultMessage="Create this Topic before adding questions"
+          />
+        </Typography>
+      )}
     </Fragment>
   );
 };

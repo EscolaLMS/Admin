@@ -76,10 +76,9 @@ const TableList: React.FC = () => {
     {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
-      sorter: false,
+      sorter: true,
       search: false,
     },
-
     {
       title: <FormattedMessage id="newH5P" defaultMessage="newH5P" />,
       dataIndex: 'upload',
@@ -89,6 +88,7 @@ const TableList: React.FC = () => {
       renderFormItem: () => [
         <UploadH5P
           key={'upload'}
+          hideLabel
           onSuccess={() => {
             if (actionRef.current) {
               actionRef.current.reload();
@@ -190,11 +190,9 @@ const TableList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={
-          {
-            // labelWidth: 120,
-          }
-        }
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Link to="/courses/h5ps/new" key={'new'}>
             <Button type="primary" key="primary">
