@@ -11,6 +11,7 @@ import consultations from './pl-PL/consultations';
 import fabric from './pl-PL/fabric';
 import vouchers from './pl-PL/vouchers';
 import courses from './pl-PL/courses';
+import events from './pl-PL/events';
 
 export default {
   courseAccessEnquiries: 'Zapytania od dostęp do kursu',
@@ -45,6 +46,7 @@ export default {
   ...fabric,
   ...vouchers,
   ...courses,
+  ...events,
   branding: 'Branding',
   product_details: 'Ustawienia produktu',
   title: 'Tytuł',

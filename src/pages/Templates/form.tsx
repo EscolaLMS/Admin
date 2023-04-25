@@ -21,20 +21,6 @@ import TemplateManuallyTriggerProduct from '@/components/TemplateManuallyTrigger
 
 const { Panel } = Collapse;
 
-const variablesForChannel = (
-  variables: API.TemplateVariables,
-  channel: string,
-): Record<string, string> => {
-  return variables
-    ? Object.keys(variables).reduce((acc, curr) => {
-        if (variables[curr][channel]) {
-          return { ...acc, [curr]: curr };
-        }
-        return acc;
-      }, {})
-    : {};
-};
-
 // creates sections collections for post template
 const createEntries = (data: Record<string, string>): API.TemplateSections[] => {
   return Object.entries(data).map((entry) => {
@@ -176,6 +162,20 @@ export default () => {
     fetchData();
   }, [id, variables]);
 
+  const variablesForChannel = useCallback(
+    (channel: string): Record<string, string> => {
+      return variables
+        ? Object.keys(variables).reduce((acc, curr) => {
+            if (variables[curr][channel]) {
+              return { ...acc, [curr]: intl.formatMessage({ id: curr, defaultMessage: curr }) };
+            }
+            return acc;
+          }, {})
+        : {};
+    },
+    [variables],
+  );
+
   return (
     <PageContainer
       title={
@@ -215,7 +215,7 @@ export default () => {
               name="event"
               width="lg"
               label={<FormattedMessage id="event" />}
-              valueEnum={variables ? variablesForChannel(variables, channels[template]) : {}}
+              valueEnum={variables ? variablesForChannel(channels[template]) : {}}
               placeholder={intl.formatMessage({
                 id: 'event',
               })}

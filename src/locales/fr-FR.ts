@@ -11,6 +11,7 @@ import consultations from './fr-FR/consultations';
 import fabric from './fr-FR/fabric';
 import vouchers from './fr-FR/vouchers';
 import courses from './fr-FR/courses';
+import events from './fr-FR/events';
 
 export default {
   parent: 'Parent',
@@ -43,6 +44,7 @@ export default {
   ...fabric,
   ...vouchers,
   ...courses,
+  ...events,
   branding: 'Image de marque',
   product_details: 'Détails du produit',
   title: 'Titre',
