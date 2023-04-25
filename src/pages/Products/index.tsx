@@ -48,7 +48,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   },
 
   {
-    title: <FormattedMessage id="productable" defaultMessage="productable" />,
+    title: <FormattedMessage id="items" defaultMessage="items" />,
     dataIndex: 'productable',
     key: 'productable',
     sorter: false,

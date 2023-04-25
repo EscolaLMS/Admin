@@ -3,9 +3,10 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/model-fields */
 export async function fields(
-  params: {
-    class_type: string;
-  },
+  params: API.PageParams &
+    API.PaginationParams & {
+      class_type: string;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata[]>>(

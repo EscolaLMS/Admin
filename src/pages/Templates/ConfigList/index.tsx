@@ -35,7 +35,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
     {
       title: <FormattedMessage id="name" defaultMessage="name" />,
       dataIndex: 'name',
-      hideInSearch: true,
+      hideInSearch: false,
       sorter: true,
     },
     {
@@ -78,7 +78,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   );
 
   return (
-    <ProTable<API.TemplateListItem, API.PageParams & API.PaginationParams>
+    <ProTable<API.TemplateListItem, API.TemplatesParams>
       headerTitle={intl.formatMessage({
         id: 'templates',
         defaultMessage: 'templates',
@@ -86,7 +86,9 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       loading={loading}
       actionRef={actionRef}
       rowKey="id"
-      search={false}
+      search={{
+        layout: 'vertical',
+      }}
       toolBarRender={() => [
         <Link key={'new'} to={`/configuration/templates/${templateType}/new`}>
           <Button type="primary" key="primary">
@@ -94,13 +96,14 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
           </Button>
         </Link>,
       ]}
-      request={({ pageSize, current }, sort) => {
-        const sortArr = sort && Object.entries(sort)[0];
+      request={({ pageSize, current, name }, sort) => {
         setLoading(true);
+        const sortArr = sort && Object.entries(sort)[0];
         return templates({
-          per_page: pageSize,
-          page: current,
+          pageSize,
+          current,
           channel,
+          name: name || undefined,
           order_by: sortArr && sortArr[0],
           order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
         }).then((response) => {

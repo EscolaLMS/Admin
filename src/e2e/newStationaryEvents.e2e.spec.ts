@@ -19,7 +19,12 @@ test.describe('New stationary events', () => {
     await page.locator('text=Today >> nth=0').click();
     await page.locator('#finished_at').click();
     await page.locator('text=Today >> nth=1').click();
-    await page.locator("div[role='textbox'] >> nth=1").fill('test description');
+    await page.type('#short_desc', 'short desctiption');
+    await page.click('.placeholder >>nth=0');
+    await page.type('.form-wysiwyg-markdown >>nth=0', 'program test');
+    await page.click('.placeholder');
+    await page.type('.form-wysiwyg-markdown >>nth=1', 'Description test');
+    // await page.locator("div[role='textbox'] >> nth=1").fill('test description');
     await page.locator('button:has-text("Submit")').click();
 
     page.once('dialog', (dialog) => {
@@ -31,9 +36,11 @@ test.describe('New stationary events', () => {
 
     await page.goto(`${BASE_URL}/#/other/stationary-events`);
     await page.waitForTimeout(3500);
-    await page.locator('#name').fill('new event');
-    await page.locator('button:has-text("Query")').click();
-    await page.locator('text=new event2022 >> button').nth(1).click();
+    await page.type('#name', 'new event');
+    await page.waitForTimeout(2000);
+    await page.getByRole('button', { name: /Query/i }).click();
+    await new Promise((r) => setTimeout(r, 2000));
+    await page.click('.anticon-delete>>nth=0');
     const ConfirmDeleteStationaryEvent = await page.locator('.ant-popover-message');
     await expect(ConfirmDeleteStationaryEvent).toContainText('Are you sure to delete this record?');
     await page.locator('button:has-text("Yes")').click();

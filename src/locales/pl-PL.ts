@@ -10,6 +10,7 @@ import templates from './pl-PL/templates';
 import consultations from './pl-PL/consultations';
 import fabric from './pl-PL/fabric';
 import vouchers from './pl-PL/vouchers';
+import courses from './pl-PL/courses';
 
 export default {
   courseAccessEnquiries: 'Zapytania od dostęp do kursu',
@@ -43,6 +44,7 @@ export default {
   ...consultations,
   ...fabric,
   ...vouchers,
+  ...courses,
   branding: 'Branding',
   product_details: 'Ustawienia produktu',
   title: 'Tytuł',
@@ -546,7 +548,7 @@ export default {
   public_course: 'Publiczny',
   no_pricing: 'Brak ceny',
   public_label: ' Publiczny ',
-  public_tooltip: ' Kursy jest dostępny publicznie bez potrzeby posiadania konta ',
+  public_tooltip: ' Kurs jest dostępny publicznie bez potrzeby posiadania konta ',
   changesToBeApproved: 'Zmiany do zatwierdzenia',
   orderHasBeenChanged: 'Kolejność została zmieniona',
   or: 'lub',
@@ -592,4 +594,12 @@ export default {
   'Consultation Not Found': 'Konsultacja nie została znaleziona',
   'Order Not Found': 'Zamówienie nie zostało znalezione',
   field_required: 'Pole jest wymagane',
+  add_title_here: 'Dodaj tytuł',
+  user_projects: 'Zadania użytkowników',
+  project_solutions: 'Rozwiązania zadań użytkowników',
+  'Course cloning started. This may take a while.': 'Trwa klonowanie kursu. To może zająć chwilę',
+  'Course deleted successfully': 'Kurs został usunięty',
+  'Course imported successfully': 'Kurs został zaimportowany',
+  'Course updated successfully': 'Kurs został zaktualizowany',
+  'Export created': 'Poprawnie wyeksportowano plik',
 };
