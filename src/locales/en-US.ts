@@ -336,7 +336,7 @@ export default {
   back_home: 'Back to main page',
   '403_subtitle': 'Sorry, you are not authorized to access this page.',
   '404_subtitle': 'Sorry, the page you visited does not exist.',
-  user_id: 'User ID',
+  user_id: 'User ID: ',
   order_id: 'Order ID: ',
   course_id: 'Course ID: ',
   consultation_id: 'Consultation ID: ',

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import React, { useState } from 'react';
 import './index.css';
 
-import { Button, Popconfirm, Tooltip } from 'antd';
+import { Button, Popconfirm, Space, Tooltip } from 'antd';
 import { arrayMoveImmutable } from 'array-move';
 import type { SortableContainerProps, SortableElementProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
@@ -21,7 +21,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import AgendaModalForm from './ModalForm';
 import type { AgendaType } from '@/pages/StationaryEvents/form';
-import { user as fetchUser } from '@/services/escola-lms/user';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 const SortableItem: ComponentClass<SortableElementProps & { className?: string }, any> =
   SortableElement((props: React.HTMLAttributes<HTMLTableRowElement>) => <tr {...props} />);
@@ -37,14 +37,8 @@ const DragHandle = SortableHandle(() => (
   />
 ));
 
-interface RenderAgendaTutor {
-  id: number;
-  first_name: string;
-  last_name: string;
-}
-
 interface RenderAgendaType extends Omit<AgendaType, 'tutors'> {
-  tutors: (RenderAgendaTutor | null)[];
+  tutors: number[];
 }
 
 const Agenda = ({
@@ -101,8 +95,14 @@ const Agenda = ({
       title: <FormattedMessage id="tutors" defaultMessage="tutors" />,
       dataIndex: 'tutors',
       hideInSearch: true,
-      renderText: (tutors: RenderAgendaTutor[]) =>
-        tutors.map(({ first_name, last_name }) => `${first_name} ${last_name}`).join(', '),
+      render: (_, { tutors }) =>
+        tutors && (
+          <Space>
+            {tutors.map((tutorId: number) => (
+              <TypeButtonDrawer key={tutorId} type={'App\\Models\\User'} type_id={tutorId} />
+            ))}
+          </Space>
+        ),
     },
     {
       width: '18%',
@@ -148,21 +148,6 @@ const Agenda = ({
     return <SortableItem index={index} {...updatedRestProps} />;
   };
 
-  const getUsersFullNames = async (ids: number[]): Promise<(RenderAgendaTutor | null)[]> => {
-    const usersRequests = ids.map((id) => fetchUser(id));
-    const response = await Promise.all(usersRequests);
-    const results = await response.map((user) =>
-      user.success
-        ? {
-            id: user.data.id,
-            first_name: user.data.first_name,
-            last_name: user.data.last_name,
-          }
-        : null,
-    );
-    return results;
-  };
-
   useEffect(() => {
     setCandidateData([]);
     setReceivedData(data);
@@ -175,17 +160,7 @@ const Agenda = ({
     (async () => {
       if (!receivedData || !candidateData) return;
 
-      const dataRequests: Promise<RenderAgendaType>[] = [...receivedData, ...candidateData].map(
-        async (element) => {
-          const results = await getUsersFullNames(element.tutors);
-          return {
-            ...element,
-            tutors: results,
-          };
-        },
-      );
-
-      const dataResponse = await Promise.all(dataRequests);
+      const dataResponse = [...receivedData, ...candidateData];
 
       const uniqueData = dataResponse.reduce((acc, item, _, arr) => {
         const value = arr.filter(({ id }) => id === item.id);
@@ -227,7 +202,7 @@ const Agenda = ({
         subtitle,
         hour,
         description,
-        tutors: tutors.map((tutor) => (tutor ? tutor.id : null)).filter(Boolean),
+        tutors,
       };
     });
     onCreate(JSON.stringify(a));
