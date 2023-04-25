@@ -10,6 +10,7 @@ import templates from './en-US/templates';
 import consultations from './en-US/consultations';
 import fabric from './en-US/fabric';
 import vouchers from './en-US/vouchers';
+import courses from './en-US/courses';
 
 export default {
   actions: 'Actions',
@@ -65,7 +66,7 @@ export default {
   ...consultations,
   ...fabric,
   ...vouchers,
-
+  ...courses,
   branding: 'Branding',
   product_details: 'Product details',
   title: 'Title',
@@ -605,4 +606,12 @@ export default {
   'Consultation Not Found': 'Consultation Not Found',
   'Order Not Found': 'Order Not Found',
   field_required: 'Field is required',
+  add_title_here: 'Add title here',
+  user_projects: 'User projects',
+  project_solutions: 'User project solutions',
+  'Course cloning started. This may take a while.': 'Course cloning started. This may take a while',
+  'Course deleted successfully': 'Course deleted successfully',
+  'Course imported successfully': 'Course imported successfully',
+  'Course updated successfully': 'Course updated successfully',
+  'Export created': 'File exported successfully',
 };

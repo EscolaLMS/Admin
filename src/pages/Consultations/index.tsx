@@ -231,7 +231,7 @@ const Consultations: React.FC = () => {
             dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
 
           return consultations({
-            name,
+            name: name || undefined,
             'categories[]': category_id,
             per_page: pageSize,
             page: current,
