@@ -616,4 +616,7 @@ export default {
   'Course imported successfully': 'Course imported successfully',
   'Course updated successfully': 'Course updated successfully',
   'Export created': 'File exported successfully',
+  'QuestionType.rate': 'Question',
+  'QuestionType.text': 'Text',
+  'QuestionType.review': 'Review (rating + comment)',
 };

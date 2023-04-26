@@ -604,4 +604,7 @@ export default {
   'Course imported successfully': 'Kurs został zaimportowany',
   'Course updated successfully': 'Kurs został zaktualizowany',
   'Export created': 'Poprawnie wyeksportowano plik',
+  'QuestionType.rate': 'Pytanie',
+  'QuestionType.text': 'Tekst',
+  'QuestionType.review': 'Recenzja (ocena + komentarz)',
 };

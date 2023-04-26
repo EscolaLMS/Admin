@@ -1,18 +1,32 @@
 import React, { useEffect } from 'react';
 import { Form } from 'antd';
-import { ProFormText, ProFormSwitch, ModalForm, ProFormDigit } from '@ant-design/pro-form';
+import {
+  ProFormText,
+  ProFormSwitch,
+  ModalForm,
+  ProFormDigit,
+  ProFormSelect,
+} from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 import { getQuestion } from '@/services/escola-lms/questionnaire';
+import type { DefaultOptionType } from 'antd/lib/select';
+
+enum TypeOptions {
+  Rate = 'rate',
+  Text = 'text',
+  Review = 'review',
+}
 
 export const QuestionModalForm: React.FC<{
   id?: number | false;
   visible: boolean;
   onVisibleChange: (visible: boolean) => void;
   onFinish: (formData: API.Question) => Promise<boolean | void>;
+  questionsList: EscolaLms.Questionnaire.Models.Question[];
 }> = (props) => {
   const intl = useIntl();
 
-  const { visible, onVisibleChange, onFinish, id } = props;
+  const { visible, onVisibleChange, onFinish, id, questionsList } = props;
 
   const [form] = Form.useForm();
 
@@ -26,6 +40,15 @@ export const QuestionModalForm: React.FC<{
     }
   }, [id, form]);
 
+  const questionTypeOptions: DefaultOptionType[] = Object.values(TypeOptions).map((name) => ({
+    name,
+    label: intl.formatMessage({
+      id: `QuestionType.${name}`,
+    }),
+    value: name,
+    disabled: name === 'review' && questionsList.findIndex(({ type }) => type === 'review') !== -1,
+  }));
+
   return (
     <ModalForm
       form={form}
@@ -38,6 +61,12 @@ export const QuestionModalForm: React.FC<{
       onVisibleChange={onVisibleChange}
       onFinish={onFinish}
     >
+      <ProFormSelect
+        name="type"
+        options={questionTypeOptions}
+        label={<FormattedMessage id="type" />}
+        initialValue={TypeOptions.Rate}
+      />
       <ProFormText
         width="lg"
         name="title"
