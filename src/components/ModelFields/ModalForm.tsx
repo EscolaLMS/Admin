@@ -90,7 +90,7 @@ export const ModelFieldsModalForm: React.FC<{
         tooltip={<FormattedMessage id="type_tooltip" defaultMessage="type_tooltip" />}
         options={(Object.keys(ModelFieldType) as (keyof typeof ModelFieldType)[]).map((key) => ({
           label: intl.formatMessage({
-            id: ModelFieldType[key],
+            id: `model.${ModelFieldType[key]}`,
           }),
           value: ModelFieldType[key],
         }))}
@@ -123,7 +123,7 @@ export const ModelFieldsModalForm: React.FC<{
             </a>
           </span>
         }
-        tooltip={<FormattedMessage id="available-validation-rules" />}
+        tooltip={<FormattedMessage id="available-validation-rules-tooltip" />}
         valuePropName="value"
       >
         <JsonEditor />
@@ -171,7 +171,7 @@ export const ModelFieldsModalForm: React.FC<{
       <ProForm.Item
         name="extra"
         label={<FormattedMessage id="extra" />}
-        tooltip={<FormattedMessage id="extra" />}
+        tooltip={<FormattedMessage id="extra_tooltip" />}
         valuePropName="value"
       >
         <JsonEditor />
