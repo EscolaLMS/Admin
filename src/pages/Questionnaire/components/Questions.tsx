@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { message, Button, Tooltip, Popconfirm } from 'antd';
 import { addQuestion, deleteQuestion, editQuestion } from '@/services/escola-lms/questionnaire';
@@ -7,30 +7,6 @@ import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import QuestionModalForm from './QuestionModalForm';
 
-const TableColumns: ProColumns<API.Questionnaire>[] = [
-  {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
-    dataIndex: 'id',
-    hideInSearch: true,
-  },
-  {
-    title: <FormattedMessage id="title" defaultMessage="title" />,
-    dataIndex: 'title',
-    hideInSearch: true,
-    sorter: true,
-  },
-  {
-    title: <FormattedMessage id="description" defaultMessage="description" />,
-    dataIndex: 'description',
-    hideInSearch: true,
-  },
-  {
-    title: <FormattedMessage id="position" defaultMessage="position" />,
-    dataIndex: 'position',
-    hideInSearch: true,
-  },
-];
-
 const QuestionForm: React.FC<{
   questionnaireId: number | undefined;
   questions?: API.Question[];
@@ -38,6 +14,44 @@ const QuestionForm: React.FC<{
 }> = ({ questionnaireId, questions, fetchData }) => {
   const intl = useIntl();
   const [modalVisible, setModalVisible] = useState<number | false>(false);
+
+  const TableColumns: ProColumns<API.Questionnaire>[] = useMemo(
+    () => [
+      {
+        title: <FormattedMessage id="id" defaultMessage="id" />,
+        dataIndex: 'id',
+        hideInSearch: true,
+      },
+      {
+        title: <FormattedMessage id="title" defaultMessage="title" />,
+        dataIndex: 'title',
+        hideInSearch: true,
+        sorter: true,
+      },
+      {
+        title: <FormattedMessage id="type" defaultMessage="type" />,
+        dataIndex: 'type',
+        hideInSearch: true,
+        sorter: true,
+        renderText: (_, type) =>
+          intl.formatMessage({
+            // @ts-ignore TODO: Remove this ts-ignore when types ready
+            id: `QuestionType.${type.type}`,
+          }),
+      },
+      {
+        title: <FormattedMessage id="description" defaultMessage="description" />,
+        dataIndex: 'description',
+        hideInSearch: true,
+      },
+      {
+        title: <FormattedMessage id="position" defaultMessage="position" />,
+        dataIndex: 'position',
+        hideInSearch: true,
+      },
+    ],
+    [],
+  );
 
   const actionRef = useRef<ActionType>();
 
@@ -161,6 +175,7 @@ const QuestionForm: React.FC<{
         onVisibleChange={(value) => {
           return value === false && setModalVisible(false);
         }}
+        questionsList={questions ?? []}
         onFinish={async (value) => {
           const success = await handleUpdate(value, Number(modalVisible));
           if (success) {

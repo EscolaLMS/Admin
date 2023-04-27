@@ -31,7 +31,7 @@ const prepareObj = (arr: (API.Course | API.Webinar | API.Consultation)[]) =>
     };
   });
 
-export const CourseSelect: React.FC<{
+export const CollectionSelect: React.FC<{
   state?: {
     type: number;
   };
@@ -50,28 +50,16 @@ export const CourseSelect: React.FC<{
   const abortController = useRef<AbortController>();
 
   const modelCollectionMethod = useCallback(
-    (search: string) => {
+    (params: Parameters<typeof getCourses>[0]) => {
       switch (modelType) {
         case 'COURSE':
-          return getCourses(
-            { title: search || undefined },
-            { signal: abortController?.current?.signal },
-          );
+          return getCourses(params, { signal: abortController?.current?.signal });
         case 'WEBINAR':
-          return getWebinars(
-            { name: search || undefined },
-            { signal: abortController?.current?.signal },
-          );
+          return getWebinars(params, { signal: abortController?.current?.signal });
         case 'CONSULTATIONS':
-          return getConsultations(
-            { name: search || undefined },
-            { signal: abortController?.current?.signal },
-          );
+          return getConsultations(params, { signal: abortController?.current?.signal });
         default:
-          return getCourses(
-            { title: search || undefined },
-            { signal: abortController?.current?.signal },
-          );
+          return getCourses(params, { signal: abortController?.current?.signal });
       }
     },
     [modelType, abortController],
@@ -101,7 +89,7 @@ export const CourseSelect: React.FC<{
 
       abortController.current = new AbortController();
 
-      modelCollectionMethod(search || '')
+      modelCollectionMethod(search ? { title: search } : {})
         .then((response) => {
           if (response.success) {
             setModelCollection(prepareObj(response.data));
@@ -169,5 +157,3 @@ export const CourseSelect: React.FC<{
     </Select>
   );
 };
-
-export default CourseSelect;

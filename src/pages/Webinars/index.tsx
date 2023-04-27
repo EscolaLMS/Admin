@@ -4,10 +4,17 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag, Select, message } from 'antd';
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  DollarOutlined,
+  FireOutlined,
+} from '@ant-design/icons';
+import { Button, Tooltip, Popconfirm, Tag, Select, message, Typography } from 'antd';
 import { format } from 'date-fns/esm';
 import { deleteWebinar, webinars, generateYoutubeToken } from '@/services/escola-lms/webinars';
+import { roundTo } from '@/utils/utils';
 
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 import Tags from '@/components/Tags';
@@ -16,9 +23,10 @@ import TokenForm from './components/TokenForm';
 
 export const TableColumns: ProColumns<API.Webinar>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
@@ -34,11 +42,13 @@ export const TableColumns: ProColumns<API.Webinar>[] = [
   {
     title: <FormattedMessage id="name" defaultMessage="name" />,
     dataIndex: 'name',
+    sorter: true,
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
     hideInSearch: true,
+    sorter: true,
     renderFormItem: ({ type }) => {
       if (type === 'form') {
         return null;
@@ -92,25 +102,46 @@ export const TableColumns: ProColumns<API.Webinar>[] = [
     },
   },
   {
-    title: <FormattedMessage id="base_price" defaultMessage="base_price" />,
-    dataIndex: 'base_price',
-    hideInSearch: true,
+    title: <FormattedMessage id="product" defaultMessage="base_price" />,
+    dataIndex: 'product',
+    sorter: false,
+    valueType: 'textarea',
+    search: false,
+    render: (_, record) => {
+      if (record.product && record.product.price) {
+        return (
+          <Link to={`/courses/list/${record.id}/product`}>
+            <Button type="primary" icon={<DollarOutlined />}>
+              <span>{roundTo(record.product.price)}</span>
+            </Button>
+          </Link>
+        );
+      }
+      return (
+        <Typography>
+          <FireOutlined /> <FormattedMessage id="no_pricing" defaultMessage="no pricing" />
+        </Typography>
+      );
+    },
   },
   {
     title: <FormattedMessage id="duration" defaultMessage="duration" />,
     dataIndex: 'duration',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="active_from" defaultMessage="active_from" />,
     dataIndex: 'active_from',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => format(new Date(record.active_from), DAY_FORMAT),
   },
   {
     title: <FormattedMessage id="active_to" defaultMessage="active_to" />,
     dataIndex: 'active_to',
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => format(new Date(record.active_to), DAY_FORMAT),
   },
   {
@@ -197,8 +228,9 @@ const Webinars: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ name, status, dateRange, pageSize, current }) => {
+        request={({ name, status, dateRange, pageSize, current }, sort) => {
           setLoading(true);
+          const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
@@ -211,6 +243,8 @@ const Webinars: React.FC = () => {
             date_from,
             date_to,
             status,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           })
             .then((response) => {
               if (response.success) {
