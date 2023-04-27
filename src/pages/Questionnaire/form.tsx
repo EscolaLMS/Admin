@@ -11,7 +11,7 @@ import {
   getQuestionnaireModels,
 } from '@/services/escola-lms/questionnaire';
 import ProForm from '@ant-design/pro-form';
-import CourseSelect from '@/components/CourseSelect';
+import { CollectionSelect } from '@/components/CollectionSelect';
 import QuestionForm from './components/Questions';
 import QuestionAnswers from './components/Answers';
 import QuestionnaireRaports from './components/Raports';
@@ -232,7 +232,7 @@ export const QuestionareForm = () => {
               })}`}
               disabled={isNew}
             >
-              <CourseSelect
+              <CollectionSelect
                 defaultValue={
                   (models ? models[model.id]?.map((item: number | string) => item) : []) as (
                     | number
