@@ -154,7 +154,7 @@ export default ({
         if (isNew) {
           response = await createUser(postData);
           if (response.success) {
-            history.push(`/users/${response.data.id}#/user_info`);
+            history.push(`/users/${response.data.id}/user_info`);
           }
         } else {
           response = await updateUser(Number(user), postData);
