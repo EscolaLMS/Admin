@@ -31,7 +31,7 @@ const prepareObj = (arr: (API.Course | API.Webinar | API.Consultation)[]) =>
     };
   });
 
-export const CourseSelect: React.FC<{
+export const CollectionSelect: React.FC<{
   state?: {
     type: number;
   };
@@ -156,5 +156,3 @@ export const CourseSelect: React.FC<{
     </Select>
   );
 };
-
-export default CourseSelect;
