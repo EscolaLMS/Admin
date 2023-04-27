@@ -8,7 +8,7 @@ import {
   getConsultation,
 } from '@/services/escola-lms/consultations';
 import { FormattedMessage } from 'umi';
-import type { DefaultOptionType } from 'antd/lib/select';
+import type { DefaultOptionType, LabeledValue } from 'antd/lib/select';
 
 type CollectionModelItem = {
   id: number;
@@ -38,10 +38,10 @@ export const CollectionSelect: React.FC<{
   multiple?: boolean;
   value?: string;
   onChange?: (
-    value: string | string[] | number | number[],
+    value: string | string[] | number | number[] | LabeledValue | LabeledValue[],
     option: DefaultOptionType | DefaultOptionType[],
   ) => void;
-  defaultValue?: string | string[] | number | number[];
+  defaultValue?: string | string[] | number | number[] | LabeledValue | LabeledValue[];
   modelType?: string;
 }> = ({ value, onChange, multiple = false, defaultValue, modelType = 'COURSE' }) => {
   const [modelCollection, setModelCollection] = useState<CollectionModelItem[]>([]);
@@ -55,9 +55,9 @@ export const CollectionSelect: React.FC<{
         case 'COURSE':
           return getCourses(params, { signal: abortController?.current?.signal });
         case 'WEBINAR':
-          return getWebinars();
+          return getWebinars(params, { signal: abortController?.current?.signal });
         case 'CONSULTATIONS':
-          return getConsultations();
+          return getConsultations(params, { signal: abortController?.current?.signal });
         default:
           return getCourses(params, { signal: abortController?.current?.signal });
       }
@@ -128,7 +128,7 @@ export const CollectionSelect: React.FC<{
   }, [value, modelType]);
 
   return (
-    <Select<string | string[] | number | number[]>
+    <Select<string | string[] | number | number[] | LabeledValue | LabeledValue[]>
       defaultValue={defaultValue}
       onFocus={() => fetch()}
       allowClear
@@ -147,9 +147,10 @@ export const CollectionSelect: React.FC<{
         return true;
       }}
       notFoundContent={fetching ? <Spin size="small" /> : null}
+      optionLabelProp="label"
     >
       {modelCollection.map((modelItem: CollectionModelItem) => (
-        <Select.Option key={modelItem.id} value={modelItem.id}>
+        <Select.Option key={modelItem.id} value={modelItem.id} label={modelItem.name}>
           {modelItem.name}
         </Select.Option>
       ))}
