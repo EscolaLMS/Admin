@@ -1,3 +1,4 @@
+import { settings } from '@/services/escola-lms/settings';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
@@ -32,11 +33,13 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
+    const config = await settings({ current: 1, pageSize: 100, group: 'global' });
 
     if (userInfo) {
       setInitialState({
         ...initialState,
         currentUser: userInfo,
+        config: config.success ? config.data : [],
       });
     }
   };
