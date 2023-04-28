@@ -1,10 +1,10 @@
-import { settings } from '@/services/escola-lms/settings';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage, useModel } from 'umi';
 import { forgot, login } from '@/services/escola-lms/auth';
+import { settings } from '@/services/escola-lms/settings';
 
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
