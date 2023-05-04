@@ -1078,6 +1078,7 @@ declare namespace API {
     tags?: Tag[] | string[];
     logotype_url?: string;
     logotype_path?: string;
+    product?: EscolaLms.Cart.Models.Product;
   };
 
   type ProductableListItem = {

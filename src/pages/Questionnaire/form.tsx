@@ -16,6 +16,7 @@ import QuestionForm from './components/Questions';
 import QuestionAnswers from './components/Answers';
 import QuestionnaireRaports from './components/Raports';
 import './style.css';
+import type { LabeledValue } from 'antd/lib/select';
 
 const { Title } = Typography;
 
@@ -34,7 +35,7 @@ export const QuestionareForm = () => {
   const [data, setData] = useState<Partial<API.Questionnaire>>();
   const [tab, setTab] = useState('questionnaire');
   const [listOfModels, setListOfModels] = useState<API.QuestionnaireModel[]>();
-  const [models, setModels] = useState<Record<number, (string | number)[]>>({});
+  const [models, setModels] = useState<Record<number, (string | number | LabeledValue)[]>>({});
 
   const fetchModels = useCallback(async () => {
     const response = await getQuestionnaireModels();
@@ -76,7 +77,7 @@ export const QuestionareForm = () => {
   }, [questionnaireId, fetchData, fetchModels, isNew]);
 
   const handleModelChange = useCallback(
-    (modelids: (string | number)[], selectedModel: ModelTypes) => {
+    (modelids: (string | number | LabeledValue)[], selectedModel: ModelTypes) => {
       setModels((prevState) => ({
         ...prevState,
         [selectedModel]: modelids,
@@ -85,7 +86,7 @@ export const QuestionareForm = () => {
     [],
   );
 
-  const formatData = useCallback((items: Record<number, (string | number)[]>) => {
+  const formatData = useCallback((items: Record<number, (string | number | LabeledValue)[]>) => {
     const mappedData: Record<string, number>[] = [];
     Object.keys(items).map((key) => {
       mappedData.push(
@@ -234,12 +235,17 @@ export const QuestionareForm = () => {
             >
               <CollectionSelect
                 defaultValue={
-                  (models ? models[model.id]?.map((item: number | string) => item) : []) as (
-                    | number
-                  )[]
+                  data.models
+                    ?.filter((item) => item.model_type_title === model.title)
+                    .map((item) => ({
+                      value: item.model_id,
+                      label: item.model_title,
+                    })) || []
                 }
                 multiple
-                onChange={(values) => handleModelChange(values as (string | number)[], model.id)}
+                onChange={(values) =>
+                  handleModelChange(values as (string | number | LabeledValue)[], model.id)
+                }
                 modelType={model.title?.toUpperCase()}
               />
               <Button
