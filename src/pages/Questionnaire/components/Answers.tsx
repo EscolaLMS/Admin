@@ -11,7 +11,7 @@ import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 const QuestionVisibilitySwitch: React.FC<{
-  record: EscolaLms.Questionnaire.Models.QuestionAnswer;
+  record: API.QuestionAnswer;
 }> = ({ record }) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -45,7 +45,6 @@ const QuestionVisibilitySwitch: React.FC<{
     <ProForm form={form} {...formProps}>
       <ProFormSwitch
         name="visible_on_front"
-        // @ts-ignore
         initialValue={record.visible_on_front}
         checkedChildren={intl.formatMessage({
           id: 'visible',
