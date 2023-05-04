@@ -375,6 +375,10 @@ export default {
   country: 'Country',
   slug_tooltip: 'SLUG is part of Pages URL ',
   sum_rate: 'Ranking',
+  show_hide_on_front: 'Show/Hide on front',
+  visible: 'Visible',
+  hidden: 'Hidden',
+  question_answer_visibility_changed: 'Answer visibility changed',
   count_answers: 'Answers count',
   content_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',

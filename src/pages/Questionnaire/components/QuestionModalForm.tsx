@@ -103,6 +103,11 @@ export const QuestionModalForm: React.FC<{
         name="active"
         label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
       />
+      <ProFormSwitch
+        initialValue={true}
+        name="public_answers"
+        label={<FormattedMessage id="show_hide_on_front" defaultMessage="show_hide_on_front" />}
+      />
     </ModalForm>
   );
 };
