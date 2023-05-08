@@ -1291,6 +1291,44 @@ declare namespace API {
     API.PaginationParams & {
       name?: string;
     };
+
+  type SubjectGroups = {
+    id: number;
+    name: string;
+    parent_id: number;
+  };
+
+  type Subject = {
+    id: number;
+    name: string;
+  };
+
+  type SubjectSemester = {
+    id: number;
+    name: string;
+    type: string;
+    year: string;
+  };
+
+  type Semester = {
+    id: number;
+    name: string;
+    type: string;
+    speciality: string;
+    study_plan_id: number;
+    academic_year_id: number;
+  };
+
+  type Subjects = {
+    id: number;
+    group_id: number;
+    semester: SubjectSemester;
+    subject: Subject;
+    groups: SubjectGroups[];
+  };
+
+  type SemestersList = DefaultMetaResponse<Semester>;
+  type SubjectsList = DefaultMetaResponse<Subject>;
 }
 
 declare module 'jsoneditor-react' {
