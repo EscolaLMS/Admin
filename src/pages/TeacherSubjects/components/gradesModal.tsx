@@ -76,7 +76,7 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
 
       <Row gutter={[16, 16]}>
         <Col span={12}>
-          <Button type="primary" key="primary" onClick={() => console.log('MSTeams')}>
+          <Button type="primary" key="primary" onClick={() => console.log('MSteams')}>
             <FormattedMessage
               id="uploadFile.MsTeamsForms"
               defaultMessage="uploadFile.MsTeamsForms"
