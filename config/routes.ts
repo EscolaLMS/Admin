@@ -299,6 +299,37 @@
     ],
   },
   {
+    path: '/teacher',
+    name: 'Teacher',
+    access: 'usersPermission',
+    icon: 'experiment',
+    routes: [
+      {
+        path: '/teacher/subjects',
+        name: 'Subjects',
+        icon: 'book',
+        access: 'usersPermission',
+        component: './TeacherSubjects',
+      },
+      {
+        path: '/teacher/subjects/:subjectId',
+        name: 'Form',
+        icon: 'book',
+        access: 'usersPermission',
+        component: './TeacherSubjects/form',
+        hideInMenu: true,
+      },
+      {
+        path: '/teacher/subjects/:subjectId/:tab',
+        name: 'Subject Form',
+        icon: 'book',
+        access: 'usersPermission',
+        component: './TeacherSubjects/form',
+        hideInMenu: true,
+      },
+    ],
+  },
+  {
     name: 'Analytics',
     path: '/analytics',
     access: 'analyticsPermission',

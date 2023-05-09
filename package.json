@@ -67,7 +67,7 @@
         "@ant-design/pro-table": "^2",
         "@escolalms/gift-pegjs": "^0.2.8",
         "@escolalms/h5p-react": "^0.2.17",
-        "@escolalms/ts-models": "^0.0.33",
+        "@escolalms/ts-models": "^0.0.35",
         "@sentry/react": "^7.7.0",
         "@sentry/tracing": "^7.7.0",
         "@testing-library/jest-dom": "^5.16.4",
