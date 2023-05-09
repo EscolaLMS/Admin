@@ -818,7 +818,9 @@ declare namespace API {
     guard_name?: string;
   };
 
-  type QuestionAnswer = EscolaLms.Questionnaire.Models.QuestionAnswer;
+  type QuestionAnswer = EscolaLms.Questionnaire.Models.QuestionAnswer & {
+    visible_on_front: boolean;
+  };
 
   type Questionnaire = EscolaLms.Questionnaire.Models.Questionnaire & {
     models?: QuestionnaireModel[];
@@ -1078,6 +1080,7 @@ declare namespace API {
     tags?: Tag[] | string[];
     logotype_url?: string;
     logotype_path?: string;
+    product?: EscolaLms.Cart.Models.Product;
   };
 
   type ProductableListItem = {

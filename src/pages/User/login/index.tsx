@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage, useModel } from 'umi';
 import { forgot, login } from '@/services/escola-lms/auth';
+import { settings } from '@/services/escola-lms/settings';
 
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
@@ -32,11 +33,13 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
+    const config = await settings({ current: 1, pageSize: 100, group: 'global' });
 
     if (userInfo) {
       setInitialState({
         ...initialState,
         currentUser: userInfo,
+        config: config.success ? config.data : [],
       });
     }
   };

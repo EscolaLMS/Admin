@@ -15,7 +15,7 @@ import {
   approveCourseAccess,
 } from '@/services/escola-lms/course_access';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import CourseSelect from '@/components/CourseSelect';
+import { CollectionSelect } from '@/components/CollectionSelect';
 
 const handleRemove = async (id: number) => {
   return deleteCourseAccess(id).then((response) => {
@@ -64,7 +64,7 @@ const TableList: React.FC = () => {
         }
         const stateType = form.getFieldValue('state');
         return (
-          <CourseSelect
+          <CollectionSelect
             {...rest}
             state={{
               type: stateType,

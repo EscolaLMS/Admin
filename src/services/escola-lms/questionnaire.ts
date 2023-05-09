@@ -58,6 +58,17 @@ export async function updateQuestionare(
   });
 }
 
+/**  POST /api/admin/question-answers/{id}/change-visiblity */
+export async function changeQuestionareVisibility(id: number, body?: Record<string, any>) {
+  return request<API.DefaultResponse<any>>(`/api/admin/question-answers/${id}/change-visibility`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  });
+}
+
 /**  DELETE /api/admin/questionnaire/:id */
 export async function deleteQuestionnaire(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<{ data: boolean }>>(`/api/admin/questionnaire/${id}`, {

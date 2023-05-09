@@ -12,7 +12,7 @@ import { DisapproveForm } from './disapproveForm';
 
 import { consultationAccess } from '@/services/escola-lms/consultations_access';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import CourseSelect from '@/components/CourseSelect';
+import { CollectionSelect } from '@/components/CollectionSelect';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -74,7 +74,7 @@ const TableList: React.FC = () => {
         }
         const stateType = form.getFieldValue('state');
         return (
-          <CourseSelect
+          <CollectionSelect
             modelType="CONSULTATIONS"
             {...rest}
             state={{
