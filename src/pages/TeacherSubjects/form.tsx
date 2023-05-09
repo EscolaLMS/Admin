@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel } from 'umi';
@@ -14,14 +14,14 @@ export default () => {
   const [modalGradesVisible, setModalGradesVisible] = useState(false);
   const { setInitialState, initialState } = useModel('@@initialState');
 
-  const getSubjectById = async () => {
+  const getSubjectById = useCallback(async () => {
     const response = await semesterSubject(Number(subjectId));
     if (response.success) {
       setData({
         ...response.data,
       });
     }
-  };
+  }, [subjectId]);
 
   useEffect(() => {
     getSubjectById();
@@ -39,7 +39,7 @@ export default () => {
         visible={modalGradesVisible}
         onFinish={async (item) => console.log(item)}
         onVisibleChange={(value: boolean) => {
-          if (value === false) {
+          if (!value) {
             handleCancelModalGrades();
           }
         }}

@@ -33,7 +33,7 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
     >
       <ProForm.Group>
         <ProFormText
-          label={<FormattedMessage id="egzamTitle" defaultMessage="egzamTitle" />}
+          label={<FormattedMessage id="examTitle" defaultMessage="examTitle" />}
           rules={[
             {
               required: true,
@@ -43,7 +43,7 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
           name="title"
         />
         <ProFormDatePicker
-          label={<FormattedMessage id="datePassingEgzam" defaultMessage="datePassingEgzam" />}
+          label={<FormattedMessage id="datePassingExam" defaultMessage="datePassingExam" />}
           rules={[
             {
               required: true,
@@ -53,8 +53,8 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
           name="subtitle"
         />
         <ProFormSelect
-          name="egzamImportance"
-          label={<FormattedMessage id="egzamImportance" defaultMessage="egzamImportance" />}
+          name="examImportance"
+          label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
           rules={[
             {
               required: false,
@@ -95,7 +95,7 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
         </Col>
         <Col span={12}>
           <Button type="primary" key="primary" onClick={() => console.log('upload')}>
-            <FormattedMessage id="uploadGradesManullay" defaultMessage="uploadGradesManullay" />
+            <FormattedMessage id="uploadGradesManually" defaultMessage="uploadGradesManually" />
           </Button>
         </Col>
       </Row>
