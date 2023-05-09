@@ -1328,7 +1328,9 @@ declare namespace API {
   };
 
   type SemestersList = DefaultMetaResponse<Semester>;
-  type SubjectsList = DefaultMetaResponse<Subject>;
+  type SubjectsList = DefaultMetaResponse<Subjects>;
+  type SubjectParams = PageParams & PaginationParams & { semester_id?: number };
+  type SubjectRow = DefaultResponse<Subjects>;
 }
 
 declare module 'jsoneditor-react' {

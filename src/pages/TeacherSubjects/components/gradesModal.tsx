@@ -1,24 +1,20 @@
-import { FC } from 'react';
-import { Button, Modal, Form, Space, Row, Col } from 'antd';
+import { Button, Form, Row, Col } from 'antd';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
 import ProForm, {
   ProFormText,
   ModalForm,
-  ProFormTextArea,
-  ProFormTimePicker,
   ProFormDatePicker,
   ProFormSelect,
 } from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
 
 interface GradesModalProps {
   visible: boolean;
-  handleOk: () => void;
-  handleCancel: () => void;
+  onVisibleChange: (visible: boolean) => void;
+  onFinish: (formData: Record<string, string>) => Promise<boolean | void>;
 }
-//TODO: Get correct data when possible
-export const GradesModal: FC<GradesModalProps> = (props) => {
-  const { visible = false, handleOk, handleCancel } = props;
+
+export const GradesModal: React.FC<GradesModalProps> = (props) => {
+  const { visible = false, onFinish, onVisibleChange } = props;
   const [form] = Form.useForm();
   return (
     <ModalForm
@@ -26,14 +22,14 @@ export const GradesModal: FC<GradesModalProps> = (props) => {
       title={<FormattedMessage id="uploadGrades" />}
       width="40vw"
       visible={visible}
-      // onVisibleChange={(newVisibleValue) => {
-      //   onVisibleChange(newVisibleValue);
-      //   form.resetFields();
-      // }}
-      // onFinish={(formData) => {
-      //   form.resetFields();
-      //   return onFinish({ ...formData, id: fields?.id || null });
-      // }}
+      onVisibleChange={(newVisibleValue) => {
+        onVisibleChange(newVisibleValue);
+        form.resetFields();
+      }}
+      onFinish={(formData) => {
+        form.resetFields();
+        return onFinish(formData);
+      }}
     >
       <ProForm.Group>
         <ProFormText
@@ -61,7 +57,7 @@ export const GradesModal: FC<GradesModalProps> = (props) => {
           label={<FormattedMessage id="egzamImportance" defaultMessage="egzamImportance" />}
           rules={[
             {
-              required: true,
+              required: false,
             },
           ]}
           width="sm"
@@ -71,7 +67,7 @@ export const GradesModal: FC<GradesModalProps> = (props) => {
           label={<FormattedMessage id="semester" defaultMessage="semester" />}
           rules={[
             {
-              required: true,
+              required: false,
             },
           ]}
           width="sm"

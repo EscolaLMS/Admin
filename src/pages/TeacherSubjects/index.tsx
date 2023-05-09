@@ -4,7 +4,7 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { semesterSubject } from '@/services/escola-lms/semesterSubject';
+import { semesterSubjects } from '@/services/escola-lms/semesterSubject';
 import { EditOutlined } from '@ant-design/icons';
 import SemesterSelect from '@/components/SemesterSelect';
 
@@ -67,7 +67,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable
+      <ProTable<API.Subjects, API.SubjectParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Teacher.Subjects',
           defaultMessage: 'Subjects',
@@ -78,7 +78,7 @@ const TableList: React.FC = () => {
           layout: 'vertical',
         }}
         request={({ pageSize, current, semester_id }) => {
-          return semesterSubject({ per_page: pageSize, page: current, semester_id }).then(
+          return semesterSubjects({ per_page: pageSize, page: current, semester_id }).then(
             (response) => {
               if (response.success) {
                 return {

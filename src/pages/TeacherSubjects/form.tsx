@@ -2,40 +2,30 @@ import { useState, useEffect } from 'react';
 import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel } from 'umi';
-import { getCourse } from '@/services/escola-lms/course';
 import { PageContainer } from '@ant-design/pro-layout';
-import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 import { GradesModal } from './components/gradesModal';
+import { semesterSubject } from '@/services/escola-lms/semesterSubject';
 
 export default () => {
-  const params = useParams<{ subject?: string; tab?: string }>();
+  const params = useParams<{ subjectId?: string; tab?: string }>();
   const intl = useIntl();
-  const { subject, tab = 'groups' } = params;
-  const [data, setData] = useState<Partial<API.Course>>();
+  const { subjectId, tab = 'groups' } = params;
+  const [data, setData] = useState<Partial<API.Subjects>>();
   const [modalGradesVisible, setModalGradesVisible] = useState(false);
-  const [fromDateValidation, setFromDateValidation] = useState<Date | undefined | null>(null);
-  const [toDateValidation, setToDateValidation] = useState<Date | undefined | null>(null);
   const { setInitialState, initialState } = useModel('@@initialState');
 
+  const getSubjectById = async () => {
+    const response = await semesterSubject(Number(subjectId));
+    if (response.success) {
+      setData({
+        ...response.data,
+      });
+    }
+  };
+
   useEffect(() => {
-    //TODO: Get correct data when possible
-    const fetch = async () => {
-      const response = await getCourse(Number(subject));
-
-      if (response.success) {
-        setData({
-          ...response.data,
-          categories: response.data.categories?.map(categoriesArrToIds),
-          tags: response.data.tags?.map(tagsArrToIds),
-          summary: response.data.summary || '',
-        });
-
-        setFromDateValidation(response.data.active_from);
-        setToDateValidation(response.data.active_to);
-      }
-    };
-    fetch();
-  }, [subject]);
+    getSubjectById();
+  }, [subjectId]);
 
   if (!data) {
     return <Spin />;
@@ -47,13 +37,17 @@ export default () => {
     <>
       <GradesModal
         visible={modalGradesVisible}
-        handleOk={() => console.log('ok')}
-        handleCancel={handleCancelModalGrades}
+        onFinish={async (item) => console.log(item)}
+        onVisibleChange={(value: boolean) => {
+          if (value === false) {
+            handleCancelModalGrades();
+          }
+        }}
       />
       <PageContainer
         title={
           <>
-            <FormattedMessage id={data.title ?? 'course'} />
+            <FormattedMessage id={data.subject?.name} />
             {', '}
             <FormattedMessage id={tab} />
           </>
@@ -81,14 +75,14 @@ export default () => {
                 }),
               },
               {
-                path: String(subject),
+                path: String(subjectId),
                 breadcrumbName: intl.formatMessage({
                   id: 'form',
                 }),
               },
               {
                 path: '/',
-                breadcrumbName: String(data.title),
+                breadcrumbName: String(data.subject?.name),
               },
               {
                 path: String(tab),
@@ -106,10 +100,9 @@ export default () => {
             onChange: (key) => {
               setInitialState({
                 ...initialState,
-                collapsed: key === 'program',
               });
 
-              history.push(`/teacher/subjects/${subject}/${key}`);
+              history.push(`/teacher/subjects/${subjectId}/${key}`);
             },
           }}
         >

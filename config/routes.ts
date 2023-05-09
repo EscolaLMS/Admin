@@ -312,7 +312,7 @@
         component: './TeacherSubjects',
       },
       {
-        path: '/teacher/subjects/:subject',
+        path: '/teacher/subjects/:subjectId',
         name: 'Form',
         icon: 'book',
         access: 'usersPermission',
@@ -320,7 +320,7 @@
         hideInMenu: true,
       },
       {
-        path: '/teacher/subjects/:subject/:tab',
+        path: '/teacher/subjects/:subjectId/:tab',
         name: 'Subject Form',
         icon: 'book',
         access: 'usersPermission',
