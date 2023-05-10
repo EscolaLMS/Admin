@@ -3,8 +3,9 @@ import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { GradesModal } from './components/gradesModal';
 import { semesterSubject } from '@/services/escola-lms/semesterSubject';
+import { GradesModal } from './components/gradesModal';
+import { Exams } from './components/Exams';
 
 export default () => {
   const params = useParams<{ subjectId?: string; tab?: string }>();
@@ -112,11 +113,8 @@ export default () => {
           <ProCard.TabPane key="students" tab={<FormattedMessage id="students" />}>
             <p>STUDENTS</p>
           </ProCard.TabPane>
-          <ProCard.TabPane
-            key="examPartialGrades"
-            tab={<FormattedMessage id="examPartialGrades" />}
-          >
-            <p>EXAMS - PARTIAL GRADES</p>
+          <ProCard.TabPane key="exams" tab={<FormattedMessage id="exams" />}>
+            <Exams />
           </ProCard.TabPane>
           <ProCard.TabPane key="schedule" tab={<FormattedMessage id="schedule" />}>
             <p>SCHEDULE</p>

@@ -645,4 +645,13 @@ export default {
   'model.varchar': 'Pole tekstowe (varchar)',
   'model.text': 'Pole tekstowe',
   'model.json': 'JSON',
+  'TeacherSubjects.Exams.exam_date': 'Data egzaminu',
+  'TeacherSubjects.Exams.grade_weight': 'Waga',
+  'SemesterType.winter': 'Zima {year}',
+  'SemesterType.summer': 'Lato {year}',
+  'ExamType.manual': 'Ręcznie',
+  'ExamType.teams_forms': 'MS Teams Forms',
+  'ExamType.teams_lecture': 'MS Teams Wykład',
+  'ExamType.test_portal': 'Test Portal',
+  'TeacherSubjects.Exams.results': 'Wyniki',
 };
