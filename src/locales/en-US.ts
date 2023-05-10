@@ -50,7 +50,7 @@ export default {
   select_semester: 'Select semester',
   groups: 'Groups',
   students: 'Students',
-  examPartialGrades: 'Exams (partial grades)',
+  exams: 'Exams (partial grades)',
   schedule: 'Schedule',
   attendance: 'Attendance',
   ratingScale: 'Rating scale',

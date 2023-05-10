@@ -28,7 +28,7 @@ export default {
   select_semester: 'Wybierz semestr',
   groups: 'Grupy',
   students: 'Studenci',
-  examPartialGrades: 'Egzaminy (oceny cząstkowe)',
+  exams: 'Egzaminy (oceny cząstkowe)',
   schedule: 'Harmonogram',
   attendance: 'Obecności',
   ratingScale: 'Skala ocen',
