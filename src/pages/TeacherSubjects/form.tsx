@@ -70,6 +70,12 @@ export default () => {
           breadcrumb: {
             routes: [
               {
+                path: 'teacher',
+                breadcrumbName: intl.formatMessage({
+                  id: 'Teacher',
+                }),
+              },
+              {
                 path: 'subjects',
                 breadcrumbName: intl.formatMessage({
                   id: 'Subjects',
@@ -77,12 +83,6 @@ export default () => {
               },
               {
                 path: String(subjectId),
-                breadcrumbName: intl.formatMessage({
-                  id: 'form',
-                }),
-              },
-              {
-                path: '/',
                 breadcrumbName: String(data.subject?.name),
               },
               {
