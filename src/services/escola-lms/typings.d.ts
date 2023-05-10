@@ -1349,9 +1349,17 @@ declare namespace API {
     email: string;
   };
 
+  type ExamSemester = {
+    id: number;
+    name: string;
+    type: string;
+    year: string;
+  };
+
   type Exam = {
     id: number;
     semester_subject_id: number;
+    semester: ExamSemester;
     title: string;
     type: string;
     weight: number;
