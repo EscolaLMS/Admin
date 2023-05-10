@@ -305,6 +305,11 @@
     icon: 'experiment',
     routes: [
       {
+        path: '/teacher',
+        redirect: '/teacher/subjects',
+        access: 'usersPermission',
+      },
+      {
         path: '/teacher/subjects',
         name: 'Subjects',
         icon: 'book',
