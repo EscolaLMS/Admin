@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import { format } from 'date-fns';
-import { useIntl, FormattedMessage, Link } from 'umi';
+import { FormattedMessage, Link } from 'umi';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, LineChartOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
@@ -11,7 +11,6 @@ import { getExams, deleteExam } from '@/services/escola-lms/exams';
 
 export const Exams: React.FC = () => {
   const actionRef = useRef<ActionType>();
-  const intl = useIntl();
 
   const columns: ProColumns<API.Exam>[] = useMemo(
     () => [
@@ -116,9 +115,7 @@ export const Exams: React.FC = () => {
 
   return (
     <ProTable<API.Exam, API.ExamsParams>
-      headerTitle={intl.formatMessage({
-        id: 'exams',
-      })}
+      headerTitle={<FormattedMessage id="exams" />}
       actionRef={actionRef}
       search={false}
       rowKey="id"
