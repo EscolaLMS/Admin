@@ -76,7 +76,7 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
 
       <Row gutter={[16, 16]}>
         <Col span={12}>
-          <Button type="primary" key="primary" onClick={() => console.log('MSTeams')}>
+          <Button type="primary" onClick={() => console.log('MSTeams')}>
             <FormattedMessage
               id="uploadFile.MsTeamsForms"
               defaultMessage="uploadFile.MsTeamsForms"
@@ -84,17 +84,17 @@ export const GradesModal: React.FC<GradesModalProps> = (props) => {
           </Button>
         </Col>
         <Col span={12}>
-          <Button type="primary" key="primary" onClick={() => console.log('attendence')}>
+          <Button type="primary" onClick={() => console.log('attendence')}>
             <FormattedMessage id="uploadFile.TestPortal" defaultMessage="uploadFile.TestPortal" />
           </Button>
         </Col>
         <Col span={12}>
-          <Button type="primary" key="primary" onClick={() => console.log('upload')}>
+          <Button type="primary" onClick={() => console.log('upload')}>
             <FormattedMessage id="uploadFile.MsTeams" defaultMessage="uploadFile.MsTeams" />
           </Button>
         </Col>
         <Col span={12}>
-          <Button type="primary" key="primary" onClick={() => console.log('upload')}>
+          <Button type="primary" onClick={() => console.log('upload')}>
             <FormattedMessage id="uploadGradesManually" defaultMessage="uploadGradesManually" />
           </Button>
         </Col>

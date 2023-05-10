@@ -54,13 +54,13 @@ export default () => {
         }
         tabBarExtraContent={
           <div style={{ display: 'flex', padding: '12px', gap: '12px' }}>
-            <Button type="primary" key="primary" onClick={() => console.log('MSTeams')}>
+            <Button type="primary" onClick={() => console.log('MSTeams')}>
               <FormattedMessage id="msTeams" defaultMessage="msTeams" />
             </Button>
-            <Button type="primary" key="primary" onClick={() => console.log('attendence')}>
+            <Button type="primary" onClick={() => console.log('attendence')}>
               <FormattedMessage id="uploadAttendance" defaultMessage="uploadAttendance" />
             </Button>
-            <Button type="primary" key="primary" onClick={() => setModalGradesVisible(true)}>
+            <Button type="primary" onClick={() => setModalGradesVisible(true)}>
               <FormattedMessage id="uploadGrades" defaultMessage="uploadGrades" />
             </Button>
           </div>
