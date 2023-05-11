@@ -27,6 +27,7 @@ export default {
   select_user_group: 'Wybierz Grupę',
   select_semester: 'Wybierz semestr',
   groups: 'Grupy',
+  groupId: 'ID Grupy: ',
   students: 'Studenci',
   examPartialGrades: 'Egzaminy (oceny cząstkowe)',
   schedule: 'Harmonogram',

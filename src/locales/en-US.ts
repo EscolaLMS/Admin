@@ -49,6 +49,7 @@ export default {
   select_user_group: 'Select User Group',
   select_semester: 'Select semester',
   groups: 'Groups',
+  groupId: 'Group ID: ',
   students: 'Students',
   examPartialGrades: 'Exams (partial grades)',
   schedule: 'Schedule',

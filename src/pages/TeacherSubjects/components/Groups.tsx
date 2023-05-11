@@ -1,13 +1,43 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
-import { Button, Spin, Tooltip } from 'antd';
-import ProTable, { ActionType } from '@ant-design/pro-table';
+import { Button, Space, Tooltip } from 'antd';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
-import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 interface GroupsProps {
   subjectGroups?: API.SubjectGroups[];
 }
+
+export const StudentsTableColumns: ProColumns<any>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="groupName" defaultMessage="groupName" />,
+    dataIndex: 'name',
+    hideInSearch: true,
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="students" defaultMessage="students" />,
+    dataIndex: 'users',
+    render: (_, record) => (
+      <span>
+        {record.users.map((item: API.StudentUser) => (
+          <span key={item.id}>
+            {`${item.first_name} ${item.last_name}`} <br />
+          </span>
+        ))}
+      </span>
+    ),
+    hideInForm: true,
+    hideInSearch: true,
+  },
+];
 
 const TableColumns = [
   {
@@ -21,30 +51,6 @@ const TableColumns = [
     hideInSearch: true,
   },
 ];
-
-const UsersGroupComponent: React.FC<{ idRecord: number }> = ({ idRecord }) => {
-  const [user, setUser] = useState<API.StudentUser[]>([]);
-  useEffect(() => {
-    fetchStudentUserGroup(idRecord).then((response) => {
-      if (response.success) {
-        setUser(response.data.users);
-      }
-    });
-  }, []);
-  if (!user.length) {
-    return <Spin />;
-  }
-  return (
-    <>
-      {user.map((item) => (
-        <p key={item.id}>
-          {`${item.first_name} ${item.last_name}`}
-          <br />
-        </p>
-      ))}
-    </>
-  );
-};
 
 export const Groups: React.FC<GroupsProps> = ({ subjectGroups }) => {
   const actionRef = useRef<ActionType>();
@@ -66,7 +72,12 @@ export const Groups: React.FC<GroupsProps> = ({ subjectGroups }) => {
           hideInSearch: true,
           title: <FormattedMessage id="studentsList" />,
           dataIndex: 'studentsList',
-          render: (_, record) => <UsersGroupComponent idRecord={record.id} />,
+          render: (_, record) =>
+            record.id && (
+              <Space key={'space'}>
+                <TypeButtonDrawer key={record.id} type={'Students'} type_id={record.id} />
+              </Space>
+            ),
         },
         {
           hideInSearch: true,

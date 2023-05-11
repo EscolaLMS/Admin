@@ -926,6 +926,10 @@ declare namespace API {
     | {
         type: 'Product';
         value: EscolaLms.Cart.Models.Product;
+      }
+    | {
+        type: 'Students';
+        value: API.StudentUserGroup;
       };
 
   type ReportType =
