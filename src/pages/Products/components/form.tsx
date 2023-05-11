@@ -185,6 +185,14 @@ const ProductsForm: React.FC<{
             related_products: EscolaLms.Cart.Models.Product[] | number[];
           },
       ) => {
+        const related_products = values.related_products?.every(
+          (related_product) => typeof related_product === 'object',
+        )
+          ? (values.related_products as EscolaLms.Cart.Models.Product[]).map(
+              (product) => product.id,
+            )
+          : values.related_products;
+
         const postData = {
           ...values,
           productables: currProductables
@@ -192,16 +200,11 @@ const ProductsForm: React.FC<{
                 currProductables as string[] | string | API.ProductableResourceListItem[],
               )
             : undefined,
-          related_products: values.related_products.every(
-            (related_product) => typeof related_product === 'object',
-          )
-            ? (values.related_products as EscolaLms.Cart.Models.Product[]).map(
-                (product) => product.id,
-              )
-            : values.related_products,
+          ...(values.related_products ? { related_products } : {}),
         };
 
         let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;
+
         if (isNew) {
           response = await createProduct(postData);
           if (response.success) {
