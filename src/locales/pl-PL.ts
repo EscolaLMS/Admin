@@ -39,6 +39,8 @@ export default {
   semester: 'Semestr',
   subject: 'Przedmiot',
   subjects: 'Przedmioty',
+  groupName: 'Nazwa grupy',
+  studentsList: 'Lista studentów',
   examTitle: 'Wpisz tytuł egzaminu',
   datePassingExam: 'Data zaliczenia egzaminu',
   examImportance: 'Waga egzaminu (1-100%)',

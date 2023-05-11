@@ -5,6 +5,7 @@ import { useParams, history, useIntl, FormattedMessage, useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { GradesModal } from './components/gradesModal';
 import { semesterSubject } from '@/services/escola-lms/semesterSubject';
+import Groups from './components/Groups';
 
 export default () => {
   const params = useParams<{ subjectId?: string; tab?: string }>();
@@ -47,7 +48,7 @@ export default () => {
       <PageContainer
         title={
           <>
-            <FormattedMessage id={data.subject?.name} />
+            <FormattedMessage id={data?.subject?.name} />
             {', '}
             <FormattedMessage id={tab} />
           </>
@@ -82,7 +83,7 @@ export default () => {
               },
               {
                 path: '/',
-                breadcrumbName: String(data.subject?.name),
+                breadcrumbName: String(data?.subject?.name),
               },
               {
                 path: String(tab),
@@ -107,7 +108,7 @@ export default () => {
           }}
         >
           <ProCard.TabPane key="groups" tab={<FormattedMessage id="groups" />}>
-            <p>GROUPS</p>
+            <Groups subjectGroups={data?.groups} />
           </ProCard.TabPane>
           <ProCard.TabPane key="students" tab={<FormattedMessage id="students" />}>
             <p>STUDENTS</p>

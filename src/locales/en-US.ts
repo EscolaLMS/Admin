@@ -57,6 +57,8 @@ export default {
   finalGrades: 'Final grades',
   subject: 'Subject',
   subjects: 'Subjects',
+  groupName: 'Group name',
+  studentsList: 'Students list',
   msTeams: 'MS Teams',
   uploadAttendance: 'Upload attendance',
   uploadGrades: 'Upload grades',
