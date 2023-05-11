@@ -180,10 +180,19 @@ const ProductsForm: React.FC<{
 
       onFinish: async (
         values: EscolaLms.Cart.Http.Requests.Admin.ProductUpdateRequest &
-          EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest & {
+          Omit<EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest, 'related_products'> & {
             productables: string[] | string;
+            related_products: EscolaLms.Cart.Models.Product[] | number[];
           },
       ) => {
+        const related_products = values.related_products?.every(
+          (related_product) => typeof related_product === 'object',
+        )
+          ? (values.related_products as EscolaLms.Cart.Models.Product[]).map(
+              (product) => product.id,
+            )
+          : values.related_products;
+
         const postData = {
           ...values,
           productables: currProductables
@@ -191,9 +200,11 @@ const ProductsForm: React.FC<{
                 currProductables as string[] | string | API.ProductableResourceListItem[],
               )
             : undefined,
+          ...(values.related_products ? { related_products } : {}),
         };
 
         let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;
+
         if (isNew) {
           response = await createProduct(postData);
           if (response.success) {

@@ -1380,6 +1380,57 @@ declare namespace API {
   };
 
   type StudentGroupRow = DefaultResponse<StudentUserGroup>;
+  type ExamsParams = PaginationParams & {
+    semester_subject_id?: number;
+    subject_id?: number;
+    semester_id?: number;
+  };
+
+  type ExamResult = {
+    result: number;
+    user_id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+
+  type ExamSemester = {
+    id: number;
+    name: string;
+    type: string;
+    year: string;
+  };
+
+  type Exam = {
+    id: number;
+    semester_subject_id: number;
+    semester: ExamSemester;
+    title: string;
+    type: string;
+    weight: number;
+    passed_at: Date | string;
+    results: ExamResult[];
+    created_at: Date | string;
+    user_id: number;
+  };
+
+  type CreateExamResult = {
+    user_id: number;
+    result: number;
+  };
+
+  type CreateExamRequest = {
+    semester_subject_id: number;
+    title: string;
+    type: string;
+    weight: number;
+    passed_at: Date | string;
+    results: CreateExamResult[];
+  };
+
+  type CreateExamResultRequest = {
+    result: number;
+  };
 }
 
 declare module 'jsoneditor-react' {
