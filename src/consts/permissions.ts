@@ -250,6 +250,42 @@ enum PERMISSIONS {
   QuizAttemptList = 'quiz-attempt_list',
   QuizAttemptRead = 'quiz-attempt_read',
   QuizAttemptUpdate = 'quiz-attempt_update',
+
+  /* -------- EscolaLMS/Teacher -------- */
+
+  /* -------- grades -------- */
+  TeacherListGradeTerm = 'grade-term_list',
+  TeacherListGradeScale = 'grade-scale_list',
+  TeacherListOwnFinalGrade = 'final-grade_list-own',
+  TeacherSaveOwnFinalGrade = 'final-grade_save-own',
+  TeacherListFinalGrade = 'final-grade_list',
+  TeacherSaveFinalGrade = 'final-grade_save',
+  TeacherListOwnFinalGrades = 'final-grade_list-own',
+  TeacherListExamResult = 'exam_list',
+  TeacherListOwnExamResult = 'exam_list-own',
+  TeacherListSelfExamResult = 'exam_list-self',
+  TeacherSaveExamResult = 'exam_save',
+  TeacherSaveOwnExamResult = 'exam_save-own',
+  TeacherDeleteExamResult = 'exam_delete',
+  TeacherDeleteOwnExamResult = 'exam_delete-own',
+
+  /* -------- attendances -------- */
+  TeacherListOwnAttendance = 'attendance_list-own',
+  TeacherListAttendance = 'attendance_list-admin',
+  TeacherSaveAttendance = 'attendance_save-admin',
+  TeacherSaveTutorAttendance = 'attendance_save-own',
+
+  /* -------- EscolaLMS/pcg-integration -------- */
+  PCGListAcademicYears = 'pcg-integration_academic-year_list',
+  PCGListSemesters = 'pcg-integration_semester_list',
+  PCGListSelfSemesters = 'pcg-integration_semester_list-self',
+  PCGListSemesterSubjects = 'pcg-integration_semester-subject_list',
+  PCGListSelfSemesterSubjects = 'pcg-integration_semester-subject_list-self',
+  PCGReadSemesterSubjects = 'pcg-integration_semester-subject_read',
+  PCGReadSelfSemesterSubjects = 'pcg-integration_semester-subject_read-self',
+
+  /* -------- EscolaLMS/sds-integration -------- */
+  SDSExport = 'sds-integration_export',
 }
 
 export default PERMISSIONS;
