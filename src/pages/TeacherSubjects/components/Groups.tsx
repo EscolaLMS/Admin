@@ -3,7 +3,7 @@ import { FormattedMessage, Link, useIntl } from 'umi';
 import { Button, Spin, Tooltip } from 'antd';
 import ProTable, { ActionType } from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
-import { userGroup as fetchUserGroup } from '@/services/escola-lms/user_groups';
+import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
 
 interface GroupsProps {
   subjectGroups?: API.SubjectGroups[];
@@ -24,9 +24,8 @@ const TableColumns = [
 
 const UsersGroupComponent: React.FC<{ idRecord: number }> = ({ idRecord }) => {
   const [user, setUser] = useState<API.StudentUser[]>([]);
-
   useEffect(() => {
-    fetchUserGroup(idRecord).then((response) => {
+    fetchStudentUserGroup(idRecord).then((response) => {
       if (response.success) {
         setUser(response.data.users);
       }

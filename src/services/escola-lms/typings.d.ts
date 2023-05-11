@@ -1368,6 +1368,14 @@ declare namespace API {
       user_id: number;
     };
   };
+
+  type StudentUserGroup = {
+    id: number;
+    name: string;
+    users: StudentUser[];
+  };
+
+  type StudentGroupRow = DefaultResponse<StudentUserGroup>;
 }
 
 declare module 'jsoneditor-react' {
