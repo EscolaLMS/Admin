@@ -3,8 +3,9 @@ import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { GradesModal } from './components/gradesModal';
 import { semesterSubject } from '@/services/escola-lms/semesterSubject';
+import { GradesModal } from './components/gradesModal';
+import { Exams } from './components/Exams';
 
 export default () => {
   const params = useParams<{ subjectId?: string; tab?: string }>();
@@ -54,13 +55,13 @@ export default () => {
         }
         tabBarExtraContent={
           <div style={{ display: 'flex', padding: '12px', gap: '12px' }}>
-            <Button type="primary" key="primary" onClick={() => console.log('MSTeams')}>
+            <Button type="primary" onClick={() => console.log('MSTeams')}>
               <FormattedMessage id="msTeams" defaultMessage="msTeams" />
             </Button>
-            <Button type="primary" key="primary" onClick={() => console.log('attendence')}>
+            <Button type="primary" onClick={() => console.log('attendence')}>
               <FormattedMessage id="uploadAttendance" defaultMessage="uploadAttendance" />
             </Button>
-            <Button type="primary" key="primary" onClick={() => setModalGradesVisible(true)}>
+            <Button type="primary" onClick={() => setModalGradesVisible(true)}>
               <FormattedMessage id="uploadGrades" defaultMessage="uploadGrades" />
             </Button>
           </div>
@@ -69,6 +70,12 @@ export default () => {
           breadcrumb: {
             routes: [
               {
+                path: 'teacher',
+                breadcrumbName: intl.formatMessage({
+                  id: 'Teacher',
+                }),
+              },
+              {
                 path: 'subjects',
                 breadcrumbName: intl.formatMessage({
                   id: 'Subjects',
@@ -76,12 +83,6 @@ export default () => {
               },
               {
                 path: String(subjectId),
-                breadcrumbName: intl.formatMessage({
-                  id: 'form',
-                }),
-              },
-              {
-                path: '/',
                 breadcrumbName: String(data.subject?.name),
               },
               {
@@ -112,11 +113,8 @@ export default () => {
           <ProCard.TabPane key="students" tab={<FormattedMessage id="students" />}>
             <p>STUDENTS</p>
           </ProCard.TabPane>
-          <ProCard.TabPane
-            key="examPartialGrades"
-            tab={<FormattedMessage id="examPartialGrades" />}
-          >
-            <p>EXAMS - PARTIAL GRADES</p>
+          <ProCard.TabPane key="exams" tab={<FormattedMessage id="exams" />}>
+            <Exams />
           </ProCard.TabPane>
           <ProCard.TabPane key="schedule" tab={<FormattedMessage id="schedule" />}>
             <p>SCHEDULE</p>
