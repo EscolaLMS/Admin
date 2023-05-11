@@ -926,6 +926,10 @@ declare namespace API {
     | {
         type: 'Product';
         value: EscolaLms.Cart.Models.Product;
+      }
+    | {
+        type: 'Students';
+        value: API.StudentUserGroup;
       };
 
   type ReportType =
@@ -1335,6 +1339,47 @@ declare namespace API {
   type SubjectParams = PageParams & PaginationParams & { semester_id?: number };
   type SubjectRow = DefaultResponse<Subjects>;
 
+  type StudentUser = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: number | string | null;
+    is_active: boolean;
+    email_verified_at: string;
+    path_avatar: string | null;
+    gender: string | null;
+    age: number | string | null;
+    country: string | null;
+    city: string | null;
+    street: string | null;
+    postcode: number | string | null;
+    created_at: Date | string | null;
+    updated_at: Date | string | null;
+    points: number;
+    notification_channels: number | string | null;
+    access_to_directories: number | string | null;
+    current_timezone: string;
+    deleted_at: Date | string | null;
+    external_id: string;
+    email_additional: string;
+    academic_teacher_id: number | null;
+    student_id: number;
+    login: string | null;
+    avatar_url: number | string | null;
+    pivot: {
+      group_id: number;
+      user_id: number;
+    };
+  };
+
+  type StudentUserGroup = {
+    id: number;
+    name: string;
+    users: StudentUser[];
+  };
+
+  type StudentGroupRow = DefaultResponse<StudentUserGroup>;
   type ExamsParams = PaginationParams & {
     semester_subject_id?: number;
     subject_id?: number;
