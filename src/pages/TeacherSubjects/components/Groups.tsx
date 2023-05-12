@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 import { Button, Space, Tooltip } from 'antd';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
@@ -84,7 +85,7 @@ export const Groups: React.FC<GroupsProps> = ({ subjectGroups }) => {
           title: <FormattedMessage id="msTeams" />,
           dataIndex: 'teamsLink',
           valueType: 'option',
-          render: (_, record) => [
+          render: () => [
             <Link to={'#'} key="teamsLink">
               <Tooltip title={<FormattedMessage id="msTeams" defaultMessage="teams" />}>
                 <Button type="primary" icon={<ExportOutlined />} />

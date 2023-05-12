@@ -18,7 +18,10 @@ export default function (initialState: {
   };
 
   // TODO implement minimal versions
-  const havePackageInstalled = (packageName: string, minVersion: string = '0.0.0') => {
+  const havePackageInstalled = (
+    packageName: string,
+    // ,minVersion: string = '0.0.0'
+  ) => {
     return initialState.packages && initialState.packages[packageName];
   };
 
