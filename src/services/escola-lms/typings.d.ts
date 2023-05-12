@@ -1406,7 +1406,7 @@ declare namespace API {
     semester_subject_id: number;
     semester: ExamSemester;
     title: string;
-    type: string;
+    type: Enum.ExamGradeType;
     weight: number;
     passed_at: Date | string;
     results: ExamResult[];

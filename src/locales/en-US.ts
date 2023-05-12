@@ -643,6 +643,8 @@ export default {
   'Consultation Not Found': 'Consultation Not Found',
   'Order Not Found': 'Order Not Found',
   field_required: 'Field is required',
+  number_between: 'Field must have value between {min} and {max}',
+  must_be_a_number: 'Field value must be a number',
   add_title_here: 'Add title here',
   user_projects: 'User projects',
   project_solutions: 'User project solutions',

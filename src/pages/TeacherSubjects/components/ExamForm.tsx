@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { FormattedMessage } from 'umi';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, history } from 'umi';
 import { Button, Col, InputNumber, Row } from 'antd';
+import ProTable, { ProColumns } from '@ant-design/pro-table';
 import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
 import { ExamGradeType } from '@/services/escola-lms/enums';
+import { createExam, getExam } from '@/services/escola-lms/exams';
 
 import { ConvertGradesModal } from './ConvertGradesModal';
 
@@ -33,29 +35,109 @@ const SelectTypeButtonsGroup: React.FC<{ onSelect: (type: ExamGradeType) => void
   </Row>
 );
 
+const staticColumns: ProColumns<API.ExamResult>[] = [
+  { title: <FormattedMessage id="first_name" />, dataIndex: 'first_name', editable: false },
+  { title: <FormattedMessage id="last_name" />, dataIndex: 'last_name', editable: false },
+  {
+    title: <FormattedMessage id="result" />,
+    dataIndex: 'result',
+    valueType: 'percent',
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: <FormattedMessage id="field_required" />,
+        },
+        {
+          type: 'number',
+          min: 0,
+          max: 100,
+          message: <FormattedMessage id="number_between" values={{ min: 0, max: 100 }} />,
+        },
+      ],
+    },
+  },
+];
+
+interface ExamFormValues {
+  title: string;
+  weight: number;
+  passed_at: Date | string;
+}
+
 interface Props {
   exam_id: string;
   semester_subject_id: number;
 }
-export const ExamForm: React.FC<Props> = ({ semester_subject_id }) => {
-  const [form] = ProForm.useForm();
+export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
+  const [form] = ProForm.useForm<ExamFormValues>();
   const [selectedType, setSelectedType] = useState<ExamGradeType>();
-  const [convertedData, setConvertedData] = useState<API.ExamResult[]>();
+  const [examResults, setExamResults] = useState<API.ExamResult[]>();
+  const editableKeys = useMemo(
+    () => (examResults ?? []).map(({ user_id }) => user_id),
+    [examResults],
+  );
+
+  useEffect(() => {
+    const numExamId = Number(exam_id);
+
+    if (exam_id !== 'new' && !Number.isNaN(numExamId)) {
+      getExam(numExamId).then((res) => {
+        if (res.success) {
+          const { type, results, title, weight, passed_at } = res.data;
+          setSelectedType(type);
+          setExamResults(results);
+          form.setFieldsValue({ title, weight, passed_at });
+        }
+      });
+    }
+  }, [exam_id]);
+
+  const resetState = useCallback(() => {
+    setSelectedType(undefined);
+    setExamResults(undefined);
+  }, []);
 
   return (
     <>
       {selectedType && (
         <ConvertGradesModal
-          open={Boolean(selectedType && !convertedData)}
+          open={Boolean(selectedType && !examResults)}
           type={selectedType}
-          closeModal={() => setSelectedType(undefined)}
-          onSuccess={setConvertedData}
+          closeModal={resetState}
+          onSuccess={setExamResults}
           semester_subject_id={semester_subject_id}
         />
       )}
       <ProForm
         form={form}
-        submitter={selectedType === undefined || !convertedData ? false : undefined}
+        submitter={selectedType === undefined || !examResults ? false : undefined}
+        onFinish={async (formData: ExamFormValues) => {
+          // Validation since table has other form instance
+          const areExamResultsValid = examResults?.every(
+            ({ result }) => typeof result === 'number' && result >= 0 && result <= 100,
+          );
+
+          if (areExamResultsValid) {
+            const { title, passed_at, weight } = formData;
+            const reqData: API.CreateExamRequest = {
+              type: selectedType!,
+              semester_subject_id,
+              title,
+              passed_at,
+              weight,
+              results: examResults!,
+            };
+
+            // TODO add edit logic
+            const response = await createExam(reqData);
+            if (response.success) {
+              history.push(`/teacher/subjects/${semester_subject_id}/exams`);
+            }
+          }
+          return true;
+        }}
+        onReset={resetState}
       >
         <ProForm.Group>
           <ProFormText
@@ -63,6 +145,7 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id }) => {
             rules={[
               {
                 required: true,
+                message: <FormattedMessage id="field_required" />,
               },
             ]}
             width="lg"
@@ -73,6 +156,7 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id }) => {
             rules={[
               {
                 required: true,
+                message: <FormattedMessage id="field_required" />,
               },
             ]}
             width="lg"
@@ -81,16 +165,34 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id }) => {
           <ProForm.Item
             name="weight"
             label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
-            rules={[{ required: true }, { type: 'number', min: 1, max: 100 }]}
+            rules={[
+              { required: true, message: <FormattedMessage id="field_required" /> },
+              {
+                type: 'number',
+                min: 1,
+                max: 100,
+                message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
+              },
+            ]}
           >
-            <InputNumber min={1} max={100} />
+            <InputNumber />
           </ProForm.Item>
         </ProForm.Group>
-        {selectedType === ExamGradeType.TeamsForms && convertedData && <p>MS Teams Forms</p>}
-        {selectedType === ExamGradeType.TestPortal && convertedData && <p>Test Portal</p>}
-        {selectedType === ExamGradeType.TeamsLecture && convertedData && <p>MS Teams Lecture</p>}
-        {selectedType === ExamGradeType.Manual && convertedData && <p>Manual</p>}
-        {!convertedData && <SelectTypeButtonsGroup onSelect={setSelectedType} />}
+        {selectedType && examResults && (
+          <ProTable
+            rowKey={'user_id'}
+            editable={{
+              type: 'single',
+              editableKeys,
+              onValuesChange: (record, dataSource) => setExamResults(dataSource),
+            }}
+            cardProps={{ bodyStyle: { paddingInline: 0 } }}
+            search={false}
+            dataSource={examResults}
+            columns={staticColumns}
+          />
+        )}
+        {!examResults && <SelectTypeButtonsGroup onSelect={setSelectedType} />}
       </ProForm>
     </>
   );

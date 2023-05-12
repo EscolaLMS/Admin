@@ -632,6 +632,8 @@ export default {
   'Consultation Not Found': 'Konsultacja nie została znaleziona',
   'Order Not Found': 'Zamówienie nie zostało znalezione',
   field_required: 'Pole jest wymagane',
+  number_between: 'Pole musi mieć wartość pomiędzy {min} a {max}',
+  must_be_a_number: 'Wartość pola musi być liczbą',
   add_title_here: 'Dodaj tytuł',
   user_projects: 'Zadania użytkowników',
   project_solutions: 'Rozwiązania zadań użytkowników',
