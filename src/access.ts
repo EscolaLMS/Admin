@@ -18,7 +18,10 @@ export default function (initialState: {
   };
 
   // TODO implement minimal versions
-  const havePackageInstalled = (packageName: string, minVersion: string = '0.0.0') => {
+  const havePackageInstalled = (
+    packageName: string,
+    // ,minVersion: string = '0.0.0'
+  ) => {
     return initialState.packages && initialState.packages[packageName];
   };
 
@@ -181,6 +184,38 @@ export default function (initialState: {
       !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
       havePackageInstalled('escolalms/topic-type-gift'),
 
+    teacherPermission:
+      havePermissionsInDashboard(
+        PERMISSIONS.PCGListSemesterSubjects,
+        PERMISSIONS.PCGListSemesters,
+        PERMISSIONS.PCGListAcademicYears,
+      ) && !haveSettingsInDashboard('hideInMenu-Teacher', true),
+
+    teacherSubjectListPermission:
+      havePermissionsInDashboard(
+        PERMISSIONS.PCGListSemesterSubjects,
+        PERMISSIONS.PCGListSemesters,
+        PERMISSIONS.PCGListAcademicYears,
+      ) &&
+      !haveSettingsInDashboard('hideInMenu-TeacherSubjects', true) &&
+      havePackageInstalled('escolalms/pcg-integration'),
+
+    teacherSubjectDetailsPermission:
+      havePermissionsInDashboard(
+        PERMISSIONS.TeacherListExamResult,
+        PERMISSIONS.TeacherListGradeTerm,
+        PERMISSIONS.TeacherListAttendance,
+        PERMISSIONS.TeacherListGradeScale,
+        PERMISSIONS.TeacherListFinalGrade,
+        PERMISSIONS.TeacherSaveExamResult,
+        PERMISSIONS.TeacherSaveAttendance,
+        PERMISSIONS.TeacherSaveFinalGrade,
+        PERMISSIONS.TeacherDeleteExamResult,
+      ) &&
+      !haveSettingsInDashboard('hideInMenu-TeacherSubjects', true) &&
+      havePackageInstalled('escolalms/pcg-integration') &&
+      havePackageInstalled('escolalms/pcg-grades') &&
+      havePackageInstalled('escolalms/pcg-attendances'),
     tasksPermission: () => true,
   };
 }

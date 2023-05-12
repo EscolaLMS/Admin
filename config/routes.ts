@@ -301,21 +301,26 @@
   {
     path: '/teacher',
     name: 'Teacher',
-    access: 'usersPermission',
+    access: 'teacherPermission',
     icon: 'experiment',
     routes: [
+      {
+        path: '/teacher',
+        redirect: '/teacher/subjects',
+        access: 'teacherPermission',
+      },
       {
         path: '/teacher/subjects',
         name: 'Subjects',
         icon: 'book',
-        access: 'usersPermission',
+        access: 'teacherSubjectListPermission',
         component: './TeacherSubjects',
       },
       {
         path: '/teacher/subjects/:subjectId',
         name: 'Form',
         icon: 'book',
-        access: 'usersPermission',
+        access: 'teacherSubjectDetailsPermission',
         component: './TeacherSubjects/form',
         hideInMenu: true,
       },
@@ -323,7 +328,7 @@
         path: '/teacher/subjects/:subjectId/:tab',
         name: 'Subject Form',
         icon: 'book',
-        access: 'usersPermission',
+        access: 'teacherSubjectDetailsPermission',
         component: './TeacherSubjects/form',
         hideInMenu: true,
       },

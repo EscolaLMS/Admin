@@ -56,6 +56,18 @@ const columns: ProColumns<API.ConfigEntry>[] = [
             defaultMessage={record.value ? 'true' : 'false'}
           />
         </Tag>
+      ) : Array.isArray(record.value) ? (
+        record.value.map((item) =>
+          typeof item === 'object'
+            ? React.Children.toArray(
+                <p>
+                  {Object.keys(item)
+                    .map((key) => `${key}: ${item[key]}`)
+                    .join(', ')}
+                </p>,
+              )
+            : item,
+        )
       ) : (
         record.value
       ),

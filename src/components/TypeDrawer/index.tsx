@@ -13,6 +13,7 @@ import { TableColumns as ConsultationsTableColumns } from '@/pages/Consultations
 import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
 import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
 import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
+import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -100,6 +101,14 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
           {...descrProps}
           title={<FormattedMessage id="product" />}
           columns={ProductTableColumns as ProDescriptionsItemProps<EscolaLms.Cart.Models.Product>[]}
+        />
+      )}
+
+      {data.type === 'Students' && (
+        <ProDescriptions<API.StudentUserGroup>
+          {...descrProps}
+          title={<FormattedMessage id="studentsList" />}
+          columns={StudentsTableColumns as ProDescriptionsItemProps<API.StudentUserGroup>[]}
         />
       )}
 
