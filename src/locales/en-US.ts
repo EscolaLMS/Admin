@@ -48,6 +48,8 @@ export default {
   select_user_role: 'Select role',
   select_user_group: 'Select User Group',
   select_semester: 'Select semester',
+  select_attempt: 'Select attempt',
+  attempt: 'Attempt',
   groups: 'Groups',
   students: 'Students',
   examPartialGrades: 'Exams (partial grades)',
@@ -656,4 +658,8 @@ export default {
   'model.varchar': 'Text field (varchar)',
   'model.text': 'Text field',
   'model.json': 'JSON',
+  'course.finished': 'Course finish',
+  'course.attempt_number': 'Attempt number',
+  'course.another_attempts': 'Another attempts',
+  'course.interactions_in_days': 'Number of interactions in particular days',
 };

@@ -5,7 +5,7 @@ import { Spin, Alert, Typography } from 'antd';
 import Chart from './chart';
 import { useIntl, FormattedMessage } from 'umi';
 import { getFlatTopics } from '@/components/ProgramForm/Context';
-import { UserProgress } from './userProgress';
+import { UserCourseAttempts, UserCourseFinish, UserProgress } from './userProgress';
 
 export type FinishedTopicsUserStat = {
   id: number;
@@ -19,6 +19,33 @@ export type FinishedTopicsUserStats = {
   email: string;
   id: number;
   topics: FinishedTopicsUserStat[];
+};
+
+export type FinishedCourseUserStats = {
+  email: string;
+  finished: boolean;
+  finished_at: string;
+  id: number;
+};
+
+export type CourseAttemptDateObject = {
+  date: string;
+  times: string[];
+};
+
+export type CourseAttemptDates = Record<string, CourseAttemptDateObject>;
+
+export type CourseAttemptObject = {
+  attempt: number;
+  dates: CourseAttemptDates;
+};
+
+export type CourseAttempt = Record<number, CourseAttemptObject>;
+
+export type CourseAttempts = {
+  attempts: CourseAttempt;
+  email: string;
+  id: number;
 };
 
 type State =
@@ -104,6 +131,20 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
             stats={
               state.value.find((element: courseStats) => element.type.includes('FinishedTopics'))
                 ?.value as FinishedTopicsUserStats[]
+            }
+          />
+
+          <UserCourseFinish
+            stats={
+              state.value.find((element: courseStats) => element.type.includes('FinishedCourse'))
+                ?.value as FinishedCourseUserStats[]
+            }
+          />
+
+          <UserCourseAttempts
+            stats={
+              state.value.find((element: courseStats) => element.type.includes('AttendanceList'))
+                ?.value as CourseAttempts[]
             }
           />
 

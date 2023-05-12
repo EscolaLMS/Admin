@@ -26,6 +26,8 @@ export default {
   select_user_role: 'Wybierz rolę',
   select_user_group: 'Wybierz Grupę',
   select_semester: 'Wybierz semestr',
+  select_attempt: 'Wybierz podejście',
+  attempt: 'Podejście',
   groups: 'Grupy',
   students: 'Studenci',
   examPartialGrades: 'Egzaminy (oceny cząstkowe)',
@@ -645,4 +647,8 @@ export default {
   'model.varchar': 'Pole tekstowe (varchar)',
   'model.text': 'Pole tekstowe',
   'model.json': 'JSON',
+  'course.finished': 'Ukończenie kursu',
+  'course.attempt_number': 'Numer podejścia',
+  'course.another_attempts': 'Ponowne podejścia',
+  'course.interactions_in_days': 'Liczba interakcji w poszczególnych dniach',
 };
