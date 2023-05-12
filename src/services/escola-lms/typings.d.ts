@@ -1431,6 +1431,11 @@ declare namespace API {
   type CreateExamResultRequest = {
     result: number;
   };
+
+  type ParseExamFileRequest = {
+    semester_subject_id: number;
+    type: Enum.ExamGradeType;
+  };
 }
 
 declare module 'jsoneditor-react' {
