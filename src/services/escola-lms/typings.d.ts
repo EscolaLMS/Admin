@@ -1436,6 +1436,14 @@ declare namespace API {
     semester_subject_id: number;
     type: Enum.ExamGradeType;
   };
+
+  type GradeScale = {
+    id: number;
+    s_subject_scale_form_id: number;
+    grade: number;
+    grade_value: number;
+    name: string;
+  };
 }
 
 declare module 'jsoneditor-react' {
