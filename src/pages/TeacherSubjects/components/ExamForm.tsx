@@ -81,6 +81,12 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
   useEffect(() => {
     const numExamId = Number(exam_id);
 
+    if (exam_id === 'new') {
+      setSelectedType(undefined);
+      setExamResults(undefined);
+      form.resetFields();
+    }
+
     if (exam_id !== 'new' && !Number.isNaN(numExamId)) {
       getExam(numExamId).then((res) => {
         if (res.success) {
