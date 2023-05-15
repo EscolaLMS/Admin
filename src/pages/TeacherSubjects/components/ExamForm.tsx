@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history } from 'umi';
-import { Button, Col, InputNumber, Row } from 'antd';
+import { Button, Col, InputNumber, Row, Spin } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
 import { ExamGradeType } from '@/services/escola-lms/enums';
@@ -73,6 +73,8 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
   const [form] = ProForm.useForm<ExamFormValues>();
   const [selectedType, setSelectedType] = useState<ExamGradeType>();
   const [examResults, setExamResults] = useState<API.ExamResult[]>();
+  const [fetching, setFetching] = useState(false);
+
   const editableKeys = useMemo(
     () => (examResults ?? []).map(({ user_id }) => user_id),
     [examResults],
@@ -88,14 +90,17 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
     }
 
     if (exam_id !== 'new' && !Number.isNaN(numExamId)) {
-      getExam(numExamId).then((res) => {
-        if (res.success) {
-          const { type, results, title, weight, passed_at } = res.data;
-          setSelectedType(type);
-          setExamResults(results);
-          form.setFieldsValue({ title, weight, passed_at });
-        }
-      });
+      setFetching(true);
+      getExam(numExamId)
+        .then((res) => {
+          if (res.success) {
+            const { type, results, title, weight, passed_at } = res.data;
+            setSelectedType(type);
+            setExamResults(results);
+            form.setFieldsValue({ title, weight, passed_at });
+          }
+        })
+        .finally(() => setFetching(false));
     }
   }, [exam_id]);
 
@@ -103,6 +108,10 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
     setSelectedType(undefined);
     setExamResults(undefined);
   }, []);
+
+  if (fetching) {
+    return <Spin />;
+  }
 
   return (
     <>
