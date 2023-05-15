@@ -4,7 +4,7 @@ import { Button, Col, InputNumber, Row } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
 import { ExamGradeType } from '@/services/escola-lms/enums';
-import { createExam, getExam } from '@/services/escola-lms/exams';
+import { createExam, getExam, updateExam } from '@/services/escola-lms/exams';
 
 import { ConvertGradesModal } from './ConvertGradesModal';
 
@@ -126,6 +126,8 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
 
           if (areExamResultsValid) {
             const { title, passed_at, weight } = formData;
+            const numExamId = Number(exam_id);
+
             const reqData: API.CreateExamRequest = {
               type: selectedType!,
               semester_subject_id,
@@ -135,8 +137,9 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
               results: examResults!,
             };
 
-            // TODO add edit logic
-            const response = await createExam(reqData);
+            const response = Number.isNaN(numExamId)
+              ? await createExam(reqData)
+              : await updateExam(numExamId, reqData);
             if (response.success) {
               history.push(`/teacher/subjects/${semester_subject_id}/exams`);
             }
