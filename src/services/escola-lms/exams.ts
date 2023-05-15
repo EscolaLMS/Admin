@@ -34,7 +34,7 @@ export async function getExam(id: number, options?: RequestOptionsInit) {
 
 /**  DELETE /api/admin/exams/:id */
 export async function deleteExam(id: number, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<undefined>>(`/api/admin/consultations/${id}`, {
+  return request<API.DefaultResponse<undefined>>(`/api/admin/exams/${id}`, {
     method: 'DELETE',
     ...(options || {}),
   });
