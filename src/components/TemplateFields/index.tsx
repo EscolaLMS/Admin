@@ -114,6 +114,9 @@ export const TemplateFields: React.FC<FormWysiwygProps> = ({ name, field, variab
                       form.setFieldsValue({ [name]: JSON.stringify(tpl) });
                       form.submit();
                     }}
+                    onTemplateUpdated={(tpl) => {
+                      form.setFieldsValue({ [name]: JSON.stringify(tpl) });
+                    }}
                   />
                 );
               }}

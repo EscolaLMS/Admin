@@ -79,7 +79,8 @@ export const PdfEditor: React.FC<{
   variables: string[];
   onTemplateSaved: (tpl: object) => void;
   reportBroTemplate?: ReportBroTemplate;
-}> = ({ onTemplateSaved, reportBroTemplate = null, field, variables }) => {
+  onTemplateUpdated?: (tpl: object) => void;
+}> = ({ onTemplateSaved, reportBroTemplate = null, field, variables, onTemplateUpdated }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const stopPropagation = (e: SyntheticEvent) => {
@@ -106,6 +107,11 @@ export const PdfEditor: React.FC<{
         }/api/pdfs/reportbro/report/run`, // TODO use env vars
         saveCallback: () => {
           onTemplateSaved(rb.getReport());
+        },
+        cmdExecutedCallback: () => {
+          if (onTemplateUpdated) {
+            onTemplateUpdated(rb.getReport());
+          }
         },
       });
 
