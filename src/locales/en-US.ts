@@ -65,6 +65,7 @@ export default {
   uploadGrades: 'Uploading grades type',
   semester: 'Semester',
   examTitle: 'Enter an exam title',
+  examResult: 'Exam results',
   datePassingExam: 'Date of passing the exam',
   examImportance: 'Exam importance (1-100%)',
   gradesType: 'Type of grades to upload',

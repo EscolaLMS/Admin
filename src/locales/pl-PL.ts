@@ -43,6 +43,7 @@ export default {
   groupName: 'Nazwa grupy',
   studentsList: 'Lista studentów',
   examTitle: 'Wpisz tytuł egzaminu',
+  examResult: 'Wynik egzaminu',
   datePassingExam: 'Data zaliczenia egzaminu',
   examImportance: 'Waga egzaminu (1-100%)',
   gradesType: 'Typ wgrywania ocen',

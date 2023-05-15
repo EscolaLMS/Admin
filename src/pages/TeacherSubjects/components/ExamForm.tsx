@@ -39,7 +39,7 @@ const staticColumns: ProColumns<API.ExamResult>[] = [
   { title: <FormattedMessage id="first_name" />, dataIndex: 'first_name', editable: false },
   { title: <FormattedMessage id="last_name" />, dataIndex: 'last_name', editable: false },
   {
-    title: <FormattedMessage id="result" />,
+    title: <FormattedMessage id="examResult" />,
     dataIndex: 'result',
     valueType: 'percent',
     formItemProps: {
@@ -189,7 +189,7 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
         </ProForm.Group>
         {selectedType && examResults && (
           <ProTable
-            rowKey={'user_id'}
+            rowKey="user_id"
             editable={{
               type: 'single',
               editableKeys,
