@@ -186,15 +186,16 @@ export const TopicTypesSelector: React.FC<{
             <Button block onClick={() => setSelected(TopicType.SCORM)} icon={<FundOutlined />} />
           </Tooltip>
         )}
-        {!positionsToHide?.includes(TopicType.Project) && !topicTypeIsDisabled(TopicType.Project) && (
-          <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
-            <Button
-              block
-              onClick={() => setSelected(TopicType.Project)}
-              icon={<CarryOutOutlined />}
-            />
-          </Tooltip>
-        )}
+        {!positionsToHide?.includes(TopicType.Project) &&
+          !topicTypeIsDisabled(TopicType.Project) && (
+            <Tooltip placement="right" title={<FormattedMessage id="Project" />}>
+              <Button
+                block
+                onClick={() => setSelected(TopicType.Project)}
+                icon={<CarryOutOutlined />}
+              />
+            </Tooltip>
+          )}
         {!positionsToHide?.includes(TopicType.GiftQuiz) &&
           !topicTypeIsDisabled(TopicType.GiftQuiz) && (
             <Tooltip placement="right" title={<FormattedMessage id="Quiz" />}>

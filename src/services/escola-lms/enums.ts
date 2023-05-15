@@ -60,3 +60,10 @@ export enum QuestionType {
   ESSAY = 'essay',
   DESCRIPTION = 'description',
 }
+
+export enum ExamGradeType {
+  Manual = 'manual',
+  TeamsForms = 'teams_forms',
+  TeamsLecture = 'teams_lecture',
+  TestPortal = 'test_portal',
+}

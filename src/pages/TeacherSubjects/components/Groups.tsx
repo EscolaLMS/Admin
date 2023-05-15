@@ -5,10 +5,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-
-interface GroupsProps {
-  subjectGroups?: API.SubjectGroups[];
-}
+import { useTeacherSubject } from '../context';
 
 export const StudentsTableColumns: ProColumns<any>[] = [
   {
@@ -53,7 +50,8 @@ const TableColumns = [
   },
 ];
 
-export const Groups: React.FC<GroupsProps> = ({ subjectGroups }) => {
+export const Groups: React.FC = () => {
+  const { teacherSubjectData } = useTeacherSubject();
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
@@ -66,7 +64,7 @@ export const Groups: React.FC<GroupsProps> = ({ subjectGroups }) => {
       actionRef={actionRef}
       rowKey="id"
       search={false}
-      dataSource={subjectGroups}
+      dataSource={teacherSubjectData?.groups ?? []}
       columns={[
         ...TableColumns,
         {
