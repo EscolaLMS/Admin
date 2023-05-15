@@ -90,7 +90,7 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
         const response = await getExams({
           per_page: pageSize,
           page: current,
-          semester_subject_id: Number.isNaN(semester_subject_id) ? semester_subject_id : undefined,
+          semester_subject_id: !Number.isNaN(semester_subject_id) ? semester_subject_id : undefined,
           order_by: sortArr && sortArr[0],
           order: sortArr && (sortArr[1] === 'ascend' ? 'ASC' : 'DESC'),
         });
