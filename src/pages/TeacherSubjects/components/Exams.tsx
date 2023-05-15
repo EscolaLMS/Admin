@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import { format } from 'date-fns';
-import { Location } from 'history';
+import type { Location } from 'history';
 import { FormattedMessage, Link, useLocation } from 'umi';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, LineChartOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ import { ExamForm } from './ExamForm';
 import { ExamResults } from './ExamResults';
 
 interface Params {
-  semesterSubjectId: string | undefined;
+  semesterSubjectId: number;
 }
 
 const staticColumns: ProColumns<API.Exam>[] = [
@@ -79,7 +79,7 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
   }
 
   if (exam_id !== null) {
-    return <ExamForm exam_id={exam_id} semester_subject_id={Number(semesterSubjectId)} />;
+    return <ExamForm exam_id={exam_id} semester_subject_id={semesterSubjectId} />;
   }
 
   return (
@@ -88,7 +88,7 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
       actionRef={actionRef}
       search={false}
       rowKey="id"
-      request={async ({ current, pageSize, semester_id, subject_id }, sort) => {
+      request={async ({ current, pageSize }, sort) => {
         const sortArr = sort && Object.entries(sort)[0];
         const semester_subject_id = Number(semesterSubjectId);
 

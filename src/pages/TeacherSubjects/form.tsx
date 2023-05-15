@@ -1,34 +1,22 @@
-import { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { semesterSubject } from '@/services/escola-lms/semesterSubject';
 
+import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
 
-export default () => {
-  const params = useParams<{ subjectId?: string; tab?: string }>();
+const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: string }> = ({
+  semester_subject_id,
+  tab,
+}) => {
   const intl = useIntl();
-  const { subjectId, tab = 'groups' } = params;
-  const [data, setData] = useState<Partial<API.Subjects>>();
   const { setInitialState, initialState } = useModel('@@initialState');
+  const { teacherSubjectData } = useTeacherSubject();
 
-  const getSubjectById = useCallback(async () => {
-    const response = await semesterSubject(Number(subjectId));
-    if (response.success) {
-      setData({
-        ...response.data,
-      });
-    }
-  }, [subjectId]);
-
-  useEffect(() => {
-    getSubjectById();
-  }, [subjectId]);
-
-  if (!data) {
+  if (!teacherSubjectData) {
     return <Spin />;
   }
 
@@ -36,7 +24,7 @@ export default () => {
     <PageContainer
       title={
         <>
-          <FormattedMessage id={data?.subject?.name} />
+          <FormattedMessage id={teacherSubjectData?.subject?.name} />
           {', '}
           <FormattedMessage id={tab} />
         </>
@@ -49,7 +37,7 @@ export default () => {
           <Button type="primary" onClick={() => console.log('attendence')}>
             <FormattedMessage id="uploadAttendance" defaultMessage="uploadAttendance" />
           </Button>
-          <Link to={`/teacher/subjects/${params.subjectId}/exams?exam_id=new`}>
+          <Link to={`/teacher/subjects/${semester_subject_id}/exams?exam_id=new`}>
             <Button type="primary">
               <FormattedMessage id="uploadGrades" defaultMessage="uploadGrades" />
             </Button>
@@ -72,8 +60,8 @@ export default () => {
               }),
             },
             {
-              path: String(subjectId),
-              breadcrumbName: String(data.subject?.name),
+              path: String(semester_subject_id),
+              breadcrumbName: String(teacherSubjectData.subject?.name),
             },
             {
               path: String(tab),
@@ -93,18 +81,18 @@ export default () => {
               ...initialState,
             });
 
-            history.push(`/teacher/subjects/${subjectId}/${key}`);
+            history.push(`/teacher/subjects/${semester_subject_id}/${key}`);
           },
         }}
       >
         <ProCard.TabPane key="groups" tab={<FormattedMessage id="groups" />}>
-          <Groups subjectGroups={data?.groups} />
+          <Groups />
         </ProCard.TabPane>
         <ProCard.TabPane key="students" tab={<FormattedMessage id="students" />}>
           <p>STUDENTS</p>
         </ProCard.TabPane>
         <ProCard.TabPane key="exams" tab={<FormattedMessage id="exams" />}>
-          <Exams semesterSubjectId={subjectId} />
+          <Exams semesterSubjectId={semester_subject_id} />
         </ProCard.TabPane>
         <ProCard.TabPane key="schedule" tab={<FormattedMessage id="schedule" />}>
           <p>SCHEDULE</p>
@@ -120,5 +108,16 @@ export default () => {
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>
+  );
+};
+
+export default () => {
+  const params = useParams<{ subjectId?: string; tab?: string }>();
+  const { subjectId, tab = 'groups' } = params;
+
+  return (
+    <TeacherSubjectContextProvider semester_subject_id={Number(subjectId)}>
+      <TeacherSubjectsFormContent semester_subject_id={Number(subjectId)} tab={tab} />
+    </TeacherSubjectContextProvider>
   );
 };
