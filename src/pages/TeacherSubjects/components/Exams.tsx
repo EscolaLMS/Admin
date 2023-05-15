@@ -10,6 +10,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { DAY_FORMAT } from '@/consts/dates';
 import { getExams, deleteExam } from '@/services/escola-lms/exams';
 import { ExamForm } from './ExamForm';
+import { ExamResults } from './ExamResults';
 
 interface Params {
   semesterSubjectId: string | undefined;
@@ -66,12 +67,16 @@ const staticColumns: ProColumns<API.Exam>[] = [
 
 export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
   const actionRef = useRef<ActionType>();
-  const location = useLocation() as Location & { query: { exam_id?: string } };
+  const location = useLocation() as Location & { query: { exam_id?: string; results?: string } };
 
-  const { exam_id } = useMemo(
-    () => ({ exam_id: location.query?.exam_id ?? null }),
-    [location.query?.exam_id],
+  const { exam_id, results } = useMemo(
+    () => ({ exam_id: location.query?.exam_id ?? null, results: location.query?.results }),
+    [location.query?.exam_id, location.query?.results],
   );
+
+  if (results !== null && !Number.isNaN(Number(results))) {
+    return <ExamResults exam_id={Number(results)} />;
+  }
 
   if (exam_id !== null) {
     return <ExamForm exam_id={exam_id} semester_subject_id={Number(semesterSubjectId)} />;
@@ -120,7 +125,7 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
               </Tooltip>
             </Link>,
             <Link
-              to={`/teacher/subjects/${record.semester_subject_id}/results?exam=${record.id}`}
+              to={`/teacher/subjects/${record.semester_subject_id}/exams?results=${record.id}`}
               key="results"
             >
               <Tooltip

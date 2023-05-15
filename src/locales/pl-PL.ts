@@ -44,6 +44,7 @@ export default {
   studentsList: 'Lista studentów',
   examTitle: 'Wpisz tytuł egzaminu',
   examResult: 'Wynik egzaminu',
+  examResults: 'Wyniki egzaminu',
   datePassingExam: 'Data zaliczenia egzaminu',
   examImportance: 'Waga egzaminu (1-100%)',
   gradesType: 'Typ wgrywania ocen',
