@@ -8,13 +8,10 @@ import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
 
-const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: string }> = ({
-  semester_subject_id,
-  tab,
-}) => {
+const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
   const intl = useIntl();
   const { setInitialState, initialState } = useModel('@@initialState');
-  const { teacherSubjectData } = useTeacherSubject();
+  const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
 
   if (!teacherSubjectData) {
     return <Spin />;
@@ -92,7 +89,7 @@ const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: s
           <p>STUDENTS</p>
         </ProCard.TabPane>
         <ProCard.TabPane key="exams" tab={<FormattedMessage id="exams" />}>
-          <Exams semesterSubjectId={semester_subject_id} />
+          <Exams />
         </ProCard.TabPane>
         <ProCard.TabPane key="schedule" tab={<FormattedMessage id="schedule" />}>
           <p>SCHEDULE</p>
@@ -117,7 +114,7 @@ export default () => {
 
   return (
     <TeacherSubjectContextProvider semester_subject_id={Number(subjectId)}>
-      <TeacherSubjectsFormContent semester_subject_id={Number(subjectId)} tab={tab} />
+      <TeacherSubjectsFormContent tab={tab} />
     </TeacherSubjectContextProvider>
   );
 };

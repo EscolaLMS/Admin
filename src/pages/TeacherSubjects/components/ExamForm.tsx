@@ -7,6 +7,7 @@ import { ExamGradeType } from '@/services/escola-lms/enums';
 import { createExam, getExam, updateExam } from '@/services/escola-lms/exams';
 
 import { ConvertGradesModal } from './ConvertGradesModal';
+import { useTeacherSubject } from '../context';
 
 const SelectTypeButtonsGroup: React.FC<{ onSelect: (type: ExamGradeType) => void }> = ({
   onSelect,
@@ -67,13 +68,13 @@ interface ExamFormValues {
 
 interface Props {
   exam_id: string;
-  semester_subject_id: number;
 }
-export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
+export const ExamForm: React.FC<Props> = ({ exam_id }) => {
   const [form] = ProForm.useForm<ExamFormValues>();
   const [selectedType, setSelectedType] = useState<ExamGradeType>();
   const [examResults, setExamResults] = useState<API.ExamResult[]>();
   const [fetching, setFetching] = useState(false);
+  const { semester_subject_id } = useTeacherSubject();
 
   const editableKeys = useMemo(
     () => (examResults ?? []).map(({ user_id }) => user_id),
@@ -121,7 +122,6 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
           type={selectedType}
           closeModal={resetState}
           onSuccess={setExamResults}
-          semester_subject_id={semester_subject_id}
         />
       )}
       <ProForm
@@ -133,7 +133,7 @@ export const ExamForm: React.FC<Props> = ({ semester_subject_id, exam_id }) => {
             ({ result }) => typeof result === 'number' && result >= 0 && result <= 100,
           );
 
-          if (areExamResultsValid) {
+          if (areExamResultsValid && typeof semester_subject_id === 'number') {
             const { title, passed_at, weight } = formData;
             const numExamId = Number(exam_id);
 

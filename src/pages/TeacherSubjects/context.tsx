@@ -12,6 +12,7 @@ export interface TeacherSubjectContext {
   groupUsers: GroupUserData;
   getTeacherSubjectById: (semester_subject_id: number) => void;
   getGroupUsers: (group_id: number) => void;
+  semester_subject_id: number | null;
 }
 
 const Context = React.createContext<TeacherSubjectContext>({
@@ -19,6 +20,7 @@ const Context = React.createContext<TeacherSubjectContext>({
   groupUsers: { loading: false, byId: {} },
   getTeacherSubjectById: () => console.warn('default value'),
   getGroupUsers: () => console.warn('default value'),
+  semester_subject_id: null,
 });
 
 export const useTeacherSubject = () => useContext(Context);
@@ -58,7 +60,13 @@ export const TeacherSubjectContextProvider: React.FC<{
 
   return (
     <Context.Provider
-      value={{ teacherSubjectData, getTeacherSubjectById, groupUsers, getGroupUsers }}
+      value={{
+        teacherSubjectData,
+        getTeacherSubjectById,
+        groupUsers,
+        getGroupUsers,
+        semester_subject_id,
+      }}
     >
       {children}
     </Context.Provider>
