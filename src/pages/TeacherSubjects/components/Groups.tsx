@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 import { Button, Space, Tooltip } from 'antd';
-import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { useTeacherSubject } from '../context';

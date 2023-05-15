@@ -120,6 +120,10 @@
   opacity: 0;
 }
 
+.program-sidebar__lesson--actions .topic-types-selector--visible {
+  opacity: 1;
+}
+
 .program-sidebar__lesson--actions:hover .topic-types-selector {
   opacity: 1;
 }

@@ -1,9 +1,16 @@
-import type { FinishedTopicsUserStats, FinishedTopicsUserStat } from './index';
-import { Space, Switch, Table, Tag } from 'antd';
+import type {
+  FinishedTopicsUserStats,
+  FinishedTopicsUserStat,
+  FinishedCourseUserStats,
+  CourseAttempts,
+} from './index';
+import { Select, Space, Switch, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import TypeButtonDrawer from '../TypeButtonDrawer';
+import Chart from './chart';
+import ProCard from '@ant-design/pro-card';
 
 type UserStatColumn = Record<string, number | string | FinishedTopicsUserStat> & {
   email: string;
@@ -117,5 +124,146 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
       size="small"
       scroll={{ x: 1500 }}
     />
+  );
+};
+
+export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = ({ stats }) => {
+  const columns: ColumnsType<{ email: string; finished_at: string }> = useMemo(() => {
+    return [
+      {
+        title: 'user',
+        dataIndex: 'id',
+        render: (id: number) => <TypeButtonDrawer type="App\Models\User" type_id={id} />,
+      },
+      {
+        title: 'email',
+        dataIndex: 'email',
+      },
+      {
+        title: <FormattedMessage id="finished_at" defaultMessage="Finished at" />,
+        dataIndex: 'finished_at',
+      },
+    ];
+  }, []);
+
+  const dataSource: { email: string; finished_at: string }[] = useMemo(() => {
+    return stats.map(({ id, email, finished_at }) => ({
+      id,
+      email,
+      finished_at,
+    }));
+  }, [stats]);
+
+  return (
+    <Table
+      title={() => (
+        <Space>
+          <FormattedMessage id="course.finished" defaultMessage="Finished" />
+        </Space>
+      )}
+      columns={columns}
+      dataSource={dataSource}
+      size="small"
+      scroll={{ x: 500 }}
+    />
+  );
+};
+
+export const UserCourseAttempts: React.FC<{ stats: CourseAttempts[] }> = ({ stats }) => {
+  const [choosenUserEmail, setChoosenUserEmail] = useState<string | null>(null);
+  const [choosenAttempt, setChoosenAttempt] = useState<number | null>(null);
+
+  const dataSource = useMemo(() => {
+    return stats.map((userStats) =>
+      Object.values(userStats.attempts).flatMap(({ dates, attempt }) => {
+        const { date, times } = Object.values(dates)[0];
+        return {
+          date,
+          attempt,
+          times: times.length,
+          email: userStats.email,
+        };
+      }),
+    );
+  }, [stats]);
+
+  const config = {
+    xField: 'date',
+    yField: 'times',
+    seriesField: 'attempt',
+    isStack: true,
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
+    },
+    slider: {
+      start: 0,
+      end: 1,
+    },
+    label: {
+      position: 'middle',
+      layout: [
+        {
+          type: 'interval-adjust-position',
+        },
+        {
+          type: 'interval-hide-overlap',
+        },
+        {
+          type: 'adjust-color',
+        },
+      ],
+    },
+  };
+
+  return (
+    <ProCard colSpan={12} layout="center">
+      <Chart
+        config={config}
+        title={
+          <Space>
+            <FormattedMessage id="course.interactions_in_days" />
+            <Select
+              showSearch
+              value={choosenUserEmail}
+              onChange={(newValue) => {
+                setChoosenUserEmail(newValue);
+                setChoosenAttempt(null);
+              }}
+              placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
+            >
+              {stats.map(({ id, email }) => (
+                <Select.Option key={id} value={email}>
+                  {email}
+                </Select.Option>
+              ))}
+            </Select>
+            <Select
+              value={choosenAttempt}
+              onChange={(newValue) => setChoosenAttempt(newValue)}
+              disabled={choosenUserEmail === null}
+              placeholder={<FormattedMessage id="select_attempt" defaultMessage="Select attempt" />}
+            >
+              {dataSource
+                .flatMap((data) => data)
+                .filter(({ email }) => email === choosenUserEmail)
+                .map(({ attempt }) => (
+                  <Select.Option value={attempt} key={attempt}>
+                    <FormattedMessage id="attempt" defaultMessage="Attempt" /> {attempt}
+                  </Select.Option>
+                ))}
+            </Select>
+          </Space>
+        }
+        value={dataSource
+          .flatMap((data) => data)
+          .filter(({ email }) => email === choosenUserEmail)
+          .filter(({ attempt }) =>
+            Number.isInteger(choosenAttempt) ? attempt === choosenAttempt : true,
+          )}
+      />
+    </ProCard>
   );
 };
