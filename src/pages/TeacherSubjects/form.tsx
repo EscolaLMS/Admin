@@ -3,10 +3,11 @@ import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { semesterSubject } from '@/services/escola-lms/semesterSubject';
+import { semesterSubject } from '@/services/escola-lms/semester_subject';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
 import { GradesModal } from './components/gradesModal';
+import Attendances from './components/Attendances';
 
 export default () => {
   const params = useParams<{ subjectId?: string; tab?: string }>();
@@ -16,7 +17,7 @@ export default () => {
   const [modalGradesVisible, setModalGradesVisible] = useState(false);
   const { setInitialState, initialState } = useModel('@@initialState');
 
-  const getSubjectById = useCallback(async () => {
+  const getSubjectGroupsById = useCallback(async () => {
     const response = await semesterSubject(Number(subjectId));
     if (response.success) {
       setData({
@@ -26,7 +27,7 @@ export default () => {
   }, [subjectId]);
 
   useEffect(() => {
-    getSubjectById();
+    getSubjectGroupsById();
   }, [subjectId]);
 
   if (!data) {
@@ -121,7 +122,7 @@ export default () => {
             <p>SCHEDULE</p>
           </ProCard.TabPane>
           <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
-            <p>ATTENDENCE</p>
+            <Attendances subjectGroups={data?.groups} />
           </ProCard.TabPane>
           <ProCard.TabPane key="ratingScale" tab={<FormattedMessage id="ratingScale" />}>
             <p>RATING SCALE</p>

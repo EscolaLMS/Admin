@@ -60,3 +60,8 @@ export enum QuestionType {
   ESSAY = 'essay',
   DESCRIPTION = 'description',
 }
+
+export enum AttendanceValue {
+  PRESENT = 'present',
+  ABSENT = 'absent',
+}
