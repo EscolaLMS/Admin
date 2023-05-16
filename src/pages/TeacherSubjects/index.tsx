@@ -4,7 +4,7 @@ import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { semesterSubjects } from '@/services/escola-lms/semesterSubject';
+import { semesterSubjects } from '@/services/escola-lms/semester_subject';
 import { EditOutlined } from '@ant-design/icons';
 import SemesterSelect from '@/components/SemesterSelect';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
-import { semesters as fetchSemesters } from '@/services/escola-lms/semesterSubject';
+import { semesters as fetchSemesters } from '@/services/escola-lms/semester_subject';
 import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
 
