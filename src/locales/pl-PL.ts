@@ -34,7 +34,7 @@ export default {
   exams: 'Egzaminy (oceny cząstkowe)',
   schedule: 'Harmonogram',
   attendance: 'Obecności',
-  ratingScale: 'Skala ocen',
+  'grades-scale': 'Skala ocen',
   finalGrades: 'Oceny końcowe',
   msTeams: 'MS Teams',
   uploadAttendance: 'Wgraj obecność',
@@ -674,4 +674,7 @@ export default {
   'TeacherSubjects.Exams.teams_formsConvert': 'Wgraj plik XLSX (MS Teams Forms)',
   'TeacherSubjects.Exams.teams_lectureConvert': 'Wgraj plik (MS Teams Lecture)',
   'TeacherSubjects.Exams.test_portalConvert': 'Wgraj plik XLSX (Test Portal)',
+  degree: 'Stopień',
+  grade: 'Ocena',
+  max_percent: 'Max procent (%)',
 };

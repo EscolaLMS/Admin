@@ -56,7 +56,7 @@ export default {
   exams: 'Exams (partial grades)',
   schedule: 'Schedule',
   attendance: 'Attendance',
-  ratingScale: 'Rating scale',
+  'grades-scale': 'Grades scale',
   finalGrades: 'Final grades',
   subject: 'Subject',
   subjects: 'Subjects',
@@ -685,4 +685,7 @@ export default {
   'TeacherSubjects.Exams.teams_formsConvert': 'Upload MS Teams Forms XLSX file',
   'TeacherSubjects.Exams.teams_lectureConvert': 'Upload MS Teams Lecture file',
   'TeacherSubjects.Exams.test_portalConvert': 'Upload Test Portal XLSX file',
+  degree: 'Degree',
+  grade: 'Grade',
+  max_percent: 'Max percent (%)',
 };
