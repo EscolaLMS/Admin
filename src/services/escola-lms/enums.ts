@@ -61,6 +61,11 @@ export enum QuestionType {
   DESCRIPTION = 'description',
 }
 
+export enum AttendanceValue {
+  PRESENT = 'present',
+  ABSENT = 'absent',
+}
+
 export enum ExamGradeType {
   Manual = 'manual',
   TeamsForms = 'teams_forms',

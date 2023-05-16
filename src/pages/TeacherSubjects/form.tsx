@@ -3,10 +3,10 @@ import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
+import Attendances from './components/Attendances';
 
 const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: string }> = ({
   semester_subject_id,
@@ -98,7 +98,7 @@ const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: s
           <p>SCHEDULE</p>
         </ProCard.TabPane>
         <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
-          <p>ATTENDENCE</p>
+          <Attendances />
         </ProCard.TabPane>
         <ProCard.TabPane key="ratingScale" tab={<FormattedMessage id="ratingScale" />}>
           <p>RATING SCALE</p>

@@ -1,6 +1,6 @@
 import { studentUserGroup } from '@/services/escola-lms/student_user_groups';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { semesterSubject } from '@/services/escola-lms/semesterSubject';
+import { semesterSubject } from '@/services/escola-lms/semester_subject';
 
 interface GroupUserData {
   loading: boolean;

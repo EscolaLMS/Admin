@@ -1386,6 +1386,26 @@ declare namespace API {
     semester_id?: number;
   };
 
+  type StudentAttendance = {
+    user_id: number;
+    value: AttendanceValue;
+  };
+
+  type GroupAttendanceSchedule = {
+    id: number;
+    date_from: Date | string;
+    date_to: Date | string;
+    subject_id: number;
+    group_id: number;
+    semester_id: number;
+    teacher_id: number;
+    term_status_id: number;
+    attendances: StudentAttendance[];
+  };
+
+  type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule[]>;
+  type ChangeStudentAttendance = DefaultResponse<StudentAttendance[]>;
+
   type ExamResult = {
     result: number;
     user_id: number;
