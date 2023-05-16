@@ -10,12 +10,9 @@ import { format } from 'date-fns';
 import { DAY_FORMAT } from '@/consts/dates';
 import ProCard from '@ant-design/pro-card';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
+import { useTeacherSubject } from '../context';
 
 export type ColumnType = BaseUserProps & Record<string, AttendanceValue | null>;
-
-interface GroupsProps {
-  subjectGroups?: API.SubjectGroups[];
-}
 
 interface BaseUserProps {
   id: number;
@@ -28,15 +25,16 @@ interface CurrentGroupProps {
   name?: string;
 }
 
-export const Attendances: React.FC<GroupsProps> = ({ subjectGroups }) => {
+export const Attendances: React.FC = () => {
+  const { teacherSubjectData } = useTeacherSubject();
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const [attendanceSchedule, setAttendanceSchedule] = useState<API.GroupAttendanceSchedule[]>();
   const [studentsGroup, setStudentsGroup] = useState<API.StudentUserGroup>();
   const [currentGroup, setCurrentGroup] = useState<CurrentGroupProps>({
-    id: subjectGroups?.[0].id ?? null,
-    name: subjectGroups?.[0].name,
+    id: teacherSubjectData?.groups?.[0].id ?? null,
+    name: teacherSubjectData?.groups?.[0].name,
   });
 
   const studentAttendanceList: ColumnType[] = useMemo(
@@ -99,7 +97,7 @@ export const Attendances: React.FC<GroupsProps> = ({ subjectGroups }) => {
   }, [attendanceSchedule]);
 
   const getGroupName = (id: number) => {
-    const findedGroup = subjectGroups?.find((group) => group.id === id);
+    const findedGroup = teacherSubjectData?.groups?.find((group) => group.id === id);
     return findedGroup ? findedGroup?.name : '';
   };
 
@@ -127,9 +125,9 @@ export const Attendances: React.FC<GroupsProps> = ({ subjectGroups }) => {
           <Select
             style={{ minWidth: '400px' }}
             onChange={handleSelectGroup}
-            defaultValue={subjectGroups?.[0].id}
+            defaultValue={teacherSubjectData?.groups?.[0].id}
           >
-            {subjectGroups?.map((group: API.SubjectGroups) => (
+            {teacherSubjectData?.groups?.map((group: API.SubjectGroups) => (
               <Select.Option key={group.id} value={group.id}>
                 {group.name}
               </Select.Option>

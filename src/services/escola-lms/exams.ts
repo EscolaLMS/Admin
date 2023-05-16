@@ -23,6 +23,20 @@ export async function createExam(body?: API.CreateExamRequest, options?: Request
   });
 }
 
+/**  PUT /api/admin/exams/:id */
+export async function updateExam(
+  id: number,
+  body: API.CreateExamRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.Exam>>(`/api/admin/exams/${id}`, {
+    method: 'PUT',
+    data: body,
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
 /**  GET /api/admin/exams/:id */
 export async function getExam(id: number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.Exam>>(`/api/admin/exams/${id}`, {
@@ -34,7 +48,7 @@ export async function getExam(id: number, options?: RequestOptionsInit) {
 
 /**  DELETE /api/admin/exams/:id */
 export async function deleteExam(id: number, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<undefined>>(`/api/admin/consultations/${id}`, {
+  return request<API.DefaultResponse<undefined>>(`/api/admin/exams/${id}`, {
     method: 'DELETE',
     ...(options || {}),
   });
