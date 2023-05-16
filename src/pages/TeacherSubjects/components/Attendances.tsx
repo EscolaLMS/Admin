@@ -108,10 +108,16 @@ export const Attendances: React.FC = () => {
 
   useEffect(() => {
     if (currentGroup.id) {
-      fetchGroupAttendanceSchedule(currentGroup.id).then((response) =>
-        setAttendanceSchedule(response.data),
-      );
-      fetchStudentUserGroup(currentGroup.id).then((response) => setStudentsGroup(response.data));
+      fetchGroupAttendanceSchedule(currentGroup.id).then((response) => {
+        if (response.success) {
+          setAttendanceSchedule(response.data);
+        }
+      });
+      fetchStudentUserGroup(currentGroup.id).then((response) => {
+        if (response.success) {
+          setStudentsGroup(response.data);
+        }
+      });
     }
   }, [currentGroup]);
 

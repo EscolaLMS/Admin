@@ -31,8 +31,10 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
     ).then((res) => {
       if (res.success) {
         fetchGroupAttendanceSchedule(Number(groupId)).then((response) => {
-          onSuccess(response.data);
-          setLoadingUserAttendance(false);
+          if (response.success) {
+            onSuccess(response.data);
+            setLoadingUserAttendance(false);
+          }
         });
       }
     });

@@ -1403,7 +1403,7 @@ declare namespace API {
     attendances: StudentAttendance[];
   };
 
-  type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule>;
+  type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule[]>;
   type ChangeStudentAttendance = DefaultResponse<StudentAttendance[]>;
 
   type ExamResult = {
