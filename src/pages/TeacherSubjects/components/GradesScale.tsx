@@ -78,7 +78,7 @@ export const GradesScale: React.FC = () => {
 
     getSubjectTutorGrades(semester_subject_id, selectedTutor).then((response) => {
       if (response.success) {
-        const gradeScaleWithIds = response.data.grade_scale.map((values, i) => ({
+        const gradeScaleWithIds = (response.data.grade_scale ?? []).map((values, i) => ({
           ...values,
           id: String((i + 1) * 100),
         }));
