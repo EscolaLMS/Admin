@@ -57,23 +57,17 @@ interface Props {
   closeModal: () => void;
   onSuccess: (convertedData: API.ExamResult[]) => void;
   type: ExamGradeType;
-  semester_subject_id: number;
 }
 
-export const ConvertGradesModal: React.FC<Props> = ({
-  open,
-  closeModal,
-  onSuccess,
-  type,
-  semester_subject_id,
-}) => {
-  const { teacherSubjectData, groupUsers, getGroupUsers } = useTeacherSubject();
+export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSuccess, type }) => {
+  const { teacherSubjectData, semester_subject_id, groupUsers, getGroupUsers } =
+    useTeacherSubject();
   const [convertedData, setConvertedData] = useState<API.ExamResult[]>();
   const [manualSelectValue, setManualSelectValue] = useState<number[]>([]);
 
   const reqData: API.ParseExamFileRequest = {
     type,
-    semester_subject_id,
+    semester_subject_id: semester_subject_id!,
   };
 
   const onUploadFile = useCallback((response: API.DefaultResponse<API.Exam>) => {

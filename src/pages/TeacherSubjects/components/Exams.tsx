@@ -11,10 +11,7 @@ import { DAY_FORMAT } from '@/consts/dates';
 import { getExams, deleteExam } from '@/services/escola-lms/exams';
 import { ExamForm } from './ExamForm';
 import { ExamResults } from './ExamResults';
-
-interface Params {
-  semesterSubjectId: number;
-}
+import { useTeacherSubject } from '../context';
 
 const staticColumns: ProColumns<API.Exam>[] = [
   {
@@ -65,8 +62,9 @@ const staticColumns: ProColumns<API.Exam>[] = [
   },
 ];
 
-export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
+export const Exams: React.FC = () => {
   const actionRef = useRef<ActionType>();
+  const { semester_subject_id } = useTeacherSubject();
   const location = useLocation() as Location & { query: { exam_id?: string; results?: string } };
 
   const { exam_id, results } = useMemo(
@@ -79,7 +77,7 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
   }
 
   if (exam_id !== null) {
-    return <ExamForm exam_id={exam_id} semester_subject_id={semesterSubjectId} />;
+    return <ExamForm exam_id={exam_id} />;
   }
 
   return (
@@ -89,8 +87,13 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
       search={false}
       rowKey="id"
       request={async ({ current, pageSize }, sort) => {
+        if (semester_subject_id === null)
+          return {
+            data: [],
+            total: 0,
+            success: false,
+          };
         const sortArr = sort && Object.entries(sort)[0];
-        const semester_subject_id = Number(semesterSubjectId);
 
         const response = await getExams({
           per_page: pageSize,
@@ -107,7 +110,12 @@ export const Exams: React.FC<Params> = ({ semesterSubjectId }) => {
             success: true,
           };
         }
-        return [];
+
+        return {
+          data: [],
+          total: 0,
+          success: false,
+        };
       }}
       columns={[
         ...staticColumns,

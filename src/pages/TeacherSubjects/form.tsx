@@ -3,18 +3,17 @@ import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
+
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
 import Attendances from './components/Attendances';
+import { GradesScale } from './components/GradesScale';
 
-const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: string }> = ({
-  semester_subject_id,
-  tab,
-}) => {
+const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
   const intl = useIntl();
   const { setInitialState, initialState } = useModel('@@initialState');
-  const { teacherSubjectData } = useTeacherSubject();
+  const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
 
   if (!teacherSubjectData) {
     return <Spin />;
@@ -92,7 +91,7 @@ const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: s
           <p>STUDENTS</p>
         </ProCard.TabPane>
         <ProCard.TabPane key="exams" tab={<FormattedMessage id="exams" />}>
-          <Exams semesterSubjectId={semester_subject_id} />
+          <Exams />
         </ProCard.TabPane>
         <ProCard.TabPane key="schedule" tab={<FormattedMessage id="schedule" />}>
           <p>SCHEDULE</p>
@@ -100,8 +99,8 @@ const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: s
         <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
           <Attendances />
         </ProCard.TabPane>
-        <ProCard.TabPane key="ratingScale" tab={<FormattedMessage id="ratingScale" />}>
-          <p>RATING SCALE</p>
+        <ProCard.TabPane key="grades-scale" tab={<FormattedMessage id="grades-scale" />}>
+          <GradesScale />
         </ProCard.TabPane>
         <ProCard.TabPane key="finalGrades" tab={<FormattedMessage id="finalGrades" />}>
           <p>FINAL GRADES</p>
@@ -117,7 +116,7 @@ export default () => {
 
   return (
     <TeacherSubjectContextProvider semester_subject_id={Number(subjectId)}>
-      <TeacherSubjectsFormContent semester_subject_id={Number(subjectId)} tab={tab} />
+      <TeacherSubjectsFormContent tab={tab} />
     </TeacherSubjectContextProvider>
   );
 };

@@ -26,3 +26,18 @@ export async function semesterSubject(id: number, options?: RequestOptionsInit) 
     ...(options || {}),
   });
 }
+
+/** GET /api/admin/semester-subjects/:id/tutors */
+export async function getSemesterSubjectTutors(
+  semester_subject_id: number,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.SemesterSubjectTutors>>(
+    `/api/admin/semester-subjects/${semester_subject_id}/tutors`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
+      ...(options || {}),
+    },
+  );
+}
