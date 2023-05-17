@@ -53,6 +53,7 @@ export const GradesScale: React.FC = () => {
   const [editableKeys, setEditableKeys] = useState<React.Key[]>([]);
   const actionRef = useRef<ActionType>();
 
+  const [tableLoading, setTableLoading] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState<number | null>(null);
   const tutorsSelectOptions = useMemo(
     () =>
@@ -76,16 +77,21 @@ export const GradesScale: React.FC = () => {
   useEffect(() => {
     if (semester_subject_id === null || selectedTutor === null) return;
 
-    getSubjectTutorGrades(semester_subject_id, selectedTutor).then((response) => {
-      if (response.success) {
-        const gradeScaleWithIds = (response.data.grade_scale ?? []).map((values, i) => ({
-          ...values,
-          id: String((i + 1) * 100),
-        }));
+    setTableLoading(true);
+    getSubjectTutorGrades(semester_subject_id, selectedTutor)
+      .then((response) => {
+        if (response.success) {
+          const gradeScaleWithIds = (response.data.grade_scale ?? []).map((values, i) => ({
+            ...values,
+            id: String((i + 1) * 100),
+          }));
 
-        form.setFieldValue('table', gradeScaleWithIds);
-      }
-    });
+          form.setFieldValue('table', gradeScaleWithIds);
+        }
+      })
+      .finally(() => {
+        setTableLoading(false);
+      });
   }, [semester_subject_id, selectedTutor]);
 
   const onFormSubmit = useCallback(
@@ -125,6 +131,7 @@ export const GradesScale: React.FC = () => {
           formItemProps={{ label: <FormattedMessage id="grades-scale" /> }}
           cardProps={{ bodyStyle: { padding: 0 } }}
           recordCreatorProps={false}
+          loading={tableLoading}
           columns={[
             ...staticColumns,
             {
