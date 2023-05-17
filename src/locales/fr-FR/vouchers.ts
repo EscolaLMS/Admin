@@ -1,6 +1,7 @@
 export default {
   vouchers: 'Bons de réduction',
   voucher: 'Bon de réduction',
+  'voucher.value': 'Valeur du bon',
   'vouchers.code': 'Code du bon',
   'vouchers.limit_usage': "Limitation d'utilisation",
   'vouchers.max_cart_price': 'Prix maximum du panier',
