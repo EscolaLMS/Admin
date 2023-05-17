@@ -10,6 +10,7 @@ import { Exams } from './components/Exams';
 import Students from './components/Students';
 import Attendances from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
+import { FinalGradesList } from './components/FinalGradesList';
 
 const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
   const intl = useIntl();
@@ -103,8 +104,8 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
         <ProCard.TabPane key="grades-scale" tab={<FormattedMessage id="grades-scale" />}>
           <GradesScale />
         </ProCard.TabPane>
-        <ProCard.TabPane key="finalGrades" tab={<FormattedMessage id="finalGrades" />}>
-          <p>FINAL GRADES</p>
+        <ProCard.TabPane key="final-grades" tab={<FormattedMessage id="final-grades" />}>
+          <FinalGradesList />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

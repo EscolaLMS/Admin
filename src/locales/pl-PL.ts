@@ -35,7 +35,7 @@ export default {
   schedule: 'Harmonogram',
   attendance: 'Obecności',
   'grades-scale': 'Skala ocen',
-  finalGrades: 'Oceny końcowe',
+  'final-grades': 'Oceny końcowe',
   msTeams: 'MS Teams',
   uploadAttendance: 'Wgraj obecność',
   uploadGrades: 'Wgraj oceny',

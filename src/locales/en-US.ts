@@ -57,7 +57,7 @@ export default {
   schedule: 'Schedule',
   attendance: 'Attendance',
   'grades-scale': 'Grades scale',
-  finalGrades: 'Final grades',
+  'final-grades': 'Final grades',
   subject: 'Subject',
   subjects: 'Subjects',
   groupName: 'Group name',
