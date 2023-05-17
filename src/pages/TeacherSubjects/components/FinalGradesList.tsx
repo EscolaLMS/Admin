@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FormattedMessage, Link } from 'umi';
+import type { Location } from 'history';
+import { FormattedMessage, Link, useLocation } from 'umi';
 import { Button, Divider, Select } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
@@ -7,6 +8,7 @@ import type { ProColumns } from '@ant-design/pro-table';
 import { EditOutlined } from '@ant-design/icons';
 
 import { getGroupFinalGrades } from '@/services/escola-lms/grades';
+import { FinalGradesDetails } from './FinalGradesDetails';
 import { useTeacherSubject } from '../context';
 
 interface TableData {
@@ -33,6 +35,13 @@ const staticColumns: ProColumns<API.FinalGradeItem>[] = [
 ];
 
 export const FinalGradesList: React.FC = () => {
+  const location = useLocation() as Location & { query: { user_id?: string } };
+  const user_id = useMemo(
+    () => (Number.isNaN(Number(location.query?.user_id)) ? null : Number(location.query?.user_id)),
+
+    [location.query?.user_id],
+  );
+
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
   const [tableData, setTableData] = useState<TableData>({ loading: false });
 
@@ -65,6 +74,10 @@ export const FinalGradesList: React.FC = () => {
         setTableData((prev) => ({ ...prev, loading: false }));
       });
   }, [selectedGroup]);
+
+  if (user_id !== null) {
+    return <FinalGradesDetails />;
+  }
 
   return (
     <>
