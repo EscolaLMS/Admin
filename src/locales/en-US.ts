@@ -607,7 +607,7 @@ export default {
   current_user_status: 'Current user status',
   public_course: 'Public',
   no_pricing: 'No Price/Access',
-  public_label: ' Is public ',
+  public_label: 'Is public (available free of charge)',
   public_tooltip: ' Course is accessible to anyone without having account ',
   changesToBeApproved: 'Changes to be approved',
   orderHasBeenChanged: 'The order has been changed',
