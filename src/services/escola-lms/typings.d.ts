@@ -1486,6 +1486,34 @@ declare namespace API {
     id: number; // semester_subject_id,
     tutors: SemesterSubjectTutor[];
   };
+
+  type FinalGradeItemUser = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+
+  type FinalGradeItemGradeTerm = {
+    id: number;
+    name: string;
+  };
+
+  type FinalGradeItemGrade = {
+    id: number;
+    grade_name: string;
+    grade_value: number;
+    grade_date: Date | string;
+    grade_term: FinalGradeItemGradeTerm;
+  };
+
+  type FinalGradeItem = {
+    id: number;
+    user: FinalGradeItemUser;
+    group_id: number;
+    s_subject_scale_form_id: number;
+    grades: FinalGradeItemGrade[];
+  };
 }
 
 declare module 'jsoneditor-react' {
