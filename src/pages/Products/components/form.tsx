@@ -339,7 +339,7 @@ const ProductsForm: React.FC<{
               ]}
               width="xs"
               name="price"
-              label={<FormattedMessage id="price" />}
+              label={<FormattedMessage id="price_in_cents" />}
               tooltip={<FormattedMessage id="price_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'price',

@@ -481,6 +481,7 @@ export default {
   tax_rate: 'Tax rate',
   tax_rate_tooltip: 'Tax rate specified as a percentage',
   price: 'Price',
+  price_in_cents: 'Price (in cents)',
   price_tooltip: 'Product price',
   teaser_url: 'Teaser URL',
   teaser_url_tooltip: 'URL to teaser',

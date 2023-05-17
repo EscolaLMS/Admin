@@ -467,6 +467,7 @@ export default {
   tax_rate: 'Podatek stawka',
   tax_rate_tooltip: 'Stawka podatku określona w procentach',
   price: 'Cena',
+  price_in_cents: 'Cena (w groszach)',
   price_tooltip: 'Cena produktu',
   teaser_url: 'Teaser URL',
   teaser_url_tooltip: 'URL do zwiastunu',

@@ -1,6 +1,7 @@
 export default {
   vouchers: 'Vouchery',
   voucher: 'Voucher',
+  'voucher.value': 'Wartość vouchera',
   'vouchers.code': 'Kod vouchera',
   'vouchers.limit_usage': 'Limit użycia',
   'vouchers.max_cart_price': 'Max. wartość koszyka',

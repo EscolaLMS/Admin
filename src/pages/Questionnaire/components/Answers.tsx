@@ -95,6 +95,19 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
       hideInSearch: true,
     },
     {
+      title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,
+      dataIndex: 'updated_at',
+      hideInSearch: false,
+      render: (_, record) =>
+        record.updated_at ? new Date(record.updated_at).toLocaleString() : '-',
+      sorter: {
+        compare: (a, b) =>
+          a.updated_at && b.updated_at
+            ? new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
+            : 0,
+      },
+    },
+    {
       title: <FormattedMessage id="question_title" defaultMessage="question_title" />,
       dataIndex: 'question_title',
       hideInSearch: true,
@@ -107,11 +120,15 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
         record.note && record.note?.length > 64 ? record.note?.slice(0, 64) + '...' : record.note,
     },
     {
-      title: <FormattedMessage id="user_id" defaultMessage="user_id" />,
+      title: <FormattedMessage id="user" defaultMessage="user" />,
       dataIndex: 'user_id',
       hideInSearch: true,
       render: (_, record) => (
-        <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />
+        <div>
+          <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />
+          <p className="list-paragraph">{record.user?.name}</p>
+          <p className="list-paragraph">{record.user?.email}</p>
+        </div>
       ),
     },
 

@@ -259,11 +259,11 @@ const VoucherForm = () => {
             <ProFormDigit
               width="md"
               name="amount"
-              label={<FormattedMessage id="amount" />}
-              tooltip={<FormattedMessage id="amount" />}
+              label={<FormattedMessage id="voucher.value" />}
+              tooltip={<FormattedMessage id="voucher.value" />}
               placeholder={intl.formatMessage({
-                id: 'amount',
-                defaultMessage: 'amount',
+                id: 'voucher.value',
+                defaultMessage: 'voucher value',
               })}
               required
               disabled={!voucherType}
