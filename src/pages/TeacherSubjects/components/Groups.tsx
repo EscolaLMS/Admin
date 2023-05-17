@@ -7,7 +7,7 @@ import { ExportOutlined } from '@ant-design/icons';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { useTeacherSubject } from '../context';
 
-export const StudentsTableColumns: ProColumns<any>[] = [
+export const StudentsTableColumns: ProColumns<API.StudentUserGroup>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
@@ -25,11 +25,14 @@ export const StudentsTableColumns: ProColumns<any>[] = [
     dataIndex: 'users',
     render: (_, record) => (
       <span>
-        {record.users.map((item: API.StudentUser) => (
-          <span key={item.id}>
-            {`${item.first_name} ${item.last_name}`} <br />
-          </span>
-        ))}
+        {record.users.map(
+          (item: API.StudentUser) =>
+            !item.academic_teacher_id && (
+              <span key={item.id}>
+                {`${item.first_name} ${item.last_name}`} <br />
+              </span>
+            ),
+        )}
       </span>
     ),
     hideInForm: true,
@@ -56,7 +59,7 @@ export const Groups: React.FC = () => {
   const intl = useIntl();
 
   return (
-    <ProTable<any>
+    <ProTable
       headerTitle={intl.formatMessage({
         id: 'groups',
         defaultMessage: 'groups',
