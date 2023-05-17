@@ -7,6 +7,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
+import Students from './components/Students';
 
 const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: string }> = ({
   semester_subject_id,
@@ -89,7 +90,7 @@ const TeacherSubjectsFormContent: React.FC<{ semester_subject_id: number; tab: s
           <Groups />
         </ProCard.TabPane>
         <ProCard.TabPane key="students" tab={<FormattedMessage id="students" />}>
-          <p>STUDENTS</p>
+          <Students />
         </ProCard.TabPane>
         <ProCard.TabPane key="exams" tab={<FormattedMessage id="exams" />}>
           <Exams semesterSubjectId={semester_subject_id} />

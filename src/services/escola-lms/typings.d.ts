@@ -1371,6 +1371,7 @@ declare namespace API {
       group_id: number;
       user_id: number;
     };
+    academic_teacher_id: number | null;
   };
 
   type StudentUserGroup = {
@@ -1379,7 +1380,7 @@ declare namespace API {
     users: StudentUser[];
   };
 
-  type StudentGroupRow = DefaultResponse<StudentUserGroup>;
+  type StudentGroupRow = DefaultResponse<StudentUserGroup[]>;
   type ExamsParams = PaginationParams & {
     semester_subject_id?: number;
     subject_id?: number;
