@@ -596,7 +596,7 @@ export default {
   current_user_status: 'Obecny status użytkownika',
   public_course: 'Publiczny',
   no_pricing: 'Brak ceny',
-  public_label: ' Publiczny ',
+  public_label: 'Publiczny (dostępny bezpłatnie)',
   public_tooltip: ' Kurs jest dostępny publicznie bez potrzeby posiadania konta ',
   changesToBeApproved: 'Zmiany do zatwierdzenia',
   orderHasBeenChanged: 'Kolejność została zmieniona',

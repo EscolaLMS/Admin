@@ -542,7 +542,7 @@ export default {
   current_user_status: "Statut de l'utilisateur actuel",
   public_course: 'Public',
   no_pricing: 'Sans prix/accès',
-  public_label: 'Est public',
+  public_label: 'Est public (disponible gratuitement)',
   public_tooltip: 'Le cours est accessible à tout le monde sans avoir de compte',
   changesToBeApproved: 'Modifications à approuver',
   orderHasBeenChanged: "L'ordre a été modifié",
