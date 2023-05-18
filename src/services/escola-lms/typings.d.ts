@@ -1494,7 +1494,7 @@ declare namespace API {
     email: string;
   };
 
-  type FinalGradeItemGradeTerm = {
+  type GradeTerm = {
     id: number;
     name: string;
   };
@@ -1504,7 +1504,7 @@ declare namespace API {
     grade_name: string;
     grade_value: number;
     grade_date: Date | string;
-    grade_term: FinalGradeItemGradeTerm;
+    grade_term: GradeTerm;
   };
 
   type FinalGradeItem = {
@@ -1513,6 +1513,10 @@ declare namespace API {
     group_id: number;
     s_subject_scale_form_id: number;
     grades: FinalGradeItemGrade[];
+  };
+
+  type UserAttendanceSchedule = Omit<API.GroupAttendanceSchedule, 'attendances'> & {
+    attendance: API.StudentAttendance;
   };
 }
 

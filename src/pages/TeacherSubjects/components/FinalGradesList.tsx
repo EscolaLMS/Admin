@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Location } from 'history';
 import { FormattedMessage, Link, useLocation } from 'umi';
-import { Button, Divider, Select } from 'antd';
+import { Button, Divider, Select, Tooltip } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
@@ -35,11 +35,18 @@ const staticColumns: ProColumns<API.FinalGradeItem>[] = [
 ];
 
 export const FinalGradesList: React.FC = () => {
-  const location = useLocation() as Location & { query: { user_id?: string } };
-  const user_id = useMemo(
-    () => (Number.isNaN(Number(location.query?.user_id)) ? null : Number(location.query?.user_id)),
+  const location = useLocation() as Location & { query: { user_id?: string; group_id?: string } };
+  const { user_id, group_id } = useMemo(
+    () => ({
+      user_id: Number.isNaN(Number(location.query?.user_id))
+        ? null
+        : Number(location.query?.user_id),
+      group_id: Number.isNaN(Number(location.query?.group_id))
+        ? null
+        : Number(location.query?.group_id),
+    }),
 
-    [location.query?.user_id],
+    [location.query?.user_id, location.query?.group_id],
   );
 
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
@@ -75,8 +82,8 @@ export const FinalGradesList: React.FC = () => {
       });
   }, [selectedGroup]);
 
-  if (user_id !== null) {
-    return <FinalGradesDetails />;
+  if (user_id !== null && group_id !== null) {
+    return <FinalGradesDetails user_id={user_id} group_id={group_id} />;
   }
 
   return (
@@ -100,9 +107,12 @@ export const FinalGradesList: React.FC = () => {
             title: <FormattedMessage id="options" />,
             render: (_n, row) => [
               <Link
-                to={`/teacher/subjects/${semester_subject_id}/final-grades?user_id=${row.user.id}`}
+                key="edit"
+                to={`/teacher/subjects/${semester_subject_id}/final-grades?user_id=${row.user.id}&group_id=${row.group_id}`}
               >
-                <Button type="primary" icon={<EditOutlined />} />
+                <Tooltip title={<FormattedMessage id="edit" />}>
+                  <Button type="primary" icon={<EditOutlined />} />
+                </Tooltip>
               </Link>,
             ],
           },

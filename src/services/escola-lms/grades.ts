@@ -45,3 +45,43 @@ export async function getGroupFinalGrades(group_id: number, options?: RequestOpt
     },
   );
 }
+
+/**  GET /api/admin/lesson-group-users/groups/:group_id/users/:user_id */
+export async function getUserFinalGrades(
+  group_id: number,
+  user_id: number,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.FinalGradeItem>>(
+    `/api/admin/lesson-group-users/groups/${group_id}/users/${user_id}`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
+      ...(options || {}),
+    },
+  );
+}
+
+/** GET /api/admin/grade-terms */
+export async function getGradeTerms(options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.GradeTerm[]>>(`/api/admin/grade-terms`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
+/** GET /api/admin/grade-scales/:s_subject_scale_form_id */
+export async function getGradeScales(
+  s_subject_scale_form_id: number,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.GradeScale[]>>(
+    `/api/admin/grade-scales/${s_subject_scale_form_id}`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
+      ...(options || {}),
+    },
+  );
+}
