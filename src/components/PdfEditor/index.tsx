@@ -99,7 +99,8 @@ export const PdfEditor: React.FC<{
     if (ref.current) {
       const rb = new ReportBro(ref.current, {
         enableSpreadsheet: false,
-        additionalFonts: [{ name: 'Tangerine', value: 'tangerine' }],
+        fonts: [{ name: 'Open Sans', value: 'Open Sans' }],
+        defaultFont: 'Open Sans',
         // src={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/scorm/play/${uuid}`}
         //reportServerUrl: 'https://reportbro.stage.etd24.pl/reportbro/report/run', // TODO use env vars
         reportServerUrl: `${
