@@ -85,3 +85,31 @@ export async function getGradeScales(
     },
   );
 }
+
+/** POST /api/admin/final-grades */
+export async function createFinalGrade(
+  body: API.CreateFinalGradeRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.FinalGradeItem>>(`/api/admin/final-grades`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** PATCH /api/admin/final-grades/:id */
+export async function updateFinalGrade(
+  final_grade_id: number,
+  body: API.UpdateFinalGradeRequest,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.FinalGradeItem>>(
+    `/api/admin/final-grades/${final_grade_id}`,
+    {
+      method: 'PATCH',
+      data: body,
+      ...(options || {}),
+    },
+  );
+}

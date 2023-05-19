@@ -1518,6 +1518,16 @@ declare namespace API {
   type UserAttendanceSchedule = Omit<API.GroupAttendanceSchedule, 'attendances'> & {
     attendance: API.StudentAttendance;
   };
+
+  type CreateFinalGradeRequest = {
+    lesson_group_user_id: number;
+    grade_term_id: number;
+    grade_scale_id: number;
+  };
+
+  type UpdateFinalGradeRequest = {
+    grade_scale_id: number;
+  };
 }
 
 declare module 'jsoneditor-react' {
