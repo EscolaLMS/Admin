@@ -681,4 +681,5 @@ export default {
   degree: 'Stopień',
   grade: 'Ocena',
   max_percent: 'Max procent (%)',
+  icon: 'Ikona',
 };
