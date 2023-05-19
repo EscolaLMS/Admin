@@ -1464,6 +1464,11 @@ declare namespace API {
     grade_value: number;
   };
 
+  type SubjectGradeScale = GradeScale & {
+    id: number;
+    s_subject_scale_form_id: number;
+  };
+
   type SubjectTutorGrades = {
     id: number;
     tutor_id: number;

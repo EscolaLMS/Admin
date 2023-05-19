@@ -1,14 +1,21 @@
-import React, { useMemo } from 'react';
-import { FormattedMessage } from 'umi';
+import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
+import React, { useCallback, useMemo } from 'react';
+import { FormattedMessage, history } from 'umi';
 import { format } from 'date-fns';
-import { Checkbox, Col, Divider, Row, Spin, Typography } from 'antd';
+import { Checkbox, Col, Divider, message, Row, Spin, Typography } from 'antd';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
 import { AttendanceValue } from '@/services/escola-lms/enums';
-import { useFinalGrades, useGradeScales, useGradeTerms, useUserAttendanceSchedules } from './hooks';
+import { useTeacherSubject } from '../../context';
+import {
+  useFinalGrades,
+  useSubjectGradeScales,
+  useGradeTerms,
+  useUserAttendanceSchedules,
+} from './hooks';
 
 interface Props {
   user_id: number;
@@ -16,11 +23,11 @@ interface Props {
 }
 
 interface FormData {
-  term: number;
-  grade_value: number;
+  grade_term_id: number;
+  grade_scale_id: number;
 }
 
-const gradeScalesColumns: ProColumns<API.GradeScale>[] = [
+const subjectGradeScalesColumns: ProColumns<API.GradeScale>[] = [
   {
     title: <FormattedMessage id="grade" />,
     dataIndex: 'grade',
@@ -47,9 +54,10 @@ const userAttendanceColumns: ProColumns<API.UserAttendanceSchedule>[] = [
 const TABLE_PAGE_SIZE = 6;
 
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
+  const { semester_subject_id } = useTeacherSubject();
   const { finalGrades } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
-  const { gradeScales } = useGradeScales(finalGrades.data?.s_subject_scale_form_id);
+  const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
   const { userAttendanceSchedules, updateUserAttendanceSchedules } = useUserAttendanceSchedules(
     group_id,
     user_id,
@@ -64,15 +72,43 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
 
   const gradesSelectOptions = useMemo(
     () =>
-      (gradeScales.data ?? []).map(({ name, grade_value }) => ({
+      (subjectGradeScales.data ?? []).map(({ name, id }) => ({
         label: name,
-        value: grade_value,
+        value: id,
       })),
-    [gradeScales.data],
+    [subjectGradeScales.data],
   );
 
   // TODO
   const proposedGrade = useMemo(() => '3+', []);
+
+  const onFinalGradeSubmit = useCallback(
+    async ({ grade_scale_id, grade_term_id }: FormData) => {
+      if (finalGrades.data?.id === undefined) return;
+
+      const existingFinalGrade = finalGrades.data?.grades.find(
+        ({ grade_term }) => grade_term.id === grade_term_id,
+      );
+
+      if (existingFinalGrade) {
+        updateFinalGrade(existingFinalGrade.id, { grade_scale_id }).then((response) => {
+          message[response.success ? 'success' : 'error'](response.message);
+          history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
+        });
+        return;
+      }
+
+      createFinalGrade({
+        grade_scale_id,
+        grade_term_id,
+        lesson_group_user_id: finalGrades.data.id,
+      }).then((response) => {
+        message[response.success ? 'success' : 'error'](response.message);
+        history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
+      });
+    },
+    [finalGrades.data, semester_subject_id],
+  );
 
   if (finalGrades.loading) {
     return <Spin />;
@@ -141,9 +177,9 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             options={false}
             pagination={{ pageSize: TABLE_PAGE_SIZE }}
             cardProps={{ bodyStyle: { padding: 0 } }}
-            dataSource={gradeScales.data}
-            loading={gradeScales.loading}
-            columns={gradeScalesColumns}
+            dataSource={subjectGradeScales.data}
+            loading={subjectGradeScales.loading}
+            columns={subjectGradeScalesColumns}
           />
         </Col>
         <Col span={12}>
@@ -158,8 +194,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
           />
         </Col>
       </Row>
-      {/* TODO */}
-      <ProForm<FormData> form={form} onFinish={async (v) => console.log(v)}>
+      <ProForm<FormData> form={form} onFinish={onFinalGradeSubmit}>
         <ProForm.Group
           style={{ display: 'flex', flexDirection: 'column', paddingTop: '48px' }}
           title={<FormattedMessage id="Wystaw ocenę końcową" />}
@@ -167,7 +202,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
           align="center"
         >
           <ProFormSelect
-            name="term"
+            name="grade_term_id"
             rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
             label={<FormattedMessage id="TeacherSubjects.FinalGrades.GradeTerm" />}
             options={gradeTermsSelectOptions}
@@ -175,11 +210,11 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             fieldProps={{ loading: gradeTerms.loading }}
           />
           <ProFormSelect
-            name="grade_value"
+            name="grade_scale_id"
             rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
             label={<FormattedMessage id="TeacherSubjects.FinalGrades.FinalGrade" />}
             options={gradesSelectOptions}
-            fieldProps={{ loading: finalGrades.loading || gradeScales.loading }}
+            fieldProps={{ loading: finalGrades.loading || subjectGradeScales.loading }}
           />
           <ProForm.Item>
             <FormattedMessage

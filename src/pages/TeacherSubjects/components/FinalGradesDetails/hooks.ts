@@ -5,7 +5,11 @@ import {
   changeStudentAttendance,
   groupAttendanceSchedule,
 } from '@/services/escola-lms/attendances';
-import { getGradeTerms, getUserFinalGrades, getGradeScales } from '@/services/escola-lms/grades';
+import {
+  getGradeTerms,
+  getUserFinalGrades,
+  getSubjectGradeScales,
+} from '@/services/escola-lms/grades';
 
 interface FetchedData<T> {
   loading: boolean;
@@ -52,25 +56,29 @@ export function useGradeTerms() {
   return { gradeTerms };
 }
 
-export function useGradeScales(s_subject_scale_form_id: number | undefined) {
-  const [gradeScales, setGradeScales] = useState<FetchedData<API.GradeScale[]>>({ loading: false });
+export function useSubjectGradeScales(s_subject_scale_form_id: number | undefined) {
+  const [subjectGradeScales, setSubjectGradeScales] = useState<
+    FetchedData<API.SubjectGradeScale[]>
+  >({
+    loading: false,
+  });
 
   useEffect(() => {
     if (s_subject_scale_form_id === undefined) return;
 
-    setGradeScales((prev) => ({ ...prev, loading: true }));
-    getGradeScales(s_subject_scale_form_id)
+    setSubjectGradeScales((prev) => ({ ...prev, loading: true }));
+    getSubjectGradeScales(s_subject_scale_form_id)
       .then((response) => {
         if (response.success) {
-          setGradeScales((prev) => ({ ...prev, data: response.data }));
+          setSubjectGradeScales((prev) => ({ ...prev, data: response.data }));
         }
       })
       .finally(() => {
-        setGradeScales((prev) => ({ ...prev, loading: false }));
+        setSubjectGradeScales((prev) => ({ ...prev, loading: false }));
       });
   }, [s_subject_scale_form_id]);
 
-  return { gradeScales };
+  return { subjectGradeScales };
 }
 
 export function useUserAttendanceSchedules(group_id: number, user_id: number) {

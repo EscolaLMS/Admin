@@ -72,11 +72,11 @@ export async function getGradeTerms(options?: RequestOptionsInit) {
 }
 
 /** GET /api/admin/grade-scales/:s_subject_scale_form_id */
-export async function getGradeScales(
+export async function getSubjectGradeScales(
   s_subject_scale_form_id: number,
   options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultResponse<API.GradeScale[]>>(
+  return request<API.DefaultResponse<API.SubjectGradeScale[]>>(
     `/api/admin/grade-scales/${s_subject_scale_form_id}`,
     {
       method: 'GET',
