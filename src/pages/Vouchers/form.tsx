@@ -9,11 +9,12 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useParams, useIntl, FormattedMessage, history } from 'umi';
+import { useParams, useIntl, FormattedMessage, history, useModel } from 'umi';
 import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
 import UserSelect from '@/components/UserSelect';
 import CategoryTree from '@/components/CategoryTree';
 import ProductSelect from '@/components/ProductsSelect';
+import { MoneyInput } from '@/components/MoneyInput';
 
 const mapper = <T extends { id: string | number } | string | number>(item: T): string | number =>
   typeof item === 'object' ? item.id : item;
@@ -35,6 +36,11 @@ const VoucherForm = () => {
   const params = useParams<{ voucherId?: string; tab?: string }>();
   const { voucherId, tab = 'attributes' } = params;
   const isNew = voucherId === 'new';
+  const { initialState } = useModel('@@initialState');
+
+  const currentCurrency = initialState?.config?.find(
+    ({ group, key }) => group === 'currencies' && key === 'default',
+  )?.value;
 
   const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
@@ -256,17 +262,24 @@ const VoucherForm = () => {
               disabled={!voucherType}
               required
             />
-            <ProFormDigit
+            <MoneyInput
               width="md"
               name="amount"
-              label={<FormattedMessage id="voucher.value" />}
+              label={
+                <FormattedMessage
+                  id="voucher.value"
+                  values={{
+                    currency: currentCurrency ? `(${currentCurrency})` : '',
+                  }}
+                />
+              }
               tooltip={<FormattedMessage id="voucher.value" />}
               placeholder={intl.formatMessage({
                 id: 'voucher.value',
                 defaultMessage: 'voucher value',
               })}
+              form={form}
               required
-              disabled={!voucherType}
             />
           </ProForm.Group>
           {voucherType && (
