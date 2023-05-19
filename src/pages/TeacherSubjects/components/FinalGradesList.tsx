@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Location } from 'history';
 import { FormattedMessage, Link, useLocation } from 'umi';
-import { Button, Divider, Select, Tooltip } from 'antd';
+import { Button, Divider, Select, Tooltip, Typography } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
@@ -30,7 +30,17 @@ const staticColumns: ProColumns<API.FinalGradeItem>[] = [
   {
     title: <FormattedMessage id="grade" />,
     dataIndex: 'grades',
-    render: (_n, row) => (row.grades[0] ? row.grades[0].grade_value : '-'),
+    render: (_n, row) => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        {row.grades.length
+          ? row.grades.map(({ grade_name, grade_term, id }) => (
+              <Typography.Text key={id}>
+                {grade_term.name}: {grade_name}
+              </Typography.Text>
+            ))
+          : '-'}
+      </div>
+    ),
   },
 ];
 
@@ -61,7 +71,7 @@ export const FinalGradesList: React.FC = () => {
   );
 
   useEffect(() => {
-    if (selectedGroup === undefined) return;
+    if (selectedGroup === undefined || typeof user_id === 'number') return;
 
     setTableData((prev) => ({ ...prev, loading: true }));
     getGroupFinalGrades(selectedGroup)
@@ -80,7 +90,7 @@ export const FinalGradesList: React.FC = () => {
       .finally(() => {
         setTableData((prev) => ({ ...prev, loading: false }));
       });
-  }, [selectedGroup]);
+  }, [selectedGroup, user_id]);
 
   if (user_id !== null && group_id !== null) {
     return <FinalGradesDetails user_id={user_id} group_id={group_id} />;
