@@ -1385,6 +1385,7 @@ declare namespace API {
     semester_subject_id?: number;
     subject_id?: number;
     semester_id?: number;
+    student_id?: number;
   };
 
   type StudentAttendance = {
