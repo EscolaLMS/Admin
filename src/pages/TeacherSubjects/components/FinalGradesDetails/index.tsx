@@ -29,6 +29,8 @@ interface FormData {
   grade_scale_id: number;
 }
 
+type FinalGradeTableItem = API.GradeTerm & { grade?: API.FinalGradeItemGrade };
+
 const subjectGradeScalesColumns: ProColumns<API.GradeScale>[] = [
   {
     title: <FormattedMessage id="grade" />,
@@ -72,6 +74,24 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
     title: <FormattedMessage id="grade" />,
     dataIndex: 'result',
     render: (_n, row) => `${row.result.result}%`,
+  },
+];
+
+const finalGradesColumns: ProColumns<FinalGradeTableItem>[] = [
+  {
+    title: <FormattedMessage id="name" />,
+    dataIndex: 'name',
+  },
+  {
+    title: <FormattedMessage id="issued_at" />,
+    dataIndex: 'grade',
+    render: (_n, row) =>
+      row.grade?.grade_date ? format(new Date(row.grade?.grade_date), DAY_FORMAT) : '-',
+  },
+  {
+    title: <FormattedMessage id="grade" />,
+    dataIndex: 'grade',
+    render: (_n, row) => row.grade?.grade_name ?? '-',
   },
 ];
 
@@ -135,6 +155,15 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     [finalGrades.data, semester_subject_id],
   );
 
+  const finalGradesTableData: FinalGradeTableItem[] = useMemo(
+    () =>
+      (gradeTerms.data ?? []).map((term) => ({
+        ...term,
+        grade: finalGrades.data?.grades.find(({ grade_term }) => grade_term.id === term.id),
+      })),
+    [finalGrades.data, gradeTerms.data],
+  );
+
   if (finalGrades.loading) {
     return <Spin />;
   }
@@ -162,6 +191,19 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             dataSource={studentExams.data}
             loading={studentExams.loading}
             columns={studentExamsColumns}
+            options={false}
+            cardProps={{ bodyStyle: { padding: 0 } }}
+          />
+        </Col>
+        <Col span={12}>
+          <ProTable
+            rowKey="id"
+            headerTitle={<FormattedMessage id="TeacherSubjects.FinalGrades.FinalGrades" />}
+            search={false}
+            pagination={{ pageSize: TABLE_PAGE_SIZE }}
+            dataSource={finalGradesTableData}
+            loading={finalGrades.loading || gradeTerms.loading}
+            columns={finalGradesColumns}
             options={false}
             cardProps={{ bodyStyle: { padding: 0 } }}
           />

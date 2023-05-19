@@ -685,10 +685,12 @@ export default {
   'TeacherSubjects.FinalGrades.StudentPartialGrades': 'Oceny cząstkowe',
   'TeacherSubjects.FinalGrades.Attendance': 'Obecność',
   'TeacherSubjects.FinalGrades.Attendances': 'Obecności',
+  'TeacherSubjects.FinalGrades.FinalGrades': 'Oceny końcowe',
   'TeacherSubjects.FinalGrades.GradesScale': 'Skala ocen dla przedmiotu',
   'TeacherSubjects.FinalGrades.CoursesProgress': 'Postęp w kursach',
   'TeacherSubjects.FinalGrades.GradeTerm': 'Termin zaliczenia',
   'TeacherSubjects.FinalGrades.FinalGrade': 'Ocena końcowa',
   'TeacherSubjects.FinalGrades.ProposedGrade': 'Proponowana ocena: {grade}',
   date: 'Data',
+  issued_at: 'Wystawiono',
 };

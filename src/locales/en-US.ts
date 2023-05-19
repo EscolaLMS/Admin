@@ -696,10 +696,12 @@ export default {
   'TeacherSubjects.FinalGrades.StudentPartialGrades': `Partial grades`,
   'TeacherSubjects.FinalGrades.Attendance': 'Attendance',
   'TeacherSubjects.FinalGrades.Attendances': 'Attendances',
+  'TeacherSubjects.FinalGrades.FinalGrades': 'Final grades',
   'TeacherSubjects.FinalGrades.GradesScale': 'Grades scale for subject',
   'TeacherSubjects.FinalGrades.CoursesProgress': 'Courses progress',
   'TeacherSubjects.FinalGrades.GradeTerm': 'Due date',
   'TeacherSubjects.FinalGrades.FinalGrade': 'Final grade',
   'TeacherSubjects.FinalGrades.ProposedGrade': 'Proposed grade: {grade}',
   date: 'Date',
+  issued_at: 'Issued at',
 };
