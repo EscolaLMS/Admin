@@ -10,6 +10,7 @@ import {
   getUserFinalGrades,
   getSubjectGradeScales,
 } from '@/services/escola-lms/grades';
+import { getExams } from '@/services/escola-lms/exams';
 
 interface FetchedData<T> {
   loading: boolean;
@@ -136,4 +137,34 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
   }, [fetchUserAttendanceSchedules]);
 
   return { userAttendanceSchedules, fetchUserAttendanceSchedules, updateUserAttendanceSchedules };
+}
+
+export type StudentExam = Omit<API.Exam, 'results'> & { result: API.ExamResult };
+
+export function useStudentExams(student_id: number) {
+  const [studentExams, setStudentExams] = useState<FetchedData<StudentExam[]>>({ loading: false });
+
+  useEffect(() => {
+    setStudentExams((prev) => ({ ...prev, loading: true }));
+    getExams({ student_id })
+      .then((response) => {
+        if (response.success) {
+          const data = response.data.reduce<StudentExam[]>(
+            (acc, { results: [result], ...rest }) => {
+              if (!result) return acc;
+
+              return [...acc, { ...rest, result }];
+            },
+            [],
+          );
+
+          setStudentExams((prev) => ({ ...prev, data }));
+        }
+      })
+      .finally(() => {
+        setStudentExams((prev) => ({ ...prev, loading: false }));
+      });
+  }, [student_id]);
+
+  return { studentExams };
 }

@@ -15,6 +15,8 @@ import {
   useSubjectGradeScales,
   useGradeTerms,
   useUserAttendanceSchedules,
+  useStudentExams,
+  StudentExam,
 } from './hooks';
 
 interface Props {
@@ -51,10 +53,33 @@ const userAttendanceColumns: ProColumns<API.UserAttendanceSchedule>[] = [
   },
 ];
 
+const studentExamsColumns: ProColumns<StudentExam>[] = [
+  {
+    title: <FormattedMessage id="name" />,
+    dataIndex: 'title',
+  },
+  {
+    title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
+    dataIndex: 'weight',
+    valueType: 'percent',
+  },
+  {
+    title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
+    dataIndex: 'created_at',
+    render: (_n, row) => format(new Date(row.created_at), DAY_FORMAT),
+  },
+  {
+    title: <FormattedMessage id="grade" />,
+    dataIndex: 'result',
+    render: (_n, row) => `${row.result.result}%`,
+  },
+];
+
 const TABLE_PAGE_SIZE = 6;
 
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { semester_subject_id } = useTeacherSubject();
+  const { studentExams } = useStudentExams(user_id);
   const { finalGrades } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
@@ -129,12 +154,14 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
       )}
       <Row gutter={[48, 48]} justify="space-between">
         <Col span={12}>
-          {/* TODO */}
           <ProTable
             rowKey="id"
             headerTitle={<FormattedMessage id="TeacherSubjects.FinalGrades.StudentPartialGrades" />}
             search={false}
             pagination={{ pageSize: TABLE_PAGE_SIZE }}
+            dataSource={studentExams.data}
+            loading={studentExams.loading}
+            columns={studentExamsColumns}
             options={false}
             cardProps={{ bodyStyle: { padding: 0 } }}
           />
