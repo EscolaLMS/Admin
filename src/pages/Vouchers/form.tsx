@@ -238,7 +238,8 @@ const VoucherForm = () => {
             />
           </ProForm.Group>
           <ProForm.Group>
-            <ProFormDigit
+            <MoneyInput
+              form={form}
               width="md"
               name="min_cart_price"
               label={<FormattedMessage id="vouchers.min_cart_price" />}
@@ -250,7 +251,8 @@ const VoucherForm = () => {
               disabled={!voucherType}
               required
             />
-            <ProFormDigit
+            <MoneyInput
+              form={form}
               width="md"
               name="max_cart_price"
               label={<FormattedMessage id="vouchers.max_cart_price" />}
