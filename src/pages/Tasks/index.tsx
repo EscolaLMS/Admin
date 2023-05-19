@@ -30,15 +30,18 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
+      sorter: true,
     },
 
     {
       title: <FormattedMessage id="type" defaultMessage="type" />,
       dataIndex: 'type',
+      sorter: true,
     },
 
     {
@@ -97,6 +100,7 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="completed_at" defaultMessage="Completed at" />,
       dataIndex: 'completed_at',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) =>
         record.completed_at ? (
           format(new Date(record.completed_at), DATETIME_FORMAT)
@@ -163,13 +167,20 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title, user_id, created_by_id }) => {
+        request={({ pageSize, current, title, user_id, created_by_id }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           return tasks({
             pageSize,
             current,
             title,
             created_by_id,
             user_id,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
           }).then((response) => {
             if (response.success) {
               return {
