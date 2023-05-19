@@ -1407,6 +1407,38 @@ declare namespace API {
   type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule[]>;
   type ChangeStudentAttendance = DefaultResponse<StudentAttendance[]>;
 
+  type ScheduleData = {
+    id: number;
+    date_from: Date | string;
+    date_to: Date | string;
+    tutor: {
+      id: number;
+      first_name: string;
+      last_name: string;
+      email: string;
+    };
+    subject: {
+      id: number;
+      name: string;
+    };
+    semester: {
+      id: number;
+      name: string;
+      type: string;
+      year: string;
+    };
+    term_status: {
+      id: number;
+      name: string;
+    };
+    group: {
+      id: number;
+      name: string;
+    };
+  };
+
+  type ScheduleList = DefaultResponse<ScheduleData[]>;
+
   type ExamResult = {
     result: number;
     user_id: number;

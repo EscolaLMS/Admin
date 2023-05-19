@@ -47,6 +47,7 @@ export default {
   nameAndSurname: 'Imię i nazwisko',
   attendances: 'Obecności',
   noAttendanceSchedule: 'Brak harmonogramu obecności dla tej grupy...',
+  tutorName: 'Prowadzący',
   examTitle: 'Wpisz tytuł egzaminu',
   examResult: 'Wynik egzaminu',
   examResults: 'Wyniki egzaminu',
