@@ -683,4 +683,10 @@ export default {
   grade: 'Ocena',
   max_percent: 'Max procent (%)',
   icon: 'Ikona',
+  approved: 'Zatwierdzony',
+  pending: 'W trakcie',
+  extra_data: 'Dodatkowe dane',
+  show: 'Pokaż',
+  phone_number: 'Numer kontaktowy',
+  contact_details: 'Szczegóły kontaktu',
 };

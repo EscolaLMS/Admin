@@ -694,4 +694,10 @@ export default {
   grade: 'Grade',
   max_percent: 'Max percent (%)',
   icon: 'Icon',
+  approved: 'Approved',
+  pending: 'Pending',
+  extra_data: 'Extra data',
+  show: 'Show',
+  phone_number: 'Phone number',
+  contact_details: 'Contact details',
 };
