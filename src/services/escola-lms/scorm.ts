@@ -3,20 +3,14 @@ import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function scorms(
-  params: {
-    // query
-    current?: number;
-    pageSize?: number;
-    search?: string;
-  },
+  params: API.PageParams &
+    API.PaginationParams & {
+      search?: string;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.ScormList>('/api/admin/scorm', {
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
