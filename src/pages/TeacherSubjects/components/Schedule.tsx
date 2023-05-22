@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { Badge, Modal, Typography } from 'antd';
 import { Calendar } from 'antd';
@@ -21,221 +22,13 @@ interface EventCalendarProps {
   subject: string;
 }
 
-const eventMockData: API.ScheduleData[] = [
-  {
-    id: 1,
-    date_from: '2023-05-28T13:15:00.000000Z',
-    date_to: '2023-05-28T15:30:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 645,
-      name: 'ćwiczenia R03',
-    },
-  },
-  {
-    id: 1,
-    date_from: '2023-05-28T13:15:00.000000Z',
-    date_to: '2023-05-28T15:30:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 645,
-      name: 'ćwiczenia R03',
-    },
-  },
-  {
-    id: 1,
-    date_from: '2023-05-18T13:15:00.000000Z',
-    date_to: '2023-05-18T15:30:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 645,
-      name: 'ćwiczenia R03',
-    },
-  },
-  {
-    id: 2,
-    date_from: '2023-05-01T15:30:00.000000Z',
-    date_to: '2023-05-01T17:45:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 653,
-      name: 'ćwiczenia R04',
-    },
-  },
-  {
-    id: 2,
-    date_from: '2023-05-30T15:30:00.000000Z',
-    date_to: '2023-05-30T17:45:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 653,
-      name: 'ćwiczenia R04',
-    },
-  },
-  {
-    id: 2,
-    date_from: '2023-06-02T17:30:00.000000Z',
-    date_to: '2023-06-02T17:45:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 653,
-      name: 'ćwiczenia R04',
-    },
-  },
-  {
-    id: 2,
-    date_from: '2023-06-01T18:30:00.000000Z',
-    date_to: '2023-06-01T20:45:00.000000Z',
-    tutor: {
-      id: 1,
-      first_name: 'Admin',
-      last_name: 'A',
-      email: 'admin@escolalms.com',
-    },
-    subject: {
-      id: 1,
-      name: 'Fizjoterapia ogólna',
-    },
-    semester: {
-      id: 2,
-      name: 'FIZ/JPR/ST/22/23/s2',
-      type: 'summer',
-      year: '2022',
-    },
-    term_status: {
-      id: 34,
-      name: 'Ćwiczenia',
-    },
-    group: {
-      id: 653,
-      name: 'ćwiczenia R04',
-    },
-  },
-];
-//TODO: Usunąć eventMockData i użyć eventData, sprawdzić ep, usunąc console.logi
-const Schedule = () => {
+const Schedule: FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventCalendarProps | null>(null);
   const [eventData, setEventData] = useState<API.ScheduleData[]>([]);
   const { semester_subject_id } = useTeacherSubject();
   const now = moment();
 
-  console.log({ selectedEvent });
-
-  const events = eventMockData.map((event) => ({
+  const events = eventData.map((event) => ({
     id: event.id,
     title: `${event.group.name} (${event.term_status.name})`,
     start: moment(event.date_from).toDate(),
@@ -291,7 +84,6 @@ const Schedule = () => {
   const handlePanelChange = (date: moment.Moment, mode: CalendarMode) => {
     const start = moment(date).startOf(mode).subtract(1, 'month');
     const end = moment(date).endOf(mode).add(1, 'month');
-    console.log({ start }, { end });
     fetchEvents(start, end);
   };
 
