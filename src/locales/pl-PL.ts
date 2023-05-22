@@ -683,4 +683,6 @@ export default {
   grade: 'Ocena',
   max_percent: 'Max procent (%)',
   icon: 'Ikona',
+  assigned: 'Przypisany',
+  completed_at: 'Ukończone',
 };

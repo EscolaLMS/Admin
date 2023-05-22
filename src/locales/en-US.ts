@@ -694,4 +694,6 @@ export default {
   grade: 'Grade',
   max_percent: 'Max percent (%)',
   icon: 'Icon',
+  assigned: 'Assigned',
+  completed_at: 'Completed at',
 };

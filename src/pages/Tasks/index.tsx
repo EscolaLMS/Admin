@@ -152,8 +152,8 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.TaskListItem, API.TaskListParams>
         headerTitle={intl.formatMessage({
-          id: 'tasks',
-          defaultMessage: 'tasks',
+          id: 'menu.Other activities.Tasks',
+          defaultMessage: 'Tasks',
         })}
         actionRef={actionRef}
         rowKey="id"
