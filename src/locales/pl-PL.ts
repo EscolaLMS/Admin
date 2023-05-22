@@ -681,6 +681,7 @@ export default {
   degree: 'Stopień',
   grade: 'Ocena',
   max_percent: 'Max procent (%)',
+  min_percent: 'Min procent (%)',
   'TeacherSubjects.FinalGrades.Student': 'Student: {first_name} {last_name}',
   'TeacherSubjects.FinalGrades.StudentPartialGrades': 'Oceny cząstkowe',
   'TeacherSubjects.FinalGrades.Attendance': 'Obecność',

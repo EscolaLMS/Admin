@@ -692,6 +692,7 @@ export default {
   degree: 'Degree',
   grade: 'Grade',
   max_percent: 'Max percent (%)',
+  min_percent: 'Min percent (%)',
   'TeacherSubjects.FinalGrades.Student': 'Student: {first_name} {last_name}',
   'TeacherSubjects.FinalGrades.StudentPartialGrades': `Partial grades`,
   'TeacherSubjects.FinalGrades.Attendance': 'Attendance',

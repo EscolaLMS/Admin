@@ -27,7 +27,7 @@ const staticColumns: ProColumns<TableGradeScale>[] = [
     editable: false,
   },
   {
-    title: <FormattedMessage id="max_percent" />,
+    title: <FormattedMessage id="min_percent" />,
     dataIndex: 'grade_value',
     valueType: 'percent',
     formItemProps: {
