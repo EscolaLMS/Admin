@@ -485,3 +485,30 @@ export const sortByKey = <T>(myKey: string, reverse: boolean = false) => {
     return reverse ? comparison * -1 : comparison;
   };
 };
+
+export const sortArrayByKey = <T>(array: T[], key: string, reverse: boolean = false): T[] => {
+  const sortedArray = array.slice().sort((a, b) => {
+    const valueA = a[key];
+    const valueB = b[key];
+
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return valueA - valueB;
+    }
+
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      return valueA.localeCompare(valueB);
+    }
+
+    if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
+      return valueA === valueB ? 0 : valueA ? -1 : 1;
+    }
+
+    throw new Error('Cannot compare values of different types.');
+  });
+
+  if (reverse) {
+    return sortedArray.reverse();
+  }
+
+  return sortedArray;
+};
