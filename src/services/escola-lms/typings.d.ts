@@ -930,6 +930,10 @@ declare namespace API {
     | {
         type: 'Students';
         value: API.StudentUserGroup;
+      }
+    | {
+        type: 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz';
+        value: API.QuizAttempt;
       };
 
   type ReportType =

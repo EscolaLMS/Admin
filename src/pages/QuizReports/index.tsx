@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { format } from 'date-fns';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { Button, Tag, Tooltip } from 'antd';
@@ -12,114 +12,107 @@ import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
 import UserSelect from '@/components/UserSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
+export const TableColumns: ProColumns<API.QuizAttempt>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="gift_quiz" defaultMessage="GIFT Quiz" />,
+    dataIndex: 'topic_gift_quiz_id',
+    hideInSearch: true,
+    render: (_, record) => (
+      <TypeButtonDrawer
+        type="EscolaLms\TopicTypeGift\Models\GiftQuiz"
+        type_id={record.topic_gift_quiz_id}
+      />
+    ),
+  },
+  {
+    title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
+    dataIndex: 'dateRange',
+    hideInSearch: false,
+    hideInForm: true,
+    hideInTable: true,
+    valueType: 'dateRange',
+    fieldProps: {
+      allowEmpty: [true, true],
+    },
+  },
+  {
+    title: <FormattedMessage id="student" defaultMessage="Student" />,
+    dataIndex: 'user_id',
+    renderFormItem: (item, { type, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <UserSelect
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_, record) => (
+      <TypeButtonDrawer key="student" type="EscolaLms\Core\Models\User" type_id={record.user_id} />
+    ),
+  },
+  {
+    title: <FormattedMessage id="result_score" defaultMessage="Result score" />,
+    dataIndex: 'result_score',
+    hideInSearch: true,
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="max_score" defaultMessage="Max score" />,
+    dataIndex: 'max_score',
+    hideInSearch: true,
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="started_at" defaultMessage="Started at" />,
+    dataIndex: 'started_at',
+    hideInSearch: true,
+    sorter: true,
+    render: (_, record) => format(new Date(record.started_at), DATETIME_FORMAT),
+  },
+  {
+    title: <FormattedMessage id="end_at" defaultMessage="End at" />,
+    dataIndex: 'end_at',
+    hideInSearch: true,
+    sorter: true,
+    render: (_, record) =>
+      record.end_at ? (
+        format(new Date(record.end_at), DATETIME_FORMAT)
+      ) : (
+        <Tag>
+          <FormattedMessage id="uncompleted" defaultMessage="uncompleted" />
+        </Tag>
+      ),
+  },
+  {
+    hideInSearch: true,
+    title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
+    dataIndex: 'option',
+    valueType: 'option',
+    render: (_, record) => (
+      <Link to={`/courses/quiz-reports/${record.id}`} key="details">
+        <Tooltip title={<FormattedMessage id="details" defaultMessage="details" />}>
+          <Button icon={<FileSearchOutlined />} />
+        </Tooltip>
+      </Link>
+    ),
+  },
+];
+
 const QuizAttempts: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-
-  const columns: ProColumns<API.QuizAttempt>[] = useMemo(
-    () => [
-      {
-        title: <FormattedMessage id="ID" defaultMessage="ID" />,
-        dataIndex: 'id',
-        hideInSearch: true,
-        sorter: true,
-      },
-      {
-        title: <FormattedMessage id="gift_quiz" defaultMessage="GIFT Quiz" />,
-        dataIndex: 'topic_gift_quiz_id',
-        hideInSearch: true,
-        render: (_, record) => (
-          <TypeButtonDrawer
-            type="EscolaLms\TopicTypeGift\Models\GiftQuiz"
-            type_id={record.topic_gift_quiz_id}
-          />
-        ),
-      },
-      {
-        title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
-        dataIndex: 'dateRange',
-        hideInSearch: false,
-        hideInForm: true,
-        hideInTable: true,
-        valueType: 'dateRange',
-        fieldProps: {
-          allowEmpty: [true, true],
-        },
-      },
-      {
-        title: <FormattedMessage id="student" defaultMessage="Student" />,
-        dataIndex: 'user_id',
-        renderFormItem: (item, { type, ...rest }, form) => {
-          if (type === 'form') {
-            return null;
-          }
-          const stateType = form.getFieldValue('state');
-          return (
-            <UserSelect
-              {...rest}
-              state={{
-                type: stateType,
-              }}
-            />
-          );
-        },
-        render: (_, record) => (
-          <TypeButtonDrawer
-            key="student"
-            type="EscolaLms\Core\Models\User"
-            type_id={record.user_id}
-          />
-        ),
-      },
-      {
-        title: <FormattedMessage id="result_score" defaultMessage="Result score" />,
-        dataIndex: 'result_score',
-        hideInSearch: true,
-        sorter: true,
-      },
-      {
-        title: <FormattedMessage id="max_score" defaultMessage="Max score" />,
-        dataIndex: 'max_score',
-        hideInSearch: true,
-        sorter: true,
-      },
-      {
-        title: <FormattedMessage id="started_at" defaultMessage="Started at" />,
-        dataIndex: 'started_at',
-        hideInSearch: true,
-        sorter: true,
-        render: (_, record) => format(new Date(record.started_at), DATETIME_FORMAT),
-      },
-      {
-        title: <FormattedMessage id="end_at" defaultMessage="End at" />,
-        dataIndex: 'end_at',
-        hideInSearch: true,
-        sorter: true,
-        render: (_, record) =>
-          record.end_at ? (
-            format(new Date(record.end_at), DATETIME_FORMAT)
-          ) : (
-            <Tag>
-              <FormattedMessage id="uncompleted" defaultMessage="uncompleted" />
-            </Tag>
-          ),
-      },
-      {
-        hideInSearch: true,
-        title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
-        dataIndex: 'option',
-        valueType: 'option',
-        render: (_, record) => (
-          <Link to={`/courses/quiz-reports/${record.id}`} key="details">
-            <Tooltip title={<FormattedMessage id="details" defaultMessage="details" />}>
-              <Button icon={<FileSearchOutlined />} />
-            </Tooltip>
-          </Link>
-        ),
-      },
-    ],
-    [],
-  );
 
   return (
     <PageContainer>
@@ -158,7 +151,7 @@ const QuizAttempts: React.FC = () => {
             return [];
           });
         }}
-        columns={columns}
+        columns={TableColumns}
       />
     </PageContainer>
   );

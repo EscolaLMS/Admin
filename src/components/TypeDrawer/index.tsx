@@ -13,6 +13,7 @@ import { TableColumns as ConsultationsTableColumns } from '@/pages/Consultations
 import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
 import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
 import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
+import { TableColumns as QuizTableColumns } from '@/pages/QuizReports/index';
 import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
 
 type TypeDrawerProps = {
@@ -109,6 +110,14 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
           {...descrProps}
           title={<FormattedMessage id="studentsList" />}
           columns={StudentsTableColumns as ProDescriptionsItemProps<API.StudentUserGroup>[]}
+        />
+      )}
+
+      {data.type === 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz' && (
+        <ProDescriptions<API.QuizAttempt>
+          {...descrProps}
+          title={<FormattedMessage id="quiz_reports" />}
+          columns={QuizTableColumns as ProDescriptionsItemProps<API.QuizAttempt>[]}
         />
       )}
 
