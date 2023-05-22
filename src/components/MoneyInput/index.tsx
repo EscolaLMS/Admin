@@ -4,59 +4,96 @@ import { useEffect } from 'react';
 import React, { useState } from 'react';
 import type { FormInstance, ProFormFieldProps } from '@ant-design/pro-form';
 import { ProForm } from '@ant-design/pro-form';
+import { FormattedMessage, useModel } from 'umi';
 
-interface CurrencyInputProps extends ProFormFieldProps {
+interface CurrencyInputProps extends Omit<ProFormFieldProps, 'label'> {
   name: string;
   form: FormInstance<any>;
   onChange?: (cents: number) => void;
+  label?: React.ComponentProps<typeof FormattedMessage>;
 }
 
+const centsToDollars = (cents: number, toFixedValue?: number): string => {
+  return (cents / 100).toFixed(toFixedValue ?? 0);
+};
+
 export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...restProps }) => {
-  const [dollars, setDollars] = useState('');
-  const [cents, setCents] = useState(0);
+  const { label, ...rest } = restProps;
+
+  const [state, setState] = useState<{
+    dollars: string;
+    cents: number;
+  }>({
+    dollars: '',
+    cents: 0,
+  });
+
+  const { initialState } = useModel('@@initialState');
+
+  const currentCurrency = initialState?.config?.find(
+    ({ group, key }) => group === 'currencies' && key === 'default',
+  )?.value;
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const inputValue = event.target.value;
-    setDollars(inputValue.trim());
 
     // Remove currency symbol and other special characters
     const cleanValue = inputValue.replace(/[^0-9.]/, '');
     const parsedValue = parseFloat(cleanValue);
 
     const centsValue = Math.round(parsedValue * 100);
-    setCents(centsValue);
+    setState({ cents: centsValue, dollars: inputValue.trim() });
+  };
 
+  const formattedDollars = centsToDollars(state.cents, 2);
+
+  useEffect(() => {
+    const initialValue = form.getFieldValue(name)
+      ? centsToDollars(form.getFieldValue(name), 2)
+      : '';
+
+    setState({
+      dollars: initialValue,
+      cents: +initialValue * 100,
+    });
+  }, [form, name]);
+
+  useEffect(() => {
     if (form && name) {
       form.setFieldsValue({
-        [name]: !Number.isNaN(centsValue) ? centsValue : 0,
+        [name]: !Number.isNaN(state.cents) ? state.cents : 0,
       });
     }
 
     if (onChange) {
-      onChange(centsValue);
+      onChange(state.cents);
     }
+  }, [state]);
+
+  const labelProps = {
+    ...label,
+    values: {
+      ...label?.values,
+      currency: currentCurrency ? `(${currentCurrency})` : '',
+    },
   };
-
-  const centsToDollars = (amountOfCents: number) => {
-    return (amountOfCents / 100).toFixed(2);
-  };
-
-  const formattedDollars = centsToDollars(cents);
-
-  useEffect(() => {
-    if (form && name) {
-      const initialValue = form.getFieldValue(name) ? centsToDollars(form.getFieldValue(name)) : '';
-      setDollars(initialValue);
-      setCents(+initialValue * 100);
-    }
-  }, [form, name]);
 
   return (
-    <ProForm.Item name={name} initialValue={dollars} {...restProps}>
+    <ProForm.Item
+      name={name}
+      initialValue={state.dollars}
+      label={label ? <FormattedMessage {...labelProps} /> : undefined}
+      {...rest}
+    >
       <Input
-        value={dollars}
+        value={state.dollars}
         onChange={handleInputChange}
-        onBlur={() => setDollars(formattedDollars !== 'NaN' ? formattedDollars : '')}
+        onBlur={() => {
+          setState((prev) => ({
+            ...prev,
+            dollars: formattedDollars !== 'NaN' ? formattedDollars : '',
+          }));
+        }}
       />
     </ProForm.Item>
   );

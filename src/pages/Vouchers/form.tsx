@@ -9,7 +9,7 @@ import ProForm, {
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useParams, useIntl, FormattedMessage, history, useModel } from 'umi';
+import { useParams, useIntl, FormattedMessage, history } from 'umi';
 import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
 import UserSelect from '@/components/UserSelect';
 import CategoryTree from '@/components/CategoryTree';
@@ -36,11 +36,6 @@ const VoucherForm = () => {
   const params = useParams<{ voucherId?: string; tab?: string }>();
   const { voucherId, tab = 'attributes' } = params;
   const isNew = voucherId === 'new';
-  const { initialState } = useModel('@@initialState');
-
-  const currentCurrency = initialState?.config?.find(
-    ({ group, key }) => group === 'currencies' && key === 'default',
-  )?.value;
 
   const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
@@ -242,7 +237,7 @@ const VoucherForm = () => {
               form={form}
               width="md"
               name="min_cart_price"
-              label={<FormattedMessage id="vouchers.min_cart_price" />}
+              label={{ id: 'vouchers.min_cart_price' }}
               tooltip={<FormattedMessage id="vouchers.min_cart_price" />}
               placeholder={intl.formatMessage({
                 id: 'vouchers.min_cart_price',
@@ -255,7 +250,7 @@ const VoucherForm = () => {
               form={form}
               width="md"
               name="max_cart_price"
-              label={<FormattedMessage id="vouchers.max_cart_price" />}
+              label={{ id: 'vouchers.max_cart_price' }}
               tooltip={<FormattedMessage id="vouchers.max_cart_price" />}
               placeholder={intl.formatMessage({
                 id: 'vouchers.max_cart_price',
@@ -267,14 +262,9 @@ const VoucherForm = () => {
             <MoneyInput
               width="md"
               name="amount"
-              label={
-                <FormattedMessage
-                  id="voucher.value"
-                  values={{
-                    currency: currentCurrency ? `(${currentCurrency})` : '',
-                  }}
-                />
-              }
+              label={{
+                id: 'voucher.value',
+              }}
               tooltip={<FormattedMessage id="voucher.value" />}
               placeholder={intl.formatMessage({
                 id: 'voucher.value',

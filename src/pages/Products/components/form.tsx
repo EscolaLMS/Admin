@@ -341,14 +341,9 @@ const ProductsForm: React.FC<{
               form={form}
               width="xs"
               name="price"
-              label={
-                <FormattedMessage
-                  id="price"
-                  values={{
-                    currency: currentCurrency ? `(${currentCurrency})` : '',
-                  }}
-                />
-              }
+              label={{
+                id: 'price',
+              }}
               tooltip={<FormattedMessage id="price_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'price',
@@ -450,14 +445,9 @@ const ProductsForm: React.FC<{
               form={form}
               width="xs"
               name="price_old"
-              label={
-                <FormattedMessage
-                  id="price_old"
-                  values={{
-                    currency: currentCurrency ? `(${currentCurrency})` : '',
-                  }}
-                />
-              }
+              label={{
+                id: 'price_old',
+              }}
               tooltip={<FormattedMessage id="price_old_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'price',
@@ -471,14 +461,9 @@ const ProductsForm: React.FC<{
               initialValue={isNew ? null : undefined}
               width="xs"
               name="extra_fees"
-              label={
-                <FormattedMessage
-                  id="extra_fees"
-                  values={{
-                    currency: currentCurrency ? `(${currentCurrency})` : '',
-                  }}
-                />
-              }
+              label={{
+                id: 'extra_fees',
+              }}
               tooltip={<FormattedMessage id="extra_fees_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'extra_fees',
