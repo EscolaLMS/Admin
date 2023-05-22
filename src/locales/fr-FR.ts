@@ -567,4 +567,5 @@ export default {
   'model.varchar': 'Champ de texte (varchar)',
   'model.text': 'Champ de texte',
   'model.json': 'JSON',
+  icon: 'Icône',
 };
