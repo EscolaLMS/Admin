@@ -151,6 +151,10 @@ export default ({
           ...values,
         };
 
+        if (!postData.password || postData.password === '') {
+          delete postData.password;
+        }
+
         if (isNew) {
           response = await createUser(postData);
           if (response.success) {
@@ -220,11 +224,15 @@ export default ({
           rules={[
             {
               validator(_, value) {
-                if (!/(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/i.test(value)) {
+                if (value && !/(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/i.test(value)) {
                   return Promise.reject(new Error(intl.formatMessage({ id: 'badPassword' })));
                 }
                 return Promise.resolve();
               },
+            },
+            {
+              required: isNew,
+              message: <FormattedMessage id="field_required" />,
             },
           ]}
         />
