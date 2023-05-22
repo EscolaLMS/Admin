@@ -359,6 +359,7 @@ export default {
   tutor: 'Trener',
   tutors: 'Trenerzy',
   pages: 'Strony',
+  page: 'Strona',
   new_page: 'Nowa strona tekstowa',
   edit_page: 'Edycja strony tekstowej',
   add_new_topic: 'Dodaj nowy temat',
