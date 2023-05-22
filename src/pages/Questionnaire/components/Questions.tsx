@@ -6,6 +6,7 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import QuestionModalForm from './QuestionModalForm';
+import { sortArrayByKey, sortByKey } from '@/utils/utils';
 
 const QuestionForm: React.FC<{
   questionnaireId: number | undefined;
@@ -18,14 +19,15 @@ const QuestionForm: React.FC<{
   const TableColumns: ProColumns<API.Questionnaire>[] = useMemo(
     () => [
       {
-        title: <FormattedMessage id="id" defaultMessage="id" />,
+        title: <FormattedMessage id="ID" defaultMessage="ID" />,
         dataIndex: 'id',
         hideInSearch: true,
+        sorter: true,
       },
       {
         title: <FormattedMessage id="title" defaultMessage="title" />,
         dataIndex: 'title',
-        hideInSearch: true,
+        hideInSearch: false,
         sorter: true,
       },
       {
@@ -43,11 +45,13 @@ const QuestionForm: React.FC<{
         title: <FormattedMessage id="description" defaultMessage="description" />,
         dataIndex: 'description',
         hideInSearch: true,
+        sorter: true,
       },
       {
         title: <FormattedMessage id="position" defaultMessage="position" />,
         dataIndex: 'position',
         hideInSearch: true,
+        sorter: true,
       },
     ],
     [],
@@ -121,7 +125,9 @@ const QuestionForm: React.FC<{
         })}
         actionRef={actionRef}
         rowKey="id"
-        search={false}
+        search={{
+          layout: 'vertical',
+        }}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -133,7 +139,7 @@ const QuestionForm: React.FC<{
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
           </Button>,
         ]}
-        dataSource={questions && questions}
+        // dataSource={questions && questions}
         columns={[
           ...TableColumns,
           {
@@ -168,6 +174,29 @@ const QuestionForm: React.FC<{
             ],
           },
         ]}
+        request={({ title }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return new Promise((resolve) => {
+            let newArray = questions ? [...questions] : [];
+            if (title) {
+              newArray = newArray.filter((item) =>
+                item.title.toLowerCase().includes(title.toLowerCase()),
+              );
+            }
+            if (sortArr) {
+              newArray = sortArrayByKey<API.Question>(
+                newArray,
+                sortArr[0],
+                sortArr[1] === 'ascend' ? false : true,
+              );
+            }
+            resolve({
+              data: newArray,
+              success: true,
+              total: newArray.length,
+            });
+          });
+        }}
       />
       <QuestionModalForm
         id={modalVisible}
