@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 import { Button, Divider, Select, Spin } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import { EditableProTable } from '@ant-design/pro-table';
@@ -48,13 +48,19 @@ const staticColumns: ProColumns<TableGradeScale>[] = [
 ];
 
 export const GradesScale: React.FC = () => {
-  const { semester_subject_id, tutors, getTutors } = useTeacherSubject();
+  const { initialState } = useModel('@@initialState');
+  const { semester_subject_id, tutors } = useTeacherSubject();
   const [form] = ProForm.useForm<FormData>();
   const [editableKeys, setEditableKeys] = useState<React.Key[]>([]);
   const actionRef = useRef<ActionType>();
 
   const [tableLoading, setTableLoading] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState<number | null>(null);
+
+  const tutorViewing = useMemo(
+    () => !!tutors.data.find(({ id }) => id === initialState?.currentUser?.id),
+    [tutors.data, initialState?.currentUser?.id],
+  );
   const tutorsSelectOptions = useMemo(
     () =>
       tutors.data.map(({ id, first_name, last_name }) => ({
@@ -65,14 +71,15 @@ export const GradesScale: React.FC = () => {
   );
 
   useEffect(() => {
-    if (semester_subject_id === null) return;
-
-    getTutors(semester_subject_id).then((response) => {
-      if (response && response.success && response.data.tutors?.[0]) {
-        setSelectedTutor(response.data.tutors[0].id);
+    if (!tutorViewing || !initialState?.currentUser?.id) {
+      if (tutors.data?.[0]) {
+        setSelectedTutor(tutors.data?.[0].id);
       }
-    });
-  }, [semester_subject_id]);
+      return;
+    }
+
+    setSelectedTutor(initialState?.currentUser?.id);
+  }, [initialState?.currentUser?.id, tutorViewing]);
 
   useEffect(() => {
     if (semester_subject_id === null || selectedTutor === null) return;
@@ -113,6 +120,8 @@ export const GradesScale: React.FC = () => {
     <>
       <ProForm.Item label={<FormattedMessage id="menu.Teacher" />}>
         <Select
+          disabled={tutorViewing}
+          placeholder={<FormattedMessage id="select" />}
           options={tutorsSelectOptions}
           value={selectedTutor}
           onChange={(v) => setSelectedTutor(v)}
@@ -122,7 +131,7 @@ export const GradesScale: React.FC = () => {
       <ProForm<FormData>
         form={form}
         onFinish={onFormSubmit}
-        submitter={{ render: (_p, [_r, submit]) => [submit] }}
+        submitter={{ render: (_p, [, submit]) => [submit] }}
       >
         <EditableProTable<TableGradeScale>
           name="table"
