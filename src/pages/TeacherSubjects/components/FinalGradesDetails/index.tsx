@@ -16,8 +16,8 @@ import {
   useGradeTerms,
   useUserAttendanceSchedules,
   useStudentExams,
-  StudentExam,
 } from './hooks';
+import type { StudentExam } from './hooks';
 
 interface Props {
   user_id: number;
@@ -124,8 +124,33 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     [subjectGradeScales.data],
   );
 
-  // TODO
-  const proposedGrade = useMemo(() => '3+', []);
+  const proposedGrade = useMemo(() => {
+    const [sum, weightsSum] = (studentExams.data ?? []).reduce<[number, number]>(
+      (acc, { result, weight }) => [acc[0] + result.result * weight, acc[1] + weight],
+      [0, 0],
+    );
+    const weightedAverage = Number.isNaN(sum / weightsSum) ? 0 : sum / weightsSum;
+
+    const sortedGradeScales = (subjectGradeScales.data ?? [])
+      .sort((a, b) => a.grade_value - b.grade_value)
+      .reduce<(API.SubjectGradeScale & { isWeightedAverageGreater: boolean })[]>(
+        (acc, curr) => [
+          ...acc,
+          {
+            ...curr,
+            isWeightedAverageGreater: weightedAverage > curr.grade_value,
+          },
+        ],
+        [],
+      );
+
+    const firstFalseIndex = sortedGradeScales.findIndex(
+      ({ isWeightedAverageGreater }) => !isWeightedAverageGreater,
+    );
+    if (firstFalseIndex <= 0) return '';
+
+    return sortedGradeScales[firstFalseIndex]?.name;
+  }, [studentExams.data, subjectGradeScales.data]);
 
   const onFinalGradeSubmit = useCallback(
     async ({ grade_scale_id, grade_term_id }: FormData) => {
