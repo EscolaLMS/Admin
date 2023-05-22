@@ -6,7 +6,7 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import QuestionModalForm from './QuestionModalForm';
-import { sortArrayByKey, sortByKey } from '@/utils/utils';
+import { sortArrayByKey } from '@/utils/utils';
 
 const QuestionForm: React.FC<{
   questionnaireId: number | undefined;
