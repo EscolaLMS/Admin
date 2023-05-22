@@ -35,7 +35,7 @@ const H5PPreviewPage: React.FC = () => {
         },
       }}
     >
-      <ProCard direction="column" style={{ height: '100vh' }}>
+      <ProCard direction="column" style={{ minHeight: '100vh' }}>
         <Row>
           <Col span={24}>
             <Divider />
