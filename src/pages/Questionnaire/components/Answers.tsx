@@ -9,6 +9,9 @@ import ProTable from '@ant-design/pro-table';
 import { Form, message } from 'antd';
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+import UserSelect from '@/components/UserSelect';
+import { format } from 'date-fns';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 const QuestionVisibilitySwitch: React.FC<{
   record: API.QuestionAnswer;
@@ -93,36 +96,45 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,
       dataIndex: 'updated_at',
-      hideInSearch: false,
+      hideInSearch: true,
       render: (_, record) =>
         record.updated_at ? new Date(record.updated_at).toLocaleString() : '-',
-      sorter: {
-        compare: (a, b) =>
-          a.updated_at && b.updated_at
-            ? new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
-            : 0,
+      sorter: true,
+    },
+    {
+      title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,
+      dataIndex: 'date',
+      hideInSearch: false,
+      hideInForm: true,
+      hideInTable: true,
+      valueType: 'date',
+      fieldProps: {
+        allowEmpty: [true],
       },
     },
     {
-      title: <FormattedMessage id="question_title" defaultMessage="question_title" />,
+      title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'question_title',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="note" defaultMessage="note" />,
       dataIndex: 'note',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) =>
         record.note && record.note?.length > 64 ? record.note?.slice(0, 64) + '...' : record.note,
     },
     {
       title: <FormattedMessage id="user" defaultMessage="user" />,
       dataIndex: 'user_id',
-      hideInSearch: true,
+      hideInSearch: false,
       render: (_, record) => (
         <div>
           <TypeButtonDrawer type={'App\\Models\\User'} type_id={record.user_id} />
@@ -130,23 +142,42 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
           <p className="list-paragraph">{record.user?.email}</p>
         </div>
       ),
+      renderFormItem: (item, { type, ...rest }, form) => {
+        if (type === 'form') {
+          return null;
+        }
+        const stateType = form.getFieldValue('state');
+        return (
+          <UserSelect
+            {...rest}
+            state={{
+              type: stateType,
+            }}
+          />
+        );
+      },
     },
 
     {
       title: <FormattedMessage id="sum_rate" defaultMessage="sum_rate" />,
       dataIndex: 'rate',
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: <FormattedMessage id="show_hide_on_front" defaultMessage="show_hide_on_front" />,
       dataIndex: 'visible_on_front',
       hideInSearch: true,
+      sorter: false,
       render: (_, record) => <QuestionVisibilitySwitch record={record} />,
     },
   ];
 
   return (
-    <ProTable<API.QuestionAnswer, API.PageParams & { question_id?: number }>
+    <ProTable<
+      API.QuestionAnswer,
+      API.PageParams & { question_id?: number; user_id?: string; date?: string }
+    >
       headerTitle={intl.formatMessage({
         id: 'answers',
         defaultMessage: 'answers',
@@ -155,18 +186,25 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
         layout: 'vertical',
       }}
       rowKey="id"
-      request={({ pageSize, current, question_id }) => {
-        return getQuestionAnswers(questionnaireId, { pageSize, current, question_id }).then(
-          (response) => {
-            if (response.success) {
-              return {
-                data: response.data,
-                success: true,
-              };
-            }
-            return [];
-          },
-        );
+      request={({ pageSize, current, question_id, user_id, date }, sort) => {
+        const sortArr = sort && Object.entries(sort)[0];
+        return getQuestionAnswers(questionnaireId, {
+          per_page: pageSize,
+          page: current,
+          question_id,
+          user_id,
+          updated_at: date ? format(new Date(date), DATETIME_FORMAT) : undefined,
+          order_by: sortArr && sortArr[0],
+          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+        }).then((response) => {
+          if (response.success) {
+            return {
+              data: response.data,
+              success: true,
+            };
+          }
+          return [];
+        });
       }}
       columns={[...TableColumns, ...searchSelect]}
     />

@@ -419,6 +419,7 @@ export default {
   content_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
   pages: 'Pages',
+  page: 'Page',
   import_users: 'Import users',
   import_file: 'Import file',
   new_page: 'New static page',
@@ -692,4 +693,5 @@ export default {
   degree: 'Degree',
   grade: 'Grade',
   max_percent: 'Max percent (%)',
+  icon: 'Icon',
 };

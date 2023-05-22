@@ -200,14 +200,21 @@ const TableList: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title, library_id }) => {
+        request={({ pageSize, current, title, library_id }, sort) => {
           setLoading(true);
+          const sortArr = sort && Object.entries(sort)[0];
 
           return h5p({
             title,
             library_id,
             pageSize,
             current,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
           }).then((response) => {
             setLoading(false);
             if (response.success) {
