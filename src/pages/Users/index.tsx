@@ -15,6 +15,7 @@ import SecureUpload from '@/components/SecureUpload';
 import ProCard from '@ant-design/pro-card';
 
 import './index.css';
+import { createTableOrderObject } from '@/utils/utils';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
@@ -284,19 +285,17 @@ const TableList: React.FC = () => {
                 gt_last_login_day,
                 lt_last_login_day,
               });
-              const sortArr = sort && Object.entries(sort)[0];
               // const requestRole = role && role.toString() === 'all' ? undefined : role;
               return users({
                 per_page: pageSize,
                 page: current,
-                search,
+                search: search || undefined,
                 role: role || undefined,
                 from,
                 to,
                 gt_last_login_day,
                 lt_last_login_day,
-                order_by: sortArr && sortArr[0],
-                order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+                ...createTableOrderObject(sort, 'created_at'),
               }).then((response) => {
                 if (response.success) {
                   return {
