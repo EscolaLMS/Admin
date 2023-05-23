@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
-import { roundTo } from '@/utils/utils';
+import { createTableOrderObject, roundTo } from '@/utils/utils';
 import { Tag } from 'antd';
 
 const TableList: React.FC = () => {
@@ -137,20 +137,13 @@ const TableList: React.FC = () => {
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
             dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
-          const sortArr = sort && Object.entries(sort)[0];
           return payments({
             per_page: pageSize,
             page: current,
             date_from,
             date_to,
             status,
-            // order_id: 'G1JmH5Ue3D',
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               return {
