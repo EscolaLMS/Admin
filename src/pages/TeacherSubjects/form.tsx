@@ -12,6 +12,7 @@ import { Exams } from './components/Exams';
 import Students from './components/Students';
 import Attendances from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
+import Schedule from './components/Schedule';
 import { FinalGradesList } from './components/FinalGradesList';
 
 const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
@@ -48,9 +49,6 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
         <div style={{ display: 'flex', padding: '12px', gap: '12px' }}>
           <Button type="primary" onClick={() => console.log('MSTeams')}>
             <FormattedMessage id="msTeams" defaultMessage="msTeams" />
-          </Button>
-          <Button type="primary" onClick={() => console.log('attendence')}>
-            <FormattedMessage id="uploadAttendance" defaultMessage="uploadAttendance" />
           </Button>
           <Link to={`/teacher/subjects/${semester_subject_id}/exams?exam_id=new`}>
             <Button type="primary">
@@ -110,7 +108,7 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
           <Exams />
         </ProCard.TabPane>
         <ProCard.TabPane key="schedule" tab={<FormattedMessage id="schedule" />}>
-          <p>SCHEDULE</p>
+          <Schedule />
         </ProCard.TabPane>
         <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
           <Attendances />

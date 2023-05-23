@@ -69,6 +69,7 @@ export default {
   uploadAttendance: 'Upload attendance',
   uploadGrades: 'Uploading grades type',
   semester: 'Semester',
+  tutorName: 'Tutor',
   examTitle: 'Enter an exam title',
   examResult: 'Exam result',
   examResults: 'Exam results',
