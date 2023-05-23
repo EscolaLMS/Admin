@@ -15,7 +15,7 @@ import { Button, Tooltip, Popconfirm, message, Tag, Select, Typography } from 'a
 import CategoryTree from '@/components/CategoryTree';
 import { format } from 'date-fns/esm';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
-import { roundTo } from '@/utils/utils';
+import { createTableOrderObject, roundTo } from '@/utils/utils';
 
 export const TableColumns: ProColumns<API.Consultation>[] = [
   {
@@ -224,7 +224,6 @@ const Consultations: React.FC = () => {
         ]}
         request={({ name, status, dateRange, category_id, pageSize, current }, sort) => {
           setLoading(true);
-          const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
@@ -238,8 +237,7 @@ const Consultations: React.FC = () => {
             date_from,
             date_to,
             status,
-            order_by: sortArr && sortArr[0],
-            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             setLoading(false);
             if (response.success) {
