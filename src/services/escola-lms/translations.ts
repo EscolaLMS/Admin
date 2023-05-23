@@ -13,11 +13,7 @@ export async function translations(
   return request<API.DefaultMetaResponse<API.Translation>>(`/api/admin/translations`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
