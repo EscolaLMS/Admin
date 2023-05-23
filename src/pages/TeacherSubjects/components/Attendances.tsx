@@ -18,6 +18,7 @@ interface BaseUserProps {
   id: number;
   first_name: string;
   last_name: string;
+  academic_teacher_id: number | null;
 }
 
 interface CurrentGroupProps {
@@ -44,6 +45,7 @@ export const Attendances: React.FC = () => {
           id: curr.id,
           first_name: curr.first_name,
           last_name: curr.last_name,
+          academic_teacher_id: curr.academic_teacher_id,
         };
 
         const baseSchedule = (attendanceSchedule ?? []).reduce<
@@ -53,11 +55,12 @@ export const Attendances: React.FC = () => {
 
           return { ...accumulator, [String(schedule.date_from)]: y?.value };
         }, {});
-        return [...acc, { ...baseUser, ...baseSchedule }] as ColumnType[];
+        return baseUser.academic_teacher_id
+          ? [...acc]
+          : ([...acc, { ...baseUser, ...baseSchedule }] as ColumnType[]);
       }, []),
     [studentsGroup, attendanceSchedule],
   );
-
   const columns: ProColumns<ColumnType>[] = useMemo(() => {
     const dynamicCols = (attendanceSchedule ?? []).reduce<ProColumns<ColumnType>[]>(
       (acc, curr) => [
@@ -80,6 +83,7 @@ export const Attendances: React.FC = () => {
       ],
       [],
     );
+    console.log({ columns });
 
     setLoading(false);
 
@@ -120,7 +124,7 @@ export const Attendances: React.FC = () => {
       });
     }
   }, [currentGroup]);
-
+  console.log({ studentAttendanceList });
   return (
     <>
       <ProCard>
@@ -156,7 +160,7 @@ export const Attendances: React.FC = () => {
           rowKey="group_id"
           search={false}
           loading={loading}
-          dataSource={studentAttendanceList}
+          dataSource={studentAttendanceList ?? []}
           scroll={{ x: 1500 }}
           columns={[...columns]}
         />
