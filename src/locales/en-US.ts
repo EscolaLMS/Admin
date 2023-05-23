@@ -715,6 +715,8 @@ export default {
   show: 'Show',
   phone_number: 'Phone number',
   contact_details: 'Contact details',
+  assigned: 'Assigned',
+  completed_at: 'Completed at',
   Finished: 'Finished:',
   Started: 'Started:',
   NotStarted: 'Not started:',

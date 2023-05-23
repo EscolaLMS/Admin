@@ -704,6 +704,8 @@ export default {
   show: 'Pokaż',
   phone_number: 'Numer kontaktowy',
   contact_details: 'Szczegóły kontaktu',
+  assigned: 'Przypisany',
+  completed_at: 'Ukończone',
   Finished: 'Zakończone:',
   Started: 'Rozpoczęte:',
   NotStarted: 'Nie rozpoczęte:',
