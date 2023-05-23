@@ -697,8 +697,8 @@ export default {
   date: 'Data',
   issued_at: 'Wystawiono',
   icon: 'Ikona',
-  Finished: 'Zakończone',
-  Started: 'Rozpoczętę',
-  NotStarted: 'Nie rozpoczęte',
+  Finished: 'Zakończone:',
+  Started: 'Rozpoczętę:',
+  NotStarted: 'Nie rozpoczęte:',
   ShowMinutes: 'Pokaż minuty spędzone nad tematem:',
 };

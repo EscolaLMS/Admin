@@ -58,14 +58,14 @@ export const UserProgress: React.FC<{
               case 1:
                 return (
                   <Space>
-                    <Tag>F</Tag>
+                    <Tag color="success">F</Tag>
                     {showSeconds && <small>{minutes.toFixed(2)}m</small>}
                   </Space>
                 );
               case 2:
                 return (
                   <Space>
-                    <Tag>S</Tag>
+                    <Tag color="blue">S</Tag>
                     {showSeconds && <small>{minutes.toFixed(2)}m</small>}
                   </Space>
                 );
@@ -73,7 +73,7 @@ export const UserProgress: React.FC<{
               default:
                 return (
                   <React.Fragment>
-                    <Tag>N</Tag>
+                    <Tag color="error">N</Tag>
                   </React.Fragment>
                 );
             }
@@ -106,9 +106,10 @@ export const UserProgress: React.FC<{
     <Table
       title={() => (
         <Space>
-          <FormattedMessage id="Finished" defaultMessage="Finished" />: <Tag>F</Tag>
-          <FormattedMessage id="Started" defaultMessage="Started" />: <Tag>S</Tag>
-          <FormattedMessage id="NotStarted" defaultMessage="Not Started" />: <Tag>N</Tag>
+          <FormattedMessage id="Finished" defaultMessage="Finished:" /> <Tag color="success">F</Tag>
+          <FormattedMessage id="Started" defaultMessage="Started:" /> <Tag color="blue">S</Tag>
+          <FormattedMessage id="NotStarted" defaultMessage="Not Started:" />{' '}
+          <Tag color="error">N</Tag>
           <FormattedMessage id="ShowMinutes" defaultMessage="Show minutes spent on topic:" />{' '}
           <Switch checked={showSeconds} onChange={(v) => setShowSeconds(v)} />
         </Space>

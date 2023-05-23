@@ -708,8 +708,8 @@ export default {
   date: 'Date',
   issued_at: 'Issued at',
   icon: 'Icon',
-  Finished: 'Finished',
-  Started: 'Started',
-  NotStarted: 'Not started',
+  Finished: 'Finished:',
+  Started: 'Started:',
+  NotStarted: 'Not started:',
   ShowMinutes: 'Show minutes spent on topic:',
 };
