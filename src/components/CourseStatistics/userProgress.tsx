@@ -26,12 +26,12 @@ export const UserProgress: React.FC<{
   const columns: ColumnsType<UserStatColumn> = useMemo(() => {
     return [
       {
-        title: 'user',
+        title: <FormattedMessage id="user" />,
         dataIndex: 'id',
         render: (id: number) => <TypeButtonDrawer type="App\Models\User" type_id={id} />,
       },
       {
-        title: 'email',
+        title: <FormattedMessage id="email" />,
         dataIndex: 'email',
       },
       ...topics.map((topic) => {
@@ -109,7 +109,7 @@ export const UserProgress: React.FC<{
           <FormattedMessage id="Finished" defaultMessage="Finished" />: <Tag>F</Tag>
           <FormattedMessage id="Started" defaultMessage="Started" />: <Tag>S</Tag>
           <FormattedMessage id="NotStarted" defaultMessage="Not Started" />: <Tag>N</Tag>
-          <FormattedMessage id="ShowSeconds" defaultMessage="Show minutes spent on topic:" />{' '}
+          <FormattedMessage id="ShowMinutes" defaultMessage="Show minutes spent on topic:" />{' '}
           <Switch checked={showSeconds} onChange={(v) => setShowSeconds(v)} />
         </Space>
       )}

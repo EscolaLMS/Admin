@@ -704,7 +704,12 @@ export default {
   'TeacherSubjects.FinalGrades.GradeTerm': 'Due date',
   'TeacherSubjects.FinalGrades.FinalGrade': 'Final grade',
   'TeacherSubjects.FinalGrades.ProposedGrade': 'Proposed grade: {grade}',
+  'TeacherSubjects.FinalGrades.IssueAssessment': 'Issue an assessment',
   date: 'Date',
   issued_at: 'Issued at',
   icon: 'Icon',
+  Finished: 'Finished',
+  Started: 'Started',
+  NotStarted: 'Not started',
+  ShowMinutes: 'Show minutes spent on topic:',
 };

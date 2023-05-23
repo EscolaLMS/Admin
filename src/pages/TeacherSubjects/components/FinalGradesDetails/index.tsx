@@ -305,7 +305,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
       <ProForm<FormData> form={form} onFinish={onFinalGradeSubmit}>
         <ProForm.Group
           style={{ display: 'flex', flexDirection: 'column', paddingTop: '48px' }}
-          title={<FormattedMessage id="Wystaw ocenę końcową" />}
+          title={<FormattedMessage id="TeacherSubjects.FinalGrades.IssueAssessment" />}
           titleStyle={{ flex: 'unset' }}
           align="center"
         >

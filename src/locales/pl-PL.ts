@@ -693,7 +693,12 @@ export default {
   'TeacherSubjects.FinalGrades.GradeTerm': 'Termin zaliczenia',
   'TeacherSubjects.FinalGrades.FinalGrade': 'Ocena końcowa',
   'TeacherSubjects.FinalGrades.ProposedGrade': 'Proponowana ocena: {grade}',
+  'TeacherSubjects.FinalGrades.IssueAssessment': 'Wystaw ocenę końcową',
   date: 'Data',
   issued_at: 'Wystawiono',
   icon: 'Ikona',
+  Finished: 'Zakończone',
+  Started: 'Rozpoczętę',
+  NotStarted: 'Nie rozpoczęte',
+  ShowMinutes: 'Pokaż minuty spędzone nad tematem:',
 };
