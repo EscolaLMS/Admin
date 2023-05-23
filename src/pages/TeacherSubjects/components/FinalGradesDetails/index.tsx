@@ -152,6 +152,10 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
         [],
       );
 
+    if (sortedGradeScales.every(({ isWeightedAverageGreater }) => isWeightedAverageGreater)) {
+      return sortedGradeScales.at(-1)?.name;
+    }
+
     const firstFalseIndex = sortedGradeScales.findIndex(
       ({ isWeightedAverageGreater }) => !isWeightedAverageGreater,
     );
