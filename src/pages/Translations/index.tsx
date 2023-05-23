@@ -14,6 +14,7 @@ import {
   updateTranslation,
 } from '@/services/escola-lms/translations';
 import TranslationModalForm from './components/ModalForm';
+import { createTableOrderObject } from '@/utils/utils';
 
 export const TableColumns: ProColumns<API.Translation>[] = [
   {
@@ -113,15 +114,13 @@ const Translations: React.FC = () => {
           </Button>,
         ]}
         request={({ pageSize, current, group, key }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return translations({
-            pageSize,
-            current,
-            group,
-            key,
-            order_by: sortArr && sortArr[0],
-            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+            per_page: pageSize,
+            page: current,
+            group: group || undefined,
+            key: key || undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           })
             .then((response) => {
               setLoading(false);
