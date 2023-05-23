@@ -12,6 +12,8 @@ import {
   getSubjectTutorGrades,
 } from '@/services/escola-lms/grades';
 import { getExams } from '@/services/escola-lms/exams';
+import { course, getCourseStats, program } from '@/services/escola-lms/course';
+import { getFlatTopics } from '@/components/ProgramForm/Context';
 
 interface FetchedData<T> {
   loading: boolean;
@@ -194,4 +196,74 @@ export function useStudentExams(student_id: number) {
   }, [student_id]);
 
   return { studentExams };
+}
+
+export function useUserCoursesStats(group_id: number, user_id: number) {
+  const [userCourses, setUserCourses] = useState<FetchedData<API.Course[]>>({
+    loading: false,
+  });
+  const [userCoursesStats, setUserCoursesStats] = useState<
+    FetchedData<Record<string, API.FinishedTopicsUserStats[]>>
+  >({ loading: false });
+  const [userCoursesTopics, setUserCoursesTopics] = useState<
+    FetchedData<Record<string, API.Topic[]>>
+  >({ loading: false });
+
+  useEffect(() => {
+    setUserCourses((prev) => ({ ...prev, loading: true }));
+    course({ group_id })
+      .then((response) => {
+        if (response.success) {
+          setUserCourses((prev) => ({ ...prev, data: response.data }));
+        }
+      })
+      .finally(() => {
+        setUserCourses((prev) => ({ ...prev, loading: false }));
+      });
+  }, [group_id]);
+
+  useEffect(() => {
+    if (!userCourses.data) return;
+
+    setUserCoursesTopics((prev) => ({ ...prev, loading: true }));
+    Promise.all(userCourses.data.map(({ id }) => program(id!)))
+      .then((responses) => {
+        responses.forEach((response) => {
+          if (response.success) {
+            setUserCoursesTopics((prev) => ({
+              ...prev,
+              data: { ...prev.data, [response.data.id!]: getFlatTopics(response.data.lessons) },
+            }));
+          }
+        });
+      })
+      .finally(() => {
+        setUserCoursesTopics((prev) => ({ ...prev, loading: false }));
+      });
+
+    setUserCoursesStats((prev) => ({ ...prev, loading: true }));
+    Promise.all(
+      userCourses.data.map(({ id }) =>
+        getCourseStats(id!, ['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics']).then(
+          (response) => {
+            if (response.success) {
+              const data = (
+                response.data['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics'] ?? []
+              ).filter((userStat) => userStat.id === user_id);
+
+              setUserCoursesStats((prev) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  [Number(id)]: data,
+                },
+              }));
+            }
+          },
+        ),
+      ),
+    ).finally(() => setUserCoursesStats((prev) => ({ ...prev, loading: false })));
+  }, [userCourses.data, user_id]);
+
+  return { userCourses, userCoursesStats, userCoursesTopics };
 }

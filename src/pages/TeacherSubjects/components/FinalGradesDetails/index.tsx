@@ -8,6 +8,8 @@ import type { ProColumns } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
 import { AttendanceValue } from '@/services/escola-lms/enums';
+import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
+import { UserProgress } from '@/components/CourseStatistics/userProgress';
 import { useTeacherSubject } from '../../context';
 import {
   useFinalGrades,
@@ -15,6 +17,8 @@ import {
   useGradeTerms,
   useUserAttendanceSchedules,
   useStudentExams,
+  useTutorGradeScales,
+  useUserCoursesStats,
 } from './hooks';
 import type { StudentExam } from './hooks';
 
@@ -104,6 +108,10 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
   const { tutorGradeScales } = useTutorGradeScales(semester_subject_id, finalGrades.data?.tutor_id);
   const { userAttendanceSchedules, updateUserAttendanceSchedules } = useUserAttendanceSchedules(
+    group_id,
+    user_id,
+  );
+  const { userCourses, userCoursesStats, userCoursesTopics } = useUserCoursesStats(
     group_id,
     user_id,
   );
@@ -197,12 +205,12 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     <>
       {finalGrades.data && (
         <>
-          <Typography.Title level={5}>
+          <Typography.Text style={{ fontSize: '16px', fontWeight: 500 }}>
             <FormattedMessage
               id="TeacherSubjects.FinalGrades.Student"
               values={finalGrades.data.user}
             />
-          </Typography.Title>
+          </Typography.Text>
           <Divider />
         </>
       )}
@@ -276,17 +284,23 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             columns={tutorGradeScalesColumns}
           />
         </Col>
-        <Col span={12}>
-          {/* TODO */}
-          <ProTable
-            rowKey="id"
-            headerTitle={<FormattedMessage id="TeacherSubjects.FinalGrades.CoursesProgress" />}
-            search={false}
-            pagination={{ pageSize: TABLE_PAGE_SIZE }}
-            options={false}
-            cardProps={{ bodyStyle: { padding: 0 } }}
-          />
-        </Col>
+        {(userCourses.loading && !userCourses.data) ||
+          (userCoursesStats.loading && !userCoursesStats.data) ||
+          (userCoursesTopics.loading && !userCoursesTopics.data && <Spin />)}
+        {userCourses.data &&
+          userCoursesStats.data &&
+          userCoursesTopics.data &&
+          userCourses.data.map(({ id, title }) => (
+            <Col key={id} span={24}>
+              <Typography.Text style={{ fontSize: '16px', fontWeight: 500 }}>
+                {title}
+              </Typography.Text>
+              <UserProgress
+                topics={userCoursesTopics.data?.[Number(id)] ?? []}
+                stats={userCoursesStats.data?.[Number(id)] ?? []}
+              />
+            </Col>
+          ))}
       </Row>
       <ProForm<FormData> form={form} onFinish={onFinalGradeSubmit}>
         <ProForm.Group
