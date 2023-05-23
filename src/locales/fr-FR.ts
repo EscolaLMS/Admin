@@ -352,6 +352,7 @@ export default {
   content_tooltip:
     "L'éditeur est WYSIWYG et comprend des outils de mise en forme tout en conservant la possibilité d'écrire des raccourcis markdown en ligne et de produire du Markdown brut.",
   pages: 'Pages',
+  page: 'Page',
   import_users: 'Importer des utilisateurs',
   import_file: 'Importer un fichier',
   new_page: 'Nouvelle page statique',
@@ -542,7 +543,7 @@ export default {
   current_user_status: "Statut de l'utilisateur actuel",
   public_course: 'Public',
   no_pricing: 'Sans prix/accès',
-  public_label: 'Est public',
+  public_label: 'Est public (disponible gratuitement)',
   public_tooltip: 'Le cours est accessible à tout le monde sans avoir de compte',
   changesToBeApproved: 'Modifications à approuver',
   orderHasBeenChanged: "L'ordre a été modifié",
@@ -566,4 +567,5 @@ export default {
   'model.varchar': 'Champ de texte (varchar)',
   'model.text': 'Champ de texte',
   'model.json': 'JSON',
+  icon: 'Icône',
 };

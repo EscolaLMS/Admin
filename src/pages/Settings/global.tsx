@@ -101,14 +101,16 @@ const flatRoutes = (routes: Route[]): Route[] => {
   ).filter((route) => route.layout !== false && route.hideInMenu !== true);
 };
 
+const courseEditAdditionalSettingsKeys = ['public'];
+const templateTabsKeys = ['email', 'sms'];
+
 export const pathToSettingName = (path: string) =>
   `hideInMenu-${snakeToCamel(path.split('/').join('_'))}`;
 
 export const topicTypeToSettingName = (type: string) => `disableTopicType-${type}`;
 
 const booleanSettings = [
-  ...Object.keys(TopicType).map((type, i) => ({
-    id: -1 * (i + 200),
+  ...Object.keys(TopicType).map((type) => ({
     key: topicTypeToSettingName(type),
     group: 'global',
     value: 'false',
@@ -120,8 +122,7 @@ const booleanSettings = [
   })),
   ...flatRoutes(getRoutes())
     .filter((route) => route.path && route.path !== '/')
-    .map((route, i) => ({
-      id: -1 * (i + 100),
+    .map((route) => ({
       path: route.path,
       key: pathToSettingName(route.path),
       group: 'global',
@@ -132,8 +133,7 @@ const booleanSettings = [
       type: 'boolean',
       data: false,
     })),
-  ...['ECommerce', 'Certificates'].map((feature, i) => ({
-    id: -1 * (i + 100),
+  ...['ECommerce', 'Certificates'].map((feature) => ({
     key: `disable-${feature}`,
     group: 'global',
     value: 'false',
@@ -143,7 +143,30 @@ const booleanSettings = [
     type: 'boolean',
     data: false,
   })),
-].reduce((acc, curr, index) => ({ ...acc, [curr.key]: { ...curr, id: -1 * index } }), {});
+  ...courseEditAdditionalSettingsKeys.map((key) => ({
+    key: `showInCourseAdditionalSettings-${key}`,
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
+  ...templateTabsKeys.map((key) => ({
+    key: `hideTemplateTab-${key}`,
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
+].reduce((acc, curr, index) => {
+  acc[curr.key] = { ...curr, id: -1 * index };
+  return acc;
+}, {});
 
 const initialData: InitialDataRecords = {
   logo: {

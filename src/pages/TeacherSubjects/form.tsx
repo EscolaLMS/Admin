@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 
+import PERMISSIONS from '@/consts/permissions';
+import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
@@ -11,11 +13,24 @@ import Students from './components/Students';
 import Attendances from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
 import Schedule from './components/Schedule';
+import { FinalGradesList } from './components/FinalGradesList';
 
 const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
   const intl = useIntl();
   const { setInitialState, initialState } = useModel('@@initialState');
-  const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
+  const { teacherSubjectData, semester_subject_id, tutors } = useTeacherSubject();
+
+  const currentUserHasPermissions = useCallback(
+    isUserHavePermissions(initialState?.currentUser as API.UserItem),
+    [initialState?.currentUser],
+  );
+
+  const showGradeScale = useMemo(
+    () =>
+      !!tutors.data.find(({ id }) => id === initialState?.currentUser?.id) ||
+      currentUserHasPermissions(PERMISSIONS.TeacherListGradeScale),
+    [],
+  );
 
   if (!teacherSubjectData) {
     return <Spin />;
@@ -98,11 +113,13 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
         <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
           <Attendances />
         </ProCard.TabPane>
-        <ProCard.TabPane key="grades-scale" tab={<FormattedMessage id="grades-scale" />}>
-          <GradesScale />
-        </ProCard.TabPane>
-        <ProCard.TabPane key="finalGrades" tab={<FormattedMessage id="finalGrades" />}>
-          <p>FINAL GRADES</p>
+        {showGradeScale && (
+          <ProCard.TabPane key="grades-scale" tab={<FormattedMessage id="grades-scale" />}>
+            <GradesScale />
+          </ProCard.TabPane>
+        )}
+        <ProCard.TabPane key="final-grades" tab={<FormattedMessage id="final-grades" />}>
+          <FinalGradesList />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

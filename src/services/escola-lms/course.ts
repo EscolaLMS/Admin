@@ -88,12 +88,12 @@ export async function createLesson(body?: Record<string, any>, options?: Request
 
 export async function getCourseStats(
   id: number,
-  body?: Record<string, any>,
+  stats?: API.CourseStatsParam[],
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.CourseStats>>(`/api/admin/stats/course/${id}`, {
     method: 'GET',
-    data: body,
+    params: { 'stats[]': stats },
     ...(options || {}),
   });
 }

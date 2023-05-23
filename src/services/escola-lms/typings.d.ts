@@ -244,6 +244,7 @@ declare namespace API {
       tag?: string;
       active?: boolean;
       status?: string;
+      group_id?: number;
     };
 
   type CategoryParams = PageParams &
@@ -342,13 +343,68 @@ declare namespace API {
     parent_id?: number;
   };
 
+  type CourseStatsParam =
+    | 'EscolaLms\\Reports\\Stats\\Course\\AttendanceList'
+    | 'EscolaLms\\Reports\\Stats\\Course\\AverageTime'
+    | 'EscolaLms\\Reports\\Stats\\Course\\AverageTimePerTopic'
+    | 'EscolaLms\\Reports\\Stats\\Course\\FinishedCourse'
+    | 'EscolaLms\\Reports\\Stats\\Course\\FinishedTopics'
+    | 'EscolaLms\\Reports\\Stats\\Course\\MoneyEarned'
+    | 'EscolaLms\\Reports\\Stats\\Course\\PeopleBought'
+    | 'EscolaLms\\Reports\\Stats\\Course\\PeopleFinished'
+    | 'EscolaLms\\Reports\\Stats\\Course\\PeopleStarted';
+
+  type CourseAttemptDateObject = {
+    date: string;
+    times: string[];
+  };
+
+  type CourseAttemptDates = Record<string, CourseAttemptDateObject>;
+
+  type CourseAttemptObject = {
+    attempt: number;
+    dates: CourseAttemptDates;
+  };
+
+  type CourseAttempt = Record<number, CourseAttemptObject>;
+
+  type CourseAttempts = {
+    attempts: CourseAttempt;
+    email: string;
+    id: number;
+  };
+
+  type FinishedCourseUserStats = {
+    email: string;
+    finished: boolean;
+    finished_at: Date | string;
+    id: number;
+  };
+
+  type FinishedTopicsUserStat = {
+    id: number;
+    finished_at: string;
+    started_at: string;
+    title: string;
+    seconds: number;
+  };
+
+  type FinishedTopicsUserStats = {
+    email: string;
+    id: number;
+    seconds_total: number;
+    topics: FinishedTopicsUserStat[];
+  };
+
   type CourseStats = {
-    EscolaLmsReportsStatsCourseAverageTime: number;
-    EscolaLmsReportsStatsCourseAverageTimePerTopic: Record<string, number>;
-    EscolaLmsReportsStatsCourseMoneyEarned: number;
-    EscolaLmsReportsStatsCoursePeopleBought: number;
-    EscolaLmsReportsStatsCoursePeopleFinished: number;
-    EscolaLmsReportsStatsCoursePeopleStarted: number;
+    'EscolaLms\\Reports\\Stats\\Course\\AverageTime': number;
+    'EscolaLms\\Reports\\Stats\\Course\\AverageTimePerTopic': Record<string, number>;
+    'EscolaLms\\Reports\\Stats\\Course\\MoneyEarned': number;
+    'EscolaLms\\Reports\\Stats\\Course\\PeopleBought': number;
+    'EscolaLms\\Reports\\Stats\\Course\\PeopleFinished': number;
+    'EscolaLms\\Reports\\Stats\\Course\\PeopleStarted': number;
+    'EscolaLms\\Reports\\Stats\\Course\\FinishedCourse': FinishedCourseUserStats[];
+    'EscolaLms\\Reports\\Stats\\Course\\FinishedTopics': FinishedTopicsUserStats[];
   };
 
   type DataRangeStats = {
@@ -1385,6 +1441,7 @@ declare namespace API {
     semester_subject_id?: number;
     subject_id?: number;
     semester_id?: number;
+    student_id?: number;
   };
 
   type StudentAttendance = {
@@ -1496,6 +1553,11 @@ declare namespace API {
     grade_value: number;
   };
 
+  type SubjectGradeScale = GradeScale & {
+    id: number;
+    s_subject_scale_form_id: number;
+  };
+
   type SubjectTutorGrades = {
     id: number;
     tutor_id: number;
@@ -1517,6 +1579,49 @@ declare namespace API {
   type SemesterSubjectTutors = {
     id: number; // semester_subject_id,
     tutors: SemesterSubjectTutor[];
+  };
+
+  type FinalGradeItemUser = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+
+  type GradeTerm = {
+    id: number;
+    name: string;
+  };
+
+  type FinalGradeItemGrade = {
+    id: number;
+    grade_name: string;
+    grade_value: number;
+    grade_date: Date | string;
+    grade_term: GradeTerm;
+  };
+
+  type FinalGradeItem = {
+    id: number;
+    user: FinalGradeItemUser;
+    group_id: number;
+    tutor_id: number;
+    s_subject_scale_form_id: number;
+    grades: FinalGradeItemGrade[];
+  };
+
+  type UserAttendanceSchedule = Omit<API.GroupAttendanceSchedule, 'attendances'> & {
+    attendance: API.StudentAttendance;
+  };
+
+  type CreateFinalGradeRequest = {
+    lesson_group_user_id: number;
+    grade_term_id: number;
+    grade_scale_id: number;
+  };
+
+  type UpdateFinalGradeRequest = {
+    grade_scale_id: number;
   };
 }
 

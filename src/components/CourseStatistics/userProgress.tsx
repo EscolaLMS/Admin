@@ -1,9 +1,3 @@
-import type {
-  FinishedTopicsUserStats,
-  FinishedTopicsUserStat,
-  FinishedCourseUserStats,
-  CourseAttempts,
-} from './index';
 import { Select, Space, Switch, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useMemo, useState } from 'react';
@@ -12,7 +6,7 @@ import TypeButtonDrawer from '../TypeButtonDrawer';
 import Chart from './chart';
 import ProCard from '@ant-design/pro-card';
 
-type UserStatColumn = Record<string, number | string | FinishedTopicsUserStat> & {
+type UserStatColumn = Record<string, number | string | API.FinishedTopicsUserStat> & {
   email: string;
   id: number;
 };
@@ -24,20 +18,20 @@ const findH5PType = (topic: API.TopicH5P) => {
   return 'H5P';
 };
 
-export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopicsUserStats[] }> = ({
-  topics,
-  stats,
-}) => {
+export const UserProgress: React.FC<{
+  topics: API.Topic[];
+  stats: API.FinishedTopicsUserStats[];
+}> = ({ topics, stats }) => {
   const [showSeconds, setShowSeconds] = useState(false);
   const columns: ColumnsType<UserStatColumn> = useMemo(() => {
     return [
       {
-        title: 'user',
+        title: <FormattedMessage id="user" />,
         dataIndex: 'id',
         render: (id: number) => <TypeButtonDrawer type="App\Models\User" type_id={id} />,
       },
       {
-        title: 'email',
+        title: <FormattedMessage id="email" />,
         dataIndex: 'email',
       },
       ...topics.map((topic) => {
@@ -48,7 +42,7 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
         }
 
         return {
-          render: (row: FinishedTopicsUserStat | undefined) => {
+          render: (row: API.FinishedTopicsUserStat | undefined) => {
             let result = 0;
             let minutes = 0;
             if (row) {
@@ -64,14 +58,14 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
               case 1:
                 return (
                   <Space>
-                    <Tag>F</Tag>
+                    <Tag color="success">F</Tag>
                     {showSeconds && <small>{minutes.toFixed(2)}m</small>}
                   </Space>
                 );
               case 2:
                 return (
                   <Space>
-                    <Tag>S</Tag>
+                    <Tag color="blue">S</Tag>
                     {showSeconds && <small>{minutes.toFixed(2)}m</small>}
                   </Space>
                 );
@@ -79,7 +73,7 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
               default:
                 return (
                   <React.Fragment>
-                    <Tag>N</Tag>
+                    <Tag color="error">N</Tag>
                   </React.Fragment>
                 );
             }
@@ -112,10 +106,11 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
     <Table
       title={() => (
         <Space>
-          <FormattedMessage id="Finished" defaultMessage="Finished" />: <Tag>F</Tag>
-          <FormattedMessage id="Started" defaultMessage="Started" />: <Tag>S</Tag>
-          <FormattedMessage id="NotStarted" defaultMessage="Not Started" />: <Tag>N</Tag>
-          <FormattedMessage id="ShowSeconds" defaultMessage="Show minutes spent on topic:" />{' '}
+          <FormattedMessage id="Finished" defaultMessage="Finished:" /> <Tag color="success">F</Tag>
+          <FormattedMessage id="Started" defaultMessage="Started:" /> <Tag color="blue">S</Tag>
+          <FormattedMessage id="NotStarted" defaultMessage="Not Started:" />{' '}
+          <Tag color="error">N</Tag>
+          <FormattedMessage id="ShowMinutes" defaultMessage="Show minutes spent on topic:" />{' '}
           <Switch checked={showSeconds} onChange={(v) => setShowSeconds(v)} />
         </Space>
       )}
@@ -127,8 +122,8 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
   );
 };
 
-export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = ({ stats }) => {
-  const columns: ColumnsType<{ email: string; finished_at: string }> = useMemo(() => {
+export const UserCourseFinish: React.FC<{ stats: API.FinishedCourseUserStats[] }> = ({ stats }) => {
+  const columns: ColumnsType<{ email: string; finished_at: Date | string }> = useMemo(() => {
     return [
       {
         title: 'user',
@@ -146,7 +141,7 @@ export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = 
     ];
   }, []);
 
-  const dataSource: { email: string; finished_at: string }[] = useMemo(() => {
+  const dataSource: { email: string; finished_at: Date | string }[] = useMemo(() => {
     return stats.map(({ id, email, finished_at }) => ({
       id,
       email,
@@ -169,7 +164,7 @@ export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = 
   );
 };
 
-export const UserCourseAttempts: React.FC<{ stats: CourseAttempts[] }> = ({ stats }) => {
+export const UserCourseAttempts: React.FC<{ stats: API.CourseAttempts[] }> = ({ stats }) => {
   const [choosenUserEmail, setChoosenUserEmail] = useState<string | null>(null);
   const [choosenAttempt, setChoosenAttempt] = useState<number | null>(null);
 

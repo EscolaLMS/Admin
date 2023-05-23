@@ -423,17 +423,17 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           ...prevState,
           lessons: recursiveDeleteLesson(prevState?.lessons ?? [], lesson_id),
         }));
+      } else {
+        apiRemoveLesson(lesson_id).then((data) => {
+          if (data.success) {
+            message.success(data.message);
+            setState((prevState) => ({
+              ...prevState,
+              lessons: recursiveDeleteLesson(prevState?.lessons ?? [], lesson_id),
+            }));
+          }
+        });
       }
-
-      apiRemoveLesson(lesson_id).then((data) => {
-        if (data.success) {
-          message.success(data.message);
-          setState((prevState) => ({
-            ...prevState,
-            lessons: recursiveDeleteLesson(prevState?.lessons ?? [], lesson_id),
-          }));
-        }
-      });
     },
     [state],
   );

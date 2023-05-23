@@ -7,47 +7,6 @@ import { useIntl, FormattedMessage } from 'umi';
 import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { UserCourseAttempts, UserCourseFinish, UserProgress } from './userProgress';
 
-export type FinishedTopicsUserStat = {
-  id: number;
-  finished_at: string;
-  started_at: string;
-  title: string;
-  seconds: number;
-};
-
-export type FinishedTopicsUserStats = {
-  email: string;
-  id: number;
-  topics: FinishedTopicsUserStat[];
-};
-
-export type FinishedCourseUserStats = {
-  email: string;
-  finished: boolean;
-  finished_at: string;
-  id: number;
-};
-
-export type CourseAttemptDateObject = {
-  date: string;
-  times: string[];
-};
-
-export type CourseAttemptDates = Record<string, CourseAttemptDateObject>;
-
-export type CourseAttemptObject = {
-  attempt: number;
-  dates: CourseAttemptDates;
-};
-
-export type CourseAttempt = Record<number, CourseAttemptObject>;
-
-export type CourseAttempts = {
-  attempts: CourseAttempt;
-  email: string;
-  id: number;
-};
-
 type State =
   | {
       mode: 'init';
@@ -130,21 +89,21 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
             topics={topics}
             stats={
               state.value.find((element: courseStats) => element.type.includes('FinishedTopics'))
-                ?.value as FinishedTopicsUserStats[]
+                ?.value as API.FinishedTopicsUserStats[]
             }
           />
 
           <UserCourseFinish
             stats={
               state.value.find((element: courseStats) => element.type.includes('FinishedCourse'))
-                ?.value as FinishedCourseUserStats[]
+                ?.value as API.FinishedCourseUserStats[]
             }
           />
 
           <UserCourseAttempts
             stats={
               state.value.find((element: courseStats) => element.type.includes('AttendanceList'))
-                ?.value as CourseAttempts[]
+                ?.value as API.CourseAttempts[]
             }
           />
 
@@ -193,7 +152,7 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
             >
               <Text>
                 <FormattedMessage id="AverageTime" />
-                {`: 
+                {`:
                     ${
                       state.value.find(
                         (element: courseStats) =>

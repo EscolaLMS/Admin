@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, useParams, history, useAccess } from 'umi';
+import { FormattedMessage, useParams, history, useAccess, useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 
@@ -16,6 +16,13 @@ const Templates: React.FC = () => {
   const { template } = params;
   const access = useAccess();
 
+  const { initialState } = useModel('@@initialState');
+
+  const hideSMSTab =
+    initialState?.config?.find((item) => item.key === 'hideTemplateTab-sms')?.data ?? false;
+  const hideEmailTab =
+    initialState?.config?.find((item) => item.key === 'hideTemplateTab-email')?.data ?? false;
+
   return (
     <PageContainer>
       <ProCard
@@ -26,9 +33,11 @@ const Templates: React.FC = () => {
         }}
       >
         {/** TODO check here if all essential access is given */}
-        <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
-          <ConfigList templateType={'email'} channel={channelType.email} />
-        </ProCard.TabPane>
+        {!hideEmailTab && (
+          <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
+            <ConfigList templateType={'email'} channel={channelType.email} />
+          </ProCard.TabPane>
+        )}
 
         {access.certificatesPermission && (
           <ProCard.TabPane key={'pdf'} tab={<FormattedMessage id="PDF" />}>
@@ -47,16 +56,18 @@ const Templates: React.FC = () => {
         >
           Push
         </ProCard.TabPane> */}
-        <ProCard.TabPane
-          key={'sms'}
-          tab={
-            <span>
-              <FormattedMessage id="SMS" />
-            </span>
-          }
-        >
-          <ConfigList templateType={'sms'} channel={channelType.sms} />
-        </ProCard.TabPane>
+        {!hideSMSTab && (
+          <ProCard.TabPane
+            key={'sms'}
+            tab={
+              <span>
+                <FormattedMessage id="SMS" />
+              </span>
+            }
+          >
+            <ConfigList templateType={'sms'} channel={channelType.sms} />
+          </ProCard.TabPane>
+        )}
       </ProCard>
     </PageContainer>
   );

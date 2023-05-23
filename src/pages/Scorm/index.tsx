@@ -117,8 +117,18 @@ const TableList: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
-        request={({ pageSize, current }) => {
-          return scorms({ pageSize, current }).then((response) => {
+        request={({ pageSize, current }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return scorms({
+            per_page: pageSize,
+            page: current,
+            order_by: sortArr && sortArr[0], // i like nested ternary
+            /* eslint-disable */ order: sortArr
+              ? sortArr[1] === 'ascend'
+                ? 'ASC'
+                : 'DESC'
+              : undefined,
+          }).then((response) => {
             if (response.success) {
               return {
                 data: response.data.data,

@@ -70,6 +70,7 @@ export const CategoryModalForm: React.FC<{
       <ProFormSwitch
         name="is_active"
         label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
+        initialValue={false}
       />
       <ProForm.Item
         name="parent_id"
@@ -78,7 +79,7 @@ export const CategoryModalForm: React.FC<{
       >
         <CategoryTree />
       </ProForm.Item>
-      {id && (
+      {id !== -1 && (
         <ProFormImageUpload
           folder={`categories/${id}`}
           wrapInForm={false}
@@ -91,6 +92,14 @@ export const CategoryModalForm: React.FC<{
             if (removed.icon_path === '') {
               setDeletedIcon(true);
             }
+          }}
+          proFormGroupProps={{
+            style: {
+              flexDirection: 'column',
+            },
+            titleStyle: {
+              flex: '0 0 10px',
+            },
           }}
         />
       )}

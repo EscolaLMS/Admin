@@ -202,15 +202,16 @@ export async function unassignQuestionnaire(
 /**  GET /api/admin/question-answers/:id */
 export async function getQuestionAnswers(
   id: number,
-  params: API.PageParams & { question_id?: number },
+  params: API.PageParams &
+    API.PaginationParams & {
+      question_id?: number;
+      user_id?: string;
+      updated_at?: string;
+    },
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultMetaResponse<API.QuestionAnswer>>(`/api/admin/question-answers/${id}`, {
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     method: 'GET',
     /* useCache: true */ useCache: false,
 
