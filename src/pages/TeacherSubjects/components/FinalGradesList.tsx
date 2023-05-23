@@ -1,3 +1,4 @@
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Location } from 'history';
 import { FormattedMessage, Link, useLocation } from 'umi';
@@ -17,6 +18,13 @@ interface TableData {
 }
 
 const staticColumns: ProColumns<API.FinalGradeItem>[] = [
+  {
+    title: <FormattedMessage id="group" />,
+    dataIndex: 'group_id',
+    render: (_n, row) => (
+      <TypeButtonDrawer key={row.group_id} type="Students" type_id={row.group_id} />
+    ),
+  },
   {
     title: <FormattedMessage id="first_name" />,
     dataIndex: 'user',
