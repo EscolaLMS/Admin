@@ -12,11 +12,7 @@ export async function pages(
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     ...(options || {}),
   });
 }

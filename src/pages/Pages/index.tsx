@@ -8,6 +8,7 @@ import ProTable from '@ant-design/pro-table';
 
 import { pages, deletePage } from '@/services/escola-lms/pages';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { createTableOrderObject } from '@/utils/utils';
 
 const handleRemove = async (id: number) => {
   return deletePage(id).then((response) => {
@@ -112,14 +113,12 @@ const TableList: React.FC = () => {
           </Link>,
         ]}
         request={({ pageSize, current, title, slug }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           return pages({
-            pageSize,
-            current,
+            per_page: pageSize,
+            page: current,
             title: title || undefined,
             slug: slug || undefined,
-            order_by: sortArr && sortArr[0],
-            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               return {
