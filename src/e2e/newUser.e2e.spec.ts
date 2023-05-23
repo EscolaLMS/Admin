@@ -13,7 +13,7 @@ test.describe('New user', () => {
     await page.goto(`${BASE_URL}/#/configuration/settings/escola_auth`);
     await page.waitForLoadState();
     await page.waitForSelector('text=Settings', { state: 'visible' });
-    await page.click('.anticon-edit >>nth=2');
+    await page.locator('.anticon-edit').locator('nth=2').click();
     await page.locator('.ant-input').fill('http://localhost');
     await page.click('text=OK');
     await page.waitForTimeout(2000);
