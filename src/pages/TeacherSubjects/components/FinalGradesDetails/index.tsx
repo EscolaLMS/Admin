@@ -9,7 +9,7 @@ import type { ProColumns } from '@ant-design/pro-table';
 import { DAY_FORMAT } from '@/consts/dates';
 import { AttendanceValue } from '@/services/escola-lms/enums';
 import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
-import { UserProgress } from '@/components/CourseStatistics/userProgress';
+import { UserCourseAttempts, UserProgress } from '@/components/CourseStatistics/userProgress';
 import { useTeacherSubject } from '../../context';
 import {
   useFinalGrades,
@@ -301,7 +301,10 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
               </Typography.Text>
               <UserProgress
                 topics={userCoursesTopics.data?.[Number(id)] ?? []}
-                stats={userCoursesStats.data?.[Number(id)] ?? []}
+                stats={userCoursesStats.data?.[Number(id)]?.finishedTopics ?? []}
+              />
+              <UserCourseAttempts
+                stats={userCoursesStats.data?.[Number(id)]?.attendanceList ?? []}
               />
             </Col>
           ))}
