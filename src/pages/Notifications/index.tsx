@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import UserSelect from '@/components/UserSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { createTableOrderObject } from '@/utils/utils';
 
 export const getEventType = (event: string) => event.split('\\').pop() as string;
 
@@ -90,7 +91,6 @@ const NotificationsPage: React.FC = () => {
           layout: 'vertical',
         }}
         request={({ pageSize, current, event, notifiable_id, dateRange }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
@@ -98,13 +98,12 @@ const NotificationsPage: React.FC = () => {
 
           return getNotifications(
             {
-              pageSize,
-              current,
-              event,
+              per_page: pageSize,
+              page: current,
+              event: event || undefined,
               date_from,
               date_to,
-              order_by: sortArr && sortArr[0],
-              order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+              ...createTableOrderObject(sort, 'created_at'),
             },
             notifiable_id,
           ).then((response) => {
