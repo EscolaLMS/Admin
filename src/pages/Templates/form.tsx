@@ -262,7 +262,7 @@ export default () => {
             </ProForm.Group>
           )}
 
-          {channels[template] === TemplateChannelValue.pdf && (
+          {channels[template] === TemplateChannelValue.pdf && !isNew && (
             <Collapse ghost destroyInactivePanel defaultActiveKey={[-1]}>
               <Panel header={<FormattedMessage id="generated_pdfs" />} key={0}>
                 <PdfList template_id={Number(id)} />

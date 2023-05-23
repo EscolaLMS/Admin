@@ -7,6 +7,7 @@ import { getNotifications, getEventTypes } from '@/services/escola-lms/notificat
 import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import UserSelect from '@/components/UserSelect';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 export const getEventType = (event: string) => event.split('\\').pop() as string;
 
@@ -27,6 +28,10 @@ export const TableColumns: ProColumns<API.Notification>[] = [
     renderFormItem: (item, { type, defaultRender, ...rest }) => {
       return <UserSelect {...rest} />;
     },
+    render: (_, record) =>
+      record.notifiable_id && (
+        <TypeButtonDrawer key={'user'} type="App\Models\User" type_id={record.notifiable_id} />
+      ),
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,

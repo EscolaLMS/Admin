@@ -159,7 +159,14 @@ const Translations: React.FC = () => {
         onFinish={async (values) => {
           Object.entries(values.text).forEach((txt) => {
             if (txt[1]) {
-              addLocale(txt[0], { [values.key]: txt[1] });
+              addLocale(
+                txt[0],
+                { [values.key]: txt[1] },
+                {
+                  antd: localeInfo[txt[0]].antd,
+                  momentLocale: localeInfo[txt[0]].momentLocale,
+                },
+              );
             }
           });
 

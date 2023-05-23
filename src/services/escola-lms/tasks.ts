@@ -3,7 +3,10 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/tasks */
-export async function tasks(params: API.TaskListParams, options?: RequestOptionsInit) {
+export async function tasks(
+  params: API.TaskListParams & API.PaginationParams,
+  options?: RequestOptionsInit,
+) {
   return request<API.TaskList>(`/api/admin/tasks`, {
     method: 'GET',
     params: {

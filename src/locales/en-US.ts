@@ -419,6 +419,7 @@ export default {
   content_tooltip:
     'The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.',
   pages: 'Pages',
+  page: 'Page',
   import_users: 'Import users',
   import_file: 'Import file',
   new_page: 'New static page',
@@ -608,7 +609,7 @@ export default {
   current_user_status: 'Current user status',
   public_course: 'Public',
   no_pricing: 'No Price/Access',
-  public_label: ' Is public ',
+  public_label: 'Is public (available free of charge)',
   public_tooltip: ' Course is accessible to anyone without having account ',
   changesToBeApproved: 'Changes to be approved',
   orderHasBeenChanged: 'The order has been changed',
@@ -705,4 +706,5 @@ export default {
   'TeacherSubjects.FinalGrades.ProposedGrade': 'Proposed grade: {grade}',
   date: 'Date',
   issued_at: 'Issued at',
+  icon: 'Icon',
 };
