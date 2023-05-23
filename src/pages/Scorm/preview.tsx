@@ -22,7 +22,7 @@ const H5PPreviewPage: React.FC = () => {
             {
               path: 'scorms',
               breadcrumbName: intl.formatMessage({
-                id: 'menu.SCORMs',
+                id: 'menu.Courses.SCORMs',
               }),
             },
             {
@@ -35,7 +35,7 @@ const H5PPreviewPage: React.FC = () => {
         },
       }}
     >
-      <ProCard direction="column">
+      <ProCard direction="column" style={{ minHeight: '100vh' }}>
         <Row>
           <Col span={24}>
             <Divider />
