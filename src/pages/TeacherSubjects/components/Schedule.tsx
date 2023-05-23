@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { FC, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Badge, Modal, Typography } from 'antd';
 import { Calendar } from 'antd';
 import moment from 'moment';
@@ -28,64 +28,74 @@ const Schedule: FC = () => {
   const { semester_subject_id } = useTeacherSubject();
   const now = moment();
 
-  const events = eventData.map((event) => ({
-    id: event.id,
-    title: `${event.group.name} (${event.term_status.name})`,
-    start: moment(event.date_from).toDate(),
-    end: moment(event.date_to).toDate(),
-    tutor_name: `${event.tutor.first_name} ${event.tutor.last_name}`,
-    tutor_email: event.tutor.email,
-    semester: event.semester.name,
-    group: event.group.name,
-    subject: event.subject.name,
-  }));
+  const events = useMemo(
+    () =>
+      eventData.map((event) => ({
+        id: event.id,
+        title: `${event.group.name} (${event.term_status.name})`,
+        start: moment(event.date_from).toDate(),
+        end: moment(event.date_to).toDate(),
+        tutor_name: `${event.tutor.first_name} ${event.tutor.last_name}`,
+        tutor_email: event.tutor.email,
+        semester: event.semester.name,
+        group: event.group.name,
+        subject: event.subject.name,
+      })),
+    [eventData],
+  );
 
-  const fetchEvents = (start: moment.Moment, end: moment.Moment) => {
-    fetchAllSchedules({
-      semester_subject_id: semester_subject_id,
-      date_form: start.toDate(),
-      date_to: end.toDate(),
-    }).then((response) => {
-      if (response.success) {
-        setEventData(response.data);
-      }
-    });
-  };
+  const fetchEvents = useCallback(
+    (start: moment.Moment, end: moment.Moment) => {
+      fetchAllSchedules({
+        semester_subject_id: semester_subject_id,
+        date_form: start.toDate(),
+        date_to: end.toDate(),
+      }).then((response) => {
+        if (response.success) {
+          setEventData(response.data);
+        }
+      });
+    },
+    [semester_subject_id],
+  );
 
-  const handleEventClick = (event: EventCalendarProps) => {
+  const handleEventClick = useCallback((event: EventCalendarProps) => {
     setSelectedEvent(event);
-  };
+  }, []);
 
-  const handleModalClose = () => {
+  const handleModalClose = useCallback(() => {
     setSelectedEvent(null);
-  };
+  }, []);
 
-  const checkDate = (date: moment.Moment) => {
+  const checkDate = useCallback((date: moment.Moment) => {
     if (date.isSame(now, 'day')) {
       return 'warning';
     }
     return date.isAfter(now, 'day') ? 'success' : 'error';
-  };
+  }, []);
 
-  const dateCellRender = (date: moment.Moment) => {
-    const filteredEvents = events.filter((event) => moment(event.start).isSame(date, 'day'));
+  const dateCellRender = useCallback(
+    (date: moment.Moment) => {
+      const filteredEvents = events.filter((event) => moment(event.start).isSame(date, 'day'));
 
-    return (
-      <ul className="events">
-        {filteredEvents.map((event) => (
-          <li key={event.id} onClick={() => handleEventClick(event)}>
-            <Badge status={checkDate(moment(event.start))} text={event.title} />
-          </li>
-        ))}
-      </ul>
-    );
-  };
+      return (
+        <ul className="events">
+          {filteredEvents.map((event) => (
+            <li key={event.id} onClick={() => handleEventClick(event)}>
+              <Badge status={checkDate(moment(event.start))} text={event.title} />
+            </li>
+          ))}
+        </ul>
+      );
+    },
+    [eventData],
+  );
 
-  const handlePanelChange = (date: moment.Moment, mode: CalendarMode) => {
+  const handlePanelChange = useCallback((date: moment.Moment, mode: CalendarMode) => {
     const start = moment(date).startOf(mode).subtract(1, 'month');
     const end = moment(date).endOf(mode).add(1, 'month');
     fetchEvents(start, end);
-  };
+  }, []);
 
   useEffect(() => {
     const initialStartDate = moment().startOf('month');
@@ -106,26 +116,26 @@ const Schedule: FC = () => {
         onCancel={handleModalClose}
         footer={null}
       >
-        <p>
+        <Typography.Paragraph>
           <FormattedMessage id="tutorName" defaultMessage="Tutor" />: {selectedEvent?.tutor_name}
-        </p>
-        <p>
+        </Typography.Paragraph>
+        <Typography.Paragraph>
           <FormattedMessage id="email" defaultMessage="Email" />: {selectedEvent?.tutor_email}
-        </p>
-        <p>
+        </Typography.Paragraph>
+        <Typography.Paragraph>
           <FormattedMessage id="group" defaultMessage="Group" />: {selectedEvent?.group}
-        </p>
-        <p>
+        </Typography.Paragraph>
+        <Typography.Paragraph>
           <FormattedMessage id="semester" defaultMessage="Semester" />: {selectedEvent?.semester}
-        </p>
-        <p>
+        </Typography.Paragraph>
+        <Typography.Paragraph>
           <FormattedMessage id="started_at" defaultMessage="Start date" />:
           {selectedEvent && moment(selectedEvent.start).format(DAYTIME_FORMAT)}
-        </p>
-        <p>
+        </Typography.Paragraph>
+        <Typography.Paragraph>
           <FormattedMessage id="end_at" defaultMessage="End date" />:
           {selectedEvent && moment(selectedEvent.end).format(DAYTIME_FORMAT)}
-        </p>
+        </Typography.Paragraph>
       </Modal>
     </>
   );
