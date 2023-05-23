@@ -13,6 +13,8 @@ test.describe('New user', () => {
     await page.goto(`${BASE_URL}/#/configuration/settings/escola_auth`);
     await page.waitForLoadState();
     await page.waitForSelector('text=Settings', { state: 'visible' });
+    await page.locator('.anticon-edit').locator('nth=2').click();
+    await page.locator('.ant-input').fill('http://localhost');
     await page.click('[data-row-key="return_url"] button');
     await page.getByRole('textbox', { name: 'Please enter' }).fill('');
     await page.getByRole('textbox', { name: 'Please enter' }).type('http://localhost');

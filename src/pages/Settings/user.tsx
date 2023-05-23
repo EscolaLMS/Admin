@@ -207,7 +207,7 @@ const TableList: React.FC = () => {
         ]}
         request={({ pageSize, current, group }) => {
           return settings({
-            pageSize,
+            per_page: pageSize,
             current,
             group,
           }).then((response) => {
@@ -240,7 +240,7 @@ const TableList: React.FC = () => {
               actionRef.current.reload();
             }
             if (fields.group === 'global') {
-              const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+              const config = await settings({ current: 1, per_page: 100, group: 'global' });
               setInitialState((prevState) => ({
                 ...prevState,
                 config: config.success ? config.data : prevState?.config,

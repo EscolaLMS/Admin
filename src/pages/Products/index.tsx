@@ -45,6 +45,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     dataIndex: 'price',
     hideInSearch: true,
     sorter: true,
+    render: (_, value) => (value?.price ? value?.price / 100 : '-'),
   },
 
   {
@@ -68,6 +69,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     dataIndex: 'price_old',
     hideInSearch: true,
     sorter: true,
+    render: (_, value) => (value?.price_old ? value?.price_old / 100 : '-'),
   },
 
   {

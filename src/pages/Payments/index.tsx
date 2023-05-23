@@ -52,7 +52,7 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="total" defaultMessage="total" />,
       dataIndex: 'amount',
       hideInSearch: true,
-      render: (_, record) => roundTo(record.amount),
+      render: (_, record) => roundTo(record.amount / 100),
       sorter: true,
     },
     {

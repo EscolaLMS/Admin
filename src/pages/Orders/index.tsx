@@ -54,19 +54,19 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
     dataIndex: 'subtotal',
     hideInSearch: true,
-    render: (_, record) => roundTo(record.subtotal),
+    render: (_, record) => roundTo(record.subtotal / 100),
   },
   {
     title: <FormattedMessage id="tax" defaultMessage="Tax" />,
     dataIndex: 'tax',
     hideInSearch: true,
-    render: (_, record) => roundTo(record.tax),
+    render: (_, record) => roundTo(record.tax / 100),
   },
   {
     title: <FormattedMessage id="total" defaultMessage="total" />,
     dataIndex: 'total',
     hideInSearch: true,
-    render: (_, record) => roundTo(record.total),
+    render: (_, record) => roundTo(record.total / 100),
   },
   {
     title: <FormattedMessage id="items" defaultMessage="items" />,

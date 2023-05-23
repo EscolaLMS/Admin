@@ -5,7 +5,7 @@ export async function settings(
   params: {
     // query
     current?: number;
-    pageSize?: number;
+    per_page?: number;
     group?: string;
   },
   options?: RequestOptionsInit,
@@ -15,7 +15,6 @@ export async function settings(
     /* useCache: true */ useCache: false,
     params: {
       ...params,
-      per_page: params.pageSize,
       page: params.current,
     },
     ...(options || {}),

@@ -14,6 +14,7 @@ import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/
 import UserSelect from '@/components/UserSelect';
 import CategoryTree from '@/components/CategoryTree';
 import ProductSelect from '@/components/ProductsSelect';
+import { MoneyInput } from '@/components/MoneyInput';
 
 const mapper = <T extends { id: string | number } | string | number>(item: T): string | number =>
   typeof item === 'object' ? item.id : item;
@@ -232,10 +233,11 @@ const VoucherForm = () => {
             />
           </ProForm.Group>
           <ProForm.Group>
-            <ProFormDigit
+            <MoneyInput
+              form={form}
               width="md"
               name="min_cart_price"
-              label={<FormattedMessage id="vouchers.min_cart_price" />}
+              label={{ id: 'vouchers.min_cart_price' }}
               tooltip={<FormattedMessage id="vouchers.min_cart_price" />}
               placeholder={intl.formatMessage({
                 id: 'vouchers.min_cart_price',
@@ -244,10 +246,11 @@ const VoucherForm = () => {
               disabled={!voucherType}
               required
             />
-            <ProFormDigit
+            <MoneyInput
+              form={form}
               width="md"
               name="max_cart_price"
-              label={<FormattedMessage id="vouchers.max_cart_price" />}
+              label={{ id: 'vouchers.max_cart_price' }}
               tooltip={<FormattedMessage id="vouchers.max_cart_price" />}
               placeholder={intl.formatMessage({
                 id: 'vouchers.max_cart_price',
@@ -256,17 +259,19 @@ const VoucherForm = () => {
               disabled={!voucherType}
               required
             />
-            <ProFormDigit
+            <MoneyInput
               width="md"
               name="amount"
-              label={<FormattedMessage id="voucher.value" />}
+              label={{
+                id: 'voucher.value',
+              }}
               tooltip={<FormattedMessage id="voucher.value" />}
               placeholder={intl.formatMessage({
                 id: 'voucher.value',
                 defaultMessage: 'voucher value',
               })}
+              form={form}
               required
-              disabled={!voucherType}
             />
           </ProForm.Group>
           {voucherType && (

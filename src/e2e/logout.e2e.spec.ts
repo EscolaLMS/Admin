@@ -12,6 +12,7 @@ test.describe('Logout test', () => {
     await page.locator('.avatar-dropdown').dispatchEvent('mouseover', { bubbles: true });
 
     // Click text=Logout
+    await page.waitForSelector('text=Logout');
     await page.locator('text=Logout').click();
     await page.waitForURL(`${BASE_URL}/#/user/login?redirect=/welcome`);
 
