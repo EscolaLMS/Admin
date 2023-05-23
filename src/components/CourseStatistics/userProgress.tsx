@@ -1,9 +1,3 @@
-import type {
-  FinishedTopicsUserStats,
-  FinishedTopicsUserStat,
-  FinishedCourseUserStats,
-  CourseAttempts,
-} from './index';
 import { Select, Space, Switch, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useMemo, useState } from 'react';
@@ -12,7 +6,7 @@ import TypeButtonDrawer from '../TypeButtonDrawer';
 import Chart from './chart';
 import ProCard from '@ant-design/pro-card';
 
-type UserStatColumn = Record<string, number | string | FinishedTopicsUserStat> & {
+type UserStatColumn = Record<string, number | string | API.FinishedTopicsUserStat> & {
   email: string;
   id: number;
 };
@@ -24,10 +18,10 @@ const findH5PType = (topic: API.TopicH5P) => {
   return 'H5P';
 };
 
-export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopicsUserStats[] }> = ({
-  topics,
-  stats,
-}) => {
+export const UserProgress: React.FC<{
+  topics: API.Topic[];
+  stats: API.FinishedTopicsUserStats[];
+}> = ({ topics, stats }) => {
   const [showSeconds, setShowSeconds] = useState(false);
   const columns: ColumnsType<UserStatColumn> = useMemo(() => {
     return [
@@ -48,7 +42,7 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
         }
 
         return {
-          render: (row: FinishedTopicsUserStat | undefined) => {
+          render: (row: API.FinishedTopicsUserStat | undefined) => {
             let result = 0;
             let minutes = 0;
             if (row) {
@@ -127,8 +121,8 @@ export const UserProgress: React.FC<{ topics: API.Topic[]; stats: FinishedTopics
   );
 };
 
-export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = ({ stats }) => {
-  const columns: ColumnsType<{ email: string; finished_at: string }> = useMemo(() => {
+export const UserCourseFinish: React.FC<{ stats: API.FinishedCourseUserStats[] }> = ({ stats }) => {
+  const columns: ColumnsType<{ email: string; finished_at: Date | string }> = useMemo(() => {
     return [
       {
         title: 'user',
@@ -146,7 +140,7 @@ export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = 
     ];
   }, []);
 
-  const dataSource: { email: string; finished_at: string }[] = useMemo(() => {
+  const dataSource: { email: string; finished_at: Date | string }[] = useMemo(() => {
     return stats.map(({ id, email, finished_at }) => ({
       id,
       email,
@@ -169,7 +163,7 @@ export const UserCourseFinish: React.FC<{ stats: FinishedCourseUserStats[] }> = 
   );
 };
 
-export const UserCourseAttempts: React.FC<{ stats: CourseAttempts[] }> = ({ stats }) => {
+export const UserCourseAttempts: React.FC<{ stats: API.CourseAttempts[] }> = ({ stats }) => {
   const [choosenUserEmail, setChoosenUserEmail] = useState<string | null>(null);
   const [choosenAttempt, setChoosenAttempt] = useState<number | null>(null);
 
