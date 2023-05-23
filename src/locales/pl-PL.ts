@@ -698,6 +698,8 @@ export default {
   date: 'Data',
   issued_at: 'Wystawiono',
   icon: 'Ikona',
+  assigned: 'Przypisany',
+  completed_at: 'Ukończone',
   Finished: 'Zakończone:',
   Started: 'Rozpoczęte:',
   NotStarted: 'Nie rozpoczęte:',

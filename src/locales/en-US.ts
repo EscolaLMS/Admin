@@ -709,6 +709,8 @@ export default {
   date: 'Date',
   issued_at: 'Issued at',
   icon: 'Icon',
+  assigned: 'Assigned',
+  completed_at: 'Completed at',
   Finished: 'Finished:',
   Started: 'Started:',
   NotStarted: 'Not started:',
