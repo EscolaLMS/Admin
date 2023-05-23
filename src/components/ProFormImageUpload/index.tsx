@@ -5,6 +5,7 @@ import ProForm from '@ant-design/pro-form';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { FormattedMessage } from 'umi';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
+import type { GroupProps } from '@ant-design/pro-form/lib/interface';
 
 export const ProFormImageUpload: React.FC<{
   folder: string;
@@ -15,6 +16,7 @@ export const ProFormImageUpload: React.FC<{
   getUploadedSrcField: (info: UploadChangeParam) => string;
   setPath: (state: Record<string, string>) => void;
   wrapInForm?: boolean;
+  proFormGroupProps?: GroupProps;
 }> = ({
   title,
   action,
@@ -24,9 +26,10 @@ export const ProFormImageUpload: React.FC<{
   setPath,
   wrapInForm = true,
   folder,
+  proFormGroupProps,
 }) => {
   return (
-    <ProForm.Group title={<FormattedMessage id={title} />}>
+    <ProForm.Group title={<FormattedMessage id={title} />} {...proFormGroupProps}>
       <Row>
         <Col>
           <ProForm.Item shouldUpdate>

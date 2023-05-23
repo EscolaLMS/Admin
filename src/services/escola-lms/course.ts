@@ -2,24 +2,11 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/courses */
-export async function course(
-  params: API.CourseParams & {
-    // query
-    current?: number;
-    pageSize?: number;
-    title?: string;
-    status?: string;
-  },
-  options?: RequestOptionsInit,
-) {
+export async function course(params: API.CourseParams, options?: RequestOptionsInit) {
   return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
@@ -88,12 +75,12 @@ export async function createLesson(body?: Record<string, any>, options?: Request
 
 export async function getCourseStats(
   id: number,
-  body?: Record<string, any>,
+  stats?: API.CourseStatsParam[],
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.CourseStats>>(`/api/admin/stats/course/${id}`, {
     method: 'GET',
-    data: body,
+    params: { 'stats[]': stats },
     ...(options || {}),
   });
 }

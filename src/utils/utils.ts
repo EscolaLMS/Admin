@@ -1,3 +1,5 @@
+import { SortOrder } from 'antd/lib/table/interface';
+
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
@@ -483,5 +485,52 @@ export const sortByKey = <T>(myKey: string, reverse: boolean = false) => {
       sensitivity: 'base',
     });
     return reverse ? comparison * -1 : comparison;
+  };
+};
+
+export const sortArrayByKey = <T>(array: T[], key: string, reverse: boolean = false): T[] => {
+  const sortedArray = array.slice().sort((a, b) => {
+    const valueA = a[key];
+    const valueB = b[key];
+
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return valueA - valueB;
+    }
+
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      return valueA.localeCompare(valueB);
+    }
+
+    if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
+      return valueA === valueB ? 0 : valueA ? -1 : 1;
+    }
+
+    throw new Error('Cannot compare values of different types.');
+  });
+
+  if (reverse) {
+    return sortedArray.reverse();
+  }
+
+  return sortedArray;
+};
+
+export const createTableOrderObject = (
+  sort: Record<string, SortOrder>,
+  defaultSorter?: string,
+): {
+  order: 'ASC' | 'DESC' | undefined;
+  order_by: string | undefined;
+} => {
+  const sortArr = sort && Object.entries(sort)[0];
+  return {
+    order_by: sortArr ? sortArr[0] : defaultSorter,
+    order: sortArr
+      ? sortArr[1] === 'ascend'
+        ? 'ASC'
+        : 'DESC'
+      : defaultSorter
+      ? 'DESC'
+      : undefined,
   };
 };

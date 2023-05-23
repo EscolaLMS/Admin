@@ -53,15 +53,18 @@ const PDFPreview: React.FC<{ file: string }> = ({ file }) => {
       {nPages === 0 ? (
         <Spin />
       ) : (
-        <React.Fragment>
-          <Typography>Page:</Typography>
+        <div style={{ margin: '0.5em 0' }}>
+          <Typography>
+            <FormattedMessage id="page" />:
+          </Typography>
           <Pagination
             defaultPageSize={1}
             size="small"
             total={nPages}
             onChange={(page) => setPageNumber(page)}
+            simple
           />
-        </React.Fragment>
+        </div>
       )}
       <Document file={file} onLoadSuccess={({ numPages }) => setNumPages(numPages)}>
         <Page pageNumber={pageNumber} className="pdf-preview" />

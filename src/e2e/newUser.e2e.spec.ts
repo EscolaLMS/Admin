@@ -15,6 +15,9 @@ test.describe('New user', () => {
     await page.waitForSelector('text=Settings', { state: 'visible' });
     await page.locator('.anticon-edit').locator('nth=2').click();
     await page.locator('.ant-input').fill('http://localhost');
+    await page.click('[data-row-key="return_url"] button');
+    await page.getByRole('textbox', { name: 'Please enter' }).fill('');
+    await page.getByRole('textbox', { name: 'Please enter' }).type('http://localhost');
     await page.click('text=OK');
     await page.waitForTimeout(2000);
     await page.waitForLoadState();
@@ -26,14 +29,14 @@ test.describe('New user', () => {
     await page.type('#last_name', 'user');
     await page.type('#email', email);
     await page.type('#password', 'Testowanie1!');
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(7000);
     await page.click('.ant-checkbox-input >> nth = 0');
     await page.click('.ant-checkbox-input >> nth = 1');
     await page.locator('#is_active').click();
     await page.locator('text=student').click();
     await page.locator('button:has-text("Submit")').click();
     // await page.waitForSelector('text=Created user', { state: 'visible' });
-    await page.waitForTimeout(7000);
+    await page.waitForTimeout(5000);
 
     await page.goto(`${BASE_URL}/#/users/list`);
     await page.waitForTimeout(4000);
