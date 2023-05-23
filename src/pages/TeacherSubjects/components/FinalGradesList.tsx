@@ -70,19 +70,24 @@ export const FinalGradesList: React.FC = () => {
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
   const [tableData, setTableData] = useState<TableData>({ loading: false });
 
-  const [selectedGroup, setSelectedGroup] = useState<number | undefined>(
-    teacherSubjectData?.groups?.[0].id,
-  );
+  const [selectedGroups, setSelectedGroups] = useState<number[]>([
+    Number(teacherSubjectData?.groups?.[0].id),
+  ]);
   const groupsSelectOptions = useMemo(
     () => (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({ label: name, value: id })),
     [teacherSubjectData?.groups],
   );
 
   useEffect(() => {
-    if (selectedGroup === undefined || typeof user_id === 'number') return;
+    if (typeof user_id === 'number') return;
+
+    if (!selectedGroups.length) {
+      setTableData({ loading: false });
+      return;
+    }
 
     setTableData((prev) => ({ ...prev, loading: true }));
-    getGroupFinalGrades(selectedGroup)
+    getGroupFinalGrades(selectedGroups)
       .then((response) => {
         if (response.success) {
           const dataSource = response.data.map(({ grades, ...rest }) => ({
@@ -98,7 +103,7 @@ export const FinalGradesList: React.FC = () => {
       .finally(() => {
         setTableData((prev) => ({ ...prev, loading: false }));
       });
-  }, [selectedGroup, user_id]);
+  }, [selectedGroups, user_id]);
 
   if (user_id !== null && group_id !== null) {
     return <FinalGradesDetails user_id={user_id} group_id={group_id} />;
@@ -108,9 +113,10 @@ export const FinalGradesList: React.FC = () => {
     <>
       <ProForm.Item label={<FormattedMessage id="group" />}>
         <Select
+          mode="multiple"
           options={groupsSelectOptions}
-          value={selectedGroup}
-          onChange={(v) => setSelectedGroup(v)}
+          value={selectedGroups}
+          onChange={(v) => setSelectedGroups(v)}
         />
       </ProForm.Item>
       <Divider />

@@ -34,16 +34,17 @@ export async function createSubjectTutorGrades(
   );
 }
 
-/**  GET /api/admin/lesson-group-users/groups/:group_id */
-export async function getGroupFinalGrades(group_id: number, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<API.FinalGradeItem[]>>(
-    `/api/admin/lesson-group-users/groups/${group_id}`,
-    {
-      method: 'GET',
-      /* useCache: true */ useCache: false,
-      ...(options || {}),
-    },
-  );
+/**  GET /api/admin/lesson-group-users */
+export async function getGroupFinalGrades(
+  group_id: number | number[],
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.FinalGradeItem[]>>(`/api/admin/lesson-group-users`, {
+    method: 'GET',
+    params: { 'groups[]': group_id },
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
 }
 
 /**  GET /api/admin/lesson-group-users/groups/:group_id/users/:user_id */
