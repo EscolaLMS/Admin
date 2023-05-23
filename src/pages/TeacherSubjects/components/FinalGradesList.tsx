@@ -113,6 +113,7 @@ export const FinalGradesList: React.FC = () => {
     <>
       <ProForm.Item label={<FormattedMessage id="group" />}>
         <Select
+          allowClear
           mode="multiple"
           options={groupsSelectOptions}
           value={selectedGroups}
