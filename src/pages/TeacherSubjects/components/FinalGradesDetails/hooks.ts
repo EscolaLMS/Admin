@@ -203,7 +203,12 @@ export function useUserCoursesStats(group_id: number, user_id: number) {
     loading: false,
   });
   const [userCoursesStats, setUserCoursesStats] = useState<
-    FetchedData<Record<string, API.FinishedTopicsUserStats[]>>
+    FetchedData<
+      Record<
+        string,
+        { finishedTopics: API.FinishedTopicsUserStats[]; attendanceList: API.CourseAttempts[] }
+      >
+    >
   >({ loading: false });
   const [userCoursesTopics, setUserCoursesTopics] = useState<
     FetchedData<Record<string, API.Topic[]>>
@@ -247,23 +252,27 @@ export function useUserCoursesStats(group_id: number, user_id: number) {
     setUserCoursesStats((prev) => ({ ...prev, loading: true }));
     Promise.all(
       userCourses.data.map(({ id }) =>
-        getCourseStats(Number(id), ['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics']).then(
-          (response) => {
-            if (response.success) {
-              const data = (
-                response.data['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics'] ?? []
-              ).filter((userStat) => userStat.id === user_id);
+        getCourseStats(Number(id), [
+          'EscolaLms\\Reports\\Stats\\Course\\FinishedTopics',
+          'EscolaLms\\Reports\\Stats\\Course\\AttendanceList',
+        ]).then((response) => {
+          if (response.success) {
+            const finishedTopics = (
+              response.data['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics'] ?? []
+            ).filter((userStat) => userStat.id === user_id);
 
-              setUserCoursesStats((prev) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  [Number(id)]: data,
-                },
-              }));
-            }
-          },
-        ),
+            const attendanceList =
+              response.data['EscolaLms\\Reports\\Stats\\Course\\AttendanceList'] ?? [];
+
+            setUserCoursesStats((prev) => ({
+              ...prev,
+              data: {
+                ...prev.data,
+                [Number(id)]: { finishedTopics, attendanceList },
+              },
+            }));
+          }
+        }),
       ),
     ).finally(() => setUserCoursesStats((prev) => ({ ...prev, loading: false })));
   }, [userCourses.data, user_id]);

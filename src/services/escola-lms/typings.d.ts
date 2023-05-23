@@ -398,6 +398,7 @@ declare namespace API {
   };
 
   type CourseStats = {
+    'EscolaLms\\Reports\\Stats\\Course\\AttendanceList': CourseAttempts[];
     'EscolaLms\\Reports\\Stats\\Course\\AverageTime': number;
     'EscolaLms\\Reports\\Stats\\Course\\AverageTimePerTopic': Record<string, number>;
     'EscolaLms\\Reports\\Stats\\Course\\MoneyEarned': number;
