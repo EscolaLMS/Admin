@@ -13,8 +13,6 @@ export async function categoryTree(options?: RequestOptionsInit) {
 export async function categories(
   params: API.CourseParams & {
     // query
-    current?: number;
-    pageSize?: number;
     name?: string;
     is_active?: 0 | 1;
   },
@@ -23,11 +21,7 @@ export async function categories(
   return request<API.CategoryList>('/api/admin/categories', {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
