@@ -226,13 +226,16 @@ export function useUserCoursesStats(group_id: number, user_id: number) {
     if (!userCourses.data) return;
 
     setUserCoursesTopics((prev) => ({ ...prev, loading: true }));
-    Promise.all(userCourses.data.map(({ id }) => program(id!)))
+    Promise.all(userCourses.data.map(({ id }) => program(Number(id))))
       .then((responses) => {
         responses.forEach((response) => {
           if (response.success) {
             setUserCoursesTopics((prev) => ({
               ...prev,
-              data: { ...prev.data, [response.data.id!]: getFlatTopics(response.data.lessons) },
+              data: {
+                ...prev.data,
+                [Number(response.data.id)]: getFlatTopics(response.data.lessons),
+              },
             }));
           }
         });
@@ -244,7 +247,7 @@ export function useUserCoursesStats(group_id: number, user_id: number) {
     setUserCoursesStats((prev) => ({ ...prev, loading: true }));
     Promise.all(
       userCourses.data.map(({ id }) =>
-        getCourseStats(id!, ['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics']).then(
+        getCourseStats(Number(id), ['EscolaLms\\Reports\\Stats\\Course\\FinishedTopics']).then(
           (response) => {
             if (response.success) {
               const data = (
