@@ -6,6 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { stationaryEvents, deleteStationaryEvent } from '@/services/escola-lms/stationary_events';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
+import { createTableOrderObject } from '@/utils/utils';
 
 export const TableColumns: ProColumns<EscolaLms.StationaryEvents.Models.StationaryEvent>[] = [
   {
@@ -92,19 +93,13 @@ const StationaryEvents: React.FC = () => {
           </Link>,
         ]}
         request={({ name, pageSize, current }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
 
           return stationaryEvents({
-            pageSize,
-            current,
-            name,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            per_page: pageSize,
+            page: current,
+            name: name || undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             setLoading(false);
             if (response.success) {
