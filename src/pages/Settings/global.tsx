@@ -331,7 +331,7 @@ const TableList: React.FC = () => {
         rowKey="id"
         request={({ pageSize, current }) => {
           return settings({
-            pageSize,
+            per_page: pageSize,
             current,
             group: 'global',
           }).then((response) => {
