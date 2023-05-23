@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Typography, Drawer } from 'antd';
+import { Button, Tooltip, Popconfirm, message, Typography, Drawer, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -35,7 +35,11 @@ const DataDisplay: React.FC<{ data: unknown }> = ({ data }) => {
       </Button>
       <Drawer width={700} open={visible} onClose={() => setVisible(false)}>
         <Typography.Paragraph>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+          {Object.keys(data).map((key) => (
+            <p key={key}>
+              <FormattedMessage id={key} defaultMessage={key} />:<span> {data[key]}</span>
+            </p>
+          ))}
         </Typography.Paragraph>
       </Drawer>
     </React.Fragment>
@@ -53,6 +57,7 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="ID" defaultMessage="ID" />,
       dataIndex: 'id',
       hideInSearch: true,
+      sorter: true,
     },
 
     {
@@ -108,20 +113,30 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
       dataIndex: 'created_at',
       hideInSearch: true,
+      sorter: true,
       render: (_, record) =>
         record.created_at && format(new Date(record.created_at), DATETIME_FORMAT),
     },
     {
       title: <FormattedMessage id="status" defaultMessage="Status" />,
       dataIndex: 'status',
+      sorter: true,
       valueType: 'select',
       valueEnum: {
         pending: {
-          text: 'pending',
+          text: (
+            <Tag color="processing">
+              <FormattedMessage id="pending" defaultMessage="pending" />
+            </Tag>
+          ),
           status: 'pending',
         },
         approved: {
-          text: 'approved',
+          text: (
+            <Tag color="success">
+              <FormattedMessage id="approved" defaultMessage="approved" />
+            </Tag>
+          ),
           status: 'approved',
         },
       },
@@ -143,7 +158,9 @@ const TableList: React.FC = () => {
             <FormattedMessage id="approve" defaultMessage="Approve" />
           </Button>
         ) : (
-          record.status
+          <Tag color={record.status === 'approved' ? 'success' : 'processing'}>
+            <FormattedMessage id={record.status} defaultMessage={record.status} />
+          </Tag>
         ),
     },
     {
@@ -197,13 +214,16 @@ const TableList: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="id"
-        request={({ pageSize, current, course_id, status, user_id }) => {
+        request={({ pageSize, current, course_id, status, user_id }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
           return courseAccess({
             pageSize,
             current,
             course_id,
             user_id,
             status,
+            order_by: sortArr && sortArr[0],
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           }).then((response) => {
             if (response.success) {
               return {
