@@ -9,6 +9,7 @@ import {
   getGradeTerms,
   getUserFinalGrades,
   getSubjectGradeScales,
+  getSubjectTutorGrades,
 } from '@/services/escola-lms/grades';
 import { getExams } from '@/services/escola-lms/exams';
 
@@ -80,6 +81,32 @@ export function useSubjectGradeScales(s_subject_scale_form_id: number | undefine
   }, [s_subject_scale_form_id]);
 
   return { subjectGradeScales };
+}
+
+export function useTutorGradeScales(
+  semester_subject_id: number | undefined | null,
+  tutor_id: number | undefined | null,
+) {
+  const [tutorGradeScales, setTutorGradeScales] = useState<FetchedData<API.GradeScale[]>>({
+    loading: false,
+  });
+
+  useEffect(() => {
+    if (typeof semester_subject_id !== 'number' || typeof tutor_id !== 'number') return;
+
+    setTutorGradeScales((prev) => ({ ...prev, loading: true }));
+    getSubjectTutorGrades(semester_subject_id, tutor_id)
+      .then((response) => {
+        if (response.success) {
+          setTutorGradeScales((prev) => ({ ...prev, data: response.data.grade_scale }));
+        }
+      })
+      .finally(() => {
+        setTutorGradeScales((prev) => ({ ...prev, loading: false }));
+      });
+  }, [semester_subject_id, tutor_id]);
+
+  return { tutorGradeScales };
 }
 
 export function useUserAttendanceSchedules(group_id: number, user_id: number) {

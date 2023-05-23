@@ -1,4 +1,3 @@
-import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
 import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage, history } from 'umi';
 import { format } from 'date-fns';
@@ -31,7 +30,7 @@ interface FormData {
 
 type FinalGradeTableItem = API.GradeTerm & { grade?: API.FinalGradeItemGrade };
 
-const subjectGradeScalesColumns: ProColumns<API.GradeScale>[] = [
+const tutorGradeScalesColumns: ProColumns<API.GradeScale>[] = [
   {
     title: <FormattedMessage id="grade" />,
     dataIndex: 'grade',
@@ -41,7 +40,7 @@ const subjectGradeScalesColumns: ProColumns<API.GradeScale>[] = [
     dataIndex: 'name',
   },
   {
-    title: <FormattedMessage id="max_percent" />,
+    title: <FormattedMessage id="min_percent" />,
     dataIndex: 'grade_value',
     valueType: 'percent',
   },
@@ -103,6 +102,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { finalGrades } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
+  const { tutorGradeScales } = useTutorGradeScales(semester_subject_id, finalGrades.data?.tutor_id);
   const { userAttendanceSchedules, updateUserAttendanceSchedules } = useUserAttendanceSchedules(
     group_id,
     user_id,
@@ -131,14 +131,14 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     );
     const weightedAverage = Number.isNaN(sum / weightsSum) ? 0 : sum / weightsSum;
 
-    const sortedGradeScales = (subjectGradeScales.data ?? [])
+    const sortedGradeScales = (tutorGradeScales.data ?? [])
       .sort((a, b) => a.grade_value - b.grade_value)
-      .reduce<(API.SubjectGradeScale & { isWeightedAverageGreater: boolean })[]>(
+      .reduce<(API.GradeScale & { isWeightedAverageGreater: boolean })[]>(
         (acc, curr) => [
           ...acc,
           {
             ...curr,
-            isWeightedAverageGreater: weightedAverage > curr.grade_value,
+            isWeightedAverageGreater: weightedAverage >= curr.grade_value,
           },
         ],
         [],
@@ -147,10 +147,10 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     const firstFalseIndex = sortedGradeScales.findIndex(
       ({ isWeightedAverageGreater }) => !isWeightedAverageGreater,
     );
-    if (firstFalseIndex <= 0) return '';
+    if (firstFalseIndex < 0) return '';
 
-    return sortedGradeScales[firstFalseIndex]?.name;
-  }, [studentExams.data, subjectGradeScales.data]);
+    return sortedGradeScales[firstFalseIndex - 1]?.name;
+  }, [studentExams.data, tutorGradeScales.data]);
 
   const onFinalGradeSubmit = useCallback(
     async ({ grade_scale_id, grade_term_id }: FormData) => {
@@ -271,9 +271,9 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             options={false}
             pagination={{ pageSize: TABLE_PAGE_SIZE }}
             cardProps={{ bodyStyle: { padding: 0 } }}
-            dataSource={subjectGradeScales.data}
-            loading={subjectGradeScales.loading}
-            columns={subjectGradeScalesColumns}
+            dataSource={tutorGradeScales.data}
+            loading={tutorGradeScales.loading}
+            columns={tutorGradeScalesColumns}
           />
         </Col>
         <Col span={12}>
