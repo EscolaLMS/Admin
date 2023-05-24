@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useRef, useState } from 'react';
 import ProForm from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
 
-import { Button, message, Popconfirm, Tooltip } from 'antd';
+import { Button, message, Popconfirm, Tag, Tooltip } from 'antd';
 
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -12,14 +12,16 @@ import {
   deleteUserSubmission,
   userSubmissions,
 } from '@/services/escola-lms/users_submissions';
+import { createTableOrderObject } from '@/utils/utils';
 import AddUserSubmission from './form';
 import './index.css';
 
 export const TableColumns: ProColumns<EscolaLms.AssignWithoutAccount.Models.UserSubmission>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
 
   {
@@ -27,11 +29,35 @@ export const TableColumns: ProColumns<EscolaLms.AssignWithoutAccount.Models.User
     dataIndex: 'email',
     hideInSearch: false,
     width: '70%',
+    sorter: true,
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
     hideInSearch: true,
+    sorter: true,
+    valueEnum: {
+      sent: (
+        <Tag color="processing">
+          <FormattedMessage id="sent" />
+        </Tag>
+      ),
+      assigned: (
+        <Tag color="default">
+          <FormattedMessage id="assigned" />
+        </Tag>
+      ),
+      accepted: (
+        <Tag color="success">
+          <FormattedMessage id="accepted" />
+        </Tag>
+      ),
+      rejected: (
+        <Tag color="error">
+          <FormattedMessage id="rejected" />
+        </Tag>
+      ),
+    },
   },
 ];
 
@@ -76,14 +102,15 @@ export const UserSubmissions: React.FC<{
           </Button>,
         ]}
         rowKey="id"
-        request={async ({ email, pageSize, current }) => {
+        request={async ({ email, pageSize, current }, sort) => {
           setLoading(true);
           return userSubmissions({
             email,
-            pageSize,
-            current,
+            per_page: pageSize,
+            page: current,
             morphable_type: type,
             morphable_id: id,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             setLoading(false);
             if (response.success) {
