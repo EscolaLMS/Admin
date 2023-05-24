@@ -85,7 +85,9 @@ export const TypeButton: React.FC<{
       );
     // TODO add onLoaded
     case 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz':
-      return <GiftQuizRow id={type_id} />;
+      return (
+        <GiftQuizRow id={type_id} onLoaded={(giftQuiz) => onData({ type, value: giftQuiz })} />
+      );
     case 'Product':
       return <ProductRow id={type_id} onLoaded={(product) => onData({ type, value: product })} />;
     case 'Students':

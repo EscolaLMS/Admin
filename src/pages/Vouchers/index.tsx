@@ -11,6 +11,7 @@ import { deleteVoucher } from '@/services/escola-lms/vouchers';
 
 import { vouchers } from '@/services/escola-lms/vouchers';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
+import { createTableOrderObject } from '@/utils/utils';
 
 export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
   {
@@ -144,7 +145,6 @@ const Vouchers: React.FC = () => {
         ]}
         request={({ pageSize, current, name, code, dateRange }, sort) => {
           setLoading(true);
-          const sortArr = sort && Object.entries(sort)[0];
           const active_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const active_to =
@@ -157,12 +157,7 @@ const Vouchers: React.FC = () => {
             code: code || undefined,
             active_from,
             active_to,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             setLoading(false);
             if (response.success) {

@@ -67,6 +67,14 @@ export default () => {
     initialState?.config?.find((item) => item.key === 'showInCourseAdditionalSettings-public')
       ?.data ?? false;
 
+  const tabsToHide: Record<string, boolean> =
+    initialState?.config
+      ?.filter((item) => item.key.includes('hideInCourseTabs'))
+      ?.reduce((acc, { key, data: settingValue }) => {
+        acc[key.split('-')[1]] = settingValue;
+        return acc;
+      }, {}) ?? {};
+
   useEffect(() => {
     if (tab === 'attributes' && data && isFirstTimeEdit) {
       validateCourseEdit(data);
@@ -663,7 +671,7 @@ export default () => {
           </ProCard.TabPane>
         )}
 
-        {!isNew && (
+        {!isNew && !tabsToHide.statistics && (
           <ProCard.TabPane
             key="statistics"
             tab={<FormattedMessage id="statistics" />}
@@ -672,21 +680,17 @@ export default () => {
             {course && <CourseStatistics courseId={course} />}
           </ProCard.TabPane>
         )}
-        {!isNew && (
+        {!isNew && !tabsToHide.user_submission && (
           <ProCard.TabPane
             key="user_submission"
             tab={<FormattedMessage id="user_submission" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <Row>
-              <Col span={12}>
-                {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
-              </Col>
-            </Row>
+            {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
           </ProCard.TabPane>
         )}
 
-        {!isNew && (
+        {!isNew && !tabsToHide.user_projects && (
           <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="user_projects" />}>
             <ProjectsList courseId={Number(course)} />
           </ProCard.TabPane>

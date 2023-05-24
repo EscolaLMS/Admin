@@ -112,8 +112,8 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
         setLoading(true);
         const sortArr = sort && Object.entries(sort)[0];
         return templates({
-          pageSize,
-          current,
+          per_page: pageSize,
+          page: current,
           channel,
           name: name || undefined,
           order_by: sortArr && sortArr[0],
