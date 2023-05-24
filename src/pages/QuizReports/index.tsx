@@ -157,7 +157,7 @@ const QuizAttempts: React.FC = () => {
             topic_gift_quiz_id,
             date_from,
             date_to,
-            // ...createTableOrderObject(sort, 'created_at'),
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               return {
