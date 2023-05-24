@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import { useIntl, FormattedMessage, useModel } from 'umi';
 import type { IntlShape } from 'react-intl';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -15,7 +15,7 @@ import {
 } from '@/services/escola-lms/settings';
 
 import SettingsModalForm from './components/ModalForm';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 import { getRoutes } from '@@/core/routes';
 
@@ -175,7 +175,7 @@ const booleanSettings = [
     data: false,
   })),
 ].reduce((acc, curr, index) => {
-  acc[curr.key] = { ...curr, id: -1 * index };
+  acc[curr.key] = { ...curr, id: -100 * index };
   return acc;
 }, {});
 
@@ -242,6 +242,13 @@ const TableList: React.FC = () => {
       title: <FormattedMessage id="key" defaultMessage="key" />,
       dataIndex: 'key',
       hideInSearch: true,
+      render: (_, record) => (
+        <Fragment>
+          <Tooltip title={<FormattedMessage id={`Settings.tooltip.${record.key}`} />}>
+            {record.key} <InfoCircleOutlined />
+          </Tooltip>
+        </Fragment>
+      ),
     },
     {
       title: <FormattedMessage id="type" defaultMessage="type" />,

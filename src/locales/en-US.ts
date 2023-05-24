@@ -165,6 +165,8 @@ export default {
   'menu.reset': 'reset',
   'menu.settings': 'Settings',
   'menu.Settings': 'Settings',
+  settings: 'settings',
+  package: 'package',
   id: 'id',
   place: 'Place',
   place_tooltip: 'Place',
