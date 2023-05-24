@@ -16,11 +16,7 @@ export async function userSubmissions(
     `/api/admin/user-submissions`,
     {
       method: 'GET',
-      params: {
-        ...params,
-        per_page: params && params.pageSize,
-        page: params && params.current,
-      },
+      params,
       ...(options || {}),
     },
   );

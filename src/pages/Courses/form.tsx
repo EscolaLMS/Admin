@@ -678,11 +678,7 @@ export default () => {
             tab={<FormattedMessage id="user_submission" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <Row>
-              <Col span={12}>
-                {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
-              </Col>
-            </Row>
+            {course && <UserSubmissions id={Number(course)} type="App\Models\Course" />}
           </ProCard.TabPane>
         )}
 
