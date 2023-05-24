@@ -13,8 +13,8 @@ import { TableColumns as ConsultationsTableColumns } from '@/pages/Consultations
 import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
 import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
 import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
-import { TableColumns as QuizTableColumns } from '@/pages/QuizReports/index';
 import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
+import { GiftQuizTableColumns } from '@/pages/QuizReports';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -114,10 +114,10 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
       )}
 
       {data.type === 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz' && (
-        <ProDescriptions<API.QuizAttempt>
+        <ProDescriptions<API.GiftQuiz>
           {...descrProps}
-          title={<FormattedMessage id="quiz_reports" />}
-          columns={QuizTableColumns as ProDescriptionsItemProps<API.QuizAttempt>[]}
+          title={<FormattedMessage id="gift_quiz" defaultMessage="GIFT Quiz" />}
+          columns={GiftQuizTableColumns as ProDescriptionsItemProps<API.GiftQuiz>[]}
         />
       )}
 

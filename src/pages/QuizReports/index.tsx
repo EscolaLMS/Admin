@@ -13,6 +13,25 @@ import UserSelect from '@/components/UserSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { createTableOrderObject } from '@/utils/utils';
 
+export const GiftQuizTableColumns: ProColumns<API.GiftQuiz>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+  },
+  {
+    title: <FormattedMessage id="value" defaultMessage="value" />,
+    dataIndex: 'value',
+  },
+  {
+    title: <FormattedMessage id="max_attempts" defaultMessage="max_attempts" />,
+    dataIndex: 'max_attempts',
+  },
+  {
+    title: <FormattedMessage id="max_execution_time" defaultMessage="max_execution_time" />,
+    dataIndex: 'max_execution_time',
+  },
+];
+
 export const TableColumns: ProColumns<API.QuizAttempt>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -138,7 +157,7 @@ const QuizAttempts: React.FC = () => {
             topic_gift_quiz_id,
             date_from,
             date_to,
-            ...createTableOrderObject(sort, 'created_at'),
+            // ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               return {

@@ -991,7 +991,7 @@ declare namespace API {
       }
     | {
         type: 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz';
-        value: API.QuizAttempt;
+        value: API.GiftQuiz;
       };
 
   type ReportType =
@@ -1345,6 +1345,14 @@ declare namespace API {
       date_from?: string;
       date_to?: string;
     };
+
+  type GiftQuiz = {
+    id: number;
+    value: string;
+    type: string;
+    max_attempts: number;
+    max_execution_time: number;
+  };
 
   type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &
     API.PageParams &
