@@ -16,7 +16,6 @@ import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import { splitImagePath } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
-import UnsavedPrompt from '@/components/UnsavedPrompt';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
@@ -27,7 +26,6 @@ const WebinarForm = () => {
   const params = useParams<{ webinar?: string; tab?: string }>();
   const { webinar, tab = 'attributes' } = params;
   const isNew = webinar === 'new';
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<API.Webinar>>();
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
 
@@ -68,19 +66,15 @@ const WebinarForm = () => {
           });
           return;
         }
-
+        console.log('values: ', values);
         const postData = {
           ...values,
-          ...(tab === 'attributes' && { active_from: new Date(String(values.active_from)) }),
-          ...(tab === 'attributes' && { active_to: new Date(String(values.active_to)) }),
-          ...(tab === 'media' && { image_url: data && data.image_url }),
-          ...(tab === 'media' && {
-            image_path: data && data.image_url && splitImagePath(data.image_url),
-          }),
-          ...(tab === 'branding' && { logotype_url: data && data.logotype_url }),
-          ...(tab === 'branding' && {
-            logotype_path: data && data.logotype_path && splitImagePath(data.logotype_path),
-          }),
+          active_from: new Date(String(values.active_from)),
+          active_to: new Date(String(values.active_to)),
+          image_url: data?.image_url,
+          image_path: data?.image_url && splitImagePath(data.image_url),
+          logotype_url: data?.logotype_url,
+          logotype_path: data?.logotype_path && splitImagePath(data.logotype_path),
           trainers:
             values.trainers &&
             values.trainers.map((author) => (typeof author === 'object' ? author.id : author)),
@@ -90,13 +84,11 @@ const WebinarForm = () => {
         if (isNew) {
           response = await createWebinar(postData);
           if (response.success) {
-            setUnsavedChanges(false);
             history.push(`/courses/webinars/${response.data.id}`);
           }
         } else {
           response = await updateWebinar(Number(webinar), postData);
           if (response.success) {
-            setUnsavedChanges(false);
             validateCourseEdit(response.data);
             history.push(`/courses/webinars/${response.data.id}/${tab}`);
           }
@@ -104,8 +96,9 @@ const WebinarForm = () => {
         message.success(response.message);
       },
       initialValues: data,
+      form,
     }),
-    [data, webinar, tab, manageCourseEdit],
+    [data, webinar, tab, manageCourseEdit, form],
   );
 
   if (!data) {
@@ -186,15 +179,8 @@ const WebinarForm = () => {
               }
             />
           )}
-          <UnsavedPrompt show={unsavedChanges} />
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
-          <ProForm
-            {...formProps}
-            form={form}
-            onValuesChange={() => {
-              setUnsavedChanges(true);
-            }}
-          >
+          <ProForm {...formProps}>
             <ProForm.Group>
               <ProFormText
                 width="md"
@@ -222,7 +208,7 @@ const WebinarForm = () => {
               />
               <ProFormSelect
                 name="status"
-                width="xs"
+                width="sm"
                 label={<FormattedMessage id="status" />}
                 valueEnum={{
                   draft: intl.formatMessage({
