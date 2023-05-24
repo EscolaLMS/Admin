@@ -33,3 +33,9 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: dist # The folder the action should deploy.
+
+      - name: Send webook to mattermost
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          data: '{ "text": "There is a [admin-stage.escolalms.com](https://admin-stage.escolalms.com/) available" }'
