@@ -32,7 +32,7 @@ const NoticeIconView = () => {
   const [hasMore, setHasMore] = useState(false);
 
   const fetchNotifications = useCallback(async (page: number) => {
-    const request = await getNotifications({ current: page }, currentUser?.id);
+    const request = await getNotifications({ page }, currentUser?.id);
     const response = await request;
 
     if (response.success) {
