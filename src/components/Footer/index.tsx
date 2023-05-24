@@ -6,16 +6,14 @@ import { useMemo } from 'react';
 
 export default () => {
   const { initialState } = useModel('@@initialState');
-  const companyName = useMemo(
-    () =>
-      initialState?.config?.find((item) => item.group === 'companyInfo' && item.key === 'name')
+  const companyInfo = useMemo(
+    () => ({
+      name: initialState?.config?.find(
+        (item) => item.group === 'companyInfo' && item.key === 'name',
+      )?.value,
+      url: initialState?.config?.find((item) => item.group === 'companyInfo' && item.key === 'url')
         ?.value,
-    [initialState?.config],
-  );
-  const companyUrl = useMemo(
-    () =>
-      initialState?.config?.find((item) => item.group === 'companyInfo' && item.key === 'url')
-        ?.value,
+    }),
     [initialState?.config],
   );
 
@@ -24,9 +22,9 @@ export default () => {
       copyright="2021 EscolaSoft"
       links={[
         {
-          key: companyName || 'Wellms',
-          title: companyName || 'Wellms',
-          href: companyUrl || 'https://www.wellms.io/',
+          key: companyInfo.name || 'Wellms',
+          title: companyInfo.name || 'Wellms',
+          href: companyInfo.url || 'https://www.wellms.io/',
           blankTarget: true,
         },
         {
