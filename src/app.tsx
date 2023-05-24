@@ -66,7 +66,7 @@ export async function getInitialState(): Promise<{
   const currentUser = await fetchUserInfo();
 
   if (currentUser) {
-    const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+    const config = await settings({ per_page: -1 });
     const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
     const packs = await packages();
 

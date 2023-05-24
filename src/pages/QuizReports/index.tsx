@@ -11,6 +11,7 @@ import { DATETIME_FORMAT } from '@/consts/dates';
 import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
 import UserSelect from '@/components/UserSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { createTableOrderObject } from '@/utils/utils';
 
 export const TableColumns: ProColumns<API.QuizAttempt>[] = [
   {
@@ -127,7 +128,6 @@ const QuizAttempts: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         request={({ current, pageSize, topic_gift_quiz_id, dateRange }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
@@ -138,8 +138,7 @@ const QuizAttempts: React.FC = () => {
             topic_gift_quiz_id,
             date_from,
             date_to,
-            order_by: sortArr && sortArr[0],
-            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               return {

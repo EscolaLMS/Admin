@@ -33,7 +33,7 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    const config = await settings({ current: 1, pageSize: 100, group: 'global' });
+    const config = await settings({ current: 1, per_page: 100, group: 'global' });
 
     if (userInfo) {
       setInitialState({

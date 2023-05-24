@@ -7,7 +7,7 @@ import ProForm, {
   ProFormSwitch,
 } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
-import { useIntl, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 import ProductablesSelect from '@/components/ProductablesSelect';
 
 import {
@@ -28,6 +28,7 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
 import ProductsSelect from '@/components/ProductsSelect';
 import ProTable from '@ant-design/pro-table';
+import { MoneyInput } from '@/components/MoneyInput';
 
 type MinimumProductProductable = {
   class: string;
@@ -93,6 +94,11 @@ const ProductsForm: React.FC<{
   const [, updateState] = useState({});
   const forceUpdate = useCallback(() => updateState({}), []);
   const [form] = ProForm.useForm();
+
+  const { initialState } = useModel('@@initialState');
+  const currentCurrency = initialState?.config?.find(
+    ({ group, key }) => group === 'currencies' && key === 'default',
+  )?.value;
 
   const [multiple, setMultiple] = useState<boolean>(false);
 
@@ -331,22 +337,18 @@ const ProductsForm: React.FC<{
             />
           </ProForm.Group>
           <ProForm.Group title={<FormattedMessage id="prices" />}>
-            <ProFormDigit
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+            <MoneyInput
+              form={form}
               width="xs"
               name="price"
-              label={<FormattedMessage id="price_in_cents" />}
+              label={{
+                id: 'price',
+              }}
               tooltip={<FormattedMessage id="price_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'price',
                 defaultMessage: 'price',
               })}
-              min={0}
-              max={99999}
               fieldProps={{ step: 1 }}
             />
 
@@ -375,7 +377,14 @@ const ProductsForm: React.FC<{
             />
             <ProForm.Item
               shouldUpdate
-              label={<FormattedMessage id="price_brutto" />}
+              label={
+                <FormattedMessage
+                  id="price_brutto"
+                  values={{
+                    currency: currentCurrency ? `(${currentCurrency})` : '',
+                  }}
+                />
+              }
               tooltip={<FormattedMessage id="price_brutto_tooltip" />}
             >
               {(formRef) => {
@@ -386,19 +395,29 @@ const ProductsForm: React.FC<{
                     style={{ width: '104px' }}
                     value={
                       formRef.getFieldValue('price')
-                        ? Math.round(
-                            parseInt(formRef.getFieldValue('price')) *
-                              (1 + parseInt(formRef.getFieldValue('tax_rate')) / 100),
-                          )
+                        ? (
+                            Math.round(
+                              parseInt(formRef.getFieldValue('price')) *
+                                (1 + parseInt(formRef.getFieldValue('tax_rate')) / 100),
+                            ) / 100
+                          ).toFixed(2)
                         : undefined
                     }
                   />
                 );
               }}
             </ProForm.Item>
+
             <ProForm.Item
               shouldUpdate
-              label={<FormattedMessage id="tax_value" />}
+              label={
+                <FormattedMessage
+                  id="tax_value"
+                  values={{
+                    currency: currentCurrency ? `(${currentCurrency})` : '',
+                  }}
+                />
+              }
               tooltip={<FormattedMessage id="tax_value_tooltip" />}
             >
               {(formRef) => {
@@ -409,42 +428,47 @@ const ProductsForm: React.FC<{
                     style={{ width: '104px' }}
                     value={
                       formRef.getFieldValue('price')
-                        ? Math.round(
-                            parseInt(formRef.getFieldValue('price')) *
-                              (parseInt(formRef.getFieldValue('tax_rate')) / 100),
-                          )
+                        ? (
+                            Math.round(
+                              parseInt(formRef.getFieldValue('price')) *
+                                (parseInt(formRef.getFieldValue('tax_rate')) / 100),
+                            ) / 100
+                          ).toFixed(2)
                         : undefined
                     }
                   />
                 );
               }}
             </ProForm.Item>
-            <ProFormDigit
+
+            <MoneyInput
+              form={form}
               width="xs"
               name="price_old"
-              label={<FormattedMessage id="price_old" />}
+              label={{
+                id: 'price_old',
+              }}
               tooltip={<FormattedMessage id="price_old_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'price',
                 defaultMessage: 'price',
               })}
-              min={0}
-              max={99999}
               fieldProps={{ step: 1 }}
             />
 
-            <ProFormDigit
+            <MoneyInput
+              form={form}
               initialValue={isNew ? null : undefined}
               width="xs"
               name="extra_fees"
-              label={<FormattedMessage id="extra_fees" />}
+              label={{
+                id: 'extra_fees',
+              }}
               tooltip={<FormattedMessage id="extra_fees_tooltip" />}
               placeholder={intl.formatMessage({
                 id: 'extra_fees',
                 defaultMessage: 'extra_fees',
               })}
-              min={0}
-              max={99999}
               fieldProps={{ step: 1 }}
             />
           </ProForm.Group>

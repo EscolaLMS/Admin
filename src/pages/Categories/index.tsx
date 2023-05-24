@@ -17,6 +17,7 @@ import {
 } from '@/services/escola-lms/category';
 import CategoryModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { createTableOrderObject } from '@/utils/utils';
 
 const handleUpdate = async (intl: IntlShape, fields: API.CategoryListItem, id?: number) => {
   const hide = message.loading(
@@ -273,18 +274,12 @@ const TableList: React.FC = () => {
           </Button>,
         ]}
         request={({ pageSize, current, name, is_active }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           return categories({
-            pageSize,
-            current,
-            name,
+            per_page: pageSize,
+            page: current,
+            name: name || undefined,
             is_active: is_active ? (is_active === 'true' ? 1 : 0) : undefined,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               setData(response.data);

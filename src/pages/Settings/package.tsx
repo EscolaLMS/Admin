@@ -5,12 +5,14 @@ import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { EditOutlined } from '@ant-design/icons';
 import PackageModalForm from './components/PackageModalForm';
+import { sortArrayByKey } from '@/utils/utils';
 
 const columns: ProColumns<API.ConfigEntry>[] = [
   {
     title: <FormattedMessage id="key" defaultMessage="key" />,
     dataIndex: 'key',
-    hideInSearch: true,
+    hideInSearch: false,
+    sorter: true,
   },
 
   {
@@ -18,6 +20,7 @@ const columns: ProColumns<API.ConfigEntry>[] = [
     dataIndex: 'readonly',
     hideInForm: true,
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => (
       <Tag color={record.readonly ? 'success' : 'error'}>
         <FormattedMessage
@@ -33,6 +36,7 @@ const columns: ProColumns<API.ConfigEntry>[] = [
     dataIndex: 'public',
     hideInForm: true,
     hideInSearch: true,
+    sorter: true,
     render: (_, record) => (
       <Tag color={record.public ? 'success' : 'error'}>
         <FormattedMessage
@@ -116,7 +120,6 @@ const TableList: React.FC<{
         search={{
           layout: 'vertical',
         }}
-        dataSource={entries as API.ConfigEntry[]}
         columns={[
           ...columns,
           {
@@ -135,6 +138,29 @@ const TableList: React.FC<{
             ],
           },
         ]}
+        request={({ key }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          return new Promise((resolve) => {
+            let newArray = entries ? [...(entries as API.ConfigEntry[])] : [];
+            if (key) {
+              newArray = newArray.filter((item) =>
+                item.key.toLowerCase().includes(key.toLowerCase()),
+              );
+            }
+            if (sortArr) {
+              newArray = sortArrayByKey<API.ConfigEntry>(
+                newArray,
+                sortArr[0],
+                sortArr[1] === 'ascend' ? false : true,
+              );
+            }
+            resolve({
+              data: newArray,
+              success: true,
+              total: newArray.length,
+            });
+          });
+        }}
       />
       {selectedEntry && (
         <PackageModalForm

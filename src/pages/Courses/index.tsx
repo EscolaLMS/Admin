@@ -12,7 +12,7 @@ import { cloneCourse, course, exportCourse, removeCourse } from '@/services/esco
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
 import SecureUpload from '@/components/SecureUpload';
-import { roundTo } from '@/utils/utils';
+import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
 
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
@@ -340,22 +340,16 @@ const TableList: React.FC = () => {
           layout: 'vertical',
         }}
         request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
           return course({
-            title,
+            title: title || undefined,
             status,
-            pageSize,
-            current,
+            per_page: pageSize,
+            page: current,
             category_id,
             tag,
             active: active && active,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             setLoading(false);
             if (response.success) {

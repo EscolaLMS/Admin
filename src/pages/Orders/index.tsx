@@ -29,6 +29,7 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,
@@ -53,19 +54,19 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     title: <FormattedMessage id="subtotal" defaultMessage="SubTotal" />,
     dataIndex: 'subtotal',
     hideInSearch: true,
-    render: (_, record) => roundTo(record.subtotal),
+    render: (_, record) => roundTo(record.subtotal / 100),
   },
   {
     title: <FormattedMessage id="tax" defaultMessage="Tax" />,
     dataIndex: 'tax',
     hideInSearch: true,
-    render: (_, record) => roundTo(record.tax),
+    render: (_, record) => roundTo(record.tax / 100),
   },
   {
     title: <FormattedMessage id="total" defaultMessage="total" />,
     dataIndex: 'total',
     hideInSearch: true,
-    render: (_, record) => roundTo(record.total),
+    render: (_, record) => roundTo(record.total / 100),
   },
   {
     title: <FormattedMessage id="items" defaultMessage="items" />,
@@ -169,8 +170,8 @@ const TableList: React.FC = () => {
           const date_to =
             dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
           return orders({
-            pageSize,
-            current,
+            per_page: pageSize,
+            page: current,
             user_id,
             date_from,
             date_to,

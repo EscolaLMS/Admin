@@ -72,17 +72,19 @@ export const TeacherSubjectContextProvider: React.FC<{
 
     if (response.success) {
       setTutors((prev) => ({
-        loading: false,
+        ...prev,
         data: response.data.tutors,
       }));
     }
 
+    setTutors((prev) => ({ ...prev, loading: false }));
     return response;
   }, []);
 
   useEffect(() => {
     getTeacherSubjectById(semester_subject_id);
-  }, [getTeacherSubjectById, semester_subject_id]);
+    getTutors(semester_subject_id);
+  }, [getTeacherSubjectById, getTutors, semester_subject_id]);
 
   return (
     <Context.Provider
