@@ -7,9 +7,9 @@ export default () => (
     copyright="2021 EscolaSoft"
     links={[
       {
-        key: 'EscolaSoft',
-        title: 'Escola Soft',
-        href: 'https://escolasoft.com',
+        key: 'Wellms',
+        title: 'Wellms',
+        href: 'https://www.wellms.io/',
         blankTarget: true,
       },
       {
