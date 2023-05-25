@@ -20,7 +20,7 @@ export const DashdoardComponent: React.FC = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       const request = await course({
-        author_id: initialState?.currentUser?.id,
+        authors: initialState?.currentUser?.id,
         // Default get courses by latest
         order: 'DESC',
         order_by: 'created_at',
