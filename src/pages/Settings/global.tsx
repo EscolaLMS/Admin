@@ -227,6 +227,29 @@ const initialData: InitialDataRecords = {
     data: 0,
   },
 
+  companyName: {
+    id: -6,
+    key: 'companyName',
+    group: 'global',
+    value: 'Wellms',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'text',
+    data: 'Wellms',
+  },
+  companyURL: {
+    id: -7,
+    key: 'companyURL',
+    group: 'global',
+    value: 'https://www.wellms.io/',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'text',
+    data: 'https://www.wellms.io/',
+  },
+
   ...booleanSettings,
 };
 
