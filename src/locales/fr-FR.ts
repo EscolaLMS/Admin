@@ -51,6 +51,8 @@ export default {
   options: 'Options',
   base_price: 'Prix de base [¢]',
   base_price_tooltip: 'Prix de base [¢]. Utilisez 0 pour un cours gratuit',
+  duration_freemode_description: 'Durée',
+  duration_freemode: 'Durée',
   duration: 'Durée',
   duration_tooltip: 'Durée, exemple "1 heure"',
   categories: 'Catégories',

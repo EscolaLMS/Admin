@@ -212,11 +212,11 @@ const WebinarForm = () => {
               <ProFormText
                 width="sm"
                 name="duration"
-                label={<FormattedMessage id="duration" />}
-                tooltip={<FormattedMessage id="duration" />}
+                label={<FormattedMessage id="duration_freemode" />}
+                tooltip={<FormattedMessage id="duration_freemode_description" />}
                 placeholder={intl.formatMessage({
-                  id: 'duration',
-                  defaultMessage: 'duration',
+                  id: 'duration_freemode',
+                  defaultMessage: 'duration_freemode',
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
