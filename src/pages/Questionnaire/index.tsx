@@ -6,6 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { questionnaire, deleteQuestionnaire } from '@/services/escola-lms/questionnaire';
 import { Button, Tooltip, Popconfirm, message } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { createTableOrderObject } from '@/utils/utils';
 
 export const TableColumns: ProColumns<API.Questionnaire>[] = [
   {
@@ -72,17 +73,11 @@ const Questionnaire: React.FC = () => {
           </Link>,
         ]}
         request={({ pageSize, current, title }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           return questionnaire({
-            pageSize,
-            current,
-            title,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            per_page: pageSize,
+            page: current,
+            title: title || undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               return {
