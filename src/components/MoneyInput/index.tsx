@@ -61,7 +61,7 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
   useEffect(() => {
     if (form && name) {
       form.setFieldsValue({
-        [name]: !Number.isNaN(state.cents) ? state.cents : 0,
+        [name]: !Number.isNaN(state.cents) ? state.cents : null,
       });
     }
 

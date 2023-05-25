@@ -259,20 +259,44 @@ const VoucherForm = () => {
               disabled={!voucherType}
               required
             />
-            <MoneyInput
-              width="md"
-              name="amount"
-              label={{
-                id: 'voucher.value',
-              }}
-              tooltip={<FormattedMessage id="voucher.value" />}
-              placeholder={intl.formatMessage({
-                id: 'voucher.value',
-                defaultMessage: 'voucher value',
-              })}
-              form={form}
-              required
-            />
+            {voucherType.includes('percent') ? (
+              <ProFormDigit
+                width="sm"
+                name="amount"
+                label={
+                  <FormattedMessage
+                    id="voucher.value"
+                    values={{
+                      currency: '(%)',
+                    }}
+                  />
+                }
+                tooltip={<FormattedMessage id="voucher.value" />}
+                placeholder={intl.formatMessage({
+                  id: 'voucher.value',
+                  defaultMessage: 'voucher.value',
+                })}
+                required
+                disabled={!voucherType}
+                min={1}
+                max={100}
+              />
+            ) : (
+              <MoneyInput
+                width="md"
+                name="amount"
+                label={{
+                  id: 'voucher.value',
+                }}
+                tooltip={<FormattedMessage id="voucher.value" />}
+                placeholder={intl.formatMessage({
+                  id: 'voucher.value',
+                  defaultMessage: 'voucher value',
+                })}
+                form={form}
+                required
+              />
+            )}
           </ProForm.Group>
           {voucherType && (
             <>
