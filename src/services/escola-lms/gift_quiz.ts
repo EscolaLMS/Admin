@@ -56,3 +56,11 @@ export async function getQuizAttemptDetails(id: string | number, options?: Reque
     ...(options || {}),
   });
 }
+
+/** GET /api/admin/gift-quizes/{id} */
+export async function getGiftQuiz(id: string | number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

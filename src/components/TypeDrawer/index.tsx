@@ -14,6 +14,7 @@ import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
 import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
 import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
 import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
+import { GiftQuizTableColumns } from '@/pages/QuizReports';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -109,6 +110,14 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
           {...descrProps}
           title={<FormattedMessage id="studentsList" />}
           columns={StudentsTableColumns as ProDescriptionsItemProps<API.StudentUserGroup>[]}
+        />
+      )}
+
+      {data.type === 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz' && (
+        <ProDescriptions<API.GiftQuiz>
+          {...descrProps}
+          title={<FormattedMessage id="gift_quiz" defaultMessage="GIFT Quiz" />}
+          columns={GiftQuizTableColumns as ProDescriptionsItemProps<API.GiftQuiz>[]}
         />
       )}
 

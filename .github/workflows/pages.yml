@@ -33,3 +33,10 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: dist # The folder the action should deploy.
+
+      - name: Create the Mattermost Message
+        run: |
+          echo "{\"text\":\"There is a [admin-stage.escolalms.com](https://admin-stage.escolalms.com/) available\"}" > mattermost.json
+      - uses: mattermost/action-mattermost-notify@master
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}

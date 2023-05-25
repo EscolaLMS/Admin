@@ -13,11 +13,7 @@ export async function stationaryEvents(
     `/api/admin/stationary-events`,
     {
       method: 'GET',
-      params: {
-        ...params,
-        per_page: params.pageSize,
-        page: params.current,
-      },
+      params,
       ...(options || {}),
     },
   );

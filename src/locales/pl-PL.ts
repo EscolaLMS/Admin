@@ -710,4 +710,7 @@ export default {
   Started: 'Rozpoczęte:',
   NotStarted: 'Nie rozpoczęte:',
   ShowMinutes: 'Pokaż minuty spędzone nad tematem:',
+  sent: 'Wysłane',
+  accepted: 'Zaakceptowane',
+  rejected: 'Odrzucone',
 };

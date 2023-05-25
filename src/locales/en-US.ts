@@ -721,4 +721,7 @@ export default {
   Started: 'Started:',
   NotStarted: 'Not started:',
   ShowMinutes: 'Show minutes spent on topic:',
+  sent: 'Sent',
+  accepted: 'Accepted',
+  rejected: 'Rejected',
 };

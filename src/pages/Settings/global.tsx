@@ -101,6 +101,7 @@ const flatRoutes = (routes: Route[]): Route[] => {
   ).filter((route) => route.layout !== false && route.hideInMenu !== true);
 };
 
+const courseEditTabsKeys = ['statistics', 'user_submission', 'user_projects'];
 const courseEditAdditionalSettingsKeys = ['public'];
 const templateTabsKeys = ['email', 'sms'];
 
@@ -145,6 +146,16 @@ const booleanSettings = [
   })),
   ...courseEditAdditionalSettingsKeys.map((key) => ({
     key: `showInCourseAdditionalSettings-${key}`,
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 1,
+    type: 'boolean',
+    data: false,
+  })),
+  ...courseEditTabsKeys.map((key) => ({
+    key: `hideInCourseTabs-${key}`,
     group: 'global',
     value: 'false',
     public: true,
