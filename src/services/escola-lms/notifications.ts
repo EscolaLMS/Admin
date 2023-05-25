@@ -4,8 +4,6 @@ import type { RequestOptionsInit } from 'umi-request';
 /**  GET /api/admin/notifications/:id */
 export async function getNotifications(
   params: API.PaginationParams & {
-    current?: number;
-    pageSize?: number;
     event?: string;
     date_from?: string;
     date_to?: string;
@@ -18,12 +16,7 @@ export async function getNotifications(
     {
       method: 'GET',
       /* useCache: true */ useCache: false,
-      params: {
-        ...params,
-        per_page: params.pageSize,
-        page: params.current,
-        event: params.event,
-      },
+      params,
       ...(options || {}),
     },
   );
