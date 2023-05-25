@@ -9,10 +9,11 @@ export default () => {
   const companyInfo = useMemo(
     () => ({
       name: initialState?.config?.find(
-        (item) => item.group === 'companyInfo' && item.key === 'name',
+        (item) => item.group === 'global' && item.key === 'companyName',
       )?.value,
-      url: initialState?.config?.find((item) => item.group === 'companyInfo' && item.key === 'url')
-        ?.value,
+      url: initialState?.config?.find(
+        (item) => item.group === 'global' && item.key === 'companyURL',
+      )?.value,
     }),
     [initialState?.config],
   );
