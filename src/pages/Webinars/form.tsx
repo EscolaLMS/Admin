@@ -14,17 +14,27 @@ import { useCallback } from 'react';
 import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
-import { splitImagePath } from '@/utils/utils';
+import { splitImagePath, tagsArrToIds } from '@/utils/utils';
 import TagsInput from '@/components/TagsInput';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
+import ConfirmModal from '@/components/ConfirmModal';
+
+enum TabNames {
+  ATTRIBUTES = 'attributes',
+  PRODUCT = 'product',
+  MEDIA = 'media',
+  TAGS = 'tags',
+  BRANDING = 'branding',
+  USER_SUBMISSION = 'user_submission',
+}
 
 const WebinarForm = () => {
   const intl = useIntl();
   const params = useParams<{ webinar?: string; tab?: string }>();
-  const { webinar, tab = 'attributes' } = params;
+  const { webinar, tab = TabNames.ATTRIBUTES } = params;
   const isNew = webinar === 'new';
   const [data, setData] = useState<Partial<API.Webinar>>();
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
@@ -34,12 +44,13 @@ const WebinarForm = () => {
   const fetchData = useCallback(async () => {
     const response = await getWebinar(Number(webinar));
     if (response.success) {
-      if (tab === 'attributes') {
+      if (tab === TabNames.ATTRIBUTES) {
         validateCourseEdit(response.data);
       }
 
       setData({
         ...response.data,
+        tags: response.data.tags?.map(tagsArrToIds),
       });
     }
   }, [webinar]);
@@ -57,6 +68,12 @@ const WebinarForm = () => {
 
   const formProps = useMemo(
     () => ({
+      onValuesChange: () => {
+        setManageCourseEdit({
+          ...manageCourseEdit,
+          valuesChanged: true,
+        });
+      },
       onFinish: async (values: Partial<API.Webinar>) => {
         if (manageCourseEdit.disableEdit) {
           setManageCourseEdit({
@@ -66,11 +83,11 @@ const WebinarForm = () => {
           });
           return;
         }
-        console.log('values: ', values);
+
         const postData = {
           ...values,
-          active_from: new Date(String(values.active_from)),
-          active_to: new Date(String(values.active_to)),
+          active_from: new Date(String(values.active_from)) || data?.active_from || null,
+          active_to: new Date(String(values.active_to)) || data?.active_to || null,
           image_url: data?.image_url,
           image_path: data?.image_url && splitImagePath(data.image_url),
           logotype_url: data?.logotype_url,
@@ -94,6 +111,11 @@ const WebinarForm = () => {
           }
         }
         message.success(response.message);
+        setManageCourseEdit({
+          ...manageCourseEdit,
+          showConfirmModal: false,
+          loading: false,
+        });
       },
       initialValues: data,
       form,
@@ -145,10 +167,19 @@ const WebinarForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/courses/webinars/${webinar}/${key}`),
+          onChange: (key) => {
+            if (key === TabNames.PRODUCT && manageCourseEdit.valuesChanged) {
+              setManageCourseEdit({
+                ...manageCourseEdit,
+                showConfirmModal: true,
+              });
+            } else {
+              history.push(`/courses/webinars/${webinar}/${key}`);
+            }
+          },
         }}
       >
-        <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+        <ProCard.TabPane key={TabNames.ATTRIBUTES} tab={<FormattedMessage id="attributes" />}>
           {manageCourseEdit.disableEdit && (
             <Alert
               closable
@@ -270,37 +301,33 @@ const WebinarForm = () => {
             </ProForm.Group>
             <ProForm.Group>
               <ProFormTextArea
-                width="lg"
                 name="short_desc"
                 label={<FormattedMessage id="short_description" />}
                 tooltip={<FormattedMessage id="short_description" />}
+                width="lg"
               />
             </ProForm.Group>
-            <ProForm.Group>
-              <ProForm.Item
-                name="agenda"
-                label={<FormattedMessage id="program" />}
-                tooltip={<FormattedMessage id="program" />}
-                valuePropName="value"
-              >
-                <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
-              </ProForm.Item>
-            </ProForm.Group>
-            <ProForm.Group>
-              <ProForm.Item
-                name="description"
-                label={<FormattedMessage id="description" />}
-                tooltip={<FormattedMessage id="description_tooltip" />}
-                valuePropName="value"
-              >
-                <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
-              </ProForm.Item>
-            </ProForm.Group>
+            <ProForm.Item
+              name="agenda"
+              label={<FormattedMessage id="program" />}
+              tooltip={<FormattedMessage id="program" />}
+              valuePropName="value"
+            >
+              <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
+            </ProForm.Item>
+            <ProForm.Item
+              name="description"
+              label={<FormattedMessage id="description" />}
+              tooltip={<FormattedMessage id="description_tooltip" />}
+              valuePropName="value"
+            >
+              <WysiwygMarkdown directory={`webinars/${webinar}/wysiwyg`} />
+            </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>{' '}
         {!isNew && (
           <ProCard.TabPane
-            key="product"
+            key={TabNames.PRODUCT}
             tab={<FormattedMessage id="product" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -318,7 +345,7 @@ const WebinarForm = () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="media"
+            key={TabNames.MEDIA}
             tab={<FormattedMessage id="media" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -342,7 +369,7 @@ const WebinarForm = () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="tags"
+            key={TabNames.TAGS}
             tab={<FormattedMessage id="tags" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -363,7 +390,7 @@ const WebinarForm = () => {
         )}{' '}
         {!isNew && (
           <ProCard.TabPane
-            key="branding"
+            key={TabNames.BRANDING}
             tab={<FormattedMessage id="branding" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -387,18 +414,32 @@ const WebinarForm = () => {
         )}{' '}
         {!isNew && (
           <ProCard.TabPane
-            key="user_submission"
+            key={TabNames.USER_SUBMISSION}
             tab={<FormattedMessage id="user_submission" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <Row>
-              <Col span={12}>
-                {webinar && <UserSubmissions id={Number(webinar)} type="App\Models\Webinar" />}
-              </Col>
-            </Row>
+            {webinar && <UserSubmissions id={Number(webinar)} type="App\Models\Webinar" />}
           </ProCard.TabPane>
         )}
       </ProCard>
+      {/* CONFIRM MODAL COMPONENT */}
+      <ConfirmModal
+        open={!!manageCourseEdit.showConfirmModal}
+        onOk={() => {
+          setManageCourseEdit({
+            ...manageCourseEdit,
+            loading: true,
+          });
+          form.submit();
+        }}
+        onCancel={() => {
+          setManageCourseEdit({
+            ...manageCourseEdit,
+            showConfirmModal: false,
+          });
+        }}
+        loading={!!manageCourseEdit.loading}
+      />
     </PageContainer>
   );
 };

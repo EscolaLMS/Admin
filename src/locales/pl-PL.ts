@@ -713,4 +713,6 @@ export default {
   sent: 'Wysłane',
   accepted: 'Zaakceptowane',
   rejected: 'Odrzucone',
+  'confirmModal.title': 'Potwierdź zmiany',
+  'confirmModal.content': 'Jeśli chcesz przejść do kolejnej zakładki zapisz aktualne zmiany',
 };
