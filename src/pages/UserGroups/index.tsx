@@ -10,6 +10,7 @@ import UserGroupSelect from '@/components/UserGroupSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
 import { Tree } from '@/components/Tree';
+import { createTableOrderObject } from '@/utils/utils';
 
 const handleRemove = async (id: number) => {
   await deleteUserGroup(id);
@@ -168,14 +169,12 @@ const TableList: React.FC = () => {
           </Link>,
         ]}
         request={({ pageSize, current, search, parent_id }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           return userGroups({
             per_page: pageSize,
             page: current,
             search: search || undefined,
             parent_id,
-            order_by: sortArr && sortArr[0],
-            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {
             if (response.success) {
               setData(response.data);
