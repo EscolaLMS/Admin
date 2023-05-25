@@ -357,7 +357,7 @@ declare namespace API {
 
   type CourseAttemptDateObject = {
     date: string;
-    times: string[];
+    seconds_total: string[];
   };
 
   type CourseAttemptDates = Record<string, CourseAttemptDateObject>;

@@ -169,22 +169,25 @@ export const UserCourseAttempts: React.FC<{ stats: API.CourseAttempts[] }> = ({ 
   const [choosenAttempt, setChoosenAttempt] = useState<number | null>(null);
 
   const dataSource = useMemo(() => {
-    return stats.map((userStats) =>
+    return stats.flatMap((userStats) =>
       Object.values(userStats.attempts).flatMap(({ dates, attempt }) => {
-        const { date, times } = Object.values(dates)[0];
-        return {
-          date,
-          attempt,
-          times: times.length,
-          email: userStats.email,
-        };
+        const datesValue = Object.values(dates).flatMap(({ date, seconds_total }) => {
+          return {
+            date,
+            attempt,
+            seconds_total,
+            email: userStats.email,
+          };
+        });
+
+        return datesValue;
       }),
     );
   }, [stats]);
 
   const config = {
     xField: 'date',
-    yField: 'times',
+    yField: 'seconds_total',
     seriesField: 'attempt',
     isStack: true,
     xAxis: {
@@ -241,19 +244,21 @@ export const UserCourseAttempts: React.FC<{ stats: API.CourseAttempts[] }> = ({ 
               disabled={choosenUserEmail === null}
               placeholder={<FormattedMessage id="select_attempt" defaultMessage="Select attempt" />}
             >
-              {dataSource
-                .flatMap((data) => data)
-                .filter(({ email }) => email === choosenUserEmail)
-                .map(({ attempt }) => (
-                  <Select.Option value={attempt} key={attempt}>
-                    <FormattedMessage id="attempt" defaultMessage="Attempt" /> {attempt}
-                  </Select.Option>
-                ))}
+              {[
+                ...new Set(
+                  dataSource
+                    .filter(({ email }) => email === choosenUserEmail)
+                    .map(({ attempt }) => attempt),
+                ),
+              ].map((attempt) => (
+                <Select.Option value={attempt} key={attempt}>
+                  <FormattedMessage id="attempt" defaultMessage="Attempt" /> {attempt}
+                </Select.Option>
+              ))}
             </Select>
           </Space>
         }
         value={dataSource
-          .flatMap((data) => data)
           .filter(({ email }) => email === choosenUserEmail)
           .filter(({ attempt }) =>
             Number.isInteger(choosenAttempt) ? attempt === choosenAttempt : true,
