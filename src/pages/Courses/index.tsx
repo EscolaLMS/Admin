@@ -12,6 +12,7 @@ import { cloneCourse, course, exportCourse, removeCourse } from '@/services/esco
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
 import SecureUpload from '@/components/SecureUpload';
+import UserSelect from '@/components/UserSelect';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
 
@@ -156,6 +157,17 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
         )}
       </React.Fragment>
     ),
+  },
+  {
+    title: <FormattedMessage id="author_tutor" />,
+    dataIndex: 'authors',
+    hideInTable: true,
+    renderFormItem: (_i, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') return null;
+      const stateType = form.getFieldValue('state');
+
+      return <UserSelect multiple {...rest} state={{ type: stateType }} />;
+    },
   },
 ];
 
@@ -339,7 +351,10 @@ const TableList: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
-        request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
+        request={(
+          { pageSize, current, title, active, category_id, tag, status, authors },
+          sort,
+        ) => {
           setLoading(true);
           return course({
             title: title || undefined,
@@ -348,6 +363,7 @@ const TableList: React.FC = () => {
             page: current,
             category_id,
             tag,
+            authors,
             active: active && active,
             ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {

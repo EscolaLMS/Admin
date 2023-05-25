@@ -2,11 +2,14 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/courses */
-export async function course(params: API.CourseParams, options?: RequestOptionsInit) {
+export async function course(
+  { authors, ...params }: API.CourseParams,
+  options?: RequestOptionsInit,
+) {
   return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params,
+    params: { ...params, 'authors[]': authors },
     ...(options || {}),
   });
 }
