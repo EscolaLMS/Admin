@@ -107,6 +107,9 @@ export default {
   options: 'Options',
   base_price: 'Base price [¢]',
   base_price_tooltip: 'Base price [¢]. Use 0 for free course',
+  duration_freemode_description:
+    'By default this value is treated as number of hours - To pass value in minutes use this format: "n minutes"',
+  duration_freemode: 'Duration (hours)',
   duration: 'Duration',
   duration_tooltip: 'Duration, example "1 hour"',
   categories: 'Categories',
@@ -726,4 +729,6 @@ export default {
   sent: 'Sent',
   accepted: 'Accepted',
   rejected: 'Rejected',
+  'confirmModal.title': 'Confirm changes',
+  'confirmModal.content': 'If you want to go to the next tab, save the current changes',
 };

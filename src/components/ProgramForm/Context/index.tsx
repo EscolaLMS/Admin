@@ -78,7 +78,6 @@ const recursiveAddTopicToLessons = (
   }));
 };
 
-/*
 const recursiveEditTopic = (
   lessons: API.Lesson[],
   topicId: number,
@@ -86,13 +85,10 @@ const recursiveEditTopic = (
 ): API.Lesson[] => {
   return lessons.map((lesson) => ({
     ...lesson,
-    lessons: lesson.lessons ? recursiveEditTopic(lesson.lessons, topicId, updatedTopic) : [],
-    topics: lesson.topics
-      ? lesson.topics.map((topic) => (topic.id === topicId ? updatedTopic : topic))
-      : [],
+    lessons: recursiveEditTopic(lesson.lessons ?? [], topicId, updatedTopic),
+    topics: lesson.topics?.map((topic) => (topic.id === topicId ? updatedTopic : topic)) ?? [],
   }));
 };
-*/
 
 const recursiveAddLessonToLessons = (
   lessons: API.Lesson[],
@@ -646,25 +642,9 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   }, []);
 
   const onTopicUploaded = (prevTopicId: number, info: UploadChangeParam) => {
-    const lesson_id = getLessonIdByTopicId(prevTopicId);
     setState((prevState) => ({
       ...prevState,
-      lessons: prevState
-        ? prevState.lessons?.map((lesson) => {
-            if (lesson.id === lesson_id) {
-              return {
-                ...lesson,
-                topics: lesson.topics?.map((topic) => {
-                  if (topic.id === prevTopicId) {
-                    return info.file.response.data;
-                  }
-                  return topic;
-                }),
-              };
-            }
-            return lesson;
-          })
-        : [],
+      lessons: recursiveEditTopic(prevState?.lessons ?? [], prevTopicId, info.file.response.data),
     }));
     // Update topic id in params after receiving from server
     history.push(`/courses/list/${id}/program/?topic=${info.file.response.data.id}`);
