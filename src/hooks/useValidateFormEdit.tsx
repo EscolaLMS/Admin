@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import { isPast } from 'date-fns';
 
+interface ManageProps {
+  showModal: boolean;
+  disableEdit: boolean;
+  clicked: boolean;
+  valuesChanged?: boolean;
+  showConfirmModal?: boolean;
+  loading?: boolean;
+}
+
 export default function useValidateFormEdit() {
-  const [manageCourseEdit, setManageCourseEdit] = useState({
+  const [manageCourseEdit, setManageCourseEdit] = useState<ManageProps>({
     showModal: false,
     disableEdit: false,
     clicked: false,
@@ -16,12 +25,14 @@ export default function useValidateFormEdit() {
       !manageCourseEdit.clicked
     ) {
       setManageCourseEdit({
+        ...manageCourseEdit,
         showModal: false,
         disableEdit: true,
         clicked: false,
       });
     } else {
       setManageCourseEdit({
+        ...manageCourseEdit,
         showModal: false,
         disableEdit: false,
         clicked: false,

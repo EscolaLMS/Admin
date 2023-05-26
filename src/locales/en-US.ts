@@ -729,4 +729,6 @@ export default {
   sent: 'Sent',
   accepted: 'Accepted',
   rejected: 'Rejected',
+  'confirmModal.title': 'Confirm changes',
+  'confirmModal.content': 'If you want to go to the next tab, save the current changes',
 };
