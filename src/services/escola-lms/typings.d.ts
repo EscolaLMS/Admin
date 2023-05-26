@@ -240,7 +240,7 @@ declare namespace API {
     PaginationParams & {
       title?: string;
       category_id?: number;
-      author_id?: number;
+      authors?: number | number[];
       tag?: string;
       active?: boolean;
       status?: string;
@@ -815,7 +815,6 @@ declare namespace API {
     is_ended: boolean;
     is_started: boolean;
     status: ConsultationAppointmentStatus;
-    user: API.UserItem;
     date: Date | string;
     user: UserItem;
     busy_terms?: string[];
@@ -1442,7 +1441,6 @@ declare namespace API {
       group_id: number;
       user_id: number;
     };
-    academic_teacher_id: number | null;
   };
 
   type StudentUserGroup = {
