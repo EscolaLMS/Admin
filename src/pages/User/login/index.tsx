@@ -1,3 +1,4 @@
+import { packages } from '@/services/escola-lms/packages';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
@@ -33,13 +34,15 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    const config = await settings({ current: 1, per_page: 100, group: 'global' });
+    const config = await settings({ per_page: -1 });
+    const packs = await packages();
 
     if (userInfo) {
       setInitialState({
         ...initialState,
         currentUser: userInfo,
         config: config.success ? config.data : [],
+        packages: packs.success ? packs.data : {},
       });
     }
   };
