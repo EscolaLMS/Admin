@@ -472,9 +472,13 @@ export const roundPercentageList = (orig: number[], target?: number) => {
   return newVals;
 };
 
-export const roundTo = (val: number, places = 2): number => {
+export const roundTo = (val: number, places = 2, divider?: number): number => {
   if (!val || typeof val !== 'number') return 0;
-  return Math.round(val * Math.pow(10, places)) / Math.pow(10, places);
+  const returnedValue = Math.round(val * Math.pow(10, places)) / Math.pow(10, places);
+  if (divider) {
+    return returnedValue / divider;
+  }
+  return returnedValue;
 };
 
 // Use inside sort function

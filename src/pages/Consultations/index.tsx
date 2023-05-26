@@ -105,9 +105,9 @@ export const TableColumns: ProColumns<API.Consultation>[] = [
     render: (_, record) => {
       if (record.product && record.product.price) {
         return (
-          <Link to={`/courses/list/${record.id}/product`}>
+          <Link to={`/other/consultations/${record.id}/product`}>
             <Button type="primary" icon={<DollarOutlined />}>
-              <span>{roundTo(record.product.price)}</span>
+              <span>{roundTo(record.product.price, 2, 100)}</span>
             </Button>
           </Link>
         );
