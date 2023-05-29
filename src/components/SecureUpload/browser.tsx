@@ -27,6 +27,22 @@ const fixDirName = (inputDir: string) => {
   return dir;
 };
 
+const fixFileName = (file: API.File[] | API.File) => {
+  if (Array.isArray(file) && file[0]) {
+    return file[0].name;
+  }
+  return (file as API.File).name;
+};
+
+const getPath = (dir: string, file: API.File[] | API.File) => {
+  const fixedDir = fixDirName(dir);
+  const fixedName = fixFileName(file);
+  if (fixedName.includes(fixedDir)) {
+    return fixedName;
+  }
+  return `${fixedDir}${fixedName}`;
+};
+
 const getUploadChangeSuccessParam = (data: any): UploadChangeParam => ({
   file: {
     status: 'done',
@@ -60,7 +76,7 @@ function SecureUploadBrowser<Type = API.File>({
       </Button>
 
       {showBrowser && (
-        <Modal visible={showBrowser} onCancel={closeModal} onOk={closeModal} width="60vw">
+        <Modal open={showBrowser} onCancel={closeModal} onOk={closeModal} width="60vw">
           <FilesBrowser
             forceLoading={loading}
             hideDeleteBtn={true}
@@ -68,9 +84,7 @@ function SecureUploadBrowser<Type = API.File>({
             onFile={(file, dir) => {
               if (dir) {
                 setLoading(true);
-                const path = `${fixDirName(dir)}${file.name}`;
-
-                post(url, { ...data, [name]: path })
+                post(url, { ...data, [name]: getPath(dir, file) })
                   .then((response: AnyResponse) => {
                     setLoading(false);
                     if (onResponse) {
