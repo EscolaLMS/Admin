@@ -147,6 +147,33 @@ const recursiveDeleteTopic = (lessons: API.Lesson[], topicId: number): API.Lesso
   }));
 };
 
+const recursiveTopicUploaded = (
+  prevTopicId: number,
+  info: UploadChangeParam,
+  lesson_id: number | null | undefined,
+  lessons: API.Lesson[],
+): API.Lesson[] => {
+  return lessons?.map((lesson) => {
+    if (lesson.id === lesson_id) {
+      return {
+        ...lesson,
+        topics: lesson.topics?.map((topic) => {
+          if (topic.id === prevTopicId) {
+            return info.file.response.data;
+          }
+          return topic;
+        }),
+      };
+    } else if (lesson.lessons) {
+      return {
+        ...lesson,
+        lessons: recursiveTopicUploaded(prevTopicId, info, lesson_id, lesson.lessons || []),
+      };
+    }
+    return lesson;
+  });
+};
+
 export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = ({
   children,
   id,
@@ -650,20 +677,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     setState((prevState) => ({
       ...prevState,
       lessons: prevState
-        ? prevState.lessons?.map((lesson) => {
-            if (lesson.id === lesson_id) {
-              return {
-                ...lesson,
-                topics: lesson.topics?.map((topic) => {
-                  if (topic.id === prevTopicId) {
-                    return info.file.response.data;
-                  }
-                  return topic;
-                }),
-              };
-            }
-            return lesson;
-          })
+        ? recursiveTopicUploaded(prevTopicId, info, lesson_id, prevState.lessons || [])
         : [],
     }));
     // Update topic id in params after receiving from server
