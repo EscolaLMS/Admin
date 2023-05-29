@@ -11,7 +11,7 @@ import { deleteVoucher } from '@/services/escola-lms/vouchers';
 
 import { vouchers } from '@/services/escola-lms/vouchers';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
-import { createTableOrderObject } from '@/utils/utils';
+import { createTableOrderObject, roundTo } from '@/utils/utils';
 
 export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
   {
@@ -68,6 +68,7 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
     dataIndex: 'max_cart_price',
     hideInSearch: true,
     sorter: true,
+    render: (_, record) => (record.max_cart_price ? roundTo(record.max_cart_price, 2, 100) : ''),
   },
   {
     title: (
@@ -76,6 +77,7 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
     dataIndex: 'min_cart_price',
     hideInSearch: true,
     sorter: true,
+    render: (_, record) => (record.min_cart_price ? roundTo(record.min_cart_price, 2, 100) : ''),
   },
   {
     title: <FormattedMessage id="active_from" defaultMessage="active_from" />,

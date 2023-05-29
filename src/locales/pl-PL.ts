@@ -85,6 +85,9 @@ export default {
   options: 'Opcje',
   base_price: 'Cena podstawowa [gr]',
   base_price_tooltip: 'Cena podstawowa [gr]. Wpisz 0 dla darmowego kursu',
+  duration_freemode_description:
+    'Wartość ta traktowana jest jako ilość godzin - Aby podać wartość w minutach należy użyć formatu "n minutes"',
+  duration_freemode: 'Czas trwania (godz)',
   duration: 'Czas trwania',
   duration_tooltip: 'Czas trwania, przykładowo "1 godzina"',
   categories: 'Kategorie',
@@ -713,4 +716,6 @@ export default {
   sent: 'Wysłane',
   accepted: 'Zaakceptowane',
   rejected: 'Odrzucone',
+  'confirmModal.title': 'Potwierdź zmiany',
+  'confirmModal.content': 'Jeśli chcesz przejść do kolejnej zakładki zapisz aktualne zmiany',
 };
