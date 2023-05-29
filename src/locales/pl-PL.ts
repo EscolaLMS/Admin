@@ -669,7 +669,7 @@ export default {
   'course.finished': 'Ukończenie kursu',
   'course.attempt_number': 'Numer podejścia',
   'course.another_attempts': 'Ponowne podejścia',
-  'course.interactions_in_days': 'Liczba interakcji w poszczególnych dniach',
+  'course.interactions_time_in_days': 'Czas spędzony w poszczególnych dniach',
   'TeacherSubjects.Exams.exam_date': 'Data egzaminu',
   'TeacherSubjects.Exams.grade_weight': 'Waga',
   'SemesterType.winter': 'Zima {year}',
