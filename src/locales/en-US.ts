@@ -682,7 +682,7 @@ export default {
   'course.finished': 'Course finish',
   'course.attempt_number': 'Attempt number',
   'course.another_attempts': 'Another attempts',
-  'course.interactions_in_days': 'Number of interactions in particular days',
+  'course.interactions_time_in_days': 'Time spend on interactions in particular days',
   'TeacherSubjects.Exams.exam_date': 'Exam date',
   'TeacherSubjects.Exams.grade_weight': 'Weight',
   'SemesterType.winter': 'Winter {year}',
