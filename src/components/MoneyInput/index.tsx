@@ -9,11 +9,12 @@ import { FormattedMessage, useModel } from 'umi';
 interface CurrencyInputProps extends Omit<ProFormFieldProps, 'label'> {
   name: string;
   form: FormInstance<any>;
-  onChange?: (cents: number) => void;
+  onChange?: (cents: number | null) => void;
   label?: React.ComponentProps<typeof FormattedMessage>;
 }
 
-const centsToDollars = (cents: number, toFixedValue?: number): string => {
+const centsToDollars = (cents: number | null, toFixedValue?: number): string => {
+  if (cents === null) return '';
   return (cents / 100).toFixed(toFixedValue ?? 0);
 };
 
@@ -22,10 +23,10 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
 
   const [state, setState] = useState<{
     dollars: string;
-    cents: number;
+    cents: number | null;
   }>({
     dollars: '',
-    cents: 0,
+    cents: null,
   });
 
   const { initialState } = useModel('@@initialState');
@@ -45,7 +46,7 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
     setState({ cents: centsValue, dollars: inputValue.trim() });
   };
 
-  const formattedDollars = centsToDollars(state.cents, 2);
+  const formattedDollars = state.cents === null ? '' : centsToDollars(state.cents, 2);
 
   useEffect(() => {
     const initialValue = form.getFieldValue(name)
