@@ -27,7 +27,6 @@ export const Tags: React.FC<{
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
     if (value) {
       const val = Array.isArray(value) ? value : [value];
       const values: string[] = val.map((tag) => {
@@ -39,9 +38,6 @@ export const Tags: React.FC<{
 
       setCurrTags(values);
     }
-    return () => {
-      controller.abort();
-    };
   }, [value]);
 
   return (

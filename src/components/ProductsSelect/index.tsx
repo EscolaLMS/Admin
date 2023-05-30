@@ -20,14 +20,17 @@ export const ProductsSelect: React.FC<{
 
   const abortController = useRef<AbortController>();
 
-  const fetch = useCallback(() => {
+  const fetch = useCallback((search?: string) => {
     setFetching(true);
     if (abortController.current) {
       abortController.current.abort();
     }
 
     abortController.current = new AbortController();
-    fetchProducts({ productable_type: type }, { signal: abortController.current.signal })
+    fetchProducts(
+      { productable_type: type, name: search || undefined },
+      { signal: abortController.current.signal },
+    )
       .then((response) => {
         if (response.success) {
           setProducts(
@@ -61,22 +64,40 @@ export const ProductsSelect: React.FC<{
     };
   }, [value]);
 
+  const onSearch = useCallback(
+    (search: string) => {
+      fetch(search);
+    },
+    [fetch],
+  );
+
+  const onDeselect = useCallback(() => {
+    setCurrProducts([]);
+  }, []);
+
+  const handleOnChange = useCallback(
+    (changedValue: string | string[] | number | number[]) => {
+      if (!changedValue) {
+        onDeselect();
+      }
+      if (onChange) {
+        onChange(changedValue);
+      }
+    },
+    [onChange, onDeselect],
+  );
+
   return (
     <Select
       onFocus={() => fetch()}
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
       value={currProducts}
-      onChange={(changedValue) => {
-        if (!changedValue) {
-          setCurrProducts([]);
-        }
-        if (onChange) {
-          onChange(changedValue);
-        }
-      }}
+      onChange={handleOnChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
+      onSearch={onSearch}
+      onDeselect={onDeselect}
       placeholder={<FormattedMessage id="select_product" defaultMessage="Select a product" />}
       optionFilterProp="children"
       filterOption={(input, option) => {
