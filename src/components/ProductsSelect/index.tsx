@@ -67,7 +67,14 @@ export const ProductsSelect: React.FC<{
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
       value={currProducts}
-      onChange={onChange}
+      onChange={(changedValue) => {
+        if (!changedValue) {
+          setCurrProducts([]);
+        }
+        if (onChange) {
+          onChange(changedValue);
+        }
+      }}
       mode={multiple ? 'multiple' : undefined}
       showSearch
       placeholder={<FormattedMessage id="select_product" defaultMessage="Select a product" />}

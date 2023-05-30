@@ -105,7 +105,14 @@ export const UserSelect: React.FC<{
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
       value={currUsers}
-      onChange={onChange}
+      onChange={(changedValue, changedOption) => {
+        if (!changedValue) {
+          onDeselect();
+        }
+        if (onChange) {
+          onChange(changedValue, changedOption);
+        }
+      }}
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}

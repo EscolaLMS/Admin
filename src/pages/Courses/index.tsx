@@ -143,6 +143,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
           state={{
             type: stateType,
           }}
+          multiple={true}
         />
       );
     },

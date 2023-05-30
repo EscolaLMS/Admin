@@ -13,25 +13,54 @@ export const Tags: React.FC<{
   state?: {
     type: number;
   };
-  value?: string;
-  onChange?: (value: string) => void;
+  multiple?: boolean;
+  value?: string | string[] | Tag[];
+  onChange?: (value: string | string[] | Tag[]) => void;
 }> = (props) => {
-  const { value, onChange } = props;
+  const { value, onChange, multiple } = props;
 
   const [tags, setTags] = useState<Tag[]>([]);
+  const [currTags, setCurrTags] = useState<string[]>([]);
 
   useEffect(() => {
     tagsUnique().then((response) => setTags(response.data));
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    if (value) {
+      const val = Array.isArray(value) ? value : [value];
+      const values: string[] = val.map((tag) => {
+        if (typeof tag === 'object') {
+          return tag.title;
+        }
+        return tag;
+      });
+
+      setCurrTags(values);
+    }
+    return () => {
+      controller.abort();
+    };
+  }, [value]);
+
   return (
     <Select
       loading={tags.length === 0}
       showSearch
+      allowClear
       placeholder={<FormattedMessage id="select_tags" defaultMessage="Select tags" />}
       optionFilterProp="children"
-      onChange={onChange}
-      value={value}
+      mode={multiple ? 'multiple' : undefined}
+      onChange={(changedValue) => {
+        if (!changedValue) {
+          setCurrTags([]);
+        }
+        if (onChange) {
+          onChange(changedValue);
+        }
+      }}
+      value={currTags}
     >
       {tags.map((tag) => (
         <Option value={tag.title} key={tag.title}>
