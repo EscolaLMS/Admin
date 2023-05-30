@@ -718,4 +718,5 @@ export default {
   rejected: 'Odrzucone',
   'confirmModal.title': 'Potwierdź zmiany',
   'confirmModal.content': 'Jeśli chcesz przejść do kolejnej zakładki zapisz aktualne zmiany',
+  read_all: 'Przeczytaj wszystko',
 };

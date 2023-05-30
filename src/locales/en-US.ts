@@ -731,4 +731,5 @@ export default {
   rejected: 'Rejected',
   'confirmModal.title': 'Confirm changes',
   'confirmModal.content': 'If you want to go to the next tab, save the current changes',
+  read_all: 'Read all',
 };
