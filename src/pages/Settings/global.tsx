@@ -415,6 +415,10 @@ const TableList: React.FC = () => {
             fields = { ...fields, value: fields.data };
           }
 
+          if (fields.type === 'array') {
+            fields = { ...fields, value: JSON.parse(fields.value) };
+          }
+
           const { success, updatedSettings } = await handleUpdate(
             intl,
             fields,
