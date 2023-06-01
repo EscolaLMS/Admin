@@ -245,6 +245,7 @@ declare namespace API {
       active?: boolean;
       status?: string;
       group_id?: number;
+      'tag[]'?: string | string[];
     };
 
   type CategoryParams = PageParams &
@@ -262,6 +263,19 @@ declare namespace API {
       date_from?: string;
       date_to?: string;
       'categories[]'?: number;
+    };
+
+  type WebinarsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+      'tags[]'?: string | string[];
+      tag?: string;
     };
 
   type H5PListParams = PageParams &

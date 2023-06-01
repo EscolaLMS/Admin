@@ -143,6 +143,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
           state={{
             type: stateType,
           }}
+          multiple={true}
         />
       );
     },
@@ -362,7 +363,7 @@ const TableList: React.FC = () => {
             per_page: pageSize,
             page: current,
             category_id,
-            tag,
+            'tag[]': tag ? [tag] : undefined,
             authors,
             active: active && active,
             ...createTableOrderObject(sort, 'created_at'),

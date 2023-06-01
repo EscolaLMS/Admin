@@ -2,21 +2,11 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/webinars */
-export async function webinars(
-  params?: API.ConsultationsParams & {
-    date_from?: string;
-    date_to?: string;
-  },
-  options?: RequestOptionsInit,
-) {
+export async function webinars(params?: API.WebinarsParams, options?: RequestOptionsInit) {
   return request<API.DefaultMetaResponse<API.Webinar>>(`/api/admin/webinars`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: {
-      ...params,
-      per_page: params && params.pageSize,
-      page: params && params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
