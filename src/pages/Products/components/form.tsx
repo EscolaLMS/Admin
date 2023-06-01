@@ -454,6 +454,7 @@ const ProductsForm: React.FC<{
                 defaultMessage: 'price',
               })}
               fieldProps={{ step: 1 }}
+              defaultValue={null}
             />
 
             <MoneyInput
