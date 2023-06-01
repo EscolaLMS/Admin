@@ -4,7 +4,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 
 import ConfigList from './ConfigList/index';
-import { useCheckRoles } from '@/hooks/useChackRoles';
+import { useCheckRoles } from '@/hooks/useCheckRoles';
 
 export enum channelType {
   email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
