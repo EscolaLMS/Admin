@@ -317,7 +317,7 @@ declare namespace API {
     interests: any;
     path_avatar: string;
     avatar: string;
-    roles: ('admin' | 'tutor' | 'student')[];
+    roles: ('admin' | 'tutor' | 'student' | string)[];
     permissions: string[];
     password?: string;
   };
@@ -825,7 +825,15 @@ declare namespace API {
     assignable_id: number;
   };
 
-  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image' | 'boolean' | 'number';
+  type SettingType =
+    | 'text'
+    | 'markdown'
+    | 'json'
+    | 'file'
+    | 'image'
+    | 'boolean'
+    | 'number'
+    | 'array';
   type SettingBase = {
     id: number;
     key: string;
@@ -866,6 +874,10 @@ declare namespace API {
     | (SettingBase & {
         type: 'image';
         data: string;
+      })
+    | (SettingBase & {
+        type: 'array';
+        data: any[];
       });
 
   type Role = {
