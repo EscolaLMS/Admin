@@ -1636,6 +1636,17 @@ declare namespace API {
   type UpdateFinalGradeRequest = {
     grade_scale_id: number;
   };
+
+  type LessonTopicId = number;
+  type Index = number;
+
+  type CoursesSortOrderItem = [LessonTopicId, Index];
+
+  type CoursesSortRequest = {
+    class: 'Lesson' | 'Topic';
+    orders: CoursesSortOrderItem[];
+    course_id: number;
+  };
 }
 
 declare module 'jsoneditor-react' {

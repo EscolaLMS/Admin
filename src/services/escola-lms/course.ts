@@ -121,7 +121,7 @@ export async function updateTopic(
 }
 
 /**  POST /api/courses/sort */
-export async function sort(body?: Record<string, any>, options?: RequestOptionsInit) {
+export async function sort(body: API.CoursesSortRequest, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<unknown>>(`/api/admin/courses/sort`, {
     method: 'POST',
     headers: {
