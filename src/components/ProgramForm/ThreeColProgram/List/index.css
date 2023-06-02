@@ -1,3 +1,4 @@
+/* SIDEBAR */
 .program-sidebar {
   position: relative;
   height: 100%;
@@ -48,99 +49,107 @@
   bottom: 4px;
 }
 
-.program-sidebar__list-item {
-  margin-bottom: 0px;
-  padding: 9px 0px 9px 18px;
+.program-sidebar__link {
+  width: 100%;
+
+  color: rgb(0 0 0);
+  cursor: pointer !important;
   border: 1px solid transparent;
-  border-right: none;
-  transition: background-color 0.3s ease;
 }
 
-.program-sidebar__list-item a span:last-child {
-  margin-left: auto;
+.program-sidebar__link:not(.program-sidebar__list-item--active):hover {
+  color: rgb(0 0 0);
 }
 
-.program-sidebar__list-item a span.title {
-  margin-right: 8px;
-}
-
-.program-sidebar__list-item:hover > a {
-  background-color: rgb(0 0 0 / 5%);
-}
-
-.program-sidebar__list-item a {
-  display: flex;
-  align-items: center;
-  color: #000;
-}
-
-.program-sidebar__list-item svg {
-  margin-right: 12px;
+.program-sidebar__list-item {
+  padding: 9px 0;
+  border: 1px solid transparent;
 }
 
 .program-sidebar__list-item--active {
-  background-color: rgb(24 144 255 / 10%);
+  background-color: rgb(24 144 255 / 20%);
   border-color: #1890ff;
-}
-
-.program-sidebar__list-item--active a {
   color: #1890ff;
 }
 
-.program-sidebar__list-item--active:hover {
+.program-sidebar__list-item > span > svg,
+.program-sidebar__list-item--lesson .program-sidebar__collapse svg {
+  margin-left: 9px;
+}
+
+.program-sidebar__list-item:not(.program-sidebar__list-item--active):hover {
   background-color: rgb(24 144 255 / 10%);
 }
 
-.program-sidebar__list-item--lesson {
-  display: block;
-  padding-right: 0px;
-  padding-left: 9px;
+.program-sidebar__list-item--lesson .program-sidebar__collapse:hover {
+  color: #1890ff;
 }
 
 .program-sidebar__list-item--lesson-new {
   display: flex;
   align-items: center;
-  padding-right: 3px;
+  gap: 12px;
 }
 
-.program-sidebar__lesson--actions {
+.program-sidebar__list-item--lesson {
   display: flex;
-  flex-direction: row;
   flex-wrap: nowrap;
   align-content: flex-start;
   align-items: flex-start;
   justify-content: space-between;
 }
 
-.program-sidebar__lesson--actions > a {
-  flex-basis: 100%;
+.program-sidebar__list-item--lesson .program-sidebar__link {
+  max-width: calc(100% - 34px);
 }
 
-.program-sidebar__lesson--actions .topic-types-selector {
+.program-sidebar__list-item--lesson .program-sidebar__collapse {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgb(0 0 0);
+}
+
+.program-sidebar__list-item--lesson .program-sidebar__text-wrap {
+  flex-basis: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.program-sidebar__list-item--lesson.program-sidebar__list-item--active .program-sidebar__link,
+.program-sidebar__list-item--lesson.program-sidebar__list-item--active .program-sidebar__collapse {
+  color: #1890ff;
+}
+
+.program-sidebar__list-item--lesson .topic-types-selector {
   opacity: 0;
 }
 
-.program-sidebar__lesson--actions .topic-types-selector--visible {
+.program-sidebar__list-item--lesson:hover .topic-types-selector,
+.program-sidebar__list-item--lesson .topic-types-selector--visible {
   opacity: 1;
 }
 
-.program-sidebar__lesson--actions:hover .topic-types-selector {
-  opacity: 1;
+.program-sidebar__list-item--topic {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.program-sidebar__list-item--lesson .program-sidebar__lesson--actions > a {
-  margin-right: auto;
-  color: rgb(0 0 0 / 45%);
+.program-sidebar__title {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-inline: 0 auto;
 }
 
-.program-sidebar__list-item--lesson .btn-create-lesson {
-  margin-left: 8px;
-}
-
-.program-sidebar__list-item--lesson button svg {
-  margin-right: 0;
-}
-
+/* TOPIC CONTENT */
 .program__cta-footer {
   position: absolute;
   bottom: -42px;
@@ -153,25 +162,4 @@
   left: 50%;
   text-align: center;
   transform: translate(-50%, -50%);
-}
-
-.program-sidebar__list-item a.program-sidebar__link {
-  /*
-  display: grid;
-  grid-auto-flow: column;
-  width: auto;
-  */
-}
-
-.program-sidebar__list-item a.program-sidebar__link--active {
-  color: #000;
-}
-
-.program-sidebar__title {
-  display: -webkit-box;
-  width: 100%;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  margin-inline: 0 auto;
 }

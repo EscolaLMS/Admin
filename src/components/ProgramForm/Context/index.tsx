@@ -12,7 +12,6 @@ import {
   updateTopic as apiUpdateTopic,
   removeLesson as apiRemoveLesson,
   removeTopic as apiRemoveTopic,
-  sort,
   cloneLesson as apiCloneLesson,
   cloneTopic as apiCloneTopic,
 } from '@/services/escola-lms/course';
@@ -38,12 +37,8 @@ type ProgramContext = {
   // removeResource,
   deleteLesson?: (lesson_id: number) => void;
   // updateH5P,
-  sortLesson?: (lesson_id: number, upDirection?: boolean) => void;
   addNewTopic?: (lesson_id: number, type: API.TopicType) => API.Topic;
   deleteTopic?: (topic_id: number) => void;
-  sortTopic?: (lesson_id: number, topic_id: number, upDirection?: boolean) => void;
-  sortTopics?: (lesson_id: number, new_order: API.Lesson[]) => void;
-  updateTopicsOrder?: (lesson_id: number) => void;
   onTopicUploaded?: (prevTopicId: number, info: UploadChangeParam) => void;
   cloneTopic?: (topic_id: number) => void;
   cloneLesson?: (lesson_id: number) => void;
@@ -280,128 +275,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           );
         },
       );
-    },
-    [state],
-  );
-
-  //** TODO this function will not work with nested structure */
-
-  const sortLesson = useCallback(
-    (lesson_id: number, up: boolean = true) => {
-      const cIndex = state?.lessons.findIndex((lesson) => lesson.id === lesson_id) || 0;
-
-      const swapIndex = up ? cIndex - 1 : cIndex + 1;
-
-      const lessons = state?.lessons.map((lesson, index, arr) => {
-        const newLesson =
-          // eslint-disable-next-line
-          index == cIndex ? arr[swapIndex] : index == swapIndex ? arr[cIndex] : lesson;
-        return {
-          ...newLesson,
-          order: index,
-        };
-      });
-
-      setState((prevState) => ({
-        ...prevState,
-        lessons: lessons || [],
-      }));
-
-      const orders = lessons
-        ?.filter((lesson) => !lesson.isNew)
-        .map((lesson) => [lesson.id, lesson.order]);
-
-      sort({ class: 'Lesson', orders, course_id: id }).then((response) => {
-        if (response.success) {
-          message.success(response.message);
-        }
-      });
-    },
-    [state, id],
-  );
-
-  const sortTopic = useCallback(
-    (lesson_id: number, topic_id: number, up = true) => {
-      const lesson = flatLessons.find((lesson_item) => lesson_item.id === lesson_id);
-
-      const lIndex = lesson?.topics?.findIndex((topic) => topic.id === topic_id);
-
-      if (lIndex === undefined || lIndex === -1) {
-        return;
-      }
-
-      const swapIndex = up ? lIndex - 1 : lIndex + 1;
-
-      const topics =
-        lesson?.topics?.map((topic, index, arr) => {
-          const newTopic =
-            // eslint-disable-next-line
-            index == lIndex ? arr[swapIndex] : index == swapIndex ? arr[lIndex] : topic;
-
-          return {
-            ...newTopic,
-            order: index,
-          };
-        }) || [];
-
-      setState((prevState) => ({
-        ...prevState,
-        lessons: prevState
-          ? prevState.lessons.map((lesson_item) => {
-              if (lesson_item.id === lesson_id) {
-                return {
-                  ...lesson_item,
-                  topics,
-                };
-              }
-              return lesson_item;
-            })
-          : [],
-      }));
-    },
-    [state],
-  );
-
-  const updateTopicsOrder = useCallback(
-    (lesson_id: number) => {
-      const lesson = flatLessons.find((lesson_item) => lesson_item.id === lesson_id);
-      const orders = lesson?.topics
-        ?.filter((topic) => !topic.isNew)
-        .map((topic) => [topic.id, topic.order]);
-
-      sort({ class: 'Topic', orders, course_id: id }).then((response) => {
-        if (response.success) {
-          message.success(response.message);
-        }
-      });
-    },
-    [state, id],
-  );
-
-  const sortTopics = useCallback(
-    (lesson_id: number, new_order: API.Topic[]) => {
-      setState((prevState) => ({
-        ...prevState,
-        lessons: prevState
-          ? prevState.lessons.map((lesson_item) => {
-              if (lesson_item.id === lesson_id) {
-                return {
-                  ...lesson_item,
-                  topics: new_order,
-                };
-              }
-              return lesson_item;
-            })
-          : [],
-      }));
-
-      const orders = new_order.map((topic) => [topic.id, topic.order]);
-
-      sort({ class: 'Topic', orders, course_id: id }).then((response) => {
-        if (response.success) {
-          message.success(response.message);
-        }
-      });
     },
     [state],
   );
@@ -703,12 +576,8 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     // removeResource,
     deleteLesson,
     // updateH5P,
-    sortLesson,
     addNewTopic,
     deleteTopic,
-    sortTopic,
-    sortTopics,
-    updateTopicsOrder,
     onTopicUploaded,
     cloneTopic,
     cloneLesson,
