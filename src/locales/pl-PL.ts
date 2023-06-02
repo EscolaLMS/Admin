@@ -722,4 +722,6 @@ export default {
   topics_cant_be_nested: 'Nie można zagnieżdżać tematów',
   topic_cant_be_in_root: 'Temat musi być zagnieżdżony w lekcji',
   lessons_and_topics_cant_be_mixed: 'Lekcje i tematy nie mogą być układane naprzemiennie',
+  stacking_order: 'Kolejność',
+  stacking_order_tooltip: 'Kolejność lekcji w kontekście lekcji lub kursu',
 };
