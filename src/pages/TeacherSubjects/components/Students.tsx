@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FormattedMessage, Link } from 'umi';
 import { Button, Tooltip } from 'antd';
+import type { DefaultOptionType } from 'antd/lib/select';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
 
@@ -25,11 +26,6 @@ interface TableParams {
 
 export const TableColumns: ProColumns<TableDataProps>[] = [
   {
-    title: <FormattedMessage id="select_user_group" defaultMessage="Select group" />,
-    dataIndex: 'groups',
-    hideInTable: true,
-  },
-  {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'user_id',
     hideInSearch: true,
@@ -53,6 +49,12 @@ export const TableColumns: ProColumns<TableDataProps>[] = [
   },
 ];
 
+const getGroupsOptions = (subjectGroups: API.SubjectGroups[]): DefaultOptionType[] =>
+  subjectGroups.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
+
 const getTableData = (studentUserGroups: API.StudentUserGroup[]): TableDataProps[] =>
   studentUserGroups.reduce<TableDataProps[]>((acc, curr) => {
     const userTable = curr?.users?.map<TableDataProps>((currentUser) => ({
@@ -69,6 +71,11 @@ const getTableData = (studentUserGroups: API.StudentUserGroup[]): TableDataProps
 
 export const Students: React.FC = () => {
   const { teacherSubjectData } = useTeacherSubject();
+
+  const groupOptions = useMemo(
+    () => getGroupsOptions(teacherSubjectData?.groups ?? []),
+    [teacherSubjectData?.groups],
+  );
 
   return (
     <ProTable<TableDataProps, TableParams>
@@ -94,6 +101,17 @@ export const Students: React.FC = () => {
         return { data: tableData, total: tableData.length, success: true };
       }}
       columns={[
+        {
+          title: <FormattedMessage id="groups" defaultMessage="Groups" />,
+          dataIndex: 'groups',
+          hideInTable: true,
+          filterMultiple: true,
+          valueType: 'select',
+          fieldProps: {
+            options: groupOptions,
+            mode: 'multiple',
+          },
+        },
         ...TableColumns,
         {
           hideInSearch: true,
