@@ -130,10 +130,10 @@ export const LessonForm: React.FC<{
             <ParentLesson name="parent_id" currentLessonId={lesson?.id} />
             <ProFormText
               name="order"
-              label={<FormattedMessage id="order" />}
-              tooltip={<FormattedMessage id="order" />}
+              label={<FormattedMessage id="stacking_order" />}
+              tooltip={<FormattedMessage id="stacking_order_tooltip" />}
               placeholder={intl.formatMessage({
-                id: 'order',
+                id: 'stacking_order',
               })}
             />
           </aside>
