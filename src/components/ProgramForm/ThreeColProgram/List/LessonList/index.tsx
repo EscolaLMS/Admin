@@ -209,21 +209,21 @@ export const LessonList: React.FC = () => {
 
       // Moving new lesson
       if (movedType === 'new') {
-        message.warn(intl.formatMessage({ id: 'newLessonsCantBeMoved' }));
+        message.warn(intl.formatMessage({ id: 'new_lessons_cant_be_moved' }));
         return;
       }
 
       // Nest lesson/topic into topic case
       if (destination.parentId.toString().includes('topic')) {
         // TODO add translation
-        message.warn(intl.formatMessage({ id: 'topicsCantBeNested' }));
+        message.warn(intl.formatMessage({ id: 'topics_cant_be_nested' }));
         return;
       }
 
       // Topics to root case
       if (destination.parentId === 'root' && movedType === 'topic') {
         // TODO add translation
-        message.warn(intl.formatMessage({ id: 'topicCantBeInRoot' }));
+        message.warn(intl.formatMessage({ id: 'topic_cant_be_in_root' }));
         return;
       }
 
@@ -239,7 +239,7 @@ export const LessonList: React.FC = () => {
           const maxLessonPos = lessonsIds.length - 1;
 
           if (destination.index < minLessonPos || destination.index > maxLessonPos) {
-            message.warn(intl.formatMessage({ id: 'lessonsAndTopicsCantBeMixed' }));
+            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -258,7 +258,7 @@ export const LessonList: React.FC = () => {
           const maxTopicPos = sourceChildren.length - 1;
 
           if (destination.index < minTopicPos || destination.index > maxTopicPos) {
-            message.warn(intl.formatMessage({ id: 'lessonsAndTopicsCantBeMixed' }));
+            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -290,7 +290,7 @@ export const LessonList: React.FC = () => {
             (maxLessonPos !== 0 && destIndex < minLessonPos) ||
             (maxLessonPos !== 0 && destIndex > maxLessonPos)
           ) {
-            message.warn(intl.formatMessage({ id: 'lessonsAndTopicsCantBeMixed' }));
+            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -328,7 +328,7 @@ export const LessonList: React.FC = () => {
             (minTopicPos !== 0 && maxTopicPos !== 0 && destIndex < minTopicPos) ||
             (minTopicPos !== 0 && maxTopicPos !== 0 && destIndex > maxTopicPos)
           ) {
-            message.warn(intl.formatMessage({ id: 'lessonsAndTopicsCantBeMixed' }));
+            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
