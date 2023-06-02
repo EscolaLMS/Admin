@@ -79,7 +79,7 @@ export const Students: React.FC = () => {
 
   return (
     <ProTable<TableDataProps, TableParams>
-      rowKey="user_id"
+      rowKey={(record) => `${record.group_id}-${record.user_id}`}
       search={{ layout: 'vertical' }}
       request={async ({ groups, first_name = '', last_name = '', email = '' }) => {
         const response = await fetchAllStudentsAndGroups({
