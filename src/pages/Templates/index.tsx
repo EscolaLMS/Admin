@@ -1,9 +1,10 @@
 import React from 'react';
-import { FormattedMessage, useParams, history, useAccess, useModel } from 'umi';
+import { FormattedMessage, useParams, history, useAccess } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 
 import ConfigList from './ConfigList/index';
+import { useCheckRoles } from '@/hooks/useCheckRoles';
 
 export enum channelType {
   email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',
@@ -15,13 +16,10 @@ const Templates: React.FC = () => {
   const params = useParams<{ template?: string }>();
   const { template } = params;
   const access = useAccess();
+  const { checkRoles } = useCheckRoles();
 
-  const { initialState } = useModel('@@initialState');
-
-  const hideSMSTab =
-    initialState?.config?.find((item) => item.key === 'hideTemplateTab-sms')?.data ?? false;
-  const hideEmailTab =
-    initialState?.config?.find((item) => item.key === 'hideTemplateTab-email')?.data ?? false;
+  const hideSMSTab = checkRoles('hideTemplateTab-sms');
+  const hideEmailTab = checkRoles('hideTemplateTab-email');
 
   return (
     <PageContainer>

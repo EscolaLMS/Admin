@@ -98,6 +98,21 @@ export const UserSelect: React.FC<{
     };
   }, [value]);
 
+  const handleOnChange = useCallback(
+    (
+      changedValue: string | string[] | number | number[],
+      changedOption: DefaultOptionType | DefaultOptionType[],
+    ) => {
+      if (!changedValue) {
+        onDeselect();
+      }
+      if (onChange) {
+        onChange(changedValue, changedOption);
+      }
+    },
+    [onChange, onDeselect],
+  );
+
   return (
     <Select
       disabled={disabled}
@@ -105,7 +120,7 @@ export const UserSelect: React.FC<{
       allowClear
       style={{ width: '100%', minWidth: '150px' }}
       value={currUsers}
-      onChange={onChange}
+      onChange={handleOnChange}
       mode={multiple ? 'multiple' : undefined}
       showSearch
       onSearch={onSearch}

@@ -245,6 +245,7 @@ declare namespace API {
       active?: boolean;
       status?: string;
       group_id?: number;
+      'tag[]'?: string | string[];
     };
 
   type CategoryParams = PageParams &
@@ -262,6 +263,19 @@ declare namespace API {
       date_from?: string;
       date_to?: string;
       'categories[]'?: number;
+    };
+
+  type WebinarsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+      'tags[]'?: string | string[];
+      tag?: string;
     };
 
   type H5PListParams = PageParams &
@@ -317,7 +331,7 @@ declare namespace API {
     interests: any;
     path_avatar: string;
     avatar: string;
-    roles: ('admin' | 'tutor' | 'student')[];
+    roles: ('admin' | 'tutor' | 'student' | string)[];
     permissions: string[];
     password?: string;
   };
@@ -825,7 +839,15 @@ declare namespace API {
     assignable_id: number;
   };
 
-  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image' | 'boolean' | 'number';
+  type SettingType =
+    | 'text'
+    | 'markdown'
+    | 'json'
+    | 'file'
+    | 'image'
+    | 'boolean'
+    | 'number'
+    | 'array';
   type SettingBase = {
     id: number;
     key: string;
@@ -866,6 +888,10 @@ declare namespace API {
     | (SettingBase & {
         type: 'image';
         data: string;
+      })
+    | (SettingBase & {
+        type: 'array';
+        data: any[];
       });
 
   type Role = {

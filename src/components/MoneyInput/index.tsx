@@ -9,23 +9,25 @@ import { FormattedMessage, useModel } from 'umi';
 interface CurrencyInputProps extends Omit<ProFormFieldProps, 'label'> {
   name: string;
   form: FormInstance<any>;
-  onChange?: (cents: number) => void;
+  onChange?: (cents: number | null) => void;
   label?: React.ComponentProps<typeof FormattedMessage>;
+  defaultValue?: number | null;
 }
 
-const centsToDollars = (cents: number, toFixedValue?: number): string => {
+const centsToDollars = (cents: number | null, toFixedValue?: number): string => {
+  if (cents === null) return '';
   return (cents / 100).toFixed(toFixedValue ?? 0);
 };
 
 export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...restProps }) => {
-  const { label, ...rest } = restProps;
+  const { label, defaultValue = 0, ...rest } = restProps;
 
   const [state, setState] = useState<{
     dollars: string;
-    cents: number;
+    cents: number | null;
   }>({
     dollars: '',
-    cents: 0,
+    cents: null,
   });
 
   const { initialState } = useModel('@@initialState');
@@ -42,10 +44,10 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
     const parsedValue = parseFloat(cleanValue);
 
     const centsValue = Math.round(parsedValue * 100);
-    setState({ cents: centsValue, dollars: inputValue.trim() });
+    setState({ cents: centsValue || defaultValue, dollars: inputValue.trim() });
   };
 
-  const formattedDollars = centsToDollars(state.cents, 2);
+  const formattedDollars = state.cents === null ? '' : centsToDollars(state.cents, 2);
 
   useEffect(() => {
     const initialValue = form.getFieldValue(name)
@@ -54,12 +56,13 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
 
     setState({
       dollars: initialValue,
-      cents: +initialValue * 100,
+      cents: +initialValue * 100 || defaultValue,
     });
   }, [form, name]);
 
   useEffect(() => {
     if (form && name) {
+      console.log(name, state);
       form.setFieldsValue({
         [name]: !Number.isNaN(state.cents) ? state.cents : null,
       });

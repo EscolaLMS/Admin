@@ -122,6 +122,7 @@ const VoucherForm = () => {
               setVoucherType(values.type);
             }
           }}
+          omitNil={false}
         >
           <ProForm.Group>
             <ProFormText
@@ -259,7 +260,7 @@ const VoucherForm = () => {
               disabled={!voucherType}
               required
             />
-            {voucherType.includes('percent') ? (
+            {voucherType?.includes('percent') ? (
               <ProFormDigit
                 width="sm"
                 name="amount"
