@@ -9,7 +9,7 @@ import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
 import Groups from './components/Groups';
 import { Exams } from './components/Exams';
-import Students from './components/Students';
+import { Students } from './components/Students';
 import Attendances from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
 import Schedule from './components/Schedule';
