@@ -177,5 +177,3 @@ export const Attendances: React.FC = () => {
     </>
   );
 };
-
-export default Attendances;
