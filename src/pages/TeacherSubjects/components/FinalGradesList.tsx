@@ -1,42 +1,36 @@
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import type { Location } from 'history';
 import { FormattedMessage, Link, useLocation } from 'umi';
-import { Button, Divider, Select, Tooltip, Typography } from 'antd';
-import ProForm from '@ant-design/pro-form';
+import { Button, Tooltip, Typography } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 import { EditOutlined } from '@ant-design/icons';
 
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { getGroupFinalGrades } from '@/services/escola-lms/grades';
 import { FinalGradesDetails } from './FinalGradesDetails';
 import { useTeacherSubject } from '../context';
 
-interface TableData {
-  loading: boolean;
-  dataSource?: API.FinalGradeItem[];
+interface TableParams {
+  group_id?: number[];
+  first_name?: string;
+  last_name?: string;
 }
 
 const staticColumns: ProColumns<API.FinalGradeItem>[] = [
   {
-    title: <FormattedMessage id="group" />,
-    dataIndex: 'group_id',
-    render: (_n, row) => (
-      <TypeButtonDrawer key={row.group_id} type="Students" type_id={row.group_id} />
-    ),
-  },
-  {
     title: <FormattedMessage id="first_name" />,
-    dataIndex: 'user',
+    dataIndex: 'first_name',
     render: (_n, row) => row.user.first_name,
   },
   {
     title: <FormattedMessage id="last_name" />,
-    dataIndex: 'user',
+    dataIndex: 'last_name',
     render: (_n, row) => row.user.last_name,
   },
   {
     title: <FormattedMessage id="grade" />,
+    hideInSearch: true,
     dataIndex: 'grades',
     render: (_n, row) => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -68,81 +62,67 @@ export const FinalGradesList: React.FC = () => {
   );
 
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
-  const [tableData, setTableData] = useState<TableData>({ loading: false });
 
-  const [selectedGroups, setSelectedGroups] = useState<number[]>([
-    Number(teacherSubjectData?.groups?.[0].id),
-  ]);
-  const groupsSelectOptions = useMemo(
+  const groupOptions = useMemo(
     () => (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({ label: name, value: id })),
     [teacherSubjectData?.groups],
   );
-
-  useEffect(() => {
-    if (typeof user_id === 'number') return;
-
-    if (!selectedGroups.length) {
-      setTableData({ loading: false });
-      return;
-    }
-
-    setTableData((prev) => ({ ...prev, loading: true }));
-    getGroupFinalGrades(selectedGroups)
-      .then((response) => {
-        if (response.success) {
-          const dataSource = response.data.map(({ grades, ...rest }) => ({
-            ...rest,
-            grades: grades.sort(
-              (a, b) => new Date(b.grade_date).getTime() - new Date(a.grade_date).getTime(),
-            ),
-          }));
-
-          setTableData((prev) => ({ ...prev, dataSource }));
-        }
-      })
-      .finally(() => {
-        setTableData((prev) => ({ ...prev, loading: false }));
-      });
-  }, [selectedGroups, user_id]);
 
   if (user_id !== null && group_id !== null) {
     return <FinalGradesDetails user_id={user_id} group_id={group_id} />;
   }
 
   return (
-    <>
-      <ProForm.Item label={<FormattedMessage id="group" />}>
-        <Select
-          allowClear
-          mode="multiple"
-          options={groupsSelectOptions}
-          value={selectedGroups}
-          onChange={(v) => setSelectedGroups(v)}
-        />
-      </ProForm.Item>
-      <Divider />
-      <ProTable
-        rowKey="id"
-        search={false}
-        loading={tableData.loading}
-        dataSource={tableData.dataSource}
-        columns={[
-          ...staticColumns,
-          {
-            title: <FormattedMessage id="options" />,
-            render: (_n, row) => [
-              <Link
-                key="edit"
-                to={`/teacher/subjects/${semester_subject_id}/final-grades?user_id=${row.user.id}&group_id=${row.group_id}`}
-              >
-                <Tooltip title={<FormattedMessage id="edit" />}>
-                  <Button type="primary" icon={<EditOutlined />} />
-                </Tooltip>
-              </Link>,
-            ],
+    <ProTable<API.FinalGradeItem, TableParams>
+      rowKey="id"
+      search={{ layout: 'vertical' }}
+      request={async ({ group_id: group_ids = [], first_name = '', last_name = '' }) => {
+        const allGroups = (teacherSubjectData?.groups ?? []).map(({ id }) => id);
+
+        const response = await getGroupFinalGrades(group_ids.length === 0 ? allGroups : group_ids);
+
+        if (!response.success) {
+          return { success: false, total: 0, data: [] };
+        }
+
+        // TODO backend filter
+        const data = response.data.filter(
+          ({ user }) =>
+            user.first_name.toLowerCase().includes(first_name.toLowerCase()) &&
+            user.last_name.toLowerCase().includes(last_name.toLowerCase()),
+        );
+
+        return { success: true, total: data.length, data };
+      }}
+      columns={[
+        {
+          title: <FormattedMessage id="group" />,
+          dataIndex: 'group_id',
+          valueType: 'select',
+          fieldProps: {
+            options: groupOptions,
+            mode: 'multiple',
           },
-        ]}
-      />
-    </>
+          render: (_n, row) => (
+            <TypeButtonDrawer key={row.group_id} type="Students" type_id={row.group_id} />
+          ),
+        },
+        ...staticColumns,
+        {
+          title: <FormattedMessage id="options" />,
+          hideInSearch: true,
+          render: (_n, row) => [
+            <Link
+              key="edit"
+              to={`/teacher/subjects/${semester_subject_id}/final-grades?user_id=${row.user.id}&group_id=${row.group_id}`}
+            >
+              <Tooltip title={<FormattedMessage id="edit" />}>
+                <Button type="primary" icon={<EditOutlined />} />
+              </Tooltip>
+            </Link>,
+          ],
+        },
+      ]}
+    />
   );
 };
