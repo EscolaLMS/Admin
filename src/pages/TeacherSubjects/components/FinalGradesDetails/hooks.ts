@@ -123,8 +123,8 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
         if (response.success) {
           const filteredSchedules = response.data.reduce<API.UserAttendanceSchedule[]>(
             (acc, { attendances, ...rest }) => {
-              const attendance = attendances.find((attendanceItem) =>
-                Boolean(attendanceItem.user_id),
+              const attendance = attendances.find(
+                (attendanceItem) => attendanceItem.user_id === user_id,
               );
 
               if (!attendance) return acc;
