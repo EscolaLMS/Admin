@@ -1485,7 +1485,7 @@ declare namespace API {
 
   type StudentAttendance = {
     user_id: number;
-    value: AttendanceValue;
+    value: Enum.AttendanceValue;
   };
 
   type GroupAttendanceSchedule = {
