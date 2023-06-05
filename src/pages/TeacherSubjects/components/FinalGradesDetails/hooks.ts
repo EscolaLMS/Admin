@@ -100,7 +100,10 @@ export function useTutorGradeScales(
     getSubjectTutorGrades(semester_subject_id, tutor_id)
       .then((response) => {
         if (response.success) {
-          setTutorGradeScales((prev) => ({ ...prev, data: response.data.grade_scale }));
+          setTutorGradeScales((prev) => ({
+            ...prev,
+            data: response.data.grade_scale.map((v, i) => ({ ...v, id: i })),
+          }));
         }
       })
       .finally(() => {
