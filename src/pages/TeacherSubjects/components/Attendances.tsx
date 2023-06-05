@@ -1,68 +1,76 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { format } from 'date-fns';
 import { FormattedMessage, useIntl } from 'umi';
-import { Select, Space, Typography } from 'antd';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import { Divider, Select } from 'antd';
+import ProForm from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
+
+import { DAY_FORMAT } from '@/consts/dates';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
 import type { AttendanceValue } from '@/services/escola-lms/enums';
-import { format } from 'date-fns';
-import { DAY_FORMAT } from '@/consts/dates';
-import ProCard from '@ant-design/pro-card';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
 
-export type ColumnType = BaseUserProps & Record<string, AttendanceValue | null>;
+export type AttendanceTableItem = BaseUserProps & Record<string, AttendanceValue | null>;
 
 interface BaseUserProps {
   id: number;
-  first_name: string;
-  last_name: string;
+  full_name: string;
   academic_teacher_id: number | null;
 }
 
-interface CurrentGroupProps {
-  id: number | null;
-  name?: string;
+interface Filters {
+  full_name: string;
 }
 
 export const Attendances: React.FC = () => {
   const { teacherSubjectData } = useTeacherSubject();
-  const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const [attendanceSchedule, setAttendanceSchedule] = useState<API.GroupAttendanceSchedule[]>();
   const [studentsGroup, setStudentsGroup] = useState<API.StudentUserGroup>();
-  const [currentGroup, setCurrentGroup] = useState<CurrentGroupProps>({
-    id: teacherSubjectData?.groups?.[0].id ?? null,
-    name: teacherSubjectData?.groups?.[0].name,
-  });
 
-  const studentAttendanceList: ColumnType[] = useMemo(
-    () =>
-      (studentsGroup?.users ?? []).reduce<ColumnType[]>((acc, curr) => {
-        const baseUser: BaseUserProps = {
-          id: curr.id,
-          first_name: curr.first_name,
-          last_name: curr.last_name,
-          academic_teacher_id: curr.academic_teacher_id,
-        };
-
-        const baseSchedule = (attendanceSchedule ?? []).reduce<
-          Record<string, AttendanceValue | null>
-        >((accumulator, schedule) => {
-          const y = schedule.attendances.find((item) => item.user_id === curr.id);
-
-          return { ...accumulator, [String(schedule.date_from)]: y?.value };
-        }, {});
-        return baseUser.academic_teacher_id
-          ? [...acc]
-          : ([...acc, { ...baseUser, ...baseSchedule }] as ColumnType[]);
-      }, []),
-    [studentsGroup, attendanceSchedule],
+  const [filters, setFilters] = useState<Filters>({ full_name: '' });
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(
+    teacherSubjectData?.groups?.[0]?.id ?? null,
   );
-  const columns: ProColumns<ColumnType>[] = useMemo(() => {
-    const dynamicCols = (attendanceSchedule ?? []).reduce<ProColumns<ColumnType>[]>(
+
+  const dataSource = useMemo(
+    () =>
+      (studentsGroup?.users ?? []).reduce<AttendanceTableItem[]>(
+        (acc, { id, first_name, last_name, academic_teacher_id }) => {
+          const baseUser: BaseUserProps = {
+            id,
+            full_name: `${first_name} ${last_name}`,
+            academic_teacher_id,
+          };
+
+          // filters implementation
+          if (!baseUser.full_name.toLowerCase().includes(filters.full_name.toLowerCase())) {
+            return acc;
+          }
+
+          const baseSchedule = (attendanceSchedule ?? []).reduce<
+            Record<string, AttendanceValue | null>
+          >((accumulator, schedule) => {
+            const attendance = schedule.attendances.find((item) => item.user_id === id);
+
+            return { ...accumulator, [String(schedule.date_from)]: attendance?.value };
+          }, {});
+
+          const tableItem = { ...baseUser, ...baseSchedule } as AttendanceTableItem;
+
+          return [...acc, tableItem];
+        },
+        [],
+      ),
+    [studentsGroup, attendanceSchedule, filters?.full_name],
+  );
+
+  const columns: ProColumns<AttendanceTableItem>[] = useMemo(() => {
+    const dynamicCols = (attendanceSchedule ?? []).reduce<ProColumns<AttendanceTableItem>[]>(
       (acc, curr) => [
         ...acc,
         {
@@ -76,93 +84,94 @@ export const Attendances: React.FC = () => {
               currentData={curr}
               recordData={record}
               onSuccess={(data) => setAttendanceSchedule(data)}
-              groupId={currentGroup.id}
+              groupId={selectedGroup}
             />
           ),
         },
       ],
       [],
     );
-    console.log({ columns });
 
     setLoading(false);
 
     return [
       {
         title: <FormattedMessage id="nameAndSurname" defaultMessage="Name and surname" />,
-        hideInSearch: true,
+        dataIndex: 'full_name',
         fixed: 'left',
-        render: (_, record) => {
-          return `${record.first_name} ${record.last_name}`;
-        },
       },
       ...dynamicCols,
     ];
   }, [attendanceSchedule]);
 
-  const getGroupName = (id: number) => {
-    const findedGroup = teacherSubjectData?.groups?.find((group) => group.id === id);
-    return findedGroup ? findedGroup?.name : '';
-  };
+  const getGroupName = useCallback(
+    (id: number | null): string => {
+      if (id === null) return '';
+      const foundGroup = teacherSubjectData?.groups?.find((group) => group.id === id);
 
-  const handleSelectGroup = (value: number) => {
+      return foundGroup?.name ?? '';
+    },
+    [teacherSubjectData?.groups],
+  );
+
+  const resetFilters = useCallback(() => setFilters({ full_name: '' }), []);
+  const applyFilters = useCallback(
+    ({ full_name = '' }: Partial<Filters>) => setFilters({ full_name }),
+    [],
+  );
+
+  const groupOptions = useMemo(
+    () => (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({ value: id, label: name })),
+    [teacherSubjectData?.groups],
+  );
+
+  const handleSelectGroup = useCallback((value: number) => {
+    resetFilters();
     setLoading(true);
-    setCurrentGroup({ id: value, name: getGroupName(value) });
-  };
+    setSelectedGroup(value);
+  }, []);
 
   useEffect(() => {
-    if (currentGroup.id) {
-      fetchGroupAttendanceSchedule(currentGroup.id).then((response) => {
-        if (response.success) {
-          setAttendanceSchedule(response.data);
-        }
-      });
-      fetchStudentUserGroup(currentGroup.id).then((response) => {
-        if (response.success) {
-          setStudentsGroup(response.data);
-        }
-      });
-    }
-  }, [currentGroup]);
-  console.log({ studentAttendanceList });
+    if (selectedGroup === null) return;
+
+    fetchGroupAttendanceSchedule(selectedGroup).then((response) => {
+      if (response.success) {
+        setAttendanceSchedule(response.data);
+      }
+    });
+    fetchStudentUserGroup(selectedGroup).then((response) => {
+      if (response.success) {
+        setStudentsGroup(response.data);
+      }
+    });
+  }, [selectedGroup]);
+
   return (
     <>
-      <ProCard>
-        <Space>
-          <Typography.Title level={5}>
-            <FormattedMessage id="select_user_group" defaultMessage="Select group" />
-          </Typography.Title>
-          <Select
-            style={{ minWidth: '400px' }}
-            onChange={handleSelectGroup}
-            defaultValue={teacherSubjectData?.groups?.[0].id}
-          >
-            {teacherSubjectData?.groups?.map((group: API.SubjectGroups) => (
-              <Select.Option key={group.id} value={group.id}>
-                {group.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Space>
-      </ProCard>
+      <ProForm.Item label={<FormattedMessage id="group" />}>
+        <Select onChange={handleSelectGroup} value={selectedGroup} options={groupOptions} />
+      </ProForm.Item>
+      <Divider />
       {columns.length === 1 ? (
         <FormattedMessage
           id="noAttendanceSchedule"
           defaultMessage="No attendance schedule for this group..."
         />
       ) : (
-        <ProTable
+        <ProTable<AttendanceTableItem, Filters>
+          className="attendances-table"
           headerTitle={`${intl.formatMessage({
             id: 'attendances',
             defaultMessage: 'Attendances',
-          })} (${currentGroup.name})`}
-          actionRef={actionRef}
-          rowKey="group_id"
-          search={false}
+          })} (${getGroupName(selectedGroup)})`}
+          rowKey="id"
+          onSubmit={applyFilters}
+          onReset={resetFilters}
+          search={{ layout: 'vertical' }}
           loading={loading}
-          dataSource={studentAttendanceList ?? []}
+          dataSource={dataSource}
           scroll={{ x: 1500 }}
-          columns={[...columns]}
+          columns={columns}
         />
       )}
     </>
