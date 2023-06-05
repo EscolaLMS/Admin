@@ -47,8 +47,11 @@ export const Attendances: React.FC = () => {
             academic_teacher_id,
           };
 
-          // filters implementation
-          if (!baseUser.full_name.toLowerCase().includes(filters.full_name.toLowerCase())) {
+          // filters implementation & filter out tutors
+          if (
+            !baseUser.full_name.toLowerCase().includes(filters.full_name.toLowerCase()) ||
+            academic_teacher_id !== null
+          ) {
             return acc;
           }
 
