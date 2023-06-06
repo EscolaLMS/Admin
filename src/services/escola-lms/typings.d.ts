@@ -1399,6 +1399,8 @@ declare namespace API {
     id: number;
     name: string;
     parent_id: number;
+    ms_teams_web_url: string | null;
+    ms_teams_team_id: string; // uuid
   };
 
   type Subject = {
@@ -1507,6 +1509,7 @@ declare namespace API {
     id: number;
     date_from: Date | string;
     date_to: Date | string;
+    ms_teams_join_url: string | null;
     tutor: {
       id: number;
       first_name: string;
