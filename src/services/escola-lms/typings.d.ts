@@ -1509,6 +1509,7 @@ declare namespace API {
     id: number;
     date_from: Date | string;
     date_to: Date | string;
+    ms_teams_join_url: string | null;
     tutor: {
       id: number;
       first_name: string;
