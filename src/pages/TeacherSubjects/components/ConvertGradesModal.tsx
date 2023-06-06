@@ -88,14 +88,23 @@ const ManualExamGradeType: React.FC<{
       const currGroup = groupUsers.byId?.[group_id];
       if (!currGroup) return;
 
-      const exam_results = currGroup.users.map<API.ExamResult>(
-        ({ id, email, first_name, last_name }) => ({
-          email,
-          first_name,
-          last_name,
-          user_id: id,
-          result: 0,
-        }),
+      const exam_results = currGroup.users.reduce<API.ExamResult[]>(
+        (acc, { id, email, first_name, last_name, academic_teacher_id }) => {
+          // filter out tutors
+          if (academic_teacher_id !== null) return acc;
+
+          return [
+            ...acc,
+            {
+              email,
+              first_name,
+              last_name,
+              user_id: id,
+              result: 0,
+            },
+          ];
+        },
+        [],
       );
 
       onDataConverted({ group_id, exam_results });
