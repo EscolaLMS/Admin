@@ -23,7 +23,7 @@ import { FormattedMessage, localeInfo } from '@@/plugin-locale/localeExports';
 
 declare const REACT_APP_API_URL: string;
 
-const langParser = (lang: string) => lang.split('-')[0];
+// const langParser = (lang: string) => lang.split('-')[0];
 
 const authpaths = ['/user/login', '/user/reset-password'];
 
@@ -83,8 +83,8 @@ export async function getInitialState(): Promise<{
 
       for (const lang in messages) {
         addLocale(lang, messages[lang], {
-          antd: localeInfo[lang].antd,
-          momentLocale: localeInfo[lang].momentLocale,
+          antd: localeInfo[lang]?.antd || '',
+          momentLocale: localeInfo[lang]?.momentLocale || lang,
         });
       }
     }
@@ -258,11 +258,16 @@ const errorHandler = (error: ResponseError) => {
 
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   const token = localStorage.getItem('TOKEN');
+  const optionHeaders = {
+    ...options.headers,
+    'X-locale': getLocale(),
+  };
 
   if (url.includes('login')) {
     return {
       url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
       options,
+      headers: optionHeaders,
     };
   }
 
@@ -276,9 +281,9 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
             ...options.headers,
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,
-            'X-locale': langParser(getLocale()),
+            'X-locale': getLocale(),
           }
-        : { ...options.headers, 'X-locale': langParser(getLocale()) },
+        : optionHeaders,
     },
   };
 };
