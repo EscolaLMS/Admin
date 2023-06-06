@@ -1,13 +1,12 @@
-import { FC, useCallback } from 'react';
-import { useEffect, useState, useMemo } from 'react';
-import { Badge, Modal, Typography } from 'antd';
-import { Calendar } from 'antd';
-import moment from 'moment';
-import './index.css';
-import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
-import { DAYTIME_FORMAT } from '@/consts/dates';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { FormattedMessage } from 'umi';
+import { Badge, Modal, Typography, Calendar } from 'antd';
+import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
+import moment from 'moment';
+
+import { DAYTIME_FORMAT } from '@/consts/dates';
 import { allSchedules as fetchAllSchedules } from '@/services/escola-lms/schedules';
+import './index.css';
 import { useTeacherSubject } from '../context';
 
 interface EventCalendarProps {
@@ -22,7 +21,7 @@ interface EventCalendarProps {
   subject: string;
 }
 
-const Schedule: FC = () => {
+export const Schedule: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventCalendarProps | null>(null);
   const [eventData, setEventData] = useState<API.ScheduleData[]>([]);
   const { semester_subject_id } = useTeacherSubject();
@@ -140,5 +139,3 @@ const Schedule: FC = () => {
     </>
   );
 };
-
-export default Schedule;

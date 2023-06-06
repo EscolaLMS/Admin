@@ -3,11 +3,11 @@ import { AttendanceValue } from '@/services/escola-lms/enums';
 import { Spin, Checkbox } from 'antd';
 import { useState } from 'react';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
-import type { ColumnType } from '@/pages/TeacherSubjects/components/Attendances';
+import type { AttendanceTableItem } from '@/pages/TeacherSubjects/components/Attendances';
 
 interface AttendanceCheckboxProps {
   currentData: API.GroupAttendanceSchedule;
-  recordData: ColumnType;
+  recordData: AttendanceTableItem;
   groupId: number | null;
   onSuccess: (data: API.GroupAttendanceSchedule[]) => void;
 }
