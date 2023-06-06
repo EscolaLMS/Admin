@@ -1,82 +1,78 @@
+import ProForm from '@ant-design/pro-form';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { Button, Modal, Select } from 'antd';
-import type { DefaultOptionType, SelectProps } from 'antd/lib/select';
+import { Modal, Select } from 'antd';
+import type { DefaultOptionType } from 'antd/lib/select';
 
 import SecureUpload from '@/components/SecureUpload';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { useTeacherSubject } from '../context';
-
-const FILE_TYPES = [ExamGradeType.TeamsLecture, ExamGradeType.TestPortal, ExamGradeType.TeamsForms];
-
-export function useSelectAll({
-  showSelectAll = true,
-  options = [],
-  value,
-  onChange,
-}: { showSelectAll?: boolean } & Pick<SelectProps, 'options' | 'value' | 'onChange'>) {
-  const handleSelectAll = useCallback(() => {
-    onChange?.(
-      options.map((option) => option.value),
-      options,
-    );
-  }, [onChange, options]);
-
-  const handleDeselectAll = useCallback(() => {
-    onChange?.([], []);
-  }, [onChange]);
-
-  const enhancedOptions = useMemo(() => {
-    if (!showSelectAll) return options;
-
-    return [
-      {
-        label: !value?.length ? (
-          <Button type="link" onClick={handleSelectAll}>
-            <FormattedMessage id="select_all" />
-          </Button>
-        ) : (
-          <Button type="link" onClick={handleDeselectAll}>
-            <FormattedMessage id="deselect_all" />
-          </Button>
-        ),
-        options,
-      },
-    ];
-  }, [handleSelectAll, handleDeselectAll, options, showSelectAll, value?.length]);
-
-  return {
-    options: enhancedOptions,
-    value,
-    onChange,
-  };
-}
-
-interface Props {
-  open: boolean;
-  closeModal: () => void;
-  onSuccess: (convertedData: API.ExamResult[]) => void;
+const FileExamGradeType: React.FC<{
   type: ExamGradeType;
-}
+  groupSelectDisabled: boolean;
+  onDataConverted: (data: ConvertedData | undefined) => void;
+}> = ({ type, onDataConverted, groupSelectDisabled }) => {
+  const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
 
-export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSuccess, type }) => {
-  const { teacherSubjectData, semester_subject_id, groupUsers, getGroupUsers } =
-    useTeacherSubject();
-  const [convertedData, setConvertedData] = useState<API.ExamResult[]>();
-  const [manualSelectValue, setManualSelectValue] = useState<number[]>([]);
+  const groupOptions: DefaultOptionType[] = useMemo(
+    () =>
+      (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({
+        label: name,
+        value: id,
+      })),
 
+    [],
+  );
   const reqData: API.ParseExamFileRequest = {
     type,
+    group_id: selectedGroup!,
     semester_subject_id: semester_subject_id!,
   };
 
   const onUploadFile = useCallback((response: API.DefaultResponse<API.Exam>) => {
     if (response.success) {
-      setConvertedData(response.data.results);
+      // TODO error handling
+      // filter out users that are not in selected group
+      const exam_results = response.data.results.filter(({ user_id }) => user_id !== null);
+      if (!exam_results.length) return;
+
+      onDataConverted({ exam_results, group_id: response.data.group_id });
     }
   }, []);
 
-  const manualSelectOptions: DefaultOptionType[] = useMemo(
+  return (
+    <>
+      <ProForm.Item label={<FormattedMessage id="group" />}>
+        <Select
+          disabled={groupSelectDisabled}
+          value={selectedGroup}
+          onChange={(v) => setSelectedGroup(v)}
+          options={groupOptions}
+          placeholder={<FormattedMessage id="select_group" />}
+          style={{ width: '100%' }}
+        />
+      </ProForm.Item>
+      <SecureUpload
+        name="file"
+        url="/api/admin/exams/parse"
+        onUpload={onUploadFile}
+        onChange={(info) => !info.fileList.length && onDataConverted(undefined)}
+        maxFiles={1}
+        data={reqData}
+        disabled={!selectedGroup}
+      />
+    </>
+  );
+};
+
+const ManualExamGradeType: React.FC<{
+  onDataConverted: (convertedData: ConvertedData) => void;
+}> = ({ onDataConverted }) => {
+  const { teacherSubjectData, groupUsers } = useTeacherSubject();
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+
+  const groupOptions: DefaultOptionType[] = useMemo(
     () =>
       (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({
         label: name,
@@ -86,40 +82,68 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
     [],
   );
 
-  const onManualSelectChange = useCallback(
-    (selectedGroups: number[]) => {
-      setManualSelectValue(selectedGroups);
-      const data = selectedGroups.reduce<API.ExamResult[]>((acc, group_id) => {
-        const currGroup = groupUsers.byId?.[group_id];
-        if (!currGroup) return acc;
+  const onSelectedGroupChange = useCallback(
+    (group_id: number) => {
+      setSelectedGroup(group_id);
+      const currGroup = groupUsers.byId?.[group_id];
+      if (!currGroup) return;
 
-        const userExamResults = currGroup.users.map<API.ExamResult>(
-          ({ id, email, first_name, last_name }) => ({
-            email,
-            first_name,
-            last_name,
-            user_id: id,
-            result: 0,
-          }),
-        );
+      const exam_results = currGroup.users.reduce<API.ExamResult[]>(
+        (acc, { id, email, first_name, last_name, academic_teacher_id }) => {
+          // filter out tutors
+          if (academic_teacher_id !== null) return acc;
 
-        return [...acc, ...userExamResults];
-      }, []);
+          return [
+            ...acc,
+            {
+              email,
+              first_name,
+              last_name,
+              user_id: id,
+              result: 0,
+            },
+          ];
+        },
+        [],
+      );
 
-      setConvertedData(data?.length ? data : undefined);
+      onDataConverted({ group_id, exam_results });
     },
     [groupUsers.byId],
   );
 
-  const manualSelectAllProps = useSelectAll({
-    options: manualSelectOptions,
-    onChange: onManualSelectChange,
-    value: manualSelectValue,
-  });
+  return (
+    <Select
+      value={selectedGroup}
+      onChange={onSelectedGroupChange}
+      options={groupOptions}
+      placeholder={<FormattedMessage id="select_group" />}
+      style={{ width: '100%' }}
+    />
+  );
+};
+
+export interface ConvertedData {
+  group_id: number;
+  exam_results: API.ExamResult[];
+}
+
+interface Props {
+  open: boolean;
+  closeModal: () => void;
+  onSuccess: (convertedData: ConvertedData) => void;
+  type: ExamGradeType;
+}
+
+const FILE_TYPES = [ExamGradeType.TeamsLecture, ExamGradeType.TestPortal, ExamGradeType.TeamsForms];
+
+export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSuccess, type }) => {
+  const { teacherSubjectData, fetchGroupUsers } = useTeacherSubject();
+  const [convertedData, setConvertedData] = useState<ConvertedData>();
 
   useEffect(() => {
     if (type === ExamGradeType.Manual && open) {
-      teacherSubjectData?.groups?.forEach(({ id }) => getGroupUsers(id));
+      teacherSubjectData?.groups?.forEach(({ id }) => fetchGroupUsers(id));
     }
   }, [type, open]);
 
@@ -137,24 +161,13 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
       okButtonProps={{ disabled: !convertedData }}
     >
       {FILE_TYPES.includes(type) && (
-        <SecureUpload
-          name="file"
-          url="/api/admin/exams/parse"
-          onUpload={onUploadFile}
-          onChange={(info) => !info.fileList.length && setConvertedData(undefined)}
-          maxFiles={1}
-          data={reqData}
-          hideLabel
+        <FileExamGradeType
+          type={type}
+          onDataConverted={setConvertedData}
+          groupSelectDisabled={!!convertedData}
         />
       )}
-      {type === ExamGradeType.Manual && (
-        <Select
-          {...manualSelectAllProps}
-          placeholder={<FormattedMessage id="select_groups" />}
-          mode="multiple"
-          style={{ width: '100%' }}
-        />
-      )}
+      {type === ExamGradeType.Manual && <ManualExamGradeType onDataConverted={setConvertedData} />}
     </Modal>
   );
 };

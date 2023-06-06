@@ -22,7 +22,7 @@ interface EventCalendarProps {
   ms_teams_join_url: string | null;
 }
 
-const Schedule: React.FC = () => {
+export const Schedule: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventCalendarProps | null>(null);
   const [eventData, setEventData] = useState<API.ScheduleData[]>([]);
   const { semester_subject_id } = useTeacherSubject();
@@ -155,5 +155,3 @@ const Schedule: React.FC = () => {
     </>
   );
 };
-
-export default Schedule;

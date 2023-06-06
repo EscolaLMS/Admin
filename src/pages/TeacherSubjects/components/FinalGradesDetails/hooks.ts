@@ -100,7 +100,10 @@ export function useTutorGradeScales(
     getSubjectTutorGrades(semester_subject_id, tutor_id)
       .then((response) => {
         if (response.success) {
-          setTutorGradeScales((prev) => ({ ...prev, data: response.data.grade_scale }));
+          setTutorGradeScales((prev) => ({
+            ...prev,
+            data: response.data.grade_scale.map((v, i) => ({ ...v, id: i })),
+          }));
         }
       })
       .finally(() => {
@@ -123,8 +126,8 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
         if (response.success) {
           const filteredSchedules = response.data.reduce<API.UserAttendanceSchedule[]>(
             (acc, { attendances, ...rest }) => {
-              const attendance = attendances.find((attendanceItem) =>
-                Boolean(attendanceItem.user_id),
+              const attendance = attendances.find(
+                (attendanceItem) => attendanceItem.user_id === user_id,
               );
 
               if (!attendance) return acc;

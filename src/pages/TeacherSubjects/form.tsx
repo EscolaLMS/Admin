@@ -1,18 +1,18 @@
 import React, { useCallback, useMemo } from 'react';
+import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 
 import PERMISSIONS from '@/consts/permissions';
 import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
-import Groups from './components/Groups';
+import { Groups } from './components/Groups';
 import { Exams } from './components/Exams';
 import { Students } from './components/Students';
-import Attendances from './components/Attendances';
+import { Attendances } from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
-import Schedule from './components/Schedule';
+import { Schedule } from './components/Schedule';
 import { FinalGradesList } from './components/FinalGradesList';
 
 const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
