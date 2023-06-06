@@ -9,8 +9,9 @@ import { ExamGradeType } from '@/services/escola-lms/enums';
 import { useTeacherSubject } from '../context';
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
+  groupSelectDisabled: boolean;
   onDataConverted: (data: ConvertedData | undefined) => void;
-}> = ({ type, onDataConverted }) => {
+}> = ({ type, onDataConverted, groupSelectDisabled }) => {
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
 
@@ -31,7 +32,12 @@ const FileExamGradeType: React.FC<{
 
   const onUploadFile = useCallback((response: API.DefaultResponse<API.Exam>) => {
     if (response.success) {
-      onDataConverted({ exam_results: response.data.results, group_id: response.data.group_id });
+      // TODO error handling
+      // filter out users that are not in selected group
+      const exam_results = response.data.results.filter(({ user_id }) => user_id !== null);
+      if (!exam_results.length) return;
+
+      onDataConverted({ exam_results, group_id: response.data.group_id });
     }
   }, []);
 
@@ -39,6 +45,7 @@ const FileExamGradeType: React.FC<{
     <>
       <ProForm.Item label={<FormattedMessage id="group" />}>
         <Select
+          disabled={groupSelectDisabled}
           value={selectedGroup}
           onChange={(v) => setSelectedGroup(v)}
           options={groupOptions}
@@ -145,7 +152,11 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
       okButtonProps={{ disabled: !convertedData }}
     >
       {FILE_TYPES.includes(type) && (
-        <FileExamGradeType type={type} onDataConverted={setConvertedData} />
+        <FileExamGradeType
+          type={type}
+          onDataConverted={setConvertedData}
+          groupSelectDisabled={!!convertedData}
+        />
       )}
       {type === ExamGradeType.Manual && <ManualExamGradeType onDataConverted={setConvertedData} />}
     </Modal>
