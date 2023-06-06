@@ -6,7 +6,7 @@ import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { createExam, getExam, updateExam } from '@/services/escola-lms/exams';
 
-import { ConvertGradesModal } from './ConvertGradesModal';
+import { ConvertGradesModal, type ConvertedData } from './ConvertGradesModal';
 import { useTeacherSubject } from '../context';
 
 const SelectTypeButtonsGroup: React.FC<{ onSelect: (type: ExamGradeType) => void }> = ({
@@ -72,13 +72,13 @@ interface Props {
 export const ExamForm: React.FC<Props> = ({ exam_id }) => {
   const [form] = ProForm.useForm<ExamFormValues>();
   const [selectedType, setSelectedType] = useState<ExamGradeType>();
-  const [examResults, setExamResults] = useState<API.ExamResult[]>();
+  const [convertedData, setConvertedData] = useState<ConvertedData>();
   const [fetching, setFetching] = useState(false);
-  const { semester_subject_id } = useTeacherSubject();
+  const { semester_subject_id, getGroupById } = useTeacherSubject();
 
   const editableKeys = useMemo(
-    () => (examResults ?? []).map(({ user_id }) => user_id),
-    [examResults],
+    () => (convertedData?.exam_results ?? []).map(({ user_id }) => user_id),
+    [convertedData?.exam_results],
   );
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
 
     if (exam_id === 'new') {
       setSelectedType(undefined);
-      setExamResults(undefined);
+      setConvertedData(undefined);
       form.resetFields();
     }
 
@@ -95,9 +95,9 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
       getExam(numExamId)
         .then((res) => {
           if (res.success) {
-            const { type, results, title, weight, passed_at } = res.data;
+            const { type, results, title, weight, passed_at, group_id } = res.data;
             setSelectedType(type);
-            setExamResults(results);
+            setConvertedData({ group_id, exam_results: results });
             form.setFieldsValue({ title, weight, passed_at });
           }
         })
@@ -107,7 +107,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
 
   const resetState = useCallback(() => {
     setSelectedType(undefined);
-    setExamResults(undefined);
+    setConvertedData(undefined);
   }, []);
 
   if (fetching) {
@@ -118,24 +118,25 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
     <>
       {selectedType && (
         <ConvertGradesModal
-          open={Boolean(selectedType && !examResults)}
+          open={Boolean(selectedType && !convertedData)}
           type={selectedType}
           closeModal={resetState}
-          onSuccess={setExamResults}
+          onSuccess={setConvertedData}
         />
       )}
       <ProForm
         form={form}
-        submitter={selectedType === undefined || !examResults ? false : undefined}
+        submitter={selectedType === undefined || !convertedData ? false : undefined}
         onFinish={async (formData: ExamFormValues) => {
           // Validation since table has other form instance
-          const areExamResultsValid = examResults?.every(
+          const areExamResultsValid = convertedData?.exam_results?.every(
             ({ result }) => typeof result === 'number' && result >= 0 && result <= 100,
           );
 
-          if (areExamResultsValid && typeof semester_subject_id === 'number') {
+          if (convertedData && areExamResultsValid && typeof semester_subject_id === 'number') {
             const { title, passed_at, weight } = formData;
             const numExamId = Number(exam_id);
+            const { exam_results, group_id } = convertedData;
 
             const reqData: API.CreateExamRequest = {
               type: selectedType!,
@@ -143,7 +144,8 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
               title,
               passed_at,
               weight,
-              results: examResults!,
+              group_id,
+              results: exam_results,
             };
 
             const response = Number.isNaN(numExamId)
@@ -196,21 +198,23 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             <InputNumber />
           </ProForm.Item>
         </ProForm.Group>
-        {selectedType && examResults && (
+        {selectedType && convertedData && (
           <ProTable
             rowKey="user_id"
+            headerTitle={getGroupById(convertedData.group_id)?.name}
             editable={{
               type: 'single',
               editableKeys,
-              onValuesChange: (record, dataSource) => setExamResults(dataSource),
+              onValuesChange: (record, dataSource) =>
+                setConvertedData({ group_id: convertedData.group_id, exam_results: dataSource }),
             }}
             cardProps={{ bodyStyle: { paddingInline: 0 } }}
             search={false}
-            dataSource={examResults}
+            dataSource={convertedData.exam_results}
             columns={staticColumns}
           />
         )}
-        {!examResults && <SelectTypeButtonsGroup onSelect={setSelectedType} />}
+        {!convertedData && <SelectTypeButtonsGroup onSelect={setSelectedType} />}
       </ProForm>
     </>
   );

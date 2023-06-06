@@ -9,6 +9,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
 import { getExams, deleteExam } from '@/services/escola-lms/exams';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { ExamForm } from './ExamForm';
 import { ExamResults } from './ExamResults';
 import { useTeacherSubject } from '../context';
@@ -58,6 +59,14 @@ const staticColumns: ProColumns<API.Exam>[] = [
         id={`SemesterType.${record.semester.type}`}
         values={{ year: record.semester.year }}
       />
+    ),
+  },
+  {
+    title: <FormattedMessage id="group" defaultMessage="Group" />,
+    dataIndex: 'group_id',
+    sorter: true,
+    render: (_, record) => (
+      <TypeButtonDrawer key={record.group_id} type="Students" type_id={record.group_id} />
     ),
   },
 ];

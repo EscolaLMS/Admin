@@ -1561,6 +1561,7 @@ declare namespace API {
     results: ExamResult[];
     created_at: Date | string;
     user_id: number;
+    group_id: number;
   };
 
   type CreateExamResult = {
@@ -1573,6 +1574,7 @@ declare namespace API {
     title: string;
     type: string;
     weight: number;
+    group_id: number;
     passed_at: Date | string;
     results: CreateExamResult[];
   };
@@ -1583,6 +1585,7 @@ declare namespace API {
 
   type ParseExamFileRequest = {
     semester_subject_id: number;
+    group_id: number;
     type: Enum.ExamGradeType;
   };
 

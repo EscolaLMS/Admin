@@ -258,6 +258,7 @@ export default {
   select_person: 'Wybierz osobę',
   select_course: 'Wybierz kurs',
   select_groups: 'Wybierz grupy',
+  select_group: 'Wybierz grupę',
   select_all: 'Zaznacz wszystkie',
   deselect_all: 'Odznacz wszystkie',
   select_templates: 'Wybierz szablony',
