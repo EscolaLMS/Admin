@@ -47,9 +47,6 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
       }
       tabBarExtraContent={
         <div style={{ display: 'flex', padding: '12px', gap: '12px' }}>
-          <Button type="primary" onClick={() => console.log('MSTeams')}>
-            <FormattedMessage id="msTeams" defaultMessage="msTeams" />
-          </Button>
           <Link to={`/teacher/subjects/${semester_subject_id}/exams?exam_id=new`}>
             <Button type="primary">
               <FormattedMessage id="uploadGrades" defaultMessage="uploadGrades" />
