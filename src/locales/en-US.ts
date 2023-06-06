@@ -254,6 +254,7 @@ export default {
   select_person: 'Select a person',
   select_course: 'Select a course',
   select_groups: 'Select a groups',
+  select_group: 'Select a group',
   select_all: 'Select all',
   deselect_all: 'Deselect all',
   select_templates: 'Select a templates',
