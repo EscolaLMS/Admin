@@ -173,21 +173,26 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
       );
 
       if (existingFinalGrade) {
-        updateFinalGrade(existingFinalGrade.id, { grade_scale_id }).then((response) => {
-          message[response.success ? 'success' : 'error'](response.message);
+        const response = await updateFinalGrade(existingFinalGrade.id, { grade_scale_id });
+
+        message[response.success ? 'success' : 'error'](response.message);
+        if (response.success) {
           history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
-        });
+        }
         return;
       }
 
-      createFinalGrade({
+      const response = await createFinalGrade({
         grade_scale_id,
         grade_term_id,
         lesson_group_user_id: finalGrades.data.id,
-      }).then((response) => {
-        message[response.success ? 'success' : 'error'](response.message);
-        history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
       });
+
+      message[response.success ? 'success' : 'error'](response.message);
+
+      if (response.success) {
+        history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
+      }
     },
     [finalGrades.data, semester_subject_id],
   );
