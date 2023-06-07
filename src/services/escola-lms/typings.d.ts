@@ -1679,6 +1679,14 @@ declare namespace API {
     orders: CoursesSortOrderItem[];
     course_id: number;
   };
+
+  type CreateTeamsChatRequest = {
+    user_id: number;
+  };
+
+  type TeamsChat = {
+    web_url: string; //url
+  };
 }
 
 declare module 'jsoneditor-react' {
