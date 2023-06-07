@@ -102,7 +102,7 @@ const TABLE_PAGE_SIZE = 6;
 
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { semester_subject_id } = useTeacherSubject();
-  const { studentExams } = useStudentExams(user_id);
+  const { studentExams } = useStudentExams(user_id, semester_subject_id);
   const { finalGrades } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);

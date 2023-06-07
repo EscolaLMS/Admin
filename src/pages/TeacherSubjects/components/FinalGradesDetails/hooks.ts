@@ -173,12 +173,13 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
 
 export type StudentExam = Omit<API.Exam, 'results'> & { result: API.ExamResult };
 
-export function useStudentExams(student_id: number) {
+export function useStudentExams(student_id: number, semester_subject_id: number | null) {
   const [studentExams, setStudentExams] = useState<FetchedData<StudentExam[]>>({ loading: false });
 
   useEffect(() => {
+    if (!semester_subject_id) return;
     setStudentExams((prev) => ({ ...prev, loading: true }));
-    getExams({ student_id })
+    getExams({ student_id, semester_subject_id })
       .then((response) => {
         if (response.success) {
           const data = response.data.reduce<StudentExam[]>(
@@ -196,7 +197,7 @@ export function useStudentExams(student_id: number) {
       .finally(() => {
         setStudentExams((prev) => ({ ...prev, loading: false }));
       });
-  }, [student_id]);
+  }, [student_id, semester_subject_id]);
 
   return { studentExams };
 }
