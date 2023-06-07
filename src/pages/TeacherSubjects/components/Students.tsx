@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react';
-import { FormattedMessage, Link } from 'umi';
-import { Button, Tooltip } from 'antd';
+import { FormattedMessage } from 'umi';
 import type { DefaultOptionType } from 'antd/lib/select';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import { ExportOutlined } from '@ant-design/icons';
 
 import { allStudentsAndGroups as fetchAllStudentsAndGroups } from '@/services/escola-lms/student_user_groups';
 import { useTeacherSubject } from '../context';
+import { CreateTeamsChatButton } from './CreateTeamsChatButton';
 
 interface TableDataProps {
   group_id: number;
@@ -118,12 +117,8 @@ export const Students: React.FC = () => {
           title: <FormattedMessage id="msTeams" />,
           dataIndex: 'teamsLink',
           valueType: 'option',
-          render: () => [
-            <Link to={'#'} key="teamsLink">
-              <Tooltip title={<FormattedMessage id="msTeams" defaultMessage="teams" />}>
-                <Button type="primary" icon={<ExportOutlined />} />
-              </Tooltip>
-            </Link>,
+          render: (_n, record) => [
+            <CreateTeamsChatButton key="teamsChat" student_id={record.user_id} />,
           ],
         },
       ]}

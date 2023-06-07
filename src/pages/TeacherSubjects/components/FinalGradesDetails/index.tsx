@@ -102,7 +102,7 @@ const TABLE_PAGE_SIZE = 6;
 
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { semester_subject_id } = useTeacherSubject();
-  const { studentExams } = useStudentExams(user_id);
+  const { studentExams } = useStudentExams(user_id, semester_subject_id);
   const { finalGrades } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
@@ -173,21 +173,26 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
       );
 
       if (existingFinalGrade) {
-        updateFinalGrade(existingFinalGrade.id, { grade_scale_id }).then((response) => {
-          message[response.success ? 'success' : 'error'](response.message);
+        const response = await updateFinalGrade(existingFinalGrade.id, { grade_scale_id });
+
+        message[response.success ? 'success' : 'error'](response.message);
+        if (response.success) {
           history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
-        });
+        }
         return;
       }
 
-      createFinalGrade({
+      const response = await createFinalGrade({
         grade_scale_id,
         grade_term_id,
         lesson_group_user_id: finalGrades.data.id,
-      }).then((response) => {
-        message[response.success ? 'success' : 'error'](response.message);
-        history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
       });
+
+      message[response.success ? 'success' : 'error'](response.message);
+
+      if (response.success) {
+        history.push(`/teacher/subjects/${semester_subject_id}/final-grades`);
+      }
     },
     [finalGrades.data, semester_subject_id],
   );
