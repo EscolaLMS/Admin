@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
-import { FormattedMessage, Link } from 'umi';
-import { Button, Tooltip } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { FormattedMessage } from 'umi';
+import { Button, message, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
 
 import { allStudentsAndGroups as fetchAllStudentsAndGroups } from '@/services/escola-lms/student_user_groups';
+import { createTeamsChat } from '@/services/escola-lms/chats';
 import { useTeacherSubject } from '../context';
 
 interface TableDataProps {
@@ -77,6 +78,20 @@ export const Students: React.FC = () => {
     [teacherSubjectData?.groups],
   );
 
+  const onTeamsClick = useCallback(
+    (student_id: number) => async () => {
+      const response = await createTeamsChat({ user_id: student_id });
+      if (!response.success) {
+        message.error(response.message);
+        return;
+      }
+
+      message.success(response.message);
+      window.open(response.data.web_url, '_blank', 'noopener noreferrer');
+    },
+    [],
+  );
+
   return (
     <ProTable<TableDataProps, TableParams>
       rowKey={(record) => `${record.group_id}-${record.user_id}`}
@@ -118,12 +133,17 @@ export const Students: React.FC = () => {
           title: <FormattedMessage id="msTeams" />,
           dataIndex: 'teamsLink',
           valueType: 'option',
-          render: () => [
-            <Link to={'#'} key="teamsLink">
-              <Tooltip title={<FormattedMessage id="msTeams" defaultMessage="teams" />}>
-                <Button type="primary" icon={<ExportOutlined />} />
-              </Tooltip>
-            </Link>,
+          render: (_n, record) => [
+            <Tooltip
+              key="teamsLink"
+              title={<FormattedMessage id="msTeams" defaultMessage="teams" />}
+            >
+              <Button
+                type="primary"
+                icon={<ExportOutlined />}
+                onClick={onTeamsClick(record.user_id)}
+              />
+            </Tooltip>,
           ],
         },
       ]}
