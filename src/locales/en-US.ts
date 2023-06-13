@@ -738,4 +738,5 @@ export default {
   lessons_and_topics_cant_be_mixed: "Lessons and topics can't be arranged alternately",
   stacking_order: 'Order',
   stacking_order_tooltip: 'Lesson order in lesson or course context',
+  exportData: 'Export data',
 };
