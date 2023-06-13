@@ -1687,6 +1687,23 @@ declare namespace API {
   type TeamsChat = {
     web_url: string; //url
   };
+
+  type PCGFileDataDoneBy = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+
+  type PCGFileData = {
+    url: string;
+    version: string;
+    class_type: 'EscolaLms\\PcgExport\\Exports\\PcgExport';
+    created_at: Date | string;
+    created_by: PCGFileDataDoneBy;
+    exported_at: Date | string;
+    exported_by: PCGFileDataDoneBy;
+  };
 }
 
 declare module 'jsoneditor-react' {
