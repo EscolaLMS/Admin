@@ -9,3 +9,16 @@ export async function getPCGFileData(group_id: number, options?: RequestOptionsI
     ...(options || {}),
   });
 }
+
+/**  GET /api/admin/pcg-export */
+export async function getPCGExportsHistory(
+  params?: API.PCGFileExportsHistoryParams,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultMetaResponse<API.PCGFileExportsHistoryItem>>(`/api/admin/pcg-export`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    params,
+    ...(options || {}),
+  });
+}
