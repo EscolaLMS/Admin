@@ -49,7 +49,7 @@ export const UserGroupSelect: React.FC<{
       }
 
       abortController.current = new AbortController();
-      fetchUserGroups({ search }, { signal: abortController.current.signal })
+      fetchUserGroups({ search, per_page: 30 }, { signal: abortController.current.signal })
         .then((response) => {
           if (response.success) {
             setUsersFromResponse(response.data);
