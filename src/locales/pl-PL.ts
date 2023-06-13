@@ -36,6 +36,7 @@ export default {
   attendance: 'Obecności',
   'grades-scale': 'Skala ocen',
   'final-grades': 'Oceny końcowe',
+  'file-exports-history': 'Historia eksportowania danych',
   msTeams: 'MS Teams',
   uploadAttendance: 'Wgraj obecność',
   uploadGrades: 'Wgraj oceny',
@@ -726,4 +727,7 @@ export default {
   stacking_order: 'Kolejność',
   stacking_order_tooltip: 'Kolejność lekcji w kontekście lekcji lub kursu',
   exportData: 'Eksportuj dane',
+  created_by: 'Utworzono przez',
+  exported_at: 'Eksportowano',
+  exported_by: 'Eksportowano przez',
 };
