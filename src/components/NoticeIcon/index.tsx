@@ -50,17 +50,29 @@ const NoticeIconView = () => {
 
   const noticeData = getNoticeData(notices);
 
-  const changeReadState = (id: string) => {
-    readNotification(id);
+  const changeNoticeReadAt = useCallback((id: string, date: Date | null) => {
     setNotices(
       notices.map((item) => {
         const notice = { ...item };
         if (notice.id === id) {
-          notice.read_at = new Date();
+          notice.read_at = date;
         }
         return notice;
       }),
     );
+  }, []);
+
+  const changeReadState = async (id: string) => {
+    // Change read_at key to change opacity of element
+    changeNoticeReadAt(id, new Date());
+    const response = await readNotification(id);
+    if (response.success) {
+      // remove notification when success
+      setNotices(notices.filter(({ id: noticeId }) => noticeId !== id));
+    } else {
+      // when read failed then read_at change to null
+      changeNoticeReadAt(id, null);
+    }
   };
 
   const observer = useRef<IntersectionObserver | null>(null);
