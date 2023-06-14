@@ -169,7 +169,7 @@ const WebinarForm = () => {
           type: 'card',
           activeKey: tab,
           onChange: (key) => {
-            if (key === TabNames.PRODUCT && manageCourseEdit.valuesChanged) {
+            if (key !== TabNames.ATTRIBUTES && manageCourseEdit.valuesChanged) {
               setManageCourseEdit({
                 ...manageCourseEdit,
                 showConfirmModal: true,
