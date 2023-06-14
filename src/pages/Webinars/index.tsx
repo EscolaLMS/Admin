@@ -160,6 +160,7 @@ export const TableColumns: ProColumns<API.Webinar>[] = [
           state={{
             type: stateType,
           }}
+          multiple={true}
         />
       );
     },
@@ -210,7 +211,7 @@ const Webinars: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Webinar, API.ConsultationsParams>
+      <ProTable<API.Webinar, API.WebinarsParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.Webinars',
           defaultMessage: 'Webinars',
@@ -228,7 +229,7 @@ const Webinars: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ name, status, dateRange, pageSize, current }, sort) => {
+        request={({ name, status, dateRange, pageSize, current, tag }, sort) => {
           setLoading(true);
           const sortArr = sort && Object.entries(sort)[0];
           const date_from =
@@ -238,11 +239,12 @@ const Webinars: React.FC = () => {
 
           return webinars({
             name,
-            pageSize,
-            current,
+            per_page: pageSize,
+            page: current,
             date_from,
             date_to,
             status,
+            'tags[]': tag ? [tag] : undefined,
             order_by: sortArr && sortArr[0],
             order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           })

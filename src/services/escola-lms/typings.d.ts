@@ -245,6 +245,7 @@ declare namespace API {
       active?: boolean;
       status?: string;
       group_id?: number;
+      'tag[]'?: string | string[];
     };
 
   type CategoryParams = PageParams &
@@ -262,6 +263,19 @@ declare namespace API {
       date_from?: string;
       date_to?: string;
       'categories[]'?: number;
+    };
+
+  type WebinarsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+      'tags[]'?: string | string[];
+      tag?: string;
     };
 
   type H5PListParams = PageParams &
@@ -317,7 +331,7 @@ declare namespace API {
     interests: any;
     path_avatar: string;
     avatar: string;
-    roles: ('admin' | 'tutor' | 'student')[];
+    roles: ('admin' | 'tutor' | 'student' | string)[];
     permissions: string[];
     password?: string;
   };
@@ -825,7 +839,15 @@ declare namespace API {
     assignable_id: number;
   };
 
-  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image' | 'boolean' | 'number';
+  type SettingType =
+    | 'text'
+    | 'markdown'
+    | 'json'
+    | 'file'
+    | 'image'
+    | 'boolean'
+    | 'number'
+    | 'array';
   type SettingBase = {
     id: number;
     key: string;
@@ -866,6 +888,10 @@ declare namespace API {
     | (SettingBase & {
         type: 'image';
         data: string;
+      })
+    | (SettingBase & {
+        type: 'array';
+        data: any[];
       });
 
   type Role = {
@@ -1373,6 +1399,8 @@ declare namespace API {
     id: number;
     name: string;
     parent_id: number;
+    ms_teams_web_url: string | null;
+    ms_teams_team_id: string; // uuid
   };
 
   type Subject = {
@@ -1459,7 +1487,7 @@ declare namespace API {
 
   type StudentAttendance = {
     user_id: number;
-    value: AttendanceValue;
+    value: Enum.AttendanceValue;
   };
 
   type GroupAttendanceSchedule = {
@@ -1481,6 +1509,7 @@ declare namespace API {
     id: number;
     date_from: Date | string;
     date_to: Date | string;
+    ms_teams_join_url: string | null;
     tutor: {
       id: number;
       first_name: string;
@@ -1535,6 +1564,7 @@ declare namespace API {
     results: ExamResult[];
     created_at: Date | string;
     user_id: number;
+    group_id: number;
   };
 
   type CreateExamResult = {
@@ -1547,6 +1577,7 @@ declare namespace API {
     title: string;
     type: string;
     weight: number;
+    group_id: number;
     passed_at: Date | string;
     results: CreateExamResult[];
   };
@@ -1557,6 +1588,7 @@ declare namespace API {
 
   type ParseExamFileRequest = {
     semester_subject_id: number;
+    group_id: number;
     type: Enum.ExamGradeType;
   };
 
@@ -1635,6 +1667,25 @@ declare namespace API {
 
   type UpdateFinalGradeRequest = {
     grade_scale_id: number;
+  };
+
+  type LessonTopicId = number;
+  type Index = number;
+
+  type CoursesSortOrderItem = [LessonTopicId, Index];
+
+  type CoursesSortRequest = {
+    class: 'Lesson' | 'Topic';
+    orders: CoursesSortOrderItem[];
+    course_id: number;
+  };
+
+  type CreateTeamsChatRequest = {
+    user_id: number;
+  };
+
+  type TeamsChat = {
+    web_url: string; //url
   };
 }
 

@@ -1,14 +1,13 @@
-import { FC, useCallback } from 'react';
-import { useEffect, useState, useMemo } from 'react';
-import { Badge, Modal, Typography } from 'antd';
-import { Calendar } from 'antd';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import moment from 'moment';
-import './index.css';
-import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
-import { DAYTIME_FORMAT } from '@/consts/dates';
 import { FormattedMessage } from 'umi';
+import { Badge, Button, Modal, Typography, Calendar } from 'antd';
+import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
+
+import { DAYTIME_FORMAT } from '@/consts/dates';
 import { allSchedules as fetchAllSchedules } from '@/services/escola-lms/schedules';
 import { useTeacherSubject } from '../context';
+import './index.css';
 
 interface EventCalendarProps {
   id: number;
@@ -20,15 +19,16 @@ interface EventCalendarProps {
   group: string;
   semester: string;
   subject: string;
+  ms_teams_join_url: string | null;
 }
 
-const Schedule: FC = () => {
+export const Schedule: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventCalendarProps | null>(null);
   const [eventData, setEventData] = useState<API.ScheduleData[]>([]);
   const { semester_subject_id } = useTeacherSubject();
   const now = moment();
 
-  const events = useMemo(
+  const events: EventCalendarProps[] = useMemo(
     () =>
       eventData.map((event) => ({
         id: event.id,
@@ -40,6 +40,7 @@ const Schedule: FC = () => {
         semester: event.semester.name,
         group: event.group.name,
         subject: event.subject.name,
+        ms_teams_join_url: event.ms_teams_join_url,
       })),
     [eventData],
   );
@@ -136,9 +137,21 @@ const Schedule: FC = () => {
           <FormattedMessage id="end_at" defaultMessage="End date" />:
           {selectedEvent && moment(selectedEvent.end).format(DAYTIME_FORMAT)}
         </Typography.Paragraph>
+        {selectedEvent?.ms_teams_join_url && (
+          <Typography.Paragraph>
+            <a
+              href={selectedEvent.ms_teams_join_url}
+              target="_blank"
+              rel="noreferrer"
+              key="teamsLink"
+            >
+              <Button type="primary">
+                <FormattedMessage id="msTeams" />
+              </Button>
+            </a>
+          </Typography.Paragraph>
+        )}
       </Modal>
     </>
   );
 };
-
-export default Schedule;

@@ -15,23 +15,25 @@ interface TutorsData {
 export interface TeacherSubjectContext {
   teacherSubjectData: Partial<API.Subjects> | null;
   groupUsers: GroupUserData;
-  getTeacherSubjectById: (semester_subject_id: number) => Promise<void>;
-  getGroupUsers: (group_id: number) => Promise<void>;
+  fetchTeacherSubjectById: (semester_subject_id: number) => Promise<void>;
+  fetchGroupUsers: (group_id: number) => Promise<void>;
   semester_subject_id: number | null;
   tutors: TutorsData;
-  getTutors: (
+  fetchTutors: (
     semester_subject_id: number,
   ) => Promise<API.DefaultResponse<API.SemesterSubjectTutors> | void>;
+  getGroupById: (group_id: number) => API.SubjectGroups | undefined | void;
 }
 
 const Context = React.createContext<TeacherSubjectContext>({
   teacherSubjectData: null,
   groupUsers: { loading: false, byId: {} },
-  getTeacherSubjectById: async () => console.warn('default value'),
-  getGroupUsers: async () => console.warn('default value'),
+  fetchTeacherSubjectById: async () => console.warn('default value'),
+  fetchGroupUsers: async () => console.warn('default value'),
   semester_subject_id: null,
   tutors: { loading: false, data: [] },
-  getTutors: async () => console.warn('default value'),
+  fetchTutors: async () => console.warn('default value'),
+  getGroupById: () => console.warn('default value'),
 });
 
 export const useTeacherSubject = () => useContext(Context);
@@ -44,7 +46,7 @@ export const TeacherSubjectContextProvider: React.FC<{
   const [groupUsers, setGroupUsers] = useState<GroupUserData>({ loading: false, byId: {} });
   const [tutors, setTutors] = useState<TutorsData>({ loading: false, data: [] });
 
-  const getTeacherSubjectById = useCallback(async (semesterSubjectId: number) => {
+  const fetchTeacherSubjectById = useCallback(async (semesterSubjectId: number) => {
     const response = await semesterSubject(semesterSubjectId);
 
     if (response.success) {
@@ -54,7 +56,7 @@ export const TeacherSubjectContextProvider: React.FC<{
     }
   }, []);
 
-  const getGroupUsers = useCallback(async (group_id: number) => {
+  const fetchGroupUsers = useCallback(async (group_id: number) => {
     setGroupUsers((prev) => ({ ...prev, loading: true }));
     const response = await studentUserGroup(group_id);
 
@@ -66,7 +68,7 @@ export const TeacherSubjectContextProvider: React.FC<{
     }
   }, []);
 
-  const getTutors = useCallback(async (semesterSubjectId: number) => {
+  const fetchTutors = useCallback(async (semesterSubjectId: number) => {
     setTutors((prev) => ({ ...prev, loading: true }));
     const response = await getSemesterSubjectTutors(semesterSubjectId);
 
@@ -81,21 +83,27 @@ export const TeacherSubjectContextProvider: React.FC<{
     return response;
   }, []);
 
+  const getGroupById = useCallback(
+    (group_id: number) => teacherSubjectData?.groups?.find((group) => group.id === group_id),
+    [teacherSubjectData?.groups],
+  );
+
   useEffect(() => {
-    getTeacherSubjectById(semester_subject_id);
-    getTutors(semester_subject_id);
-  }, [getTeacherSubjectById, getTutors, semester_subject_id]);
+    fetchTeacherSubjectById(semester_subject_id);
+    fetchTutors(semester_subject_id);
+  }, [fetchTeacherSubjectById, fetchTutors, semester_subject_id]);
 
   return (
     <Context.Provider
       value={{
         teacherSubjectData,
-        getTeacherSubjectById,
+        fetchTeacherSubjectById,
         groupUsers,
-        getGroupUsers,
+        fetchGroupUsers,
         semester_subject_id,
         tutors,
-        getTutors,
+        fetchTutors,
+        getGroupById,
       }}
     >
       {children}

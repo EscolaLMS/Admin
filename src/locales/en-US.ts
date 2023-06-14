@@ -254,6 +254,7 @@ export default {
   select_person: 'Select a person',
   select_course: 'Select a course',
   select_groups: 'Select a groups',
+  select_group: 'Select a group',
   select_all: 'Select all',
   deselect_all: 'Deselect all',
   select_templates: 'Select a templates',
@@ -732,4 +733,10 @@ export default {
   'confirmModal.title': 'Confirm changes',
   'confirmModal.content': 'If you want to go to the next tab, save the current changes',
   read_all: 'Read all',
+  new_lessons_cant_be_moved: "New lesson can't be moved",
+  topics_cant_be_nested: "Topics can't be nested",
+  topic_cant_be_in_root: 'Topic must be lesson children',
+  lessons_and_topics_cant_be_mixed: "Lessons and topics can't be arranged alternately",
+  stacking_order: 'Order',
+  stacking_order_tooltip: 'Lesson order in lesson or course context',
 };

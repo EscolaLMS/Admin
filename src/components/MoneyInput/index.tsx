@@ -11,6 +11,7 @@ interface CurrencyInputProps extends Omit<ProFormFieldProps, 'label'> {
   form: FormInstance<any>;
   onChange?: (cents: number | null) => void;
   label?: React.ComponentProps<typeof FormattedMessage>;
+  defaultValue?: number | null;
 }
 
 const centsToDollars = (cents: number | null, toFixedValue?: number): string => {
@@ -19,7 +20,7 @@ const centsToDollars = (cents: number | null, toFixedValue?: number): string => 
 };
 
 export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...restProps }) => {
-  const { label, ...rest } = restProps;
+  const { label, defaultValue = 0, ...rest } = restProps;
 
   const [state, setState] = useState<{
     dollars: string;
@@ -43,7 +44,7 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
     const parsedValue = parseFloat(cleanValue);
 
     const centsValue = Math.round(parsedValue * 100);
-    setState({ cents: centsValue, dollars: inputValue.trim() });
+    setState({ cents: centsValue || defaultValue, dollars: inputValue.trim() });
   };
 
   const formattedDollars = state.cents === null ? '' : centsToDollars(state.cents, 2);
@@ -55,12 +56,13 @@ export const MoneyInput: FC<CurrencyInputProps> = ({ name, form, onChange, ...re
 
     setState({
       dollars: initialValue,
-      cents: +initialValue * 100,
+      cents: +initialValue * 100 || defaultValue,
     });
   }, [form, name]);
 
   useEffect(() => {
     if (form && name) {
+      console.log(name, state);
       form.setFieldsValue({
         [name]: !Number.isNaN(state.cents) ? state.cents : null,
       });
