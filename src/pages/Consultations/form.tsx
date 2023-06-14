@@ -213,7 +213,7 @@ const ConsultationForm = () => {
                 width="sm"
                 name="duration"
                 label={<FormattedMessage id="duration" />}
-                tooltip={<FormattedMessage id="duration" />}
+                tooltip={<FormattedMessage id="consultations.duration_tooltip" />}
                 placeholder={intl.formatMessage({
                   id: 'duration',
                   defaultMessage: 'duration',
