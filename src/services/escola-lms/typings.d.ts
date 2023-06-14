@@ -1704,6 +1704,18 @@ declare namespace API {
     exported_at: Date | string;
     exported_by: PCGFileDataDoneBy;
   };
+
+  type PCGFileExportsHistoryParams = PaginationParams & {
+    group_id?: number;
+    created_by?: number;
+    exported_by?: number;
+    class_type?: string;
+  };
+
+  type PCGFileExportsHistoryItem = PCGFileData & {
+    id: number;
+    params: PCGFileExportsHistoryParams;
+  };
 }
 
 declare module 'jsoneditor-react' {

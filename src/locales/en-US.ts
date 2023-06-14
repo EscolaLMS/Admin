@@ -58,6 +58,7 @@ export default {
   attendance: 'Attendance',
   'grades-scale': 'Grades scale',
   'final-grades': 'Final grades',
+  'file-exports-history': 'Data exports history',
   subject: 'Subject',
   subjects: 'Subjects',
   groupName: 'Group name',
@@ -739,4 +740,7 @@ export default {
   stacking_order: 'Order',
   stacking_order_tooltip: 'Lesson order in lesson or course context',
   exportData: 'Export data',
+  created_by: 'Created by',
+  exported_at: 'Exported at',
+  exported_by: 'Exported by',
 };
