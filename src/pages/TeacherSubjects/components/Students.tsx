@@ -56,14 +56,23 @@ const getGroupsOptions = (subjectGroups: API.SubjectGroups[]): DefaultOptionType
 
 const getTableData = (studentUserGroups: API.StudentUserGroup[]): TableDataProps[] =>
   studentUserGroups.reduce<TableDataProps[]>((acc, curr) => {
-    const userTable = curr?.users?.map<TableDataProps>((currentUser) => ({
-      group_id: curr.id,
-      group_name: curr.name,
-      user_id: currentUser.id,
-      first_name: currentUser.first_name,
-      last_name: currentUser.last_name,
-      email: currentUser.email,
-    }));
+    const userTable = curr?.users?.reduce<TableDataProps[]>(
+      (innerAcc, currentUser) =>
+        currentUser.academic_teacher_id !== null
+          ? innerAcc
+          : [
+              ...innerAcc,
+              {
+                group_id: curr.id,
+                group_name: curr.name,
+                user_id: currentUser.id,
+                first_name: currentUser.first_name,
+                last_name: currentUser.last_name,
+                email: currentUser.email,
+              },
+            ],
+      [],
+    );
 
     return [...acc, ...userTable];
   }, []);
