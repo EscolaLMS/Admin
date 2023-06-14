@@ -18,21 +18,30 @@ import {
 import MultipleDatePicker from '@/components/MultipleDatePicker';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
-import UnsavedPrompt from '@/components/UnsavedPrompt';
 import { ModelStatus } from '@/consts/status';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import EditValidateModal from '@/components/EditValidateModal';
 import ConsultationCalendar from './components/Calendar';
-import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
+import ConfirmModal from '@/components/ConfirmModal';
+import './index.css';
+
+enum TabNames {
+  ATTRIBUTES = 'attributes',
+  PRODUCT = 'product',
+  MEDIA = 'media',
+  CATEGORIES = 'categories',
+  BRANDING = 'branding',
+  USER_SUBMISSION = 'user_submission',
+  CALENDAR = 'calendar',
+}
 
 const ConsultationForm = () => {
   const intl = useIntl();
   const params = useParams<{ consultation?: string; tab?: string }>();
   const { consultation, tab = 'attributes' } = params;
   const isNew = consultation === 'new';
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [data, setData] = useState<Partial<API.Consultation>>();
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [form] = ProForm.useForm();
@@ -65,6 +74,12 @@ const ConsultationForm = () => {
 
   const formProps = useMemo(
     () => ({
+      onValuesChange: () => {
+        setManageCourseEdit({
+          ...manageCourseEdit,
+          valuesChanged: true,
+        });
+      },
       onFinish: async (values: Partial<API.Consultation>) => {
         if (manageCourseEdit.disableEdit) {
           setManageCourseEdit({
@@ -86,27 +101,27 @@ const ConsultationForm = () => {
         if (isNew) {
           response = await createConsultation(postData);
           if (response.success) {
-            setUnsavedChanges(false);
             history.push(`/other/consultations/${response.data.id}`);
           }
         } else {
           response = await updateConsultation(Number(consultation), postData);
           if (response.success) {
-            setUnsavedChanges(false);
             validateCourseEdit(response.data);
             history.push(`/other/consultations/${response.data.id}/${tab}`);
           }
         }
         message.success(response.message);
+        setManageCourseEdit({
+          ...manageCourseEdit,
+          showConfirmModal: false,
+          loading: false,
+          valuesChanged: false,
+        });
       },
       initialValues: data,
     }),
     [data, consultation, tab, manageCourseEdit],
   );
-
-  // const onPanelChange = (value: any, mode: any) => {
-  //   console.log(value.format('YYYY-MM-DD'), mode);
-  // };
 
   if (!data) {
     return <Spin />;
@@ -152,10 +167,19 @@ const ConsultationForm = () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/other/consultations/${consultation}/${key}`),
+          onChange: (key) => {
+            if (key !== TabNames.ATTRIBUTES && manageCourseEdit.valuesChanged) {
+              setManageCourseEdit({
+                ...manageCourseEdit,
+                showConfirmModal: true,
+              });
+            } else {
+              history.push(`/other/consultations/${consultation}/${key}`);
+            }
+          },
         }}
       >
-        <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+        <ProCard.TabPane key={TabNames.ATTRIBUTES} tab={<FormattedMessage id="attributes" />}>
           {manageCourseEdit.disableEdit && (
             <Alert
               closable
@@ -186,15 +210,8 @@ const ConsultationForm = () => {
               }
             />
           )}
-          <UnsavedPrompt show={unsavedChanges} />{' '}
           <EditValidateModal visible={manageCourseEdit.showModal} setManage={setManageCourseEdit} />
-          <ProForm
-            {...formProps}
-            form={form}
-            onValuesChange={() => {
-              setUnsavedChanges(true);
-            }}
-          >
+          <ProForm {...formProps} form={form}>
             <ProForm.Group>
               <ProFormText
                 width="md"
@@ -305,7 +322,7 @@ const ConsultationForm = () => {
         </ProCard.TabPane>
         {!isNew && (
           <ProCard.TabPane
-            key="product"
+            key={TabNames.PRODUCT}
             tab={<FormattedMessage id="product" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -324,7 +341,7 @@ const ConsultationForm = () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="media"
+            key={TabNames.MEDIA}
             tab={<FormattedMessage id="media" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -348,7 +365,7 @@ const ConsultationForm = () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="categories"
+            key={TabNames.CATEGORIES}
             tab={<FormattedMessage id="categories" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -369,7 +386,7 @@ const ConsultationForm = () => {
         )}{' '}
         {!isNew && (
           <ProCard.TabPane
-            key="branding"
+            key={TabNames.BRANDING}
             tab={<FormattedMessage id="branding" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -393,7 +410,7 @@ const ConsultationForm = () => {
         )}{' '}
         {!isNew && (
           <ProCard.TabPane
-            key="user_submission"
+            key={TabNames.USER_SUBMISSION}
             tab={<FormattedMessage id="user_submission" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -407,11 +424,32 @@ const ConsultationForm = () => {
           </ProCard.TabPane>
         )}
         {!isNew && (
-          <ProCard.TabPane key="calendar" tab={<FormattedMessage id="consultations.calendar" />}>
+          <ProCard.TabPane
+            key={TabNames.CALENDAR}
+            tab={<FormattedMessage id="consultations.calendar" />}
+          >
             <ConsultationCalendar consultation={Number(consultation)} />
           </ProCard.TabPane>
         )}
       </ProCard>
+      {/* CONFIRM MODAL COMPONENT */}
+      <ConfirmModal
+        open={!!manageCourseEdit.showConfirmModal}
+        onOk={() => {
+          setManageCourseEdit({
+            ...manageCourseEdit,
+            loading: true,
+          });
+          form.submit();
+        }}
+        onCancel={() => {
+          setManageCourseEdit({
+            ...manageCourseEdit,
+            showConfirmModal: false,
+          });
+        }}
+        loading={!!manageCourseEdit.loading}
+      />
     </PageContainer>
   );
 };

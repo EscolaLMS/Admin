@@ -115,6 +115,7 @@ const WebinarForm = () => {
           ...manageCourseEdit,
           showConfirmModal: false,
           loading: false,
+          valuesChanged: false,
         });
       },
       initialValues: data,
