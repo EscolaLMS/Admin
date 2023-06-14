@@ -64,24 +64,27 @@ const consultationStatus = {
 
 export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'consultation_term_id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="user" defaultMessage="user" />,
     dataIndex: 'user',
     render: (_, item) => `${item.user?.first_name} ${item.user?.last_name} ${item.user?.email}`,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="date" defaultMessage="date" />,
     dataIndex: 'date',
+    sorter: true,
     render: (_, item) => moment(item.date).format('yyyy-MM-DD HH:mm'),
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
-
+    sorter: true,
     render: (_, item) => (
       <Badge
         status={consultationStatus[item.status]}
