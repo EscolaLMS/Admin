@@ -55,6 +55,7 @@ export const ChangeDate: React.FC<{
 };
 
 import ProTable from '@ant-design/pro-table';
+import { sortArrayByKey } from '@/utils/utils';
 
 const consultationStatus = {
   reported: 'warning',
@@ -164,10 +165,19 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
           loading={loading}
           rowKey="consultation_term_id"
           search={false}
-          request={async () => {
+          request={async ({}, sort) => {
+            const sortArr = sort && Object.entries(sort)[0];
+            let newArray = appointments;
+            if (sortArr) {
+              newArray = sortArrayByKey<API.ConsultationAppointment>(
+                newArray,
+                sortArr[0],
+                sortArr[1] === 'ascend' ? false : true,
+              );
+            }
             return {
-              data: appointments,
-              total: appointments.length,
+              data: newArray,
+              total: newArray.length,
               success: true,
             };
           }}
