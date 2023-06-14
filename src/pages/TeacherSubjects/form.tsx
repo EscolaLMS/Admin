@@ -14,6 +14,7 @@ import { Attendances } from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
 import { Schedule } from './components/Schedule';
 import { FinalGradesList } from './components/FinalGradesList';
+import { FileExportsHistory } from './components/FileExportsHistory';
 
 const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
   const intl = useIntl();
@@ -117,6 +118,12 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
         )}
         <ProCard.TabPane key="final-grades" tab={<FormattedMessage id="final-grades" />}>
           <FinalGradesList />
+        </ProCard.TabPane>
+        <ProCard.TabPane
+          key="file-exports-history"
+          tab={<FormattedMessage id="file-exports-history" />}
+        >
+          <FileExportsHistory />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>
