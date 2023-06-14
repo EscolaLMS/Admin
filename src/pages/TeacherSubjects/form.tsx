@@ -1,19 +1,20 @@
 import React, { useCallback, useMemo } from 'react';
+import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { Spin, Button } from 'antd';
 import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage, useModel, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 
 import PERMISSIONS from '@/consts/permissions';
 import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 import { TeacherSubjectContextProvider, useTeacherSubject } from './context';
-import Groups from './components/Groups';
+import { Groups } from './components/Groups';
 import { Exams } from './components/Exams';
-import Students from './components/Students';
-import Attendances from './components/Attendances';
+import { Students } from './components/Students';
+import { Attendances } from './components/Attendances';
 import { GradesScale } from './components/GradesScale';
-import Schedule from './components/Schedule';
+import { Schedule } from './components/Schedule';
 import { FinalGradesList } from './components/FinalGradesList';
+import { FileExportsHistory } from './components/FileExportsHistory';
 
 const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
   const intl = useIntl();
@@ -47,9 +48,6 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
       }
       tabBarExtraContent={
         <div style={{ display: 'flex', padding: '12px', gap: '12px' }}>
-          <Button type="primary" onClick={() => console.log('MSTeams')}>
-            <FormattedMessage id="msTeams" defaultMessage="msTeams" />
-          </Button>
           <Link to={`/teacher/subjects/${semester_subject_id}/exams?exam_id=new`}>
             <Button type="primary">
               <FormattedMessage id="uploadGrades" defaultMessage="uploadGrades" />
@@ -120,6 +118,12 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
         )}
         <ProCard.TabPane key="final-grades" tab={<FormattedMessage id="final-grades" />}>
           <FinalGradesList />
+        </ProCard.TabPane>
+        <ProCard.TabPane
+          key="file-exports-history"
+          tab={<FormattedMessage id="file-exports-history" />}
+        >
+          <FileExportsHistory />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

@@ -25,8 +25,17 @@ export default function (initialState: {
     return initialState.packages && initialState.packages[packageName];
   };
 
-  const haveSettingsInDashboard = (settingName: string, expectedValue: string | number | boolean) =>
-    initialState.config.find(({ key }) => key === settingName)?.data === expectedValue;
+  const haveSettingsInDashboard = (
+    settingName: string,
+    expectedValue: string | number | boolean,
+  ): boolean => {
+    const userRoles = currentUser?.roles || [];
+    const settingData = initialState?.config?.find(({ key }) => key === settingName)?.data;
+    if (Array.isArray(userRoles) && Array.isArray(settingData)) {
+      return userRoles.every((role) => settingData.includes(role));
+    }
+    return settingData === expectedValue;
+  };
 
   return {
     dashboardPermission,

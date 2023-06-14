@@ -1,11 +1,13 @@
 import React, { useRef } from 'react';
-import { FormattedMessage, Link, useIntl } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 import { Button, Space, Tooltip } from 'antd';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ExportOutlined } from '@ant-design/icons';
+
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { useTeacherSubject } from '../context';
+import { ExportPCGFileButton } from './ExportPCGFileButton';
 
 export const StudentsTableColumns: ProColumns<API.StudentUserGroup>[] = [
   {
@@ -83,20 +85,26 @@ export const Groups: React.FC = () => {
         },
         {
           hideInSearch: true,
-          title: <FormattedMessage id="msTeams" />,
-          dataIndex: 'teamsLink',
+          title: <FormattedMessage id="options" />,
           valueType: 'option',
-          render: () => [
-            <Link to={'#'} key="teamsLink">
-              <Tooltip title={<FormattedMessage id="msTeams" defaultMessage="teams" />}>
-                <Button type="primary" icon={<ExportOutlined />} />
-              </Tooltip>
-            </Link>,
-          ],
+          render: (_n, record) =>
+            record?.ms_teams_web_url
+              ? [
+                  <a
+                    href={record.ms_teams_web_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    key="teamsLink"
+                  >
+                    <Tooltip title={<FormattedMessage id="msTeams" defaultMessage="teams" />}>
+                      <Button type="primary" icon={<ExportOutlined />} />
+                    </Tooltip>
+                  </a>,
+                  <ExportPCGFileButton key="exportPCGFile" group_id={record.id} />,
+                ]
+              : [<ExportPCGFileButton key="exportPCGFile" group_id={record.id} />],
         },
       ]}
     />
   );
 };
-
-export default Groups;

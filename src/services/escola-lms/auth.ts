@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
+import { getLocale } from 'umi';
 
 /** POST /api/login/account */
 export async function login(body: API.LoginRequest, options?: RequestOptionsInit) {
@@ -7,6 +8,7 @@ export async function login(body: API.LoginRequest, options?: RequestOptionsInit
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-locale': getLocale(),
     },
     data: body,
     ...(options || {}),

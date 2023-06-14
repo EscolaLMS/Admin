@@ -12,6 +12,7 @@ import { cloneCourse, course, exportCourse, removeCourse } from '@/services/esco
 import CategoryTree from '@/components/CategoryTree';
 import Tags from '@/components/Tags';
 import SecureUpload from '@/components/SecureUpload';
+import UserSelect from '@/components/UserSelect';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
 
@@ -69,7 +70,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
         return (
           <Link to={`/courses/list/${record.id}/product`}>
             <Button type="primary" icon={<DollarOutlined />}>
-              <span>{roundTo(record.product.price)}</span>
+              <span>{roundTo(record.product.price, 2, 100)}</span>
             </Button>
           </Link>
         );
@@ -142,6 +143,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
           state={{
             type: stateType,
           }}
+          multiple={true}
         />
       );
     },
@@ -156,6 +158,17 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
         )}
       </React.Fragment>
     ),
+  },
+  {
+    title: <FormattedMessage id="author_tutor" />,
+    dataIndex: 'authors',
+    hideInTable: true,
+    renderFormItem: (_i, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') return null;
+      const stateType = form.getFieldValue('state');
+
+      return <UserSelect multiple {...rest} state={{ type: stateType }} />;
+    },
   },
 ];
 
@@ -339,7 +352,10 @@ const TableList: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
-        request={({ pageSize, current, title, active, category_id, tag, status }, sort) => {
+        request={(
+          { pageSize, current, title, active, category_id, tag, status, authors },
+          sort,
+        ) => {
           setLoading(true);
           return course({
             title: title || undefined,
@@ -347,7 +363,8 @@ const TableList: React.FC = () => {
             per_page: pageSize,
             page: current,
             category_id,
-            tag,
+            'tag[]': tag ? [tag] : undefined,
+            authors,
             active: active && active,
             ...createTableOrderObject(sort, 'created_at'),
           }).then((response) => {

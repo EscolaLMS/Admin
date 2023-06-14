@@ -24,12 +24,10 @@ import { FormattedMessage, useModel } from 'umi';
 import { topicTypeToSettingName } from '@/pages/Settings/global';
 
 export const TopicTypesSelector: React.FC<{
-  sortingMode: 'none' | 'up' | 'down' | 'both';
   onSelected: (type: TopicType) => void;
   onNewLesson: () => void;
-  onSort: (up: boolean) => void;
   positionsToHide?: (TopicType | 'lesson')[];
-}> = ({ onSelected, /*onSort, sortingMode = 'both',*/ onNewLesson, positionsToHide }) => {
+}> = ({ onSelected, onNewLesson, positionsToHide }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const { initialState } = useModel('@@initialState');
@@ -72,29 +70,6 @@ export const TopicTypesSelector: React.FC<{
   return (
     <div className={`topic-types-selector ${open ? 'topic-types-selector--visible' : ''}`}>
       <Space>
-        {/* TODO add sorting */}
-        {/**
-        {(sortingMode === 'both' || sortingMode === 'up') && (
-          <Tooltip placement="top" title={<FormattedMessage id="sort_element_up" />}>
-            <Button
-              type="default"
-              size="small"
-              onClick={() => onSort(true)}
-              icon={<CaretUpOutlined />}
-            />
-          </Tooltip>
-        )}
-        {(sortingMode === 'both' || sortingMode === 'down') && (
-          <Tooltip placement="top" title={<FormattedMessage id="sort_element_down" />}>
-            <Button
-              type="default"
-              size="small"
-              onClick={() => onSort(false)}
-              icon={<CaretDownOutlined />}
-            />
-          </Tooltip>
-        )}
-         */}
         <Tooltip placement="top" title={<FormattedMessage id="add_new_topic" />}>
           <Button
             type="primary"

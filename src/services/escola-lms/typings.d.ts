@@ -240,11 +240,12 @@ declare namespace API {
     PaginationParams & {
       title?: string;
       category_id?: number;
-      author_id?: number;
+      authors?: number | number[];
       tag?: string;
       active?: boolean;
       status?: string;
       group_id?: number;
+      'tag[]'?: string | string[];
     };
 
   type CategoryParams = PageParams &
@@ -262,6 +263,19 @@ declare namespace API {
       date_from?: string;
       date_to?: string;
       'categories[]'?: number;
+    };
+
+  type WebinarsParams = PageParams &
+    PaginationParams & {
+      name?: string;
+      category_id?: number;
+      status?: string | string[];
+      dateRange?: [string, string];
+      date_from?: string;
+      date_to?: string;
+      'categories[]'?: number;
+      'tags[]'?: string | string[];
+      tag?: string;
     };
 
   type H5PListParams = PageParams &
@@ -317,7 +331,7 @@ declare namespace API {
     interests: any;
     path_avatar: string;
     avatar: string;
-    roles: ('admin' | 'tutor' | 'student')[];
+    roles: ('admin' | 'tutor' | 'student' | string)[];
     permissions: string[];
     password?: string;
   };
@@ -815,7 +829,6 @@ declare namespace API {
     is_ended: boolean;
     is_started: boolean;
     status: ConsultationAppointmentStatus;
-    user: API.UserItem;
     date: Date | string;
     user: UserItem;
     busy_terms?: string[];
@@ -826,7 +839,15 @@ declare namespace API {
     assignable_id: number;
   };
 
-  type SettingType = 'text' | 'markdown' | 'json' | 'file' | 'image' | 'boolean' | 'number';
+  type SettingType =
+    | 'text'
+    | 'markdown'
+    | 'json'
+    | 'file'
+    | 'image'
+    | 'boolean'
+    | 'number'
+    | 'array';
   type SettingBase = {
     id: number;
     key: string;
@@ -867,6 +888,10 @@ declare namespace API {
     | (SettingBase & {
         type: 'image';
         data: string;
+      })
+    | (SettingBase & {
+        type: 'array';
+        data: any[];
       });
 
   type Role = {
@@ -1374,6 +1399,8 @@ declare namespace API {
     id: number;
     name: string;
     parent_id: number;
+    ms_teams_web_url: string | null;
+    ms_teams_team_id: string; // uuid
   };
 
   type Subject = {
@@ -1442,7 +1469,6 @@ declare namespace API {
       group_id: number;
       user_id: number;
     };
-    academic_teacher_id: number | null;
   };
 
   type StudentUserGroup = {
@@ -1461,7 +1487,7 @@ declare namespace API {
 
   type StudentAttendance = {
     user_id: number;
-    value: AttendanceValue;
+    value: Enum.AttendanceValue;
   };
 
   type GroupAttendanceSchedule = {
@@ -1483,6 +1509,7 @@ declare namespace API {
     id: number;
     date_from: Date | string;
     date_to: Date | string;
+    ms_teams_join_url: string | null;
     tutor: {
       id: number;
       first_name: string;
@@ -1537,6 +1564,7 @@ declare namespace API {
     results: ExamResult[];
     created_at: Date | string;
     user_id: number;
+    group_id: number;
   };
 
   type CreateExamResult = {
@@ -1549,6 +1577,7 @@ declare namespace API {
     title: string;
     type: string;
     weight: number;
+    group_id: number;
     passed_at: Date | string;
     results: CreateExamResult[];
   };
@@ -1559,6 +1588,7 @@ declare namespace API {
 
   type ParseExamFileRequest = {
     semester_subject_id: number;
+    group_id: number;
     type: Enum.ExamGradeType;
   };
 
@@ -1637,6 +1667,54 @@ declare namespace API {
 
   type UpdateFinalGradeRequest = {
     grade_scale_id: number;
+  };
+
+  type LessonTopicId = number;
+  type Index = number;
+
+  type CoursesSortOrderItem = [LessonTopicId, Index];
+
+  type CoursesSortRequest = {
+    class: 'Lesson' | 'Topic';
+    orders: CoursesSortOrderItem[];
+    course_id: number;
+  };
+
+  type CreateTeamsChatRequest = {
+    user_id: number;
+  };
+
+  type TeamsChat = {
+    web_url: string; //url
+  };
+
+  type PCGFileDataDoneBy = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+
+  type PCGFileData = {
+    url: string;
+    version: string;
+    class_type: 'EscolaLms\\PcgExport\\Exports\\PcgExport';
+    created_at: Date | string;
+    created_by: PCGFileDataDoneBy;
+    exported_at: Date | string;
+    exported_by: PCGFileDataDoneBy;
+  };
+
+  type PCGFileExportsHistoryParams = PaginationParams & {
+    group_id?: number;
+    created_by?: number;
+    exported_by?: number;
+    class_type?: string;
+  };
+
+  type PCGFileExportsHistoryItem = PCGFileData & {
+    id: number;
+    params: PCGFileExportsHistoryParams;
   };
 }
 

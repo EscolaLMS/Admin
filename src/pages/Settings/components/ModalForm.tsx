@@ -198,6 +198,10 @@ export const SettingsModalForm: React.FC<{
               label: 'number',
               value: 'number',
             },
+            {
+              label: 'array',
+              value: 'array',
+            },
           ]}
         />
       </ProForm.Group>
@@ -263,6 +267,28 @@ export const SettingsModalForm: React.FC<{
         )}
 
         {type === 'number' && <ProFormDigit name="data" label={<FormattedMessage id="value" />} />}
+
+        {type === 'array' && (
+          <>
+            <ProFormTextArea
+              width="lg"
+              name="value"
+              label={<FormattedMessage id="value" />}
+              tooltip={`${intl.formatMessage({
+                id: 'example_json',
+              })}: ['tutor', 'student']`}
+            />
+            <ProForm.Item noStyle shouldUpdate>
+              {() => {
+                try {
+                  return <ReactJson src={JSON.parse(form.getFieldValue('value'))} />;
+                } catch {
+                  return <ReactJson src={JSON.parse(`{ "error": "cannot parse this json" }`)} />;
+                }
+              }}
+            </ProForm.Item>
+          </>
+        )}
       </div>
     </ModalForm>
   );

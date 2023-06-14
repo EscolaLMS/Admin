@@ -24,6 +24,7 @@ export type SecureUploadType<T = API.File> = {
   maxFiles?: number;
   clearListAfterUpload?: boolean;
   hideLabel?: boolean;
+  disabled?: boolean;
 };
 
 function SecureUpload<Type = API.File>({
@@ -40,6 +41,7 @@ function SecureUpload<Type = API.File>({
   maxFiles,
   clearListAfterUpload,
   hideLabel,
+  disabled,
 }: PropsWithChildren<SecureUploadType<Type>>) {
   const [infoState, setInfoState] = useState<UploadChangeParam<UploadFile<any>>>();
   const intl = useIntl();
@@ -90,6 +92,7 @@ function SecureUpload<Type = API.File>({
         action={`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`}
         extra={extra}
         fileList={infoState?.fileList}
+        disabled={disabled}
       />
     </ConditionalWrap>
   );

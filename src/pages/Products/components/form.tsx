@@ -269,7 +269,7 @@ const ProductsForm: React.FC<{
       }}
     >
       <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
-        <ProForm {...formProps} form={form}>
+        <ProForm {...formProps} form={form} omitNil={false}>
           <ProForm.Group>
             <ProFormText
               width="md"
@@ -454,6 +454,7 @@ const ProductsForm: React.FC<{
                 defaultMessage: 'price',
               })}
               fieldProps={{ step: 1 }}
+              defaultValue={null}
             />
 
             <MoneyInput
