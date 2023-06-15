@@ -1,4 +1,4 @@
-import { List, Avatar } from 'antd';
+import { List, Avatar, Button } from 'antd';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './NoticeList.less';
@@ -27,12 +27,12 @@ export type NoticeIconTabProps = {
 const NoticeList: React.FC<NoticeIconTabProps> = ({
   list = [],
   onClick,
-  // onClear,
+  onClear,
   // title,
   // onViewMore,
   emptyText,
-  // showClear = true,
-  // clearText,
+  showClear = true,
+  clearText,
   // viewMoreText,
   // showViewMore = false,
   // event,
@@ -108,13 +108,15 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
         }}
       />
       {/* TODO: if you need bottom bar for some action ex: clear all */}
-      {/* <div className={styles.bottomBar}>
+      <div className={styles.bottomBar}>
         {showClear ? (
-          <div onClick={onClear}>
-            {clearText} {title}
+          <div>
+            <Button type="primary" key="primary" onClick={onClear}>
+              {clearText}
+            </Button>
           </div>
         ) : null}
-        {showViewMore ? (
+        {/* {showViewMore ? (
           <div
             onClick={(e) => {
               if (onViewMore) {
@@ -124,8 +126,8 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           >
             {viewMoreText}
           </div>
-        ) : null}
-      </div> */}
+        ) : null} */}
+      </div>
     </div>
   );
 };

@@ -720,6 +720,7 @@ export default {
   rejected: 'Odrzucone',
   'confirmModal.title': 'Potwierdź zmiany',
   'confirmModal.content': 'Jeśli chcesz przejść do kolejnej zakładki zapisz aktualne zmiany',
+  read_all: 'Przeczytaj wszystko',
   new_lessons_cant_be_moved: 'Nie można przenieść nowej lekcji',
   topics_cant_be_nested: 'Nie można zagnieżdżać tematów',
   topic_cant_be_in_root: 'Temat musi być zagnieżdżony w lekcji',

@@ -33,7 +33,16 @@ export async function getEventTypes(options?: RequestOptionsInit) {
 
 /**  POST /api/notifications/:id/read */
 export async function readNotification(id: string, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<API.Notification[]>>(`/api/notifications/${id}/read`, {
+  return request<API.DefaultResponse<API.Notification[]>>(`/api/admin/notifications/${id}/read`, {
+    method: 'POST',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
+/**  POST /api/notifications/read-all */
+export async function readAllNotification(options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.Notification[]>>(`/api/admin/notifications/read-all`, {
     method: 'POST',
     /* useCache: true */ useCache: false,
     ...(options || {}),

@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { useModel } from 'umi';
-import { getNotifications, readNotification } from '@/services/escola-lms/notifications';
+import { useIntl, useModel } from 'umi';
+import {
+  getNotifications,
+  readNotification,
+  readAllNotification,
+} from '@/services/escola-lms/notifications';
 
 import NoticeIcon from './NoticeIcon';
 import styles from './index.less';
@@ -30,6 +34,7 @@ const NoticeIconView = () => {
   const [loading, setLoading] = useState(false);
   const [unreadMsg, setUnreadMsg] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const intl = useIntl();
 
   const fetchNotifications = useCallback(async (page: number) => {
     const request = await getNotifications({ page }, currentUser?.id);
@@ -45,17 +50,29 @@ const NoticeIconView = () => {
 
   const noticeData = getNoticeData(notices);
 
-  const changeReadState = (id: string) => {
-    readNotification(id);
+  const changeNoticeReadAt = useCallback((id: string, date: Date | null) => {
     setNotices(
       notices.map((item) => {
         const notice = { ...item };
         if (notice.id === id) {
-          notice.read_at = new Date();
+          notice.read_at = date;
         }
         return notice;
       }),
     );
+  }, []);
+
+  const changeReadState = async (id: string) => {
+    // Change read_at key to change opacity of element
+    changeNoticeReadAt(id, new Date());
+    const response = await readNotification(id);
+    if (response.success) {
+      // remove notification when success
+      setNotices(notices.filter(({ id: noticeId }) => noticeId !== id));
+    } else {
+      // when read failed then read_at change to null
+      changeNoticeReadAt(id, null);
+    }
   };
 
   const observer = useRef<IntersectionObserver | null>(null);
@@ -80,6 +97,16 @@ const NoticeIconView = () => {
     fetchNotifications(pageNum);
   }, [pageNum]);
 
+  const readAll = useCallback(async () => {
+    setLoading(true);
+    const response = await readAllNotification();
+    if (response.success) {
+      setUnreadMsg(0);
+      setHasMore(false);
+      setNotices([]);
+    }
+  }, []);
+
   return (
     <>
       <NoticeIcon
@@ -88,14 +115,14 @@ const NoticeIconView = () => {
         onItemClick={(item) => {
           changeReadState(item.id!);
         }}
-        // clearText="Clear all"
-        // onClear={() => clearAll()}
+        clearText={intl.formatMessage({ id: 'read_all' })}
+        onClear={readAll}
         loading={loading}
       >
         <NoticeIcon.Tab
           tabKey="notification"
           list={noticeData.notifyList}
-          title={'notifications.list'}
+          title={intl.formatMessage({ id: 'notifications.list' })}
           emptyText="No notices"
           showViewMore
           lastElementRef={lastElementRef}

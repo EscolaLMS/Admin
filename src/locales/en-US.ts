@@ -733,6 +733,7 @@ export default {
   rejected: 'Rejected',
   'confirmModal.title': 'Confirm changes',
   'confirmModal.content': 'If you want to go to the next tab, save the current changes',
+  read_all: 'Read all',
   new_lessons_cant_be_moved: "New lesson can't be moved",
   topics_cant_be_nested: "Topics can't be nested",
   topic_cant_be_in_root: 'Topic must be lesson children',
