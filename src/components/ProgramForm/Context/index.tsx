@@ -73,17 +73,18 @@ const recursiveAddTopicToLessons = (
   }));
 };
 
-const recursiveEditTopic = (
-  lessons: API.Lesson[],
-  topicId: number,
-  updatedTopic: API.Topic,
-): API.Lesson[] => {
-  return lessons.map((lesson) => ({
-    ...lesson,
-    lessons: recursiveEditTopic(lesson.lessons ?? [], topicId, updatedTopic),
-    topics: lesson.topics?.map((topic) => (topic.id === topicId ? updatedTopic : topic)) ?? [],
-  }));
-};
+// Probably should be removed
+// const recursiveEditTopic = (
+//   lessons: API.Lesson[],
+//   topicId: number,
+//   updatedTopic: API.Topic,
+// ): API.Lesson[] => {
+//   return lessons.map((lesson) => ({
+//     ...lesson,
+//     lessons: recursiveEditTopic(lesson.lessons ?? [], topicId, updatedTopic),
+//     topics: lesson.topics?.map((topic) => (topic.id === topicId ? updatedTopic : topic)) ?? [],
+//   }));
+// };
 
 const recursiveAddLessonToLessons = (
   lessons: API.Lesson[],
@@ -136,6 +137,33 @@ const recursiveDeleteTopic = (lessons: API.Lesson[], topicId: number): API.Lesso
     lessons: lesson.lessons ? recursiveDeleteTopic(lesson.lessons, topicId) : [],
     topics: lesson.topics ? lesson.topics.filter((topic) => topic.id !== topicId) : [],
   }));
+};
+
+const recursiveTopicUploaded = (
+  prevTopicId: number,
+  info: UploadChangeParam,
+  lesson_id: number | null | undefined,
+  lessons: API.Lesson[],
+): API.Lesson[] => {
+  return lessons?.map((lesson) => {
+    if (lesson.id === lesson_id) {
+      return {
+        ...lesson,
+        topics: lesson.topics?.map((topic) => {
+          if (topic.id === prevTopicId) {
+            return info.file.response.data;
+          }
+          return topic;
+        }),
+      };
+    } else if (lesson.lessons) {
+      return {
+        ...lesson,
+        lessons: recursiveTopicUploaded(prevTopicId, info, lesson_id, lesson.lessons || []),
+      };
+    }
+    return lesson;
+  });
 };
 
 export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = ({
@@ -515,9 +543,14 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   }, []);
 
   const onTopicUploaded = (prevTopicId: number, info: UploadChangeParam) => {
+    const lesson_id = getLessonIdByTopicId(prevTopicId);
     setState((prevState) => ({
       ...prevState,
-      lessons: recursiveEditTopic(prevState?.lessons ?? [], prevTopicId, info.file.response.data),
+      lessons: prevState
+        ? recursiveTopicUploaded(prevTopicId, info, lesson_id, prevState.lessons || [])
+        : [],
+      // Probably should be removed
+      // lessons: recursiveEditTopic(prevState?.lessons ?? [], prevTopicId, info.file.response.data),
     }));
     // Update topic id in params after receiving from server
     history.push(`/courses/list/${id}/program/?topic=${info.file.response.data.id}`);
