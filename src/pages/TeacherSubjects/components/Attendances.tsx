@@ -43,7 +43,7 @@ export const Attendances: React.FC = () => {
         (acc, { id, first_name, last_name, academic_teacher_id }) => {
           const baseUser: BaseUserProps = {
             id,
-            full_name: `${first_name} ${last_name}`,
+            full_name: `${last_name} ${first_name} `,
             academic_teacher_id,
           };
 
@@ -65,7 +65,8 @@ export const Attendances: React.FC = () => {
 
           const tableItem = { ...baseUser, ...baseSchedule } as AttendanceTableItem;
 
-          return [...acc, tableItem];
+          const students = [...acc, tableItem];
+          return students.sort((a, b) => a.full_name.localeCompare(b.full_name));
         },
         [],
       ),
