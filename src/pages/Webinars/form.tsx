@@ -115,6 +115,7 @@ const WebinarForm = () => {
           ...manageCourseEdit,
           showConfirmModal: false,
           loading: false,
+          valuesChanged: false,
         });
       },
       initialValues: data,
@@ -168,7 +169,7 @@ const WebinarForm = () => {
           type: 'card',
           activeKey: tab,
           onChange: (key) => {
-            if (key === TabNames.PRODUCT && manageCourseEdit.valuesChanged) {
+            if (key !== TabNames.ATTRIBUTES && manageCourseEdit.valuesChanged) {
               setManageCourseEdit({
                 ...manageCourseEdit,
                 showConfirmModal: true,

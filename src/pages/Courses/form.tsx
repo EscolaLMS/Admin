@@ -18,6 +18,8 @@ import {
   getLocale,
   getAllLocales,
 } from 'umi';
+import { isAfter, isBefore } from 'date-fns';
+import { PageContainer } from '@ant-design/pro-layout';
 import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
@@ -25,7 +27,6 @@ import UserSelect from '@/components/UserSelect';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import TagsInput from '@/components/TagsInput';
-import { PageContainer } from '@ant-design/pro-layout';
 import ProgramForm from '@/components/ProgramForm/';
 import ScormSelector from '@/components/Scorm';
 import CourseAccess from './components/CourseAccess';
@@ -39,13 +40,28 @@ import EditValidateModal from '@/components/EditValidateModal';
 import ProductWidget from '@/components/ProductWidget';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
-import { isAfter, isBefore } from 'date-fns';
 import { ProjectsList } from '@/components/ProjectsList';
+import ConfirmModal from '@/components/ConfirmModal';
+
+enum TabNames {
+  ATTRIBUTES = 'attributes',
+  PRODUCT = 'product',
+  MEDIA = 'media',
+  USER_SUBMISSION = 'user_submission',
+  CATEGORIES = 'categories',
+  PROGRAM = 'program',
+  SCORM = 'scorm',
+  ACCESS = 'access',
+  CERTIFICATES = 'certificates',
+  QUESTIONNAIRES = 'questionnaires',
+  STATISTICS = 'statistics',
+  USER_PROJECTS = 'user_projects',
+}
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
   const intl = useIntl();
-  const { course, tab = 'attributes' } = params;
+  const { course, tab = TabNames.ATTRIBUTES } = params;
   const isNew = course === 'new';
   const access = useAccess();
   const [data, setData] = useState<Partial<API.Course>>();
@@ -76,7 +92,7 @@ export default () => {
       }, {}) ?? {};
 
   useEffect(() => {
-    if (tab === 'attributes' && data && isFirstTimeEdit) {
+    if (tab === TabNames.ATTRIBUTES && data && isFirstTimeEdit) {
       validateCourseEdit(data);
       setIsFirstTimeEdit(false);
     }
@@ -110,6 +126,20 @@ export default () => {
 
   const formProps = useMemo(
     () => ({
+      onValuesChange: (values: API.Course) => {
+        setManageCourseEdit({
+          ...manageCourseEdit,
+          valuesChanged: true,
+        });
+        if (values.active_from) {
+          setFromDateValidation(values.active_from);
+        }
+
+        if (values.active_to) {
+          setToDateValidation(values.active_to);
+        }
+        return values.title && setData({ title: values.title });
+      },
       onFinish: async (values: API.Course) => {
         if (manageCourseEdit.disableEdit) {
           setManageCourseEdit({
@@ -149,6 +179,12 @@ export default () => {
           response = await updateCourse(Number(course), postData);
         }
         message.success(intl.formatMessage({ id: response.message }));
+        setManageCourseEdit({
+          ...manageCourseEdit,
+          showConfirmModal: false,
+          loading: false,
+          valuesChanged: false,
+        });
       },
       initialValues: data,
       form,
@@ -206,12 +242,18 @@ export default () => {
               ...initialState,
               collapsed: key === 'program',
             });
-
-            history.push(`/courses/list/${course}/${key}`);
+            if (key !== TabNames.ATTRIBUTES && manageCourseEdit.valuesChanged) {
+              setManageCourseEdit({
+                ...manageCourseEdit,
+                showConfirmModal: true,
+              });
+            } else {
+              history.push(`/courses/list/${course}/${key}`);
+            }
           },
         }}
       >
-        <ProCard.TabPane key="attributes" tab={<FormattedMessage id="attributes" />}>
+        <ProCard.TabPane key={TabNames.ATTRIBUTES} tab={<FormattedMessage id="attributes" />}>
           {manageCourseEdit.disableEdit && (
             <Alert
               closable
@@ -252,19 +294,7 @@ export default () => {
               history.push(`/courses/list/${manageSuccessModal.courseId}/attributes`)
             }
           />
-          <ProForm
-            {...formProps}
-            onValuesChange={(values) => {
-              if (values.active_from) {
-                setFromDateValidation(values.active_from);
-              }
-
-              if (values.active_to) {
-                setToDateValidation(values.active_to);
-              }
-              return values.title && setData({ title: values.title });
-            }}
-          >
+          <ProForm {...formProps}>
             <ProForm.Group label={<FormattedMessage id="description" />}>
               <ProFormText
                 width="xl"
@@ -509,7 +539,7 @@ export default () => {
         </ProCard.TabPane>
         {!isNew && access.salesPermission && (
           <ProCard.TabPane
-            key="product"
+            key={TabNames.PRODUCT}
             tab={<FormattedMessage id="product" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -527,7 +557,7 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="media"
+            key={TabNames.MEDIA}
             tab={<FormattedMessage id="media" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -586,7 +616,7 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="categories"
+            key={TabNames.CATEGORIES}
             tab={<FormattedMessage id="categories_tags" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -617,7 +647,7 @@ export default () => {
         {!isNew && (
           <ProCard.TabPane
             className="program"
-            key="program"
+            key={TabNames.PROGRAM}
             tab={<FormattedMessage id="program" />}
             disabled={manageCourseEdit.disableEdit}
             cardProps={{
@@ -631,7 +661,7 @@ export default () => {
         )}
         {!isNew && access.scormListPermission && (
           <ProCard.TabPane
-            key="scorm"
+            key={TabNames.SCORM}
             tab={<FormattedMessage id="scorm" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -644,7 +674,7 @@ export default () => {
         )}
         {!isNew && (
           <ProCard.TabPane
-            key="access"
+            key={TabNames.ACCESS}
             tab={<FormattedMessage id="access" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -653,7 +683,7 @@ export default () => {
         )}
         {!isNew && access.certificatesPermission && (
           <ProCard.TabPane
-            key="certificates"
+            key={TabNames.CERTIFICATES}
             tab={<FormattedMessage id="certificates" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -663,7 +693,7 @@ export default () => {
 
         {!isNew && access.questionnaireListPermission && (
           <ProCard.TabPane
-            key="questionnaires"
+            key={TabNames.QUESTIONNAIRES}
             tab={<FormattedMessage id="questionnaires" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -673,7 +703,7 @@ export default () => {
 
         {!isNew && !tabsToHide.statistics && (
           <ProCard.TabPane
-            key="statistics"
+            key={TabNames.STATISTICS}
             tab={<FormattedMessage id="statistics" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -682,7 +712,7 @@ export default () => {
         )}
         {!isNew && !tabsToHide.user_submission && (
           <ProCard.TabPane
-            key="user_submission"
+            key={TabNames.USER_SUBMISSION}
             tab={<FormattedMessage id="user_submission" />}
             disabled={manageCourseEdit.disableEdit}
           >
@@ -691,11 +721,32 @@ export default () => {
         )}
 
         {!isNew && !tabsToHide.user_projects && (
-          <ProCard.TabPane key="user_projects" tab={<FormattedMessage id="user_projects" />}>
+          <ProCard.TabPane
+            key={TabNames.USER_PROJECTS}
+            tab={<FormattedMessage id="user_projects" />}
+          >
             <ProjectsList courseId={Number(course)} />
           </ProCard.TabPane>
         )}
       </ProCard>
+      {/* CONFIRM MODAL COMPONENT */}
+      <ConfirmModal
+        open={!!manageCourseEdit.showConfirmModal}
+        onOk={() => {
+          setManageCourseEdit({
+            ...manageCourseEdit,
+            loading: true,
+          });
+          form.submit();
+        }}
+        onCancel={() => {
+          setManageCourseEdit({
+            ...manageCourseEdit,
+            showConfirmModal: false,
+          });
+        }}
+        loading={!!manageCourseEdit.loading}
+      />
     </PageContainer>
   );
 };
