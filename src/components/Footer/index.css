@@ -1,0 +1,14 @@
+.ant-pro-global-footer > div:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.ant-pro-global-footer-footer-logo {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin-inline: auto;
+}
+
+.ant-pro-global-footer-footer-logo-image {
+  width: 100%;
+}

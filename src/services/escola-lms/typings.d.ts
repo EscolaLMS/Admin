@@ -1716,6 +1716,25 @@ declare namespace API {
     id: number;
     params: PCGFileExportsHistoryParams;
   };
+
+  type AppCurrency = {
+    default: string;
+    enum: string[];
+  };
+
+  type PublicSettings = Record<string, string | Record<string, string>> & {
+    currencies?: AppCurrency;
+    consents?: Record<string, string>;
+    faq?: Record<string, string>;
+    homepage?: Record<string, Record<string, string>>;
+    register?: Record<string, string>;
+    env?: string;
+    stripe?: {
+      publishable_key: string;
+    };
+    global?: Record<string, string>;
+    images?: Record<string, string>;
+  };
 }
 
 declare module 'jsoneditor-react' {

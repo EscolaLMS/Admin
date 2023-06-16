@@ -1,6 +1,15 @@
 import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
+/* GET /api/settings */
+export async function publicSettings(options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.PublicSettings>>(`/api/settings`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    ...(options || {}),
+  });
+}
+
 export async function settings(
   params: {
     // query

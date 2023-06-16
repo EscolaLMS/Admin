@@ -10,7 +10,7 @@ import type { ResponseError, RequestOptionsInit } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 import { BookOutlined } from '@ant-design/icons';
 import RestrictedPage from './pages/403';
-import { settings } from './services/escola-lms/settings';
+import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
 import { translations } from './services/escola-lms/translations';
 
 import { refreshTokenCallback } from './services/token_refresh';
@@ -41,6 +41,7 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.UserItem | undefined>;
   collapsed?: boolean;
   config?: API.Setting[];
+  publicConfig?: API.PublicSettings;
   translations?: API.Translation[];
   packages?: Record<string, string>;
 }> {
@@ -64,6 +65,7 @@ export async function getInitialState(): Promise<{
   };
 
   const currentUser = await fetchUserInfo();
+  const publicConfig = await fetchPublicSettings();
 
   if (currentUser) {
     const config = await settings({ per_page: -1 });
@@ -92,6 +94,7 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       config: config.success ? config.data : [],
+      publicConfig: publicConfig.success ? publicConfig.data : {},
       translations: transl.success ? transl.data : [],
       currentUser,
       settings: {},
@@ -99,8 +102,10 @@ export async function getInitialState(): Promise<{
       packages: packs.success ? packs.data : {},
     };
   }
+
   return {
     config: [],
+    publicConfig: publicConfig.success ? publicConfig.data : {},
     translations: [],
     fetchUserInfo,
     settings: {},
@@ -130,7 +135,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   if (configLogo) {
     logo = configLogo.data;
     if (!logo.includes('http')) {
-      logo = `${REACT_APP_API_URL}/storage${logo}`;
+      logo = `${window.REACT_APP_API_URL || REACT_APP_API_URL}/storage${logo}`;
     }
   }
 

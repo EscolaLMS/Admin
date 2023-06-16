@@ -54,8 +54,7 @@ export default defineConfig({
     basePath: '/',
   },
   define: {
-    REACT_APP_API_URL:
-      typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : 'http://localhost:1000', // API address,
+    REACT_APP_API_URL: typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : '', // API address,
     REACT_APP_SENTRYDSN: typeof REACT_APP_SENTRYDSN !== 'undefined' ? REACT_APP_SENTRYDSN : '',
     REACT_APP_YBUG: typeof REACT_APP_YBUG !== 'undefined' ? REACT_APP_YBUG : '',
   },
