@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { FormattedMessage } from 'umi';
 
@@ -14,24 +14,30 @@ const columns: ProColumns<API.ExamResult>[] = [
   { title: <FormattedMessage id="examResult" />, dataIndex: 'result', hideInSearch: true },
 ];
 
-export const ExamResults: React.FC<Props> = ({ exam_id }) => (
-  <ProTable<API.ExamResult>
-    rowKey="user_id"
-    search={false}
-    headerTitle={<FormattedMessage id="examResults" />}
-    request={async () => {
-      const response = await getExam(exam_id);
+export const ExamResults: React.FC<Props> = ({ exam_id }) => {
+  const [title, setTitle] = useState('');
 
-      if (response.success) {
-        return {
-          total: response.data.results.length,
-          success: true,
-          data: response.data.results,
-        };
-      }
+  return (
+    <ProTable<API.ExamResult>
+      rowKey="user_id"
+      search={false}
+      headerTitle={title}
+      request={async () => {
+        const response = await getExam(exam_id);
 
-      return [];
-    }}
-    columns={columns}
-  />
-);
+        if (response.success) {
+          setTitle(response.data.title);
+
+          return {
+            total: response.data.results.length,
+            success: true,
+            data: response.data.results,
+          };
+        }
+
+        return [];
+      }}
+      columns={columns}
+    />
+  );
+};
