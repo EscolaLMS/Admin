@@ -250,6 +250,29 @@ const initialData: InitialDataRecords = {
     data: 'https://www.wellms.io/',
   },
 
+  logoLogin: {
+    id: -8,
+    key: 'logoLogin',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'image',
+    data: 'EscolaLMS',
+  },
+  logoFooter: {
+    id: -9,
+    key: 'logoFooter',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'image',
+    data: 'EscolaLMS',
+  },
+
   ...booleanSettings,
 };
 
