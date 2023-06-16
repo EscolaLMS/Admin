@@ -55,6 +55,7 @@ export const ChangeDate: React.FC<{
 };
 
 import ProTable from '@ant-design/pro-table';
+import { sortArrayByKey } from '@/utils/utils';
 
 const consultationStatus = {
   reported: 'warning',
@@ -64,24 +65,27 @@ const consultationStatus = {
 
 export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
   {
-    title: <FormattedMessage id="id" defaultMessage="id" />,
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'consultation_term_id',
     hideInSearch: true,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="user" defaultMessage="user" />,
     dataIndex: 'user',
     render: (_, item) => `${item.user?.first_name} ${item.user?.last_name} ${item.user?.email}`,
+    sorter: true,
   },
   {
     title: <FormattedMessage id="date" defaultMessage="date" />,
     dataIndex: 'date',
+    sorter: true,
     render: (_, item) => moment(item.date).format('yyyy-MM-DD HH:mm'),
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
     dataIndex: 'status',
-
+    sorter: true,
     render: (_, item) => (
       <Badge
         status={consultationStatus[item.status]}
@@ -161,10 +165,19 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
           loading={loading}
           rowKey="consultation_term_id"
           search={false}
-          request={async () => {
+          request={async ({}, sort) => {
+            const sortArr = sort && Object.entries(sort)[0];
+            let newArray = appointments;
+            if (sortArr) {
+              newArray = sortArrayByKey<API.ConsultationAppointment>(
+                newArray,
+                sortArr[0],
+                sortArr[1] === 'ascend' ? false : true,
+              );
+            }
             return {
-              data: appointments,
-              total: appointments.length,
+              data: newArray,
+              total: newArray.length,
               success: true,
             };
           }}
