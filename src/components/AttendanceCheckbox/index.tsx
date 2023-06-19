@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
-import { Spin, Checkbox } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Checkbox } from 'antd';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { AttendanceValue } from '@/services/escola-lms/enums';
 import { changeStudentAttendance } from '@/services/escola-lms/attendances';
 
 interface AttendanceCheckboxProps {
   groupAttendanceScheduleId: number;
   studentId: number;
-  checked: boolean;
+  defaultChecked: boolean;
   onSuccess?: () => void;
 }
 
 const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
   groupAttendanceScheduleId,
   studentId,
-  checked,
+  defaultChecked,
   onSuccess,
 }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleChangeAttendance = () => {
+  const handleChangeAttendance = useCallback((e: CheckboxChangeEvent) => {
     setLoading(true);
     changeStudentAttendance(
       groupAttendanceScheduleId,
       studentId,
-      checked ? AttendanceValue.ABSENT : AttendanceValue.PRESENT,
+      e.target.checked ? AttendanceValue.PRESENT : AttendanceValue.ABSENT,
     )
       .then((res) => {
         if (res.success) {
@@ -31,12 +32,14 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
         }
       })
       .finally(() => setLoading(false));
-  };
+  }, []);
 
-  return loading ? (
-    <Spin size="small" />
-  ) : (
-    <Checkbox checked={checked} onChange={handleChangeAttendance} />
+  return (
+    <Checkbox
+      disabled={loading}
+      defaultChecked={defaultChecked}
+      onChange={handleChangeAttendance}
+    />
   );
 };
 

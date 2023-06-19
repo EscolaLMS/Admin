@@ -21,7 +21,7 @@ interface AttendanceTableFilters {
 
 export const Attendances: React.FC = () => {
   const { teacherSubjectData } = useTeacherSubject();
-  const [attendanceCols, setAttendanceCols] = useState<ProColumns<AttendanceTableItem>[]>([]);
+  const [dynamicCols, setDynamicCols] = useState<ProColumns<AttendanceTableItem>[]>([]);
   const [selectedGroupName, setSelectedGroupName] = useState('');
   const intl = useIntl();
 
@@ -50,9 +50,9 @@ export const Attendances: React.FC = () => {
         dataIndex: 'full_name',
         fixed: 'left',
       },
-      ...attendanceCols,
+      ...dynamicCols,
     ],
-    [groupOptions, attendanceCols],
+    [groupOptions, dynamicCols],
   );
 
   return (
@@ -81,12 +81,12 @@ export const Attendances: React.FC = () => {
               defaultMessage="No attendance schedule for this group..."
             />,
           );
-          setAttendanceCols([]);
+          setDynamicCols([]);
 
           return { data: [], total: 0, success: true };
         }
 
-        setAttendanceCols(
+        setDynamicCols(
           groupAttendanceScheduleRes.data.reduce<ProColumns<AttendanceTableItem>[]>(
             (acc, curr) => [
               ...acc,
@@ -99,8 +99,7 @@ export const Attendances: React.FC = () => {
                 render: (_, record) => (
                   <AttendanceCheckbox
                     groupAttendanceScheduleId={curr.id}
-                    onSuccess={actionRef.current?.reload}
-                    checked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
+                    defaultChecked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
                     studentId={record.id}
                   />
                 ),
@@ -145,6 +144,7 @@ export const Attendances: React.FC = () => {
       }}
       columns={columns}
       search={{ layout: 'vertical' }}
+      pagination={{ onChange: () => actionRef.current?.reload() }}
       scroll={{ x: 1500 }}
       actionRef={actionRef}
       rowKey="id"
