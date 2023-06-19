@@ -81,8 +81,9 @@ export const Attendances: React.FC = () => {
               defaultMessage="No attendance schedule for this group..."
             />,
           );
+          setAttendanceCols([]);
 
-          return { data: [], total: 0, success: false };
+          return { data: [], total: 0, success: true };
         }
 
         setAttendanceCols(
