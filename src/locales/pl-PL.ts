@@ -732,4 +732,6 @@ export default {
   created_by: 'Utworzono przez',
   exported_at: 'Eksportowano',
   exported_by: 'Eksportowano przez',
+  examTitleWithWeight: '{title} (waga: {weight}%)',
+  classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
 };

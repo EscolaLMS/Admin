@@ -745,4 +745,6 @@ export default {
   created_by: 'Created by',
   exported_at: 'Exported at',
   exported_by: 'Exported by',
+  examTitleWithWeight: '{title} (weight: {weight}%)',
+  classRegisterTitleWithGroupName: 'Class register of group {groupName}',
 };

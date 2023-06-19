@@ -8,17 +8,20 @@ import { DAY_FORMAT } from '@/consts/dates';
 import { AttendanceValue } from '@/services/escola-lms/enums';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
+import { getExams as fetchExams } from '@/services/escola-lms/exams';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
 
 type ClassRegisterTableItem = { id: number; full_name: string } & Record<
   string,
   API.AttendanceValue
->;
+> &
+  Record<`exam-${string}`, API.ExamResult>;
 
 export const ClassRegister: React.FC = () => {
   const { teacherSubjectData } = useTeacherSubject();
-  const [attendanceCols, setAttendanceCols] = useState<ProColumns[]>([]);
+  const [dynamicCols, setDynamicCols] = useState<ProColumns<ClassRegisterTableItem>[]>([]);
+  const [selectedGroupName, setSelectedGroupName] = useState(teacherSubjectData?.groups?.[0]?.name);
 
   const groupOptions = useMemo(
     () => (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({ value: id, label: name })),
@@ -45,45 +48,72 @@ export const ClassRegister: React.FC = () => {
         dataIndex: 'full_name',
         fixed: 'left',
       },
-      ...attendanceCols,
+      ...dynamicCols,
     ],
-    [groupOptions, attendanceCols],
+    [groupOptions, dynamicCols],
   );
 
   return (
     <ProTable<ClassRegisterTableItem>
       className="table-standalone"
-      request={async ({ group_id = teacherSubjectData?.groups?.[0]?.id, full_name = '' }) => {
-        const [studentUserGroupRes, groupAttendanceScheduleRes] = await Promise.all([
+      request={async ({ group_id = groupOptions[0]?.value, full_name = '' }) => {
+        const [studentUserGroupRes, groupAttendanceScheduleRes, examsRes] = await Promise.all([
           fetchStudentUserGroup(group_id),
           fetchGroupAttendanceSchedule(group_id),
+          fetchExams({ group_id, per_page: -1 }),
         ]);
-        if (!studentUserGroupRes.success || !groupAttendanceScheduleRes.success)
+        const selectedGroup = groupOptions.find(({ value }) => value === group_id);
+
+        if (
+          !studentUserGroupRes.success ||
+          !groupAttendanceScheduleRes.success ||
+          !examsRes.success ||
+          !selectedGroup
+        )
           return { data: [], total: 0, success: false };
 
-        setAttendanceCols(
-          groupAttendanceScheduleRes.data.reduce<ProColumns<ClassRegisterTableItem>[]>(
-            (acc, curr) => [
-              ...acc,
-              {
-                title: String(format(new Date(curr.date_from), DAY_FORMAT)),
-                dataIndex: String(curr.date_from),
-                hideInSearch: true,
-                width: 100,
-                align: 'center',
-                render: (_, record) => (
-                  <AttendanceCheckbox
-                    groupAttendanceScheduleId={curr.id}
-                    onSuccess={actionRef.current?.reload}
-                    checked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
-                    studentId={record.id}
-                  />
-                ),
-              },
-            ],
-            [],
-          ),
+        const attendanceCols = groupAttendanceScheduleRes.data.reduce<
+          ProColumns<ClassRegisterTableItem>[]
+        >(
+          (acc, curr) => [
+            ...acc,
+            {
+              title: String(format(new Date(curr.date_from), DAY_FORMAT)),
+              dataIndex: String(curr.date_from),
+              hideInSearch: true,
+              width: 100,
+              align: 'center',
+              render: (_, record) => (
+                <AttendanceCheckbox
+                  groupAttendanceScheduleId={curr.id}
+                  defaultChecked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
+                  studentId={record.id}
+                />
+              ),
+            },
+          ],
+          [],
         );
+
+        const examsCols = examsRes.data.reduce<ProColumns<ClassRegisterTableItem>[]>(
+          (acc, exam) => [
+            ...acc,
+            {
+              dataIndex: `exam-${exam.id}`,
+              title: <FormattedMessage id="examTitleWithWeight" values={exam} />,
+              hideInSearch: true,
+              width: 100,
+              render: (_n, record) =>
+                record?.[`exam-${exam.id}`]?.result !== undefined
+                  ? `${record?.[`exam-${exam.id}`]?.result}%`
+                  : '-',
+            },
+          ],
+          [],
+        );
+
+        setSelectedGroupName(selectedGroup.label);
+        setDynamicCols([...attendanceCols, ...examsCols]);
 
         const data = studentUserGroupRes.data.users
           .reduce<ClassRegisterTableItem[]>(
@@ -110,7 +140,20 @@ export const ClassRegister: React.FC = () => {
                 };
               }, {});
 
-              return [...acc, { id, full_name: studentFullName, ...studentAttendances }];
+              const studentExams = examsRes.data.reduce<Record<`exam-${string}`, API.ExamResult>>(
+                (innerAcc, exam) => {
+                  const studentResult = exam.results.find((result) => result.user_id === id);
+                  if (!studentResult) return innerAcc;
+
+                  return { ...innerAcc, [`exam-${exam.id}`]: studentResult };
+                },
+                {},
+              );
+
+              return [
+                ...acc,
+                { id, full_name: studentFullName, ...studentAttendances, ...studentExams },
+              ];
             },
             [],
           )
@@ -120,9 +163,16 @@ export const ClassRegister: React.FC = () => {
         return { data, total: data.length, success: true };
       }}
       columns={columns}
+      headerTitle={
+        <FormattedMessage
+          id="classRegisterTitleWithGroupName"
+          values={{ groupName: selectedGroupName }}
+        />
+      }
       search={{ layout: 'vertical' }}
       scroll={{ x: 1500 }}
       actionRef={actionRef}
+      pagination={{ onChange: () => actionRef.current?.reload() }}
       rowKey="id"
     />
   );
