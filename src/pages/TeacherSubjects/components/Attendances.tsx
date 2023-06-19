@@ -1,183 +1,151 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { message } from 'antd';
+import React, { useMemo, useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { FormattedMessage, useIntl } from 'umi';
-import { Divider, Select } from 'antd';
-import ProForm from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
-import type { ProColumns } from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
-import type { AttendanceValue } from '@/services/escola-lms/enums';
+import { AttendanceValue } from '@/services/escola-lms/enums';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
 
-export type AttendanceTableItem = BaseUserProps & Record<string, AttendanceValue | null>;
+type AttendanceTableItem = { id: number; full_name: string } & Record<string, API.AttendanceValue>;
 
-interface BaseUserProps {
-  id: number;
-  full_name: string;
-  academic_teacher_id: number | null;
-}
-
-interface Filters {
-  full_name: string;
+interface AttendanceTableFilters {
+  full_name?: string;
+  group_id?: number;
 }
 
 export const Attendances: React.FC = () => {
   const { teacherSubjectData } = useTeacherSubject();
+  const [attendanceCols, setAttendanceCols] = useState<ProColumns<AttendanceTableItem>[]>([]);
+  const [selectedGroupName, setSelectedGroupName] = useState('');
   const intl = useIntl();
-  const [loading, setLoading] = useState(false);
-  const [attendanceSchedule, setAttendanceSchedule] = useState<API.GroupAttendanceSchedule[]>();
-  const [studentsGroup, setStudentsGroup] = useState<API.StudentUserGroup>();
 
-  const [filters, setFilters] = useState<Filters>({ full_name: '' });
-  const [selectedGroup, setSelectedGroup] = useState<number | null>(
-    teacherSubjectData?.groups?.[0]?.id ?? null,
-  );
-
-  const dataSource = useMemo(
-    () =>
-      (studentsGroup?.users ?? []).reduce<AttendanceTableItem[]>(
-        (acc, { id, first_name, last_name, academic_teacher_id }) => {
-          const baseUser: BaseUserProps = {
-            id,
-            full_name: `${last_name} ${first_name} `,
-            academic_teacher_id,
-          };
-
-          // filters implementation & filter out tutors
-          if (
-            !baseUser.full_name.toLowerCase().includes(filters.full_name.toLowerCase()) ||
-            academic_teacher_id !== null
-          ) {
-            return acc;
-          }
-
-          const baseSchedule = (attendanceSchedule ?? []).reduce<
-            Record<string, AttendanceValue | null>
-          >((accumulator, schedule) => {
-            const attendance = schedule.attendances.find((item) => item.user_id === id);
-
-            return { ...accumulator, [String(schedule.date_from)]: attendance?.value };
-          }, {});
-
-          const tableItem = { ...baseUser, ...baseSchedule } as AttendanceTableItem;
-
-          const students = [...acc, tableItem];
-          return students.sort((a, b) => a.full_name.localeCompare(b.full_name));
-        },
-        [],
-      ),
-    [studentsGroup, attendanceSchedule, filters?.full_name],
-  );
-
-  const columns: ProColumns<AttendanceTableItem>[] = useMemo(() => {
-    const dynamicCols = (attendanceSchedule ?? []).reduce<ProColumns<AttendanceTableItem>[]>(
-      (acc, curr) => [
-        ...acc,
-        {
-          title: String(format(new Date(curr.date_from), DAY_FORMAT)),
-          dataIndex: String(curr.date_from),
-          hideInSearch: true,
-          width: 100,
-          align: 'center',
-          render: (_, record) => (
-            <AttendanceCheckbox
-              currentData={curr}
-              recordData={record}
-              onSuccess={(data) => setAttendanceSchedule(data)}
-              groupId={selectedGroup}
-            />
-          ),
-        },
-      ],
-      [],
-    );
-
-    setLoading(false);
-
-    return [
-      {
-        title: <FormattedMessage id="nameAndSurname" defaultMessage="Name and surname" />,
-        dataIndex: 'full_name',
-        fixed: 'left',
-      },
-      ...dynamicCols,
-    ];
-  }, [attendanceSchedule]);
-
-  const getGroupName = useCallback(
-    (id: number | null): string => {
-      if (id === null) return '';
-      const foundGroup = teacherSubjectData?.groups?.find((group) => group.id === id);
-
-      return foundGroup?.name ?? '';
-    },
-    [teacherSubjectData?.groups],
-  );
-
-  const resetFilters = useCallback(() => setFilters({ full_name: '' }), []);
-  const applyFilters = useCallback(
-    ({ full_name = '' }: Partial<Filters>) => setFilters({ full_name }),
-    [],
-  );
+  const actionRef = useRef<ActionType>();
 
   const groupOptions = useMemo(
     () => (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({ value: id, label: name })),
     [teacherSubjectData?.groups],
   );
 
-  const handleSelectGroup = useCallback((value: number) => {
-    resetFilters();
-    setLoading(true);
-    setSelectedGroup(value);
-  }, []);
-
-  useEffect(() => {
-    if (selectedGroup === null) return;
-
-    fetchGroupAttendanceSchedule(selectedGroup).then((response) => {
-      if (response.success) {
-        setAttendanceSchedule(response.data);
-      }
-    });
-    fetchStudentUserGroup(selectedGroup).then((response) => {
-      if (response.success) {
-        setStudentsGroup(response.data);
-      }
-    });
-  }, [selectedGroup]);
+  const columns: ProColumns<AttendanceTableItem>[] = useMemo(
+    () => [
+      {
+        title: <FormattedMessage id="group" />,
+        dataIndex: 'group_id',
+        hideInTable: true,
+        valueType: 'select',
+        fieldProps: {
+          options: groupOptions,
+          defaultValue: groupOptions?.[0]?.value,
+          allowClear: false,
+        },
+      },
+      {
+        title: <FormattedMessage id="nameAndSurname" defaultMessage="Name and surname" />,
+        dataIndex: 'full_name',
+        fixed: 'left',
+      },
+      ...attendanceCols,
+    ],
+    [groupOptions, attendanceCols],
+  );
 
   return (
-    <>
-      <ProForm.Item label={<FormattedMessage id="group" />}>
-        <Select onChange={handleSelectGroup} value={selectedGroup} options={groupOptions} />
-      </ProForm.Item>
-      <Divider />
-      {columns.length === 1 ? (
-        <FormattedMessage
-          id="noAttendanceSchedule"
-          defaultMessage="No attendance schedule for this group..."
-        />
-      ) : (
-        <ProTable<AttendanceTableItem, Filters>
-          className="attendances-table"
-          headerTitle={`${intl.formatMessage({
-            id: 'attendances',
-            defaultMessage: 'Attendances',
-          })} (${getGroupName(selectedGroup)})`}
-          rowKey="id"
-          onSubmit={applyFilters}
-          onReset={resetFilters}
-          search={{ layout: 'vertical' }}
-          loading={loading}
-          dataSource={dataSource}
-          scroll={{ x: 1500 }}
-          columns={columns}
-        />
-      )}
-    </>
+    <ProTable<AttendanceTableItem, AttendanceTableFilters>
+      headerTitle={`${intl.formatMessage({
+        id: 'attendances',
+        defaultMessage: 'Attendances',
+      })} (${selectedGroupName})`}
+      request={async ({ group_id = groupOptions?.[0]?.value, full_name = '' }) => {
+        const [studentUserGroupRes, groupAttendanceScheduleRes] = await Promise.all([
+          fetchStudentUserGroup(group_id),
+          fetchGroupAttendanceSchedule(group_id),
+        ]);
+        const selectedGroup = groupOptions.find(({ value }) => value === group_id);
+
+        if (!studentUserGroupRes.success || !groupAttendanceScheduleRes.success || !selectedGroup)
+          return { data: [], total: 0, success: false };
+
+        setSelectedGroupName(selectedGroup.label);
+
+        if (!groupAttendanceScheduleRes.data.length) {
+          message.warn(
+            <FormattedMessage
+              id="noAttendanceSchedule"
+              defaultMessage="No attendance schedule for this group..."
+            />,
+          );
+
+          return { data: [], total: 0, success: false };
+        }
+
+        setAttendanceCols(
+          groupAttendanceScheduleRes.data.reduce<ProColumns<AttendanceTableItem>[]>(
+            (acc, curr) => [
+              ...acc,
+              {
+                title: String(format(new Date(curr.date_from), DAY_FORMAT)),
+                dataIndex: String(curr.date_from),
+                hideInSearch: true,
+                width: 100,
+                align: 'center',
+                render: (_, record) => (
+                  <AttendanceCheckbox
+                    groupAttendanceScheduleId={curr.id}
+                    onSuccess={actionRef.current?.reload}
+                    checked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
+                    studentId={record.id}
+                  />
+                ),
+              },
+            ],
+            [],
+          ),
+        );
+
+        const data = studentUserGroupRes.data.users
+          .reduce<AttendanceTableItem[]>(
+            (acc, { id, academic_teacher_id, first_name, last_name }) => {
+              const studentFullName = `${last_name} ${first_name}`;
+              // filter out tutor & first name and second name filter
+              if (
+                academic_teacher_id !== null ||
+                !studentFullName.toLowerCase().includes(full_name.toLowerCase())
+              )
+                return acc;
+
+              const studentAttendances = groupAttendanceScheduleRes.data.reduce<
+                Record<string, API.AttendanceValue>
+              >((innerAcc, groupAttendanceSchedule) => {
+                const studentAttendance = groupAttendanceSchedule.attendances.find(
+                  (attendance) => attendance.user_id === id,
+                );
+                if (!studentAttendance) return innerAcc;
+
+                return {
+                  ...innerAcc,
+                  [`${groupAttendanceSchedule.date_from}`]: studentAttendance.value,
+                };
+              }, {});
+
+              return [...acc, { id, full_name: studentFullName, ...studentAttendances }];
+            },
+            [],
+          )
+          .sort((a, b) => a.full_name.localeCompare(b.full_name));
+
+        return { data, total: data.length, success: true };
+      }}
+      columns={columns}
+      search={{ layout: 'vertical' }}
+      scroll={{ x: 1500 }}
+      actionRef={actionRef}
+      rowKey="id"
+    />
   );
 };

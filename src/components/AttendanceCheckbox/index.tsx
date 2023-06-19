@@ -1,52 +1,42 @@
-import { changeStudentAttendance } from '@/services/escola-lms/attendances';
-import { AttendanceValue } from '@/services/escola-lms/enums';
+import React, { useState } from 'react';
 import { Spin, Checkbox } from 'antd';
-import { useState } from 'react';
-import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
-import type { AttendanceTableItem } from '@/pages/TeacherSubjects/components/Attendances';
+import { AttendanceValue } from '@/services/escola-lms/enums';
+import { changeStudentAttendance } from '@/services/escola-lms/attendances';
 
 interface AttendanceCheckboxProps {
-  currentData: API.GroupAttendanceSchedule;
-  recordData: AttendanceTableItem;
-  groupId: number | null;
-  onSuccess: (data: API.GroupAttendanceSchedule[]) => void;
+  groupAttendanceScheduleId: number;
+  studentId: number;
+  checked: boolean;
+  onSuccess?: () => void;
 }
 
 const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
-  currentData,
-  recordData,
-  groupId,
+  groupAttendanceScheduleId,
+  studentId,
+  checked,
   onSuccess,
 }) => {
-  const [loadingUserAttendance, setLoadingUserAttendance] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChangeAttendance = () => {
-    setLoadingUserAttendance(true);
+    setLoading(true);
     changeStudentAttendance(
-      currentData.id,
-      recordData.id,
-      recordData?.[String(currentData.date_from)] === AttendanceValue.PRESENT
-        ? AttendanceValue.ABSENT
-        : AttendanceValue.PRESENT,
-    ).then((res) => {
-      if (res.success) {
-        fetchGroupAttendanceSchedule(Number(groupId)).then((response) => {
-          if (response.success) {
-            onSuccess(response.data);
-            setLoadingUserAttendance(false);
-          }
-        });
-      }
-    });
+      groupAttendanceScheduleId,
+      studentId,
+      checked ? AttendanceValue.ABSENT : AttendanceValue.PRESENT,
+    )
+      .then((res) => {
+        if (res.success) {
+          onSuccess?.();
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
-  return loadingUserAttendance ? (
+  return loading ? (
     <Spin size="small" />
   ) : (
-    <Checkbox
-      checked={recordData?.[String(currentData.date_from)] === AttendanceValue.PRESENT}
-      onChange={() => handleChangeAttendance()}
-    />
+    <Checkbox checked={checked} onChange={handleChangeAttendance} />
   );
 };
 
