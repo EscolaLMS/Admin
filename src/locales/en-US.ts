@@ -59,6 +59,7 @@ export default {
   'grades-scale': 'Grades scale',
   'final-grades': 'Final grades',
   'file-exports-history': 'Data exports history',
+  'class-register': 'Class register',
   subject: 'Subject',
   subjects: 'Subjects',
   groupName: 'Group name',
