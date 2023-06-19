@@ -57,6 +57,7 @@ export const Attendances: React.FC = () => {
 
   return (
     <ProTable<AttendanceTableItem, AttendanceTableFilters>
+      className="table-standalone"
       headerTitle={`${intl.formatMessage({
         id: 'attendances',
         defaultMessage: 'Attendances',

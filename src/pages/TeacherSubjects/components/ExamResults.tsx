@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { FormattedMessage } from 'umi';
 
 import { getExam } from '@/services/escola-lms/exams';
@@ -19,6 +20,7 @@ export const ExamResults: React.FC<Props> = ({ exam_id }) => {
 
   return (
     <ProTable<API.ExamResult>
+      className="table-standalone"
       rowKey="user_id"
       search={false}
       headerTitle={title}

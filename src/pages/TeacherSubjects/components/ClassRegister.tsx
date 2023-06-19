@@ -52,6 +52,7 @@ export const ClassRegister: React.FC = () => {
 
   return (
     <ProTable<ClassRegisterTableItem>
+      className="table-standalone"
       request={async ({ group_id = teacherSubjectData?.groups?.[0]?.id, full_name = '' }) => {
         const [studentUserGroupRes, groupAttendanceScheduleRes] = await Promise.all([
           fetchStudentUserGroup(group_id),

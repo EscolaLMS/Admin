@@ -74,6 +74,7 @@ export const FinalGradesList: React.FC = () => {
 
   return (
     <ProTable<API.FinalGradeItem, TableParams>
+      className="table-standalone"
       rowKey="id"
       search={{ layout: 'vertical' }}
       request={async ({ group_id: group_ids = [], first_name = '', last_name = '' }) => {

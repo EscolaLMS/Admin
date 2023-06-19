@@ -62,6 +62,7 @@ export const Groups: React.FC = () => {
 
   return (
     <ProTable
+      className="table-standalone"
       headerTitle={intl.formatMessage({
         id: 'groups',
         defaultMessage: 'groups',
