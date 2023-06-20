@@ -1,30 +1,26 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { format } from 'date-fns';
 import { FormattedMessage } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
-import { DAY_FORMAT } from '@/consts/dates';
-import { AttendanceValue } from '@/services/escola-lms/enums';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
 import { getSubjectTutorGrades as fetchSubjectTutorGrades } from '@/services/escola-lms/grades';
 import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
-import AttendanceCheckbox from '@/components/AttendanceCheckbox';
-import { useTeacherSubject } from '../context';
-import { ExamGradeInput } from './ExamGradeInput';
+import { useTeacherSubject } from '../../context';
 import {
   getProposedGrade,
   getScalesBySubjectScaleFormId,
   getStudentExamsFromExams,
-} from './FinalGradesDetails/utils';
-
-type ClassRegisterTableItem = { id: number; full_name: string; proposed_grade: string } & Record<
-  string,
-  API.AttendanceValue
-> &
-  Record<`exam-${string}`, API.ExamResult>;
+} from '../FinalGradesDetails/utils';
+import {
+  getAttendanceCols,
+  getExamsCols,
+  getStudentAttendances,
+  getStudentExamResults,
+} from './utils';
+import type { ClassRegisterTableItem } from './types';
 
 export const ClassRegister: React.FC = () => {
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
@@ -74,7 +70,7 @@ export const ClassRegister: React.FC = () => {
             fetchStudentUserGroup(group_id),
             fetchGroupAttendanceSchedule(group_id),
             fetchExams({ group_id, per_page: -1 }),
-            fetchSubjectTutorGrades(semester_subject_id, finalGradesRes.data?.[0].tutor_id),
+            fetchSubjectTutorGrades(semester_subject_id, finalGradesRes.data?.[0]?.tutor_id),
           ]);
 
         const selectedGroup = groupOptions.find(({ value }) => value === group_id);
@@ -88,68 +84,23 @@ export const ClassRegister: React.FC = () => {
         )
           return { data: [], total: 0, success: false };
 
-        const attendanceCols = groupAttendanceScheduleRes.data.reduce<
-          ProColumns<ClassRegisterTableItem>[]
-        >(
-          (acc, curr) => [
-            ...acc,
-            {
-              title: String(format(new Date(curr.date_from), DAY_FORMAT)),
-              dataIndex: String(curr.date_from),
-              hideInSearch: true,
-              width: 100,
-              align: 'center',
-              render: (_, record) => (
-                <AttendanceCheckbox
-                  groupAttendanceScheduleId={curr.id}
-                  defaultChecked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
-                  studentId={record.id}
-                />
-              ),
-            },
-          ],
-          [],
-        );
-
-        const examsCols = examsRes.data.reduce<ProColumns<ClassRegisterTableItem>[]>(
-          (acc, exam) => [
-            ...acc,
-            {
-              dataIndex: `exam-${exam.id}`,
-              title: <FormattedMessage id="examTitleWithWeight" values={exam} />,
-              hideInSearch: true,
-              width: 100,
-              render: (_n, record) =>
-                record?.[`exam-${exam.id}`]?.result !== undefined ? (
-                  <ExamGradeInput
-                    result={record?.[`exam-${exam.id}`].result}
-                    exam_id={exam.id}
-                    student_id={record.id}
-                  />
-                ) : (
-                  '-'
-                ),
-            },
-          ],
-          [],
-        );
-
         setSelectedGroupName(selectedGroup.label);
-        setDynamicCols(
-          [
-            {
-              title: <FormattedMessage id="attendance" />,
-              hideInSearch: true,
-              children: attendanceCols,
-            },
-            { title: <FormattedMessage id="exams" />, hideInSearch: true, children: examsCols },
-            {
-              title: <FormattedMessage id="proposed_grade" />,
-              hideInSearch: true,
-              dataIndex: 'proposed_grade',
-            },
-          ].filter(({ children }) => children === undefined || children.length),
-        );
+
+        /* COLS */
+        const attendanceCols = getAttendanceCols(groupAttendanceScheduleRes.data);
+        const examsCols = getExamsCols(examsRes.data);
+
+        setDynamicCols([
+          attendanceCols,
+          examsCols,
+          {
+            title: <FormattedMessage id="proposed_grade" />,
+            hideInSearch: true,
+            dataIndex: 'proposed_grade',
+            align: 'center',
+            width: 100,
+          },
+        ]);
 
         const data = studentUserGroupRes.data.users
           .reduce<ClassRegisterTableItem[]>(
@@ -162,19 +113,7 @@ export const ClassRegister: React.FC = () => {
               )
                 return acc;
 
-              const studentAttendances = groupAttendanceScheduleRes.data.reduce<
-                Record<string, API.AttendanceValue>
-              >((innerAcc, groupAttendanceSchedule) => {
-                const studentAttendance = groupAttendanceSchedule.attendances.find(
-                  (attendance) => attendance.user_id === id,
-                );
-                if (!studentAttendance) return innerAcc;
-
-                return {
-                  ...innerAcc,
-                  [`${groupAttendanceSchedule.date_from}`]: studentAttendance.value,
-                };
-              }, {});
+              const studentAttendances = getStudentAttendances(groupAttendanceScheduleRes.data, id);
 
               const studentExams = getStudentExamsFromExams(examsRes.data, id);
 
@@ -186,15 +125,7 @@ export const ClassRegister: React.FC = () => {
 
               const proposed_grade = getProposedGrade(studentExams, tutorScales);
 
-              const studentExamResults = studentExams.reduce<
-                Record<`exam-${string}`, API.ExamResult>
-              >(
-                (innerAcc, { result, id: exam_id }) => ({
-                  ...innerAcc,
-                  [`exam-${exam_id}`]: result,
-                }),
-                {},
-              );
+              const studentExamResults = getStudentExamResults(studentExams);
 
               return [
                 ...acc,
