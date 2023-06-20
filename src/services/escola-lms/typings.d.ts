@@ -635,7 +635,7 @@ declare namespace API {
     status: PaymentStatus;
   }
 
-  type PaymentStatus = 'NEW' | 'PAID' | 'CANCELLED' | 'FAILED';
+  type PaymentStatus = 'NEW' | 'PAID' | 'CANCELLED' | 'FAILED' | 'PROCESSING';
   type OrderStatus = 'PAID' | 'CANCELLED';
 
   type Payment = {
