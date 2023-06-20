@@ -107,7 +107,11 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { finalGrades } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
-  const { tutorGradeScales } = useTutorGradeScales(semester_subject_id, finalGrades.data?.tutor_id);
+  const { tutorGradeScales } = useTutorGradeScales(
+    semester_subject_id,
+    finalGrades.data?.tutor_id,
+    finalGrades.data?.s_subject_scale_form_id,
+  );
   const { userAttendanceSchedules, updateUserAttendanceSchedules } = useUserAttendanceSchedules(
     group_id,
     user_id,
@@ -178,6 +182,15 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
         grade: finalGrades.data?.grades.find(({ grade_term }) => grade_term.id === term.id),
       })),
     [finalGrades.data, gradeTerms.data],
+  );
+
+  const areStatisticsLoading =
+    (userCourses.loading && !userCourses.data) ||
+    (userCoursesStats.loading && !userCoursesStats.data) ||
+    (userCoursesTopics.loading && !userCoursesTopics.data);
+
+  const isStatisticDataPresent = Boolean(
+    userCourses.data && userCoursesStats.data && userCoursesTopics.data,
   );
 
   if (finalGrades.loading) {
@@ -267,13 +280,9 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             columns={tutorGradeScalesColumns}
           />
         </Col>
-        {(userCourses.loading && !userCourses.data) ||
-          (userCoursesStats.loading && !userCoursesStats.data) ||
-          (userCoursesTopics.loading && !userCoursesTopics.data && <Spin />)}
-        {userCourses.data &&
-          userCoursesStats.data &&
-          userCoursesTopics.data &&
-          userCourses.data.map(({ id, title }) => (
+        {areStatisticsLoading && <Spin />}
+        {isStatisticDataPresent &&
+          userCourses.data?.map(({ id, title }) => (
             <Col key={id} span={24}>
               <Typography.Text style={{ fontSize: '16px', fontWeight: 500 }}>
                 {title}

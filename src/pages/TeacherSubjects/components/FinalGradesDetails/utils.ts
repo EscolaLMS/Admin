@@ -34,3 +34,12 @@ export const getProposedGrade = (
 
   return sortedGradeScales[firstFalseIndex - 1]?.name;
 };
+
+export const getScalesBySubjectScaleFormId = (
+  s_subject_scale_form_id: number,
+  tutorGrades: API.SubjectTutorGradeScale[],
+): API.GradeScale[] | undefined =>
+  tutorGrades.find(
+    (subjectTutorGradeScale) =>
+      subjectTutorGradeScale.s_subject_scale_form_id === s_subject_scale_form_id,
+  )?.scale;
