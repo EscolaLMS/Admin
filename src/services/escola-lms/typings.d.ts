@@ -1601,20 +1601,25 @@ declare namespace API {
     grade_value: number;
   };
 
-  type SubjectGradeScale = GradeScale & {
-    id: number;
+  type SubjectTutorGradeScale = {
     s_subject_scale_form_id: number;
+    scale: GradeScale[];
   };
 
   type SubjectTutorGrades = {
     id: number;
     tutor_id: number;
     semester_subject_id: number;
-    grade_scale: GradeScale[];
+    grade_scale: SubjectTutorGradeScale[] | null;
   };
 
   type CreateSubjectTutorGradesRequest = {
-    grade_scale: GradeScale[];
+    grade_scale: SubjectTutorGradeScale[];
+  };
+
+  type SubjectGradeScale = GradeScale & {
+    id: number;
+    s_subject_scale_form_id: number;
   };
 
   type SemesterSubjectTutor = {

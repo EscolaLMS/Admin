@@ -14,11 +14,8 @@ import {
 import { getExams } from '@/services/escola-lms/exams';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
 import { getFlatTopics } from '@/components/ProgramForm/Context';
-
-interface FetchedData<T> {
-  loading: boolean;
-  data?: T;
-}
+import { getScalesBySubjectScaleFormId } from './utils';
+import type { FetchedData, StudentExam } from './types';
 
 export function useFinalGrades(group_id: number, user_id: number) {
   const [finalGrades, setFinalGrades] = useState<FetchedData<API.FinalGradeItem>>({
@@ -88,13 +85,19 @@ export function useSubjectGradeScales(s_subject_scale_form_id: number | undefine
 export function useTutorGradeScales(
   semester_subject_id: number | undefined | null,
   tutor_id: number | undefined | null,
+  s_subject_scale_form_id: number | undefined | null,
 ) {
   const [tutorGradeScales, setTutorGradeScales] = useState<FetchedData<API.GradeScale[]>>({
     loading: false,
   });
 
   useEffect(() => {
-    if (typeof semester_subject_id !== 'number' || typeof tutor_id !== 'number') return;
+    if (
+      typeof semester_subject_id !== 'number' ||
+      typeof tutor_id !== 'number' ||
+      typeof s_subject_scale_form_id !== 'number'
+    )
+      return;
 
     setTutorGradeScales((prev) => ({ ...prev, loading: true }));
     getSubjectTutorGrades(semester_subject_id, tutor_id)
@@ -102,7 +105,10 @@ export function useTutorGradeScales(
         if (response.success) {
           setTutorGradeScales((prev) => ({
             ...prev,
-            data: response.data.grade_scale.map((v, i) => ({ ...v, id: i })),
+            data: getScalesBySubjectScaleFormId(
+              s_subject_scale_form_id,
+              response.data.grade_scale ?? [],
+            )?.map((v, i) => ({ ...v, id: i })),
           }));
         }
       })
@@ -170,8 +176,6 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
 
   return { userAttendanceSchedules, fetchUserAttendanceSchedules, updateUserAttendanceSchedules };
 }
-
-export type StudentExam = Omit<API.Exam, 'results'> & { result: API.ExamResult };
 
 export function useStudentExams(student_id: number, semester_subject_id: number | null) {
   const [studentExams, setStudentExams] = useState<FetchedData<StudentExam[]>>({ loading: false });

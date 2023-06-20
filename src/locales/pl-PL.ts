@@ -735,4 +735,5 @@ export default {
   exported_by: 'Eksportowano przez',
   examTitleWithWeight: '{title} (waga: {weight}%)',
   classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
+  gradesScalesMissing: 'Brak skali ocen dla wybranego dydaktyka',
 };
