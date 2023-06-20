@@ -163,6 +163,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     title: <FormattedMessage id="author_tutor" />,
     dataIndex: 'authors',
     hideInTable: true,
+    hideInDescriptions: true,
     renderFormItem: (_i, { type, defaultRender, ...rest }, form) => {
       if (type === 'form') return null;
       const stateType = form.getFieldValue('state');

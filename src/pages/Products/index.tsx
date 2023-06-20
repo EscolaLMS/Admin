@@ -6,6 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm, message, Space, Typography, Tag } from 'antd';
 
+import { createTableOrderObject } from '@/utils/utils';
 import type { PossibleType } from '@/components/TypeButtonDrawer';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 
@@ -41,7 +42,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
   },
 
   {
-    title: <FormattedMessage id="price" defaultMessage="price" />,
+    title: <FormattedMessage id="price" defaultMessage="price" values={{ currency: '' }} />,
     dataIndex: 'price',
     hideInSearch: true,
     sorter: true,
@@ -64,7 +65,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     },
   },
   {
-    title: <FormattedMessage id="price_old" defaultMessage="price_old" />,
+    title: <FormattedMessage id="price_old" defaultMessage="price_old" values={{ currency: '' }} />,
     tooltip: <FormattedMessage id="price_old_tooltip" defaultMessage="price_old_tooltip" />,
     dataIndex: 'price_old',
     hideInSearch: true,
@@ -209,19 +210,13 @@ const Products: React.FC = () => {
           </Link>,
         ]}
         request={({ name, pageSize, current, productable, type, purchasable, free }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           setLoading(true);
 
           return products({
             pageSize,
             current,
             name,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
             productable_id: productable ? Number((productable as string).split(':')[1]) : undefined,
             productable_type: productable ? (productable as string).split(':')[0] : undefined,
             type: type && type !== 'all' ? type : undefined,
