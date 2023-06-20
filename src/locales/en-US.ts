@@ -747,4 +747,5 @@ export default {
   exported_by: 'Exported by',
   examTitleWithWeight: '{title} (weight: {weight}%)',
   classRegisterTitleWithGroupName: 'Class register of group {groupName}',
+  gradesScalesMissing: 'There is no grading scale for the selected teacher',
 };

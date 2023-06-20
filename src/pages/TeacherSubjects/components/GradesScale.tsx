@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useModel } from 'umi';
-import { Button, Divider, Select, Spin } from 'antd';
+import { Button, Divider, Select, Spin, Typography } from 'antd';
 import ProForm from '@ant-design/pro-form';
 import { EditableProTable } from '@ant-design/pro-table';
-import { CheckOutlined, EditOutlined } from '@ant-design/icons';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import { CheckOutlined, EditOutlined } from '@ant-design/icons';
 
 import { createSubjectTutorGrades, getSubjectTutorGrades } from '@/services/escola-lms/grades';
 import { useTeacherSubject } from '../context';
@@ -47,14 +47,75 @@ const staticColumns: ProColumns<TableGradeScale>[] = [
   },
 ];
 
-export const GradesScale: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
-  const { semester_subject_id, tutors } = useTeacherSubject();
-  const [form] = ProForm.useForm<FormData>();
+interface GradeScaleTableProps {
+  subjectTutorGradeScale: API.SubjectTutorGradeScale;
+  onFormSubmit: (formData: FormData) => Promise<void>;
+}
+
+const GradeScaleTable: React.FC<GradeScaleTableProps> = ({
+  subjectTutorGradeScale,
+  onFormSubmit,
+}) => {
   const [editableKeys, setEditableKeys] = useState<React.Key[]>([]);
   const actionRef = useRef<ActionType>();
 
-  const [tableLoading, setTableLoading] = useState(false);
+  const [form] = ProForm.useForm<FormData>();
+
+  useEffect(() => {
+    const gradeScaleWithIds = (subjectTutorGradeScale.scale ?? []).map((values, i) => ({
+      ...values,
+      id: String((i + 1) * 100),
+    }));
+
+    form.setFieldValue('table', gradeScaleWithIds);
+  }, []);
+
+  return (
+    <ProForm<FormData>
+      form={form}
+      onFinish={onFormSubmit}
+      submitter={{ render: (_p, [, submit]) => [submit] }}
+    >
+      <EditableProTable<TableGradeScale>
+        name="table"
+        rowKey="id"
+        actionRef={actionRef}
+        formItemProps={{ label: <FormattedMessage id="grades-scale" /> }}
+        cardProps={{ bodyStyle: { padding: 0 } }}
+        recordCreatorProps={false}
+        columns={[
+          ...staticColumns,
+          {
+            title: <FormattedMessage id="options" />,
+            valueType: 'option',
+            render: (_n, row) => (
+              <Button
+                type="primary"
+                onClick={() => actionRef.current?.startEditable(row.id)}
+                icon={<EditOutlined />}
+              />
+            ),
+          },
+        ]}
+        editable={{
+          form,
+          type: 'multiple',
+          editableKeys,
+          saveText: <Button type="primary" icon={<CheckOutlined />} />,
+          onChange: setEditableKeys,
+          actionRender: (_r, _c, dom) => [dom.save],
+        }}
+      />
+    </ProForm>
+  );
+};
+
+export const GradesScale: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { semester_subject_id, tutors } = useTeacherSubject();
+
+  const [subjectTutorGrades, setSubjectTutorGrades] = useState<API.SubjectTutorGrades>();
+  const [loading, setLoading] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState<number | null>(null);
 
   const tutorViewing = useMemo(
@@ -70,6 +131,56 @@ export const GradesScale: React.FC = () => {
     [tutors.data],
   );
 
+  const refreshSubjectTutorGrades = useCallback(() => {
+    if (semester_subject_id === null || selectedTutor === null) return;
+
+    setLoading(true);
+    setSubjectTutorGrades(undefined);
+    getSubjectTutorGrades(semester_subject_id, selectedTutor)
+      .then((response) => {
+        if (response.success) {
+          setSubjectTutorGrades(response.data);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [semester_subject_id, selectedTutor]);
+
+  const onFormSubmitFactory = useCallback(
+    (subjectTutorGradeScales: API.SubjectTutorGradeScale[], s_subject_scale_form_id: number) =>
+      async (formData: FormData) => {
+        if (semester_subject_id === null || selectedTutor === null) return;
+
+        const grade_scale = subjectTutorGradeScales.reduce<API.SubjectTutorGradeScale[]>(
+          (acc, tutorGradeScale) =>
+            tutorGradeScale.s_subject_scale_form_id === s_subject_scale_form_id
+              ? [
+                  ...acc,
+                  {
+                    s_subject_scale_form_id,
+                    scale: formData.table.map(({ name, grade, grade_value }) => ({
+                      name,
+                      grade,
+                      grade_value,
+                    })),
+                  },
+                ]
+              : [...acc, tutorGradeScale],
+          [],
+        );
+
+        const res = await createSubjectTutorGrades(semester_subject_id, selectedTutor, {
+          grade_scale,
+        });
+
+        if (res.success) {
+          refreshSubjectTutorGrades();
+        }
+      },
+    [selectedTutor, semester_subject_id],
+  );
+
   useEffect(() => {
     if (!tutorViewing || !initialState?.currentUser?.id) {
       if (tutors.data?.[0]) {
@@ -82,35 +193,8 @@ export const GradesScale: React.FC = () => {
   }, [initialState?.currentUser?.id, tutorViewing]);
 
   useEffect(() => {
-    if (semester_subject_id === null || selectedTutor === null) return;
-
-    setTableLoading(true);
-    getSubjectTutorGrades(semester_subject_id, selectedTutor)
-      .then((response) => {
-        if (response.success) {
-          const gradeScaleWithIds = (response.data.grade_scale ?? []).map((values, i) => ({
-            ...values,
-            id: String((i + 1) * 100),
-          }));
-
-          form.setFieldValue('table', gradeScaleWithIds);
-        }
-      })
-      .finally(() => {
-        setTableLoading(false);
-      });
-  }, [semester_subject_id, selectedTutor]);
-
-  const onFormSubmit = useCallback(
-    async (formData: FormData) => {
-      if (semester_subject_id === null || selectedTutor === null) return;
-
-      await createSubjectTutorGrades(semester_subject_id, selectedTutor, {
-        grade_scale: formData.table,
-      });
-    },
-    [selectedTutor, semester_subject_id],
-  );
+    refreshSubjectTutorGrades();
+  }, [refreshSubjectTutorGrades]);
 
   if (tutors.loading) {
     return <Spin />;
@@ -128,43 +212,25 @@ export const GradesScale: React.FC = () => {
         />
       </ProForm.Item>
       <Divider />
-      <ProForm<FormData>
-        form={form}
-        onFinish={onFormSubmit}
-        submitter={{ render: (_p, [, submit]) => [submit] }}
-      >
-        <EditableProTable<TableGradeScale>
-          name="table"
-          rowKey="id"
-          actionRef={actionRef}
-          formItemProps={{ label: <FormattedMessage id="grades-scale" /> }}
-          cardProps={{ bodyStyle: { padding: 0 } }}
-          recordCreatorProps={false}
-          loading={tableLoading}
-          columns={[
-            ...staticColumns,
-            {
-              title: <FormattedMessage id="options" />,
-              valueType: 'option',
-              render: (_n, row) => (
-                <Button
-                  type="primary"
-                  onClick={() => actionRef.current?.startEditable(row.id)}
-                  icon={<EditOutlined />}
-                />
-              ),
-            },
-          ]}
-          editable={{
-            form,
-            type: 'multiple',
-            editableKeys,
-            saveText: <Button type="primary" icon={<CheckOutlined />} />,
-            onChange: setEditableKeys,
-            actionRender: (_r, _c, dom) => [dom.save],
-          }}
-        />
-      </ProForm>
+      {loading && !subjectTutorGrades && <Spin />}
+      {subjectTutorGrades?.grade_scale ? (
+        subjectTutorGrades.grade_scale.map((subjectTutorGradeScale, i) => (
+          <React.Fragment key={subjectTutorGradeScale.s_subject_scale_form_id}>
+            {i > 0 && <Divider />}
+            <GradeScaleTable
+              subjectTutorGradeScale={subjectTutorGradeScale}
+              onFormSubmit={onFormSubmitFactory(
+                subjectTutorGrades.grade_scale ?? [],
+                subjectTutorGradeScale.s_subject_scale_form_id,
+              )}
+            />
+          </React.Fragment>
+        ))
+      ) : (
+        <Typography.Paragraph style={{ textAlign: 'center' }}>
+          <FormattedMessage id="gradesScalesMissing" />
+        </Typography.Paragraph>
+      )}
     </>
   );
 };
