@@ -11,6 +11,7 @@ import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
+import { ExamGradeInput } from './ExamGradeInput';
 
 type ClassRegisterTableItem = { id: number; full_name: string } & Record<
   string,
@@ -104,16 +105,25 @@ export const ClassRegister: React.FC = () => {
               hideInSearch: true,
               width: 100,
               render: (_n, record) =>
-                record?.[`exam-${exam.id}`]?.result !== undefined
-                  ? `${record?.[`exam-${exam.id}`]?.result}%`
-                  : '-',
+                record?.[`exam-${exam.id}`]?.result !== undefined ? (
+                  <ExamGradeInput
+                    result={record?.[`exam-${exam.id}`].result}
+                    exam_id={exam.id}
+                    student_id={record.id}
+                  />
+                ) : (
+                  '-'
+                ),
             },
           ],
           [],
         );
 
         setSelectedGroupName(selectedGroup.label);
-        setDynamicCols([...attendanceCols, ...examsCols]);
+        setDynamicCols([
+          { title: <FormattedMessage id="attendance" />, children: attendanceCols },
+          { title: <FormattedMessage id="exams" />, children: examsCols },
+        ]);
 
         const data = studentUserGroupRes.data.users
           .reduce<ClassRegisterTableItem[]>(
