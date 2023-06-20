@@ -34,7 +34,7 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
     },
   };
   return (
-    <Drawer width={600} visible={visible} onClose={onClose} closable={true}>
+    <Drawer width={600} open={visible} onClose={onClose} closable={true}>
       {(data.type === 'App\\Models\\User' || data.type === 'EscolaLms\\Core\\Models\\User') && (
         <ProDescriptions<API.UserItem>
           {...descrProps}
