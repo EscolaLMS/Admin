@@ -59,6 +59,7 @@ export default {
   'grades-scale': 'Grades scale',
   'final-grades': 'Final grades',
   'file-exports-history': 'Data exports history',
+  'class-register': 'Class register',
   subject: 'Subject',
   subjects: 'Subjects',
   groupName: 'Group name',
@@ -744,4 +745,6 @@ export default {
   created_by: 'Created by',
   exported_at: 'Exported at',
   exported_by: 'Exported by',
+  examTitleWithWeight: '{title} (weight: {weight}%)',
+  classRegisterTitleWithGroupName: 'Class register of group {groupName}',
 };

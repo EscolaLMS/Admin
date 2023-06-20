@@ -1,51 +1,44 @@
-import { changeStudentAttendance } from '@/services/escola-lms/attendances';
+import React, { useCallback, useState } from 'react';
+import { Checkbox } from 'antd';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { AttendanceValue } from '@/services/escola-lms/enums';
-import { Spin, Checkbox } from 'antd';
-import { useState } from 'react';
-import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
-import type { AttendanceTableItem } from '@/pages/TeacherSubjects/components/Attendances';
+import { changeStudentAttendance } from '@/services/escola-lms/attendances';
 
 interface AttendanceCheckboxProps {
-  currentData: API.GroupAttendanceSchedule;
-  recordData: AttendanceTableItem;
-  groupId: number | null;
-  onSuccess: (data: API.GroupAttendanceSchedule[]) => void;
+  groupAttendanceScheduleId: number;
+  studentId: number;
+  defaultChecked: boolean;
+  onSuccess?: () => void;
 }
 
 const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
-  currentData,
-  recordData,
-  groupId,
+  groupAttendanceScheduleId,
+  studentId,
+  defaultChecked,
   onSuccess,
 }) => {
-  const [loadingUserAttendance, setLoadingUserAttendance] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleChangeAttendance = () => {
-    setLoadingUserAttendance(true);
+  const handleChangeAttendance = useCallback((e: CheckboxChangeEvent) => {
+    setLoading(true);
     changeStudentAttendance(
-      currentData.id,
-      recordData.id,
-      recordData?.[String(currentData.date_from)] === AttendanceValue.PRESENT
-        ? AttendanceValue.ABSENT
-        : AttendanceValue.PRESENT,
-    ).then((res) => {
-      if (res.success) {
-        fetchGroupAttendanceSchedule(Number(groupId)).then((response) => {
-          if (response.success) {
-            onSuccess(response.data);
-            setLoadingUserAttendance(false);
-          }
-        });
-      }
-    });
-  };
+      groupAttendanceScheduleId,
+      studentId,
+      e.target.checked ? AttendanceValue.PRESENT : AttendanceValue.ABSENT,
+    )
+      .then((res) => {
+        if (res.success) {
+          onSuccess?.();
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-  return loadingUserAttendance ? (
-    <Spin size="small" />
-  ) : (
+  return (
     <Checkbox
-      checked={recordData?.[String(currentData.date_from)] === AttendanceValue.PRESENT}
-      onChange={() => handleChangeAttendance()}
+      disabled={loading}
+      defaultChecked={defaultChecked}
+      onChange={handleChangeAttendance}
     />
   );
 };

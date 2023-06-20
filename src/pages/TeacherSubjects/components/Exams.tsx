@@ -91,6 +91,7 @@ export const Exams: React.FC = () => {
 
   return (
     <ProTable<API.Exam, API.ExamsParams>
+      className="table-standalone"
       headerTitle={<FormattedMessage id="exams" />}
       actionRef={actionRef}
       search={false}

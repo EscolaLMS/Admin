@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { format } from 'date-fns';
 import { FormattedMessage } from 'umi';
 import { Button, Tooltip } from 'antd';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { DownloadOutlined } from '@ant-design/icons';
 
 import { DATETIME_FORMAT } from '@/consts/dates';
@@ -131,6 +132,7 @@ export const FileExportsHistory: React.FC = () => {
 
   return (
     <ProTable<API.PCGFileExportsHistoryItem, API.PCGFileExportsHistoryParams>
+      className="table-standalone"
       request={async ({
         group_id = teacherSubjectData?.groups?.[0]?.id,
         created_by,

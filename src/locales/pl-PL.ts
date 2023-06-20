@@ -37,6 +37,7 @@ export default {
   'grades-scale': 'Skala ocen',
   'final-grades': 'Oceny końcowe',
   'file-exports-history': 'Historia eksportowania danych',
+  'class-register': 'Dziennik',
   msTeams: 'MS Teams',
   uploadAttendance: 'Wgraj obecność',
   uploadGrades: 'Wgraj oceny',
@@ -731,4 +732,6 @@ export default {
   created_by: 'Utworzono przez',
   exported_at: 'Eksportowano',
   exported_by: 'Eksportowano przez',
+  examTitleWithWeight: '{title} (waga: {weight}%)',
+  classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
 };

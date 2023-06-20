@@ -14,7 +14,7 @@
   cursor: pointer;
 }
 
-.attendances-table > .ant-pro-card.ant-pro-table-search.ant-pro-table-search-query-filter,
-.attendances-table .ant-pro-card-body {
+.table-standalone > .ant-pro-card.ant-pro-table-search.ant-pro-table-search-query-filter,
+.table-standalone .ant-pro-card-body {
   padding: 0;
 }

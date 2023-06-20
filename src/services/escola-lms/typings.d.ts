@@ -17,6 +17,8 @@ declare namespace API {
 
   type VouchersTypes = Enum.VouchersTypes;
 
+  type AttendanceValue = Enum.AttendanceValue;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -1483,11 +1485,12 @@ declare namespace API {
     subject_id?: number;
     semester_id?: number;
     student_id?: number;
+    group_id?: number;
   };
 
   type StudentAttendance = {
     user_id: number;
-    value: Enum.AttendanceValue;
+    value: AttendanceValue;
   };
 
   type GroupAttendanceSchedule = {
