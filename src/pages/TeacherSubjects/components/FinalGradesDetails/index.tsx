@@ -20,7 +20,8 @@ import {
   useTutorGradeScales,
   useUserCoursesStats,
 } from './hooks';
-import type { StudentExam } from './hooks';
+import type { StudentExam } from './types';
+import { getProposedGrade } from './utils';
 
 interface Props {
   user_id: number;
@@ -132,37 +133,10 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     [subjectGradeScales.data],
   );
 
-  const proposedGrade = useMemo(() => {
-    const [sum, weightsSum] = (studentExams.data ?? []).reduce<[number, number]>(
-      (acc, { result, weight }) => [acc[0] + result.result * weight, acc[1] + weight],
-      [0, 0],
-    );
-    const weightedAverage = Number.isNaN(sum / weightsSum) ? 0 : sum / weightsSum;
-
-    const sortedGradeScales = (tutorGradeScales.data ?? [])
-      .sort((a, b) => a.grade_value - b.grade_value)
-      .reduce<(API.GradeScale & { isWeightedAverageGreater: boolean })[]>(
-        (acc, curr) => [
-          ...acc,
-          {
-            ...curr,
-            isWeightedAverageGreater: weightedAverage >= curr.grade_value,
-          },
-        ],
-        [],
-      );
-
-    if (sortedGradeScales.every(({ isWeightedAverageGreater }) => isWeightedAverageGreater)) {
-      return sortedGradeScales.at(-1)?.name;
-    }
-
-    const firstFalseIndex = sortedGradeScales.findIndex(
-      ({ isWeightedAverageGreater }) => !isWeightedAverageGreater,
-    );
-    if (firstFalseIndex < 0) return '';
-
-    return sortedGradeScales[firstFalseIndex - 1]?.name;
-  }, [studentExams.data, tutorGradeScales.data]);
+  const proposedGrade = useMemo(
+    () => getProposedGrade(studentExams.data ?? [], tutorGradeScales.data ?? []),
+    [studentExams.data, tutorGradeScales.data],
+  );
 
   const onFinalGradeSubmit = useCallback(
     async ({ grade_scale_id, grade_term_id }: FormData) => {

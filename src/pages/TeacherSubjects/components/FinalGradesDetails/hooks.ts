@@ -14,11 +14,7 @@ import {
 import { getExams } from '@/services/escola-lms/exams';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
 import { getFlatTopics } from '@/components/ProgramForm/Context';
-
-interface FetchedData<T> {
-  loading: boolean;
-  data?: T;
-}
+import type { FetchedData, StudentExam } from './types';
 
 export function useFinalGrades(group_id: number, user_id: number) {
   const [finalGrades, setFinalGrades] = useState<FetchedData<API.FinalGradeItem>>({
@@ -170,8 +166,6 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
 
   return { userAttendanceSchedules, fetchUserAttendanceSchedules, updateUserAttendanceSchedules };
 }
-
-export type StudentExam = Omit<API.Exam, 'results'> & { result: API.ExamResult };
 
 export function useStudentExams(student_id: number, semester_subject_id: number | null) {
   const [studentExams, setStudentExams] = useState<FetchedData<StudentExam[]>>({ loading: false });
