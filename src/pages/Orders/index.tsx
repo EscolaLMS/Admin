@@ -3,7 +3,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Space } from 'antd';
+import { Space, Tag } from 'antd';
 import { format } from 'date-fns';
 
 import { orders } from '@/services/escola-lms/orders';
@@ -12,7 +12,22 @@ import UserSelect from '@/components/UserSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import ProductsSelect from '@/components/ProductsSelect';
-import { roundTo } from '@/utils/utils';
+import { roundTo, createTableOrderObject } from '@/utils/utils';
+import type { PresetStatusColorType } from 'antd/lib/_util/colors';
+
+const getTagColorByStatus = (status: API.PaymentStatus): PresetStatusColorType => {
+  switch (status) {
+    case 'PAID':
+      return 'success';
+    case 'CANCELLED':
+    case 'FAILED':
+      return 'error';
+    case 'PROCESSING':
+      return 'processing';
+    default:
+      return 'default';
+  }
+};
 
 const OrderItems: React.FC<{ items: API.OrderItem[] }> = ({ items }) => {
   return (
@@ -128,14 +143,29 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     dataIndex: 'status',
     hideInSearch: false,
     valueEnum: {
-      paid: <FormattedMessage id="paid" />,
-      cancelled: <FormattedMessage id="cancelled" />,
+      0: (
+        <Tag color={getTagColorByStatus('PROCESSING')}>
+          <FormattedMessage id="processing" />
+        </Tag>
+      ),
+      1: (
+        <Tag color={getTagColorByStatus('PAID')}>
+          <FormattedMessage id="paid" />
+        </Tag>
+      ),
+      2: (
+        <Tag color={getTagColorByStatus('CANCELLED')}>
+          <FormattedMessage id="cancelled" />
+        </Tag>
+      ),
     },
     render: (_, record) => (
-      <FormattedMessage
-        id={record.status.toLocaleLowerCase()}
-        defaultMessage={record.status.toLocaleLowerCase()}
-      />
+      <Tag color={getTagColorByStatus(record.status)}>
+        <FormattedMessage
+          id={record.status.toLocaleLowerCase()}
+          defaultMessage={record.status.toLocaleLowerCase()}
+        />
+      </Tag>
     ),
   },
 ];
@@ -164,7 +194,6 @@ const TableList: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         request={({ pageSize, current, user_id, product_id, dateRange, status }, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
           const date_from =
             dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
           const date_to =
@@ -176,12 +205,7 @@ const TableList: React.FC = () => {
             date_from,
             date_to,
             product_id,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            ...createTableOrderObject(sort, 'created_at'),
             status,
           }).then((response) => {
             if (response.success) {
