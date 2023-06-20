@@ -8,19 +8,26 @@ import { DAY_FORMAT } from '@/consts/dates';
 import { AttendanceValue } from '@/services/escola-lms/enums';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
+import { getSubjectTutorGrades as fetchSubjectTutorGrades } from '@/services/escola-lms/grades';
+import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
 import { ExamGradeInput } from './ExamGradeInput';
+import {
+  getProposedGrade,
+  getScalesBySubjectScaleFormId,
+  getStudentExamsFromExams,
+} from './FinalGradesDetails/utils';
 
-type ClassRegisterTableItem = { id: number; full_name: string } & Record<
+type ClassRegisterTableItem = { id: number; full_name: string; proposed_grade: string } & Record<
   string,
   API.AttendanceValue
 > &
   Record<`exam-${string}`, API.ExamResult>;
 
 export const ClassRegister: React.FC = () => {
-  const { teacherSubjectData } = useTeacherSubject();
+  const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
   const [dynamicCols, setDynamicCols] = useState<ProColumns<ClassRegisterTableItem>[]>([]);
   const [selectedGroupName, setSelectedGroupName] = useState(teacherSubjectData?.groups?.[0]?.name);
 
@@ -58,17 +65,25 @@ export const ClassRegister: React.FC = () => {
     <ProTable<ClassRegisterTableItem>
       className="table-standalone"
       request={async ({ group_id = groupOptions[0]?.value, full_name = '' }) => {
-        const [studentUserGroupRes, groupAttendanceScheduleRes, examsRes] = await Promise.all([
-          fetchStudentUserGroup(group_id),
-          fetchGroupAttendanceSchedule(group_id),
-          fetchExams({ group_id, per_page: -1 }),
-        ]);
+        const finalGradesRes = await fetchGroupFinalGrades(group_id);
+        if (!finalGradesRes.success || semester_subject_id === null)
+          return { data: [], total: 0, success: false };
+
+        const [studentUserGroupRes, groupAttendanceScheduleRes, examsRes, tutorGradesRes] =
+          await Promise.all([
+            fetchStudentUserGroup(group_id),
+            fetchGroupAttendanceSchedule(group_id),
+            fetchExams({ group_id, per_page: -1 }),
+            fetchSubjectTutorGrades(semester_subject_id, finalGradesRes.data?.[0].tutor_id),
+          ]);
+
         const selectedGroup = groupOptions.find(({ value }) => value === group_id);
 
         if (
           !studentUserGroupRes.success ||
           !groupAttendanceScheduleRes.success ||
           !examsRes.success ||
+          !tutorGradesRes.success ||
           !selectedGroup
         )
           return { data: [], total: 0, success: false };
@@ -122,9 +137,18 @@ export const ClassRegister: React.FC = () => {
         setSelectedGroupName(selectedGroup.label);
         setDynamicCols(
           [
-            { title: <FormattedMessage id="attendance" />, children: attendanceCols },
-            { title: <FormattedMessage id="exams" />, children: examsCols },
-          ].filter(({ children }) => children.length),
+            {
+              title: <FormattedMessage id="attendance" />,
+              hideInSearch: true,
+              children: attendanceCols,
+            },
+            { title: <FormattedMessage id="exams" />, hideInSearch: true, children: examsCols },
+            {
+              title: <FormattedMessage id="proposed_grade" />,
+              hideInSearch: true,
+              dataIndex: 'proposed_grade',
+            },
+          ].filter(({ children }) => children === undefined || children.length),
         );
 
         const data = studentUserGroupRes.data.users
@@ -152,19 +176,35 @@ export const ClassRegister: React.FC = () => {
                 };
               }, {});
 
-              const studentExams = examsRes.data.reduce<Record<`exam-${string}`, API.ExamResult>>(
-                (innerAcc, exam) => {
-                  const studentResult = exam.results.find((result) => result.user_id === id);
-                  if (!studentResult) return innerAcc;
+              const studentExams = getStudentExamsFromExams(examsRes.data, id);
 
-                  return { ...innerAcc, [`exam-${exam.id}`]: studentResult };
-                },
+              const tutorScales =
+                getScalesBySubjectScaleFormId(
+                  finalGradesRes.data[0].s_subject_scale_form_id,
+                  tutorGradesRes.data.grade_scale ?? [],
+                ) ?? [];
+
+              const proposed_grade = getProposedGrade(studentExams, tutorScales);
+
+              const studentExamResults = studentExams.reduce<
+                Record<`exam-${string}`, API.ExamResult>
+              >(
+                (innerAcc, { result, id: exam_id }) => ({
+                  ...innerAcc,
+                  [`exam-${exam_id}`]: result,
+                }),
                 {},
               );
 
               return [
                 ...acc,
-                { id, full_name: studentFullName, ...studentAttendances, ...studentExams },
+                {
+                  id,
+                  full_name: studentFullName,
+                  proposed_grade,
+                  ...studentAttendances,
+                  ...studentExamResults,
+                },
               ];
             },
             [],
