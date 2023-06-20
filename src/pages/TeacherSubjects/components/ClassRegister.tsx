@@ -120,10 +120,12 @@ export const ClassRegister: React.FC = () => {
         );
 
         setSelectedGroupName(selectedGroup.label);
-        setDynamicCols([
-          { title: <FormattedMessage id="attendance" />, children: attendanceCols },
-          { title: <FormattedMessage id="exams" />, children: examsCols },
-        ]);
+        setDynamicCols(
+          [
+            { title: <FormattedMessage id="attendance" />, children: attendanceCols },
+            { title: <FormattedMessage id="exams" />, children: examsCols },
+          ].filter(({ children }) => children.length),
+        );
 
         const data = studentUserGroupRes.data.users
           .reduce<ClassRegisterTableItem[]>(
