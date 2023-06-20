@@ -20,7 +20,6 @@ const getTagColorByStatus = (status: API.PaymentStatus): PresetStatusColorType =
     case 'PAID':
       return 'success';
     case 'CANCELLED':
-      return 'error';
     case 'FAILED':
       return 'error';
     case 'PROCESSING':
