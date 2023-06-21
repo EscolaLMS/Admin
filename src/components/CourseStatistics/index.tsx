@@ -86,6 +86,7 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
       {state.mode === 'loaded' && (
         <>
           <UserProgress
+            course_id={Number(courseId)}
             topics={topics}
             stats={
               state.value.find((element: courseStats) => element.type.includes('FinishedTopics'))

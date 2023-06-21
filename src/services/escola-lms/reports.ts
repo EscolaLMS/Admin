@@ -17,3 +17,21 @@ export async function reports(
     ...(options || {}),
   });
 }
+
+/* GET /api/admin/stats/course/:course_id/export */
+export async function exportStatForCourse(
+  course_id: number,
+  params: API.ExportStatForCourseParams,
+  options?: RequestOptionsInit,
+) {
+  return request<Blob | API.DefaultResponseError>(`/api/admin/stats/course/${course_id}/export`, {
+    params,
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    responseType: 'blob',
+    headers: {
+      accept: 'application/vnd.ms-excel',
+    },
+    ...(options || {}),
+  });
+}
