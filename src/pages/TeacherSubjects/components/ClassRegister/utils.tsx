@@ -7,8 +7,9 @@ import { AttendanceValue } from '@/services/escola-lms/enums';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 
 import type { StudentExam } from '../FinalGradesDetails/types';
+import { FinalGradeSelect } from '../FinalGradeSelect';
 import { ExamGradeInput } from '../ExamGradeInput';
-import type { ClassRegisterTableItemAttendance } from './types';
+import type { ClassRegisterTableItemAttendance, ClassRegisterTableItemFinalGrade } from './types';
 import type { ClassRegisterTableItem, ClassRegisterTableItemExamResult } from './types';
 
 /* Attendance */
@@ -101,5 +102,42 @@ export const getStudentExamResults = (
       ...innerAcc,
       [`exam-${exam_id}`]: result,
     }),
+    {},
+  );
+
+/* Final grades */
+export const getFinalGradesCols = (
+  gradeTerms: API.GradeTerm[],
+  subjectGradeScales: API.SubjectGradeScale[],
+): ProColumns<ClassRegisterTableItem> => ({
+  title: <FormattedMessage id="final-grades" />,
+  hideInSearch: true,
+  children: gradeTerms.map((term) => ({
+    title: term.name,
+    hideInSearch: true,
+    width: 100,
+    align: 'center',
+    render: (_n, record) => (
+      <FinalGradeSelect
+        defaultFinalGrade={record[`final-grade-${term.id}`]}
+        finalGrades={record.final_grades}
+        term={term}
+        gradeScales={subjectGradeScales}
+      />
+    ),
+  })),
+});
+
+export const getStudentFinalGrades = (
+  finalGrades: API.FinalGradeItem[],
+  student_id: number,
+): API.FinalGradeItem | undefined =>
+  finalGrades.find((finalGradeItem) => finalGradeItem.user.id === student_id);
+
+export const getFinalGrades = (
+  studentFinalGrade?: API.FinalGradeItem,
+): ClassRegisterTableItemFinalGrade =>
+  (studentFinalGrade?.grades ?? []).reduce(
+    (acc, grade) => ({ ...acc, [`final-grade-${grade.grade_term.id}`]: grade }),
     {},
   );

@@ -261,6 +261,7 @@ export default {
   select_course: 'Wybierz kurs',
   select_groups: 'Wybierz grupy',
   select_group: 'Wybierz grupę',
+  select_final_grade: 'Wybierz ocenę końcową',
   select_all: 'Zaznacz wszystkie',
   deselect_all: 'Odznacz wszystkie',
   select_templates: 'Wybierz szablony',
@@ -737,4 +738,5 @@ export default {
   classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
   gradesScalesMissing: 'Brak skali ocen dla wybranego dydaktyka',
   proposed_grade: 'Proponowana ocena',
+  groupDataMissing: 'Brak danych dla grupy {group_name}',
 };
