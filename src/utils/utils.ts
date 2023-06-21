@@ -538,3 +538,9 @@ export const createTableOrderObject = (
       : undefined,
   };
 };
+
+export const objectToQueryString = (params: object) =>
+  Object.keys(params)
+    .filter((key) => params[key])
+    .map((key) => key + '=' + params[key])
+    .join('&');

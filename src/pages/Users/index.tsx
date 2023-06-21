@@ -1,6 +1,6 @@
-import { PlusOutlined, ExportOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag, message } from 'antd';
-import React, { useCallback, useRef, useState } from 'react';
+import { PlusOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Button, Tooltip, Popconfirm, Tag, message, Dropdown, Menu } from 'antd';
+import React, { useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link, history } from 'umi';
 
 import { PageContainer } from '@ant-design/pro-layout';
@@ -8,14 +8,14 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { format } from 'date-fns';
 import { users, deleteUser } from '@/services/escola-lms/user';
-import { usersCsvExport } from '@/services/escola-lms/csv';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import SecureUpload from '@/components/SecureUpload';
 import ProCard from '@ant-design/pro-card';
 
 import './index.css';
-import { createTableOrderObject } from '@/utils/utils';
+import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
+import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
@@ -169,28 +169,6 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const [params, setParams] = useState({});
-  const [loadingExport, setLoadingExport] = useState(false);
-
-  const handleDownload = useCallback(async () => {
-    setLoadingExport(true);
-    try {
-      const request = await usersCsvExport(params);
-
-      if (request) {
-        const uri = 'data:text/csv;charset=utf-8,' + request;
-        const downloadLink = document.createElement('a');
-        downloadLink.href = uri;
-        downloadLink.download = 'users.csv';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingExport(false);
-    }
-  }, [params]);
 
   return (
     <PageContainer>
@@ -256,14 +234,36 @@ const TableList: React.FC = () => {
                   }
                 }}
               />,
-              <Button
-                loading={loadingExport}
-                type="primary"
-                key="primary"
-                onClick={() => handleDownload()}
+              <Dropdown
+                key="dropdown-export-menu"
+                overlay={
+                  <Menu>
+                    {['csv', 'xlsx', 'xls'].map((formatName) => (
+                      <Menu.Item key={formatName} style={{ cursor: 'default' }}>
+                        <AuthenticatedLinkButton
+                          url={`/api/admin/csv/users?format=${formatName}&${objectToQueryString(
+                            params,
+                          )}`}
+                          filename={`users.${formatName}`}
+                          key="download"
+                          size="small"
+                          icon={<DownloadOutlined />}
+                          type="primary"
+                          style={{
+                            width: '100%',
+                          }}
+                        >
+                          {formatName}
+                        </AuthenticatedLinkButton>
+                      </Menu.Item>
+                    ))}
+                  </Menu>
+                }
               >
-                <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
-              </Button>,
+                <Button type="primary" key="primary">
+                  <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
+                </Button>
+              </Dropdown>,
 
               <Link to="/users/list/new" key="link">
                 <Button type="primary" key="primary">
