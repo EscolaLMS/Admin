@@ -1,5 +1,5 @@
 import { PlusOutlined, ExportOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag, message } from 'antd';
+import { Button, Tooltip, Popconfirm, Tag, message, Dropdown, Menu } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import { useIntl, FormattedMessage, Link, history } from 'umi';
 
@@ -171,26 +171,32 @@ const TableList: React.FC = () => {
   const [params, setParams] = useState({});
   const [loadingExport, setLoadingExport] = useState(false);
 
-  const handleDownload = useCallback(async () => {
-    setLoadingExport(true);
-    try {
-      const request = await usersCsvExport(params);
+  const handleDownload = useCallback(
+    async (event: { key: string }) => {
+      const formatName = event.key;
+      setLoadingExport(true);
+      try {
+        const request = await usersCsvExport({
+          ...params,
+          format: formatName,
+        });
 
-      if (request) {
-        const uri = 'data:text/csv;charset=utf-8,' + request;
-        const downloadLink = document.createElement('a');
-        downloadLink.href = uri;
-        downloadLink.download = 'users.csv';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        if (request) {
+          const url = window.URL.createObjectURL(request);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `users.${formatName}`);
+          document.body.appendChild(link);
+          link.click();
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingExport(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingExport(false);
-    }
-  }, [params]);
+    },
+    [params],
+  );
 
   return (
     <PageContainer>
@@ -256,14 +262,20 @@ const TableList: React.FC = () => {
                   }
                 }}
               />,
-              <Button
-                loading={loadingExport}
-                type="primary"
-                key="primary"
-                onClick={() => handleDownload()}
+              <Dropdown
+                key="dropdown-export-menu"
+                overlay={
+                  <Menu onClick={handleDownload}>
+                    <Menu.Item key="csv">csv</Menu.Item>
+                    <Menu.Item key="xlsx">xlsx</Menu.Item>
+                    <Menu.Item key="xls">xls</Menu.Item>
+                  </Menu>
+                }
               >
-                <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
-              </Button>,
+                <Button loading={loadingExport} type="primary" key="primary">
+                  <ExportOutlined /> <FormattedMessage id="export" defaultMessage="export" />
+                </Button>
+              </Dropdown>,
 
               <Link to="/users/list/new" key="link">
                 <Button type="primary" key="primary">

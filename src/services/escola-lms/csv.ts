@@ -9,10 +9,11 @@ export async function usersCsvExport(
     pageSize?: number;
     search?: string;
     role?: string;
+    format?: string;
   },
   options?: RequestOptionsInit,
 ) {
-  return request<API.UserList>('/api/admin/csv/users', {
+  return request<Blob>('/api/admin/csv/users', {
     params: {
       ...params,
       per_page: params && params.pageSize,
@@ -20,8 +21,9 @@ export async function usersCsvExport(
     },
     method: 'GET',
     headers: {
-      accept: 'application/csv',
+      accept: `application/${params?.format || 'csv'}`,
     },
+    responseType: 'blob',
     /* useCache: true */ useCache: false,
     ...(options || {}),
   });
