@@ -35,7 +35,6 @@ export const Lesson: React.FC = () => {
     const formData = getFormData({
       course_id: lesson?.course_id || params.course,
       ...state,
-      order: 0,
       active: state.active ? 1 : 0,
       parent_lesson_id: state.parent_id,
     });
