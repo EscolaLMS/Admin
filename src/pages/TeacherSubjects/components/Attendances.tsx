@@ -1,7 +1,7 @@
-import { message } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { FormattedMessage, useIntl } from 'umi';
+import { message } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
@@ -72,20 +72,18 @@ export const Attendances: React.FC = () => {
         if (!studentUserGroupRes.success || !groupAttendanceScheduleRes.success || !selectedGroup)
           return { data: [], total: 0, success: false };
 
-        setSelectedGroupName(selectedGroup.label);
-
         if (!groupAttendanceScheduleRes.data.length) {
-          message.warn(
-            <FormattedMessage
-              id="noAttendanceSchedule"
-              defaultMessage="No attendance schedule for this group..."
-            />,
+          message.error(
+            intl.formatMessage({
+              id: 'noAttendanceSchedule',
+              defaultMessage: 'No attendance schedule for this group...',
+            }),
           );
-          setDynamicCols([]);
 
-          return { data: [], total: 0, success: true };
+          return { data: [], total: 0, success: false };
         }
 
+        setSelectedGroupName(selectedGroup.label);
         setDynamicCols(
           groupAttendanceScheduleRes.data.reduce<ProColumns<AttendanceTableItem>[]>(
             (acc, curr) => [
