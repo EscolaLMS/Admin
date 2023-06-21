@@ -736,4 +736,5 @@ export default {
   examTitleWithWeight: '{title} (waga: {weight}%)',
   classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
   gradesScalesMissing: 'Brak skali ocen dla wybranego dydaktyka',
+  proposed_grade: 'Proponowana ocena',
 };

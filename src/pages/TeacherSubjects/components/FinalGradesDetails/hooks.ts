@@ -14,7 +14,7 @@ import {
 import { getExams } from '@/services/escola-lms/exams';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
 import { getFlatTopics } from '@/components/ProgramForm/Context';
-import { getScalesBySubjectScaleFormId } from './utils';
+import { getScalesBySubjectScaleFormId, getStudentExamsFromExams } from './utils';
 import type { FetchedData, StudentExam } from './types';
 
 export function useFinalGrades(group_id: number, user_id: number) {
@@ -186,14 +186,7 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
     getExams({ student_id, semester_subject_id })
       .then((response) => {
         if (response.success) {
-          const data = response.data.reduce<StudentExam[]>(
-            (acc, { results: [result], ...rest }) => {
-              if (!result) return acc;
-
-              return [...acc, { ...rest, result }];
-            },
-            [],
-          );
+          const data = getStudentExamsFromExams(response.data, student_id);
 
           setStudentExams((prev) => ({ ...prev, data }));
         }

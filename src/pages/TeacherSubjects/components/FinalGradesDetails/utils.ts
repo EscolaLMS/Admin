@@ -1,5 +1,13 @@
 import type { StudentExam } from './types';
 
+export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number): StudentExam[] =>
+  exams.reduce<StudentExam[]>((acc, { results, ...exam }) => {
+    const result = results.find((examResult) => examResult.user_id === student_id);
+    if (!result) return acc;
+
+    return [...acc, { ...exam, result }];
+  }, []);
+
 export const getProposedGrade = (
   studentExams: StudentExam[],
   tutorGradeScales: API.GradeScale[],

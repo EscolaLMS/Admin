@@ -749,4 +749,5 @@ export default {
   examTitleWithWeight: '{title} (weight: {weight}%)',
   classRegisterTitleWithGroupName: 'Class register of group {groupName}',
   gradesScalesMissing: 'There is no grading scale for the selected teacher',
+  proposed_grade: 'Proposed grade',
 };
