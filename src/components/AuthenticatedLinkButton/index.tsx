@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import type { ButtonProps } from 'antd';
+import { FormattedMessage } from 'umi';
 declare const REACT_APP_API_URL: string;
 
 export const AuthenticatedLinkButton: React.FC<
@@ -10,19 +11,27 @@ export const AuthenticatedLinkButton: React.FC<
 
   const handleAction = useCallback(async () => {
     setLoading(true);
-    const result = await fetch(`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
-    });
+    try {
+      const result = await fetch(`${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
+      });
 
-    const anchor = document.createElement('a');
-    const blob = await result.blob();
-    const href = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      const blob = await result.blob();
+      const href = window.URL.createObjectURL(blob);
 
-    anchor.download = filename;
-    anchor.href = href;
+      anchor.download = filename;
+      anchor.href = href;
 
-    anchor.click();
-    setLoading(false);
+      anchor.click();
+      setLoading(false);
+      message.success(<FormattedMessage id="file_downloaded" defaultMessage="File downloaded" />);
+    } catch (error) {
+      setLoading(false);
+      message.error(
+        <FormattedMessage id="file_downloaded_error" defaultMessage="Can't download file" />,
+      );
+    }
   }, [url, filename]);
 
   return (

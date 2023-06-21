@@ -750,4 +750,6 @@ export default {
   classRegisterTitleWithGroupName: 'Class register of group {groupName}',
   gradesScalesMissing: 'There is no grading scale for the selected teacher',
   proposed_grade: 'Proposed grade',
+  file_downloaded: 'File downloaded',
+  file_downloaded_error: "Can't download file",
 };

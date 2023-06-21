@@ -8,7 +8,8 @@ import ProTable from '@ant-design/pro-table';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
 import { DeleteOutlined, EditOutlined, BookOutlined, ExportOutlined } from '@ant-design/icons';
 import UploadH5P from '@/components/H5P/upload';
-declare const REACT_APP_API_URL: string;
+import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
+import { createTableOrderObject } from '@/utils/utils';
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,40 +38,6 @@ const TableList: React.FC = () => {
     },
     [actionRef],
   );
-
-  const handleExport = useCallback(async (id: number, title: string) => {
-    setLoading(true);
-    const hide = message.loading(<FormattedMessage id="loading" defaultMessage="loading" />);
-    try {
-      const file = await fetch(
-        `${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/admin/hh5p/content/${id}/export`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
-        },
-      );
-      if (!file.ok) throw Error('Error occured');
-
-      hide();
-      setLoading(false);
-      message.success(<FormattedMessage id="downloading" defaultMessage="Downloading" />);
-
-      const blob = await file.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-
-      a.href = url;
-      a.download = `${title.split(' ').join('-').toLocaleLowerCase()}`;
-      a.click();
-      a.remove();
-    } catch (error) {
-      hide();
-      setLoading(false);
-      message.error(
-        <FormattedMessage id="cant-download-file" defaultMessage="Can't download file" />,
-      );
-      return;
-    }
-  }, []);
 
   const columns: ProColumns<API.H5PContentListItem>[] = [
     {
@@ -174,7 +141,11 @@ const TableList: React.FC = () => {
           </Tooltip>
         </Link>,
         <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />} key={'export'}>
-          <Button icon={<ExportOutlined />} onClick={() => handleExport(record.id, record.title)} />
+          <AuthenticatedLinkButton
+            url={`/api/admin/hh5p/content/${record.id}/export`}
+            filename={`${record.title.split(' ').join('-').toLocaleLowerCase()}.h5p`}
+            icon={<ExportOutlined />}
+          />
         </Tooltip>,
       ],
     },
@@ -202,19 +173,13 @@ const TableList: React.FC = () => {
         ]}
         request={({ pageSize, current, title, library_id }, sort) => {
           setLoading(true);
-          const sortArr = sort && Object.entries(sort)[0];
 
           return h5p({
             title,
             library_id,
-            pageSize,
-            current,
-            order_by: sortArr && sortArr[0], // i like nested ternary
-            /* eslint-disable */ order: sortArr
-              ? sortArr[1] === 'ascend'
-                ? 'ASC'
-                : 'DESC'
-              : undefined,
+            per_page: pageSize,
+            page: current,
+            ...createTableOrderObject(sort),
           }).then((response) => {
             setLoading(false);
             if (response.success) {

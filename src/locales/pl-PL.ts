@@ -737,4 +737,6 @@ export default {
   classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
   gradesScalesMissing: 'Brak skali ocen dla wybranego dydaktyka',
   proposed_grade: 'Proponowana ocena',
+  file_downloaded: 'Pobrano plik',
+  file_downloaded_error: 'Nie udało się pobrać pliku',
 };
