@@ -6,18 +6,12 @@ export async function orders(
   params: API.PaginationParams &
     EscolaLms.Cart.Http.Requests.Admin.OrderSearchRequest & {
       // query
-      current?: number;
-      pageSize?: number;
       status?: API.OrderStatus;
     },
   options?: RequestOptionsInit,
 ) {
-  return request<API.OrderList>('/api/admin/orders?page=1', {
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+  return request<API.OrderList>('/api/admin/orders', {
+    params,
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),
