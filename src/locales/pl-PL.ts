@@ -739,4 +739,6 @@ export default {
   gradesScalesMissing: 'Brak skali ocen dla wybranego dydaktyka',
   proposed_grade: 'Proponowana ocena',
   groupDataMissing: 'Brak danych dla grupy {group_name}',
+  file_downloaded: 'Pobrano plik',
+  file_downloaded_error: 'Nie udało się pobrać pliku',
 };

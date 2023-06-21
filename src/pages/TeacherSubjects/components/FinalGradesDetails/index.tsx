@@ -288,6 +288,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
                 {title}
               </Typography.Text>
               <UserProgress
+                course_id={Number(id)}
                 topics={userCoursesTopics.data?.[Number(id)] ?? []}
                 stats={userCoursesStats.data?.[Number(id)]?.finishedTopics ?? []}
               />

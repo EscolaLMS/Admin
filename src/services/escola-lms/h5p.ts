@@ -1,21 +1,10 @@
 import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
-export async function h5p(
-  params: API.H5PListParams & {
-    // query
-    current?: number;
-    pageSize?: number;
-  },
-  options?: RequestOptionsInit,
-) {
+export async function h5p(params: API.H5PListParams, options?: RequestOptionsInit) {
   return request<API.DefaultMetaResponse<API.H5PContentListItem>>(`/api/admin/hh5p/content`, {
     method: 'GET',
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     ...(options || {}),
   });
 }

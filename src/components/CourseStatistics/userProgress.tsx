@@ -1,10 +1,12 @@
-import { Select, Space, Switch, Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import React, { useMemo, useState } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
-import TypeButtonDrawer from '../TypeButtonDrawer';
+import { Row, Select, Space, Switch, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import ProCard from '@ant-design/pro-card';
 import { Column } from '@ant-design/plots';
+import { FormattedMessage, useIntl } from 'umi';
+
+import TypeButtonDrawer from '../TypeButtonDrawer';
+import { ExportStatsButton } from './ExportStatsButton';
 
 type UserStatColumn = Record<string, number | string | API.FinishedTopicsUserStat> & {
   email: string;
@@ -19,9 +21,10 @@ const findH5PType = (topic: API.TopicH5P) => {
 };
 
 export const UserProgress: React.FC<{
+  course_id: number;
   topics: API.Topic[];
   stats: API.FinishedTopicsUserStats[];
-}> = ({ topics, stats }) => {
+}> = ({ course_id, topics, stats }) => {
   const [showSeconds, setShowSeconds] = useState(false);
   const columns: ColumnsType<UserStatColumn> = useMemo(() => {
     return [
@@ -105,14 +108,18 @@ export const UserProgress: React.FC<{
   return (
     <Table
       title={() => (
-        <Space>
-          <FormattedMessage id="Finished" defaultMessage="Finished:" /> <Tag color="success">F</Tag>
-          <FormattedMessage id="Started" defaultMessage="Started:" /> <Tag color="blue">S</Tag>
-          <FormattedMessage id="NotStarted" defaultMessage="Not Started:" />{' '}
-          <Tag color="error">N</Tag>
-          <FormattedMessage id="ShowMinutes" defaultMessage="Show minutes spent on topic:" />{' '}
-          <Switch checked={showSeconds} onChange={(v) => setShowSeconds(v)} />
-        </Space>
+        <Row justify="space-between" align="middle">
+          <Space>
+            <FormattedMessage id="Finished" defaultMessage="Finished:" />{' '}
+            <Tag color="success">F</Tag>
+            <FormattedMessage id="Started" defaultMessage="Started:" /> <Tag color="blue">S</Tag>
+            <FormattedMessage id="NotStarted" defaultMessage="Not Started:" />{' '}
+            <Tag color="error">N</Tag>
+            <FormattedMessage id="ShowMinutes" defaultMessage="Show minutes spent on topic:" />{' '}
+            <Switch checked={showSeconds} onChange={(v) => setShowSeconds(v)} />
+          </Space>
+          <ExportStatsButton course_id={course_id} />
+        </Row>
       )}
       columns={columns}
       dataSource={dataSource}

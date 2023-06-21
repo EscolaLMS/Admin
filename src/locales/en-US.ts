@@ -752,4 +752,6 @@ export default {
   gradesScalesMissing: 'There is no grading scale for the selected teacher',
   proposed_grade: 'Proposed grade',
   groupDataMissing: 'Missing data for group {group_name}',
+  file_downloaded: 'File downloaded',
+  file_downloaded_error: "Can't download file",
 };

@@ -571,4 +571,6 @@ export default {
   'model.text': 'Champ de texte',
   'model.json': 'JSON',
   icon: 'Icône',
+  file_downloaded: 'Fichier téléchargé',
+  file_downloaded_error: 'Impossible de télécharger le fichier',
 };

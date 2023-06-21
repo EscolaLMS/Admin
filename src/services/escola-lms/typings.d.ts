@@ -1743,6 +1743,12 @@ declare namespace API {
     global?: Record<string, string>;
     images?: Record<string, string>;
   };
+
+  type ExportStatForCourseStat = 'EscolaLms\\Reports\\Stats\\Course\\FinishedTopics';
+
+  type ExportStatForCourseParams = {
+    stat: ExportStatForCourseStat;
+  };
 }
 
 declare module 'jsoneditor-react' {
