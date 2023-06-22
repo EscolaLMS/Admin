@@ -754,4 +754,7 @@ export default {
   groupDataMissing: 'Missing data for group {group_name}',
   file_downloaded: 'File downloaded',
   file_downloaded_error: "Can't download file",
+  present: 'Present',
+  not_exercising: 'Not exercising',
+  excused_absence: 'Excused absence',
 };

@@ -741,4 +741,7 @@ export default {
   groupDataMissing: 'Brak danych dla grupy {group_name}',
   file_downloaded: 'Pobrano plik',
   file_downloaded_error: 'Nie udało się pobrać pliku',
+  present: 'Obecny',
+  not_exercising: 'Nie ćwiczący',
+  excused_absence: 'Nieobecność usprawiedliwiona',
 };
