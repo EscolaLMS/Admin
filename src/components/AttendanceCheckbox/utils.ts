@@ -2,17 +2,16 @@ import { AttendanceValue } from '@/services/escola-lms/enums';
 import type { AttendanceMap, Status } from './types';
 
 export function parseToStatus(attendance: AttendanceValue | null): Status {
-  const attendanceMapped = attendance === null ? 'notSelected' : attendance;
+  const attendanceMapped = attendance === null ? AttendanceValue.ABSENT : attendance;
 
   const attendanceMap: AttendanceMap = {
     [AttendanceValue.PRESENT]: { ch1: true, ch2: false },
     [AttendanceValue.PRESENT_NOT_EXERCISING]: { ch1: true, ch2: true },
     [AttendanceValue.ABSENT]: { ch1: false, ch2: false },
     [AttendanceValue.EXCUSED_ABSENCE]: { ch1: false, ch2: true },
-    notSelected: { ch1: false, ch2: false },
   };
 
-  return attendanceMap[attendanceMapped];
+  return attendanceMap[attendanceMapped] ?? AttendanceValue.ABSENT;
 }
 
 export function parseToAttendanceValue({ ch1, ch2 }: Status): AttendanceValue {
@@ -25,5 +24,5 @@ export function parseToAttendanceValue({ ch1, ch2 }: Status): AttendanceValue {
     false_true: AttendanceValue.EXCUSED_ABSENCE,
   };
 
-  return statusMap[statusStr];
+  return statusMap[statusStr] ?? { ch1: false, ch2: false };
 }
