@@ -8,7 +8,6 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { DAY_FORMAT } from '@/consts/dates';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
-import { AttendanceValue } from '@/services/escola-lms/enums';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
 
@@ -97,7 +96,7 @@ export const Attendances: React.FC = () => {
                 render: (_, record) => (
                   <AttendanceCheckbox
                     groupAttendanceScheduleId={curr.id}
-                    defaultChecked={record[`${curr?.date_from}`] === AttendanceValue.PRESENT}
+                    attendance={record[`${curr?.date_from}`]}
                     studentId={record.id}
                   />
                 ),

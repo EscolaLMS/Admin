@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import type { ProColumns } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
-import { AttendanceValue } from '@/services/escola-lms/enums';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 
 import type { StudentExam } from '../FinalGradesDetails/types';
@@ -32,7 +31,7 @@ export const getAttendanceCols = (
         render: (_, record) => (
           <AttendanceCheckbox
             groupAttendanceScheduleId={curr.id}
-            defaultChecked={record[`attendance-${curr?.date_from}`] === AttendanceValue.PRESENT}
+            attendance={record[`attendance-${curr?.date_from}`]}
             studentId={record.id}
           />
         ),
