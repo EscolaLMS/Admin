@@ -63,7 +63,9 @@ export enum QuestionType {
 
 export enum AttendanceValue {
   PRESENT = 'present',
+  PRESENT_NOT_EXERCISING = 'present_not_exercising',
   ABSENT = 'absent',
+  EXCUSED_ABSENCE = 'excused_absence',
 }
 
 export enum ExamGradeType {
