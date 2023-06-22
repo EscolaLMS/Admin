@@ -9,8 +9,12 @@ import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import type { StudentExam } from '../FinalGradesDetails/types';
 import { FinalGradeSelect } from '../FinalGradeSelect';
 import { ExamGradeInput } from '../ExamGradeInput';
-import type { ClassRegisterTableItemAttendance, ClassRegisterTableItemFinalGrade } from './types';
-import type { ClassRegisterTableItem, ClassRegisterTableItemExamResult } from './types';
+import type {
+  ClassRegisterTableItemAttendance,
+  ClassRegisterTableItemFinalGrade,
+  ClassRegisterTableItem,
+  ClassRegisterTableItemExamResult,
+} from './types';
 
 /* Attendance */
 export const getAttendanceCols = (
