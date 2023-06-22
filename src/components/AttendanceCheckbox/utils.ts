@@ -11,7 +11,7 @@ export function parseToStatus(attendance: AttendanceValue | null): Status {
     [AttendanceValue.EXCUSED_ABSENCE]: { ch1: false, ch2: true },
   };
 
-  return attendanceMap[attendanceMapped] ?? AttendanceValue.ABSENT;
+  return attendanceMap[attendanceMapped] ?? { ch1: false, ch2: false };
 }
 
 export function parseToAttendanceValue({ ch1, ch2 }: Status): AttendanceValue {
@@ -24,5 +24,5 @@ export function parseToAttendanceValue({ ch1, ch2 }: Status): AttendanceValue {
     false_true: AttendanceValue.EXCUSED_ABSENCE,
   };
 
-  return statusMap[statusStr] ?? { ch1: false, ch2: false };
+  return statusMap[statusStr] ?? AttendanceValue.ABSENT;
 }
