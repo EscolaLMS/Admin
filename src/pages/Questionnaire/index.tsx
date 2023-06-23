@@ -14,6 +14,7 @@ export const TableColumns: ProColumns<API.Questionnaire>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="title" defaultMessage="title" />,

@@ -28,6 +28,7 @@ export const TableColumns: ProColumns<TableDataProps>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'user_id',
     hideInSearch: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="first_name" defaultMessage="First name" />,

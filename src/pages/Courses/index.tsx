@@ -22,6 +22,7 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     dataIndex: 'id',
     sorter: true,
     search: false,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="title" defaultMessage="title" />,

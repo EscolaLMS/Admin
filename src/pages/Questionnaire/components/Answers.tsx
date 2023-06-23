@@ -97,6 +97,7 @@ const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Quest
       dataIndex: 'id',
       hideInSearch: true,
       sorter: true,
+      width: '80px',
     },
     {
       title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,

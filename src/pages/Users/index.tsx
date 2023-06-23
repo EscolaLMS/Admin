@@ -28,6 +28,7 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="created_at" />,

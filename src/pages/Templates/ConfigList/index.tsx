@@ -23,6 +23,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
       dataIndex: 'id',
       hideInSearch: true,
       sorter: true,
+      width: '80px',
     },
     {
       title: <FormattedMessage id="created_at" defaultMessage="created_at" />,

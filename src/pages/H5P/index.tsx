@@ -45,6 +45,7 @@ const TableList: React.FC = () => {
       dataIndex: 'id',
       sorter: true,
       search: false,
+      width: '80px',
     },
     {
       title: <FormattedMessage id="newH5P" defaultMessage="newH5P" />,

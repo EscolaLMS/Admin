@@ -22,6 +22,7 @@ export const TableColumns: ProColumns<API.Translation>[] = [
     dataIndex: 'id',
     sorter: true,
     hideInSearch: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="group" defaultMessage="group" />,

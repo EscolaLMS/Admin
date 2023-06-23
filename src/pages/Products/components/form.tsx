@@ -556,7 +556,7 @@ const ProductsForm: React.FC<{
                 {
                   title: <FormattedMessage id="id" defaultMessage="id" />,
                   dataIndex: 'id',
-                  width: '10%',
+                  width: '80px',
                 },
                 {
                   title: <FormattedMessage id="name" defaultMessage="name" />,

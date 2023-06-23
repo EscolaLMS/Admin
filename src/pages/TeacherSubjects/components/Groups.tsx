@@ -15,6 +15,7 @@ export const StudentsTableColumns: ProColumns<API.StudentUserGroup>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="groupName" defaultMessage="groupName" />,
@@ -47,6 +48,7 @@ const TableColumns = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="groupName" defaultMessage="groupName" />,

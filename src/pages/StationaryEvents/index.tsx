@@ -14,6 +14,7 @@ export const TableColumns: ProColumns<EscolaLms.StationaryEvents.Models.Stationa
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
 
   {

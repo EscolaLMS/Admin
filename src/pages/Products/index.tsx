@@ -33,6 +33,7 @@ export const TableColumns: ProColumns<EscolaLms.Cart.Models.Product>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
 
   {
