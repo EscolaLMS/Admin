@@ -19,7 +19,7 @@ export const EditQuestion: React.FC<{
   return (
     <Space direction="vertical" style={{ display: 'flex' }}>
       <Divider>
-        <FormattedMessage id={question.type} />
+        <FormattedMessage id={`gift_type.${question.type}`} />
       </Divider>
       <GiftQuizQuestionEditor
         type={question.type}

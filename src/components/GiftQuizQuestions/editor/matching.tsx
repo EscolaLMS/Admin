@@ -1,6 +1,6 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useMemo } from 'react';
+import { Children, useCallback, useMemo } from 'react';
 import { parse, Matching, Match } from '@escolalms/gift-pegjs';
 import { Button, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -88,36 +88,40 @@ export const GiftQuizQuestionMatchingEditor: React.FC<{
             value={question.stem.text}
             onChange={(e) => onMatchingQuestionChange(e.target.value)}
           />
-          {question.matchPairs.map((pair, i) => (
-            <div>
-              <Space direction="horizontal">
-                <Input
-                  size="small"
-                  value={pair.subquestion.text}
-                  onChange={(e) =>
-                    onMatchingPairChange(
-                      { ...pair, subquestion: { ...pair.subquestion, text: e.target.value } },
-                      i,
-                    )
-                  }
-                />
+          {Children.toArray(
+            question.matchPairs.map((pair, i) => (
+              <div>
+                <Space direction="horizontal">
+                  <Input
+                    size="small"
+                    value={pair.subquestion.text}
+                    onChange={(e) =>
+                      onMatchingPairChange(
+                        { ...pair, subquestion: { ...pair.subquestion, text: e.target.value } },
+                        i,
+                      )
+                    }
+                  />
 
-                <Input
-                  size="small"
-                  value={pair.subanswer}
-                  onChange={(e) => onMatchingPairChange({ ...pair, subanswer: e.target.value }, i)}
-                />
+                  <Input
+                    size="small"
+                    value={pair.subanswer}
+                    onChange={(e) =>
+                      onMatchingPairChange({ ...pair, subanswer: e.target.value }, i)
+                    }
+                  />
 
-                <Button
-                  size="small"
-                  icon={<DeleteOutlined />}
-                  onClick={() => onMatchingPairDelete(i)}
-                />
-              </Space>
-            </div>
-          ))}
+                  <Button
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    onClick={() => onMatchingPairDelete(i)}
+                  />
+                </Space>
+              </div>
+            )),
+          )}
           <Button size="small" onClick={() => onMatchingQuestionAdd()}>
-            <FormattedMessage id="addPair" defaultMessage="Add Matching Pair" />
+            <FormattedMessage id="Questions.addMatchingPair" defaultMessage="Add Matching Pair" />
           </Button>
         </Space>
       )}

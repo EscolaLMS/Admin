@@ -1,6 +1,6 @@
 import Input from 'antd/lib/input';
 
-import { useCallback, useMemo } from 'react';
+import { Children, useCallback, useMemo } from 'react';
 import { parse, TextChoice, ShortAnswer } from '@escolalms/gift-pegjs';
 import { Button, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -89,37 +89,39 @@ export const GiftQuizQuestionShortEditor: React.FC<{
             value={question.stem.text}
             onChange={(e) => onMCQuestionChange(e.target.value)}
           />
-          {question.choices.map((choice, i) => (
-            <div>
-              <Space direction="horizontal">
-                <Tooltip
-                  title={intl.formatMessage({
-                    id: 'answer',
-                    defaultMessage: 'Answer',
-                  })}
-                >
-                  <Input
-                    size="small"
-                    value={choice.text.text}
-                    onChange={(e) =>
-                      onMCChoiceChange(
-                        { ...choice, text: { ...choice.text, text: e.target.value } },
-                        i,
-                      )
-                    }
-                  />
-                </Tooltip>
+          {Children.toArray(
+            question.choices.map((choice, i) => (
+              <div>
+                <Space direction="horizontal">
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: 'answer',
+                      defaultMessage: 'Answer',
+                    })}
+                  >
+                    <Input
+                      size="small"
+                      value={choice.text.text}
+                      onChange={(e) =>
+                        onMCChoiceChange(
+                          { ...choice, text: { ...choice.text, text: e.target.value } },
+                          i,
+                        )
+                      }
+                    />
+                  </Tooltip>
 
-                <Button
-                  size="small"
-                  icon={<DeleteOutlined />}
-                  onClick={() => onMCQuestionDelete(i)}
-                />
-              </Space>
-            </div>
-          ))}
+                  <Button
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    onClick={() => onMCQuestionDelete(i)}
+                  />
+                </Space>
+              </div>
+            )),
+          )}
           <Button size="small" onClick={() => onMCQuestionAdd()}>
-            <FormattedMessage id="addQuestion" defaultMessage="Add Question" />
+            <FormattedMessage id="Questions.add" defaultMessage="Add Question" />
           </Button>
         </Space>
       )}

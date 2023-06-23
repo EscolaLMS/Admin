@@ -281,6 +281,7 @@ export default {
   no_topics: "Il n'y a pas encore de sujets dans cette leçon",
   no_data: 'Aucune donnée',
   create: 'Créer',
+  sort: 'Trier',
   save: 'Enregistrer',
   relase_drop: 'Relâcher pour déposer',
   drag_here: 'Faites glisser une boîte ici',
@@ -573,4 +574,6 @@ export default {
   icon: 'Icône',
   file_downloaded: 'Fichier téléchargé',
   file_downloaded_error: 'Impossible de télécharger le fichier',
+  pressSaveToCreateQuestions: "Créez ce sujet avant d'ajouter des questions",
+  selectNewQuestionType: 'Sélectionner un nouveau type de question',
 };
