@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { message } from 'antd';
-import type { AttendanceValue } from '@/services/escola-lms/enums';
-import {
-  changeStudentAttendance,
-  groupAttendanceSchedule,
-} from '@/services/escola-lms/attendances';
+import { groupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import {
   getGradeTerms,
   getUserFinalGrades,
@@ -151,30 +146,11 @@ export function useUserAttendanceSchedules(group_id: number, user_id: number) {
       });
   }, [group_id, user_id]);
 
-  const updateUserAttendanceSchedules = useCallback(
-    (schedule_id: number, value: AttendanceValue) => {
-      setUserAttendanceSchedules((prev) => ({ ...prev, loading: true }));
-      changeStudentAttendance(schedule_id, user_id, value)
-        .then((response) => {
-          if (response.success) {
-            message.success(response.message);
-          } else {
-            message.error(response.message);
-          }
-        })
-        .finally(() => {
-          fetchUserAttendanceSchedules();
-          setUserAttendanceSchedules((prev) => ({ ...prev, loading: false }));
-        });
-    },
-    [fetchUserAttendanceSchedules, user_id],
-  );
-
   useEffect(() => {
     fetchUserAttendanceSchedules();
   }, [fetchUserAttendanceSchedules]);
 
-  return { userAttendanceSchedules, fetchUserAttendanceSchedules, updateUserAttendanceSchedules };
+  return { userAttendanceSchedules, fetchUserAttendanceSchedules };
 }
 
 export function useStudentExams(student_id: number, semester_subject_id: number | null) {

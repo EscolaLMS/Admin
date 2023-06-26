@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage, history } from 'umi';
 import { format } from 'date-fns';
-import { Checkbox, Col, Divider, message, Row, Spin, Typography } from 'antd';
+import { Col, Divider, message, Row, Spin, Typography } from 'antd';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
-import { AttendanceValue } from '@/services/escola-lms/enums';
 import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
+import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { UserCourseAttempts, UserProgress } from '@/components/CourseStatistics/userProgress';
 import { useTeacherSubject } from '../../context';
 import {
@@ -112,7 +112,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     finalGrades.data?.tutor_id,
     finalGrades.data?.s_subject_scale_form_id,
   );
-  const { userAttendanceSchedules, updateUserAttendanceSchedules } = useUserAttendanceSchedules(
+  const { userAttendanceSchedules, fetchUserAttendanceSchedules } = useUserAttendanceSchedules(
     group_id,
     user_id,
   );
@@ -253,14 +253,11 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
                 title: <FormattedMessage id="TeacherSubjects.FinalGrades.Attendance" />,
                 dataIndex: 'attendance',
                 render: (_n, row) => (
-                  <Checkbox
-                    onChange={(e) =>
-                      updateUserAttendanceSchedules(
-                        row.id,
-                        e.target.checked ? AttendanceValue.PRESENT : AttendanceValue.ABSENT,
-                      )
-                    }
-                    checked={row.attendance.value === AttendanceValue.PRESENT}
+                  <AttendanceCheckbox
+                    groupAttendanceScheduleId={row.id}
+                    studentId={user_id}
+                    attendance={row.attendance.value}
+                    onSuccess={fetchUserAttendanceSchedules}
                   />
                 ),
               },
