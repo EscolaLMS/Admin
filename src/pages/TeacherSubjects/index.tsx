@@ -33,6 +33,7 @@ export const TableColumns: ProColumns<API.Subjects>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="subject" defaultMessage="subject" />,

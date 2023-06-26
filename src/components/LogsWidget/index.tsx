@@ -14,6 +14,7 @@ export const TableColumns: ProColumns<EscolaLms.Tracker.Models.TrackRoute>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,

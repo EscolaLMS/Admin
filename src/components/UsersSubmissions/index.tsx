@@ -22,6 +22,7 @@ export const TableColumns: ProColumns<EscolaLms.AssignWithoutAccount.Models.User
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
 
   {

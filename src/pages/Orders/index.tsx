@@ -45,6 +45,7 @@ export const TableColumns: ProColumns<API.OrderListItem>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,

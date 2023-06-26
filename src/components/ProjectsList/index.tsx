@@ -68,6 +68,7 @@ export const ProjectsList: React.FC<{ courseId?: number }> = ({ courseId }) => {
       dataIndex: 'id',
       hideInSearch: true,
       sorter: true,
+      width: '80px',
     },
     {
       title: <FormattedMessage id="topic" defaultMessage="topic" />,

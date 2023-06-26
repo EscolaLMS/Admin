@@ -19,6 +19,7 @@ const staticColumns: ProColumns<API.Exam>[] = [
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="title" defaultMessage="title" />,

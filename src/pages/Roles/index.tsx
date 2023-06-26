@@ -10,11 +10,11 @@ import RolesModalForm from './components/ModalForm';
 
 export const TableColumns: ProColumns<API.Role>[] = [
   {
-    width: '10%',
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     width: '80%',

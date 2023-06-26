@@ -19,6 +19,7 @@ export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="name" defaultMessage="name" />,

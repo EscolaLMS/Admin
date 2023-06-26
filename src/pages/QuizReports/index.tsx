@@ -17,6 +17,7 @@ export const GiftQuizTableColumns: ProColumns<API.GiftQuiz>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
+    width: '80px',
   },
   {
     title: <FormattedMessage id="value" defaultMessage="value" />,
@@ -38,6 +39,7 @@ export const TableColumns: ProColumns<API.QuizAttempt>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="gift_quiz" defaultMessage="GIFT Quiz" />,

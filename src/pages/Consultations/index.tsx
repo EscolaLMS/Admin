@@ -23,6 +23,7 @@ export const TableColumns: ProColumns<API.Consultation>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="dateRange" defaultMessage="Date Range" />,

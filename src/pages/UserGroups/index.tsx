@@ -31,6 +31,7 @@ export const TableColumns: ProColumns<API.UserGroup>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="full_name" defaultMessage="full_name" />,

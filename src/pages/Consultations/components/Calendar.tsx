@@ -69,6 +69,7 @@ export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
     dataIndex: 'consultation_term_id',
     hideInSearch: true,
     sorter: true,
+    width: '80px',
   },
   {
     title: <FormattedMessage id="user" defaultMessage="user" />,
