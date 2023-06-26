@@ -140,7 +140,7 @@ export const Table: React.FC<{
       >
         <Button icon={<PlusCircleOutlined />} type="primary" onClick={() => setShowNew(true)}>
           {' '}
-          <FormattedMessage id="newQuestion" defaultMessage="Add New Question" />
+          <FormattedMessage id="addNewQuestion" defaultMessage="Add new question" />
         </Button>
       </Space>
 
@@ -164,7 +164,7 @@ export const Table: React.FC<{
             render: (_, row: API.GiftQuestion) => <FormattedMessage id={row.type} />,
           },
           {
-            title: <FormattedMessage id="question" defaultMessage="question" />,
+            title: <FormattedMessage id="question" defaultMessage="Question" />,
             dataIndex: 'question',
             hideInForm: true,
             hideInSearch: true,

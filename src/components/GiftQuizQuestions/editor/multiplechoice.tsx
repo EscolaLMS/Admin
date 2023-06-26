@@ -1,3 +1,4 @@
+import { Children } from 'react';
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
@@ -105,68 +106,70 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<{
               onChange={(e) => onMCQuestionChange(e.target.value)}
             />
           </Tooltip>
-          {question.choices.map((choice, i) => (
-            <div>
-              <Space direction="horizontal">
-                <Tooltip
-                  title={intl.formatMessage({
-                    id: 'correctAnswer',
-                    defaultMessage: 'Is Correct Answer?',
-                  })}
-                >
-                  <Checkbox
-                    checked={choice.isCorrect}
-                    onChange={(e) =>
-                      onMCChoiceChange({ ...choice, isCorrect: e.target.checked }, i)
-                    }
-                  />
-                </Tooltip>
+          {Children.toArray(
+            question.choices.map((choice, i) => (
+              <div>
+                <Space direction="horizontal">
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: 'correctAnswer',
+                      defaultMessage: 'Is Correct Answer?',
+                    })}
+                  >
+                    <Checkbox
+                      checked={choice.isCorrect}
+                      onChange={(e) =>
+                        onMCChoiceChange({ ...choice, isCorrect: e.target.checked }, i)
+                      }
+                    />
+                  </Tooltip>
 
-                <Tooltip
-                  title={intl.formatMessage({
-                    id: 'answer',
-                    defaultMessage: 'Answer',
-                  })}
-                >
-                  <Input
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: 'answer',
+                      defaultMessage: 'Answer',
+                    })}
+                  >
+                    <Input
+                      size="small"
+                      value={choice.text.text}
+                      onChange={(e) =>
+                        onMCChoiceChange(
+                          { ...choice, text: { ...choice.text, text: e.target.value } },
+                          i,
+                        )
+                      }
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: 'weight',
+                      defaultMessage: 'Weight',
+                    })}
+                  >
+                    <InputNumber
+                      size="small"
+                      addonAfter="%"
+                      defaultValue={undefined}
+                      value={choice.weight}
+                      min={1}
+                      max={100}
+                      onChange={(n) => {
+                        onMCChoiceChange({ ...choice, weight: n ?? null }, i);
+                      }}
+                    />
+                  </Tooltip>
+                  <Button
                     size="small"
-                    value={choice.text.text}
-                    onChange={(e) =>
-                      onMCChoiceChange(
-                        { ...choice, text: { ...choice.text, text: e.target.value } },
-                        i,
-                      )
-                    }
+                    icon={<DeleteOutlined />}
+                    onClick={() => onMCQuestionDelete(i)}
                   />
-                </Tooltip>
-                <Tooltip
-                  title={intl.formatMessage({
-                    id: 'weight',
-                    defaultMessage: 'Weight',
-                  })}
-                >
-                  <InputNumber
-                    size="small"
-                    addonAfter="%"
-                    defaultValue={undefined}
-                    value={choice.weight}
-                    min={1}
-                    max={100}
-                    onChange={(n) => {
-                      onMCChoiceChange({ ...choice, weight: n ?? null }, i);
-                    }}
-                  />
-                </Tooltip>
-                <Button
-                  size="small"
-                  icon={<DeleteOutlined />}
-                  onClick={() => onMCQuestionDelete(i)}
-                />
-              </Space>
-            </div>
-          ))}
+                </Space>
+              </div>
+            )),
+          )}
           <Button size="small" onClick={() => onMCQuestionAdd()}>
-            <FormattedMessage id="addQuestion" defaultMessage="Add Question" />
+            <FormattedMessage id="Questions.add" defaultMessage="Add question" />
           </Button>
         </Space>
       )}

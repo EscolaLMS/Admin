@@ -53,22 +53,29 @@ export const GiftQuizNewQuestionEditor: React.FC<{
   return (
     <Space direction="vertical" style={{ display: 'flex' }}>
       <Divider>
-        <FormattedMessage id={'newQuestion'} defaultMessage="New Question" />
+        <FormattedMessage id={'addNewQuestion'} defaultMessage="New Question" />
       </Divider>
-      <Space>
+      <Space wrap={true}>
         <Typography>
-          <FormattedMessage id={'selectType'} defaultMessage="Type:" />
+          <FormattedMessage id={'type'} defaultMessage="Type:" />
+          {':'}
         </Typography>
         <Select
           value={type}
           onChange={(newType) => setType(newType)}
           placeholder={
-            <FormattedMessage id={'selectType'} defaultMessage="Select New Question Type" />
+            <FormattedMessage
+              id={'selectNewQuestionType'}
+              defaultMessage="Select new question type"
+            />
           }
           options={Object.values(QuestionType)
             .filter((q) => q)
-            .map((q) => ({ value: q, label: <FormattedMessage id={q} /> }))}
-        ></Select>
+            .map((q) => ({ value: q, label: <FormattedMessage id={`gift_type.${q}`} /> }))}
+          style={{
+            maxWidth: '330px',
+          }}
+        />
       </Space>
       {(type === QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS ||
         type === QuestionType.MULTIPLE_CHOICE) && (
