@@ -245,9 +245,11 @@ export const Dashboard: React.FC = () => {
               </div>
             );
           })}
-        <div key="add">
-          <Add onAddButtonClick={onAdd} keys={keysToAdd} />
-        </div>
+        {keysToAdd.length > 0 && (
+          <div key="add">
+            <Add onAddButtonClick={onAdd} keys={keysToAdd} />
+          </div>
+        )}
       </ResponsiveGridLayout>
     </main>
   );
