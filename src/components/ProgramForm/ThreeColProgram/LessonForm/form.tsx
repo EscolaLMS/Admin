@@ -5,7 +5,7 @@ import { useIntl, FormattedMessage } from 'umi';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import ProCard from '@ant-design/pro-card';
 import { ParentLesson } from '../ParentLesson';
-import { StateLesson } from './types';
+import type { StateLesson } from './types';
 
 export const LessonForm: React.FC<{
   lesson: StateLesson;
@@ -128,14 +128,6 @@ export const LessonForm: React.FC<{
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
             <ParentLesson name="parent_id" currentLessonId={lesson?.id} />
-            <ProFormText
-              name="order"
-              label={<FormattedMessage id="stacking_order" />}
-              tooltip={<FormattedMessage id="stacking_order_tooltip" />}
-              placeholder={intl.formatMessage({
-                id: 'stacking_order',
-              })}
-            />
           </aside>
         </Col>
       </Row>
