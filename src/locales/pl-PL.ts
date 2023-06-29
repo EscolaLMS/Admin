@@ -756,4 +756,5 @@ export default {
   'Questions.create': 'Utwórz pytanie',
   'Questions.addMatchingPair': 'Dodaj parę',
   'Questions.add': 'Dodaj pytanie',
+  add_new_component: 'Dodaj nowy komponent',
 };

@@ -1,5 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { WidthProvider, Responsive, type Layout } from 'react-grid-layout';
 import { Button } from 'antd';
+import { CloseSquareOutlined } from '@ant-design/icons';
+
+import '../../../node_modules/react-grid-layout/css/styles.css';
+import '../../../node_modules/react-resizable/css/styles.css';
+import './index.css';
+import Add from './Add';
 import CurrentUsers from './CurrentUsers';
 import Customers from './Customers';
 import HallOfFame from './HallOfFame';
@@ -8,15 +15,8 @@ import Sales from './Sales';
 import Tutorial from './Tutorial';
 import YourCourses from './YourCourses';
 import PieChart from './PieChart';
-import { CloseSquareOutlined } from '@ant-design/icons';
-import type { Layout } from 'react-grid-layout';
-import { Responsive, WidthProvider } from 'react-grid-layout';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
-import '../../../node_modules/react-grid-layout/css/styles.css';
-import '../../../node_modules/react-resizable/css/styles.css';
-import './index.css';
 
 const COLS = 2;
 const ROW_HEIGHT = 150;
@@ -28,13 +28,13 @@ type DashboardComponent<P extends Props> = {
   props?: P;
   [key: string]: any;
 };
-type Dashboard = Record<string, DashboardComponent<any>>;
+type DashboardData = Record<string, DashboardComponent<any>>;
 
 const wrap = <P extends Props>(component: DashboardComponent<P>) => {
   return component;
 };
 
-const components: Dashboard = {
+const components: DashboardData = {
   'current-users': wrap({
     component: CurrentUsers,
     w: 1,
@@ -101,16 +101,17 @@ const components: Dashboard = {
     component: PieChart,
     props: { metric: 'EscolaLms\\Reports\\Metrics\\TutorsPopularityMetric' },
   }),
-
   add: wrap({
     w: 1,
     h: 1,
-    maxH: 1,
+    maxH: 3,
     component: PieChart,
   }),
 };
 
-const defaultStageComponents: (keyof typeof components)[] = [
+type ComponentsKeys = keyof typeof components;
+
+const defaultStageComponents: ComponentsKeys[] = [
   'tutorial',
   'hall-of-fame',
   'ratings',
@@ -120,6 +121,7 @@ const defaultStageComponents: (keyof typeof components)[] = [
   'pie-chart-CoursesPopularityMetric',
   'pie-chart-CoursesSecondsSpentMetric',
   'pie-chart-TutorsPopularityMetric',
+  'add',
 ];
 
 interface LayoutConfig {
@@ -139,11 +141,18 @@ interface LayoutConfigObject {
   xxs: LayoutConfig[];
 }
 
-export const Dashdoard: React.FC = () => {
-  const [stageComponents, setStageComponents] =
-    useState<(keyof typeof components)[]>(defaultStageComponents);
+export const Dashboard: React.FC = () => {
+  const [stageComponents, setStageComponents] = useState<ComponentsKeys[]>(defaultStageComponents);
 
-  const onRemove = useCallback((key: keyof typeof components) => {
+  const keysToAdd = useMemo(() => {
+    return Object.keys(components).filter((key) => !stageComponents.includes(key) && key !== 'add');
+  }, [stageComponents]);
+
+  const onAdd = useCallback((key: ComponentsKeys) => {
+    setStageComponents((prevStageComponents) => [...prevStageComponents, key]);
+  }, []);
+
+  const onRemove = useCallback((key: ComponentsKeys) => {
     setStageComponents((prevStageComponents) => {
       return prevStageComponents.filter((k) => k !== key);
     });
@@ -162,7 +171,7 @@ export const Dashdoard: React.FC = () => {
       }
     }
 
-    const l = stageComponents.map((key /*, i, arr */) => {
+    const l = stageComponents.map((key) => {
       // const prevItem = i > 0 ? components[arr[i - 1]] : null;
       const currItem = components[key];
       x = (x + currItem.w) % COLS;
@@ -191,20 +200,14 @@ export const Dashdoard: React.FC = () => {
   }
 
   const onLayoutChange = (layout: Layout[]) => {
-    const data = layout.reduce<LayoutConfig[]>(
-      (acc, { i, x, y, w, h, maxH }) => [
-        ...acc,
-        {
-          i,
-          x,
-          y,
-          w,
-          h,
-          maxH: maxH,
-        },
-      ],
-      [],
-    );
+    const data = layout.map<LayoutConfig>(({ i, x, y, w, h, maxH }) => ({
+      i,
+      x,
+      y,
+      w,
+      h,
+      maxH,
+    }));
     const changedLayouts: LayoutConfigObject = {
       lg: data,
       md: data,
@@ -223,7 +226,7 @@ export const Dashdoard: React.FC = () => {
         cols={{ lg: 2, md: 2, sm: 2, xs: 1, xxs: 1 }}
         className="layout dashboard-draggable"
         layouts={layouts}
-        onLayoutChange={(layout) => onLayoutChange(layout)}
+        onLayoutChange={onLayoutChange}
       >
         {stageComponents
           .filter((key) => key !== 'add')
@@ -242,6 +245,11 @@ export const Dashdoard: React.FC = () => {
               </div>
             );
           })}
+        {keysToAdd.length > 0 && (
+          <div key="add">
+            <Add onAddButtonClick={onAdd} keys={keysToAdd} />
+          </div>
+        )}
       </ResponsiveGridLayout>
     </main>
   );

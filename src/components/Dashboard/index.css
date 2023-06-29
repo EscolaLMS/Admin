@@ -42,6 +42,10 @@
   border-radius: 10px;
 }
 
+article.dashboard-draggable__add {
+  height: calc(100% - 12px);
+}
+
 .dashboard-draggable .react-grid-item {
   /* Hide content inside react-grid-item when box is smaller than content inside  */
   overflow: hidden;

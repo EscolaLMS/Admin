@@ -764,4 +764,5 @@ export default {
   pressSaveToCreateQuestions: 'Create this Topic before adding questions',
   addNewQuestion: 'Add new question',
   selectNewQuestionType: 'Select new question type',
+  add_new_component: 'Add new component',
 };
