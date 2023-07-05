@@ -1749,6 +1749,19 @@ declare namespace API {
   type ExportStatForCourseParams = {
     stat: ExportStatForCourseStat;
   };
+
+  type CompetencyChallengesParams = PaginationParams & { name?: string; is_active?: boolean };
+
+  type CompetencyChallenge = {
+    id: number;
+    name: string;
+    created_at: Date | string;
+    updated_at: Date | string;
+    description: string | null;
+    image_path: string | null;
+    is_active: boolean;
+    quiz_id: number;
+  };
 }
 
 declare module 'jsoneditor-react' {
