@@ -286,6 +286,17 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/sds-integration -------- */
   SDSExport = 'sds-integration_export',
+
+  /* -------- EscolaLMS/competency-challenges -------- */
+  CompetencyChallengeScaleCreate = 'competency-challenge-scale_create',
+  CompetencyChallengeScaleUpdate = 'competency-challenge-scale_update',
+  CompetencyChallengeScaleDelete = 'competency-challenge-scale_delete',
+
+  CreateCompetencyChallenges = 'competency-challenges_create',
+  ReadCompetencyChallenges = 'competency-challenges_read',
+  UpdateCompetencyChallenges = 'competency-challenges_update',
+  DeleteCompetencyChallenges = 'competency-challenges_delete',
+  ListCompetencyChallenges = 'competency-challenges_list',
 }
 
 export default PERMISSIONS;
