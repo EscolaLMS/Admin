@@ -138,6 +138,8 @@ export default {
   'menu.Other activities.Consultations': 'Konsultacje',
   'menu.Other activities.Form': 'Formularz',
   'menu.Analytics.Logs': 'Logi',
+  'menu.Competency challenges': 'Wyzwania',
+  'menu.Competency challenges.List': 'Lista',
   user_settings: 'Ustawienia użytkownika',
   global_settings: 'Ustawienia globalne',
   'user.settings': 'Ustawienia użytkownika',

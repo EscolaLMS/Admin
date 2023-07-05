@@ -161,6 +161,8 @@ export default {
   'menu.Other activities.StationaryEvents': 'Stationary events',
   'menu.Analytics.Logs': 'Logs',
   'menu.Sales.Vouchers': 'Vouchers',
+  'menu.Competency challenges': 'Competency challenges',
+  'menu.Competency challenges.List': 'List',
   'stationary_event.edit': 'Stationary event edit form',
   stationary_event: 'Stationary event',
   finished_at: 'Finished at Date',
