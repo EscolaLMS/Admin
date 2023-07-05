@@ -22,7 +22,8 @@ export async function deleteCompetencyChallenge(
   competency_challenge_id: number,
   options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultMetaResponse<API.CompetencyChallenge>>(
+  // TODO check response type
+  return request<API.DefaultResponse<unknown>>(
     `/api/admin/competency-challenges/${competency_challenge_id}`,
     {
       method: 'DELETE',
