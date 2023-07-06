@@ -21,8 +21,8 @@ export default function (initialState: {
   const havePackageInstalled = (
     packageName: string,
     // ,minVersion: string = '0.0.0'
-  ) => {
-    return initialState.packages && initialState.packages[packageName];
+  ): boolean => {
+    return Boolean(initialState?.packages?.[packageName]);
   };
 
   const haveSettingsInDashboard = (
