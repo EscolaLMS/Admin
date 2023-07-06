@@ -163,6 +163,7 @@ export default {
   'menu.Sales.Vouchers': 'Vouchers',
   'menu.Competency challenges': 'Competency challenges',
   'menu.Competency challenges.List': 'List',
+  'menu.Competency challenges.Competency challenge': 'Competency challenge',
   'stationary_event.edit': 'Stationary event edit form',
   stationary_event: 'Stationary event',
   finished_at: 'Finished at Date',

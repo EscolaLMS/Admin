@@ -140,6 +140,7 @@ export default {
   'menu.Analytics.Logs': 'Logi',
   'menu.Competency challenges': 'Wyzwania',
   'menu.Competency challenges.List': 'Lista',
+  'menu.Competency challenges.Competency challenge': 'Wyzwanie',
   user_settings: 'Ustawienia użytkownika',
   global_settings: 'Ustawienia globalne',
   'user.settings': 'Ustawienia użytkownika',

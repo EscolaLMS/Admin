@@ -348,8 +348,15 @@
       {
         path: '/competency-challenges/list',
         name: 'List',
-        access: 'competencyChallengesPermission',
+        access: 'competencyChallengesListPermission',
         component: './CompetencyChallenges',
+      },
+      {
+        path: '/competency-challenges/:id',
+        name: 'Competency challenge',
+        access: 'competencyChallengesFormPermission',
+        component: './CompetencyChallenges/form',
+        hideInMenu: true,
       },
     ],
   },
