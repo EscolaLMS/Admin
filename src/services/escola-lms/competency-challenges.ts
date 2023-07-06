@@ -17,6 +17,21 @@ export async function getCompetencyChallenges(
   );
 }
 
+/** GET /api/admin/competency-challenges/:competency_challenge_id */
+export async function getCompetencyChallenge(
+  competency_challenge_id: number,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.CompetencyChallenge>>(
+    `/api/admin/competency-challenges/${competency_challenge_id}`,
+    {
+      method: 'GET',
+      /* useCache: true */ useCache: false,
+      ...(options || {}),
+    },
+  );
+}
+
 /**  DELETE /api/admin/competency-challenges/:competency_challenge_id */
 export async function deleteCompetencyChallenge(
   competency_challenge_id: number,
