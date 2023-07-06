@@ -768,4 +768,9 @@ export default {
   addNewQuestion: 'Add new question',
   selectNewQuestionType: 'Select new question type',
   add_new_component: 'Add new component',
+  'CompetencyChallenges.main': 'Data',
+  'CompetencyChallenges.scales': 'Scales',
+  'CompetencyChallenges.quiz': 'Quiz',
+  'CompetencyChallenges.base': 'Base',
+  'CompetencyChallenges.additional': 'Additional',
 };

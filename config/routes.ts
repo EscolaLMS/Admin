@@ -352,7 +352,7 @@
         component: './CompetencyChallenges',
       },
       {
-        path: '/competency-challenges/:id',
+        path: '/competency-challenges/:id/:tab',
         name: 'Competency challenge',
         access: 'competencyChallengesFormPermission',
         component: './CompetencyChallenges/form',

@@ -760,4 +760,9 @@ export default {
   'Questions.addMatchingPair': 'Dodaj parę',
   'Questions.add': 'Dodaj pytanie',
   add_new_component: 'Dodaj nowy komponent',
+  'CompetencyChallenges.main': 'Dane',
+  'CompetencyChallenges.scales': 'Skale',
+  'CompetencyChallenges.quiz': 'Quiz',
+  'CompetencyChallenges.base': 'Podstawowe',
+  'CompetencyChallenges.additional': 'Dodatkowe',
 };
