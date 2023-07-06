@@ -32,6 +32,40 @@ export async function getCompetencyChallenge(
   );
 }
 
+/** POST /api/admin/competency-challenges */
+export async function createCompetencyChallenge(
+  body: API.CreateCompetencyChallenge,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.CompetencyChallenge>>(`/api/admin/competency-challenges`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** PUT /api/admin/competency-challenges/:competency_challenge_id */
+export async function updateCompetencyChallenge(
+  competency_challenge_id: number,
+  body: API.UpdateCompetencyChallenge,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.CompetencyChallenge>>(
+    `/api/admin/competency-challenges/${competency_challenge_id}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  );
+}
+
 /**  DELETE /api/admin/competency-challenges/:competency_challenge_id */
 export async function deleteCompetencyChallenge(
   competency_challenge_id: number,

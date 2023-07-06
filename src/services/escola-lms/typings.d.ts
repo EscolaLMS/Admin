@@ -1762,6 +1762,13 @@ declare namespace API {
     is_active: boolean;
     quiz_id: number;
   };
+
+  type CreateCompetencyChallenge = {
+    name: string;
+    is_active: boolean;
+  };
+
+  type UpdateCompetencyChallenge = CreateCompetencyChallenge & { description: string };
 }
 
 declare module 'jsoneditor-react' {
