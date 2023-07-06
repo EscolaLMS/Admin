@@ -73,7 +73,7 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
     title: <FormattedMessage id="options" />,
     render: (_n, record, _i, action) => [
       <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-        <Link to={`/competency-challenges/${record.id}`}>
+        <Link to={`/competency-challenges/${record.id}/main`}>
           <Button type="primary" icon={<EditOutlined />} />
         </Link>
       </Tooltip>,
@@ -108,7 +108,7 @@ const CompetencyChallenges: React.FC = () => (
       rowKey="id"
       search={{ layout: 'vertical' }}
       toolBarRender={() => [
-        <Link key="addnew" to="/competency-challenges/new">
+        <Link key="addnew" to="/competency-challenges/new/main">
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>
