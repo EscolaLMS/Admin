@@ -1,22 +1,87 @@
+import React, { useCallback } from 'react';
+import { FormattedMessage, useIntl, history } from 'umi';
+import { message } from 'antd';
+import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
-import { FormattedMessage, useIntl } from '@@/plugin-locale/localeExports';
-import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
-import React from 'react';
+import {
+  createCompetencyChallenge,
+  updateCompetencyChallenge,
+} from '@/services/escola-lms/competency-challenges';
+
+interface AddCompetencyChallengeFormValues {
+  name: string;
+  is_active: boolean;
+}
+
+interface UpdateCompetencyChallengeFormValues extends AddCompetencyChallengeFormValues {
+  description: string;
+}
 
 interface Props {
   competency_challenge_id: number;
   data?: API.CompetencyChallenge;
+  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
+  onAddSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
 }
 
-export const MainForm: React.FC<Props> = ({ data, competency_challenge_id }) => {
+export const MainForm: React.FC<Props> = ({
+  data,
+  competency_challenge_id,
+  onAddSuccess,
+  onUpdateSuccess,
+}) => {
   const intl = useIntl();
   const [form] = ProForm.useForm();
 
   const isNew = Number.isNaN(competency_challenge_id);
 
+  const addCompetencyChallenge = useCallback(
+    async ({ name, is_active = false }: AddCompetencyChallengeFormValues) => {
+      try {
+        const res = await createCompetencyChallenge({ name, is_active });
+
+        if (!res.success) {
+          message.error(res.message);
+          return;
+        }
+
+        message.success(intl.formatMessage({ id: res.message }));
+        history.push(`/competency-challenges/${res.data.id}/main`);
+        onAddSuccess?.(res);
+      } catch {
+        message.error(intl.formatMessage({ id: 'error' }));
+      }
+    },
+    [],
+  );
+
+  const changeCompetencyChallenge = useCallback(
+    async (formValues: UpdateCompetencyChallengeFormValues) => {
+      try {
+        const res = await updateCompetencyChallenge(competency_challenge_id, formValues);
+
+        if (!res.success) {
+          message.error(res.message);
+          return;
+        }
+
+        message.success(intl.formatMessage({ id: res.message }));
+        onUpdateSuccess?.(res);
+      } catch {
+        message.error(intl.formatMessage({ id: 'error' }));
+      }
+    },
+    [competency_challenge_id],
+  );
+
   return (
-    <ProForm form={form} initialValues={data} onFinish={async (values) => console.log(values)}>
+    <ProForm
+      form={form}
+      initialValues={data}
+      onFinish={isNew ? addCompetencyChallenge : changeCompetencyChallenge}
+    >
       <ProForm.Group title={<FormattedMessage id="CompetencyChallenges.base" />}>
         <ProFormText
           width="lg"
@@ -46,10 +111,11 @@ export const MainForm: React.FC<Props> = ({ data, competency_challenge_id }) => 
             wrapInForm={false}
             folder={`competency-challenges/${competency_challenge_id}`}
             title="image"
-            action={`/api/admin/competency-challenges/${competency_challenge_id}`}
+            action={`/api/admin/competency-challenges/${competency_challenge_id}?_method=PATCH`}
             src_name="image_path"
             form_name="image"
             getUploadedSrcField={(info) => info.file.response.data.image_path}
+            /* TODO */
             setPath={(removedPath) => console.log({ removedPath })}
           />
         </>

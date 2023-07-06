@@ -62,7 +62,7 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
   },
   {
     dataIndex: 'quiz_id',
-    title: <FormattedMessage id="gift_quiz" />,
+    title: <FormattedMessage id="CompetencyChallenges.diagnostic-test" />,
     render: (_n, record) => (
       <TypeButtonDrawer type="EscolaLms\TopicTypeGift\Models\GiftQuiz" type_id={record.quiz_id} />
     ),

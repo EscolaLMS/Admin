@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, history, FormattedMessage } from 'umi';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams, history, FormattedMessage, useIntl } from 'umi';
 import { Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
@@ -7,17 +7,25 @@ import ProCard from '@ant-design/pro-card';
 import { getCompetencyChallenge } from '@/services/escola-lms/competency-challenges';
 import { MainForm } from './components/MainForm';
 import { Scales } from './components/Scales';
-import { Quiz } from './components/Quiz';
+import { DiagnosticTest } from './components/DiagnosticTest';
 
 const CompetencyChallenge: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<API.CompetencyChallenge>();
 
+  const intl = useIntl();
   const { id, tab = 'main' } = useParams<{ id?: string; tab?: string }>();
   const isNew = id === 'new';
   const competency_challenge_id = Number(id);
 
-  useEffect(() => {
+  const pageTitle = useMemo(() => {
+    if (isNew) return intl.formatMessage({ id: 'CompetencyChallenges.new_challenge' });
+    if (data?.name) return data.name;
+
+    return intl.formatMessage({ id: 'menu.Competency challenges' });
+  }, [intl, data?.name]);
+
+  const fetchData = useCallback(() => {
     if (Number.isNaN(competency_challenge_id)) return;
 
     setLoading(true);
@@ -30,8 +38,34 @@ const CompetencyChallenge: React.FC = () => {
       .finally(() => setLoading(false));
   }, [competency_challenge_id]);
 
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
-    <PageContainer>
+    <PageContainer
+      title={pageTitle}
+      header={{
+        breadcrumb: {
+          routes: [
+            {
+              path: 'competency-challenges',
+              breadcrumbName: intl.formatMessage({
+                id: 'menu.Competency challenges',
+              }),
+            },
+            {
+              path: String(id),
+              breadcrumbName: pageTitle,
+            },
+            {
+              path: tab,
+              breadcrumbName: intl.formatMessage({ id: `CompetencyChallenges.${tab}` }),
+            },
+          ],
+        },
+      }}
+    >
       <ProCard
         bodyStyle={{ padding: '24px' }}
         tabs={{
@@ -44,7 +78,11 @@ const CompetencyChallenge: React.FC = () => {
         }}
       >
         <ProCard.TabPane key="main" tab={<FormattedMessage id="CompetencyChallenges.main" />}>
-          <MainForm competency_challenge_id={competency_challenge_id} data={data} />
+          <MainForm
+            competency_challenge_id={competency_challenge_id}
+            data={data}
+            onUpdateSuccess={fetchData}
+          />
         </ProCard.TabPane>
         <ProCard.TabPane
           key="scales"
@@ -54,11 +92,11 @@ const CompetencyChallenge: React.FC = () => {
           <Scales />
         </ProCard.TabPane>
         <ProCard.TabPane
-          key="quiz"
-          tab={<FormattedMessage id="CompetencyChallenges.quiz" />}
+          key="diagnostic-test"
+          tab={<FormattedMessage id="CompetencyChallenges.diagnostic-test" />}
           disabled={isNew}
         >
-          <Quiz />
+          <DiagnosticTest />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

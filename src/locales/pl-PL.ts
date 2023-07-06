@@ -762,7 +762,10 @@ export default {
   add_new_component: 'Dodaj nowy komponent',
   'CompetencyChallenges.main': 'Dane',
   'CompetencyChallenges.scales': 'Skale',
-  'CompetencyChallenges.quiz': 'Quiz',
+  'CompetencyChallenges.diagnostic-test': 'Test diagnostyczny',
   'CompetencyChallenges.base': 'Podstawowe',
   'CompetencyChallenges.additional': 'Dodatkowe',
+  'CompetencyChallenges.new_challenge': 'Nowe wyzwanie',
+  'Competency challenge updated successfully.': 'Zaktualizowano wyzwanie',
+  'Competency challenge created successfully.': 'Stworzono wyzwanie',
 };
