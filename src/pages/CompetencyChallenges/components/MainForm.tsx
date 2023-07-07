@@ -1,18 +1,26 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage, useIntl, history } from 'umi';
+import { FormattedMessage, history, useIntl } from 'umi';
 import { message } from 'antd';
-import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
 
+import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import {
   createCompetencyChallenge,
   updateCompetencyChallenge,
 } from '@/services/escola-lms/competency-challenges';
+import { CompetencyChallengeType } from '@/services/escola-lms/enums';
+
+const typeOptions = Object.values(CompetencyChallengeType).map((value) => ({
+  value,
+  label: <FormattedMessage id={`CompetencyChallenges.types.${value}`} />,
+}));
 
 interface AddCompetencyChallengeFormValues {
   name: string;
   is_active: boolean;
+  type: API.CompetencyChallengeType;
 }
 
 interface UpdateCompetencyChallengeFormValues extends AddCompetencyChallengeFormValues {
@@ -38,9 +46,9 @@ export const MainForm: React.FC<Props> = ({
   const isNew = Number.isNaN(competency_challenge_id);
 
   const addCompetencyChallenge = useCallback(
-    async ({ name, is_active = false }: AddCompetencyChallengeFormValues) => {
+    async ({ name, type, is_active = false }: AddCompetencyChallengeFormValues) => {
       try {
-        const res = await createCompetencyChallenge({ name, is_active });
+        const res = await createCompetencyChallenge({ name, is_active, type });
 
         if (!res.success) {
           message.error(res.message);
@@ -84,10 +92,18 @@ export const MainForm: React.FC<Props> = ({
     >
       <ProForm.Group title={<FormattedMessage id="CompetencyChallenges.base" />}>
         <ProFormText
-          width="lg"
+          width="md"
           name="name"
           label={<FormattedMessage id="name" />}
           placeholder={intl.formatMessage({ id: 'name' })}
+          required
+          rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
+        />
+        <ProFormSelect
+          width="md"
+          name="type"
+          label={<FormattedMessage id="type" />}
+          options={typeOptions}
           required
           rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
         />
@@ -105,6 +121,9 @@ export const MainForm: React.FC<Props> = ({
               }}
             >
               <WysiwygMarkdown directory={`competency-challenges/${competency_challenge_id}`} />
+            </ProForm.Item>
+            <ProForm.Item name="authors" label={<FormattedMessage id="author" />}>
+              <UserSelect multiple />
             </ProForm.Item>
           </ProForm.Group>
           <ProFormImageUpload

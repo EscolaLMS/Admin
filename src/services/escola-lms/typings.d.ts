@@ -19,6 +19,8 @@ declare namespace API {
 
   type AttendanceValue = Enum.AttendanceValue;
 
+  type CompetencyChallengeType = Enum.CompetencyChallengeType;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -1757,6 +1759,7 @@ declare namespace API {
     name: string;
     created_at: Date | string;
     updated_at: Date | string;
+    type: CompetencyChallengeType;
     description: string | null;
     image_path: string | null;
     is_active: boolean;
@@ -1766,6 +1769,7 @@ declare namespace API {
   type CreateCompetencyChallenge = {
     name: string;
     is_active: boolean;
+    type: CompetencyChallengeType;
   };
 
   type UpdateCompetencyChallenge = CreateCompetencyChallenge & { description: string };
