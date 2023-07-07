@@ -24,14 +24,16 @@ interface AddCompetencyChallengeFormValues {
 }
 
 interface UpdateCompetencyChallengeFormValues extends AddCompetencyChallengeFormValues {
-  description: string;
+  description?: string;
+  image_path?: string;
+  image_url?: string;
 }
 
 interface Props {
   competency_challenge_id: number;
   data?: API.CompetencyChallenge;
-  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
   onAddSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
+  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
 }
 
 export const MainForm: React.FC<Props> = ({
@@ -68,7 +70,15 @@ export const MainForm: React.FC<Props> = ({
   const changeCompetencyChallenge = useCallback(
     async (formValues: UpdateCompetencyChallengeFormValues) => {
       try {
-        const res = await updateCompetencyChallenge(competency_challenge_id, formValues);
+        // those values doesn't have inputs so we have to do it manually
+        const { image_url, image_path }: { image_url: string; image_path: string } =
+          form.getFieldsValue(['image_url', 'image_path']);
+
+        const res = await updateCompetencyChallenge(competency_challenge_id, {
+          ...formValues,
+          image_url,
+          image_path,
+        });
 
         if (!res.success) {
           message.error(res.message);
@@ -87,7 +97,7 @@ export const MainForm: React.FC<Props> = ({
   return (
     <ProForm
       form={form}
-      initialValues={data}
+      initialValues={data ?? {}}
       onFinish={isNew ? addCompetencyChallenge : changeCompetencyChallenge}
     >
       <ProForm.Group title={<FormattedMessage id="CompetencyChallenges.base" />}>
@@ -128,14 +138,13 @@ export const MainForm: React.FC<Props> = ({
           </ProForm.Group>
           <ProFormImageUpload
             wrapInForm={false}
-            folder={`competency-challenges/${competency_challenge_id}`}
+            folder={`/competency-challenges/${competency_challenge_id}`}
             title="image"
             action={`/api/admin/competency-challenges/${competency_challenge_id}?_method=PATCH`}
-            src_name="image_path"
+            src_name="image_url"
             form_name="image"
-            getUploadedSrcField={(info) => info.file.response.data.image_path}
-            /* TODO */
-            setPath={(removedPath) => console.log({ removedPath })}
+            getUploadedSrcField={(info) => info.file.response.data.image_url}
+            setPath={(paths) => form.setFieldsValue(paths)}
           />
         </>
       )}
