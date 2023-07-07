@@ -73,6 +73,56 @@ const handleRemove = async (intl: IntlShape, id: number) => {
   }
 };
 
+export const staticColumns: ProColumns<API.CategoryListItem>[] = [
+  {
+    title: <FormattedMessage id="ID" defaultMessage="ID" />,
+    dataIndex: 'id',
+    hideInSearch: true,
+    sorter: true,
+    width: '80px',
+  },
+  {
+    title: <FormattedMessage id="name" defaultMessage="name" />,
+    dataIndex: 'name',
+    sorter: true,
+  },
+  {
+    title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
+    dataIndex: 'name_with_breadcrumbs',
+    hideInSearch: true,
+  },
+  {
+    title: <FormattedMessage id="slug" defaultMessage="slug" />,
+    dataIndex: 'slug',
+    hideInSearch: true,
+    sorter: true,
+  },
+
+  {
+    title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
+    dataIndex: 'is_active',
+    sorter: true,
+    valueEnum: {
+      true: {
+        text: (
+          <Tag color="success">
+            <FormattedMessage id="Active" defaultMessage="Active" />
+          </Tag>
+        ),
+        status: 'true',
+      },
+      false: {
+        text: (
+          <Tag color="error">
+            <FormattedMessage id="Inactive" defaultMessage="Inactive" />
+          </Tag>
+        ),
+        status: 'false',
+      },
+    },
+  },
+];
+
 const TreeModal: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [categoriesWithChildren, setCategoriesWithChildren] = useState<API.Category[]>([]);
@@ -117,54 +167,7 @@ const TableList: React.FC = () => {
   );
 
   const columns: ProColumns<API.CategoryListItem>[] = [
-    {
-      title: <FormattedMessage id="ID" defaultMessage="ID" />,
-      dataIndex: 'id',
-      hideInSearch: true,
-      sorter: true,
-      width: '80px',
-    },
-    {
-      title: <FormattedMessage id="name" defaultMessage="name" />,
-      dataIndex: 'name',
-      sorter: true,
-    },
-    {
-      title: <FormattedMessage id="full_name" defaultMessage="full_name" />,
-      dataIndex: 'name_with_breadcrumbs',
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="slug" defaultMessage="slug" />,
-      dataIndex: 'slug',
-      hideInSearch: true,
-      sorter: true,
-    },
-
-    {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
-      dataIndex: 'is_active',
-      sorter: true,
-      valueEnum: {
-        true: {
-          text: (
-            <Tag color="success">
-              <FormattedMessage id="Active" defaultMessage="Active" />
-            </Tag>
-          ),
-          status: 'true',
-        },
-        false: {
-          text: (
-            <Tag color="error">
-              <FormattedMessage id="Inactive" defaultMessage="Inactive" />
-            </Tag>
-          ),
-          status: 'false',
-        },
-      },
-    },
-
+    ...staticColumns,
     {
       hideInSearch: true,
       title: <FormattedMessage id="parent_id" defaultMessage="parent_id" />,

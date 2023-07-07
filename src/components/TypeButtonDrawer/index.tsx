@@ -1,4 +1,5 @@
-import React, { useState, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
+import React, { useState } from 'react';
 
 import TypeButton from '@/components/TypeButton';
 import TypeDrawer from '@/components/TypeDrawer';
@@ -18,7 +19,8 @@ export type PossibleType =
   | 'EscolaLms\\Vouchers\\Models\\Order'
   | 'Questionnaire'
   | 'Product'
-  | 'Students';
+  | 'Students'
+  | 'Category';
 
 export const TypeButtonDrawer: React.FC<
   PropsWithChildren<{

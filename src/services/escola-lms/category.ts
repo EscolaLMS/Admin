@@ -27,7 +27,7 @@ export async function categories(
 }
 
 export async function category(id: number, options?: RequestOptionsInit) {
-  return request<API.DataResponseSuccess<API.Category>>(`/api/admin/categories/${id}`, {
+  return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
     ...(options || {}),

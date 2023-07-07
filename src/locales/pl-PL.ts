@@ -760,6 +760,8 @@ export default {
   'Questions.addMatchingPair': 'Dodaj parę',
   'Questions.add': 'Dodaj pytanie',
   add_new_component: 'Dodaj nowy komponent',
+  category: 'Kategoria',
+  categoryId: 'ID Kategorii: ',
   'CompetencyChallenges.main': 'Dane',
   'CompetencyChallenges.scales': 'Skale',
   'CompetencyChallenges.diagnostic-test': 'Test diagnostyczny',

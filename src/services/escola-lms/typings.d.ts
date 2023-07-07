@@ -1021,6 +1021,10 @@ declare namespace API {
     | {
         type: 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz';
         value: API.GiftQuiz;
+      }
+    | {
+        type: 'Category';
+        value: API.Category;
       };
 
   type ReportType =

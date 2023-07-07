@@ -768,6 +768,8 @@ export default {
   addNewQuestion: 'Add new question',
   selectNewQuestionType: 'Select new question type',
   add_new_component: 'Add new component',
+  category: 'Category',
+  categoryId: 'Category ID: ',
   'CompetencyChallenges.main': 'Data',
   'CompetencyChallenges.scales': 'Scales',
   'CompetencyChallenges.diagnostic-test': 'Diagnostic test',
