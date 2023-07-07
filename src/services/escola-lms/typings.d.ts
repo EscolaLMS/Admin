@@ -1758,6 +1758,13 @@ declare namespace API {
 
   type CompetencyChallengesParams = PaginationParams & { name?: string; is_active?: boolean };
 
+  type CompetencyChallengeScale = {
+    category: API.Category;
+    competency_challenge_id: number;
+    id: number;
+    scale_min: number;
+  };
+
   type CompetencyChallenge = {
     id: number;
     name: string;
@@ -1768,6 +1775,7 @@ declare namespace API {
     image_path: string | null;
     is_active: boolean;
     quiz_id: number;
+    scales: CompetencyChallengeScale[];
   };
 
   type CreateCompetencyChallenge = {
@@ -1776,7 +1784,17 @@ declare namespace API {
     type: CompetencyChallengeType;
   };
 
-  type UpdateCompetencyChallenge = CreateCompetencyChallenge & { description: string };
+  type UpdateCompetencyChallenge = CreateCompetencyChallenge & {
+    description?: string;
+    image_url?: string;
+    image_path?: string;
+  };
+
+  type CreateCompetencyChallengeScale = {
+    scale_min: number;
+    category_id: number;
+    competency_challenge_id: number;
+  };
 }
 
 declare module 'jsoneditor-react' {

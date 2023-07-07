@@ -421,6 +421,7 @@ export default {
   cancelled: 'Anulowane',
   processing: 'Przetwarzane',
   cancel: 'Anuluj',
+  ok: 'OK',
   failed: 'nie powiodło się',
   clear_selection: 'wyczyść',
   form: 'Formularz',
@@ -770,4 +771,8 @@ export default {
   'CompetencyChallenges.new_challenge': 'Nowe wyzwanie',
   'Competency challenge updated successfully.': 'Zaktualizowano wyzwanie',
   'Competency challenge created successfully.': 'Stworzono wyzwanie',
+  'CompetencyChallenges.addNewRow': 'Dodaj nowy wiersz',
+  'CompetencyChallenges.onlyOneRowIsEditable': 'Jednocześnie można edytować tylko jeden wiersz',
+  'CompetencyChallenges.types.simple': 'Prosty',
+  'CompetencyChallenges.types.complex': 'Złożony',
 };

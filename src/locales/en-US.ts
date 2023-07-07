@@ -405,6 +405,7 @@ export default {
   cancelled: 'Cancelled',
   processing: 'Processing',
   cancel: 'Cancel',
+  ok: 'OK',
   failed: 'failed',
   clear_selection: 'clear selection',
   form: 'Form',
@@ -778,4 +779,8 @@ export default {
   'CompetencyChallenges.new_challenge': 'New challenge',
   'Competency challenge updated successfully.': 'Competency challenge updated successfully',
   'Competency challenge created successfully.': 'Competency challenge created successfully',
+  'CompetencyChallenges.addNewRow': 'Add new row',
+  'CompetencyChallenges.onlyOneRowIsEditable': 'Only one row can be edited at a time',
+  'CompetencyChallenges.types.simple': 'Simple',
+  'CompetencyChallenges.types.complex': 'Complex',
 };
