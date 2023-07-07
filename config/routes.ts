@@ -335,6 +335,25 @@
     ],
   },
   {
+    path: '/competency-challenges',
+    name: 'Competency challenges',
+    access: 'competencyChallengesPermission',
+    icon: 'trophy',
+    routes: [
+      {
+        path: '/competency-challenges',
+        redirect: '/competency-challenges/list',
+        access: 'competencyChallengesPermission',
+      },
+      {
+        path: '/competency-challenges/list',
+        name: 'List',
+        access: 'competencyChallengesPermission',
+        component: './CompetencyChallenges',
+      },
+    ],
+  },
+  {
     name: 'Analytics',
     path: '/analytics',
     access: 'analyticsPermission',

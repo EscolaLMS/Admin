@@ -225,6 +225,17 @@ export default function (initialState: {
       havePackageInstalled('escolalms/pcg-integration') &&
       havePackageInstalled('escolalms/pcg-grades') &&
       havePackageInstalled('escolalms/pcg-attendances'),
+    competencyChallengesPermission:
+      havePermissionsInDashboard(
+        PERMISSIONS.CompetencyChallengeScaleCreate,
+        PERMISSIONS.CompetencyChallengeScaleUpdate,
+        PERMISSIONS.CompetencyChallengeScaleDelete,
+        PERMISSIONS.CreateCompetencyChallenges,
+        PERMISSIONS.ReadCompetencyChallenges,
+        PERMISSIONS.UpdateCompetencyChallenges,
+        PERMISSIONS.DeleteCompetencyChallenges,
+        PERMISSIONS.ListCompetencyChallenges,
+      ) && havePackageInstalled('escolalms/competency-challenges'),
     tasksPermission: () => true,
   };
 }
