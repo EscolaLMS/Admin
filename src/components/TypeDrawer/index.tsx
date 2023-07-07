@@ -15,6 +15,7 @@ import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvent
 import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
 import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
 import { GiftQuizTableColumns } from '@/pages/QuizReports';
+import { staticColumns as CategoryTableColumns } from '@/pages/Categories';
 
 type TypeDrawerProps = {
   visible: boolean;
@@ -159,6 +160,13 @@ export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }
               },
             ] as ProDescriptionsItemProps<API.Questionnaire>[]
           }
+        />
+      )}
+      {data.type === 'Category' && (
+        <ProDescriptions<API.Category>
+          {...descrProps}
+          title={<FormattedMessage id="category" defaultMessage="Category" />}
+          columns={CategoryTableColumns as ProDescriptionsItemProps<API.Category>[]}
         />
       )}
     </Drawer>

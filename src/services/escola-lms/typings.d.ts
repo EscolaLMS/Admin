@@ -19,6 +19,8 @@ declare namespace API {
 
   type AttendanceValue = Enum.AttendanceValue;
 
+  type CompetencyChallengeType = Enum.CompetencyChallengeType;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -1019,6 +1021,10 @@ declare namespace API {
     | {
         type: 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz';
         value: API.GiftQuiz;
+      }
+    | {
+        type: 'Category';
+        value: API.Category;
       };
 
   type ReportType =
@@ -1752,23 +1758,43 @@ declare namespace API {
 
   type CompetencyChallengesParams = PaginationParams & { name?: string; is_active?: boolean };
 
+  type CompetencyChallengeScale = {
+    category: API.Category;
+    competency_challenge_id: number;
+    id: number;
+    scale_min: number;
+  };
+
   type CompetencyChallenge = {
     id: number;
     name: string;
     created_at: Date | string;
     updated_at: Date | string;
+    type: CompetencyChallengeType;
     description: string | null;
     image_path: string | null;
     is_active: boolean;
     quiz_id: number;
+    scales: CompetencyChallengeScale[];
   };
 
   type CreateCompetencyChallenge = {
     name: string;
     is_active: boolean;
+    type: CompetencyChallengeType;
   };
 
-  type UpdateCompetencyChallenge = CreateCompetencyChallenge & { description: string };
+  type UpdateCompetencyChallenge = CreateCompetencyChallenge & {
+    description?: string;
+    image_url?: string;
+    image_path?: string;
+  };
+
+  type CreateCompetencyChallengeScale = {
+    scale_min: number;
+    category_id: number;
+    competency_challenge_id: number;
+  };
 }
 
 declare module 'jsoneditor-react' {

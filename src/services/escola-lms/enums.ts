@@ -74,3 +74,8 @@ export enum ExamGradeType {
   TeamsLecture = 'teams_lecture',
   TestPortal = 'test_portal',
 }
+
+export enum CompetencyChallengeType {
+  Simple = 'simple',
+  Complex = 'complex',
+}

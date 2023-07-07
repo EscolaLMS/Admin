@@ -1,29 +1,39 @@
 import React, { useCallback } from 'react';
-import { FormattedMessage, useIntl, history } from 'umi';
+import { FormattedMessage, history, useIntl } from 'umi';
 import { message } from 'antd';
-import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
 
+import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import {
   createCompetencyChallenge,
   updateCompetencyChallenge,
 } from '@/services/escola-lms/competency-challenges';
+import { CompetencyChallengeType } from '@/services/escola-lms/enums';
+
+const typeOptions = Object.values(CompetencyChallengeType).map((value) => ({
+  value,
+  label: <FormattedMessage id={`CompetencyChallenges.types.${value}`} />,
+}));
 
 interface AddCompetencyChallengeFormValues {
   name: string;
   is_active: boolean;
+  type: API.CompetencyChallengeType;
 }
 
 interface UpdateCompetencyChallengeFormValues extends AddCompetencyChallengeFormValues {
-  description: string;
+  description?: string;
+  image_path?: string;
+  image_url?: string;
 }
 
 interface Props {
   competency_challenge_id: number;
   data?: API.CompetencyChallenge;
-  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
   onAddSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
+  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
 }
 
 export const MainForm: React.FC<Props> = ({
@@ -38,9 +48,9 @@ export const MainForm: React.FC<Props> = ({
   const isNew = Number.isNaN(competency_challenge_id);
 
   const addCompetencyChallenge = useCallback(
-    async ({ name, is_active = false }: AddCompetencyChallengeFormValues) => {
+    async ({ name, type, is_active = false }: AddCompetencyChallengeFormValues) => {
       try {
-        const res = await createCompetencyChallenge({ name, is_active });
+        const res = await createCompetencyChallenge({ name, is_active, type });
 
         if (!res.success) {
           message.error(res.message);
@@ -60,7 +70,15 @@ export const MainForm: React.FC<Props> = ({
   const changeCompetencyChallenge = useCallback(
     async (formValues: UpdateCompetencyChallengeFormValues) => {
       try {
-        const res = await updateCompetencyChallenge(competency_challenge_id, formValues);
+        // those values doesn't have inputs so we have to do it manually
+        const { image_url, image_path }: { image_url: string; image_path: string } =
+          form.getFieldsValue(['image_url', 'image_path']);
+
+        const res = await updateCompetencyChallenge(competency_challenge_id, {
+          ...formValues,
+          image_url,
+          image_path,
+        });
 
         if (!res.success) {
           message.error(res.message);
@@ -79,15 +97,23 @@ export const MainForm: React.FC<Props> = ({
   return (
     <ProForm
       form={form}
-      initialValues={data}
+      initialValues={data ?? {}}
       onFinish={isNew ? addCompetencyChallenge : changeCompetencyChallenge}
     >
       <ProForm.Group title={<FormattedMessage id="CompetencyChallenges.base" />}>
         <ProFormText
-          width="lg"
+          width="md"
           name="name"
           label={<FormattedMessage id="name" />}
           placeholder={intl.formatMessage({ id: 'name' })}
+          required
+          rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
+        />
+        <ProFormSelect
+          width="md"
+          name="type"
+          label={<FormattedMessage id="type" />}
+          options={typeOptions}
           required
           rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
         />
@@ -106,17 +132,19 @@ export const MainForm: React.FC<Props> = ({
             >
               <WysiwygMarkdown directory={`competency-challenges/${competency_challenge_id}`} />
             </ProForm.Item>
+            <ProForm.Item name="authors" label={<FormattedMessage id="author" />}>
+              <UserSelect multiple />
+            </ProForm.Item>
           </ProForm.Group>
           <ProFormImageUpload
             wrapInForm={false}
-            folder={`competency-challenges/${competency_challenge_id}`}
+            folder={`/competency-challenges/${competency_challenge_id}`}
             title="image"
             action={`/api/admin/competency-challenges/${competency_challenge_id}?_method=PATCH`}
-            src_name="image_path"
+            src_name="image_url"
             form_name="image"
-            getUploadedSrcField={(info) => info.file.response.data.image_path}
-            /* TODO */
-            setPath={(removedPath) => console.log({ removedPath })}
+            getUploadedSrcField={(info) => info.file.response.data.image_url}
+            setPath={(paths) => form.setFieldsValue(paths)}
           />
         </>
       )}

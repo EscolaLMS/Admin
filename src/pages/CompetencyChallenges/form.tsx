@@ -89,7 +89,13 @@ const CompetencyChallenge: React.FC = () => {
           tab={<FormattedMessage id="CompetencyChallenges.scales" />}
           disabled={isNew}
         >
-          <Scales />
+          <Scales
+            competency_challenge_id={competency_challenge_id}
+            scales={data?.scales ?? []}
+            onScaleDelete={fetchData}
+            onScaleAdd={fetchData}
+            onScaleUpdate={fetchData}
+          />
         </ProCard.TabPane>
         <ProCard.TabPane
           key="diagnostic-test"
