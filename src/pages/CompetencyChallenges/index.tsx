@@ -18,6 +18,11 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
   { dataIndex: 'id', title: <FormattedMessage id="ID" />, hideInSearch: true, sorter: true },
   { dataIndex: 'name', title: <FormattedMessage id="name" />, sorter: true },
   {
+    dataIndex: 'type',
+    title: <FormattedMessage id="type" />,
+    render: (_n, record) => <FormattedMessage id={`CompetencyChallenges.types.${record.type}`} />,
+  },
+  {
     dataIndex: 'created_at',
     title: <FormattedMessage id="created_at" />,
     render: (_n, record) => format(new Date(record.created_at), DATETIME_FORMAT),
