@@ -23,7 +23,9 @@ export const CategoryModalForm: React.FC<{
     setDeletedIcon(false);
     if (typeof id === 'number' && id > 0) {
       category(id).then((response) => {
-        form.setFieldsValue(response.data);
+        if (response.success) {
+          form.setFieldsValue(response.data);
+        }
       });
     } else {
       form.resetFields();
