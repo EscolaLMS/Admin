@@ -20,6 +20,7 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
   {
     dataIndex: 'type',
     title: <FormattedMessage id="type" />,
+    hideInSearch: true,
     render: (_n, record) => <FormattedMessage id={`CompetencyChallenges.types.${record.type}`} />,
   },
   {
