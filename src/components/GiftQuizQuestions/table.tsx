@@ -8,6 +8,8 @@ import { MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import type { CategoryTreeProps } from '@/components/CategoryTree';
 import { createQuestion, deleteQuestion, updateQuestion } from '@/services/escola-lms/gift_quiz';
 import { GiftQuizNewQuestionEditor } from './editor/new_question';
 import { EditQuestion } from './editor/edit_question';
@@ -54,6 +56,20 @@ const staticColumns: ProColumns<API.GiftQuestion>[] = [
   },
 ];
 
+const categoryColumn: ProColumns<API.GiftQuestion> = {
+  title: <FormattedMessage id="category" defaultMessage="Category" />,
+  dataIndex: 'category_id',
+  hideInForm: true,
+  hideInSearch: true,
+  hideInSetting: true,
+  render: (_, row) =>
+    typeof row.category_id === 'number' ? (
+      <TypeButtonDrawer type="Category" type_id={row.category_id} />
+    ) : (
+      '-'
+    ),
+};
+
 interface OnSortEndParams {
   oldIndex: number;
   newIndex: number;
@@ -67,6 +83,7 @@ interface Props {
   onEdited?: () => void;
   tableHeader?: React.ReactNode;
   tableLoading?: boolean;
+  questionsCategory?: boolean | Omit<CategoryTreeProps, 'value' | 'onChange'>;
 }
 
 export const Table: React.FC<Props> = ({
@@ -77,6 +94,7 @@ export const Table: React.FC<Props> = ({
   quizId,
   tableLoading,
   tableHeader,
+  questionsCategory,
 }) => {
   const [editQuestion, setEditQuestion] = useState<API.GiftQuestion>();
   const [loading, setLoading] = useState(false);
@@ -84,7 +102,11 @@ export const Table: React.FC<Props> = ({
 
   const [debug, setDebug] = useState(false);
 
-  const [newQuestion, setNewQuestion] = useState<{ score: number; value: string }>({
+  const [newQuestion, setNewQuestion] = useState<{
+    score: number;
+    value: string;
+    category_id?: number;
+  }>({
     score: 1,
     value: '',
   });
@@ -164,26 +186,24 @@ export const Table: React.FC<Props> = ({
             quizId={quizId}
             question={editQuestion}
             onRemoved={() => {
-              if (onRemoved) {
-                onRemoved();
-              }
+              onRemoved?.();
               setLoading(false);
             }}
             onEdited={() => {
-              if (onEdited) {
-                onEdited();
-              }
+              onEdited?.();
               setLoading(false);
             }}
+            categoryProps={questionsCategory}
           />
         )}
       </Drawer>
       <Drawer open={showNew} onClose={() => setShowNew(false)}>
         <GiftQuizNewQuestionEditor
           debug={debug}
-          onCreate={() => onNew()}
+          onCreate={onNew}
           value={newQuestion}
-          onChange={(value) => setNewQuestion(value)}
+          onChange={setNewQuestion}
+          categoryProps={questionsCategory}
         />
       </Drawer>
       <ProTable
@@ -205,6 +225,7 @@ export const Table: React.FC<Props> = ({
         ]}
         columns={[
           ...staticColumns,
+          ...(questionsCategory ? [categoryColumn] : []),
           {
             title: <FormattedMessage id="actions" defaultMessage="Actions" />,
             dataIndex: 'address',

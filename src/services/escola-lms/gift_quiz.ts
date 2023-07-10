@@ -19,6 +19,7 @@ export async function updateQuestion(
   id: number,
   body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminUpdateGiftQuestionRequest & {
     order?: number;
+    category_id?: API.Nullable<number>;
   },
   options?: RequestOptionsInit,
 ) {
