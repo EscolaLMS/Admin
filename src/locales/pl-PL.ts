@@ -774,5 +774,5 @@ export default {
   'CompetencyChallenges.addNewRow': 'Dodaj nowy wiersz',
   'CompetencyChallenges.onlyOneRowIsEditable': 'Jednocześnie można edytować tylko jeden wiersz',
   'CompetencyChallenges.types.simple': 'Prosty',
-  'CompetencyChallenges.types.complex': 'Złożony',
+  'CompetencyChallenges.types.complex': 'Ogólny',
 };
