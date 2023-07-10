@@ -505,6 +505,7 @@ declare namespace API {
       questions: GiftQuestion[];
       max_attempts?: number;
       max_execution_time?: number;
+      min_pass_score?: number;
     };
   };
 
