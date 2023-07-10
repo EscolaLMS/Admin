@@ -18,6 +18,11 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
   { dataIndex: 'id', title: <FormattedMessage id="ID" />, hideInSearch: true, sorter: true },
   { dataIndex: 'name', title: <FormattedMessage id="name" />, sorter: true },
   {
+    dataIndex: 'type',
+    title: <FormattedMessage id="type" />,
+    render: (_n, record) => <FormattedMessage id={`CompetencyChallenges.types.${record.type}`} />,
+  },
+  {
     dataIndex: 'created_at',
     title: <FormattedMessage id="created_at" />,
     render: (_n, record) => format(new Date(record.created_at), DATETIME_FORMAT),
@@ -62,7 +67,7 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
   },
   {
     dataIndex: 'quiz_id',
-    title: <FormattedMessage id="gift_quiz" />,
+    title: <FormattedMessage id="CompetencyChallenges.diagnostic-test" />,
     render: (_n, record) => (
       <TypeButtonDrawer type="EscolaLms\TopicTypeGift\Models\GiftQuiz" type_id={record.quiz_id} />
     ),
@@ -73,7 +78,7 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
     title: <FormattedMessage id="options" />,
     render: (_n, record, _i, action) => [
       <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-        <Link to={`/competency-challenges/${record.id}`}>
+        <Link to={`/competency-challenges/${record.id}/main`}>
           <Button type="primary" icon={<EditOutlined />} />
         </Link>
       </Tooltip>,
@@ -108,7 +113,7 @@ const CompetencyChallenges: React.FC = () => (
       rowKey="id"
       search={{ layout: 'vertical' }}
       toolBarRender={() => [
-        <Link key="addnew" to="/competency-challenges/new">
+        <Link key="addnew" to="/competency-challenges/new/main">
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>

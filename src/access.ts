@@ -21,8 +21,8 @@ export default function (initialState: {
   const havePackageInstalled = (
     packageName: string,
     // ,minVersion: string = '0.0.0'
-  ) => {
-    return initialState.packages && initialState.packages[packageName];
+  ): boolean => {
+    return Boolean(initialState?.packages?.[packageName]);
   };
 
   const haveSettingsInDashboard = (
@@ -226,16 +226,41 @@ export default function (initialState: {
       havePackageInstalled('escolalms/pcg-grades') &&
       havePackageInstalled('escolalms/pcg-attendances'),
     competencyChallengesPermission:
+      !haveSettingsInDashboard('hideInMenu-Competency-challenges', true) ||
+      (!haveSettingsInDashboard('hideInMenu-Competency-challengesList', true) &&
+        havePackageInstalled('escolalms/competency-challenges') &&
+        havePermissionsInDashboard(
+          PERMISSIONS.ListCompetencyChallenges,
+          PERMISSIONS.ReadCompetencyChallenges,
+          PERMISSIONS.DeleteCompetencyChallenges,
+        )) ||
+      (havePackageInstalled('escolalms/competency-challenges') &&
+        havePermissionsInDashboard(
+          PERMISSIONS.ReadCompetencyChallenges,
+          PERMISSIONS.CreateCompetencyChallenges,
+          PERMISSIONS.UpdateCompetencyChallenges,
+          PERMISSIONS.CompetencyChallengeScaleCreate,
+          PERMISSIONS.CompetencyChallengeScaleUpdate,
+          PERMISSIONS.CompetencyChallengeScaleDelete,
+        )),
+    competencyChallengesListPermission:
+      !haveSettingsInDashboard('hideInMenu-Competency-challengesList', true) &&
+      havePackageInstalled('escolalms/competency-challenges') &&
       havePermissionsInDashboard(
+        PERMISSIONS.ListCompetencyChallenges,
+        PERMISSIONS.ReadCompetencyChallenges,
+        PERMISSIONS.DeleteCompetencyChallenges,
+      ),
+    competencyChallengesFormPermission:
+      havePackageInstalled('escolalms/competency-challenges') &&
+      havePermissionsInDashboard(
+        PERMISSIONS.ReadCompetencyChallenges,
+        PERMISSIONS.CreateCompetencyChallenges,
+        PERMISSIONS.UpdateCompetencyChallenges,
         PERMISSIONS.CompetencyChallengeScaleCreate,
         PERMISSIONS.CompetencyChallengeScaleUpdate,
         PERMISSIONS.CompetencyChallengeScaleDelete,
-        PERMISSIONS.CreateCompetencyChallenges,
-        PERMISSIONS.ReadCompetencyChallenges,
-        PERMISSIONS.UpdateCompetencyChallenges,
-        PERMISSIONS.DeleteCompetencyChallenges,
-        PERMISSIONS.ListCompetencyChallenges,
-      ) && havePackageInstalled('escolalms/competency-challenges'),
+      ),
     tasksPermission: () => true,
   };
 }
