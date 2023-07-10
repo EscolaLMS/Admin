@@ -1390,6 +1390,13 @@ declare namespace API {
     type: string;
     max_attempts: number;
     max_execution_time: number;
+    questions: GiftQuestion[];
+  };
+
+  type UpdateGiftQuiz = {
+    max_attempts: number;
+    max_execution_time: number;
+    value: string;
   };
 
   type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &

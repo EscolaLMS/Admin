@@ -65,3 +65,16 @@ export async function getGiftQuiz(id: string | number, options?: RequestOptionsI
     ...(options || {}),
   });
 }
+
+/** PUT /api/admin/gift-quizes/{id} */
+export async function updateGiftQuiz(
+  id: string | number,
+  body: API.UpdateGiftQuiz,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
+    method: 'PUT',
+    data: body,
+    ...(options || {}),
+  });
+}
