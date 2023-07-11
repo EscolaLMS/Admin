@@ -3,18 +3,16 @@
   padding: 0;
 }
 
+.ant-pro-global-footer > div {
+  padding-inline: 16px;
+}
+
 .ant-pro-global-footer > div:not(:last-child) {
   margin-bottom: 8px;
 }
 
 .ant-pro-global-footer > div:last-child {
   padding-bottom: 24px;
-}
-
-.ant-pro-global-footer-links,
-.ant-pro-global-footer-copyright,
-.ant-pro-global-footer-footer-logo-wrapper {
-  padding-inline: 16px;
 }
 
 .ant-pro-global-footer-footer-logo-wrapper {
