@@ -1800,6 +1800,7 @@ declare namespace API {
   };
 
   type UpdateCompetencyChallenge = CreateCompetencyChallenge & {
+    summary?: string;
     description?: string;
     image_url?: string;
     image_path?: string;

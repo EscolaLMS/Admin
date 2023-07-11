@@ -1,7 +1,12 @@
 import React, { useCallback } from 'react';
 import { FormattedMessage, history, useIntl } from 'umi';
 import { message } from 'antd';
-import ProForm, { ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
 
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
@@ -16,18 +21,6 @@ const typeOptions = Object.values(CompetencyChallengeType).map((value) => ({
   value,
   label: <FormattedMessage id={`CompetencyChallenges.types.${value}`} />,
 }));
-
-interface AddCompetencyChallengeFormValues {
-  name: string;
-  is_active: boolean;
-  type: API.CompetencyChallengeType;
-}
-
-interface UpdateCompetencyChallengeFormValues extends AddCompetencyChallengeFormValues {
-  description?: string;
-  image_path?: string;
-  image_url?: string;
-}
 
 interface Props {
   competency_challenge_id: number;
@@ -48,7 +41,7 @@ export const MainForm: React.FC<Props> = ({
   const isNew = Number.isNaN(competency_challenge_id);
 
   const addCompetencyChallenge = useCallback(
-    async ({ name, type, is_active = false }: AddCompetencyChallengeFormValues) => {
+    async ({ name, type, is_active = false }: API.CreateCompetencyChallenge) => {
       try {
         const res = await createCompetencyChallenge({ name, is_active, type });
 
@@ -68,9 +61,9 @@ export const MainForm: React.FC<Props> = ({
   );
 
   const changeCompetencyChallenge = useCallback(
-    async (formValues: UpdateCompetencyChallengeFormValues) => {
+    async (formValues: API.UpdateCompetencyChallenge) => {
       try {
-        // those values doesn't have inputs so we have to do it manually
+        // those values don't have inputs, so we have to do it manually
         const { image_url, image_path }: { image_url: string; image_path: string } =
           form.getFieldsValue(['image_url', 'image_path']);
 
@@ -127,12 +120,17 @@ export const MainForm: React.FC<Props> = ({
               label={<FormattedMessage id="description" />}
               valuePropName="value"
               style={{
-                width: 697,
+                width: 440,
               }}
             >
               <WysiwygMarkdown directory={`competency-challenges/${competency_challenge_id}`} />
             </ProForm.Item>
-            <ProForm.Item name="authors" label={<FormattedMessage id="author" />}>
+            <ProFormTextArea width="lg" name="summary" label={<FormattedMessage id="summary" />} />
+            <ProForm.Item
+              name="authors"
+              label={<FormattedMessage id="author" />}
+              style={{ width: '100%', maxWidth: 440 }}
+            >
               <UserSelect multiple />
             </ProForm.Item>
           </ProForm.Group>
