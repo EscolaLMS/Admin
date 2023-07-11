@@ -2,12 +2,16 @@ import React, { type PropsWithChildren, useMemo } from 'react';
 import Footer from '@/components/Footer';
 import styles from './index.less';
 import { Link, SelectLang, useModel } from 'umi';
-import { Divider } from 'antd';
 
 declare const REACT_APP_API_URL: string;
 
 const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const { initialState } = useModel('@@initialState');
+
+  const showBackgroundImage = initialState?.publicConfig?.global?.showLoginBackgroundImage ?? true;
+
+  const color = initialState?.publicConfig?.global?.loginHeaderFontColor;
+  const backgroundColor = initialState?.publicConfig?.global?.loginHeaderBackgroundColor;
 
   const configLogo = useMemo(() => {
     const logo = initialState?.publicConfig?.global?.logoLogin;
@@ -23,25 +27,21 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   }, [initialState?.publicConfig]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
-      <div className={styles.content}>
-        <div className={styles.top}>
-          <div className={styles.header}>
-            <Link to="/">
-              <img
-                alt="logo"
-                className={configLogo ? styles['custom-logo'] : styles.logo}
-                src={configLogo || '/logo.svg'}
-              />
-            </Link>
-          </div>
+    <div className={`${styles.container} ${showBackgroundImage ? styles[`background-image`] : ''}`}>
+      <header className={styles.header} style={{ backgroundColor, color }}>
+        <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
+        <div className={styles['logo-wrapper']}>
+          <Link to="/">
+            <img
+              alt="logo"
+              className={configLogo ? styles['custom-logo'] : styles.logo}
+              src={configLogo || '/logo.svg'}
+            />
+          </Link>
         </div>
+      </header>
 
-        <Divider />
-
-        <div className={styles.main}>{children}</div>
-      </div>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   );

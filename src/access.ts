@@ -226,7 +226,6 @@ export default function (initialState: {
       havePackageInstalled('escolalms/pcg-grades') &&
       havePackageInstalled('escolalms/pcg-attendances'),
     competencyChallengesPermission:
-      !haveSettingsInDashboard('hideInMenu-Competency-challenges', true) ||
       (!haveSettingsInDashboard('hideInMenu-Competency-challengesList', true) &&
         havePackageInstalled('escolalms/competency-challenges') &&
         havePermissionsInDashboard(
