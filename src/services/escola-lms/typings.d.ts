@@ -359,6 +359,8 @@ declare namespace API {
     course_id?: number;
     duration?: string;
     active?: boolean;
+    active_from?: Date | string;
+    active_to?: Date | string;
     summary?: string;
     topics?: Topic[];
     isNew?: boolean;

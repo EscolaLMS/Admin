@@ -1,9 +1,11 @@
 import React from 'react';
-import { Button, Popconfirm, Col, Row, Space, Affix, Divider } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
 import { useIntl, FormattedMessage } from 'umi';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import { isAfter, isBefore } from 'date-fns';
+import { Button, Popconfirm, Col, Row, Space, Affix, Divider } from 'antd';
+import ProForm, { ProFormText, ProFormSwitch, ProFormDatePicker } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
+
+import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { ParentLesson } from '../ParentLesson';
 import type { StateLesson } from './types';
 
@@ -16,9 +18,14 @@ export const LessonForm: React.FC<{
   initialValues: any;
   loading: boolean;
 }> = ({ onFinish, onValuesChange, onDelete, onClone, initialValues, lesson, loading = false }) => {
+  const [form] = ProForm.useForm();
+  const activeFrom = ProForm.useWatch('active_from', form);
+  const activeTo = ProForm.useWatch('active_to', form);
+
   const intl = useIntl();
   return (
     <ProForm
+      form={form}
       submitter={{
         // Fully customize the entire area
         render: (props) => {
@@ -70,11 +77,9 @@ export const LessonForm: React.FC<{
           );
         },
       }}
-      layout={'horizontal'}
+      layout="horizontal"
       onFinish={onFinish}
-      onValuesChange={(a, b) => {
-        onValuesChange(a, b);
-      }}
+      onValuesChange={onValuesChange}
       initialValues={{ ...initialValues, summary: initialValues.summary || '' }}
       style={{ height: '100%' }}
     >
@@ -127,6 +132,49 @@ export const LessonForm: React.FC<{
               })}
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
+            <ProFormDatePicker
+              allowClear={false}
+              width="md"
+              name="active_from"
+              label={<FormattedMessage id="active_from" />}
+              placeholder={intl.formatMessage({
+                id: 'active_from',
+                defaultMessage: 'active_from',
+              })}
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (value && activeTo && isAfter(new Date(value), new Date(activeTo))) {
+                      return Promise.reject(new Error(intl.formatMessage({ id: 'invalidDate' })));
+                    }
+
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            />
+            <ProFormDatePicker
+              allowClear={false}
+              width="md"
+              name="active_to"
+              label={<FormattedMessage id="active_to" />}
+              placeholder={intl.formatMessage({
+                id: 'active_to',
+                defaultMessage: 'active_to',
+              })}
+              disabled={!activeFrom && !activeTo}
+              rules={[
+                {
+                  validator(_, value) {
+                    if (value && activeFrom && isBefore(new Date(value), new Date(activeFrom))) {
+                      return Promise.reject(new Error(intl.formatMessage({ id: 'invalidDate' })));
+                    }
+
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            />
             <ParentLesson name="parent_id" currentLessonId={lesson?.id} />
           </aside>
         </Col>

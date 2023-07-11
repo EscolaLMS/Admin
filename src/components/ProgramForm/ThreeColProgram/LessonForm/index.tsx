@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
+import { useParams } from 'umi';
+
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import { useParams } from 'umi';
 import LessonForm from './form';
-import { StateLesson } from './types';
+import type { StateLesson } from './types';
 
 const getStateLesson = (lesson: API.Lesson): StateLesson => ({
   ...lesson,
@@ -62,22 +63,20 @@ export const Lesson: React.FC = () => {
   }, [cloneLesson, state.id]);
 
   return (
-    <React.Fragment>
-      <LessonForm
-        loading={loading}
-        lesson={state}
-        initialValues={state}
-        onDelete={handleDelete}
-        onFinish={handleSave}
-        onClone={handleClone}
-        onValuesChange={(changedValues) => {
-          setState((prevState) => ({
-            ...prevState,
-            ...changedValues,
-          }));
-        }}
-      />
-    </React.Fragment>
+    <LessonForm
+      loading={loading}
+      lesson={state}
+      initialValues={state}
+      onDelete={handleDelete}
+      onFinish={handleSave}
+      onClone={handleClone}
+      onValuesChange={(changedValues) => {
+        setState((prevState) => ({
+          ...prevState,
+          ...changedValues,
+        }));
+      }}
+    />
   );
 };
 
