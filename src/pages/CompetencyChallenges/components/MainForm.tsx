@@ -63,7 +63,7 @@ export const MainForm: React.FC<Props> = ({
   const changeCompetencyChallenge = useCallback(
     async (formValues: API.UpdateCompetencyChallenge) => {
       try {
-        // those values doesn't have inputs so we have to do it manually
+        // those values don't have inputs, so we have to do it manually
         const { image_url, image_path }: { image_url: string; image_path: string } =
           form.getFieldsValue(['image_url', 'image_path']);
 
