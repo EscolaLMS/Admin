@@ -73,13 +73,15 @@ export default () => {
           <CopyrightOutlined /> {currentYear} EscolaSoft
         </div>
         {footerLogo && (
-          <picture className="ant-pro-global-footer-footer-logo">
-            <img
-              className="ant-pro-global-footer-footer-logo-image"
-              alt="footer logo"
-              src={footerLogo}
-            />
-          </picture>
+          <div className="ant-pro-global-footer-footer-logo-wrapper">
+            <picture className="ant-pro-global-footer-footer-logo">
+              <img
+                className="ant-pro-global-footer-footer-logo-image"
+                alt="footer logo"
+                src={footerLogo}
+              />
+            </picture>
+          </div>
         )}
       </div>
     </footer>
