@@ -102,7 +102,7 @@ const CompetencyChallenge: React.FC = () => {
           tab={<FormattedMessage id="CompetencyChallenges.diagnostic-test" />}
           disabled={isNew}
         >
-          <DiagnosticTest />
+          <DiagnosticTest data={data} />
         </ProCard.TabPane>
       </ProCard>
     </PageContainer>

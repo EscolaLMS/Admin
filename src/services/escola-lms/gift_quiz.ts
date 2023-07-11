@@ -19,6 +19,7 @@ export async function updateQuestion(
   id: number,
   body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminUpdateGiftQuestionRequest & {
     order?: number;
+    category_id?: API.Nullable<number>;
   },
   options?: RequestOptionsInit,
 ) {
@@ -61,6 +62,19 @@ export async function getQuizAttemptDetails(id: string | number, options?: Reque
 export async function getGiftQuiz(id: string | number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** PUT /api/admin/gift-quizes/{id} */
+export async function updateGiftQuiz(
+  id: string | number,
+  body: API.UpdateGiftQuiz,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
+    method: 'PUT',
+    data: body,
     ...(options || {}),
   });
 }

@@ -5,14 +5,20 @@ import { GiftQuizQuestionMatchingEditor } from './matching';
 import { GiftQuizQuestionDescriptionEditor } from './description';
 import { GiftQuizQuestionNumericalEditor } from './numerical';
 import { GiftQuizQuestionShortEditor } from './short_answers';
+import { isCorrectCategoryType } from './utils';
 
+import CategoryTree, { type CategoryTreeProps } from '@/components/CategoryTree';
 import { QuestionType } from '@/services/escola-lms/enums';
 import { useState, useEffect } from 'react';
 import { FormattedMessage } from 'umi';
 
 import { Button, InputNumber, Typography, Space, Select, Divider } from 'antd';
 
-type NewQuestionType = { score: number; value: string };
+type NewQuestionType = {
+  score: number;
+  value: string;
+  category_id?: number;
+};
 
 const DEFAULT_VALUES: Record<QuestionType, string> = {
   [QuestionType.DESCRIPTION]: 'You can use your pencil and paper for these next math questions.',
@@ -37,25 +43,38 @@ const DEFAULT_VALUES: Record<QuestionType, string> = {
   [QuestionType.TRUE_FALSE]: 'Grant was buried in a tomb in New York City.{T}',
 };
 
+const typeOptions = Object.values(QuestionType).reduce<
+  { value: QuestionType; label: React.ReactNode }[]
+>(
+  (acc, q) => (q ? [...acc, { value: q, label: <FormattedMessage id={`gift_type.${q}`} /> }] : acc),
+  [],
+);
+
 export const GiftQuizNewQuestionEditor: React.FC<{
   value: NewQuestionType;
-  onChange: (value: NewQuestionType) => void;
+  onChange: (value: NewQuestionType | ((prevState: NewQuestionType) => NewQuestionType)) => void;
   onCreate: () => void;
   loading?: boolean;
   debug?: boolean;
-}> = ({ value, onChange, loading = false, onCreate, debug = false }) => {
+  categoryProps?: boolean | Omit<CategoryTreeProps, 'value' | 'onChange'>;
+}> = ({ value, onChange, loading = false, onCreate, categoryProps = false, debug = false }) => {
   const [type, setType] = useState<QuestionType & ''>();
+  const [categoryId, setCategoryId] = useState<number>();
 
   useEffect(() => {
     onChange({ value: type ? DEFAULT_VALUES[type] : '', score: value.score });
   }, [type]);
 
+  useEffect(() => {
+    onChange((prevState) => ({ ...prevState, category_id: categoryId }));
+  }, [categoryId]);
+
   return (
     <Space direction="vertical" style={{ display: 'flex' }}>
       <Divider>
-        <FormattedMessage id={'addNewQuestion'} defaultMessage="New Question" />
+        <FormattedMessage id="addNewQuestion" defaultMessage="New Question" />
       </Divider>
-      <Space wrap={true}>
+      <Space wrap>
         <Typography>
           <FormattedMessage id={'type'} defaultMessage="Type:" />
           {':'}
@@ -69,14 +88,25 @@ export const GiftQuizNewQuestionEditor: React.FC<{
               defaultMessage="Select new question type"
             />
           }
-          options={Object.values(QuestionType)
-            .filter((q) => q)
-            .map((q) => ({ value: q, label: <FormattedMessage id={`gift_type.${q}`} /> }))}
+          options={typeOptions}
           style={{
             maxWidth: '330px',
           }}
         />
       </Space>
+      {categoryProps && (
+        <Space wrap>
+          <Typography>
+            <FormattedMessage id="category" defaultMessage="Category" />
+            {':'}
+          </Typography>
+          <CategoryTree
+            {...(typeof categoryProps === 'object' ? categoryProps : {})}
+            value={categoryId}
+            onChange={(v) => isCorrectCategoryType(v) && setCategoryId(v)}
+          />
+        </Space>
+      )}
       {(type === QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS ||
         type === QuestionType.MULTIPLE_CHOICE) && (
         <GiftQuizQuestionMultipleChoiceEditor
@@ -144,6 +174,7 @@ export const GiftQuizNewQuestionEditor: React.FC<{
           onClick={() => {
             onCreate();
             setType(undefined);
+            setCategoryId(undefined);
           }}
         >
           <FormattedMessage id="Questions.create" defaultMessage="Create Question" />

@@ -3,6 +3,8 @@ declare module '*.less';
 declare namespace API {
   import type * as Enum from './enums';
 
+  type Nullable<T> = T | null | undefined;
+
   /// ---- ENUMS ----- ///
 
   type TopicType = Enum.TopicType;
@@ -20,6 +22,8 @@ declare namespace API {
   type AttendanceValue = Enum.AttendanceValue;
 
   type CompetencyChallengeType = Enum.CompetencyChallengeType;
+
+  type QuestionType = Enum.QuestionType;
 
   /// ---- ENUMS ----- ///
 
@@ -501,6 +505,7 @@ declare namespace API {
       questions: GiftQuestion[];
       max_attempts?: number;
       max_execution_time?: number;
+      min_pass_score?: number;
     };
   };
 
@@ -1287,42 +1292,43 @@ declare namespace API {
     title: string;
     value: string;
     type: QuestionType;
+    category_id: Nullable<number>;
   };
 
   type QuizQuestion_MultipleChoice = QuizQuestionBase & {
     options: { answers: string[] };
-    type: Enum.QuestionType.MULTIPLE_CHOICE;
+    type: QuestionType.MULTIPLE_CHOICE;
   };
   type QuizQuestion_MultipleChoiceWithMultipleRightAnswers = QuizQuestionBase & {
     options: { answers: string[] };
-    type: Enum.QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
+    type: QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
   };
   type QuizQuestion_TrueFalse = QuizQuestionBase & {
     options: unknown[];
-    type: Enum.QuestionType.TRUE_FALSE;
+    type: QuestionType.TRUE_FALSE;
   };
   type QuizQuestion_ShortAnswers = QuizQuestionBase & {
     options: unknown[];
-    type: Enum.QuestionType.SHORT_ANSWERS;
+    type: QuestionType.SHORT_ANSWERS;
   };
   type QuizQuestion_Matching = QuizQuestionBase & {
     options: {
       sub_questions: string[];
       sub_answers: string[];
     };
-    type: Enum.QuestionType.MATCHING;
+    type: QuestionType.MATCHING;
   };
   type QuizQuestion_NumericalQuestion = QuizQuestionBase & {
     options: unknown[];
-    type: Enum.QuestionType.NUMERICAL_QUESTION;
+    type: QuestionType.NUMERICAL_QUESTION;
   };
   type QuizQuestion_Essay = QuizQuestionBase & {
     options: unknown[];
-    type: Enum.QuestionType.ESSAY;
+    type: QuestionType.ESSAY;
   };
   type QuizQuestion_Description = QuizQuestionBase & {
     options: unknown[];
-    type: Enum.QuestionType.DESCRIPTION;
+    type: QuestionType.DESCRIPTION;
   };
 
   export type GiftQuestion =
@@ -1385,6 +1391,13 @@ declare namespace API {
     type: string;
     max_attempts: number;
     max_execution_time: number;
+    questions: GiftQuestion[];
+  };
+
+  type UpdateGiftQuiz = {
+    max_attempts: number;
+    max_execution_time: number;
+    value: string;
   };
 
   type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &

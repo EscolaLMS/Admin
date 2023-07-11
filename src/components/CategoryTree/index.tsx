@@ -1,36 +1,47 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { FormattedMessage } from 'umi';
 import { TreeSelect } from 'antd';
 
 import { categoryTree } from '@/services/escola-lms/category';
-import { FormattedMessage } from 'umi';
 
-type TreeNodeType = {
-  title: string;
-  value: string | number;
-  children?: TreeNodeType[];
-};
-
-const treeConvert = (category: API.Category): TreeNodeType => {
-  return category.subcategories && category.subcategories.length
-    ? {
-        title: category.name,
-        value: category.id,
-        children: category.subcategories.map((cat) => treeConvert(cat)),
-      }
-    : {
-        title: category.name,
-        value: category.id,
-      };
-};
-
-export const CategoryTree: React.FC<{
+export interface CategoryTreeProps {
   state?: {
     type: number;
   };
   multiple?: boolean;
   value?: string | string[] | number | number[];
   onChange?: (value: string | string[] | number | number[]) => void;
-}> = ({ value, onChange, multiple = false }) => {
+  disabledDepth?: number;
+}
+
+type TreeNodeType = {
+  title: string;
+  value: string | number;
+  disabled?: boolean;
+  children?: TreeNodeType[];
+};
+
+const treeConvert = (category: API.Category, disabledDepth?: number, depth = 0): TreeNodeType => {
+  return category.subcategories && category.subcategories.length
+    ? {
+        title: category.name,
+        value: category.id,
+        disabled: typeof disabledDepth === 'number' && depth >= disabledDepth,
+        children: category.subcategories.map((cat) => treeConvert(cat, disabledDepth, depth + 1)),
+      }
+    : {
+        title: category.name,
+        value: category.id,
+        disabled: typeof disabledDepth === 'number' && depth >= disabledDepth,
+      };
+};
+
+export const CategoryTree: React.FC<CategoryTreeProps> = ({
+  value,
+  onChange,
+  multiple = false,
+  disabledDepth,
+}) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
 
   useEffect(() => {
@@ -42,7 +53,7 @@ export const CategoryTree: React.FC<{
   }, []);
 
   const treeData = useMemo(() => {
-    return categories.map((cat) => treeConvert(cat));
+    return categories.map((cat) => treeConvert(cat, disabledDepth));
   }, [categories]);
 
   return (
