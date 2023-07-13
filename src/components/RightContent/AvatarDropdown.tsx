@@ -38,7 +38,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
         loginOut();
         return;
       }
-      history.push(`/users/${key}`);
+      history.push(`/${key}`);
     },
     [initialState, setInitialState],
   );
@@ -75,7 +75,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
             <SettingOutlined /> <FormattedMessage id="my_profile" />
           </React.Fragment>
         ),
-        key: 'me',
+        key: 'my-profile',
       },
       {
         type: 'divider',

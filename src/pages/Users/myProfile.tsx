@@ -67,13 +67,7 @@ export default () => {
         breadcrumb: {
           routes: [
             {
-              path: 'users',
-              breadcrumbName: intl.formatMessage({
-                id: 'menu.Users',
-              }),
-            },
-            {
-              path: 'me',
+              path: 'my-profile',
               breadcrumbName: intl.formatMessage({
                 id: 'my_profile',
               }),
@@ -92,7 +86,7 @@ export default () => {
         tabs={{
           type: 'card',
           activeKey: tab,
-          onChange: (key) => history.push(`/users/me/${key}`),
+          onChange: (key) => history.push(`/my-profile/${key}`),
         }}
       >
         <ProCard.TabPane key="general" tab={<FormattedMessage id="general" />}>
