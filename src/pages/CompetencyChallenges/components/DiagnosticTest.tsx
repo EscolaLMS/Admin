@@ -63,10 +63,6 @@ export const DiagnosticTest: React.FC<Props> = ({ data }) => {
             </Space>
           ),
         }}
-        title={intl.formatMessage({
-          id: 'base',
-          defaultMessage: 'base',
-        })}
         initialValues={quizData}
         onFinish={onFormFinish}
       >
