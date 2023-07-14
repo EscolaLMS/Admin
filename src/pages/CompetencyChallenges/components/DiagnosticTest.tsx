@@ -79,8 +79,6 @@ export const DiagnosticTest: React.FC<Props> = ({ data }) => {
               id: 'max_attempts',
               defaultMessage: 'max_attempts',
             })}
-            required
-            rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
           />
           <ProFormDigit
             name="max_execution_time"
@@ -90,8 +88,6 @@ export const DiagnosticTest: React.FC<Props> = ({ data }) => {
               id: 'max_execution_time',
               defaultMessage: 'max_execution_time',
             })}
-            required
-            rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
           />
         </ProFormGroup>
       </ProForm>
