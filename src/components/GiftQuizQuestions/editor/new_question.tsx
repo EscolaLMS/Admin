@@ -62,7 +62,11 @@ export const GiftQuizNewQuestionEditor: React.FC<{
   const [categoryId, setCategoryId] = useState<number>();
 
   useEffect(() => {
-    onChange({ value: type ? DEFAULT_VALUES[type] : '', score: value.score });
+    onChange((prevState) => ({
+      ...prevState,
+      value: type ? DEFAULT_VALUES[type] : '',
+      score: value.score,
+    }));
   }, [type]);
 
   useEffect(() => {
