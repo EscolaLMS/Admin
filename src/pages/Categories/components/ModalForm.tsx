@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch, ModalForm } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormText,
+  ProFormSwitch,
+  ModalForm,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
 import { slugify } from '@/services/escola-lms/slug';
 import { useIntl, FormattedMessage } from 'umi';
 import CategoryTree from '@/components/CategoryTree';
@@ -68,6 +73,11 @@ export const CategoryModalForm: React.FC<{
         })}
         disabled
         required
+      />
+      <ProFormTextArea
+        name="description"
+        label={<FormattedMessage id="description" />}
+        placeholder={intl.formatMessage({ id: 'description' })}
       />
       <ProFormSwitch
         name="is_active"

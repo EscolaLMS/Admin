@@ -15,13 +15,21 @@ import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvent
 import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
 import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
 import { GiftQuizTableColumns } from '@/pages/QuizReports';
-import { staticColumns as CategoryTableColumns } from '@/pages/Categories';
+import { staticColumns as categoryBaseColumns } from '@/pages/Categories';
 
 type TypeDrawerProps = {
   visible: boolean;
   onClose: () => void;
   data: API.LinkedType;
 };
+
+const CategoryTableColumns = [
+  ...categoryBaseColumns,
+  {
+    title: <FormattedMessage id="description" />,
+    dataIndex: 'description',
+  },
+];
 
 export const TypeDrawer: React.FC<TypeDrawerProps> = ({ visible, data, onClose }) => {
   const descrProps = {

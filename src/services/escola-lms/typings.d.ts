@@ -56,6 +56,7 @@ declare namespace API {
   type Category = {
     id: number;
     name: string;
+    description: Nullable<string>;
     slug: string;
     is_active: boolean;
     parent_id?: number;
