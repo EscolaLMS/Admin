@@ -5,6 +5,7 @@ import { GiftQuizQuestionMultipleChoiceEditor } from './multiplechoice';
 import { GiftQuizQuestionTrueFalseEditor } from './true_false';
 import { GiftQuizQuestionShortEditor } from './short_answers';
 import { GiftQuizQuestionMatchingEditor } from './matching';
+import { GiftQuizQuestionNumericalEditor } from './numerical';
 
 interface Props {
   type: QuestionType | undefined;
@@ -27,7 +28,7 @@ export const GiftQuizQuestion: React.FC<Props> = ({ type }) => {
       return <GiftQuizQuestionMatchingEditor />;
     }
     case QuestionType.NUMERICAL_QUESTION: {
-      return <pre>{type}</pre>;
+      return <GiftQuizQuestionNumericalEditor />;
     }
     case QuestionType.ESSAY: {
       return <pre>{type}</pre>;

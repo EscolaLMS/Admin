@@ -771,6 +771,7 @@ export default {
   'Questions.correctAnswer': 'Poprawna odpowiedź?',
   'Questions.pair': 'Para {ordinalNumber}',
   'Questions.deletePair': 'Usuń parę',
+  'Questions.errorMargin': 'Margines błędu',
   weight: 'Waga',
   add_new_component: 'Dodaj nowy komponent',
   category: 'Kategoria',

@@ -1,83 +1,27 @@
-import Input from 'antd/lib/input';
+import React from 'react';
+import { FormattedMessage } from 'umi';
+import { ProFormDigit, ProFormText } from '@ant-design/pro-form';
 
-import { useCallback, useMemo } from 'react';
-import { parse, Numerical, NumericalFormat } from '@escolalms/gift-pegjs';
-import { Space, Tooltip, InputNumber } from 'antd';
-import { useIntl } from '@@/plugin-locale/localeExports';
-
-export const GiftQuizQuestionNumericalEditor: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
-  const output = useMemo(() => {
-    if (value) {
-      return parse(value);
-    }
-    return;
-  }, [value]);
-
-  const intl = useIntl();
-
-  const question: Numerical | undefined = useMemo(() => {
-    if (output && output[0].type === 'Numerical') {
-      return output[0];
-    }
-    return undefined;
-  }, [output]);
-
-  const setNewValue = useCallback((title: string, format: NumericalFormat) => {
-    onChange(`${title}{#${format.number}:${format.range}}`);
-  }, []);
-
-  return (
-    <div>
-      {question && (
-        <Space direction="horizontal" size="middle" style={{ display: 'flex' }}>
-          <Input
-            size="small"
-            value={question.stem.text}
-            onChange={(e) => setNewValue(e.target.value, question.choices as NumericalFormat)}
-          />
-          <Tooltip
-            title={intl.formatMessage({
-              id: 'correctAnswer',
-              defaultMessage: 'Correct Answer',
-            })}
-          >
-            <InputNumber
-              size="small"
-              value={(question.choices as NumericalFormat).number}
-              onChange={(n) => {
-                if (n) {
-                  setNewValue(question.stem.text, {
-                    ...(question.choices as NumericalFormat),
-                    number: n,
-                  });
-                }
-              }}
-            />
-          </Tooltip>
-          <Tooltip
-            title={intl.formatMessage({
-              id: 'errorMargin',
-              defaultMessage: 'Error Margin',
-            })}
-          >
-            <InputNumber
-              size="small"
-              defaultValue={0}
-              addonAfter="+/-"
-              value={(question.choices as NumericalFormat).range}
-              onChange={(n) => {
-                setNewValue(question.stem.text, {
-                  ...(question.choices as NumericalFormat),
-                  range: n ?? 0,
-                });
-              }}
-            />
-          </Tooltip>
-        </Space>
-      )}
-    </div>
-  );
-};
+export const GiftQuizQuestionNumericalEditor: React.FC = () => (
+  <>
+    <ProFormText
+      name="question"
+      label={<FormattedMessage id="question" />}
+      rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+      required
+    />
+    <ProFormDigit
+      name="answer"
+      label={<FormattedMessage id="answer" />}
+      rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+      required
+    />
+    <ProFormDigit
+      name="errorMargin"
+      fieldProps={{ addonAfter: '+/-' }}
+      label={<FormattedMessage id="Questions.errorMargin" />}
+      rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+      required
+    />
+  </>
+);

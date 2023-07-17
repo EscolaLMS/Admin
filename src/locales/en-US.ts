@@ -31,6 +31,7 @@ export default {
   'Questions.correctAnswer': 'Correct answer?',
   'Questions.pair': 'Pair {ordinalNumber}',
   'Questions.deletePair': 'Delete pair',
+  'Questions.errorMargin': 'Error margin',
   weight: 'Weight',
   'menu.Payments': 'Payments',
   multiple_choice: 'Multiple Choice',
