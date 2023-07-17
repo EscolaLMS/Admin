@@ -6,6 +6,7 @@ import { GiftQuizQuestionTrueFalseEditor } from './true_false';
 import { GiftQuizQuestionShortEditor } from './short_answers';
 import { GiftQuizQuestionMatchingEditor } from './matching';
 import { GiftQuizQuestionNumericalEditor } from './numerical';
+import { GiftQuizQuestionEssayEditor } from './essay';
 
 interface Props {
   type: QuestionType | undefined;
@@ -31,7 +32,7 @@ export const GiftQuizQuestion: React.FC<Props> = ({ type }) => {
       return <GiftQuizQuestionNumericalEditor />;
     }
     case QuestionType.ESSAY: {
-      return <pre>{type}</pre>;
+      return <GiftQuizQuestionEssayEditor />;
     }
     case QuestionType.DESCRIPTION: {
       return <pre>{type}</pre>;

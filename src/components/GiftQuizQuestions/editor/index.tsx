@@ -1,7 +1,7 @@
 import { Input } from 'antd';
 
 import { GiftQuizQuestionMultipleChoiceEditor } from './multiplechoice';
-import { GiftQuizQuestionEsseyEditor } from './essey';
+import { GiftQuizQuestionEssayEditor } from './essay';
 import { GiftQuizQuestionTrueFalseEditor } from './true_false';
 import { GiftQuizQuestionMatchingEditor } from './matching';
 import { GiftQuizQuestionDescriptionEditor } from './description';
@@ -29,7 +29,7 @@ export const GiftQuizQuestionEditor: React.FC<{
       return <GiftQuizQuestionMultipleChoiceEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.ESSAY:
-      return <GiftQuizQuestionEsseyEditor value={value} onChange={onLocalChange} />;
+      return <GiftQuizQuestionEssayEditor value={value} onChange={onLocalChange} />;
 
     case QuestionType.DESCRIPTION:
       return <GiftQuizQuestionDescriptionEditor value={value} onChange={onLocalChange} />;
