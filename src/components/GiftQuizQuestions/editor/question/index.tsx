@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { QuestionType } from '@/services/escola-lms/enums';
-import { GiftQuizQuestionMultipleChoiceEditor } from './multiplechoice';
-import { GiftQuizQuestionTrueFalseEditor } from './true_false';
-import { GiftQuizQuestionShortEditor } from './short_answers';
-import { GiftQuizQuestionMatchingEditor } from './matching';
-import { GiftQuizQuestionNumericalEditor } from './numerical';
-import { GiftQuizQuestionEssayEditor } from './essay';
+import { GiftQuizQuestionMultipleChoiceEditor } from './MultipleChoice';
+import { GiftQuizQuestionTrueFalseEditor } from './TrueFalse';
+import { GiftQuizQuestionShortEditor } from './ShortAnswers';
+import { GiftQuizQuestionMatchingEditor } from './Matching';
+import { GiftQuizQuestionNumericalEditor } from './Numerical';
+import { GiftQuizQuestionEssayEditor } from './Essay';
 
 interface Props {
   type: QuestionType | undefined;
