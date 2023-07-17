@@ -19,24 +19,17 @@ export const GiftQuizQuestion: React.FC<Props> = ({ type }) => {
     case QuestionType.MULTIPLE_CHOICE:
     case QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS:
       return <GiftQuizQuestionMultipleChoiceEditor type={type} />;
-    case QuestionType.TRUE_FALSE: {
+    case QuestionType.TRUE_FALSE:
       return <GiftQuizQuestionTrueFalseEditor />;
-    }
-    case QuestionType.SHORT_ANSWERS: {
+    case QuestionType.SHORT_ANSWERS:
       return <GiftQuizQuestionShortEditor />;
-    }
-    case QuestionType.MATCHING: {
+    case QuestionType.MATCHING:
       return <GiftQuizQuestionMatchingEditor />;
-    }
-    case QuestionType.NUMERICAL_QUESTION: {
+    case QuestionType.NUMERICAL_QUESTION:
       return <GiftQuizQuestionNumericalEditor />;
-    }
-    case QuestionType.ESSAY: {
+    case QuestionType.ESSAY:
+    case QuestionType.DESCRIPTION:
       return <GiftQuizQuestionEssayEditor />;
-    }
-    case QuestionType.DESCRIPTION: {
-      return <pre>{type}</pre>;
-    }
   }
 
   return <pre>Unsupported type {type}</pre>;
