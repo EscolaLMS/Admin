@@ -11,8 +11,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import type { CategoryTreeProps } from '@/components/CategoryTree';
 import { createQuestion, deleteQuestion, updateQuestion } from '@/services/escola-lms/gift_quiz';
-import { GiftQuizNewQuestionEditor } from './editor/new_question';
-import { EditQuestion } from './editor/edit_question';
+import { GiftQuizQuestionEditor } from './editor';
 import './index.css';
 
 const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -177,32 +176,9 @@ export const Table: React.FC<Props> = ({
 
   return (
     <>
-      <Drawer open={!!editQuestion} onClose={() => setEditQuestion(undefined)}>
-        {editQuestion && (
-          <EditQuestion
-            debug={debug}
-            onLoading={() => setLoading(true)}
-            loading={loading}
-            quizId={quizId}
-            question={editQuestion}
-            onRemoved={() => {
-              onRemoved?.();
-              setLoading(false);
-            }}
-            onEdited={() => {
-              onEdited?.();
-              setLoading(false);
-            }}
-            categoryProps={questionsCategory}
-          />
-        )}
-      </Drawer>
       <Drawer open={showNew} onClose={() => setShowNew(false)}>
-        <GiftQuizNewQuestionEditor
-          debug={debug}
-          onCreate={onNew}
-          value={newQuestion}
-          onChange={setNewQuestion}
+        <GiftQuizQuestionEditor
+          onFinish={async (formData) => console.log(formData)}
           categoryProps={questionsCategory}
         />
       </Drawer>
