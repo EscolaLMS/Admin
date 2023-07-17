@@ -11,7 +11,8 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const showBackgroundImage = initialState?.publicConfig?.global?.showLoginBackgroundImage ?? true;
 
   const color = initialState?.publicConfig?.global?.loginHeaderFontColor;
-  const backgroundColor = initialState?.publicConfig?.global?.loginHeaderBackgroundColor;
+  const headerBackgroundColor = initialState?.publicConfig?.global?.loginHeaderBackgroundColor;
+  const mainBackgroundColor = initialState?.publicConfig?.global?.loginFormBackgroundColor;
 
   const configLogo = useMemo(() => {
     const logo = initialState?.publicConfig?.global?.logoLogin;
@@ -27,8 +28,11 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   }, [initialState?.publicConfig]);
 
   return (
-    <div className={`${styles.container} ${showBackgroundImage ? styles[`background-image`] : ''}`}>
-      <header className={styles.header} style={{ backgroundColor, color }}>
+    <div
+      className={`${styles.container} ${showBackgroundImage ? styles[`background-image`] : ''}`}
+      style={{ backgroundColor: mainBackgroundColor }}
+    >
+      <header className={styles.header} style={{ backgroundColor: headerBackgroundColor, color }}>
         <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
         <div className={styles['logo-wrapper']}>
           <Link to="/">

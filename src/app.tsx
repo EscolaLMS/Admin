@@ -131,6 +131,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   let logo = 'logo.svg';
 
   const configLogo = initialState?.config?.find((row) => row.key === 'logo');
+  const backgroundColor = initialState?.publicConfig?.global?.contentBackgroundColor ?? '#f0f2f5';
 
   if (configLogo) {
     logo = configLogo.data;
@@ -149,6 +150,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       });
     },
     rightContentRender: () => <RightContent />,
+    contentStyle: { backgroundColor },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
