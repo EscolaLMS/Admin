@@ -1,58 +1,81 @@
-import { Input } from 'antd';
-
-import { GiftQuizQuestionMultipleChoiceEditor } from './multiplechoice';
-import { GiftQuizQuestionEssayEditor } from './essay';
-import { GiftQuizQuestionTrueFalseEditor } from './true_false';
-import { GiftQuizQuestionMatchingEditor } from './matching';
-import { GiftQuizQuestionDescriptionEditor } from './description';
-import { GiftQuizQuestionNumericalEditor } from './numerical';
-import { GiftQuizQuestionShortEditor } from './short_answers';
+import React, { useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+import { Space, Divider } from 'antd';
+import ProForm, { ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
 
 import { QuestionType } from '@/services/escola-lms/enums';
-import { useCallback } from 'react';
+import CategoryTree, { type CategoryTreeProps } from '@/components/CategoryTree';
+import { GiftQuizQuestion } from './question';
+import type { GiftQuizFormData } from './types';
 
-export const GiftQuizQuestionEditor: React.FC<{
-  type: API.GiftQuestion['type'];
-  value: string;
-  onChange: (value: string) => void;
-  loading?: boolean;
-}> = ({ type, value, onChange, loading = false }) => {
-  const onLocalChange = useCallback((newValue: string) => {
-    if (newValue !== value) {
-      onChange(newValue);
+const VALUES_NOT_TO_RESET = ['type', 'score', 'category'];
+
+const TYPE_OPTIONS = Object.values(QuestionType).reduce<
+  { value: QuestionType; label: React.ReactNode }[]
+>(
+  (acc, q) => (q ? [...acc, { value: q, label: <FormattedMessage id={`gift_type.${q}`} /> }] : acc),
+  [],
+);
+
+interface Props {
+  onFinish: (formData: GiftQuizFormData) => Promise<void>;
+  initialValues?: GiftQuizFormData;
+  categoryProps?: boolean | Omit<CategoryTreeProps, 'value' | 'onChange'>;
+}
+
+export const GiftQuizQuestionEditor: React.FC<Props> = ({
+  onFinish,
+  initialValues,
+  categoryProps = false,
+}) => {
+  const intl = useIntl();
+
+  const [form] = ProForm.useForm<GiftQuizFormData>();
+  const type: API.QuestionType | undefined = ProForm.useWatch('type', form);
+
+  useEffect(() => {
+    if (type) {
+      const fields = form.getFieldsValue();
+      const fieldsToReset = Object.keys(fields).filter((key) => !VALUES_NOT_TO_RESET.includes(key));
+
+      form.resetFields(fieldsToReset);
     }
-  }, []);
+  }, [type]);
 
-  switch (type) {
-    case QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS:
-    case QuestionType.MULTIPLE_CHOICE:
-      return <GiftQuizQuestionMultipleChoiceEditor value={value} onChange={onLocalChange} />;
-
-    case QuestionType.ESSAY:
-      return <GiftQuizQuestionEssayEditor value={value} onChange={onLocalChange} />;
-
-    case QuestionType.DESCRIPTION:
-      return <GiftQuizQuestionDescriptionEditor value={value} onChange={onLocalChange} />;
-
-    case QuestionType.TRUE_FALSE:
-      return <GiftQuizQuestionTrueFalseEditor value={value} onChange={onLocalChange} />;
-
-    case QuestionType.MATCHING:
-      return <GiftQuizQuestionMatchingEditor value={value} onChange={onLocalChange} />;
-
-    case QuestionType.NUMERICAL_QUESTION:
-      return <GiftQuizQuestionNumericalEditor value={value} onChange={onLocalChange} />;
-
-    case QuestionType.SHORT_ANSWERS:
-      return <GiftQuizQuestionShortEditor value={value} onChange={onLocalChange} />;
-
-    default:
-      return (
-        <Input.TextArea
-          disabled={loading}
-          value={value}
-          onChange={(e) => onLocalChange(e.target.value)}
+  return (
+    <Space direction="vertical" style={{ display: 'flex' }}>
+      <Divider>
+        <FormattedMessage id="addNewQuestion" defaultMessage="New Question" />
+      </Divider>
+      <ProForm layout="horizontal" form={form} onFinish={onFinish} initialValues={initialValues}>
+        <ProFormSelect
+          name="type"
+          placeholder={intl.formatMessage({
+            id: 'selectNewQuestionType',
+            defaultMessage: 'Select new question type',
+          })}
+          label={<FormattedMessage id="type" defaultMessage="Type:" />}
+          options={TYPE_OPTIONS}
+          rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+          required
         />
-      );
-  }
+        <GiftQuizQuestion type={type} />
+        <ProFormDigit
+          name="score"
+          label={<FormattedMessage id="Questions.score" defaultMessage="Score" />}
+          rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+        />
+        {categoryProps && (
+          <ProForm.Item
+            name="category"
+            label={<FormattedMessage id="category" defaultMessage="Category" />}
+            rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+            required
+          >
+            <CategoryTree {...(typeof categoryProps === 'object' ? categoryProps : {})} />
+          </ProForm.Item>
+        )}
+      </ProForm>
+    </Space>
+  );
 };
