@@ -776,6 +776,6 @@ export default {
   'Competency challenge created successfully.': 'Stworzono wyzwanie',
   'CompetencyChallenges.addNewRow': 'Dodaj nowy wiersz',
   'CompetencyChallenges.onlyOneRowIsEditable': 'Jednocześnie można edytować tylko jeden wiersz',
-  'CompetencyChallenges.types.simple': 'Prosty',
+  'CompetencyChallenges.types.simple': 'Poziomujący',
   'CompetencyChallenges.types.complex': 'Ogólny',
 };

@@ -2,7 +2,8 @@ import { Children } from 'react';
 import Input from 'antd/lib/input';
 
 import { useCallback, useMemo } from 'react';
-import { parse, MultipleChoice, TextChoice } from '@escolalms/gift-pegjs';
+import { parse } from '@escolalms/gift-pegjs';
+import type { MultipleChoice, TextChoice } from '@escolalms/gift-pegjs';
 import { Button, Checkbox, Space } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Tooltip, InputNumber } from 'antd';
@@ -163,6 +164,7 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<{
                     size="small"
                     icon={<DeleteOutlined />}
                     onClick={() => onMCQuestionDelete(i)}
+                    disabled={question.choices.length <= 2}
                   />
                 </Space>
               </div>

@@ -37,7 +37,7 @@ const staticColumns: ProColumns<API.GiftQuestion>[] = [
     hideInForm: true,
     hideInSearch: true,
     hideInSetting: true,
-    render: (_, row: API.GiftQuestion) => <FormattedMessage id={row.type} />,
+    render: (_, row: API.GiftQuestion) => <FormattedMessage id={`gift_type.${row.type}`} />,
   },
   {
     title: <FormattedMessage id="question" defaultMessage="Question" />,
