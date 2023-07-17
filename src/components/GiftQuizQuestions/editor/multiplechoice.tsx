@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import ProForm, {
   ProFormCheckbox,
   ProFormDigit,
@@ -51,11 +51,13 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<Props> = ({ type }) 
               <>
                 <FormattedMessage id="Questions.answer" values={{ ordinalNumber: i + 1 }} />
                 {count > 2 && (
-                  <Button
-                    type="text"
-                    icon={<DeleteOutlined />}
-                    onClick={() => action.remove(field.name)}
-                  />
+                  <Tooltip title={intl.formatMessage({ id: 'Questions.deleteAnswer' })}>
+                    <Button
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      onClick={() => action.remove(field.name)}
+                    />
+                  </Tooltip>
                 )}
               </>
             }
