@@ -4,6 +4,7 @@ import { QuestionType } from '@/services/escola-lms/enums';
 import { GiftQuizQuestionMultipleChoiceEditor } from './multiplechoice';
 import { GiftQuizQuestionTrueFalseEditor } from './true_false';
 import { GiftQuizQuestionShortEditor } from './short_answers';
+import { GiftQuizQuestionMatchingEditor } from './matching';
 
 interface Props {
   type: QuestionType | undefined;
@@ -23,7 +24,7 @@ export const GiftQuizQuestion: React.FC<Props> = ({ type }) => {
       return <GiftQuizQuestionShortEditor />;
     }
     case QuestionType.MATCHING: {
-      return <pre>{type}</pre>;
+      return <GiftQuizQuestionMatchingEditor />;
     }
     case QuestionType.NUMERICAL_QUESTION: {
       return <pre>{type}</pre>;

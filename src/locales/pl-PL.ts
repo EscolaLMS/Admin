@@ -769,6 +769,8 @@ export default {
   'Questions.onlyOneAnswerIsCorrect': 'Tylko jedna odpowiedź może być poprawna',
   'Questions.answer': 'Odpowiedź {ordinalNumber}',
   'Questions.correctAnswer': 'Poprawna odpowiedź?',
+  'Questions.pair': 'Para {ordinalNumber}',
+  'Questions.deletePair': 'Usuń parę',
   weight: 'Waga',
   add_new_component: 'Dodaj nowy komponent',
   category: 'Kategoria',

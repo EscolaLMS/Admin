@@ -29,6 +29,8 @@ export default {
   'Questions.onlyOneAnswerIsCorrect': 'Only one answer can be correct',
   'Questions.answer': 'Answer {ordinalNumber}',
   'Questions.correctAnswer': 'Correct answer?',
+  'Questions.pair': 'Pair {ordinalNumber}',
+  'Questions.deletePair': 'Delete pair',
   weight: 'Weight',
   'menu.Payments': 'Payments',
   multiple_choice: 'Multiple Choice',
