@@ -12,6 +12,7 @@ import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import type { CategoryTreeProps } from '@/components/CategoryTree';
 import { createQuestion, deleteQuestion, updateQuestion } from '@/services/escola-lms/gift_quiz';
 import { GiftQuizQuestionEditor } from './editor';
+import type { QuizQuestionSubmitData } from './editor/types';
 import './index.css';
 
 const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -22,7 +23,7 @@ const SortContainer = SortableContainer((props: React.HTMLAttributes<HTMLTableSe
   <tbody {...props} />
 ));
 
-const staticColumns: ProColumns<API.GiftQuestion>[] = [
+const staticColumns: ProColumns<API.QuizQuestion>[] = [
   {
     title: <FormattedMessage id="sort" defaultMessage="sort" />,
     dataIndex: 'id',
@@ -36,7 +37,7 @@ const staticColumns: ProColumns<API.GiftQuestion>[] = [
     hideInForm: true,
     hideInSearch: true,
     hideInSetting: true,
-    render: (_, row: API.GiftQuestion) => <FormattedMessage id={`gift_type.${row.type}`} />,
+    render: (_, row) => <FormattedMessage id={`gift_type.${row.type}`} />,
   },
   {
     title: <FormattedMessage id="question" defaultMessage="Question" />,
@@ -44,7 +45,7 @@ const staticColumns: ProColumns<API.GiftQuestion>[] = [
     hideInForm: true,
     hideInSearch: true,
     hideInSetting: true,
-    render: (_, row: API.GiftQuestion) => {
+    render: (_, row) => {
       const obj = parse(row.value);
 
       if (obj?.[0] && 'stem' in obj[0]) {
@@ -55,7 +56,7 @@ const staticColumns: ProColumns<API.GiftQuestion>[] = [
   },
 ];
 
-const categoryColumn: ProColumns<API.GiftQuestion> = {
+const categoryColumn: ProColumns<API.QuizQuestion> = {
   title: <FormattedMessage id="category" defaultMessage="Category" />,
   dataIndex: 'category_id',
   hideInForm: true,
@@ -76,7 +77,7 @@ interface OnSortEndParams {
 
 interface Props {
   quizId: number;
-  questions: API.GiftQuestion[];
+  questions: API.QuizQuestion[];
   onAdded?: () => void;
   onRemoved?: () => void;
   onEdited?: () => void;
@@ -95,20 +96,11 @@ export const Table: React.FC<Props> = ({
   tableHeader,
   questionsCategory,
 }) => {
-  const [editQuestion, setEditQuestion] = useState<API.GiftQuestion>();
   const [loading, setLoading] = useState(false);
-  const [showNew, setShowNew] = useState(false);
+  const [newQuestion, setNewQuestion] = useState(false);
+  const [editQuestion, setEditQuestion] = useState<API.QuizQuestion>();
 
   const [debug, setDebug] = useState(false);
-
-  const [newQuestion, setNewQuestion] = useState<{
-    score: number;
-    value: string;
-    category_id?: number;
-  }>({
-    score: 1,
-    value: '',
-  });
 
   const [dataSource, setDataSource] = useState(questions);
 
@@ -154,32 +146,59 @@ export const Table: React.FC<Props> = ({
     return <SortableItem index={index} {...restProps} />;
   };
 
-  const onNew = useCallback(() => {
-    setLoading(true);
+  const onNewQuestionSubmit = useCallback(
+    async (data: QuizQuestionSubmitData) => {
+      try {
+        setLoading(true);
 
-    createQuestion({
-      topic_gift_quiz_id: quizId,
-      ...newQuestion,
-    })
-      .catch((err) => console.log('err', err))
-      .then(() => {
-        setNewQuestion({ value: '', score: 1 });
-        setShowNew(false);
-        if (onAdded) {
-          onAdded();
-        }
-      })
-      .finally(() => {
+        const response = await createQuestion({ topic_gift_quiz_id: quizId, ...data });
+        setNewQuestion(false);
+        onAdded?.();
+        return response.success;
+      } catch (err) {
+        console.log(err);
+        return false;
+      } finally {
         setLoading(false);
-      });
-  }, [newQuestion, quizId]);
+      }
+    },
+    [newQuestion, quizId],
+  );
+
+  const onEditQuestionSubmit = useCallback(
+    async (data: QuizQuestionSubmitData) => {
+      if (editQuestion?.id === undefined) return false;
+
+      try {
+        setLoading(true);
+
+        const response = await updateQuestion(editQuestion.id, {
+          topic_gift_quiz_id: quizId,
+          ...data,
+        });
+        setEditQuestion(undefined);
+        onEdited?.();
+        return response.success;
+      } catch (err) {
+        console.log(err);
+        return false;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [editQuestion?.id, quizId],
+  );
 
   return (
     <>
-      <Drawer open={showNew} onClose={() => setShowNew(false)}>
+      <Drawer open={newQuestion} onClose={() => setNewQuestion(false)}>
+        <GiftQuizQuestionEditor onSubmit={onNewQuestionSubmit} categoryProps={questionsCategory} />
+      </Drawer>
+      <Drawer open={!!editQuestion} onClose={() => setEditQuestion(undefined)}>
         <GiftQuizQuestionEditor
-          onFinish={async (formData) => console.log(formData)}
+          onSubmit={onEditQuestionSubmit}
           categoryProps={questionsCategory}
+          values={editQuestion}
         />
       </Drawer>
       <ProTable
@@ -193,7 +212,7 @@ export const Table: React.FC<Props> = ({
             key="add"
             icon={<PlusCircleOutlined />}
             type="primary"
-            onClick={() => setShowNew(true)}
+            onClick={() => setNewQuestion(true)}
           >
             {' '}
             <FormattedMessage id="addNewQuestion" defaultMessage="Add new question" />

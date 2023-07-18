@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 import { Space, Divider } from 'antd';
 import ProForm, { ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
@@ -6,7 +6,8 @@ import ProForm, { ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
 import { QuestionType } from '@/services/escola-lms/enums';
 import CategoryTree, { type CategoryTreeProps } from '@/components/CategoryTree';
 import { GiftQuizQuestion } from './question';
-import type { GiftQuizFormData } from './types';
+import type { QuizQuestionSubmitData, GiftQuizFormData } from './types';
+import { parseToFormData, parseToGIFT } from './utils';
 
 const VALUES_NOT_TO_RESET = ['type', 'score', 'category'];
 
@@ -18,20 +19,39 @@ const TYPE_OPTIONS = Object.values(QuestionType).reduce<
 );
 
 interface Props {
-  onFinish: (formData: GiftQuizFormData) => Promise<void>;
-  initialValues?: GiftQuizFormData;
+  onSubmit: (quizQuestion: QuizQuestionSubmitData) => Promise<boolean>;
+  values?: API.QuizQuestion;
   categoryProps?: boolean | Omit<CategoryTreeProps, 'value' | 'onChange'>;
 }
 
 export const GiftQuizQuestionEditor: React.FC<Props> = ({
-  onFinish,
-  initialValues,
+  onSubmit,
+  values,
   categoryProps = false,
 }) => {
   const intl = useIntl();
 
   const [form] = ProForm.useForm<GiftQuizFormData>();
   const type: API.QuestionType | undefined = ProForm.useWatch('type', form);
+
+  const initialValues = useMemo(() => parseToFormData(values), [values]);
+
+  const onFinish = useCallback(async (formData: GiftQuizFormData) => {
+    const value = parseToGIFT(formData);
+
+    const { score, category_id } = formData;
+    const status = await onSubmit({ value, score, category_id });
+
+    if (!status) {
+      return;
+    }
+
+    form.resetFields();
+  }, []);
+
+  useEffect(() => {
+    form.resetFields();
+  }, [initialValues]);
 
   useEffect(() => {
     if (type) {
@@ -45,7 +65,7 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
   return (
     <Space direction="vertical" style={{ display: 'flex' }}>
       <Divider>
-        <FormattedMessage id="addNewQuestion" defaultMessage="New Question" />
+        <FormattedMessage id={initialValues ? 'Questions.edit' : 'addNewQuestion'} />
       </Divider>
       <ProForm layout="horizontal" form={form} onFinish={onFinish} initialValues={initialValues}>
         <ProFormSelect
@@ -67,7 +87,7 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
         />
         {categoryProps && (
           <ProForm.Item
-            name="category"
+            name="category_id"
             label={<FormattedMessage id="category" defaultMessage="Category" />}
             rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
             required
