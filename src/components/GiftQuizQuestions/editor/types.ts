@@ -4,7 +4,7 @@ type BaseFormData = {
   type: QuestionType;
   question: string;
   score: number;
-  category?: number;
+  category_id?: API.Nullable<number>;
 };
 
 export type MultipleChoiceFormData = BaseFormData & {
