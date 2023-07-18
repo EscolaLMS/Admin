@@ -258,16 +258,9 @@ export const Topic: React.FC = () => {
                 updateValue(key as keyof API.Topic, value);
               }}
               topicable={topics.topicable as API.TopicQuiz['topicable']}
-              onAdded={() => {
-                if (getLessons) {
-                  getLessons();
-                }
-              }}
-              onRemoved={() => {
-                if (getLessons) {
-                  getLessons();
-                }
-              }}
+              onAdded={getLessons}
+              onRemoved={getLessons}
+              onEdited={getLessons}
             />
           )}
           {type && type === TopicType.H5P && (

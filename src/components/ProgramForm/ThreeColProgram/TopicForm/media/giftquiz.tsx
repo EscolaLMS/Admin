@@ -7,10 +7,11 @@ import Typography from 'antd/lib/typography/Typography';
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
-  onAdded: () => void;
-  onRemoved: () => void;
   onChange: (key: 'max_attempts' | 'max_execution_time', value: number | null) => void;
-}> = ({ topicable, onAdded, onRemoved, onChange }) => {
+  onAdded?: () => void;
+  onRemoved?: () => void;
+  onEdited?: () => void;
+}> = ({ topicable, onAdded, onRemoved, onEdited, onChange }) => {
   const intl = useIntl();
 
   return (
@@ -68,6 +69,7 @@ export const GiftQuiz: React.FC<{
           questions={topicable.questions}
           quizId={topicable.id}
           onAdded={onAdded}
+          onEdited={onEdited}
           onRemoved={onRemoved}
         />
       ) : (
