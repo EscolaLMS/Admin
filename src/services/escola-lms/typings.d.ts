@@ -1288,6 +1288,14 @@ declare namespace API {
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
   /** GIFT Quiz types */
+  type CreateQuizQuestion = {
+    topic_gift_quiz_id: number;
+    value: string;
+    score: number;
+    order?: Nullable<number>;
+    category_id?: Nullable<number>;
+  };
+
   type QuizQuestionBase = {
     id: number;
     question: string;

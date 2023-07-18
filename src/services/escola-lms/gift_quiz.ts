@@ -3,10 +3,7 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /** POST /api/admin/gift-questions */
-export async function createQuestion(
-  body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminCreateGiftQuestionRequest,
-  options?: RequestOptionsInit,
-) {
+export async function createQuestion(body: API.CreateQuizQuestion, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.GiftQuestion>>(`/api/admin/gift-questions`, {
     method: 'POST',
     data: body,
