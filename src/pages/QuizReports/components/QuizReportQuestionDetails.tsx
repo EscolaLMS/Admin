@@ -5,7 +5,7 @@ import { FormattedMessage } from 'umi';
 import { QuestionType } from '@/services/escola-lms/enums';
 
 interface Props {
-  question: API.GiftQuestion;
+  question: API.AttemptGiftQuestion;
 }
 
 const ANSWER_TYPES = [

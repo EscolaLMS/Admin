@@ -505,7 +505,7 @@ declare namespace API {
   type TopicQuiz = TopicBase & {
     topicable_type: TopicType.GiftQuiz;
     topicable: TopicableBase & {
-      questions: GiftQuestion[];
+      questions: AttemptGiftQuestion[];
       max_attempts?: number;
       max_execution_time?: number;
       min_pass_score?: number;
@@ -1288,6 +1288,15 @@ declare namespace API {
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
   /** GIFT Quiz types */
+  type QuizQuestion = {
+    id: number;
+    type: QuestionType;
+    category_id?: Nullable<number>;
+    order: Nullable<number>;
+    score: number;
+    value: string; // in GIFT grammar
+  };
+
   type CreateQuizQuestion = {
     topic_gift_quiz_id: number;
     value: string;
@@ -1342,7 +1351,7 @@ declare namespace API {
     type: QuestionType.DESCRIPTION;
   };
 
-  export type GiftQuestion =
+  export type AttemptGiftQuestion =
     | QuizQuestion_MultipleChoice
     | QuizQuestion_MultipleChoiceWithMultipleRightAnswers
     | QuizQuestion_TrueFalse
@@ -1384,7 +1393,7 @@ declare namespace API {
   };
 
   type QuizAttemptDetails = QuizAttempt & {
-    questions: GiftQuestion[];
+    questions: AttemptGiftQuestion[];
     answers: AttemptAnswer[];
   };
 
@@ -1402,7 +1411,7 @@ declare namespace API {
     type: string;
     max_attempts: number;
     max_execution_time: number;
-    questions: GiftQuestion[];
+    questions: QuizQuestion[];
   };
 
   type UpdateGiftQuiz = {
