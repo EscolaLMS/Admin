@@ -1312,7 +1312,8 @@ declare namespace API {
     title: string;
     value: string;
     type: QuestionType;
-    category_id: Nullable<number>;
+    order: Nullable<number>;
+    category_id?: Nullable<number>;
   };
 
   type QuizQuestion_MultipleChoice = QuizQuestionBase & {
@@ -1324,11 +1325,9 @@ declare namespace API {
     type: QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
   };
   type QuizQuestion_TrueFalse = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.TRUE_FALSE;
   };
   type QuizQuestion_ShortAnswers = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.SHORT_ANSWERS;
   };
   type QuizQuestion_Matching = QuizQuestionBase & {
@@ -1339,15 +1338,12 @@ declare namespace API {
     type: QuestionType.MATCHING;
   };
   type QuizQuestion_NumericalQuestion = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.NUMERICAL_QUESTION;
   };
   type QuizQuestion_Essay = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.ESSAY;
   };
   type QuizQuestion_Description = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.DESCRIPTION;
   };
 
