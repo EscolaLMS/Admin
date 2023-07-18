@@ -99,7 +99,7 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<Props> = ({ type }) 
               <ProFormDigit
                 name="weight"
                 rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
-                fieldProps={{ min: 1, max: 100, addonAfter: '%' }}
+                fieldProps={{ min: -Number.MAX_SAFE_INTEGER, addonAfter: '%' }}
                 label={<FormattedMessage id="weight" defaultMessage="Weight" />}
               />
             )}
