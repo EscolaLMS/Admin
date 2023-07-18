@@ -1,13 +1,14 @@
 import type { QuestionType } from '@/services/escola-lms/enums';
 
 type BaseFormData = {
+  type: QuestionType;
   question: string;
   score: number;
   category?: number;
 };
 
 export type MultipleChoiceFormData = BaseFormData & {
-  type: QuestionType.MATCHING;
+  type: QuestionType.MULTIPLE_CHOICE;
   answers: { isCorrect: boolean; value: string }[];
 };
 
@@ -54,3 +55,5 @@ export type GiftQuizFormData =
   | NumericalFormData
   | EssayFormData
   | DescriptionFormData;
+
+export type QuizQuestionSubmitData = Omit<API.CreateQuizQuestion, 'topic_gift_quiz_id'>;
