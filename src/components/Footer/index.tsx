@@ -51,10 +51,13 @@ export default () => {
     return logo;
   }, [initialState?.publicConfig?.global?.logoFooter]);
 
+  const backgroundColor = initialState?.publicConfig?.global?.contentBackgroundColor ?? '#f0f2f5';
+  const color = initialState?.publicConfig?.global?.footerFontColor ?? '#00000072';
+
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="ant-layout-footer" style={{ padding: 0 }}>
+    <footer className="ant-layout-footer" style={{ padding: 0, backgroundColor }}>
       <div className="ant-pro-global-footer">
         <div className="ant-pro-global-footer-links">
           {links.map(({ key, href, title, blankTarget }) => (
@@ -64,12 +67,13 @@ export default () => {
               title={key}
               target={blankTarget ? '_blank' : undefined}
               rel={blankTarget ? 'noreferrer' : undefined}
+              style={{ color }}
             >
               {title}
             </a>
           ))}
         </div>
-        <div className="ant-pro-global-footer-copyright">
+        <div className="ant-pro-global-footer-copyright" style={{ color }}>
           <CopyrightOutlined /> {currentYear} EscolaSoft
         </div>
         {footerLogo && (
