@@ -701,6 +701,7 @@ export default {
   grade: 'Ocena',
   max_percent: 'Max procent (%)',
   min_percent: 'Min procent (%)',
+  min_points: 'Minimalna liczba punktów',
   'TeacherSubjects.FinalGrades.Student': 'Student: {first_name} {last_name}',
   'TeacherSubjects.FinalGrades.StudentPartialGrades': 'Oceny cząstkowe',
   'TeacherSubjects.FinalGrades.Attendance': 'Obecność',

@@ -43,9 +43,9 @@ const staticColumns: ProColumns<DataSourceType>[] = [
     },
   },
   {
-    title: <FormattedMessage id="min_percent" />,
+    title: <FormattedMessage id="min_points" />,
     dataIndex: 'scale_min',
-    valueType: 'percent',
+    valueType: 'digit',
     formItemProps: {
       rules: [
         {
@@ -56,13 +56,12 @@ const staticColumns: ProColumns<DataSourceType>[] = [
           type: 'number',
           min: 0,
           max: 100,
-          message: <FormattedMessage id="number_between" values={{ min: 0, max: 100 }} />,
+          message: <FormattedMessage id="number_between" values={{ min: 0 }} />,
         },
       ],
     },
     fieldProps: {
       min: 0,
-      max: 100,
     },
   },
   {
