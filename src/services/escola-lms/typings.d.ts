@@ -505,7 +505,7 @@ declare namespace API {
   type TopicQuiz = TopicBase & {
     topicable_type: TopicType.GiftQuiz;
     topicable: TopicableBase & {
-      questions: GiftQuestion[];
+      questions: AttemptGiftQuestion[];
       max_attempts?: number;
       max_execution_time?: number;
       min_pass_score?: number;
@@ -1288,6 +1288,23 @@ declare namespace API {
   type ConsultationAccessEnquiryList = DefaultMetaResponse<ConsultationAccessEnquiry>;
 
   /** GIFT Quiz types */
+  type QuizQuestion = {
+    id: number;
+    type: QuestionType;
+    category_id?: Nullable<number>;
+    order: Nullable<number>;
+    score: number;
+    value: string; // in GIFT grammar
+  };
+
+  type CreateQuizQuestion = {
+    topic_gift_quiz_id: number;
+    value: string;
+    score: number;
+    order?: Nullable<number>;
+    category_id?: Nullable<number>;
+  };
+
   type QuizQuestionBase = {
     id: number;
     question: string;
@@ -1295,7 +1312,8 @@ declare namespace API {
     title: string;
     value: string;
     type: QuestionType;
-    category_id: Nullable<number>;
+    order: Nullable<number>;
+    category_id?: Nullable<number>;
   };
 
   type QuizQuestion_MultipleChoice = QuizQuestionBase & {
@@ -1307,11 +1325,9 @@ declare namespace API {
     type: QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
   };
   type QuizQuestion_TrueFalse = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.TRUE_FALSE;
   };
   type QuizQuestion_ShortAnswers = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.SHORT_ANSWERS;
   };
   type QuizQuestion_Matching = QuizQuestionBase & {
@@ -1322,19 +1338,16 @@ declare namespace API {
     type: QuestionType.MATCHING;
   };
   type QuizQuestion_NumericalQuestion = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.NUMERICAL_QUESTION;
   };
   type QuizQuestion_Essay = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.ESSAY;
   };
   type QuizQuestion_Description = QuizQuestionBase & {
-    options: unknown[];
     type: QuestionType.DESCRIPTION;
   };
 
-  export type GiftQuestion =
+  export type AttemptGiftQuestion =
     | QuizQuestion_MultipleChoice
     | QuizQuestion_MultipleChoiceWithMultipleRightAnswers
     | QuizQuestion_TrueFalse
@@ -1376,7 +1389,7 @@ declare namespace API {
   };
 
   type QuizAttemptDetails = QuizAttempt & {
-    questions: GiftQuestion[];
+    questions: AttemptGiftQuestion[];
     answers: AttemptAnswer[];
   };
 
@@ -1394,7 +1407,7 @@ declare namespace API {
     type: string;
     max_attempts: number;
     max_execution_time: number;
-    questions: GiftQuestion[];
+    questions: QuizQuestion[];
   };
 
   type UpdateGiftQuiz = {

@@ -3,11 +3,8 @@ import { request } from 'umi';
 import type { RequestOptionsInit } from 'umi-request';
 
 /** POST /api/admin/gift-questions */
-export async function createQuestion(
-  body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminCreateGiftQuestionRequest,
-  options?: RequestOptionsInit,
-) {
-  return request<API.DefaultResponse<API.GiftQuestion>>(`/api/admin/gift-questions`, {
+export async function createQuestion(body: API.CreateQuizQuestion, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.AttemptGiftQuestion>>(`/api/admin/gift-questions`, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -17,13 +14,10 @@ export async function createQuestion(
 /** PUT /api/admin/gift-questions */
 export async function updateQuestion(
   id: number,
-  body: EscolaLms.TopicTypeGift.Http.Requests.Admin.AdminUpdateGiftQuestionRequest & {
-    order?: number;
-    category_id?: API.Nullable<number>;
-  },
+  body: API.CreateQuizQuestion,
   options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultResponse<API.GiftQuestion>>(`/api/admin/gift-questions/${id}`, {
+  return request<API.DefaultResponse<API.AttemptGiftQuestion>>(`/api/admin/gift-questions/${id}`, {
     method: 'PUT',
     data: body,
     ...(options || {}),
@@ -32,7 +26,7 @@ export async function updateQuestion(
 
 /** DELETE /api/admin/gift-questions */
 export async function deleteQuestion(id: number, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<API.GiftQuestion>>(`/api/admin/gift-questions/${id}`, {
+  return request<API.DefaultResponse<API.AttemptGiftQuestion>>(`/api/admin/gift-questions/${id}`, {
     method: 'DELETE',
     ...(options || {}),
   });
