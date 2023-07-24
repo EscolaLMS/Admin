@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage, history, useIntl } from 'umi';
 import { message } from 'antd';
 import ProForm, {
@@ -39,6 +39,13 @@ export const MainForm: React.FC<Props> = ({
   const [form] = ProForm.useForm();
 
   const isNew = Number.isNaN(competency_challenge_id);
+
+  const initialValues = useMemo(() => {
+    if (!data) return {};
+    const { authors, ...restValues } = data;
+
+    return { ...restValues, authors: authors.map(({ id }) => id) };
+  }, [data]);
 
   const addCompetencyChallenge = useCallback(
     async ({ name, type, is_active = false }: API.CreateCompetencyChallenge) => {
@@ -90,7 +97,7 @@ export const MainForm: React.FC<Props> = ({
   return (
     <ProForm
       form={form}
-      initialValues={data ?? {}}
+      initialValues={initialValues}
       onFinish={isNew ? addCompetencyChallenge : changeCompetencyChallenge}
     >
       <ProForm.Group title={<FormattedMessage id="CompetencyChallenges.base" />}>
