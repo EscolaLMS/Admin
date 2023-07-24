@@ -1801,10 +1801,13 @@ declare namespace API {
     updated_at: Date | string;
     type: CompetencyChallengeType;
     description: string | null;
+    summary: string;
     image_path: string | null;
     is_active: boolean;
     quiz_id: number;
     scales: CompetencyChallengeScale[];
+    authors: UserItem[];
+    categories: number[];
   };
 
   type CreateCompetencyChallenge = {
@@ -1814,6 +1817,7 @@ declare namespace API {
   };
 
   type UpdateCompetencyChallenge = CreateCompetencyChallenge & {
+    authors?: number[];
     summary?: string;
     description?: string;
     image_url?: string;
