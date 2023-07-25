@@ -3,13 +3,48 @@ on:
   release:
     types: [created]
 jobs:
+  source-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        env:
+          CI: false
+          BASE_PATH: /
+          REACT_APP_PUBLIC_URL: https://admin-stage.escolalms.com/
+          REACT_APP_API_URL: https://api-stage.escolalms.com
+          REACT_APP_SENTRYDSN: https://ded0d6568b9744a5bcdbedb734946671@sentry.etd24.pl/63
+          REACT_APP_YBUG: 01m1nn5zqystt1qq5n11
+        run: |
+          node -v 
+          yarn
+          yarn build
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: sentry
+          SENTRY_PROJECT: wellms-all
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: production
+          sourcemaps: ./dist
+          version: admin/${{github.ref_name}}
+
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2          
+        uses: docker/setup-qemu-action@v2
         with:
           image: tonistiigi/binfmt:master
           platforms: all
@@ -19,23 +54,23 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}      
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
-          # with QEMU it takes more then 3 hours to push, 
+          # with QEMU it takes more then 3 hours to push,
           #platforms: linux/amd64,linux/arm64
           tags: escolalms/admin:${{github.ref_name}}, escolalms/admin:latest
-          
+
       - name: Create the Mattermost Message
         run: |
           echo "{\"text\":\"There is a new version ${{ github.ref_name }} [escolalms/admin:latest](https://hub.docker.com/r/escolalms/admin/tags?page=1&name=latest) image built. k8s rollout will happen soon\"}" > mattermost.json
       - uses: mattermost/action-mattermost-notify@master
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          
-      - name: Send webook to hooks to rollout all devs on k8s 
+
+      - name: Send webook to hooks to rollout all devs on k8s
         uses: distributhor/workflow-webhook@v3
         env:
           webhook_url: ${{ secrets.K8S_WEBHOOK_URL_ADMIN_LATEST }}

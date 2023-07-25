@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
-        
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -33,6 +33,18 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: dist # The folder the action should deploy.
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: sentry
+          SENTRY_PROJECT: wellms-all
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: staging
+          sourcemaps: ./dist
+          version: admin/${{github.ref_name}}
 
       - name: Create the Mattermost Message
         run: |
