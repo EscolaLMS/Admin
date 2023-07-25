@@ -45,6 +45,8 @@ jobs:
           environment: staging
           sourcemaps: ./dist
           version: admin-${{github.ref_name}}
+          ignore_missing: true
+          ignore_empty: true
 
       - name: Create the Mattermost Message
         run: |

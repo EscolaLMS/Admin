@@ -36,7 +36,7 @@ jobs:
         with:
           environment: production
           sourcemaps: ./dist
-          version: admin/${{github.ref_name}}
+          version: admin-${{github.ref_name}}
 
   build:
     runs-on: ubuntu-latest
