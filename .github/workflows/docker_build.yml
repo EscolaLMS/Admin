@@ -32,7 +32,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: sentry
           SENTRY_PROJECT: wellms-all
-          # SENTRY_URL: https://sentry.io/
+          SENTRY_URL: https://sentry.etd24.pl/
         with:
           environment: production
           sourcemaps: ./dist
