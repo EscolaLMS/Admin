@@ -23,6 +23,7 @@ jobs:
           REACT_APP_API_URL: https://api-stage.escolalms.com
           REACT_APP_SENTRYDSN: https://ded0d6568b9744a5bcdbedb734946671@sentry.etd24.pl/63
           REACT_APP_YBUG: 01m1nn5zqystt1qq5n11
+          REACT_APP_SENTRY_RELEASE: admin-${{github.ref_name}}
         run: |
           node -v 
           yarn
