@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 import { TreeSelect } from 'antd';
 
 import { categoryTree } from '@/services/escola-lms/category';
@@ -14,20 +14,24 @@ type TreeNodeType = {
 const treeConvert = (
   category: API.Category,
   disabledNodes: number[],
+  enabledDepth: number,
   depth: number = 0,
-): TreeNodeType =>
-  category.subcategories?.length
+): TreeNodeType => {
+  return category.subcategories?.length
     ? {
         title: category.name,
         value: category.id,
-        disabled: depth === 0 || disabledNodes.includes(category.id),
-        children: category.subcategories.map((cat) => treeConvert(cat, disabledNodes, depth + 1)),
+        disabled: depth !== enabledDepth || disabledNodes.includes(category.id),
+        children: category.subcategories.map((cat) =>
+          treeConvert(cat, disabledNodes, enabledDepth, depth + 1),
+        ),
       }
     : {
         title: category.name,
         value: category.id,
-        disabled: depth === 0 || disabledNodes.includes(category.id),
+        disabled: depth !== enabledDepth || disabledNodes.includes(category.id),
       };
+};
 
 interface Props {
   multiple?: boolean;
@@ -43,6 +47,14 @@ export const ScaleCategoryTree: React.FC<Props> = ({
   disabledNodes = [],
 }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
+  const { initialState } = useModel('@@initialState');
+
+  const enabledDepth = useMemo(() => {
+    const configDepth =
+      initialState?.publicConfig?.global?.competencyChallengeScaleCategoryEnabledDepth;
+
+    return configDepth === undefined ? 1 : +configDepth;
+  }, []);
 
   useEffect(() => {
     categoryTree().then((response) => {
@@ -53,7 +65,7 @@ export const ScaleCategoryTree: React.FC<Props> = ({
   }, []);
 
   const treeData = useMemo(
-    () => categories.map((cat) => treeConvert(cat, disabledNodes)),
+    () => categories.map((cat) => treeConvert(cat, disabledNodes, enabledDepth)),
     [categories, disabledNodes],
   );
 
