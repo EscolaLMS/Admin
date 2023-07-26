@@ -99,9 +99,27 @@ export const Topic: React.FC = () => {
       };
     });
     if (topic?.isNew) {
-      setSaveIsDisabled(true && !topicCanHaveEmptyValue(topic.topicable_type));
+      setSaveIsDisabled(!topicCanHaveEmptyValue(topic.topicable_type));
     }
   }, [type, topic]);
+
+  // Encoding progressbar state refresh
+  useEffect(() => {
+    if (
+      topic?.topicable_type !== TopicType.Video ||
+      !topic.json?.ffmpeg.state ||
+      topic.json?.ffmpeg.state === 'finished'
+    )
+      return;
+
+    const interval = window.setInterval(() => {
+      getLessons?.();
+    }, 1000);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [topic?.topicable_type, topic.json?.ffmpeg?.state]);
 
   const updateValue = useCallback(
     (key: keyof API.Topic, value: any) => {
