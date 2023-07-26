@@ -62,6 +62,7 @@ export const getRootLessons = (lessons: API.Lesson[]): TreeItem[] =>
 
 export const getTreeDataItemsFromFlatLessonsAndTopics = (
   items: (LessonDeeplyStringifyId | StringifyId<API.Topic>)[],
+  prevState?: Record<string | number, TreeItem>,
 ): Record<string | number, TreeItem> =>
   items.reduce<Record<string | number, TreeItem>>((acc, item) => {
     let children: string[] = [];
@@ -70,13 +71,15 @@ export const getTreeDataItemsFromFlatLessonsAndTopics = (
       children = [...(item.lessons ?? []), ...(item.topics ?? [])].map(({ id }) => id);
     }
 
+    const isExpanded = prevState?.[`${item.id}`]?.isExpanded ?? true;
+
     return {
       ...acc,
       [`${item.id}`]: {
         id: item.id,
         children,
         hasChildren: children.length > 0,
-        isExpanded: true,
+        isExpanded,
         data: item,
       },
     };

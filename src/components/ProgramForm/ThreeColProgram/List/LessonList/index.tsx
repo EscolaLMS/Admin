@@ -51,17 +51,18 @@ export const LessonList: React.FC = () => {
   const intl = useIntl();
 
   useEffect(() => {
-    const items = getTreeDataItemsFromFlatLessonsAndTopics(flatLessonsAndTopics);
+    setTreeData((prevState) => {
+      const root: TreeItem = {
+        children: rootLessons.map(({ id }) => id),
+        id: 'root',
+        data: rootLessons,
+        isExpanded: true,
+        hasChildren: rootLessons.length > 0,
+      };
 
-    const root: TreeItem = {
-      children: rootLessons.map(({ id }) => id),
-      id: 'root',
-      data: rootLessons,
-      isExpanded: true,
-      hasChildren: rootLessons.length > 0,
-    };
-
-    setTreeData({ rootId: root.id, items: { ...items, [root.id]: root } });
+      const items = getTreeDataItemsFromFlatLessonsAndTopics(flatLessonsAndTopics, prevState.items);
+      return { rootId: root.id, items: { ...items, [root.id]: root } };
+    });
   }, [flatLessonsAndTopics]);
 
   const onTopicCreate = useCallback(
