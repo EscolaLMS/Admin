@@ -35,7 +35,8 @@ import { NewLessonListItem } from '../NewLessonListItem';
 import { TopicTypesSelector } from '../TopicTypesSelector';
 
 export const LessonList: React.FC = () => {
-  const { state, currentEditMode, updateLesson, addNewTopic, addNewLesson } = useContext(Context);
+  const { state, currentEditMode, updateLesson, addNewTopic, addNewLesson, getLessons } =
+    useContext(Context);
   const courseId = state?.id;
   const rootLessons = useMemo(() => getRootLessons(state?.lessons ?? []), [state?.lessons]);
   const flatLessonsAndTopics = useMemo(
@@ -200,7 +201,7 @@ export const LessonList: React.FC = () => {
   );
 
   const onDragEnd = useCallback(
-    (source: TreeSourcePosition, destination?: TreeDestinationPosition) => {
+    async (source: TreeSourcePosition, destination?: TreeDestinationPosition) => {
       if (!destination || !courseId) return;
       const sourceChildren = treeData.items[source.parentId].children;
       const movedFullId = sourceChildren[source.index].toString();
@@ -215,14 +216,12 @@ export const LessonList: React.FC = () => {
 
       // Nest lesson/topic into topic case
       if (destination.parentId.toString().includes('topic')) {
-        // TODO add translation
         message.warn(intl.formatMessage({ id: 'topics_cant_be_nested' }));
         return;
       }
 
       // Topics to root case
       if (destination.parentId === 'root' && movedType === 'topic') {
-        // TODO add translation
         message.warn(intl.formatMessage({ id: 'topic_cant_be_in_root' }));
         return;
       }
@@ -246,9 +245,10 @@ export const LessonList: React.FC = () => {
           const reorderedArr = reorderIdArr(lessonsIds, source.index, destination.index);
           const orders = getOrdersFromReorderedArr(reorderedArr);
 
-          optimisticMoveThroughTree(setTreeData, [source, destination], () =>
+          await optimisticMoveThroughTree(setTreeData, [source, destination], () =>
             sort({ class: 'Lesson', orders, course_id: courseId }),
           );
+          getLessons?.();
           return;
         }
 
@@ -265,9 +265,10 @@ export const LessonList: React.FC = () => {
           const reorderedArr = reorderIdArr(topicsIds, source.index, destination.index);
           const orders = getOrdersFromReorderedArr(reorderedArr);
 
-          optimisticMoveThroughTree(setTreeData, [source, destination], () =>
+          await optimisticMoveThroughTree(setTreeData, [source, destination], () =>
             sort({ class: 'Topic', orders, course_id: courseId }),
           );
+          getLessons?.();
           return;
         }
       }
@@ -308,7 +309,7 @@ export const LessonList: React.FC = () => {
           const reorderedArr = insertToIndexIdArr(destinationLessonsIds, destIndex, movedFullId);
           const destinationOrders = getOrdersFromReorderedArr(reorderedArr);
 
-          optimisticMoveThroughTree(
+          await optimisticMoveThroughTree(
             setTreeData,
             [source, { ...destination, index: destIndex }],
             () =>
@@ -316,6 +317,7 @@ export const LessonList: React.FC = () => {
                 sort({ class: 'Lesson', orders: destinationOrders, course_id: courseId }),
               ),
           );
+          getLessons?.();
           return;
         }
 
@@ -347,7 +349,7 @@ export const LessonList: React.FC = () => {
 
           const formData = getFormData(updatingValues);
 
-          optimisticMoveThroughTree(
+          await optimisticMoveThroughTree(
             setTreeData,
             [source, { ...destination, index: destIndex }],
             () =>
@@ -355,6 +357,7 @@ export const LessonList: React.FC = () => {
                 sort({ class: 'Topic', orders: destinationOrders, course_id: courseId }),
               ),
           );
+          getLessons?.();
           return;
         }
       }

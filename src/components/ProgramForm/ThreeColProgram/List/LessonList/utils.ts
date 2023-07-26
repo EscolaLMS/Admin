@@ -118,7 +118,7 @@ export const getOrdersFromReorderedArr = (idArr: ItemId[]): [number, number][] =
     return [+strId, index];
   });
 
-export const optimisticMoveThroughTree = (
+export const optimisticMoveThroughTree = async (
   setState: Dispatch<SetStateAction<TreeData>>,
   moveItemOnTreeParams: [TreeSourcePosition, TreeDestinationPosition],
   promise: () => Promise<unknown> | Promise<API.DefaultResponse<unknown>>,
@@ -128,22 +128,22 @@ export const optimisticMoveThroughTree = (
     prevState = prev;
     return moveItemOnTree(prev, ...moveItemOnTreeParams);
   });
-  promise()
-    .then((res) => {
-      if (
-        typeof res === 'object' &&
-        res !== null &&
-        'success' in res &&
-        typeof res.success === 'boolean' &&
-        !res.success &&
-        prevState
-      ) {
-        setState(prevState);
-      }
-    })
-    .catch(() => {
-      if (prevState) {
-        setState(prevState);
-      }
-    });
+
+  try {
+    const res = await promise();
+    if (
+      typeof res === 'object' &&
+      res !== null &&
+      'success' in res &&
+      typeof res.success === 'boolean' &&
+      !res.success &&
+      prevState
+    ) {
+      setState(prevState);
+    }
+  } catch {
+    if (prevState) {
+      setState(prevState);
+    }
+  }
 };
