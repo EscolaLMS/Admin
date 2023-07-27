@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useIntl, FormattedMessage, useModel } from 'umi';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useIntl, FormattedMessage } from 'umi';
 import { Divider, Space, Spin } from 'antd';
 import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
 
@@ -15,20 +15,12 @@ interface FormData {
 export const DiagnosticTest: React.FC = () => {
   const {
     competencyChallenge: { data },
+    categoryDepths,
   } = useCompetencyChallengeContext();
 
   const [loading, setLoading] = useState(false);
   const [quizData, setQuizData] = useState<API.GiftQuiz>();
   const intl = useIntl();
-
-  const { initialState } = useModel('@@initialState');
-
-  const categoryEnabledDepth = useMemo(() => {
-    const configDepth =
-      initialState?.publicConfig?.global?.competencyChallengeQuestionCategoryEnabledDepth;
-
-    return configDepth === undefined ? 0 : +configDepth;
-  }, []);
 
   const fetchQuiz = useCallback(() => {
     if (data?.quiz_id === undefined) return;
@@ -106,7 +98,7 @@ export const DiagnosticTest: React.FC = () => {
         onRemoved={fetchQuiz}
         tableHeader={<FormattedMessage id="questions" />}
         tableLoading={loading}
-        questionsCategory={{ enabledDepth: categoryEnabledDepth }}
+        questionsCategory={{ enabledDepth: categoryDepths.question }}
       />
     </div>
   );

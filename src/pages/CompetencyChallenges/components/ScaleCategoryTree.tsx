@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { FormattedMessage, useModel } from 'umi';
+import { FormattedMessage } from 'umi';
 import { TreeSelect } from 'antd';
 
 import { categoryTree } from '@/services/escola-lms/category';
+import { useCompetencyChallengeContext } from '../context';
 
 type TreeNodeType = {
   title: string;
@@ -47,14 +48,7 @@ export const ScaleCategoryTree: React.FC<Props> = ({
   disabledNodes = [],
 }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
-  const { initialState } = useModel('@@initialState');
-
-  const enabledDepth = useMemo(() => {
-    const configDepth =
-      initialState?.publicConfig?.global?.competencyChallengeScaleCategoryEnabledDepth;
-
-    return configDepth === undefined ? 1 : +configDepth;
-  }, []);
+  const { categoryDepths } = useCompetencyChallengeContext();
 
   useEffect(() => {
     categoryTree().then((response) => {
@@ -65,7 +59,7 @@ export const ScaleCategoryTree: React.FC<Props> = ({
   }, []);
 
   const treeData = useMemo(
-    () => categories.map((cat) => treeConvert(cat, disabledNodes, enabledDepth)),
+    () => categories.map((cat) => treeConvert(cat, disabledNodes, categoryDepths.scale)),
     [categories, disabledNodes],
   );
 
