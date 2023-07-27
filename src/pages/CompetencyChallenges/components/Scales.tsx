@@ -1,4 +1,3 @@
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl, useParams } from 'umi';
 import { Button, Popconfirm, Tooltip } from 'antd';
@@ -19,6 +18,7 @@ type DataSourceType = {
   id: React.Key;
   scale_min: number;
   category_id: number;
+  category_name: string;
 };
 
 const staticColumns: ProColumns<DataSourceType>[] = [
@@ -60,7 +60,7 @@ const staticColumns: ProColumns<DataSourceType>[] = [
   {
     title: <FormattedMessage id="category" />,
     dataIndex: 'category_id',
-    render: (_n, record) => <TypeButtonDrawer type="Category" type_id={record.category_id} />,
+    render: (_n, record) => record.category_name,
     formItemProps: {
       rules: [
         {
@@ -85,6 +85,7 @@ const getDefaultData = (scales: API.CompetencyChallengeScale[]): DataSourceType[
     id: `old-${id}`,
     scale_min,
     category_id: category.id,
+    category_name: category.name_with_breadcrumbs,
   }));
 
 export const Scales: React.FC = () => {
