@@ -33,7 +33,7 @@ export const MainForm: React.FC = () => {
   const [form] = ProForm.useForm();
   const selectedType = ProForm.useWatch('type', form);
 
-  const isNew = Number.isNaN(competencyChallenge);
+  const isNew = Number.isNaN(competency_challenge_id);
 
   const initialValues = useMemo(() => {
     if (!competencyChallenge?.data) return {};
