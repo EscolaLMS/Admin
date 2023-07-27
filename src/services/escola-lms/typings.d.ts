@@ -1816,6 +1816,7 @@ declare namespace API {
     name: string;
     is_active: boolean;
     type: CompetencyChallengeType;
+    category_id?: number;
   };
 
   type UpdateCompetencyChallenge = CreateCompetencyChallenge & {
