@@ -79,13 +79,7 @@ const handleRemove = async (intl: IntlShape, id: number) => {
 };
 
 type InitialDataRecords = Record<
-  | 'logo'
-  | 'frontURL'
-  | 'maxLessonsNestingInProgram'
-  | 'minTopicNestingInProgram'
-  | 'competencyChallengeScaleCategoryDepth'
-  | 'competencyChallengeQuestionCategoryDepth'
-  | string,
+  'logo' | 'frontURL' | 'maxLessonsNestingInProgram' | 'minTopicNestingInProgram' | string,
   API.Setting
 >;
 
@@ -342,28 +336,6 @@ const initialData: InitialDataRecords = {
     enumerable: true,
     sort: 0,
     type: 'text',
-    data: 'EscolaLMS',
-  },
-  competencyChallengeScaleCategoryEnabledDepth: {
-    id: -16,
-    key: 'competencyChallengeScaleCategoryEnabledDepth',
-    group: 'global',
-    value: '1',
-    public: true,
-    enumerable: true,
-    sort: 0,
-    type: 'number',
-    data: 'EscolaLMS',
-  },
-  competencyChallengeQuestionCategoryEnabledDepth: {
-    id: -17,
-    key: 'competencyChallengeQuestionCategoryEnabledDepth',
-    group: 'global',
-    value: '0',
-    public: true,
-    enumerable: true,
-    sort: 0,
-    type: 'number',
     data: 'EscolaLMS',
   },
   ...booleanSettings,
