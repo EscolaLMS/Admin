@@ -56,6 +56,7 @@ declare namespace API {
   type Category = {
     id: number;
     name: string;
+    name_with_breadcrumbs: string;
     description: Nullable<string>;
     slug: string;
     is_active: boolean;
@@ -1797,6 +1798,7 @@ declare namespace API {
   type CompetencyChallenge = {
     id: number;
     name: string;
+    category?: API.Category;
     created_at: Date | string;
     updated_at: Date | string;
     type: CompetencyChallengeType;

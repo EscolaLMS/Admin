@@ -67,6 +67,13 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
     ),
   },
   {
+    dataIndex: 'category',
+    title: <FormattedMessage id="category" />,
+    render: (_n, record) =>
+      record.category ? <TypeButtonDrawer type="Category" type_id={record.category.id} /> : '-',
+    hideInSearch: true,
+  },
+  {
     dataIndex: 'quiz_id',
     title: <FormattedMessage id="CompetencyChallenges.diagnostic-test" />,
     render: (_n, record) => (
