@@ -5,17 +5,18 @@ import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
 
 import { Table } from '@/components/GiftQuizQuestions/table';
 import { getGiftQuiz, updateGiftQuiz } from '@/services/escola-lms/gift_quiz';
-
-interface Props {
-  data?: API.CompetencyChallenge;
-}
+import { useCompetencyChallengeContext } from '../context';
 
 interface FormData {
   max_attempts: number;
   max_execution_time: number;
 }
 
-export const DiagnosticTest: React.FC<Props> = ({ data }) => {
+export const DiagnosticTest: React.FC = () => {
+  const {
+    competencyChallenge: { data },
+  } = useCompetencyChallengeContext();
+
   const [loading, setLoading] = useState(false);
   const [quizData, setQuizData] = useState<API.GiftQuiz>();
   const intl = useIntl();

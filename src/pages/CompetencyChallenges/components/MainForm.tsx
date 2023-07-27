@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { FormattedMessage, history, useIntl } from 'umi';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import { message } from 'antd';
 import ProForm, {
   ProFormSelect,
@@ -16,36 +16,29 @@ import {
   updateCompetencyChallenge,
 } from '@/services/escola-lms/competency-challenges';
 import { CompetencyChallengeType } from '@/services/escola-lms/enums';
+import { useCompetencyChallengeContext } from '../context';
 
 const typeOptions = Object.values(CompetencyChallengeType).map((value) => ({
   value,
   label: <FormattedMessage id={`CompetencyChallenges.types.${value}`} />,
 }));
 
-interface Props {
-  competency_challenge_id: number;
-  data?: API.CompetencyChallenge;
-  onAddSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
-  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
-}
+export const MainForm: React.FC = () => {
+  const { competencyChallenge, refreshData } = useCompetencyChallengeContext();
+  const params = useParams<{ id?: string }>();
+  const competency_challenge_id = Number(params.id);
 
-export const MainForm: React.FC<Props> = ({
-  data,
-  competency_challenge_id,
-  onAddSuccess,
-  onUpdateSuccess,
-}) => {
   const intl = useIntl();
   const [form] = ProForm.useForm();
 
-  const isNew = Number.isNaN(competency_challenge_id);
+  const isNew = Number.isNaN(competencyChallenge);
 
   const initialValues = useMemo(() => {
-    if (!data) return {};
-    const { authors, ...restValues } = data;
+    if (!competencyChallenge?.data) return {};
+    const { authors, ...restValues } = competencyChallenge?.data;
 
     return { ...restValues, authors: authors.map(({ id }) => id) };
-  }, [data]);
+  }, [competencyChallenge?.data]);
 
   const addCompetencyChallenge = useCallback(
     async ({ name, type, is_active = false }: API.CreateCompetencyChallenge) => {
@@ -59,7 +52,7 @@ export const MainForm: React.FC<Props> = ({
 
         message.success(intl.formatMessage({ id: res.message }));
         history.push(`/competency-challenges/${res.data.id}/main`);
-        onAddSuccess?.(res);
+        await refreshData();
       } catch {
         message.error(intl.formatMessage({ id: 'error' }));
       }
@@ -86,7 +79,7 @@ export const MainForm: React.FC<Props> = ({
         }
 
         message.success(intl.formatMessage({ id: res.message }));
-        onUpdateSuccess?.(res);
+        await refreshData();
       } catch {
         message.error(intl.formatMessage({ id: 'error' }));
       }
