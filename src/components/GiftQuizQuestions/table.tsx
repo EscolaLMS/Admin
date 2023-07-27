@@ -9,7 +9,7 @@ import { ProTable } from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import type { CategoryTreeProps } from '@/components/CategoryTree';
+import type { CompetencyChallengeCategoryTreeProps } from '@/pages/CompetencyChallenges/components/CompetencyChallengeCategoryTree';
 import { createQuestion, deleteQuestion, updateQuestion } from '@/services/escola-lms/gift_quiz';
 import { GiftQuizQuestionEditor } from './editor';
 import type { QuizQuestionSubmitData } from './editor/types';
@@ -83,7 +83,7 @@ interface Props {
   onEdited?: () => void;
   tableHeader?: React.ReactNode;
   tableLoading?: boolean;
-  questionsCategory?: boolean | Omit<CategoryTreeProps, 'value' | 'onChange'>;
+  questionsCategory?: boolean | Omit<CompetencyChallengeCategoryTreeProps, 'value' | 'onChange'>;
 }
 
 export const Table: React.FC<Props> = ({
@@ -192,12 +192,15 @@ export const Table: React.FC<Props> = ({
   return (
     <>
       <Drawer open={newQuestion} onClose={() => setNewQuestion(false)}>
-        <GiftQuizQuestionEditor onSubmit={onNewQuestionSubmit} categoryProps={questionsCategory} />
+        <GiftQuizQuestionEditor
+          onSubmit={onNewQuestionSubmit}
+          competencyChallengeCategoryTreeProps={questionsCategory}
+        />
       </Drawer>
       <Drawer open={!!editQuestion} onClose={() => setEditQuestion(undefined)}>
         <GiftQuizQuestionEditor
           onSubmit={onEditQuestionSubmit}
-          categoryProps={questionsCategory}
+          competencyChallengeCategoryTreeProps={questionsCategory}
           values={editQuestion}
         />
       </Drawer>

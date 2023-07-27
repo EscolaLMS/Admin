@@ -34,21 +34,34 @@ const treeConvert = (
       };
 };
 
-interface Props {
-  multiple?: boolean;
+export interface CompetencyChallengeCategoryTreeProps {
   value?: string | string[] | number | number[];
   onChange?: (value: string | string[] | number | number[]) => void;
+  type?: 'scale' | 'question';
   disabledNodes?: number[]; // categories id arr
 }
 
-export const ScaleCategoryTree: React.FC<Props> = ({
+export const CompetencyChallengeCategoryTree: React.FC<CompetencyChallengeCategoryTreeProps> = ({
   value,
   onChange,
-  multiple = false,
+  type = 'scale',
   disabledNodes = [],
 }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
-  const { categoryDepths } = useCompetencyChallengeContext();
+  const { categoryDepths, competencyChallenge } = useCompetencyChallengeContext();
+
+  const categoriesToShow = useMemo(
+    () =>
+      competencyChallenge.data?.type === 'simple'
+        ? categories.filter((category) => category.id === competencyChallenge.data?.category?.id)
+        : categories,
+    [categories, competencyChallenge.data?.type, competencyChallenge.data?.category?.id],
+  );
+
+  const treeData = useMemo(
+    () => categoriesToShow.map((cat) => treeConvert(cat, disabledNodes, categoryDepths[type])),
+    [categoriesToShow, disabledNodes, type],
+  );
 
   useEffect(() => {
     categoryTree().then((response) => {
@@ -58,15 +71,9 @@ export const ScaleCategoryTree: React.FC<Props> = ({
     });
   }, []);
 
-  const treeData = useMemo(
-    () => categories.map((cat) => treeConvert(cat, disabledNodes, categoryDepths.scale)),
-    [categories, disabledNodes],
-  );
-
   return (
     <TreeSelect<string | string[] | number | number[]>
       loading={categories.length === 0}
-      multiple={multiple}
       showSearch
       value={value}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}

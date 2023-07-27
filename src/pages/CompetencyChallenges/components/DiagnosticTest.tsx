@@ -15,7 +15,6 @@ interface FormData {
 export const DiagnosticTest: React.FC = () => {
   const {
     competencyChallenge: { data },
-    categoryDepths,
   } = useCompetencyChallengeContext();
 
   const [loading, setLoading] = useState(false);
@@ -98,7 +97,7 @@ export const DiagnosticTest: React.FC = () => {
         onRemoved={fetchQuiz}
         tableHeader={<FormattedMessage id="questions" />}
         tableLoading={loading}
-        questionsCategory={{ enabledDepth: categoryDepths.question }}
+        questionsCategory={{ type: 'question' }}
       />
     </div>
   );

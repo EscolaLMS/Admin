@@ -11,7 +11,7 @@ import {
   deleteCompetencyChallengeScale,
   updateCompetencyChallengeScale,
 } from '@/services/escola-lms/competency-challenges';
-import { ScaleCategoryTree } from './ScaleCategoryTree';
+import { CompetencyChallengeCategoryTree } from './CompetencyChallengeCategoryTree';
 import { useCompetencyChallengeContext } from '../context';
 
 type DataSourceType = {
@@ -74,7 +74,7 @@ const staticColumns: ProColumns<DataSourceType>[] = [
         (record: DataSourceType) => record.category_id,
       );
 
-      return <ScaleCategoryTree disabledNodes={disabledNodes} />;
+      return <CompetencyChallengeCategoryTree disabledNodes={disabledNodes} />;
     },
   },
 ];
@@ -172,7 +172,6 @@ export const Scales: React.FC = () => {
         editableFormRef={editableFormRef}
         controlled
         actionRef={actionRef}
-        maxLength={10}
         name="table"
         columns={columns}
         recordCreatorProps={{
