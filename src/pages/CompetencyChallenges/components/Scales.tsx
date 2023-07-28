@@ -1,6 +1,5 @@
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import React, { useMemo, useRef, useState } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage, useIntl, useParams } from 'umi';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ProForm, { type ProFormInstance } from '@ant-design/pro-form';
@@ -12,21 +11,15 @@ import {
   deleteCompetencyChallengeScale,
   updateCompetencyChallengeScale,
 } from '@/services/escola-lms/competency-challenges';
-import { ScaleCategoryTree } from './ScaleCategoryTree';
+import { CompetencyChallengeCategoryTree } from './CompetencyChallengeCategoryTree';
+import { useCompetencyChallengeContext } from '../context';
 
 type DataSourceType = {
   id: React.Key;
   scale_min: number;
   category_id: number;
+  category_name: string;
 };
-
-interface Props {
-  competency_challenge_id: number;
-  scales: API.CompetencyChallengeScale[];
-  onScaleDelete?: () => void;
-  onScaleAdd?: () => void;
-  onScaleUpdate?: () => void;
-}
 
 const staticColumns: ProColumns<DataSourceType>[] = [
   {
@@ -67,7 +60,7 @@ const staticColumns: ProColumns<DataSourceType>[] = [
   {
     title: <FormattedMessage id="category" />,
     dataIndex: 'category_id',
-    render: (_n, record) => <TypeButtonDrawer type="Category" type_id={record.category_id} />,
+    render: (_n, record) => record.category_name,
     formItemProps: {
       rules: [
         {
@@ -81,7 +74,7 @@ const staticColumns: ProColumns<DataSourceType>[] = [
         (record: DataSourceType) => record.category_id,
       );
 
-      return <ScaleCategoryTree disabledNodes={disabledNodes} />;
+      return <CompetencyChallengeCategoryTree disabledNodes={disabledNodes} />;
     },
   },
 ];
@@ -92,15 +85,15 @@ const getDefaultData = (scales: API.CompetencyChallengeScale[]): DataSourceType[
     id: `old-${id}`,
     scale_min,
     category_id: category.id,
+    category_name: category.name_with_breadcrumbs,
   }));
 
-export const Scales: React.FC<Props> = ({
-  competency_challenge_id,
-  scales,
-  onScaleDelete,
-  onScaleAdd,
-  onScaleUpdate,
-}) => {
+export const Scales: React.FC = () => {
+  const { competencyChallenge, refreshData } = useCompetencyChallengeContext();
+  const params = useParams<{ id?: string }>();
+  const competency_challenge_id = Number(params.id);
+  const scales = competencyChallenge?.data?.scales ?? [];
+
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
 
   const intl = useIntl();
@@ -149,7 +142,7 @@ export const Scales: React.FC<Props> = ({
 
               const response = await deleteCompetencyChallengeScale(+idStr);
               if (response.success) {
-                onScaleDelete?.();
+                await refreshData();
               }
             }}
             okText={<FormattedMessage id="ok" />}
@@ -179,7 +172,6 @@ export const Scales: React.FC<Props> = ({
         editableFormRef={editableFormRef}
         controlled
         actionRef={actionRef}
-        maxLength={10}
         name="table"
         columns={columns}
         recordCreatorProps={{
@@ -203,7 +195,7 @@ export const Scales: React.FC<Props> = ({
               });
 
               if (res.success) {
-                onScaleAdd?.();
+                await refreshData();
               }
 
               return;
@@ -215,7 +207,7 @@ export const Scales: React.FC<Props> = ({
               competency_challenge_id,
             });
             if (res.success) {
-              onScaleUpdate?.();
+              await refreshData();
             }
             return;
           },

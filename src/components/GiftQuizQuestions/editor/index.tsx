@@ -4,7 +4,10 @@ import { Space, Divider } from 'antd';
 import ProForm, { ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
 
 import { QuestionType } from '@/services/escola-lms/enums';
-import CategoryTree, { type CategoryTreeProps } from '@/components/CategoryTree';
+import {
+  CompetencyChallengeCategoryTree,
+  type CompetencyChallengeCategoryTreeProps,
+} from '@/pages/CompetencyChallenges/components/CompetencyChallengeCategoryTree';
 import { GiftQuizQuestion } from './question';
 import type { QuizQuestionSubmitData, GiftQuizFormData } from './types';
 import { parseToFormData, parseToGIFT } from './utils';
@@ -21,13 +24,15 @@ const TYPE_OPTIONS = Object.values(QuestionType).reduce<
 interface Props {
   onSubmit: (quizQuestion: QuizQuestionSubmitData) => Promise<boolean>;
   values?: API.QuizQuestion;
-  categoryProps?: boolean | Omit<CategoryTreeProps, 'value' | 'onChange'>;
+  competencyChallengeCategoryTreeProps?:
+    | boolean
+    | Omit<CompetencyChallengeCategoryTreeProps, 'value' | 'onChange'>;
 }
 
 export const GiftQuizQuestionEditor: React.FC<Props> = ({
   onSubmit,
   values,
-  categoryProps = false,
+  competencyChallengeCategoryTreeProps = false,
 }) => {
   const intl = useIntl();
 
@@ -85,14 +90,18 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
           label={<FormattedMessage id="Questions.score" defaultMessage="Score" />}
           rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
         />
-        {categoryProps && (
+        {competencyChallengeCategoryTreeProps && (
           <ProForm.Item
             name="category_id"
             label={<FormattedMessage id="category" defaultMessage="Category" />}
             rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
             required
           >
-            <CategoryTree {...(typeof categoryProps === 'object' ? categoryProps : {})} />
+            <CompetencyChallengeCategoryTree
+              {...(typeof competencyChallengeCategoryTreeProps === 'object'
+                ? competencyChallengeCategoryTreeProps
+                : {})}
+            />
           </ProForm.Item>
         )}
       </ProForm>

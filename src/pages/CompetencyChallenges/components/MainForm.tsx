@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { FormattedMessage, history, useIntl } from 'umi';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import { message } from 'antd';
 import ProForm, {
   ProFormSelect,
@@ -8,6 +8,7 @@ import ProForm, {
   ProFormTextArea,
 } from '@ant-design/pro-form';
 
+import CategoryTree from '@/components/CategoryTree';
 import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -16,41 +17,35 @@ import {
   updateCompetencyChallenge,
 } from '@/services/escola-lms/competency-challenges';
 import { CompetencyChallengeType } from '@/services/escola-lms/enums';
+import { useCompetencyChallengeContext } from '../context';
 
 const typeOptions = Object.values(CompetencyChallengeType).map((value) => ({
   value,
   label: <FormattedMessage id={`CompetencyChallenges.types.${value}`} />,
 }));
 
-interface Props {
-  competency_challenge_id: number;
-  data?: API.CompetencyChallenge;
-  onAddSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
-  onUpdateSuccess?: (response: API.DataResponseSuccess<API.CreateCompetencyChallenge>) => void;
-}
+export const MainForm: React.FC = () => {
+  const { competencyChallenge, categoryDepths, refreshData } = useCompetencyChallengeContext();
+  const params = useParams<{ id?: string }>();
+  const competency_challenge_id = Number(params.id);
 
-export const MainForm: React.FC<Props> = ({
-  data,
-  competency_challenge_id,
-  onAddSuccess,
-  onUpdateSuccess,
-}) => {
   const intl = useIntl();
   const [form] = ProForm.useForm();
+  const selectedType = ProForm.useWatch('type', form);
 
   const isNew = Number.isNaN(competency_challenge_id);
 
   const initialValues = useMemo(() => {
-    if (!data) return {};
-    const { authors, ...restValues } = data;
+    if (!competencyChallenge?.data) return {};
+    const { authors, category, ...restValues } = competencyChallenge?.data;
 
-    return { ...restValues, authors: authors.map(({ id }) => id) };
-  }, [data]);
+    return { ...restValues, authors: authors.map(({ id }) => id), category_id: category?.id };
+  }, [competencyChallenge?.data]);
 
   const addCompetencyChallenge = useCallback(
-    async ({ name, type, is_active = false }: API.CreateCompetencyChallenge) => {
+    async ({ name, type, is_active = false, category_id }: API.CreateCompetencyChallenge) => {
       try {
-        const res = await createCompetencyChallenge({ name, is_active, type });
+        const res = await createCompetencyChallenge({ name, is_active, type, category_id });
 
         if (!res.success) {
           message.error(res.message);
@@ -59,7 +54,7 @@ export const MainForm: React.FC<Props> = ({
 
         message.success(intl.formatMessage({ id: res.message }));
         history.push(`/competency-challenges/${res.data.id}/main`);
-        onAddSuccess?.(res);
+        await refreshData();
       } catch {
         message.error(intl.formatMessage({ id: 'error' }));
       }
@@ -86,7 +81,7 @@ export const MainForm: React.FC<Props> = ({
         }
 
         message.success(intl.formatMessage({ id: res.message }));
-        onUpdateSuccess?.(res);
+        await refreshData();
       } catch {
         message.error(intl.formatMessage({ id: 'error' }));
       }
@@ -99,6 +94,11 @@ export const MainForm: React.FC<Props> = ({
       form={form}
       initialValues={initialValues}
       onFinish={isNew ? addCompetencyChallenge : changeCompetencyChallenge}
+      onValuesChange={(changedValues) => {
+        if (changedValues?.type === 'complex') {
+          form.setFieldValue('category', null);
+        }
+      }}
     >
       <ProForm.Group title={<FormattedMessage id="CompetencyChallenges.base" />}>
         <ProFormText
@@ -117,6 +117,16 @@ export const MainForm: React.FC<Props> = ({
           required
           rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
         />
+        {selectedType === 'simple' && (
+          <ProForm.Item
+            name="category_id"
+            required
+            label={<FormattedMessage id="category" />}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
+          >
+            <CategoryTree enabledDepth={categoryDepths.main} />
+          </ProForm.Item>
+        )}
         <ProFormSwitch name="is_active" label={<FormattedMessage id="is_active" />} />
       </ProForm.Group>
       {!isNew && (

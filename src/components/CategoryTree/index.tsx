@@ -11,7 +11,7 @@ export interface CategoryTreeProps {
   multiple?: boolean;
   value?: string | string[] | number | number[];
   onChange?: (value: string | string[] | number | number[]) => void;
-  disabledDepth?: number;
+  enabledDepth?: number;
 }
 
 type TreeNodeType = {
@@ -21,18 +21,18 @@ type TreeNodeType = {
   children?: TreeNodeType[];
 };
 
-const treeConvert = (category: API.Category, disabledDepth?: number, depth = 0): TreeNodeType => {
+const treeConvert = (category: API.Category, enabledDepth?: number, depth = 0): TreeNodeType => {
   return category.subcategories && category.subcategories.length
     ? {
         title: category.name,
         value: category.id,
-        disabled: typeof disabledDepth === 'number' && depth >= disabledDepth,
-        children: category.subcategories.map((cat) => treeConvert(cat, disabledDepth, depth + 1)),
+        disabled: typeof enabledDepth === 'number' && depth !== enabledDepth,
+        children: category.subcategories.map((cat) => treeConvert(cat, enabledDepth, depth + 1)),
       }
     : {
         title: category.name,
         value: category.id,
-        disabled: typeof disabledDepth === 'number' && depth >= disabledDepth,
+        disabled: typeof enabledDepth === 'number' && depth !== enabledDepth,
       };
 };
 
@@ -40,7 +40,7 @@ export const CategoryTree: React.FC<CategoryTreeProps> = ({
   value,
   onChange,
   multiple = false,
-  disabledDepth,
+  enabledDepth,
 }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
 
@@ -53,7 +53,7 @@ export const CategoryTree: React.FC<CategoryTreeProps> = ({
   }, []);
 
   const treeData = useMemo(() => {
-    return categories.map((cat) => treeConvert(cat, disabledDepth));
+    return categories.map((cat) => treeConvert(cat, enabledDepth));
   }, [categories]);
 
   return (
