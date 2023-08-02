@@ -136,7 +136,7 @@ export const MainForm: React.FC = () => {
             label={<FormattedMessage id="category" />}
             rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
           >
-            <CategoryTree enabledDepth={categoryDepths.main} />
+            <CategoryTree enabledDepth={categoryDepths.role} />
           </ProForm.Item>
         )}
         <ProFormSwitch name="is_active" label={<FormattedMessage id="is_active" />} />
