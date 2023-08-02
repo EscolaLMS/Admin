@@ -5,6 +5,7 @@ import { Spin, Alert, Typography } from 'antd';
 import Chart from './chart';
 import { useIntl, FormattedMessage } from 'umi';
 import { getFlatTopics } from '@/components/ProgramForm/Context';
+import { CourseTopicsStatistics } from '@/components/CourseTopicsStatistics';
 import { UserCourseAttempts, UserCourseFinish, UserProgress } from './userProgress';
 
 type State =
@@ -20,6 +21,7 @@ type State =
     }
   | {
       mode: 'loaded';
+      // TODO add type
       value: any;
     };
 
@@ -65,13 +67,13 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
           setTopics(getFlatTopics(programResponse.data.lessons));
           setState({
             mode: 'loaded',
-            value: Object.entries(statsResponse.data).map((element) => {
+            value: Object.entries(statsResponse.data).map(([key, value]) => {
               const type = intl.formatMessage({
-                id: element[0].split('\\').pop(),
+                id: key.split('\\').pop(),
               });
               return {
                 type,
-                value: element[1],
+                value,
               };
             }),
           });
@@ -164,6 +166,9 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
                   `}
               </Text>
             </Chart>
+          </ProCard>
+          <ProCard>
+            <CourseTopicsStatistics flatTopics={topics} />
           </ProCard>
         </>
       )}
