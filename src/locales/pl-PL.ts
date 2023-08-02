@@ -789,4 +789,10 @@ export default {
   'CompetencyChallenges.onlyOneRowIsEditable': 'Jednocześnie można edytować tylko jeden wiersz',
   'CompetencyChallenges.types.simple': 'Poziomujący',
   'CompetencyChallenges.types.complex': 'Ogólny',
+  'TopicStatistics.giftQuiz.title': 'Statystyki tematu typu GIFTQuiz',
+  'TopicStatistics.giftQuiz.attempt': 'Podejście',
+  'TopicStatistics.giftQuiz.question': 'Pytanie {i}',
+  'TopicStatistics.giftQuiz.attemptDate': 'Data podejścia',
+  'TopicStatistics.giftQuiz.attemptDuration': 'Czas trwania podejścia',
+  'TopicStatistics.giftQuiz.result': 'Wynik',
 };
