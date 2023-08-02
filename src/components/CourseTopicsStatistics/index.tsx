@@ -48,7 +48,7 @@ export const CourseTopicsStatistics: React.FC<Props> = ({ flatTopics }) => {
       {topicsGroupedByType[TopicType.GiftQuiz].length > 0 && (
         <GiftQuizStatistics quizTopics={topicsGroupedByType[TopicType.GiftQuiz]} />
       )}
-      {/* TODO add other topics statistics */}
+      {/* TODO add other topics statistics when they are implemented on backend */}
     </>
   );
 };
