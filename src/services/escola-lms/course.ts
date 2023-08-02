@@ -90,7 +90,7 @@ export async function getCourseStats(
 
 export async function getTopicStats(
   topic_id: number,
-  stats?: API.TopicStatsParam | API.TopicStatsParam[],
+  stats?: API.TopicStatsKey | API.TopicStatsKey[],
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.TopicStats>>(`/api/admin/stats/topic/${topic_id}`, {

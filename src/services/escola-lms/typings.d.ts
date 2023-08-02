@@ -25,6 +25,8 @@ declare namespace API {
 
   type QuestionType = Enum.QuestionType;
 
+  type TopicStatsKey = Enum.TopicStatsKey;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -381,8 +383,6 @@ declare namespace API {
     | 'EscolaLms\\Reports\\Stats\\Course\\PeopleFinished'
     | 'EscolaLms\\Reports\\Stats\\Course\\PeopleStarted';
 
-  type TopicStatsParam = 'EscolaLms\\Reports\\Stats\\Topic\\QuizSummaryForTopicTypeGIFT';
-
   type CourseAttemptDateObject = {
     date: string;
     seconds_total: string[];
@@ -447,7 +447,7 @@ declare namespace API {
   };
 
   type TopicStats = {
-    'EscolaLms\\Reports\\Stats\\Topic\\QuizSummaryForTopicTypeGIFT': GiftQuizTopicStat[];
+    [TopicStatsKey.QuizSummary]: GiftQuizTopicStat[];
   };
 
   type DataRangeStats = {

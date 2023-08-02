@@ -79,3 +79,7 @@ export enum CompetencyChallengeType {
   Simple = 'simple',
   Complex = 'complex',
 }
+
+export enum TopicStatsKey {
+  QuizSummary = 'EscolaLms\\Reports\\Stats\\Topic\\QuizSummaryForTopicTypeGIFT',
+}
