@@ -797,6 +797,7 @@ export default {
   'CompetencyChallenges.onlyOneRowIsEditable': 'Only one row can be edited at a time',
   'CompetencyChallenges.types.simple': 'Simple',
   'CompetencyChallenges.types.complex': 'Complex',
+  'TopicStatistics.giftQuiz.topic': 'GIFTQuiz topic',
   'TopicStatistics.giftQuiz.title': 'GIFTQuiz topic statistics',
   'TopicStatistics.giftQuiz.attempt': 'Attempt',
   'TopicStatistics.giftQuiz.question': 'Question {i}',

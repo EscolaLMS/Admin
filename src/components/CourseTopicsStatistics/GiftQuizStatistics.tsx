@@ -4,9 +4,10 @@ import { FormattedMessage } from 'umi';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
 
 import { DATETIME_FORMAT } from '@/consts/dates';
-import { TopicStatsKey } from '@/services/escola-lms/enums';
 import { getTopicStats } from '@/services/escola-lms/course';
+import { TopicStatsKey } from '@/services/escola-lms/enums';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { ExportTopicStatsButton } from './ExportTopicStatsButton';
 
 interface TableParams {
   topic_id?: number;
@@ -61,6 +62,7 @@ interface Props {
 }
 
 export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
+  const [selectedTopicId, setSelectedTopicId] = useState(quizTopics?.[0]?.id);
   const [dynamicColumns, setDynamicColumns] = useState<TableColumn[]>([]);
 
   const topicOptions = useMemo(
@@ -77,7 +79,7 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
     () => [
       {
         dataIndex: 'topic_id',
-        title: <FormattedMessage id="topic" />,
+        title: <FormattedMessage id="TopicStatistics.giftQuiz.topic" />,
         hideInTable: true,
         valueType: 'select',
         fieldProps: {
@@ -95,8 +97,17 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
   return (
     <ProTable<API.GiftQuizTopicStat, TableParams>
       headerTitle={<FormattedMessage id="TopicStatistics.giftQuiz.title" />}
+      onSubmit={({ topic_id }) => setSelectedTopicId(topic_id)}
+      onReset={() => setSelectedTopicId(quizTopics?.[0]?.id)}
+      toolBarRender={() => [
+        <ExportTopicStatsButton
+          key="export"
+          stat={TopicStatsKey.QuizSummary}
+          topic_id={selectedTopicId}
+        />,
+      ]}
       className="table-standalone"
-      request={async ({ topic_id = quizTopics?.[0]?.id }) => {
+      request={async ({ topic_id = selectedTopicId }) => {
         if (!topic_id) return { success: false, data: [], total: 0 };
         const response = await getTopicStats(topic_id, TopicStatsKey.QuizSummary);
 
