@@ -22,6 +22,22 @@ import type {
   TrueFalseFormData,
 } from './types';
 
+const escapeQuestionSpecialChars = (inputString: string): string => {
+  const charsToEscape = ['~', '=', '#', '{', '}', ':'];
+  let escapedString = '';
+
+  for (let i = 0; i < inputString.length; i++) {
+    const currentChar = inputString[i];
+    if (charsToEscape.includes(currentChar)) {
+      escapedString += `\\${currentChar}`;
+    } else {
+      escapedString += currentChar;
+    }
+  }
+
+  return escapedString;
+};
+
 const parseMultipleChoice = ({ question, answers }: MultipleChoiceFormData): string => {
   if (answers.length === 0) return `${question}{}`;
 
@@ -93,26 +109,28 @@ const parseEssay = ({ question }: EssayFormData): string => `${question}{}`;
 
 const parseDescription = ({ question }: DescriptionFormData): string => question;
 
-export const parseToGIFT = (formData: GiftQuizFormData): string => {
-  switch (formData.type) {
+export const parseToGIFT = ({ question, ...formData }: GiftQuizFormData): string => {
+  const safeFormData = { question: escapeQuestionSpecialChars(question), ...formData };
+
+  switch (safeFormData.type) {
     case QuestionType.MULTIPLE_CHOICE:
-      return parseMultipleChoice(formData);
+      return parseMultipleChoice(safeFormData);
     case QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS:
-      return parseMultipleChoiceWithMultipleRightAnswers(formData);
+      return parseMultipleChoiceWithMultipleRightAnswers(safeFormData);
     case QuestionType.TRUE_FALSE:
-      return parseTrueFalse(formData);
+      return parseTrueFalse(safeFormData);
     case QuestionType.SHORT_ANSWERS:
-      return parseShortAnswers(formData);
+      return parseShortAnswers(safeFormData);
     case QuestionType.MATCHING:
-      return parseMatching(formData);
+      return parseMatching(safeFormData);
     case QuestionType.NUMERICAL_QUESTION:
-      return parseNumerical(formData);
+      return parseNumerical(safeFormData);
     case QuestionType.ESSAY:
-      return parseEssay(formData);
+      return parseEssay(safeFormData);
     case QuestionType.DESCRIPTION:
-      return parseDescription(formData);
+      return parseDescription(safeFormData);
     default:
-      throw new Error(`Unsupported type: ${(formData as GiftQuizFormData).type}`);
+      throw new Error(`Unsupported type: ${(safeFormData as GiftQuizFormData).type}`);
   }
 };
 
