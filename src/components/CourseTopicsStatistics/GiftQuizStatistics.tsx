@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { FormattedMessage } from 'umi';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
@@ -57,6 +57,17 @@ const staticColumns: TableColumn[] = [
   },
 ];
 
+const getQuestionColumns = (giftQuizTopicStat: undefined | API.GiftQuizTopicStat): TableColumn[] =>
+  giftQuizTopicStat !== undefined
+    ? Object.keys(giftQuizTopicStat)
+        .filter((k) => k.includes('question'))
+        .map<TableColumn>((key, i) => ({
+          title: <FormattedMessage id="TopicStatistics.giftQuiz.question" values={{ i: i + 1 }} />,
+          dataIndex: key,
+          hideInSearch: true,
+        }))
+    : [];
+
 interface Props {
   quizTopics: API.TopicQuiz[];
 }
@@ -94,6 +105,26 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
     [topicOptions, dynamicColumns],
   );
 
+  const handleRequest = useCallback(async ({ topic_id = selectedTopicId }: TableParams) => {
+    if (!topic_id) return { success: false, data: [], total: 0 };
+    const response = await getTopicStats(topic_id, TopicStatsKey.QuizSummary);
+
+    if (!response.success || !response.data?.[TopicStatsKey.QuizSummary]) {
+      return { success: false, data: [], total: 0 };
+    }
+
+    const [responseColumns, ...data] = response.data[
+      TopicStatsKey.QuizSummary
+    ] as API.GiftQuizTopicStat[];
+    setDynamicColumns(getQuestionColumns(responseColumns));
+
+    return {
+      success: true,
+      data,
+      total: data.length,
+    };
+  }, []);
+
   return (
     <ProTable<API.GiftQuizTopicStat, TableParams>
       headerTitle={<FormattedMessage id="TopicStatistics.giftQuiz.title" />}
@@ -107,40 +138,7 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
         />,
       ]}
       className="table-standalone"
-      request={async ({ topic_id = selectedTopicId }) => {
-        if (!topic_id) return { success: false, data: [], total: 0 };
-        const response = await getTopicStats(topic_id, TopicStatsKey.QuizSummary);
-
-        if (!response.success || !response.data?.[TopicStatsKey.QuizSummary]) {
-          return { success: false, data: [], total: 0 };
-        }
-
-        const [responseColumns, ...data] = response.data[
-          TopicStatsKey.QuizSummary
-        ] as API.GiftQuizTopicStat[];
-        const questionColumns =
-          responseColumns !== undefined
-            ? Object.keys(responseColumns)
-                .filter((k) => k.includes('question'))
-                .map<TableColumn>((key, i) => ({
-                  title: (
-                    <FormattedMessage
-                      id="TopicStatistics.giftQuiz.question"
-                      values={{ i: i + 1 }}
-                    />
-                  ),
-                  dataIndex: key,
-                  hideInSearch: true,
-                }))
-            : [];
-        setDynamicColumns(questionColumns);
-
-        return {
-          success: true,
-          data,
-          total: data.length,
-        };
-      }}
+      request={handleRequest}
       columns={columns}
       search={{ layout: 'vertical' }}
       scroll={{ x: 1500 }}
