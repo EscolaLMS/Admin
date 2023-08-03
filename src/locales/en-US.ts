@@ -215,6 +215,7 @@ export default {
   editCategory: 'Edit Category',
   parent_category: 'Parent category',
   is_active: 'Active?',
+  is_highlighted: 'Highlighted?',
   parent_id: 'Parent category',
   parent_id_tooltip: 'The parent category to which the new category will be assigned',
   parent_id_group: 'Parent group',
@@ -797,4 +798,7 @@ export default {
   'CompetencyChallenges.onlyOneRowIsEditable': 'Only one row can be edited at a time',
   'CompetencyChallenges.types.simple': 'Simple',
   'CompetencyChallenges.types.complex': 'Complex',
+  'CompetencyChallenges.highlighted': 'Highlighted competency challenge on home page',
+  highlighted: 'Highlighted',
+  notHighlighted: 'Not highlighted',
 };

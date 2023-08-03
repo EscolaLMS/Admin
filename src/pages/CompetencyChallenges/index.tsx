@@ -67,6 +67,16 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
     ),
   },
   {
+    dataIndex: 'is_highlighted',
+    title: <FormattedMessage id="is_highlighted" />,
+    hideInSearch: true,
+    render: (_n, record) => (
+      <Tag key="is_highlighted" color={record.is_highlighted ? 'green' : 'red'}>
+        <FormattedMessage id={record.is_highlighted ? 'highlighted' : 'notHighlighted'} />
+      </Tag>
+    ),
+  },
+  {
     dataIndex: 'category',
     title: <FormattedMessage id="category" />,
     render: (_n, record) =>

@@ -1806,6 +1806,7 @@ declare namespace API {
     summary: string;
     image_path: string | null;
     is_active: boolean;
+    is_highlighted: boolean;
     quiz_id: number;
     scales: CompetencyChallengeScale[];
     authors: UserItem[];
@@ -1815,6 +1816,7 @@ declare namespace API {
   type CreateCompetencyChallenge = {
     name: string;
     is_active: boolean;
+    is_highlighted: boolean;
     type: CompetencyChallengeType;
     category_id?: number;
   };

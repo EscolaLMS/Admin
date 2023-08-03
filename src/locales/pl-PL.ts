@@ -202,6 +202,7 @@ export default {
   editCategory: 'Edytuj kategorię',
   parent_category: 'Nadrzędna kategoria',
   is_active: 'Aktywny?',
+  is_highlighted: 'Wyróżniony?',
   parent_id: 'Nadrzędna kategoria',
   parent_id_tooltip: 'Nadrzędna kategoria, do której będzie przypisana nowa kategoria',
   parent_id_group: 'Nadrzędna grupa',
@@ -789,4 +790,7 @@ export default {
   'CompetencyChallenges.onlyOneRowIsEditable': 'Jednocześnie można edytować tylko jeden wiersz',
   'CompetencyChallenges.types.simple': 'Poziomujący',
   'CompetencyChallenges.types.complex': 'Ogólny',
+  'CompetencyChallenges.highlighted': 'Wyróżnione wyzwanie na stronie głównej',
+  highlighted: 'Wyróżniony',
+  notHighlighted: 'Niewyróżniony',
 };

@@ -5,7 +5,7 @@ import { getCompetencyChallenge } from '@/services/escola-lms/competency-challen
 import { configs as getConfig } from '@/services/escola-lms/settings';
 
 interface CategoryDepths {
-  main: number;
+  role: number;
   scale: number;
   question: number;
 }
@@ -23,7 +23,7 @@ export interface CompetencyChallengeContext {
 }
 
 const initialValues: CompetencyChallengeContext = {
-  categoryDepths: { scale: 2, question: 1, main: 0 },
+  categoryDepths: { scale: 2, question: 1, role: 0 },
   competencyChallenge: { data: null, loading: false },
   refreshData: async () => console.warn('CONTEXT INIT'),
 };
@@ -76,14 +76,14 @@ export const CompetencyChallengeContextProvider: React.FC<React.PropsWithChildre
       const question = Number(
         (res.data?.escolalms_competency_challenge as any)?.category?.question?.depth?.value,
       );
-      const main = Number(
-        (res.data?.escolalms_competency_challenge as any)?.category?.main?.depth?.value,
+      const role = Number(
+        (res.data?.escolalms_competency_challenge as any)?.category?.role?.depth?.value,
       );
 
       setCategoryDepths({
         scale: Number.isNaN(scale) ? 2 : scale,
         question: Number.isNaN(question) ? 1 : question,
-        main: Number.isNaN(main) ? 0 : main,
+        role: Number.isNaN(role) ? 0 : role,
       });
     } catch (e) {
       console.error(e);
