@@ -25,6 +25,8 @@ declare namespace API {
 
   type QuestionType = Enum.QuestionType;
 
+  type TopicStatsKey = Enum.TopicStatsKey;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -435,6 +437,19 @@ declare namespace API {
     'EscolaLms\\Reports\\Stats\\Course\\FinishedTopics': FinishedTopicsUserStats[];
   };
 
+  type GiftQuizTopicStat = {
+    user_id: number;
+    attempt: number; // index (1 based) of attempt
+    attempt_date: Date | string;
+    attempt_time: number; // time between attempt_start and attempt_end in seconds
+    [`question_${number}`]: number; // points from certain question (number is id)
+    summary: number; // points_sum/max_points -> percents (between 0 and 1)
+  };
+
+  type TopicStats = {
+    [TopicStatsKey.QuizSummary]: GiftQuizTopicStat[];
+  };
+
   type DataRangeStats = {
     EscolaLmsReportsStatsUserNewUsers: Record<string, number>;
     EscolaLmsReportsStatsUserActiveUsers: Record<string, number>;
@@ -575,7 +590,8 @@ declare namespace API {
     | TopicImage
     | TopicPDF
     | TopicScorm
-    | TopicProject;
+    | TopicProject
+    | TopicQuiz;
 
   type TopicNotEmpty =
     | TopicRichText
@@ -585,7 +601,9 @@ declare namespace API {
     | TopicH5P
     | TopicImage
     | TopicPDF
-    | TopicScorm;
+    | TopicScorm
+    | TopicProject
+    | TopicQuiz;
 
   type CourseProgram = Course & {
     lessons: Lesson[];

@@ -35,3 +35,21 @@ export async function exportStatForCourse(
     ...(options || {}),
   });
 }
+
+/* GET /api/admin/stats/topic/:topic_id/export */
+export async function exportStatForTopic(
+  topic_id: number,
+  stat: API.TopicStatsKey,
+  options?: RequestOptionsInit,
+) {
+  return request<Blob | API.DefaultResponseError>(`/api/admin/stats/topic/${topic_id}/export`, {
+    method: 'GET',
+    /* useCache: true */ useCache: false,
+    params: { stat },
+    responseType: 'blob',
+    headers: {
+      accept: 'application/vnd.ms-excel',
+    },
+    ...(options || {}),
+  });
+}

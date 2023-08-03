@@ -801,4 +801,11 @@ export default {
   'CompetencyChallenges.highlighted': 'Highlighted competency challenge on home page',
   highlighted: 'Highlighted',
   notHighlighted: 'Not highlighted',
+  'TopicStatistics.giftQuiz.topic': 'GIFTQuiz topic',
+  'TopicStatistics.giftQuiz.title': 'GIFTQuiz topic statistics',
+  'TopicStatistics.giftQuiz.attempt': 'Attempt',
+  'TopicStatistics.giftQuiz.question': 'Question {i}',
+  'TopicStatistics.giftQuiz.attemptDate': 'Attempt date',
+  'TopicStatistics.giftQuiz.attemptDuration': 'Attempt duration',
+  'TopicStatistics.giftQuiz.result': 'Result',
 };

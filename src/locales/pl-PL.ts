@@ -793,4 +793,11 @@ export default {
   'CompetencyChallenges.highlighted': 'Wyróżnione wyzwanie na stronie głównej',
   highlighted: 'Wyróżniony',
   notHighlighted: 'Niewyróżniony',
+  'TopicStatistics.giftQuiz.topic': 'Temat GIFTQuiz',
+  'TopicStatistics.giftQuiz.title': 'Statystyki tematu typu GIFTQuiz',
+  'TopicStatistics.giftQuiz.attempt': 'Podejście',
+  'TopicStatistics.giftQuiz.question': 'Pytanie {i}',
+  'TopicStatistics.giftQuiz.attemptDate': 'Data podejścia',
+  'TopicStatistics.giftQuiz.attemptDuration': 'Czas trwania podejścia',
+  'TopicStatistics.giftQuiz.result': 'Wynik',
 };
