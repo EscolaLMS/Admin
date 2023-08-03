@@ -43,9 +43,21 @@ export const MainForm: React.FC = () => {
   }, [competencyChallenge?.data]);
 
   const addCompetencyChallenge = useCallback(
-    async ({ name, type, is_active = false, category_id }: API.CreateCompetencyChallenge) => {
+    async ({
+      name,
+      type,
+      is_active = false,
+      is_highlighted = false,
+      category_id,
+    }: API.CreateCompetencyChallenge) => {
       try {
-        const res = await createCompetencyChallenge({ name, is_active, type, category_id });
+        const res = await createCompetencyChallenge({
+          name,
+          is_active,
+          is_highlighted,
+          type,
+          category_id,
+        });
 
         if (!res.success) {
           message.error(res.message);
@@ -124,10 +136,15 @@ export const MainForm: React.FC = () => {
             label={<FormattedMessage id="category" />}
             rules={[{ required: true, message: intl.formatMessage({ id: 'field_required' }) }]}
           >
-            <CategoryTree enabledDepth={categoryDepths.main} />
+            <CategoryTree enabledDepth={categoryDepths.role} />
           </ProForm.Item>
         )}
         <ProFormSwitch name="is_active" label={<FormattedMessage id="is_active" />} />
+        <ProFormSwitch
+          name="is_highlighted"
+          label={<FormattedMessage id="is_highlighted" />}
+          tooltip={<FormattedMessage id="CompetencyChallenges.highlighted" />}
+        />
       </ProForm.Group>
       {!isNew && (
         <>
