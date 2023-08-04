@@ -1,28 +1,33 @@
-import { PlusOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag, message, Dropdown, Menu } from 'antd';
-import React, { useRef, useState } from 'react';
-import { useIntl, FormattedMessage, Link, history } from 'umi';
-
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import React, { useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import { users, deleteUser } from '@/services/escola-lms/user';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { DATETIME_FORMAT } from '@/consts/dates';
-import SecureUpload from '@/components/SecureUpload';
+import { useIntl, FormattedMessage, Link, history, getLocale } from 'umi';
+import { Button, Tooltip, Popconfirm, Tag, message, Dropdown, Menu } from 'antd';
+import {
+  PlusOutlined,
+  ExportOutlined,
+  DownloadOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import ProCard from '@ant-design/pro-card';
 
 import './index.css';
 import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import { users, deleteUser } from '@/services/escola-lms/user';
+import { FieldType } from '@/services/escola-lms/enums';
+import useModelFields from '@/hooks/useModelFields';
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
+import SecureUpload from '@/components/SecureUpload';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
   return true;
 };
 
-export const TableColumns: ProColumns<API.UserListItem>[] = [
+export const TableColumns: ProColumns<API.UserItem>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
@@ -167,9 +172,98 @@ export const TableColumns: ProColumns<API.UserListItem>[] = [
 ];
 
 const TableList: React.FC = () => {
-  const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const [params, setParams] = useState({});
+  const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
+
+  const dynamicAdditionalFieldsColumns: ProColumns<API.UserItem>[] = useMemo(() => {
+    if (additionalFields.state !== 'loaded') return [];
+
+    return (additionalFields?.list ?? []).reduce<ProColumns<API.UserItem>[]>((acc, field) => {
+      const locale = getLocale();
+      const fieldTranslatedTitle = field?.extra?.find((i: Record<string, string>) => i?.[locale])?.[
+        locale
+      ];
+
+      // TODO add other types support
+      switch (field.type) {
+        case FieldType.Boolean:
+          return [
+            ...acc,
+            {
+              title: fieldTranslatedTitle ?? <FormattedMessage id={field.name} />,
+              dataIndex: field.name,
+              hideInSearch: true,
+              width: 100,
+              render: (_n, record) => (
+                <Tag color={record?.[field.name] ? 'green' : 'red'}>
+                  {record?.[field.name] ? (
+                    <FormattedMessage id="true" />
+                  ) : (
+                    <FormattedMessage id="false" />
+                  )}
+                </Tag>
+              ),
+            },
+          ];
+        case FieldType.Varchar:
+          return [
+            ...acc,
+            {
+              title: fieldTranslatedTitle ?? <FormattedMessage id={field.name} />,
+              dataIndex: field.name,
+              hideInSearch: true,
+            },
+          ];
+        default:
+          return acc;
+      }
+    }, []);
+  }, [additionalFields]);
+
+  const columns: ProColumns<API.UserItem>[] = useMemo(
+    () => [
+      ...TableColumns,
+      ...dynamicAdditionalFieldsColumns,
+      {
+        hideInSearch: true,
+        title: <FormattedMessage id="pages.searchTable.titleOption" />,
+        dataIndex: 'option',
+        valueType: 'option',
+        fixed: 'right',
+        width: 80,
+        render: (_n, record, _i, action) => [
+          <Link to={`/users/${record.id}/user_info`} key="edit">
+            <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+              <Button type="primary" icon={<EditOutlined />} />
+            </Tooltip>
+          </Link>,
+          <Popconfirm
+            key="delete"
+            title={
+              <FormattedMessage
+                id="deleteQuestion"
+                defaultMessage="Are you sure to delete this record?"
+              />
+            }
+            onConfirm={async () => {
+              const success = await handleRemove(record.id);
+              if (success) {
+                action?.reload();
+              }
+            }}
+            okText={<FormattedMessage id="yes" />}
+            cancelText={<FormattedMessage id="no" />}
+          >
+            <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+              <Button type="primary" icon={<DeleteOutlined />} danger />
+            </Tooltip>
+          </Popconfirm>,
+        ],
+      },
+    ],
+    [dynamicAdditionalFieldsColumns],
+  );
 
   return (
     <PageContainer>
@@ -185,7 +279,6 @@ const TableList: React.FC = () => {
                 return history.push(`/users/fields`);
               default:
                 return history.push(`/users/${key}`);
-                break;
             }
           },
         }}
@@ -206,7 +299,6 @@ const TableList: React.FC = () => {
               id: 'menu.Users',
               defaultMessage: 'users',
             })}
-            actionRef={actionRef}
             rowKey="key"
             search={{
               layout: 'vertical',
@@ -308,45 +400,8 @@ const TableList: React.FC = () => {
                 return [];
               });
             }}
-            columns={[
-              ...TableColumns,
-              {
-                hideInSearch: true,
-                title: <FormattedMessage id="pages.searchTable.titleOption" />,
-                dataIndex: 'option',
-                valueType: 'option',
-                render: (_, record) => [
-                  <Link to={`/users/${record.id}/user_info`} key="edit">
-                    <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                      <Button type="primary" icon={<EditOutlined />} />
-                    </Tooltip>
-                  </Link>,
-                  <Popconfirm
-                    key="delete"
-                    title={
-                      <FormattedMessage
-                        id="deleteQuestion"
-                        defaultMessage="Are you sure to delete this record?"
-                      />
-                    }
-                    onConfirm={async () => {
-                      const success = await handleRemove(record.id);
-                      if (success) {
-                        if (actionRef.current) {
-                          actionRef.current.reload();
-                        }
-                      }
-                    }}
-                    okText={<FormattedMessage id="yes" />}
-                    cancelText={<FormattedMessage id="no" />}
-                  >
-                    <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                      <Button type="primary" icon={<DeleteOutlined />} danger />
-                    </Tooltip>
-                  </Popconfirm>,
-                ],
-              },
-            ]}
+            columns={columns}
+            scroll={{ x: true }}
           />
         </ProCard.TabPane>
         <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />} />
