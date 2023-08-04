@@ -1,4 +1,5 @@
 import JsonEditor from '@/components/JsonEditor';
+import { FieldType } from '@/services/escola-lms/enums';
 import ProForm, {
   ProFormCheckbox,
   ProFormDigit,
@@ -6,8 +7,7 @@ import ProForm, {
   ProFormTextArea,
 } from '@ant-design/pro-form';
 import React from 'react';
-import { FormattedMessage, useIntl } from 'umi';
-import { getLocale } from 'umi';
+import { FormattedMessage, getLocale, useIntl } from 'umi';
 
 const AdditionalField: React.FC<{
   field: API.ModelField;
@@ -17,7 +17,7 @@ const AdditionalField: React.FC<{
     const gl = f && f.extra && f.extra.find((item: Record<string, string>) => item[getLocale()]);
 
     switch (f.type) {
-      case 'number':
+      case FieldType.Number:
         return (
           <ProFormDigit
             width="md"
@@ -33,14 +33,14 @@ const AdditionalField: React.FC<{
             fieldProps={{ step: 1 }}
           />
         );
-      case 'boolean':
+      case FieldType.Boolean:
         return (
           <ProFormCheckbox name={f.name}>
             {gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
           </ProFormCheckbox>
         );
 
-      case 'varchar':
+      case FieldType.Varchar:
         return (
           <ProFormText
             width="md"
@@ -53,7 +53,7 @@ const AdditionalField: React.FC<{
           />
         );
 
-      case 'json':
+      case FieldType.Json:
         return (
           <ProForm.Item
             name={f.name}
@@ -65,7 +65,7 @@ const AdditionalField: React.FC<{
           </ProForm.Item>
         );
 
-      case 'text':
+      case FieldType.Text:
       default:
         return (
           <ProFormTextArea

@@ -27,6 +27,8 @@ declare namespace API {
 
   type TopicStatsKey = Enum.TopicStatsKey;
 
+  type FieldType = Enum.FieldType;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -1232,7 +1234,10 @@ declare namespace API {
     description: string;
   };
   // I need to overwrite extra key by any, cause it could be any right now
-  type ModelField = EscolaLms.ModelFields.Models.Metadata & { extra?: any };
+  type ModelField = Omit<EscolaLms.ModelFields.Models.Metadata, 'type'> & {
+    extra?: any;
+    type: FieldType;
+  };
 
   export type Translation = {
     group: string;
