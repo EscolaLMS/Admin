@@ -14,7 +14,8 @@ const AdditionalField: React.FC<{
 }> = ({ field }) => {
   const intl = useIntl();
   const getProperField = (f: API.ModelField) => {
-    const gl = f && f.extra && f.extra.find((item: Record<string, string>) => item[getLocale()]);
+    const locale = getLocale();
+    const translatedLabel = f?.extra?.find((i: Record<string, string>) => i?.[locale])?.[locale];
 
     switch (f.type) {
       case FieldType.Number:
@@ -22,7 +23,7 @@ const AdditionalField: React.FC<{
           <ProFormDigit
             width="md"
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -36,7 +37,7 @@ const AdditionalField: React.FC<{
       case FieldType.Boolean:
         return (
           <ProFormCheckbox name={f.name}>
-            {gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            {translatedLabel ?? <FormattedMessage id={f.name} />}
           </ProFormCheckbox>
         );
 
@@ -45,7 +46,7 @@ const AdditionalField: React.FC<{
           <ProFormText
             width="md"
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -57,7 +58,7 @@ const AdditionalField: React.FC<{
         return (
           <ProForm.Item
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             valuePropName="value"
           >
@@ -71,7 +72,7 @@ const AdditionalField: React.FC<{
           <ProFormTextArea
             width="md"
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
