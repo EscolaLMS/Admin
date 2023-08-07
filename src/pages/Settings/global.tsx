@@ -338,6 +338,17 @@ const initialData: InitialDataRecords = {
     type: 'text',
     data: 'EscolaLMS',
   },
+  technicalMaintenance: {
+    id: -16,
+    key: 'technicalMaintenance',
+    group: 'global',
+    value: 'false',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'boolean',
+    data: 'EscolaLMS',
+  },
   ...booleanSettings,
 };
 
