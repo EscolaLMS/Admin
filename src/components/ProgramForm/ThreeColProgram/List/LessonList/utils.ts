@@ -15,40 +15,47 @@ type LessonDeeplyStringifyId = Omit<StringifyId<API.Lesson>, 'lessons' | 'topics
   topics?: StringifyId<API.Topic>[];
 };
 
-const mutateTopicsId = (topics: API.Topic[]): StringifyId<API.Topic>[] =>
-  topics.map((t) => ({ ...t, id: `topic-${t.id}` }));
-const mutateLessonsId = (lessons: API.Lesson[]): StringifyId<API.Lesson>[] =>
-  lessons.map((l) => ({ ...l, id: l.isNew ? `new-${l.id}` : `lesson-${l.id}` }));
+const mutateTopicsId = (topics: API.Topic[], depth: number): StringifyId<API.Topic>[] =>
+  topics.map((t) => ({ ...t, id: `topic-${t.id}-${depth}` }));
+const mutateLessonsId = (lessons: API.Lesson[], depth: number): StringifyId<API.Lesson>[] =>
+  lessons.map((l) => ({ ...l, id: l.isNew ? `new-${l.id}-${depth}` : `lesson-${l.id}-${depth}` }));
 
-const getLessonDeeplyStringifyId = (l: API.Lesson): LessonDeeplyStringifyId => ({
+const getLessonDeeplyStringifyId = (l: API.Lesson, depth: number): LessonDeeplyStringifyId => ({
   ...l,
-  id: l.isNew ? `new-${l.id}` : `lesson-${l.id}`,
-  lessons: mutateLessonsId(l?.lessons ?? []),
-  topics: mutateTopicsId(l?.topics ?? []),
+  id: l.isNew ? `new-${l.id}-${depth}` : `lesson-${l.id}-${depth}`,
+  lessons: mutateLessonsId(l?.lessons ?? [], depth + 1),
+  topics: mutateTopicsId(l?.topics ?? [], depth + 1),
 });
 
-export const getFlatLessonDeeplyStringifyId = (lessons: API.Lesson[]): LessonDeeplyStringifyId[] =>
+export const getFlatLessonDeeplyStringifyId = (
+  lessons: API.Lesson[],
+  depth = 0,
+): LessonDeeplyStringifyId[] =>
   lessons.reduce<LessonDeeplyStringifyId[]>(
     (acc, l) => [
       ...acc,
-      ...getFlatLessonDeeplyStringifyId(l?.lessons ?? []),
-      getLessonDeeplyStringifyId(l),
+      ...getFlatLessonDeeplyStringifyId(l?.lessons ?? [], depth + 1),
+      getLessonDeeplyStringifyId(l, depth),
     ],
     [],
   );
 
-export const getFlatTopicsStringifyId = (lessons: API.Lesson[]): StringifyId<API.Topic>[] =>
+export const getFlatTopicsStringifyId = (
+  lessons: API.Lesson[],
+  depth = 1, // Because topic has to be nested in lesson
+): StringifyId<API.Topic>[] =>
   lessons.reduce<StringifyId<API.Topic>[]>(
     (acc, l) => [
       ...acc,
-      ...getFlatTopicsStringifyId(l?.lessons ?? []),
-      ...mutateTopicsId(l?.topics ?? []),
+      ...getFlatTopicsStringifyId(l?.lessons ?? [], depth + 1),
+      ...mutateTopicsId(l?.topics ?? [], depth),
     ],
     [],
   );
 
 export const getRootLessons = (lessons: API.Lesson[]): TreeItem[] =>
-  lessons.map(getLessonDeeplyStringifyId).map((lesson) => {
+  lessons.map((l) => {
+    const lesson = getLessonDeeplyStringifyId(l, 0);
     const children = [...(lesson.lessons ?? []), ...(lesson.topics ?? [])].map(({ id }) => id!);
 
     return {
