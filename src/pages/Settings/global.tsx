@@ -349,6 +349,17 @@ const initialData: InitialDataRecords = {
     type: 'boolean',
     data: 'EscolaLMS',
   },
+  technicalMaintenanceText: {
+    id: -17,
+    key: 'technicalMaintenanceText',
+    group: 'global',
+    value: '',
+    public: true,
+    enumerable: true,
+    sort: 0,
+    type: 'text',
+    data: 'EscolaLMS',
+  },
   ...booleanSettings,
 };
 
