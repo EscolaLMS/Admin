@@ -764,6 +764,8 @@ export default {
   topics_cant_be_nested: "Topics can't be nested",
   topic_cant_be_in_root: 'Topic must be lesson children',
   lessons_and_topics_cant_be_mixed: "Lessons and topics can't be arranged alternately",
+  max_lesson_nesting: 'Max lessons nesting level is {max}',
+  min_topic_nesting: 'Min topic nesting level is {min}',
   stacking_order: 'Order',
   stacking_order_tooltip: 'Lesson order in lesson or course context',
   exportData: 'Export data',

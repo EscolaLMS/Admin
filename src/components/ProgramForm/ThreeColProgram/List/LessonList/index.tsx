@@ -36,6 +36,11 @@ import {
 import { NewLessonListItem } from '../NewLessonListItem';
 import { TopicTypesSelector } from '../TopicTypesSelector';
 
+interface NestingSettings {
+  topic?: number;
+  lesson?: number;
+}
+
 export const LessonList: React.FC = () => {
   const { state, currentEditMode, updateLesson, addNewTopic, addNewLesson, getLessons } =
     useContext(Context);
@@ -77,17 +82,26 @@ export const LessonList: React.FC = () => {
     [addNewTopic],
   );
 
+  const nestingSettings = useMemo(
+    () =>
+      (initialState?.config ?? []).reduce<NestingSettings>((acc, setting) => {
+        if (setting.key === 'maxLessonsNestingInProgram') {
+          return { ...acc, lesson: setting.data };
+        }
+        if (setting.key === 'minTopicNestingInProgram') {
+          return { ...acc, topic: setting.data };
+        }
+        return acc;
+      }, {}),
+    [initialState?.config],
+  );
+
   const getHiddenNewTopicOptions = useCallback(
     (level: number) => {
       const hiddenOptions: (TopicType | 'lesson')[] = [];
 
-      const maxLessonsNestingInProgram = initialState?.config?.filter(
-        (item) => item.key === 'maxLessonsNestingInProgram',
-      )[0]?.data;
-
-      const minTopicNestingInProgram = initialState?.config?.filter(
-        (item) => item.key === 'minTopicNestingInProgram',
-      )[0]?.data;
+      const maxLessonsNestingInProgram = nestingSettings?.lesson ?? 0.5;
+      const minTopicNestingInProgram = nestingSettings?.topic ?? 0.5;
 
       if (Number.isInteger(maxLessonsNestingInProgram) && level > maxLessonsNestingInProgram) {
         hiddenOptions.push('lesson');
@@ -97,7 +111,7 @@ export const LessonList: React.FC = () => {
       }
       return hiddenOptions;
     },
-    [initialState],
+    [nestingSettings],
   );
 
   const renderItem = useCallback(
@@ -211,6 +225,9 @@ export const LessonList: React.FC = () => {
       const [movedType, movedId] = movedFullId.split('-');
       const destinationChildren = treeData.items[destination.parentId].children;
 
+      const maxLessonsNestingInProgram = nestingSettings?.lesson;
+      const minTopicNestingInProgram = nestingSettings?.topic;
+
       // Moving new lesson
       if (movedType === 'new') {
         message.warn(intl.formatMessage({ id: 'new_lessons_cant_be_moved' }));
@@ -221,6 +238,30 @@ export const LessonList: React.FC = () => {
       if (destination.parentId.toString().includes('topic')) {
         const topicsIds = sourceChildren.filter((id) => id.toString().includes('topic'));
         const destinationLesson = findParentByChildrenId(treeData, destination.parentId);
+        const destinationDepth =
+          Number((destinationLesson?.id ?? '').toString().split('-')?.[2] ?? -2) + 1;
+
+        if (
+          movedType === 'lesson' &&
+          maxLessonsNestingInProgram !== undefined &&
+          destinationDepth > maxLessonsNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'max_lesson_nesting' }, { max: maxLessonsNestingInProgram }),
+          );
+          return;
+        }
+
+        if (
+          movedType === 'topic' &&
+          minTopicNestingInProgram !== undefined &&
+          destinationDepth < minTopicNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'min_topic_nesting' }, { min: minTopicNestingInProgram }),
+          );
+          return;
+        }
 
         // Change order in one lesson
         if (destinationLesson?.id !== undefined && source.parentId === destinationLesson.id) {
@@ -393,6 +434,29 @@ export const LessonList: React.FC = () => {
         const destinationTopicsIds = destinationChildren.filter((id) =>
           id.toString().includes('topic'),
         );
+        const destinationDepth = Number(destination.parentId.toString().split('-')?.[2] ?? -2) + 1;
+
+        if (
+          movedType === 'lesson' &&
+          maxLessonsNestingInProgram !== undefined &&
+          destinationDepth > maxLessonsNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'max_lesson_nesting' }, { max: maxLessonsNestingInProgram }),
+          );
+          return;
+        }
+
+        if (
+          movedType === 'topic' &&
+          minTopicNestingInProgram !== undefined &&
+          destinationDepth < minTopicNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'min_topic_nesting' }, { min: minTopicNestingInProgram }),
+          );
+          return;
+        }
 
         if (movedType === 'lesson') {
           const minLessonPos = 0;
@@ -474,7 +538,7 @@ export const LessonList: React.FC = () => {
         }
       }
     },
-    [intl, treeData, courseId],
+    [intl, treeData, courseId, nestingSettings],
   );
 
   return (
