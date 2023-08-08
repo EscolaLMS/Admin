@@ -4,6 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import ProCard from '@ant-design/pro-card';
 import { Column } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from 'umi';
+import ScrollContainer from 'react-indiana-drag-scroll';
 
 import TypeButtonDrawer from '../TypeButtonDrawer';
 import { ExportStatsButton } from './ExportStatsButton';
@@ -125,6 +126,13 @@ export const UserProgress: React.FC<{
       dataSource={dataSource}
       size="small"
       scroll={{ x: 1500 }}
+      components={{
+        table: (props: React.HTMLAttributes<HTMLTableElement>) => (
+          <ScrollContainer horizontal={true} style={{ maxWidth: 'auto' }} hideScrollbars={false}>
+            <table {...props} />
+          </ScrollContainer>
+        ),
+      }}
     />
   );
 };
