@@ -103,11 +103,13 @@ export const reorderIdArr = (
 export const insertToIndexIdArr = (
   idArr: ItemId[],
   destinationIndex: number,
-  item: string | ItemId,
+  item: ItemId,
 ): ItemId[] => {
   const arrCopy = [...idArr];
   const arrCopyContextDestinationIndex =
-    arrCopy.length === 1 ? destinationIndex : destinationIndex % arrCopy.length;
+    arrCopy.length === 1 || destinationIndex === arrCopy.length
+      ? destinationIndex
+      : destinationIndex % arrCopy.length;
 
   arrCopy.splice(arrCopyContextDestinationIndex, 0, item);
 
