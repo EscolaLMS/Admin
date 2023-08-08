@@ -150,3 +150,15 @@ export const optimisticMoveThroughTree = async (
     }
   }
 };
+
+export const findParentByChildrenId = (
+  treeData: TreeData,
+  childrenId: ItemId,
+): TreeItem | undefined =>
+  Object.values(treeData.items).find(({ children }) => children.includes(childrenId));
+
+export const findChildrenIndexPosition = (
+  treeData: TreeData,
+  parentId: ItemId,
+  childrenId: ItemId,
+): number => treeData.items?.[parentId]?.children?.indexOf(childrenId) ?? -1;

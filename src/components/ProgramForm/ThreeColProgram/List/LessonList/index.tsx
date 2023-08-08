@@ -30,6 +30,8 @@ import {
   getOrdersFromReorderedArr,
   insertToIndexIdArr,
   optimisticMoveThroughTree,
+  findChildrenIndexPosition,
+  findParentByChildrenId,
 } from './utils';
 import { NewLessonListItem } from '../NewLessonListItem';
 import { TopicTypesSelector } from '../TopicTypesSelector';
@@ -217,7 +219,117 @@ export const LessonList: React.FC = () => {
 
       // Nest lesson/topic into topic case
       if (destination.parentId.toString().includes('topic')) {
-        message.warn(intl.formatMessage({ id: 'topics_cant_be_nested' }));
+        const topicsIds = sourceChildren.filter((id) => id.toString().includes('topic'));
+        const destinationLesson = findParentByChildrenId(treeData, destination.parentId);
+
+        // Change order in one lesson
+        if (destinationLesson?.id !== undefined && source.parentId === destinationLesson.id) {
+          if (movedType === 'lesson') {
+            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            return;
+          }
+
+          if (movedType === 'topic') {
+            const destinationTopicPos = findChildrenIndexPosition(
+              treeData,
+              destinationLesson.id,
+              destination.parentId,
+            );
+
+            if (destinationTopicPos < 0) {
+              return;
+            }
+
+            const reorderedArr = reorderIdArr(topicsIds, source.index, destinationTopicPos);
+            const orders = getOrdersFromReorderedArr(reorderedArr);
+
+            await optimisticMoveThroughTree(
+              setTreeData,
+              [source, { parentId: destinationLesson.id, index: destinationTopicPos }],
+              () => sort({ class: 'Topic', orders, course_id: courseId }),
+            );
+            getLessons?.();
+            return;
+          }
+        }
+
+        // traverse lesson/topic through the tree
+        if (destinationLesson?.id !== undefined && source.parentId !== destinationLesson.id) {
+          const destinationLessonsIds = destinationLesson.children.filter((id) =>
+            id.toString().includes('lesson'),
+          );
+          const destinationTopicsIds = destinationLesson.children.filter((id) =>
+            id.toString().includes('topic'),
+          );
+
+          if (movedType === 'lesson') {
+            const maxLessonPos = destinationLessonsIds.length;
+
+            const [, destinationStrId] = destinationLesson.id.toString().split('-');
+            const prevLessonState: API.Lesson = treeData.items[movedFullId].data;
+            const updatingValues = {
+              parent_lesson_id: destinationLesson.id === 'root' ? '' : +destinationStrId,
+              course_id: courseId,
+              title: prevLessonState.title,
+              order: maxLessonPos,
+            };
+
+            const formData = getFormData(updatingValues);
+
+            const reorderedArr = insertToIndexIdArr(
+              destinationLessonsIds,
+              maxLessonPos,
+              movedFullId,
+            );
+            const destinationOrders = getOrdersFromReorderedArr(reorderedArr);
+
+            await optimisticMoveThroughTree(
+              setTreeData,
+              [source, { ...destination, index: maxLessonPos }],
+              () =>
+                apiUpdateLesson(+movedId, formData).then(() =>
+                  sort({ class: 'Lesson', orders: destinationOrders, course_id: courseId }),
+                ),
+            );
+            getLessons?.();
+            return;
+          }
+
+          if (movedType === 'topic') {
+            const destinationTopicPos =
+              findChildrenIndexPosition(treeData, destinationLesson.id, destination.parentId) + 1;
+
+            if (destinationTopicPos < 1) {
+              return;
+            }
+
+            const [, destinationStrId] = destinationLesson.id.toString().split('-');
+            const updatingValues: Partial<API.Topic> = {
+              lesson_id: +destinationStrId,
+              order: destinationTopicPos,
+            };
+
+            const reorderedArr = insertToIndexIdArr(
+              destinationTopicsIds,
+              destinationTopicPos - destinationLessonsIds.length,
+              movedFullId,
+            );
+            const destinationOrders = getOrdersFromReorderedArr(reorderedArr);
+
+            const formData = getFormData(updatingValues);
+
+            await optimisticMoveThroughTree(
+              setTreeData,
+              [source, { parentId: destinationLesson.id, index: destinationTopicPos }],
+              () =>
+                apiUpdateTopic(+movedId, formData).then(() =>
+                  sort({ class: 'Topic', orders: destinationOrders, course_id: courseId }),
+                ),
+            );
+            getLessons?.();
+            return;
+          }
+        }
         return;
       }
 
@@ -233,7 +345,6 @@ export const LessonList: React.FC = () => {
         const topicsIds = sourceChildren.filter((id) => id.toString().includes('topic'));
 
         // move lessons only around 0 and x index
-        // TODO add new lesson support
         if (movedType === 'lesson') {
           const minLessonPos = 0;
           const maxLessonPos = lessonsIds.length - 1;
