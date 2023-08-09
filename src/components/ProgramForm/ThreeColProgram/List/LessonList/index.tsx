@@ -30,9 +30,17 @@ import {
   getOrdersFromReorderedArr,
   insertToIndexIdArr,
   optimisticMoveThroughTree,
+  findChildrenIndexPosition,
+  findParentByChildrenId,
+  MovedType,
 } from './utils';
 import { NewLessonListItem } from '../NewLessonListItem';
 import { TopicTypesSelector } from '../TopicTypesSelector';
+
+interface NestingSettings {
+  topic?: number;
+  lesson?: number;
+}
 
 export const LessonList: React.FC = () => {
   const { state, currentEditMode, updateLesson, addNewTopic, addNewLesson, getLessons } =
@@ -75,17 +83,26 @@ export const LessonList: React.FC = () => {
     [addNewTopic],
   );
 
+  const nestingSettings = useMemo(
+    () =>
+      (initialState?.config ?? []).reduce<NestingSettings>((acc, setting) => {
+        if (setting.key === 'maxLessonsNestingInProgram') {
+          return { ...acc, lesson: setting.data };
+        }
+        if (setting.key === 'minTopicNestingInProgram') {
+          return { ...acc, topic: setting.data };
+        }
+        return acc;
+      }, {}),
+    [initialState?.config],
+  );
+
   const getHiddenNewTopicOptions = useCallback(
     (level: number) => {
       const hiddenOptions: (TopicType | 'lesson')[] = [];
 
-      const maxLessonsNestingInProgram = initialState?.config?.filter(
-        (item) => item.key === 'maxLessonsNestingInProgram',
-      )[0]?.data;
-
-      const minTopicNestingInProgram = initialState?.config?.filter(
-        (item) => item.key === 'minTopicNestingInProgram',
-      )[0]?.data;
+      const maxLessonsNestingInProgram = nestingSettings?.lesson ?? 0.5;
+      const minTopicNestingInProgram = nestingSettings?.topic ?? 0.5;
 
       if (Number.isInteger(maxLessonsNestingInProgram) && level > maxLessonsNestingInProgram) {
         hiddenOptions.push('lesson');
@@ -95,7 +112,7 @@ export const LessonList: React.FC = () => {
       }
       return hiddenOptions;
     },
-    [initialState],
+    [nestingSettings],
   );
 
   const renderItem = useCallback(
@@ -209,20 +226,156 @@ export const LessonList: React.FC = () => {
       const [movedType, movedId] = movedFullId.split('-');
       const destinationChildren = treeData.items[destination.parentId].children;
 
+      const maxLessonsNestingInProgram = nestingSettings?.lesson;
+      const minTopicNestingInProgram = nestingSettings?.topic;
+
       // Moving new lesson
-      if (movedType === 'new') {
+      if (movedType === MovedType.New) {
         message.warn(intl.formatMessage({ id: 'new_lessons_cant_be_moved' }));
         return;
       }
 
       // Nest lesson/topic into topic case
       if (destination.parentId.toString().includes('topic')) {
-        message.warn(intl.formatMessage({ id: 'topics_cant_be_nested' }));
+        const topicsIds = sourceChildren.filter((id) => id.toString().includes('topic'));
+        const destinationLesson = findParentByChildrenId(treeData, destination.parentId);
+        const destinationDepth =
+          Number((destinationLesson?.id ?? '').toString().split('-')?.[2] ?? -2) + 1;
+
+        if (
+          movedType === MovedType.Lesson &&
+          maxLessonsNestingInProgram !== undefined &&
+          destinationDepth > maxLessonsNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'max_lesson_nesting' }, { max: maxLessonsNestingInProgram }),
+          );
+          return;
+        }
+
+        if (
+          movedType === MovedType.Topic &&
+          minTopicNestingInProgram !== undefined &&
+          destinationDepth < minTopicNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'min_topic_nesting' }, { min: minTopicNestingInProgram }),
+          );
+          return;
+        }
+
+        // Change order in one lesson
+        if (destinationLesson?.id !== undefined && source.parentId === destinationLesson.id) {
+          if (movedType === MovedType.Lesson) {
+            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            return;
+          }
+
+          if (movedType === MovedType.Topic) {
+            const destinationTopicPos = findChildrenIndexPosition(
+              treeData,
+              destinationLesson.id,
+              destination.parentId,
+            );
+
+            if (destinationTopicPos < 0) {
+              return;
+            }
+
+            const reorderedArr = reorderIdArr(topicsIds, source.index, destinationTopicPos);
+            const orders = getOrdersFromReorderedArr(reorderedArr);
+
+            await optimisticMoveThroughTree(
+              setTreeData,
+              [source, { parentId: destinationLesson.id, index: destinationTopicPos }],
+              () => sort({ class: 'Topic', orders, course_id: courseId }),
+            );
+            getLessons?.();
+            return;
+          }
+        }
+
+        // traverse lesson/topic through the tree
+        if (destinationLesson?.id !== undefined && source.parentId !== destinationLesson.id) {
+          const destinationLessonsIds = destinationLesson.children.filter((id) =>
+            id.toString().includes('lesson'),
+          );
+          const destinationTopicsIds = destinationLesson.children.filter((id) =>
+            id.toString().includes('topic'),
+          );
+
+          if (movedType === MovedType.Lesson) {
+            const maxLessonPos = destinationLessonsIds.length;
+
+            const [, destinationStrId] = destinationLesson.id.toString().split('-');
+            const prevLessonState: API.Lesson = treeData.items[movedFullId].data;
+            const updatingValues = {
+              parent_lesson_id: destinationLesson.id === 'root' ? '' : +destinationStrId,
+              course_id: courseId,
+              title: prevLessonState.title,
+              order: maxLessonPos,
+            };
+
+            const formData = getFormData(updatingValues);
+
+            const reorderedArr = insertToIndexIdArr(
+              destinationLessonsIds,
+              maxLessonPos,
+              movedFullId,
+            );
+            const destinationOrders = getOrdersFromReorderedArr(reorderedArr);
+
+            await optimisticMoveThroughTree(
+              setTreeData,
+              [source, { ...destination, index: maxLessonPos }],
+              () =>
+                apiUpdateLesson(+movedId, formData).then(() =>
+                  sort({ class: 'Lesson', orders: destinationOrders, course_id: courseId }),
+                ),
+            );
+            getLessons?.();
+            return;
+          }
+
+          if (movedType === MovedType.Topic) {
+            const destinationTopicPos =
+              findChildrenIndexPosition(treeData, destinationLesson.id, destination.parentId) + 1;
+
+            if (destinationTopicPos < 1) {
+              return;
+            }
+
+            const [, destinationStrId] = destinationLesson.id.toString().split('-');
+            const updatingValues: Partial<API.Topic> = {
+              lesson_id: +destinationStrId,
+              order: destinationTopicPos,
+            };
+
+            const reorderedArr = insertToIndexIdArr(
+              destinationTopicsIds,
+              destinationTopicPos - destinationLessonsIds.length,
+              movedFullId,
+            );
+            const destinationOrders = getOrdersFromReorderedArr(reorderedArr);
+
+            const formData = getFormData(updatingValues);
+
+            await optimisticMoveThroughTree(
+              setTreeData,
+              [source, { parentId: destinationLesson.id, index: destinationTopicPos }],
+              () =>
+                apiUpdateTopic(+movedId, formData).then(() =>
+                  sort({ class: 'Topic', orders: destinationOrders, course_id: courseId }),
+                ),
+            );
+            getLessons?.();
+          }
+        }
         return;
       }
 
       // Topics to root case
-      if (destination.parentId === 'root' && movedType === 'topic') {
+      if (destination.parentId === 'root' && movedType === MovedType.Topic) {
         message.warn(intl.formatMessage({ id: 'topic_cant_be_in_root' }));
         return;
       }
@@ -233,8 +386,7 @@ export const LessonList: React.FC = () => {
         const topicsIds = sourceChildren.filter((id) => id.toString().includes('topic'));
 
         // move lessons only around 0 and x index
-        // TODO add new lesson support
-        if (movedType === 'lesson') {
+        if (movedType === MovedType.Lesson) {
           const minLessonPos = 0;
           const maxLessonPos = lessonsIds.length - 1;
 
@@ -254,7 +406,7 @@ export const LessonList: React.FC = () => {
         }
 
         // move topics only around lessons length index and last children index
-        if (movedType === 'topic') {
+        if (movedType === MovedType.Topic) {
           const minTopicPos = lessonsIds.length;
           const maxTopicPos = sourceChildren.length - 1;
 
@@ -282,8 +434,31 @@ export const LessonList: React.FC = () => {
         const destinationTopicsIds = destinationChildren.filter((id) =>
           id.toString().includes('topic'),
         );
+        const destinationDepth = Number(destination.parentId.toString().split('-')?.[2] ?? -2) + 1;
 
-        if (movedType === 'lesson') {
+        if (
+          movedType === MovedType.Lesson &&
+          maxLessonsNestingInProgram !== undefined &&
+          destinationDepth > maxLessonsNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'max_lesson_nesting' }, { max: maxLessonsNestingInProgram }),
+          );
+          return;
+        }
+
+        if (
+          movedType === MovedType.Topic &&
+          minTopicNestingInProgram !== undefined &&
+          destinationDepth < minTopicNestingInProgram
+        ) {
+          message.warn(
+            intl.formatMessage({ id: 'min_topic_nesting' }, { min: minTopicNestingInProgram }),
+          );
+          return;
+        }
+
+        if (movedType === MovedType.Lesson) {
           const minLessonPos = 0;
           const maxLessonPos = destinationLessonsIds.length;
           const destIndex = destination.index ?? maxLessonPos;
@@ -322,7 +497,7 @@ export const LessonList: React.FC = () => {
           return;
         }
 
-        if (movedType === 'topic') {
+        if (movedType === MovedType.Topic) {
           const minTopicPos = destinationLessonsIds.length;
           const maxTopicPos = destinationChildren.length;
           const destIndex = destination.index ?? maxTopicPos;
@@ -359,11 +534,10 @@ export const LessonList: React.FC = () => {
               ),
           );
           getLessons?.();
-          return;
         }
       }
     },
-    [intl, treeData, courseId],
+    [intl, treeData, courseId, nestingSettings],
   );
 
   return (
