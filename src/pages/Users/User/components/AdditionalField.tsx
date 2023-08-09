@@ -1,4 +1,5 @@
 import JsonEditor from '@/components/JsonEditor';
+import { FieldType } from '@/services/escola-lms/enums';
 import ProForm, {
   ProFormCheckbox,
   ProFormDigit,
@@ -6,23 +7,23 @@ import ProForm, {
   ProFormTextArea,
 } from '@ant-design/pro-form';
 import React from 'react';
-import { FormattedMessage, useIntl } from 'umi';
-import { getLocale } from 'umi';
+import { FormattedMessage, getLocale, useIntl } from 'umi';
 
 const AdditionalField: React.FC<{
   field: API.ModelField;
 }> = ({ field }) => {
   const intl = useIntl();
   const getProperField = (f: API.ModelField) => {
-    const gl = f && f.extra && f.extra.find((item: Record<string, string>) => item[getLocale()]);
+    const locale = getLocale();
+    const translatedLabel = f?.extra?.find((i: Record<string, string>) => i?.[locale])?.[locale];
 
     switch (f.type) {
-      case 'number':
+      case FieldType.Number:
         return (
           <ProFormDigit
             width="md"
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -33,19 +34,19 @@ const AdditionalField: React.FC<{
             fieldProps={{ step: 1 }}
           />
         );
-      case 'boolean':
+      case FieldType.Boolean:
         return (
           <ProFormCheckbox name={f.name}>
-            {gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            {translatedLabel ?? <FormattedMessage id={f.name} />}
           </ProFormCheckbox>
         );
 
-      case 'varchar':
+      case FieldType.Varchar:
         return (
           <ProFormText
             width="md"
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,
@@ -53,11 +54,11 @@ const AdditionalField: React.FC<{
           />
         );
 
-      case 'json':
+      case FieldType.Json:
         return (
           <ProForm.Item
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             valuePropName="value"
           >
@@ -65,13 +66,13 @@ const AdditionalField: React.FC<{
           </ProForm.Item>
         );
 
-      case 'text':
+      case FieldType.Text:
       default:
         return (
           <ProFormTextArea
             width="md"
             name={f.name}
-            label={gl ? gl[getLocale()] : <FormattedMessage id={f.name} />}
+            label={translatedLabel ?? <FormattedMessage id={f.name} />}
             tooltip={<FormattedMessage id={f.name} />}
             placeholder={intl.formatMessage({
               id: f.name,

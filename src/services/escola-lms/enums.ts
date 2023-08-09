@@ -83,3 +83,11 @@ export enum CompetencyChallengeType {
 export enum TopicStatsKey {
   QuizSummary = 'EscolaLms\\Reports\\Stats\\Topic\\QuizSummaryForTopicTypeGIFT',
 }
+
+export enum FieldType {
+  Boolean = 'boolean',
+  Number = 'number',
+  Varchar = 'varchar',
+  Text = 'text',
+  Json = 'json',
+}
