@@ -808,4 +808,9 @@ export default {
   'TopicStatistics.giftQuiz.attemptDate': 'Attempt date',
   'TopicStatistics.giftQuiz.attemptDuration': 'Attempt duration',
   'TopicStatistics.giftQuiz.result': 'Result',
+  'ConsultationsAccess.meetingType': 'Meeting type',
+  'ConsultationsAccess.meetingType.custom': 'Custom',
+  'ConsultationsAccess.meetingType.jitsi': 'Jitsi',
+  'ConsultationsAccess.meetingType.pencil-spaces': 'Pencil spaces',
+  'ConsultationsAccess.meetingLink': 'Meeting link',
 };

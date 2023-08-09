@@ -21,7 +21,7 @@ export async function consultationAccess(
 /**  POST /api/admin/consultation-access-enquiries/approve/:id */
 export async function approveConsultationAccessTerm(
   id: number,
-  body: { meeting_link: string },
+  body: { meeting_link: string | null },
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.ConsultationAccessEnquiry>>(
