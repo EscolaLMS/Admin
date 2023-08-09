@@ -9,6 +9,11 @@ import type {
 import type { Dispatch, SetStateAction } from 'react';
 
 // UTIL TYPES
+export enum MovedType {
+  New = 'new',
+  Lesson = 'lesson',
+  Topic = 'topic',
+}
 type StringifyId<Obj extends { id?: number }> = Omit<Obj, 'id'> & { id: string };
 type LessonDeeplyStringifyId = Omit<StringifyId<API.Lesson>, 'lessons' | 'topics'> & {
   lessons?: StringifyId<API.Lesson>[];
