@@ -1,3 +1,4 @@
+import PACKAGES from '@/consts/packages';
 import PERMISSIONS from '@/consts/permissions';
 import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 
@@ -19,7 +20,7 @@ export default function (initialState: {
 
   // TODO implement minimal versions
   const havePackageInstalled = (
-    packageName: string,
+    packageName: PACKAGES,
     // ,minVersion: string = '0.0.0'
   ): boolean => {
     return Boolean(initialState?.packages?.[packageName]);
@@ -167,12 +168,12 @@ export default function (initialState: {
     translationListPermission:
       havePermissionsInDashboard(PERMISSIONS.TranslationList) &&
       !haveSettingsInDashboard('hideInMenu-ConfigurationTranslations', true) &&
-      havePackageInstalled('escolalms/translations'),
+      havePackageInstalled(PACKAGES.Translations),
     translationDetailPermission: havePermissionsInDashboard(PERMISSIONS.TranslationRead),
     adminTranslationListPermission:
       havePermissionsInDashboard(PERMISSIONS.TranslationList) &&
       !haveSettingsInDashboard('hideInMenu-ConfigurationAdminTranslations', true) &&
-      havePackageInstalled('escolalms/translations'),
+      havePackageInstalled(PACKAGES.Translations),
 
     loggedOut: !currentUser,
 
@@ -182,7 +183,7 @@ export default function (initialState: {
     courseAccessListPermission:
       havePermissionsInDashboard(PERMISSIONS.CourseAccessList) &&
       !haveSettingsInDashboard('hideInMenu-CoursesAccess', true) &&
-      havePackageInstalled('escolalms/course-access'),
+      havePackageInstalled(PACKAGES.CourseAccess),
 
     consultationAccessListPermission:
       havePermissionsInDashboard(PERMISSIONS.ConsultationAccessList) &&
@@ -191,7 +192,7 @@ export default function (initialState: {
     coursesQuizReportsListPermission:
       havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
       !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
-      havePackageInstalled('escolalms/topic-type-gift'),
+      havePackageInstalled(PACKAGES.TopicTypeGift),
 
     teacherPermission:
       havePermissionsInDashboard(
@@ -207,7 +208,7 @@ export default function (initialState: {
         PERMISSIONS.PCGListAcademicYears,
       ) &&
       !haveSettingsInDashboard('hideInMenu-TeacherSubjects', true) &&
-      havePackageInstalled('escolalms/pcg-integration'),
+      havePackageInstalled(PACKAGES.PCGIntegration),
 
     teacherSubjectDetailsPermission:
       havePermissionsInDashboard(
@@ -222,18 +223,18 @@ export default function (initialState: {
         PERMISSIONS.TeacherDeleteExamResult,
       ) &&
       !haveSettingsInDashboard('hideInMenu-TeacherSubjects', true) &&
-      havePackageInstalled('escolalms/pcg-integration') &&
-      havePackageInstalled('escolalms/pcg-grades') &&
-      havePackageInstalled('escolalms/pcg-attendances'),
+      havePackageInstalled(PACKAGES.PCGIntegration) &&
+      havePackageInstalled(PACKAGES.PCGGrades) &&
+      havePackageInstalled(PACKAGES.PCGAttendances),
     competencyChallengesPermission:
       (!haveSettingsInDashboard('hideInMenu-Competency-challengesList', true) &&
-        havePackageInstalled('escolalms/competency-challenges') &&
+        havePackageInstalled(PACKAGES.CompetencyChallenges) &&
         havePermissionsInDashboard(
           PERMISSIONS.ListCompetencyChallenges,
           PERMISSIONS.ReadCompetencyChallenges,
           PERMISSIONS.DeleteCompetencyChallenges,
         )) ||
-      (havePackageInstalled('escolalms/competency-challenges') &&
+      (havePackageInstalled(PACKAGES.CompetencyChallenges) &&
         havePermissionsInDashboard(
           PERMISSIONS.ReadCompetencyChallenges,
           PERMISSIONS.CreateCompetencyChallenges,
@@ -244,14 +245,14 @@ export default function (initialState: {
         )),
     competencyChallengesListPermission:
       !haveSettingsInDashboard('hideInMenu-Competency-challengesList', true) &&
-      havePackageInstalled('escolalms/competency-challenges') &&
+      havePackageInstalled(PACKAGES.CompetencyChallenges) &&
       havePermissionsInDashboard(
         PERMISSIONS.ListCompetencyChallenges,
         PERMISSIONS.ReadCompetencyChallenges,
         PERMISSIONS.DeleteCompetencyChallenges,
       ),
     competencyChallengesFormPermission:
-      havePackageInstalled('escolalms/competency-challenges') &&
+      havePackageInstalled(PACKAGES.CompetencyChallenges) &&
       havePermissionsInDashboard(
         PERMISSIONS.ReadCompetencyChallenges,
         PERMISSIONS.CreateCompetencyChallenges,

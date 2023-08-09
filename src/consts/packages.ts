@@ -1,5 +1,5 @@
-// TODO add all packages & use this enum in code instead of hardcoded string
-export enum Packages {
+// TODO add all packages
+enum PACKAGES {
   Api = 'escolalms/api',
   AssignWithoutAccount = 'escolalms/assign-without-account',
   Auth = 'escolalms/auth',
@@ -7,6 +7,7 @@ export enum Packages {
   Cart = 'escolalms/cart',
   Categories = 'escolalms/categories',
   Cmi5 = 'escolalms/cmi5',
+  CompetencyChallenges = 'escolalms/competency-challenges',
   ConsultationAccess = 'escolalms/consultation-access',
   Consultations = 'escolalms/consultations',
   Core = 'escolalms/core',
@@ -26,6 +27,9 @@ export enum Packages {
   Notifications = 'escolalms/notifications',
   Pages = 'escolalms/pages',
   Payments = 'escolalms/payments',
+  PCGAttendances = 'escolalms/pcg-attendances',
+  PCGGrades = 'escolalms/pcg-grades',
+  PCGIntegration = 'escolalms/pcg-integration',
   PencilSpaces = 'escolalms/pencil-spaces',
   Permissions = 'escolalms/permissions',
   Questionnaire = 'escolalms/questionnaire',
@@ -49,3 +53,5 @@ export enum Packages {
   Webinar = 'escolalms/webinar',
   Youtube = 'escolalms/youtube',
 }
+
+export default PACKAGES;

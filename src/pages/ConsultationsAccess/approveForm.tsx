@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl, useModel } from 'umi';
 import { Form, Descriptions } from 'antd';
 import { DrawerForm, ProFormSelect, ProFormText } from '@ant-design/pro-form';
 
-import { Packages } from '@/consts/packages';
+import PACKAGES from '@/consts/packages';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { approveConsultationAccessTerm } from '@/services/escola-lms/consultations_access';
 
@@ -51,7 +51,7 @@ export const ApproveForm: React.FC<Props> = ({ term, onClose, onSuccess }) => {
   const meetingType = Form.useWatch('meeting_type', form);
 
   const pencilSpacesPackageInstalled = useMemo(
-    () => Boolean(initialState?.packages?.[Packages.PencilSpaces]),
+    () => Boolean(initialState?.packages?.[PACKAGES.PencilSpaces]),
     [initialState?.packages],
   );
 
