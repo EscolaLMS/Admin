@@ -38,7 +38,7 @@ export default () => {
 
   return (
     <PageContainer
-      title={<FormattedMessage id={'settings'} />}
+      title={<FormattedMessage id="menu.Settings" />}
       header={{
         breadcrumb: {
           routes: [
@@ -51,7 +51,9 @@ export default () => {
 
             {
               path: String(tab),
-              breadcrumbName: String(tab),
+              breadcrumbName: intl.formatMessage({
+                id: String(tab),
+              }),
             },
           ],
         },
