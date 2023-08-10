@@ -802,4 +802,9 @@ export default {
   'TopicStatistics.giftQuiz.attemptDate': 'Data podejścia',
   'TopicStatistics.giftQuiz.attemptDuration': 'Czas trwania podejścia',
   'TopicStatistics.giftQuiz.result': 'Wynik',
+  'ConsultationsAccess.meetingType': 'Typ spotkania',
+  'ConsultationsAccess.meetingType.custom': 'Niestandardowy',
+  'ConsultationsAccess.meetingType.jitsi': 'Jitsi',
+  'ConsultationsAccess.meetingType.pencil-spaces': 'Pencil spaces',
+  'ConsultationsAccess.meetingLink': 'Link do spotkania',
 };

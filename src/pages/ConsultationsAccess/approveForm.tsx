@@ -1,24 +1,97 @@
-import { DrawerForm, ProFormText } from '@ant-design/pro-form';
-import { v4 as uuidv4 } from 'uuid';
-
-import { Button, Form } from 'antd';
-import { FormattedMessage } from 'umi';
+import React, { useCallback, useMemo } from 'react';
 import { format } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
+import { FormattedMessage, useIntl, useModel } from 'umi';
+import { Form, Descriptions } from 'antd';
+import { DrawerForm, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+
+import PACKAGES from '@/consts/packages';
 import { DATETIME_FORMAT } from '@/consts/dates';
-import { Descriptions } from 'antd';
 import { approveConsultationAccessTerm } from '@/services/escola-lms/consultations_access';
 
-export const ApproveForm: React.FC<{
+enum MeetingType {
+  Custom = 'custom',
+  Jitsi = 'jitsi',
+  PencilSpaces = 'pencil-spaces',
+}
+
+const conditionallyReturnArr = <TObj extends Record<string, any>>(
+  value: TObj,
+  bool: boolean,
+): TObj[] => (bool ? [value] : []);
+
+const generateJitsiMeeting = () => `https://meet.jit.si/${uuidv4()}`;
+
+const getMeetingLink = ({ meeting_link, meeting_type }: FormData): string | null => {
+  const meetingTypeMap: Record<MeetingType, string | null> = {
+    [MeetingType.Custom]: meeting_link,
+    [MeetingType.Jitsi]: generateJitsiMeeting(),
+    [MeetingType.PencilSpaces]: null,
+  };
+
+  return meetingTypeMap?.[meeting_type] ?? meeting_link;
+};
+
+interface FormData {
+  meeting_type: MeetingType;
+  meeting_link: string;
+}
+
+interface Props {
   term?: EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiryProposedTerm;
   onClose: () => void;
   onSuccess: () => void;
-}> = ({ term, onClose, onSuccess }) => {
-  const [form] = Form.useForm<{ name: string; company: string }>();
+}
+
+export const ApproveForm: React.FC<Props> = ({ term, onClose, onSuccess }) => {
+  const intl = useIntl();
+  const { initialState } = useModel('@@initialState');
+
+  const [form] = Form.useForm<FormData>();
+  const meetingType = Form.useWatch('meeting_type', form);
+
+  const pencilSpacesPackageInstalled = useMemo(
+    () => Boolean(initialState?.packages?.[PACKAGES.PencilSpaces]),
+    [initialState?.packages],
+  );
+
+  const meetingTypeOptions = useMemo(
+    () => [
+      {
+        value: MeetingType.Custom,
+        label: intl.formatMessage({ id: `ConsultationsAccess.meetingType.custom` }),
+      },
+      {
+        value: MeetingType.Jitsi,
+        label: intl.formatMessage({ id: `ConsultationsAccess.meetingType.jitsi` }),
+      },
+      ...conditionallyReturnArr(
+        {
+          value: MeetingType.PencilSpaces,
+          label: intl.formatMessage({ id: `ConsultationsAccess.meetingType.pencil-spaces` }),
+        },
+        pencilSpacesPackageInstalled,
+      ),
+    ],
+    [intl, pencilSpacesPackageInstalled],
+  );
+
+  const handleFinish = useCallback(
+    async (formData: FormData) => {
+      if (!term) return;
+      const meeting_link = getMeetingLink(formData);
+
+      const res = await approveConsultationAccessTerm(term?.id, { meeting_link });
+      if (!res.success) return;
+
+      onClose();
+      onSuccess();
+    },
+    [term],
+  );
 
   return (
-    <DrawerForm<{
-      meeting_link: string;
-    }>
+    <DrawerForm<FormData>
       title={<FormattedMessage id="approve_form" defaultMessage="Approve Form" />}
       onVisibleChange={(visible) => !visible && onClose()}
       form={form}
@@ -28,18 +101,8 @@ export const ApproveForm: React.FC<{
         destroyOnClose: true,
       }}
       submitTimeout={2000}
-      onFinish={async (values) => {
-        if (term) {
-          await approveConsultationAccessTerm(term?.id, values).then((data) => {
-            if (data.success) {
-              onClose();
-              onSuccess();
-            }
-          });
-        }
-
-        return true;
-      }}
+      initialValues={{ meeting_type: MeetingType.Custom }}
+      onFinish={handleFinish}
     >
       {term && (
         <Descriptions column={2}>
@@ -50,23 +113,22 @@ export const ApproveForm: React.FC<{
           </Descriptions.Item>
         </Descriptions>
       )}
-      <ProFormText
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-        name="meeting_link"
-        label={<FormattedMessage id="meeting_link" defaultMessage="Meeting Link" />}
-        tooltip={<FormattedMessage id="meeting_link" defaultMessage="Meeting Link" />}
+      <ProFormSelect
+        name="meeting_type"
+        options={meetingTypeOptions}
+        label={<FormattedMessage id="ConsultationsAccess.meetingType" />}
       />
-      <Button
-        onClick={() => {
-          form.setFieldValue('meeting_link', `https://meet.jit.si/${uuidv4()}`);
-        }}
-      >
-        <FormattedMessage id="generate_jitsy" defaultMessage="Generate Jitsy URL" />
-      </Button>
+      {meetingType === MeetingType.Custom && (
+        <ProFormText
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+          name="meeting_link"
+          label={<FormattedMessage id="ConsultationsAccess.meetingLink" />}
+        />
+      )}
     </DrawerForm>
   );
 };

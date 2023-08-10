@@ -1,3 +1,4 @@
+import PACKAGES from '@/consts/packages';
 import { useState, useCallback } from 'react';
 import { Button, Tooltip, Space, Divider } from 'antd';
 import {
@@ -53,15 +54,13 @@ export const TopicTypesSelector: React.FC<{
 
       switch (type) {
         case TopicType.GiftQuiz:
-          return !(initialState?.packages && initialState?.packages['escolalms/topic-type-gift']);
+          return !(initialState?.packages && initialState?.packages?.[PACKAGES.TopicTypeGift]);
         case TopicType.SCORM:
-          return !(initialState?.packages && initialState?.packages['escolalms/scorm']);
+          return !(initialState?.packages && initialState?.packages?.[PACKAGES.Scorm]);
         case TopicType.Project:
-          return !(
-            initialState?.packages && initialState?.packages['escolalms/topic-type-project']
-          );
+          return !(initialState?.packages && initialState?.packages?.[PACKAGES.TopicTypeProject]);
         default:
-          return !(initialState?.packages && initialState?.packages['escolalms/topic-types']);
+          return !(initialState?.packages && initialState?.packages?.[PACKAGES.TopicTypes]);
       }
     },
     [initialState],
