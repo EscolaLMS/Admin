@@ -23,22 +23,21 @@ export const JsonEditor: React.FC<{
       <Button type="primary" onClick={() => setIsModalVisible(true)} size="small">
         <FormattedMessage id="json_editor" />
       </Button>
-      <Modal title="JSON" visible={isModalVisible} onOk={hideModal} onCancel={hideModal}>
+      <Modal
+        title="JSON"
+        open={isModalVisible}
+        onOk={hideModal}
+        onCancel={hideModal}
+        destroyOnClose
+      >
         <Radio.Group onChange={(e) => setMode(e.target.value)} value={mode}>
-          <Radio value={'tree'}>tree</Radio>
-          <Radio value={'view'}>view</Radio>
-          <Radio value={'form'}>form</Radio>
-          <Radio value={'code'}>code</Radio>
-          <Radio value={'text'}>text</Radio>
+          <Radio value="tree">tree</Radio>
+          <Radio value="view">view</Radio>
+          <Radio value="form">form</Radio>
+          <Radio value="code">code</Radio>
+          <Radio value="text">text</Radio>
         </Radio.Group>
-        <Editor
-          key={mode}
-          mode={mode}
-          value={value}
-          onChange={(newValue: string) => {
-            return onChange && onChange(newValue);
-          }}
-        />
+        <Editor key={mode} mode={mode} value={value} onChange={onChange} />
       </Modal>
     </div>
   );

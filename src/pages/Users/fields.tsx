@@ -12,20 +12,12 @@ const UserFields: React.FC = () => {
         tabs={{
           type: 'card',
           activeKey: 'fields',
-          onChange: (key) => {
-            switch (key) {
-              case 'list':
-                return history.push(`/users`);
-              default:
-                return history.push(`/users/${key}`);
-                break;
-            }
-          },
+          onChange: (key) => history.push(`/users/${key}`),
         }}
       >
         <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />} />
 
-        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />}>
+        <ProCard.TabPane key="fields" tab={<FormattedMessage id="ModelFields" />}>
           <ModelFields class_type="EscolaLms\Auth\Models\User" />
         </ProCard.TabPane>
       </ProCard>

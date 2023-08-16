@@ -1,19 +1,30 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { IntlShape } from 'react-intl';
+import { useParams, history, useModel, useIntl, FormattedMessage } from 'umi';
 import { Alert, Spin } from 'antd';
-
 import ProCard from '@ant-design/pro-card';
-import { useParams, history } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useIntl, FormattedMessage } from 'umi';
 
 import { configs as fetchConfigs } from '@/services/escola-lms/settings';
-
 import UserSettings from './user';
 import PackageForm from './package';
 import GlobalSettings from './global';
-import { useModel } from '@@/plugin-model/useModel';
 
-const sanitizePackageName = (name: string) => name.replaceAll('escolalms', '').split('_').join('');
+function transformPackageName(rawPackageName: string): string {
+  const packageName = rawPackageName.replaceAll('escolalms', '');
+  const words = packageName.split('_');
+  const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+
+  return capitalizedWords.join(' ');
+}
+
+function getTabNameForBreadcrumbs(tab: string, intl: IntlShape): string {
+  const NON_PACKAGE_TABS = ['global_settings', 'user_settings'];
+
+  return NON_PACKAGE_TABS.includes(tab)
+    ? intl.formatMessage({ id: String(tab) })
+    : intl.formatMessage({ id: 'Settings.package' }, { package: transformPackageName(tab) });
+}
 
 export default () => {
   const params = useParams<{ course?: string; tab?: string }>();
@@ -59,7 +70,7 @@ export default () => {
 
             {
               path: String(tab),
-              breadcrumbName: String(tab),
+              breadcrumbName: getTabNameForBreadcrumbs(tab, intl),
             },
           ],
         },
@@ -95,7 +106,7 @@ export default () => {
           <UserSettings />
         </ProCard.TabPane>
 
-        <ProCard.TabPane key={'global_settings'} tab={<FormattedMessage id="global_settings" />}>
+        <ProCard.TabPane key="global_settings" tab={<FormattedMessage id="global_settings" />}>
           <GlobalSettings />
         </ProCard.TabPane>
 
@@ -104,7 +115,10 @@ export default () => {
             key={pkg}
             tab={
               <span>
-                <FormattedMessage id="package" /> {sanitizePackageName(pkg)}
+                <FormattedMessage
+                  id="Settings.package"
+                  values={{ package: transformPackageName(pkg) }}
+                />
               </span>
             }
           >

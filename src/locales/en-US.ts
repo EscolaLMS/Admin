@@ -815,4 +815,9 @@ export default {
   'ConsultationsAccess.meetingType.jitsi': 'Jitsi',
   'ConsultationsAccess.meetingType.pencil-spaces': 'Pencil spaces',
   'ConsultationsAccess.meetingLink': 'Meeting link',
+  'Settings.package': 'Package {package}',
+  consultation_term_date: 'Consultation term',
+  meeting_link: 'Meeting link',
+  logs: 'Logs',
+  user_info: 'User info',
 };

@@ -71,16 +71,12 @@ export const ModelFields: React.FC<{
         fields={fields}
         onResponse={() => {
           setModalVisible(false);
-          if (actionRef.current) {
-            actionRef.current.reload();
-          }
+          actionRef.current?.reload();
         }}
         class_type={class_type}
         name={modalVisible}
         visible={typeof modalVisible === 'string'}
-        onVisibleChange={(value) => {
-          return value === false && setModalVisible(false);
-        }}
+        onVisibleChange={(value) => value === false && setModalVisible(false)}
       />
 
       <ProTable<EscolaLms.ModelFields.Models.Metadata>

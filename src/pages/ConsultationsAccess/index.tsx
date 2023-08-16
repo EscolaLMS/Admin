@@ -199,8 +199,7 @@ const TableList: React.FC = () => {
 
       <ProTable<API.ConsultationAccessEnquiryListItem, API.ConsultationAccessEnquiryListParams>
         headerTitle={intl.formatMessage({
-          id: 'consultationAccessEnquiries',
-          defaultMessage: 'consultation Access Enquiries',
+          id: 'menu.Other activities.Consultation Requests',
         })}
         search={{
           layout: 'vertical',
