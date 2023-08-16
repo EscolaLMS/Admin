@@ -39,6 +39,7 @@ export interface CompetencyChallengeCategoryTreeProps {
   onChange?: (value: string | string[] | number | number[]) => void;
   type?: 'scale' | 'question';
   disabledNodes?: number[]; // categories id arr
+  multiple?: boolean;
 }
 
 export const CompetencyChallengeCategoryTree: React.FC<CompetencyChallengeCategoryTreeProps> = ({
@@ -46,6 +47,7 @@ export const CompetencyChallengeCategoryTree: React.FC<CompetencyChallengeCatego
   onChange,
   type = 'scale',
   disabledNodes = [],
+  multiple = false,
 }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
   const { categoryDepths, competencyChallenge } = useCompetencyChallengeContext();
@@ -75,6 +77,7 @@ export const CompetencyChallengeCategoryTree: React.FC<CompetencyChallengeCatego
     <TreeSelect<string | string[] | number | number[]>
       loading={categories.length === 0}
       showSearch
+      multiple={multiple}
       value={value}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
       placeholder={<FormattedMessage id="select" defaultMessage="Please select" />}
