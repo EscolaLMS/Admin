@@ -1,16 +1,18 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
 import { parse } from '@escolalms/gift-pegjs';
-import { Button, Drawer, Typography, Switch } from 'antd';
-import { MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Drawer, Typography, Switch, message } from 'antd';
+import { ExportOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
+import SecureUpload from '@/components/SecureUpload';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import type { CompetencyChallengeCategoryTreeProps } from '@/pages/CompetencyChallenges/components/CompetencyChallengeCategoryTree';
 import { createQuestion, deleteQuestion, updateQuestion } from '@/services/escola-lms/gift_quiz';
+import { ExportQuizQuestionsModal } from './ExportQuizQuestionsModal';
 import { GiftQuizQuestionEditor } from './editor';
 import type { QuizQuestionSubmitData } from './editor/types';
 import './index.css';
@@ -84,6 +86,7 @@ interface Props {
   tableHeader?: React.ReactNode;
   tableLoading?: boolean;
   questionsCategory?: boolean | Omit<CompetencyChallengeCategoryTreeProps, 'value' | 'onChange'>;
+  customToolbarElements?: React.ReactNode[];
 }
 
 export const Table: React.FC<Props> = ({
@@ -95,15 +98,18 @@ export const Table: React.FC<Props> = ({
   tableLoading,
   tableHeader,
   questionsCategory,
+  customToolbarElements = [],
 }) => {
   const [loading, setLoading] = useState(false);
   const [newQuestion, setNewQuestion] = useState(false);
   const [editQuestion, setEditQuestion] = useState<API.QuizQuestion>();
+  const [exportQuestions, setExportQuestions] = useState(false);
 
   const [debug, setDebug] = useState(false);
 
   const [dataSource, setDataSource] = useState(questions);
 
+  const intl = useIntl();
   const actionRef = useRef<ActionType>();
 
   useEffect(() => {
@@ -204,6 +210,12 @@ export const Table: React.FC<Props> = ({
           values={editQuestion}
         />
       </Drawer>
+      <ExportQuizQuestionsModal
+        quiz_id={quizId}
+        quizQuestions={dataSource}
+        visible={exportQuestions}
+        onVisibleChange={setExportQuestions}
+      />
       <ProTable
         search={false}
         cardProps={{ bodyStyle: { padding: 0 } }}
@@ -220,6 +232,42 @@ export const Table: React.FC<Props> = ({
             {' '}
             <FormattedMessage id="addNewQuestion" defaultMessage="Add new question" />
           </Button>,
+          <SecureUpload
+            key="import"
+            title={intl.formatMessage({
+              id: 'importQuestions',
+            })}
+            hideLabel
+            showUploadList={false}
+            url="/api/admin/gift-questions/import"
+            name="file"
+            accept=".xlsx"
+            data={{
+              topic_gift_quiz_id: quizId,
+            }}
+            onChange={(info) => {
+              if (info.file.status === 'done') {
+                if (info.file.response && info.file.response.success) {
+                  message.success(info.file.response.message);
+                  onAdded?.();
+                }
+              }
+              if (info.file.response && info.file.status === 'error') {
+                message.error(info.file.response.message);
+                console.error(info.file.response);
+              }
+            }}
+          />,
+          <Button
+            key="export"
+            icon={<ExportOutlined />}
+            type="primary"
+            onClick={() => setExportQuestions(true)}
+          >
+            {' '}
+            <FormattedMessage id="exportQuestions" />
+          </Button>,
+          ...customToolbarElements,
         ]}
         columns={[
           ...staticColumns,

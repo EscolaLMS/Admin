@@ -807,4 +807,8 @@ export default {
   'ConsultationsAccess.meetingType.jitsi': 'Jitsi',
   'ConsultationsAccess.meetingType.pencil-spaces': 'Pencil spaces',
   'ConsultationsAccess.meetingLink': 'Link do spotkania',
+  importQuestions: 'Importuj pytania',
+  exportQuestions: 'Eksportuj pytania',
+  exportQuestionsByCategory: 'Eksportuj pytania według kategorii',
+  'ExportQuestions.questionTitle': `Pytanie o id: {id}`,
 };
