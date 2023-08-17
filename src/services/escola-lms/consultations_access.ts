@@ -9,11 +9,7 @@ export async function consultationAccess(
 ) {
   return request<API.ConsultationAccessEnquiryList>(`/api/admin/consultation-access-enquiries`, {
     method: 'GET',
-    params: {
-      ...params,
-      per_page: params.pageSize,
-      page: params.current,
-    },
+    params,
     ...(options || {}),
   });
 }
