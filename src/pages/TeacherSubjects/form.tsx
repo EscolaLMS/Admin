@@ -62,13 +62,13 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
             {
               path: 'teacher',
               breadcrumbName: intl.formatMessage({
-                id: 'Teacher',
+                id: 'menu.Teacher',
               }),
             },
             {
               path: 'subjects',
               breadcrumbName: intl.formatMessage({
-                id: 'Subjects',
+                id: 'menu.Teacher.Subjects',
               }),
             },
             {
