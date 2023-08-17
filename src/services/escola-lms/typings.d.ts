@@ -1857,6 +1857,20 @@ declare namespace API {
     category_id: number;
     competency_challenge_id: number;
   };
+
+  type ExportGiftQuizQuestionsParamsByIds = {
+    quiz_id: number;
+    ids: number[]; //question ids
+  };
+
+  type ExportGiftQuizQuestionsParamsByCategoryIds = {
+    quiz_id: number;
+    category_ids: number[];
+  };
+
+  export type ExportGiftQuizQuestionsParams =
+    | ExportGiftQuizQuestionsParamsByIds
+    | ExportGiftQuizQuestionsParamsByCategoryIds;
 }
 
 declare module 'jsoneditor-react' {

@@ -815,4 +815,8 @@ export default {
   meeting_link: 'Link do spotkania',
   logs: 'Logi',
   user_info: 'Informacje o użytkowniku',
+  importQuestions: 'Importuj pytania',
+  exportQuestions: 'Eksportuj pytania',
+  exportQuestionsByCategory: 'Eksportuj pytania według kategorii',
+  'ExportQuestions.questionTitle': `Pytanie o id: {id}`,
 };

@@ -72,3 +72,20 @@ export async function updateGiftQuiz(
     ...(options || {}),
   });
 }
+
+/** GET /api/admin/gift-questions/export */
+export async function exportQuizQuestions(
+  { quiz_id, ...params }: API.ExportGiftQuizQuestionsParams,
+  options?: RequestOptionsInit,
+) {
+  return request<Blob | API.DefaultResponseError>(`/api/admin/gift-questions/export`, {
+    method: 'GET',
+    responseType: 'blob',
+    params: {
+      topic_gift_quiz_id: quiz_id,
+      'category_ids[]': 'category_ids' in params ? params.category_ids : undefined,
+      'ids[]': 'ids' in params ? params.ids : undefined,
+    },
+    ...(options || {}),
+  });
+}

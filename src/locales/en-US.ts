@@ -820,4 +820,8 @@ export default {
   meeting_link: 'Meeting link',
   logs: 'Logs',
   user_info: 'User info',
+  importQuestions: 'Import questions',
+  exportQuestions: 'Export questions',
+  exportQuestionsByCategory: 'Eksportuj pytania według kategorii',
+  'ExportQuestions.questionTitle': `Question with id: {id}`,
 };

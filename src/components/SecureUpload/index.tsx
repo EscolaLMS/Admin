@@ -25,6 +25,7 @@ export type SecureUploadType<T = API.File> = {
   clearListAfterUpload?: boolean;
   hideLabel?: boolean;
   disabled?: boolean;
+  showUploadList?: boolean;
 };
 
 function SecureUpload<Type = API.File>({
@@ -42,6 +43,7 @@ function SecureUpload<Type = API.File>({
   clearListAfterUpload,
   hideLabel,
   disabled,
+  showUploadList,
 }: PropsWithChildren<SecureUploadType<Type>>) {
   const [infoState, setInfoState] = useState<UploadChangeParam<UploadFile<any>>>();
   const intl = useIntl();
@@ -73,6 +75,7 @@ function SecureUpload<Type = API.File>({
           data,
           accept,
           name,
+          showUploadList,
           headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
           onChange: (info) => {
             setInfoState(info);
