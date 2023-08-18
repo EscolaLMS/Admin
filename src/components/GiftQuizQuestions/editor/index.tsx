@@ -37,7 +37,7 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
   const intl = useIntl();
 
   const [form] = ProForm.useForm<GiftQuizFormData>();
-  const type: API.QuestionType | undefined = ProForm.useWatch('type', form);
+  const type: QuestionType | undefined = ProForm.useWatch('type', form);
 
   const initialValues = useMemo(() => parseToFormData(values), [values]);
 
