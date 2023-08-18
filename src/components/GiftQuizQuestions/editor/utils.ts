@@ -233,23 +233,28 @@ export function parseToFormData(
 ): GiftQuizFormData | undefined {
   if (!questionBase) return;
 
-  const [parsedValue] = parse(questionBase.value);
+  try {
+    const [parsedValue] = parse(questionBase.value);
 
-  switch (parsedValue.type) {
-    case 'MC':
-      return parseMultipleChoiceToFormData(parsedValue, questionBase);
-    case 'TF':
-      return parseTrueFalseToFormData(parsedValue, questionBase);
-    case 'Short':
-      return parseShortAnswersToFormData(parsedValue, questionBase);
-    case 'Matching':
-      return parseMatchingToFormData(parsedValue, questionBase);
-    case 'Numerical':
-      return parseNumericalToFormData(parsedValue, questionBase);
-    case 'Description':
-    case 'Essay':
-      return parseDescriptionEssayToFormData(parsedValue, questionBase);
-    default:
-      throw new Error(`Unsupported type: ${parsedValue?.type}`);
+    switch (parsedValue.type) {
+      case 'MC':
+        return parseMultipleChoiceToFormData(parsedValue, questionBase);
+      case 'TF':
+        return parseTrueFalseToFormData(parsedValue, questionBase);
+      case 'Short':
+        return parseShortAnswersToFormData(parsedValue, questionBase);
+      case 'Matching':
+        return parseMatchingToFormData(parsedValue, questionBase);
+      case 'Numerical':
+        return parseNumericalToFormData(parsedValue, questionBase);
+      case 'Description':
+      case 'Essay':
+        return parseDescriptionEssayToFormData(parsedValue, questionBase);
+      default:
+        throw new Error(`Unsupported type: ${parsedValue?.type}`);
+    }
+  } catch (e) {
+    console.error(e);
+    return;
   }
 }

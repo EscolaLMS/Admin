@@ -49,17 +49,25 @@ export const ExportQuizQuestionsModal: React.FC<Props> = ({
   const questionsOptions = useMemo(
     () =>
       quizQuestions.map(({ id, value }) => {
-        const giftQuestionArr = parse(value);
+        try {
+          const giftQuestionArr = parse(value);
 
-        if (!giftQuestionArr?.[0] || !('stem' in giftQuestionArr[0])) {
+          if (!giftQuestionArr?.[0] || !('stem' in giftQuestionArr[0])) {
+            return {
+              value: id,
+              label: intl.formatMessage({ id: 'ExportQuestions.questionTitle' }, { id }),
+            };
+          }
+
+          const label = giftQuestionArr[0].stem.text;
+          return { value: id, label };
+        } catch (e) {
+          console.error(e);
           return {
             value: id,
             label: intl.formatMessage({ id: 'ExportQuestions.questionTitle' }, { id }),
           };
         }
-
-        const label = giftQuestionArr[0].stem.text;
-        return { value: id, label };
       }),
     [quizQuestions],
   );

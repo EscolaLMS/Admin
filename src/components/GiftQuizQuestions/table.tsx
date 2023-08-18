@@ -48,12 +48,17 @@ const staticColumns: ProColumns<API.QuizQuestion>[] = [
     hideInSearch: true,
     hideInSetting: true,
     render: (_, row) => {
-      const obj = parse(row.value);
+      try {
+        const obj = parse(row.value);
 
-      if (obj?.[0] && 'stem' in obj[0]) {
-        return obj[0].stem.text;
+        if (obj?.[0] && 'stem' in obj[0]) {
+          return obj[0].stem.text;
+        }
+        return 'question';
+      } catch (e) {
+        console.error(e);
+        return 'question';
       }
-      return 'question';
     },
   },
 ];
