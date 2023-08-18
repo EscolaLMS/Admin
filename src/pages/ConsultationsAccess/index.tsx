@@ -27,6 +27,7 @@ const TableList: React.FC = () => {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
         dataIndex: 'id',
         hideInSearch: true,
+        defaultSortOrder: 'descend',
         sorter: true,
         width: '80px',
       },
@@ -88,7 +89,7 @@ const TableList: React.FC = () => {
         render: (_, record) =>
           record.consultation?.id && (
             <TypeButtonDrawer
-              key={'consultation_id'}
+              key="consultation_id"
               type="EscolaLms\Consultations\Models\Consultation"
               type_id={record.consultation?.id}
             >
@@ -208,8 +209,8 @@ const TableList: React.FC = () => {
         rowKey="id"
         request={async (
           {
-            pageSize,
-            current,
+            pageSize: per_page,
+            current: page,
             consultation_id,
             status,
             user_id,
@@ -222,8 +223,8 @@ const TableList: React.FC = () => {
           const sortArr = sort && Object.entries(sort)[0];
 
           const response = await consultationAccess({
-            pageSize,
-            current,
+            per_page,
+            page,
             consultation_id,
             status,
             user_id,
