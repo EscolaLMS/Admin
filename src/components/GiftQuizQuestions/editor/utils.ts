@@ -41,9 +41,13 @@ const escapeQuestionSpecialChars = (inputString: string): string => {
 const parseMultipleChoice = ({ question, answers }: MultipleChoiceFormData): string => {
   if (answers.length === 0) return `${question}{}`;
 
+  const escapedAnswers = answers.map(({ isCorrect, value }) => ({
+    isCorrect,
+    value: escapeQuestionSpecialChars(value),
+  }));
   let giftString = `${question}{`;
 
-  for (const { isCorrect, value } of answers) {
+  for (const { isCorrect, value } of escapedAnswers) {
     const sign = isCorrect ? '=' : '~';
 
     giftString += `${sign}${value}`;
@@ -62,7 +66,12 @@ const parseMultipleChoiceWithMultipleRightAnswers = ({
 
   let giftString = `${question}{`;
 
-  for (const { value, weight } of answers) {
+  const escapedAnswers = answers.map(({ weight, value }) => ({
+    weight,
+    value: escapeQuestionSpecialChars(value),
+  }));
+
+  for (const { value, weight } of escapedAnswers) {
     giftString += `~%${weight}%${value}`;
   }
 
@@ -79,7 +88,11 @@ const parseShortAnswers = ({ question, answers }: ShortAnswersFormData): string 
 
   let giftString = `${question}{`;
 
-  for (const { value } of answers) {
+  const escapedAnswers = answers.map(({ value }) => ({
+    value: escapeQuestionSpecialChars(value),
+  }));
+
+  for (const { value } of escapedAnswers) {
     giftString += `=${value}`;
   }
 
@@ -93,7 +106,12 @@ const parseMatching = ({ question, answers }: MatchingFormData): string => {
 
   let giftString = `${question}{`;
 
-  for (const { firstOfPair, secondOfPair } of answers) {
+  const escapedAnswers = answers.map(({ firstOfPair, secondOfPair }) => ({
+    firstOfPair: escapeQuestionSpecialChars(firstOfPair),
+    secondOfPair: escapeQuestionSpecialChars(secondOfPair),
+  }));
+
+  for (const { firstOfPair, secondOfPair } of escapedAnswers) {
     giftString += `=${firstOfPair}->${secondOfPair}`;
   }
 
@@ -233,23 +251,28 @@ export function parseToFormData(
 ): GiftQuizFormData | undefined {
   if (!questionBase) return;
 
-  const [parsedValue] = parse(questionBase.value);
+  try {
+    const [parsedValue] = parse(questionBase.value);
 
-  switch (parsedValue.type) {
-    case 'MC':
-      return parseMultipleChoiceToFormData(parsedValue, questionBase);
-    case 'TF':
-      return parseTrueFalseToFormData(parsedValue, questionBase);
-    case 'Short':
-      return parseShortAnswersToFormData(parsedValue, questionBase);
-    case 'Matching':
-      return parseMatchingToFormData(parsedValue, questionBase);
-    case 'Numerical':
-      return parseNumericalToFormData(parsedValue, questionBase);
-    case 'Description':
-    case 'Essay':
-      return parseDescriptionEssayToFormData(parsedValue, questionBase);
-    default:
-      throw new Error(`Unsupported type: ${parsedValue?.type}`);
+    switch (parsedValue.type) {
+      case 'MC':
+        return parseMultipleChoiceToFormData(parsedValue, questionBase);
+      case 'TF':
+        return parseTrueFalseToFormData(parsedValue, questionBase);
+      case 'Short':
+        return parseShortAnswersToFormData(parsedValue, questionBase);
+      case 'Matching':
+        return parseMatchingToFormData(parsedValue, questionBase);
+      case 'Numerical':
+        return parseNumericalToFormData(parsedValue, questionBase);
+      case 'Description':
+      case 'Essay':
+        return parseDescriptionEssayToFormData(parsedValue, questionBase);
+      default:
+        throw new Error(`Unsupported type: ${parsedValue?.type}`);
+    }
+  } catch (e) {
+    console.error(e);
+    return;
   }
 }
