@@ -180,6 +180,12 @@ const Translations: React.FC = () => {
           return value === false && setModalVisible(false);
         }}
         onFinish={async (value) => {
+          value.text = Object.entries(value.text).reduce((acc, curr) => {
+            if (curr[1] !== '') {
+              return { ...acc, [curr[0]]: curr[1] };
+            }
+            return acc;
+          }, {});
           if (modalVisible === -1) {
             const success = await createTranslation(value);
             if (success) {
