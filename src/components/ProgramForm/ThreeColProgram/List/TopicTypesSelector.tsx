@@ -20,7 +20,7 @@ import {
 
 import './types.css';
 import { TopicType } from '@/services/escola-lms/enums';
-import { FormattedMessage, useModel } from 'umi';
+import { FormattedMessage, useModel, useIntl } from 'umi';
 
 import { topicTypeToSettingName } from '@/pages/Settings/global';
 
@@ -28,10 +28,12 @@ export const TopicTypesSelector: React.FC<{
   onSelected: (type: TopicType) => void;
   onNewLesson: () => void;
   positionsToHide?: (TopicType | 'lesson')[];
-}> = ({ onSelected, onNewLesson, positionsToHide }) => {
+  depth?: number;
+}> = ({ onSelected, onNewLesson, positionsToHide, depth = 0 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const { initialState } = useModel('@@initialState');
+  const intl = useIntl();
 
   const setSelected = useCallback((type: TopicType) => {
     setOpen(false);
@@ -86,7 +88,16 @@ export const TopicTypesSelector: React.FC<{
       >
         {!positionsToHide?.includes('lesson') && (
           <>
-            <Tooltip placement="right" title={<FormattedMessage id="Lesson" />}>
+            <Tooltip
+              placement="right"
+              title={
+                intl.messages[`Lesson_level-${depth}`] ? (
+                  <FormattedMessage id={`Lesson_level-${depth}`} />
+                ) : (
+                  <FormattedMessage id="Lesson" defaultMessage="Lesson" />
+                )
+              }
+            >
               <Button
                 block
                 onClick={() => {

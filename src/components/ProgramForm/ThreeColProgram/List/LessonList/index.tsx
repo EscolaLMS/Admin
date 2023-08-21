@@ -179,6 +179,7 @@ export const LessonList: React.FC = () => {
               onSelected={(topic_type) => onTopicCreate(id, topic_type)}
               // depth is 0 index based and settings are 1 index based
               positionsToHide={getHiddenNewTopicOptions(depth + 1)}
+              depth={depth}
             />
           </div>
         );
