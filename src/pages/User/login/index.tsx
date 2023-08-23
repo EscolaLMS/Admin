@@ -1,16 +1,16 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Alert, message } from 'antd';
 import React, { useState } from 'react';
+import { useIntl, FormattedMessage, useModel, addLocale, localeInfo } from 'umi';
+import { Alert, message } from 'antd';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage, useModel } from 'umi';
-import { forgot, login } from '@/services/escola-lms/auth';
-import { settings } from '@/services/escola-lms/settings';
-import { packages } from '@/services/escola-lms/packages';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
+import { forgot, login } from '@/services/escola-lms/auth';
+import { packages } from '@/services/escola-lms/packages';
+import { settings } from '@/services/escola-lms/settings';
+import { refreshTokenCallback } from '@/services/token_refresh';
+import { translations } from '@/services/escola-lms/translations';
 import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
-
-import { refreshTokenCallback } from '@/services/token_refresh';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -36,6 +36,26 @@ const Login: React.FC = () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     const config = await settings({ per_page: -1 });
     const packs = await packages();
+    const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
+
+    if (transl.success) {
+      const messages = {};
+      transl.data.forEach((t) => {
+        Object.keys(t.text).forEach((key) => {
+          if (!messages[key]) {
+            messages[key] = {};
+          }
+          messages[key][t.key] = t.text[key];
+        });
+      });
+
+      for (const lang in messages) {
+        addLocale(lang, messages[lang], {
+          antd: localeInfo[lang]?.antd || '',
+          momentLocale: localeInfo[lang]?.momentLocale || lang,
+        });
+      }
+    }
 
     if (userInfo) {
       setInitialState({
@@ -43,6 +63,7 @@ const Login: React.FC = () => {
         currentUser: userInfo,
         config: config.success ? config.data : [],
         packages: packs.success ? packs.data : {},
+        translations: transl.success ? transl.data : [],
       });
     }
   };
