@@ -824,4 +824,13 @@ export default {
   exportQuestions: 'Export questions',
   exportQuestionsByCategory: 'Eksportuj pytania według kategorii',
   'ExportQuestions.questionTitle': `Question with id: {id}`,
+  RichText: 'RichText',
+  OEmbed: 'OEmbed',
+  Audio: 'Audio',
+  Video: 'Video',
+  Image: 'Image',
+  SCORM: 'ScormSco',
+  Project: 'Project',
+  GiftQuiz: 'GiftQuiz',
+  Unknown: 'Unknown',
 };
