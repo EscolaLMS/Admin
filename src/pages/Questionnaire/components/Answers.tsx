@@ -62,10 +62,10 @@ const QuestionVisibilitySwitch: React.FC<{
   );
 };
 
-const QuestionAnswers: React.FC<{ questionnaireId: number; questions?: API.Question[] }> = ({
-  questionnaireId,
-  questions,
-}) => {
+const QuestionAnswers: React.FC<{
+  questionnaireId: number;
+  questions?: API.QuestionnaireQuestion[];
+}> = ({ questionnaireId, questions }) => {
   const questionValueType = useMemo(
     () =>
       questions &&

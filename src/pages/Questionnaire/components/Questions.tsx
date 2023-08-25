@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { message, Button, Tooltip, Popconfirm } from 'antd';
 import { addQuestion, deleteQuestion, editQuestion } from '@/services/escola-lms/questionnaire';
@@ -9,14 +9,14 @@ import QuestionModalForm from './QuestionModalForm';
 import { sortArrayByKey } from '@/utils/utils';
 
 const QuestionForm: React.FC<{
-  questionnaireId: number | undefined;
-  questions?: API.Question[];
+  questionnaireId: number;
+  questions?: API.QuestionnaireQuestion[];
   fetchData: () => void;
 }> = ({ questionnaireId, questions, fetchData }) => {
   const intl = useIntl();
   const [modalVisible, setModalVisible] = useState<number | false>(false);
 
-  const TableColumns: ProColumns<API.Questionnaire>[] = useMemo(
+  const TableColumns: ProColumns<API.QuestionnaireQuestion>[] = useMemo(
     () => [
       {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -38,7 +38,6 @@ const QuestionForm: React.FC<{
         sorter: true,
         renderText: (_, type) =>
           intl.formatMessage({
-            // @ts-ignore TODO: Remove this ts-ignore when types ready
             id: `QuestionType.${type.type}`,
           }),
       },
@@ -60,7 +59,7 @@ const QuestionForm: React.FC<{
 
   const actionRef = useRef<ActionType>();
 
-  const handleUpdate = async (fields: Partial<API.Question>, id?: number) => {
+  const handleUpdate = async (fields: Partial<API.QuestionnaireQuestion>, id?: number) => {
     const hide = message.loading(
       intl.formatMessage({
         id: 'loading',
@@ -106,7 +105,6 @@ const QuestionForm: React.FC<{
         await deleteQuestion(questionId);
         hide();
         fetchData();
-        actionRef.current?.reload();
         return true;
       } catch (error) {
         hide();
@@ -116,6 +114,10 @@ const QuestionForm: React.FC<{
     },
     [actionRef, intl],
   );
+
+  useEffect(() => {
+    actionRef.current?.reload();
+  }, [questions, fetchData]);
 
   return (
     <>
@@ -140,7 +142,6 @@ const QuestionForm: React.FC<{
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
           </Button>,
         ]}
-        // dataSource={questions && questions}
         columns={[
           ...TableColumns,
           {
@@ -185,7 +186,7 @@ const QuestionForm: React.FC<{
               );
             }
             if (sortArr) {
-              newArray = sortArrayByKey<API.Question>(
+              newArray = sortArrayByKey(
                 newArray,
                 sortArr[0],
                 sortArr[1] === 'ascend' ? false : true,
@@ -210,9 +211,6 @@ const QuestionForm: React.FC<{
           const success = await handleUpdate(value, Number(modalVisible));
           if (success) {
             setModalVisible(false);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
           }
         }}
       />

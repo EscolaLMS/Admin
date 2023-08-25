@@ -23,7 +23,7 @@ export type QuestionnaireRaportState =
 
 const QuestionnaireRaports: React.FC<{
   questionnaireId: number;
-  models: API.QuestionnaireModel[];
+  models: API.QuestionnaireQuestionModel[];
 }> = ({ questionnaireId, models }) => {
   const [selectedRaport, setSelectedRaport] = useState('');
   const [state, setState] = useState<QuestionnaireRaportState>({ mode: 'init' });
