@@ -81,7 +81,7 @@ const Questionnaire: React.FC = () => {
             ...createTableOrderObject(sort, 'created_at'),
           });
           if (!response.success) {
-            return [];
+            return { success: false, total: 0, data: [] };
           }
 
           return {

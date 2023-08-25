@@ -937,8 +937,15 @@ declare namespace API {
   type QuestionAnswer = EscolaLms.Questionnaire.Models.QuestionAnswer & {
     visible_on_front: boolean;
   };
-
   type QuestionnaireModel = {
+    id: number;
+    title: string;
+    model_class: string;
+    created_at: string | null;
+    updated_at: string | null;
+  };
+
+  type QuestionnaireQuestionModel = {
     id: number;
     model_id: number;
     model_title: string;
@@ -951,7 +958,7 @@ declare namespace API {
     EscolaLms.Questionnaire.Models.Questionnaire,
     'active' | 'id' | 'title'
   > & {
-    models: QuestionnaireModel[];
+    models: QuestionnaireQuestionModel[];
     questions: QuestionnaireQuestion[];
   };
 

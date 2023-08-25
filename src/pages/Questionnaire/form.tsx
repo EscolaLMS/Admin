@@ -44,8 +44,8 @@ export const QuestionareForm = () => {
     }
   }, []);
 
-  const parseData = useCallback((array: API.QuestionnaireModel[], key: string) => {
-    return array.reduce((result: Record<number, number[]>, obj: API.QuestionnaireModel) => {
+  const parseData = useCallback((array: API.QuestionnaireQuestionModel[], key: string) => {
+    return array.reduce((result: Record<number, number[]>, obj: API.QuestionnaireQuestionModel) => {
       (result[obj[key]] = result[obj[key]] || []).push(obj.model_id);
       return result;
     }, {});
