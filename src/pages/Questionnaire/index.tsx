@@ -73,21 +73,22 @@ const Questionnaire: React.FC = () => {
             </Button>
           </Link>,
         ]}
-        request={({ pageSize, current, title }, sort) => {
-          return questionnaire({
+        request={async ({ pageSize, current, title }, sort) => {
+          const response = await questionnaire({
             per_page: pageSize,
             page: current,
             title: title || undefined,
             ...createTableOrderObject(sort, 'created_at'),
-          }).then((response) => {
-            if (response.success) {
-              return {
-                data: response.data,
-                success: true,
-              };
-            }
-            return [];
           });
+          if (!response.success) {
+            return [];
+          }
+
+          return {
+            data: response.data,
+            total: response.meta.total,
+            success: true,
+          };
         }}
         columns={[
           ...TableColumns,

@@ -938,17 +938,33 @@ declare namespace API {
     visible_on_front: boolean;
   };
 
-  type Questionnaire = EscolaLms.Questionnaire.Models.Questionnaire & {
-    models?: QuestionnaireModel[];
-  };
-
-  type QuestionnaireModel = EscolaLms.Questionnaire.Models.QuestionnaireModel & {
-    model_type_title?: string;
-    title?: string;
+  type QuestionnaireModel = {
+    id: number;
+    model_id: number;
     model_title: string;
+    model_type_class: string;
+    model_type_id: number;
+    model_type_title: string;
   };
 
-  type Question = EscolaLms.Questionnaire.Models.Question;
+  type Questionnaire = Pick<
+    EscolaLms.Questionnaire.Models.Questionnaire,
+    'active' | 'id' | 'title'
+  > & {
+    models: QuestionnaireModel[];
+    questions: QuestionnaireQuestion[];
+  };
+
+  type QuestionnaireQuestion = {
+    active: boolean;
+    description: string;
+    id: number;
+    position: number;
+    public_answers: boolean;
+    questionnaire_id: number;
+    title: string;
+    type: Enum.QuestionnaireQuestionType;
+  };
 
   type QuestionnaireReport = {
     avg_rate: string;

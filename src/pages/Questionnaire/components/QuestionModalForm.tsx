@@ -10,19 +10,14 @@ import {
 import { useIntl, FormattedMessage } from 'umi';
 import { getQuestion } from '@/services/escola-lms/questionnaire';
 import type { DefaultOptionType } from 'antd/lib/select';
-
-enum TypeOptions {
-  Rate = 'rate',
-  Text = 'text',
-  Review = 'review',
-}
+import { QuestionnaireQuestionType } from '@/services/escola-lms/enums';
 
 export const QuestionModalForm: React.FC<{
   id?: number | false;
   visible: boolean;
   onVisibleChange: (visible: boolean) => void;
-  onFinish: (formData: API.Question) => Promise<boolean | void>;
-  questionsList: EscolaLms.Questionnaire.Models.Question[];
+  onFinish: (formData: API.QuestionnaireQuestion) => Promise<boolean | void>;
+  questionsList: API.QuestionnaireQuestion[];
 }> = (props) => {
   const intl = useIntl();
 
@@ -40,14 +35,18 @@ export const QuestionModalForm: React.FC<{
     }
   }, [id, form]);
 
-  const questionTypeOptions: DefaultOptionType[] = Object.values(TypeOptions).map((name) => ({
-    name,
-    label: intl.formatMessage({
-      id: `QuestionType.${name}`,
+  const questionTypeOptions: DefaultOptionType[] = Object.values(QuestionnaireQuestionType).map(
+    (name) => ({
+      name,
+      label: intl.formatMessage({
+        id: `QuestionType.${name}`,
+      }),
+      value: name,
+      disabled:
+        name === QuestionnaireQuestionType.Review &&
+        questionsList.findIndex(({ type }) => type === QuestionnaireQuestionType.Review) !== -1,
     }),
-    value: name,
-    disabled: name === 'review' && questionsList.findIndex(({ type }) => type === 'review') !== -1,
-  }));
+  );
 
   return (
     <ModalForm
@@ -65,7 +64,7 @@ export const QuestionModalForm: React.FC<{
         name="type"
         options={questionTypeOptions}
         label={<FormattedMessage id="type" />}
-        initialValue={TypeOptions.Rate}
+        initialValue={QuestionnaireQuestionType.Rate}
       />
       <ProFormText
         width="lg"

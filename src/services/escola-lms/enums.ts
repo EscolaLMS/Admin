@@ -91,3 +91,9 @@ export enum FieldType {
   Text = 'text',
   Json = 'json',
 }
+
+export enum QuestionnaireQuestionType {
+  Rate = 'rate',
+  Text = 'text',
+  Review = 'review',
+}

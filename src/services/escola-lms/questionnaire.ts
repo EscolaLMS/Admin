@@ -81,7 +81,7 @@ export async function deleteQuestionnaire(id: number, options?: RequestOptionsIn
 
 /**  POST /api/admin/question */
 export async function addQuestion(body?: Record<string, any>, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<API.Question>>(`/api/admin/question`, {
+  return request<API.DefaultResponse<API.QuestionnaireQuestion>>(`/api/admin/question`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export async function editQuestion(
   body?: Record<string, any>,
   options?: RequestOptionsInit,
 ) {
-  return request<API.DefaultResponse<API.Question>>(`/api/admin/question/${id}`, {
+  return request<API.DefaultResponse<API.QuestionnaireQuestion>>(`/api/admin/question/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ export async function editQuestion(
 
 /**  GET /api/admin/question/:id */
 export async function getQuestion(id: number, options?: RequestOptionsInit) {
-  return request<API.DefaultResponse<API.Question>>(`/api/admin/question/${id}`, {
+  return request<API.DefaultResponse<API.QuestionnaireQuestion>>(`/api/admin/question/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
 
