@@ -157,6 +157,10 @@ const Login: React.FC = () => {
               size: 'large',
               prefix: <UserOutlined className={styles.prefixIcon} />,
             }}
+            placeholder={intl.formatMessage({
+              id: 'email_field',
+              defaultMessage: 'Please enter your email',
+            })}
             rules={[
               {
                 required: true,
@@ -173,6 +177,10 @@ const Login: React.FC = () => {
                 size: 'large',
                 prefix: <LockOutlined className={styles.prefixIcon} />,
               }}
+              placeholder={intl.formatMessage({
+                id: 'password_field',
+                defaultMessage: 'Please enter your password',
+              })}
               rules={[
                 {
                   required: true,
