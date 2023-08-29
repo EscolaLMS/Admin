@@ -400,7 +400,7 @@ declare namespace API {
   type CourseAttempt = Record<number, CourseAttemptObject>;
 
   type CourseAttempts = {
-    attempts: CourseAttempt;
+    attempts: CourseAttempt & CourseAttempt[];
     email: string;
     id: number;
   };
