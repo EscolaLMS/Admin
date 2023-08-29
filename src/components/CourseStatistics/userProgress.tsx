@@ -166,11 +166,15 @@ export const UserCourseFinish: React.FC<{
   const dataSource: { email: string; finished_at: Date | string }[] = useMemo(() => {
     return stats.map(({ id, email, finished_at }) => {
       const courseAttempts = attempts?.find((attempt) => attempt.id === id);
+      const attemptCount = Array.isArray(courseAttempts?.attempts)
+        ? courseAttempts?.attempts.length
+        : 0;
+
       return {
         id,
         email,
         finished_at,
-        attempt: courseAttempts?.attempts.length || 0,
+        attempt: attemptCount,
       };
     });
   }, [stats]);
