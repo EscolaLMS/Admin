@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'umi';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
 import { parse } from '@escolalms/gift-pegjs';
-import { Button, Drawer, Typography, Switch, message } from 'antd';
+import { Button, Drawer, message } from 'antd';
 import { ExportOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -109,8 +109,6 @@ export const Table: React.FC<Props> = ({
   const [newQuestion, setNewQuestion] = useState(false);
   const [editQuestion, setEditQuestion] = useState<API.QuizQuestion>();
   const [exportQuestions, setExportQuestions] = useState(false);
-
-  const [debug, setDebug] = useState(false);
 
   const [dataSource, setDataSource] = useState(questions);
 
@@ -325,9 +323,6 @@ export const Table: React.FC<Props> = ({
           },
         }}
       />
-      <Typography style={{ marginTop: '3em' }}>
-        Debug GIFT: <Switch checked={debug} onChange={(v) => setDebug(v)} />
-      </Typography>
     </>
   );
 };
