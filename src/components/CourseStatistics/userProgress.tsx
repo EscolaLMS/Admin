@@ -137,17 +137,24 @@ export const UserProgress: React.FC<{
   );
 };
 
-export const UserCourseFinish: React.FC<{ stats: API.FinishedCourseUserStats[] }> = ({ stats }) => {
+export const UserCourseFinish: React.FC<{
+  stats: API.FinishedCourseUserStats[];
+  attempts: API.CourseAttempts[];
+}> = ({ stats, attempts }) => {
   const columns: ColumnsType<{ email: string; finished_at: Date | string }> = useMemo(() => {
     return [
       {
-        title: 'user',
+        title: <FormattedMessage id="user" />,
         dataIndex: 'id',
         render: (id: number) => <TypeButtonDrawer type="App\Models\User" type_id={id} />,
       },
       {
-        title: 'email',
+        title: <FormattedMessage id="email" />,
         dataIndex: 'email',
+      },
+      {
+        title: <FormattedMessage id="attempt" defaultMessage="Attempt" />,
+        dataIndex: 'attempt',
       },
       {
         title: <FormattedMessage id="finished_at" defaultMessage="Finished at" />,
@@ -157,11 +164,19 @@ export const UserCourseFinish: React.FC<{ stats: API.FinishedCourseUserStats[] }
   }, []);
 
   const dataSource: { email: string; finished_at: Date | string }[] = useMemo(() => {
-    return stats.map(({ id, email, finished_at }) => ({
-      id,
-      email,
-      finished_at,
-    }));
+    return stats.map(({ id, email, finished_at }) => {
+      const courseAttempts = attempts?.find((attempt) => attempt.id === id);
+      const attemptCount = Array.isArray(courseAttempts?.attempts)
+        ? courseAttempts?.attempts.length
+        : 0;
+
+      return {
+        id,
+        email,
+        finished_at,
+        attempt: attemptCount,
+      };
+    });
   }, [stats]);
 
   return (

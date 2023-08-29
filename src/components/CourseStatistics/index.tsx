@@ -101,6 +101,10 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
               state.value.find((element: courseStats) => element.type.includes('FinishedCourse'))
                 ?.value as API.FinishedCourseUserStats[]
             }
+            attempts={
+              state.value.find((element: courseStats) => element.type.includes('AttendanceList'))
+                ?.value as API.CourseAttempts[]
+            }
           />
 
           <UserCourseAttempts
