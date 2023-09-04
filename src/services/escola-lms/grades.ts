@@ -114,3 +114,11 @@ export async function updateFinalGrade(
     },
   );
 }
+
+/** DELETE /api/admin/final-grades/:id */
+export async function removeFinalGrade(final_grade_id: number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<undefined>>(`/api/admin/final-grades/${final_grade_id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
