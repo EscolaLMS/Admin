@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage, history } from 'umi';
 import { format } from 'date-fns';
-import { Col, Divider, message, Row, Spin, Typography } from 'antd';
+import { Button, Col, Divider, message, Popconfirm, Row, Spin, Tooltip, Typography } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns } from '@ant-design/pro-table';
+import ProTable, { type ProColumns } from '@ant-design/pro-table';
 
 import { DAY_FORMAT } from '@/consts/dates';
 import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
@@ -81,7 +81,7 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   },
 ];
 
-const finalGradesColumns: ProColumns<FinalGradeTableItem>[] = [
+const staticFinalGradesColumns: ProColumns<FinalGradeTableItem>[] = [
   {
     title: <FormattedMessage id="name" />,
     dataIndex: 'name',
@@ -104,7 +104,7 @@ const TABLE_PAGE_SIZE = 6;
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { semester_subject_id } = useTeacherSubject();
   const { studentExams } = useStudentExams(user_id, semester_subject_id);
-  const { finalGrades } = useFinalGrades(group_id, user_id);
+  const { finalGrades, deleteFinalGrade } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
   const { tutorGradeScales } = useTutorGradeScales(
@@ -173,6 +173,39 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
       }
     },
     [finalGrades.data, semester_subject_id],
+  );
+
+  const finalGradesColumns: ProColumns<FinalGradeTableItem>[] = useMemo(
+    () => [
+      ...staticFinalGradesColumns,
+      {
+        title: <FormattedMessage id="options" defaultMessage="options" />,
+        dataIndex: 'option',
+        valueType: 'option',
+        render: (_n, record) =>
+          typeof record?.grade?.id === 'number'
+            ? [
+                <Popconfirm
+                  key="delete"
+                  title={
+                    <FormattedMessage
+                      id="deleteQuestion"
+                      defaultMessage="Are you sure to delete this record?"
+                    />
+                  }
+                  onConfirm={() => deleteFinalGrade(record.grade!.id)}
+                  okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+                  cancelText={<FormattedMessage id="no" defaultMessage="No" />}
+                >
+                  <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                    <Button type="primary" icon={<DeleteOutlined />} danger />
+                  </Tooltip>
+                </Popconfirm>,
+              ]
+            : [],
+      },
+    ],
+    [],
   );
 
   const finalGradesTableData: FinalGradeTableItem[] = useMemo(
