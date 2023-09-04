@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { Select } from 'antd';
 
-import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
+import { createFinalGrade, removeFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
 
 interface Props {
   term: API.GradeTerm;
@@ -32,8 +32,20 @@ export const FinalGradeSelect: React.FC<Props> = ({
   );
 
   const onChange = useCallback(
-    (grade_scale_id: number) => {
+    (grade_scale_id: number | undefined) => {
       if (!finalGrades?.id) return;
+
+      if (grade_scale_id === undefined) {
+        if (!createdGrade) return;
+        setLoading(true);
+        removeFinalGrade(createdGrade.id)
+          .then((res) => {
+            if (!res.success) return;
+            setCreatedGrade(undefined);
+          })
+          .finally(() => setLoading(false));
+        return;
+      }
 
       if (createdGrade) {
         setLoading(true);
@@ -64,6 +76,7 @@ export const FinalGradeSelect: React.FC<Props> = ({
 
   return (
     <Select
+      allowClear
       loading={loading}
       disabled={loading}
       placeholder={<FormattedMessage id="select_final_grade" />}
