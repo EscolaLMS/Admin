@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { groupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import {
@@ -5,6 +6,7 @@ import {
   getUserFinalGrades,
   getSubjectGradeScales,
   getSubjectTutorGrades,
+  removeFinalGrade,
 } from '@/services/escola-lms/grades';
 import { getExams } from '@/services/escola-lms/exams';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
@@ -12,25 +14,51 @@ import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { getScalesBySubjectScaleFormId, getStudentExamsFromExams } from './utils';
 import type { FetchedData, StudentExam } from './types';
 
+type SetLoading = (loading: boolean) => void;
+
+function setLoadingFactory<T>(
+  setter: React.Dispatch<React.SetStateAction<FetchedData<T>>>,
+): SetLoading {
+  return function setLoading(loading) {
+    setter((prev) => ({ ...prev, loading }));
+  };
+}
+
+async function withLoading<T>(setLoading: SetLoading, promiseCb: () => Promise<T>) {
+  setLoading(true);
+  try {
+    return promiseCb();
+  } finally {
+    setLoading(false);
+  }
+}
+
 export function useFinalGrades(group_id: number, user_id: number) {
   const [finalGrades, setFinalGrades] = useState<FetchedData<API.FinalGradeItem>>({
     loading: false,
   });
 
-  useEffect(() => {
-    setFinalGrades((prev) => ({ ...prev, loading: true }));
-    getUserFinalGrades(group_id, user_id)
-      .then((response) => {
-        if (response.success) {
-          setFinalGrades((prev) => ({ ...prev, data: response.data }));
-        }
-      })
-      .finally(() => {
-        setFinalGrades((prev) => ({ ...prev, loading: false }));
-      });
+  const setLoading = useCallback(setLoadingFactory(setFinalGrades), []);
+
+  const fetchFinalGrades = useCallback(async () => {
+    const res = await getUserFinalGrades(group_id, user_id);
+    if (!res.success) return res;
+
+    setFinalGrades((prev) => ({ ...prev, data: res.data }));
+    return res;
   }, [user_id, group_id]);
 
-  return { finalGrades };
+  const deleteFinalGrade = useCallback(
+    (final_grade_id: number) =>
+      withLoading(setLoading, () => removeFinalGrade(final_grade_id).then(fetchFinalGrades)),
+    [fetchFinalGrades],
+  );
+
+  useEffect(() => {
+    withLoading(setLoading, fetchFinalGrades);
+  }, [fetchFinalGrades]);
+
+  return { finalGrades, deleteFinalGrade };
 }
 
 export function useGradeTerms() {
