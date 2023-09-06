@@ -22,6 +22,21 @@ const getMockedValueForVariable = (varname: string) => {
   }
 };
 
+function isObject(obj: unknown): obj is Record<string, unknown> {
+  return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
+}
+
+function isReportBroTemplate(obj: unknown | ReportBroTemplate): obj is ReportBroTemplate {
+  return (
+    isObject(obj) &&
+    typeof obj?.version === 'number' &&
+    isObject(obj?.documentProperties) &&
+    Array.isArray(obj?.styles) &&
+    Array.isArray(obj?.parameters) &&
+    Array.isArray(obj?.docElements)
+  );
+}
+
 const addVariablesToTemplate = (
   template: ReportBroTemplate,
   variables: string[],
@@ -116,7 +131,7 @@ export const PdfEditor: React.FC<{
         },
       });
 
-      if (reportBroTemplate) {
+      if (reportBroTemplate && isReportBroTemplate(reportBroTemplate)) {
         rb.load(addVariablesToTemplate(reportBroTemplate, variables, field.required_variables));
       }
     }
