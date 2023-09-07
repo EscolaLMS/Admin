@@ -1467,6 +1467,11 @@ declare namespace API {
     value: string;
   };
 
+  type UpdateGiftQuizAnswer = {
+    score?: number;
+    feedback?: string;
+  };
+
   type Vouchers = EscolaLms.Vouchers.Http.Requests.ListCouponsRequest &
     API.PageParams &
     API.PaginationParams & {
