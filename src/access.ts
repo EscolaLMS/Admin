@@ -190,9 +190,12 @@ export default function (initialState: {
       !haveSettingsInDashboard('hideInMenu-OtherConsultation-access', true),
 
     coursesQuizReportsListPermission:
-      havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
-      !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
-      havePackageInstalled(PACKAGES.TopicTypeGift),
+      (havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
+        !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
+        havePackageInstalled(PACKAGES.TopicTypeGift)) ||
+      (havePermissionsInDashboard(PERMISSIONS.QuizAttemptListSelf) &&
+        !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
+        havePackageInstalled(PACKAGES.TopicTypeGift)),
 
     teacherPermission:
       havePermissionsInDashboard(

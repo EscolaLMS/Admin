@@ -248,6 +248,7 @@ enum PERMISSIONS {
   QuizAttemptListOwn = 'quiz-attempt_list-own',
   QuizAttemptReadOwn = 'quiz-attempt_read-own',
   QuizAttemptList = 'quiz-attempt_list',
+  QuizAttemptListSelf = 'quiz-attempt_list-self',
   QuizAttemptRead = 'quiz-attempt_read',
   QuizAttemptUpdate = 'quiz-attempt_update',
 
