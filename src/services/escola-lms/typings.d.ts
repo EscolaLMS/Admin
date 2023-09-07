@@ -1424,14 +1424,17 @@ declare namespace API {
   };
 
   type QuizAttempt = Omit<EscolaLms.TopicTypeGift.Models.QuizAttempt, 'questions' | 'answers'> & {
+    course: Pick<Course, 'id' | 'title'>;
     id: number;
-    user_id: number;
-    topic_gift_quiz_id: number;
     started_at: Date | string;
     end_at: Date | string | null;
-    max_score: number;
-    result_score: number | null;
     is_ended: boolean;
+    max_score: number;
+    min_pass_score: number | null;
+    result_score: number | null;
+    topic_gift_quiz_id: number;
+    user: Pick<User, 'id' | 'first_name' | 'last_name' | 'email'>;
+    user_id: number;
   };
 
   type QuizAttemptDetails = QuizAttempt & {
@@ -1445,6 +1448,8 @@ declare namespace API {
       dateRange?: [string, string];
       date_from?: string;
       date_to?: string;
+      course_id?: number;
+      user_id?: number;
     };
 
   type GiftQuiz = {
