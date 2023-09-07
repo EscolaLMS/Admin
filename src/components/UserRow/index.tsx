@@ -6,7 +6,8 @@ import { user as fetchUser } from '@/services/escola-lms/user';
 export const UserRow: React.FC<{
   id: number;
   onLoaded: (user: API.UserItem) => void;
-}> = ({ id, onLoaded }) => {
+  text?: React.ReactNode;
+}> = ({ id, onLoaded, text }) => {
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
 
@@ -47,8 +48,12 @@ export const UserRow: React.FC<{
 
   return (
     <Button loading={loading} onClick={fetch} size="small">
-      <FormattedMessage id="user_id" />
-      {id}
+      {text ?? (
+        <>
+          <FormattedMessage id="user_id" />
+          {id}
+        </>
+      )}
     </Button>
   );
 };

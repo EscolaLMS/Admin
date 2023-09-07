@@ -6,7 +6,8 @@ import { getCourse as fetchCourse } from '@/services/escola-lms/course';
 export const CourseRow: React.FC<{
   id: number;
   onLoaded: (course: API.Course) => void;
-}> = ({ id, onLoaded }) => {
+  text?: React.ReactNode;
+}> = ({ id, onLoaded, text }) => {
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
 
@@ -39,8 +40,12 @@ export const CourseRow: React.FC<{
 
   return (
     <Button loading={loading} onClick={fetch} size="small">
-      <FormattedMessage id="course_id" />
-      {id}
+      {text ?? (
+        <>
+          <FormattedMessage id="course_id" />
+          {id}
+        </>
+      )}
     </Button>
   );
 };
