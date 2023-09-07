@@ -40,7 +40,7 @@ function useQuizAttempt() {
 }
 
 const QuizDetails: React.FC = () => {
-  const { data, error, loading } = useQuizAttempt();
+  const { data, error, loading, fetchQuizAttempt } = useQuizAttempt();
 
   return (
     <PageContainer
@@ -52,23 +52,26 @@ const QuizDetails: React.FC = () => {
         {data && (
           <>
             <QuizReportDetailsDescription data={data} />
-            <Space direction="vertical">
-              <Typography.Text strong>
-                <FormattedMessage id="questions" defaultMessage="Questions" />
-              </Typography.Text>
-              <Collapse style={{ width: '100%' }}>
-                {data.questions.map((question) => (
-                  <Collapse.Panel key={question.id} header={question.question}>
-                    <QuizReportQuestionDetails question={question} />
-                    <QuizReportQuestionAnswerDetails
-                      answerObj={data?.answers.find(
-                        (answerObj) => answerObj.topic_gift_question_id === question.id,
-                      )}
-                    />
-                  </Collapse.Panel>
-                ))}
-              </Collapse>
-            </Space>
+            {!!data.questions.length && (
+              <Space direction="vertical">
+                <Typography.Text strong>
+                  <FormattedMessage id="questions" defaultMessage="Questions" />
+                </Typography.Text>
+                <Collapse style={{ width: '100%' }}>
+                  {data.questions.map((question) => (
+                    <Collapse.Panel key={question.id} header={question.question}>
+                      <QuizReportQuestionDetails question={question} />
+                      <QuizReportQuestionAnswerDetails
+                        refreshData={fetchQuizAttempt}
+                        answerObj={data?.answers.find(
+                          (answerObj) => answerObj.topic_gift_question_id === question.id,
+                        )}
+                      />
+                    </Collapse.Panel>
+                  ))}
+                </Collapse>
+              </Space>
+            )}
           </>
         )}
       </ProCard>
