@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { format } from 'date-fns';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { Button, Tag, Tooltip } from 'antd';
@@ -7,6 +7,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { FileSearchOutlined } from '@ant-design/icons';
 
+import type { ProTableRequest } from '@/types';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
 import UserSelect from '@/components/UserSelect';
@@ -174,6 +175,37 @@ const QuizAttempts: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
+  const onRequest = useCallback<ProTableRequest<API.QuizAttempt, API.QuizAttemptsParams>>(
+    async ({ current, pageSize, topic_gift_quiz_id, dateRange, course_id, user_id }, sort) => {
+      const date_from = dateRange?.[0]
+        ? format(new Date(dateRange[0]), DATETIME_FORMAT)
+        : undefined;
+      const date_to = dateRange?.[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
+
+      const res = await getQuizAttempts({
+        per_page: pageSize,
+        page: current,
+        topic_gift_quiz_id,
+        date_from,
+        date_to,
+        course_id,
+        user_id,
+        ...createTableOrderObject(sort, 'id'),
+      });
+
+      if (!res.success) {
+        return { data: [], total: 0, success: false };
+      }
+
+      return {
+        data: res.data,
+        total: res.meta.total,
+        success: true,
+      };
+    },
+    [],
+  );
+
   return (
     <PageContainer>
       <ProTable<API.QuizAttempt, API.QuizAttemptsParams>
@@ -186,38 +218,7 @@ const QuizAttempts: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="id"
-        request={async (
-          { current, pageSize, topic_gift_quiz_id, dateRange, course_id, user_id },
-          sort,
-        ) => {
-          const date_from = dateRange?.[0]
-            ? format(new Date(dateRange[0]), DATETIME_FORMAT)
-            : undefined;
-          const date_to = dateRange?.[1]
-            ? format(new Date(dateRange[1]), DATETIME_FORMAT)
-            : undefined;
-
-          const res = await getQuizAttempts({
-            per_page: pageSize,
-            page: current,
-            topic_gift_quiz_id,
-            date_from,
-            date_to,
-            course_id,
-            user_id,
-            ...createTableOrderObject(sort, 'id'),
-          });
-
-          if (!res.success) {
-            return { data: [], total: 0, success: false };
-          }
-
-          return {
-            data: res.data,
-            total: res.meta.total,
-            success: true,
-          };
-        }}
+        request={onRequest}
         columns={TableColumns}
       />
     </PageContainer>
