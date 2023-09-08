@@ -38,6 +38,16 @@ export default function (initialState: {
     return settingData === expectedValue;
   };
 
+  const canAccessQuizReports =
+    !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
+    havePackageInstalled(PACKAGES.TopicTypeGift);
+
+  const canAccessQuizReportsList =
+    havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) && canAccessQuizReports;
+
+  const canAccessQuizReportsListSelf =
+    havePermissionsInDashboard(PERMISSIONS.QuizAttemptListSelf) && canAccessQuizReports;
+
   return {
     dashboardPermission,
 
@@ -189,13 +199,7 @@ export default function (initialState: {
       havePermissionsInDashboard(PERMISSIONS.ConsultationAccessList) &&
       !haveSettingsInDashboard('hideInMenu-OtherConsultation-access', true),
 
-    coursesQuizReportsListPermission:
-      (havePermissionsInDashboard(PERMISSIONS.QuizAttemptList) &&
-        !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
-        havePackageInstalled(PACKAGES.TopicTypeGift)) ||
-      (havePermissionsInDashboard(PERMISSIONS.QuizAttemptListSelf) &&
-        !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
-        havePackageInstalled(PACKAGES.TopicTypeGift)),
+    coursesQuizReportsListPermission: canAccessQuizReportsList || canAccessQuizReportsListSelf,
 
     teacherPermission:
       havePermissionsInDashboard(
