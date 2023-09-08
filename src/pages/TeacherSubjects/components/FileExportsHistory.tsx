@@ -58,6 +58,11 @@ const staticColumns: ProColumns<API.PCGFileExportsHistoryItem>[] = [
         key={record.created_by.id}
         type="EscolaLms\Core\Models\User"
         type_id={record.created_by.id}
+        text={
+          record?.created_by?.first_name && record?.created_by?.last_name
+            ? `${record.created_by.first_name} ${record.created_by.last_name}`
+            : undefined
+        }
       />
     ),
   },
@@ -89,6 +94,11 @@ const staticColumns: ProColumns<API.PCGFileExportsHistoryItem>[] = [
         key={record.exported_by.id}
         type="EscolaLms\Core\Models\User"
         type_id={record.exported_by.id}
+        text={
+          record?.exported_by?.first_name && record?.exported_by?.last_name
+            ? `${record.exported_by.first_name} ${record.exported_by.last_name}`
+            : undefined
+        }
       />
     ),
   },

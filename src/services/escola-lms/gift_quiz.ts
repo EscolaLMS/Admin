@@ -52,6 +52,19 @@ export async function getQuizAttemptDetails(id: string | number, options?: Reque
   });
 }
 
+/** PATCH /api/admin/quiz-answers/{id} */
+export async function updateQuizAnswer(
+  answer_id: number,
+  body: API.UpdateGiftQuizAnswer,
+  options?: RequestOptionsInit,
+) {
+  return request<API.DefaultResponse<API.AttemptAnswer>>(`/api/admin/quiz-answers/${answer_id}`, {
+    method: 'PATCH',
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** GET /api/admin/gift-quizes/{id} */
 export async function getGiftQuiz(id: string | number, options?: RequestOptionsInit) {
   return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {

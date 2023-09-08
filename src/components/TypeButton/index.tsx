@@ -60,7 +60,9 @@ export const TypeButton: React.FC<{
       );
     case 'App\\Models\\User':
     case 'EscolaLms\\Core\\Models\\User':
-      return <UserRow id={type_id} onLoaded={(user) => onData({ type, value: user })} />;
+      return (
+        <UserRow id={type_id} onLoaded={(user) => onData({ type, value: user })} text={text} />
+      );
     case 'EscolaLms\\Cart\\Models\\Order':
       return <OrderRow id={type_id} onLoaded={(order) => onData({ type, value: order })} />;
     case 'EscolaLms\\Vouchers\\Models\\Order':
@@ -71,6 +73,7 @@ export const TypeButton: React.FC<{
         <CourseRow
           id={type_id}
           onLoaded={(course) => onData({ type: 'EscolaLms\\Cart\\Models\\Course', value: course })}
+          text={text}
         />
       );
     case 'EscolaLms\\Auth\\Models\\UserGroup':

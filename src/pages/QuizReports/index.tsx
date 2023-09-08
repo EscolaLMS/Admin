@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { format } from 'date-fns';
 import { useIntl, FormattedMessage, Link } from 'umi';
 import { Button, Tag, Tooltip } from 'antd';
@@ -7,9 +7,11 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { FileSearchOutlined } from '@ant-design/icons';
 
+import type { ProTableRequest } from '@/types';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
 import UserSelect from '@/components/UserSelect';
+import CourseSelect from '@/components/CourseSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { createTableOrderObject } from '@/utils/utils';
 
@@ -39,6 +41,7 @@ export const TableColumns: ProColumns<API.QuizAttempt>[] = [
     dataIndex: 'id',
     hideInSearch: true,
     sorter: true,
+    defaultSortOrder: 'descend',
     width: '80px',
   },
   {
@@ -64,9 +67,37 @@ export const TableColumns: ProColumns<API.QuizAttempt>[] = [
     },
   },
   {
+    title: <FormattedMessage id="course" />,
+    dataIndex: 'course_id',
+    renderFormItem: (_s, { type, ...rest }, form) => {
+      if (type === 'form') {
+        return null;
+      }
+      const stateType = form.getFieldValue('state');
+      return (
+        <CourseSelect
+          {...rest}
+          state={{
+            type: stateType,
+          }}
+        />
+      );
+    },
+    render: (_n, record) =>
+      typeof record?.course?.id === 'number' ? (
+        <TypeButtonDrawer
+          type="EscolaLms\Cart\Models\Course"
+          type_id={record.course.id}
+          text={record?.course?.title}
+        />
+      ) : (
+        '-'
+      ),
+  },
+  {
     title: <FormattedMessage id="student" defaultMessage="Student" />,
     dataIndex: 'user_id',
-    renderFormItem: (item, { type, ...rest }, form) => {
+    renderFormItem: (_s, { type, ...rest }, form) => {
       if (type === 'form') {
         return null;
       }
@@ -81,7 +112,15 @@ export const TableColumns: ProColumns<API.QuizAttempt>[] = [
       );
     },
     render: (_, record) => (
-      <TypeButtonDrawer key="student" type="EscolaLms\Core\Models\User" type_id={record.user_id} />
+      <TypeButtonDrawer
+        type="EscolaLms\Core\Models\User"
+        type_id={record.user_id}
+        text={
+          record?.user?.first_name && record?.user?.last_name
+            ? `${record.user.first_name} ${record.user.last_name}`
+            : undefined
+        }
+      />
     ),
   },
   {
@@ -136,6 +175,37 @@ const QuizAttempts: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
+  const onRequest = useCallback<ProTableRequest<API.QuizAttempt, API.QuizAttemptsParams>>(
+    async ({ current, pageSize, topic_gift_quiz_id, dateRange, course_id, user_id }, sort) => {
+      const date_from = dateRange?.[0]
+        ? format(new Date(dateRange[0]), DATETIME_FORMAT)
+        : undefined;
+      const date_to = dateRange?.[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
+
+      const res = await getQuizAttempts({
+        per_page: pageSize,
+        page: current,
+        topic_gift_quiz_id,
+        date_from,
+        date_to,
+        course_id,
+        user_id,
+        ...createTableOrderObject(sort, 'id'),
+      });
+
+      if (!res.success) {
+        return { data: [], total: 0, success: false };
+      }
+
+      return {
+        data: res.data,
+        total: res.meta.total,
+        success: true,
+      };
+    },
+    [],
+  );
+
   return (
     <PageContainer>
       <ProTable<API.QuizAttempt, API.QuizAttemptsParams>
@@ -148,29 +218,7 @@ const QuizAttempts: React.FC = () => {
         }}
         actionRef={actionRef}
         rowKey="id"
-        request={({ current, pageSize, topic_gift_quiz_id, dateRange }, sort) => {
-          const date_from =
-            dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
-          const date_to =
-            dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
-          return getQuizAttempts({
-            per_page: pageSize,
-            page: current,
-            topic_gift_quiz_id,
-            date_from,
-            date_to,
-            ...createTableOrderObject(sort, 'created_at'),
-          }).then((response) => {
-            if (response.success) {
-              return {
-                data: response.data,
-                total: response.meta.total,
-                success: true,
-              };
-            }
-            return [];
-          });
-        }}
+        request={onRequest}
         columns={TableColumns}
       />
     </PageContainer>

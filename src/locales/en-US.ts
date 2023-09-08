@@ -835,4 +835,5 @@ export default {
   Project: 'Project',
   GiftQuiz: 'GiftQuiz',
   Unknown: 'Unknown',
+  edit_score: 'Edit score',
 };

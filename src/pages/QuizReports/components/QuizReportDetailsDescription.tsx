@@ -23,7 +23,15 @@ const QuizReportDetailsDescription: React.FC<Props> = ({ data }) => (
         span={1.5}
         label={<FormattedMessage id="student" defaultMessage="Student" />}
       >
-        <TypeButtonDrawer type="EscolaLms\Core\Models\User" type_id={data.user_id} />
+        <TypeButtonDrawer
+          type="EscolaLms\Core\Models\User"
+          type_id={data.user_id}
+          text={
+            data?.user?.first_name && data?.user?.last_name
+              ? `${data.user.first_name} ${data.user.last_name}`
+              : undefined
+          }
+        />
       </Descriptions.Item>
       <Descriptions.Item
         span={1.5}
