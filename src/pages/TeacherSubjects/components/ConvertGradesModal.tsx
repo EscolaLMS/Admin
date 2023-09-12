@@ -1,12 +1,14 @@
-import ProForm from '@ant-design/pro-form';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { Modal, Select } from 'antd';
+import { Button, Image, Modal, Select, Space, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
+import ProForm from '@ant-design/pro-form';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 import SecureUpload from '@/components/SecureUpload';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { useTeacherSubject } from '../context';
+
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
   groupSelectDisabled: boolean;
@@ -135,6 +137,60 @@ interface Props {
   type: ExamGradeType;
 }
 
+const EXAM_GRADE_IMAGES: Record<ExamGradeType, string[]> = {
+  [ExamGradeType.TestPortal]: ['/teacher-examples/testPortal.png'],
+  [ExamGradeType.TeamsForms]: ['/teacher-examples/teamsForms.png'],
+  [ExamGradeType.TeamsLecture]: [
+    '/teacher-examples/teamsLecture.png',
+    '/teacher-examples/teamsLectureWithoutMail.png',
+  ],
+  [ExamGradeType.Manual]: [],
+};
+
+const ExampleImagesPreview: React.FC<{ images: string[] }> = ({ images }) => {
+  const [visible, setVisible] = useState(false);
+
+  const openImagePreview = useCallback(() => setVisible(true), []);
+
+  return (
+    <>
+      <Tooltip title={<FormattedMessage id="see_file_example_image" />}>
+        <Button onClick={openImagePreview} icon={<InfoCircleOutlined />} />
+      </Tooltip>
+      <Image.PreviewGroup preview={{ visible, onVisibleChange: setVisible }}>
+        {images.map((src) => (
+          <Image key={src} style={{ display: 'none' }} src={src} />
+        ))}
+      </Image.PreviewGroup>
+    </>
+  );
+};
+
+const ModalFooter: React.FC<{
+  type: ExamGradeType;
+  onOk: () => void;
+  onCancel: () => void;
+  okDisabled: boolean;
+}> = ({ type, onOk, onCancel, okDisabled }) => {
+  const currentImages = EXAM_GRADE_IMAGES?.[type] ?? EXAM_GRADE_IMAGES[ExamGradeType.Manual];
+
+  return (
+    <Space
+      style={{ width: '100%', justifyContent: currentImages.length ? 'space-between' : 'flex-end' }}
+    >
+      {!!currentImages.length && <ExampleImagesPreview images={currentImages} />}
+      <Space>
+        <Button onClick={onCancel}>
+          <FormattedMessage id="cancel" />
+        </Button>
+        <Button type="primary" disabled={okDisabled} onClick={onOk}>
+          <FormattedMessage id="ok" />
+        </Button>
+      </Space>
+    </Space>
+  );
+};
+
 const FILE_TYPES = [ExamGradeType.TeamsLecture, ExamGradeType.TestPortal, ExamGradeType.TeamsForms];
 
 export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSuccess, type }) => {
@@ -152,13 +208,18 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
       title={<FormattedMessage id={`TeacherSubjects.Exams.${type}Convert`} />}
       width="40vw"
       open={open}
-      onCancel={closeModal}
-      onOk={() => {
-        if (convertedData) {
-          onSuccess(convertedData);
-        }
-      }}
-      okButtonProps={{ disabled: !convertedData }}
+      footer={
+        <ModalFooter
+          type={type}
+          onOk={() => {
+            if (convertedData) {
+              onSuccess(convertedData);
+            }
+          }}
+          onCancel={closeModal}
+          okDisabled={!convertedData}
+        />
+      }
     >
       {FILE_TYPES.includes(type) && (
         <FileExamGradeType
