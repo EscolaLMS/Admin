@@ -836,4 +836,5 @@ export default {
   GiftQuiz: 'GiftQuiz',
   Unknown: 'Unknown',
   edit_score: 'Edit score',
+  see_file_example_image: 'See file example image',
 };

@@ -831,4 +831,5 @@ export default {
   GiftQuiz: 'GiftQuiz',
   Unknown: 'Nieznany',
   edit_score: 'Edytuj wynik',
+  see_file_example_image: 'Zobacz zdjęcie przykładowego pliku',
 };
