@@ -208,6 +208,7 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
       title={<FormattedMessage id={`TeacherSubjects.Exams.${type}Convert`} />}
       width="40vw"
       open={open}
+      onCancel={closeModal}
       footer={
         <ModalFooter
           type={type}
