@@ -38,6 +38,7 @@ export default function (initialState: {
     return settingData === expectedValue;
   };
 
+  // Quiz reports
   const canAccessQuizReports =
     !haveSettingsInDashboard('hideInMenu-CoursesQuiz-reports', true) &&
     havePackageInstalled(PACKAGES.TopicTypeGift);
@@ -47,6 +48,16 @@ export default function (initialState: {
 
   const canAccessQuizReportsListSelf =
     havePermissionsInDashboard(PERMISSIONS.QuizAttemptListSelf) && canAccessQuizReports;
+
+  // H5P
+  const canAccessH5P =
+    !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true) &&
+    havePackageInstalled(PACKAGES.HeadlessH5p);
+  const canAccessH5PList = havePermissionsInDashboard(PERMISSIONS.H5PList) && canAccessH5P;
+  const canAccessH5PAuthorList =
+    havePermissionsInDashboard(PERMISSIONS.H5PAuthorList) && canAccessH5P;
+
+  const canAccessH5PDetails = havePermissionsInDashboard(PERMISSIONS.H5PRead) && canAccessH5P;
 
   return {
     dashboardPermission,
@@ -91,10 +102,8 @@ export default function (initialState: {
       !haveSettingsInDashboard('hideInMenu-CoursesList', true),
     courseDetailsPermission: havePermissionsInDashboard(PERMISSIONS.CourseRead),
 
-    h5pListPermission:
-      havePermissionsInDashboard(PERMISSIONS.H5PList) &&
-      !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true),
-    h5pDetailsPermission: havePermissionsInDashboard(PERMISSIONS.H5PRead),
+    h5pListPermission: canAccessH5PList || canAccessH5PAuthorList,
+    h5pDetailsPermission: canAccessH5PDetails,
 
     otherPermission: havePermissionsInDashboard(
       PERMISSIONS.ConsultationList,
