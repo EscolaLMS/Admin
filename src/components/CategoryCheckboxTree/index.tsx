@@ -5,7 +5,7 @@ import { categoryTree } from '@/services/escola-lms/category';
 
 type TreeNodeType = {
   title: string;
-  key: string | number;
+  key: React.Key;
   children?: TreeNodeType[];
 };
 
@@ -27,8 +27,8 @@ export const CategoryCheckboxTree: React.FC<{
     type: number;
   };
   multiple?: boolean;
-  value?: (string | number)[];
-  onChange?: (value: (string | number)[]) => void;
+  value?: React.Key[];
+  onChange?: (value: React.Key[]) => void;
 }> = ({ value, onChange, multiple = true }) => {
   const [categories, setCategories] = useState<API.Category[]>([]);
 
