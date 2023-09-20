@@ -85,11 +85,17 @@ enum PERMISSIONS {
   H5PCreate = 'h5p_create',
   H5PDelete = 'h5p_delete',
   H5PUpdate = 'h5p-update',
+
+  H5PAuthorList = 'h5p_author_list',
+  H5PAuthorUpdate = 'h5p_author_update',
+
   H5PLibraryList = 'h5p_library_list',
   H5PLibraryRead = 'h5p_library_read',
   H5PLibraryCreate = 'h5p_library_create',
   H5PLibraryDelete = 'h5p_library_delete',
   H5PLibraryUpdate = 'h5p_library_update',
+  H5PLibraryInstall = 'h5p_library_install',
+  H5PLibraryUpload = 'h5p_library_upload',
 
   /* -------- EscolaLMS/payments -------- */
 
