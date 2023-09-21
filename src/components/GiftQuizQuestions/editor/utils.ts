@@ -67,14 +67,13 @@ const parseMultipleChoiceWithMultipleRightAnswers = ({
 
   let giftString = `${question}{`;
 
-  const escapedAnswers = answers.map(({ weight, value, feedback }) => ({
+  const escapedAnswers = answers.map(({ weight, value }) => ({
     weight,
     value: escapeQuestionSpecialChars(value),
-    feedback: escapeQuestionSpecialChars(feedback ?? ''),
   }));
 
-  for (const { value, weight, feedback } of escapedAnswers) {
-    giftString += feedback ? `~%${weight}%${value}#${feedback}` : `~%${weight}%${value}`;
+  for (const { value, weight } of escapedAnswers) {
+    giftString += `~%${weight}%${value}`;
   }
 
   giftString += '}';
@@ -178,8 +177,7 @@ const parseMultipleChoiceToFormData = (
   const answers = parsedValue.choices.reduce<
     MultipleChoiceWithMultipleRightAnswersFormData['answers']
   >(
-    (acc, { weight, text, feedback }) =>
-      weight !== null ? [...acc, { weight, value: text.text, feedback: feedback?.text }] : acc,
+    (acc, { weight, text }) => (weight !== null ? [...acc, { weight, value: text.text }] : acc),
     [],
   );
 

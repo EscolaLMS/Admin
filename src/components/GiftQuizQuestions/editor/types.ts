@@ -14,7 +14,7 @@ export type MultipleChoiceFormData = BaseFormData & {
 
 export type MultipleChoiceWithMultipleRightAnswersFormData = BaseFormData & {
   type: QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
-  answers: { value: string; weight: number; feedback?: string }[];
+  answers: { value: string; weight: number }[];
 };
 
 export type TrueFalseFormData = BaseFormData & {
