@@ -1,8 +1,10 @@
 import React from 'react';
 import { useIntl, FormattedMessage } from 'umi';
-import { ProFormList, ProFormText } from '@ant-design/pro-form';
+import { Button, Tooltip } from 'antd';
+import ProForm, { ProFormList, ProFormText } from '@ant-design/pro-form';
+import { DeleteOutlined } from '@ant-design/icons';
 
-const INITIAL_VALUES = [{ value: '' }];
+const INITIAL_VALUES = [{ value: '', feedback: '' }];
 
 export const GiftQuizQuestionShortEditor: React.FC = () => {
   const intl = useIntl();
@@ -20,23 +22,39 @@ export const GiftQuizQuestionShortEditor: React.FC = () => {
         creatorButtonProps={{
           creatorButtonText: intl.formatMessage({ id: 'Questions.addAnswer' }),
         }}
-        deleteIconProps={{ tooltipText: intl.formatMessage({ id: 'Questions.deleteAnswer' }) }}
-        actionRender={(_f, _a, [, deleteButton]) => [deleteButton]}
-        min={1}
+        actionRender={() => []}
         initialValue={INITIAL_VALUES}
       >
-        {(_f, i) => (
-          <ProFormText
-            name="value"
-            rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
-            label={
-              <FormattedMessage
-                id="Questions.answer"
-                values={{ ordinalNumber: i + 1 }}
-                defaultMessage={`Answer ${i + 1}`}
-              />
+        {(field, i, action, count) => (
+          <ProForm.Group
+            title={
+              <>
+                <FormattedMessage id="Questions.answer" values={{ ordinalNumber: i + 1 }} />
+                {count > 1 && (
+                  <Tooltip title={intl.formatMessage({ id: 'Questions.deleteAnswer' })}>
+                    <Button
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      onClick={() => action.remove(field.name)}
+                    />
+                  </Tooltip>
+                )}
+              </>
             }
-          />
+            titleStyle={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
+          >
+            <ProFormText
+              name="value"
+              rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+              label={<FormattedMessage id="content" defaultMessage="Content" />}
+            />
+            <ProFormText
+              name="feedback"
+              label={
+                <FormattedMessage id="Questions.answerFeedback" defaultMessage="Answer feedback" />
+              }
+            />
+          </ProForm.Group>
         )}
       </ProFormList>
     </>

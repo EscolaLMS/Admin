@@ -9,12 +9,12 @@ type BaseFormData = {
 
 export type MultipleChoiceFormData = BaseFormData & {
   type: QuestionType.MULTIPLE_CHOICE;
-  answers: { isCorrect: boolean; value: string }[];
+  answers: { isCorrect: boolean; value: string; feedback?: string }[];
 };
 
 export type MultipleChoiceWithMultipleRightAnswersFormData = BaseFormData & {
   type: QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS;
-  answers: { value: string; weight: number }[];
+  answers: { value: string; weight: number; feedback?: string }[];
 };
 
 export type TrueFalseFormData = BaseFormData & {
@@ -24,7 +24,7 @@ export type TrueFalseFormData = BaseFormData & {
 
 export type ShortAnswersFormData = BaseFormData & {
   type: QuestionType.SHORT_ANSWERS;
-  answers: { value: string }[];
+  answers: { value: string; feedback?: string }[];
 };
 
 export type MatchingFormData = BaseFormData & {

@@ -41,16 +41,17 @@ const escapeQuestionSpecialChars = (inputString: string): string => {
 const parseMultipleChoice = ({ question, answers }: MultipleChoiceFormData): string => {
   if (answers.length === 0) return `${question}{}`;
 
-  const escapedAnswers = answers.map(({ isCorrect, value }) => ({
+  const escapedAnswers = answers.map(({ isCorrect, value, feedback }) => ({
     isCorrect,
+    feedback: escapeQuestionSpecialChars(feedback ?? ''),
     value: escapeQuestionSpecialChars(value),
   }));
   let giftString = `${question}{`;
 
-  for (const { isCorrect, value } of escapedAnswers) {
+  for (const { isCorrect, value, feedback } of escapedAnswers) {
     const sign = isCorrect ? '=' : '~';
 
-    giftString += `${sign}${value}`;
+    giftString += feedback ? `${sign}${value}#${feedback}` : `${sign}${value}`;
   }
 
   giftString += '}';
@@ -66,13 +67,14 @@ const parseMultipleChoiceWithMultipleRightAnswers = ({
 
   let giftString = `${question}{`;
 
-  const escapedAnswers = answers.map(({ weight, value }) => ({
+  const escapedAnswers = answers.map(({ weight, value, feedback }) => ({
     weight,
     value: escapeQuestionSpecialChars(value),
+    feedback: escapeQuestionSpecialChars(feedback ?? ''),
   }));
 
-  for (const { value, weight } of escapedAnswers) {
-    giftString += `~%${weight}%${value}`;
+  for (const { value, weight, feedback } of escapedAnswers) {
+    giftString += feedback ? `~%${weight}%${value}#${feedback}` : `~%${weight}%${value}`;
   }
 
   giftString += '}';
@@ -88,12 +90,13 @@ const parseShortAnswers = ({ question, answers }: ShortAnswersFormData): string 
 
   let giftString = `${question}{`;
 
-  const escapedAnswers = answers.map(({ value }) => ({
+  const escapedAnswers = answers.map(({ value, feedback }) => ({
     value: escapeQuestionSpecialChars(value),
+    feedback: escapeQuestionSpecialChars(feedback ?? ''),
   }));
 
-  for (const { value } of escapedAnswers) {
-    giftString += `=${value}`;
+  for (const { value, feedback } of escapedAnswers) {
+    giftString += feedback ? `=${value}#${feedback}` : `=${value}`;
   }
 
   giftString += '}';
@@ -148,7 +151,7 @@ export const parseToGIFT = ({ question, ...formData }: GiftQuizFormData): string
     case QuestionType.DESCRIPTION:
       return parseDescription(safeFormData);
     default:
-      throw new Error(`Unsupported type: ${(safeFormData as GiftQuizFormData).type}`);
+      throw new Error(`Unsupported type: ${(safeFormData as GiftQuizFormData)?.type}`);
   }
 };
 
@@ -162,9 +165,10 @@ const parseMultipleChoiceToFormData = (
 
   if (isMultipleChoice) {
     const answers: MultipleChoiceFormData['answers'] = parsedValue.choices.map(
-      ({ isCorrect, text }) => ({
+      ({ isCorrect, text, feedback }) => ({
         isCorrect,
         value: text.text,
+        feedback: feedback?.text,
       }),
     );
 
@@ -174,7 +178,8 @@ const parseMultipleChoiceToFormData = (
   const answers = parsedValue.choices.reduce<
     MultipleChoiceWithMultipleRightAnswersFormData['answers']
   >(
-    (acc, { weight, text }) => (weight !== null ? [...acc, { weight, value: text.text }] : acc),
+    (acc, { weight, text, feedback }) =>
+      weight !== null ? [...acc, { weight, value: text.text, feedback: feedback?.text }] : acc,
     [],
   );
 
@@ -197,9 +202,12 @@ const parseShortAnswersToFormData = (
 ): ShortAnswersFormData => {
   const question = parsedValue?.stem.text;
 
-  const answers: ShortAnswersFormData['answers'] = parsedValue.choices.map(({ text }) => ({
-    value: text.text,
-  }));
+  const answers: ShortAnswersFormData['answers'] = parsedValue.choices.map(
+    ({ text, feedback }) => ({
+      value: text.text,
+      feedback: feedback?.text,
+    }),
+  );
 
   return { type, score, category_id, question, answers };
 };

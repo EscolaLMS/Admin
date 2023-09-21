@@ -13,12 +13,12 @@ import { QuestionType } from '@/services/escola-lms/enums';
 
 const INITIAL_VALUES = {
   [QuestionType.MULTIPLE_CHOICE]: [
-    { isCorrect: false, value: '' },
-    { isCorrect: false, value: '' },
+    { isCorrect: false, value: '', feedback: '' },
+    { isCorrect: false, value: '', feedback: '' },
   ],
   [QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_RIGHT_ANSWERS]: [
-    { value: '', weight: '' },
-    { value: '', weight: '' },
+    { value: '', weight: '', feedback: '' },
+    { value: '', weight: '', feedback: '' },
   ],
 };
 
@@ -103,6 +103,12 @@ export const GiftQuizQuestionMultipleChoiceEditor: React.FC<Props> = ({ type }) 
                 label={<FormattedMessage id="weight" defaultMessage="Weight" />}
               />
             )}
+            <ProFormText
+              name="feedback"
+              label={
+                <FormattedMessage id="Questions.answerFeedback" defaultMessage="Answer feedback" />
+              }
+            />
           </ProForm.Group>
         )}
       </ProFormList>
