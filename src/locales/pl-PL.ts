@@ -783,6 +783,7 @@ export default {
   'Questions.pair': 'Para {ordinalNumber}',
   'Questions.deletePair': 'Usuń parę',
   'Questions.errorMargin': 'Margines błędu',
+  'Questions.answerFeedback': 'Informacja zwrotna',
   weight: 'Waga',
   add_new_component: 'Dodaj nowy komponent',
   category: 'Kategoria',

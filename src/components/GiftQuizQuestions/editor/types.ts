@@ -9,7 +9,7 @@ type BaseFormData = {
 
 export type MultipleChoiceFormData = BaseFormData & {
   type: QuestionType.MULTIPLE_CHOICE;
-  answers: { isCorrect: boolean; value: string }[];
+  answers: { isCorrect: boolean; value: string; feedback?: string }[];
 };
 
 export type MultipleChoiceWithMultipleRightAnswersFormData = BaseFormData & {
@@ -24,7 +24,7 @@ export type TrueFalseFormData = BaseFormData & {
 
 export type ShortAnswersFormData = BaseFormData & {
   type: QuestionType.SHORT_ANSWERS;
-  answers: { value: string }[];
+  answers: { value: string; feedback?: string }[];
 };
 
 export type MatchingFormData = BaseFormData & {

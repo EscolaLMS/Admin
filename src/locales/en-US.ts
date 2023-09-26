@@ -32,6 +32,7 @@ export default {
   'Questions.pair': 'Pair {ordinalNumber}',
   'Questions.deletePair': 'Delete pair',
   'Questions.errorMargin': 'Error margin',
+  'Questions.answerFeedback': 'Answer feedback',
   weight: 'Weight',
   'menu.Payments': 'Payments',
   multiple_choice: 'Multiple Choice',

@@ -30,7 +30,7 @@ export const GiftQuizQuestion: React.FC<Props> = ({ type }) => {
     case QuestionType.ESSAY:
     case QuestionType.DESCRIPTION:
       return <GiftQuizQuestionEssayEditor />;
+    default:
+      return <pre>Unsupported type {type}</pre>;
   }
-
-  return <pre>Unsupported type {type}</pre>;
 };

@@ -171,7 +171,7 @@ export const Table: React.FC<Props> = ({
         setLoading(false);
       }
     },
-    [newQuestion, quizId],
+    [quizId],
   );
 
   const onEditQuestionSubmit = useCallback(
@@ -206,7 +206,7 @@ export const Table: React.FC<Props> = ({
           competencyChallengeCategoryTreeProps={questionsCategory}
         />
       </Drawer>
-      <Drawer open={!!editQuestion} onClose={() => setEditQuestion(undefined)}>
+      <Drawer open={!!editQuestion} onClose={() => setEditQuestion(undefined)} destroyOnClose>
         <GiftQuizQuestionEditor
           onSubmit={onEditQuestionSubmit}
           competencyChallengeCategoryTreeProps={questionsCategory}
