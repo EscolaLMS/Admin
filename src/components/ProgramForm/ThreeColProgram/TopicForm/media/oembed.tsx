@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import Embed from 'react-tiny-oembed';
 import { Row, Input, Button } from 'antd';
 import { FormattedMessage } from 'umi';
+
+import { OEmbed } from '@/components/OEmbed';
 
 export const Oembed: React.FC<{ text: string; onChange: (value: string) => void }> = ({
   text,
@@ -24,7 +25,7 @@ export const Oembed: React.FC<{ text: string; onChange: (value: string) => void 
           <FormattedMessage id="preview" />
         </Button>
       </Row>
-      <Row>{previewValue && <Embed key={previewValue} url={previewValue} />}</Row>
+      <Row>{previewValue && <OEmbed key={previewValue} url={previewValue} />}</Row>
     </React.Fragment>
   );
 };
