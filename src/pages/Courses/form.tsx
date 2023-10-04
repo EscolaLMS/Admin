@@ -164,6 +164,7 @@ export default () => {
           video_path: data && data.video_url && splitImagePath(data.video_url),
           poster_url: data && data.poster_url,
           poster_path: data && data.poster_url && splitImagePath(data.poster_url),
+          hours_to_complete: values.hours_to_complete || null,
         };
 
         let response: API.DefaultResponse<API.Course>;
