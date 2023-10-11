@@ -57,7 +57,7 @@ export default () => {
 
   return (
     <PageContainer
-      title={<FormattedMessage id={'settings'} />}
+      title={getTabNameForBreadcrumbs(tab, intl)}
       header={{
         breadcrumb: {
           routes: [
