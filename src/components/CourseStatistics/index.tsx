@@ -49,7 +49,12 @@ const config = {
 
 interface courseStats {
   type: string;
-  value: number;
+  value:
+    | API.CourseAttempts[]
+    | Record<string, API.CourseStatsAverageTimePerTopic>
+    | number
+    | API.FinishedCourseUserStats[]
+    | API.FinishedTopicsUserStats[];
 }
 
 const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
@@ -149,13 +154,11 @@ const CourseStatistics: React.FC<{ courseId: string }> = ({ courseId }) => {
                     element.type.split('\\').pop() ===
                     intl.formatMessage({ id: 'AverageTimePerTopic' }),
                 ).value,
-              ).map((element) => {
-                return {
-                  type: element[0],
-                  value: element[1],
-                  topic: topics.find((topic) => topic.id === Number(element[0])),
-                };
-              })}
+              ).map((element) => ({
+                type: element[0],
+                value: (element[1] as API.CourseStatsAverageTimePerTopic)?.average_time,
+                topic: topics.find((topic) => topic.id === Number(element[0])),
+              }))}
             >
               <Text>
                 <FormattedMessage id="AverageTime" />

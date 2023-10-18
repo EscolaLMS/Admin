@@ -427,10 +427,18 @@ declare namespace API {
     topics: FinishedTopicsUserStat[];
   };
 
+  type CourseStatsAverageTimePerTopic = {
+    title: string;
+    average_time: number;
+  };
+
   type CourseStats = {
     'EscolaLms\\Reports\\Stats\\Course\\AttendanceList': CourseAttempts[];
     'EscolaLms\\Reports\\Stats\\Course\\AverageTime': number;
-    'EscolaLms\\Reports\\Stats\\Course\\AverageTimePerTopic': Record<string, number>;
+    'EscolaLms\\Reports\\Stats\\Course\\AverageTimePerTopic': Record<
+      string,
+      CourseStatsAverageTimePerTopic
+    >;
     'EscolaLms\\Reports\\Stats\\Course\\MoneyEarned': number;
     'EscolaLms\\Reports\\Stats\\Course\\PeopleBought': number;
     'EscolaLms\\Reports\\Stats\\Course\\PeopleFinished': number;
