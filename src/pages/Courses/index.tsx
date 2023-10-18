@@ -58,6 +58,14 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
         ),
         status: 'published',
       },
+      published_unactivated: {
+        text: (
+          <Tag color="processing">
+            <FormattedMessage id="published_unactivated" defaultMessage="published_unactivated" />
+          </Tag>
+        ),
+        status: 'published_unactivated',
+      },
     },
   },
   {

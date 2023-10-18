@@ -5,6 +5,8 @@ import ProCard from '@ant-design/pro-card';
 import { Column } from '@ant-design/plots';
 import { FormattedMessage, useIntl } from 'umi';
 import ScrollContainer from 'react-indiana-drag-scroll';
+import { format } from 'date-fns';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 import TypeButtonDrawer from '../TypeButtonDrawer';
 import { ExportStatsButton } from './ExportStatsButton';
@@ -159,6 +161,7 @@ export const UserCourseFinish: React.FC<{
       {
         title: <FormattedMessage id="finished_at" defaultMessage="Finished at" />,
         dataIndex: 'finished_at',
+        render: (text) => (text ? format(new Date(text), DATETIME_FORMAT) : ''),
       },
     ];
   }, []);
