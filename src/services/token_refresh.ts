@@ -5,6 +5,7 @@ import { differenceInSeconds } from 'date-fns';
 
 const logout = () => {
   localStorage.removeItem('TOKEN');
+  dispatchEvent(new Event('token_change'));
   window.location.reload();
 };
 
@@ -16,6 +17,7 @@ export const refreshTokenCallback = () => {
         if (response.success) {
           const newToken = response.data.token;
           localStorage.setItem('TOKEN', newToken);
+          dispatchEvent(new Event('token_change'));
           const { exp } = jwt_decode(newToken) as JwtPayload;
           if (exp) {
             const diffInSecs = differenceInSeconds(new Date(exp * 1000), new Date()) - 60;

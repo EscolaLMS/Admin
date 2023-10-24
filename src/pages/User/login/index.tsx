@@ -73,6 +73,7 @@ const Login: React.FC = () => {
       const msg = await login({ ...values });
       if (msg.success) {
         localStorage.setItem('TOKEN', msg.data.token);
+        dispatchEvent(new Event('token_change'));
         refreshTokenCallback();
         await fetchUserInfo();
         message.success(msg.message);
