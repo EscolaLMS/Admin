@@ -4,10 +4,6 @@ export function useTokenChangeListener(onTokenChange: (newToken: string | null) 
   const onTokenChangeRef = useRef(onTokenChange);
 
   useEffect(() => {
-    onTokenChangeRef.current = onTokenChange;
-  }, [onTokenChange]);
-
-  useEffect(() => {
     const eventHandler = () => {
       const token = localStorage.getItem('TOKEN');
       onTokenChangeRef.current(token);
