@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { editorSettings, updateContent } from '@/services/escola-lms/h5p';
-import { ContextlessEditor } from '@escolalms/h5p-react';
-import type { EditorSettings, H5PEditorContent } from '@escolalms/h5p-react';
-
 import { useIntl, FormattedMessage } from 'umi';
 import { Col, Row, Spin, Alert, message } from 'antd';
+import {
+  ContextlessEditor,
+  type EditorSettings,
+  type H5PEditorContent,
+} from '@escolalms/h5p-react';
+
+import { useTokenChangeListener } from '@/hooks/useTokenChangeListener';
+import { editorSettings, updateContent } from '@/services/escola-lms/h5p';
 
 export const Editor: React.FC<{
   id: 'new' | number;
@@ -17,6 +21,10 @@ export const Editor: React.FC<{
 
   const intl = useIntl();
   const lang = intl.locale.split('-')[0];
+
+  useTokenChangeListener((newToken) =>
+    setEditorSettings((prev) => (prev ? { ...prev, token: newToken ?? '' } : prev)),
+  );
 
   useEffect(() => {
     if (id) {
