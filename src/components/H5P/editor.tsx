@@ -1,10 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { editorSettings, updateContent } from '@/services/escola-lms/h5p';
-import { ContextlessEditor } from '@escolalms/h5p-react';
-import type { EditorSettings, H5PEditorContent } from '@escolalms/h5p-react';
-
 import { useIntl, FormattedMessage } from 'umi';
 import { Col, Row, Spin, Alert, message } from 'antd';
+import {
+  ContextlessEditor,
+  type EditorSettings,
+  type H5PEditorContent,
+} from '@escolalms/h5p-react';
+
+import { useTokenChangeListener } from '@/hooks/useTokenChangeListener';
+import { editorSettings, updateContent } from '@/services/escola-lms/h5p';
+
+const H5P_EDITOR_IFRAME_ID = 'h5p-editor';
+enum EditorMessage {
+  TokenChanged = 'TOKEN_CHANGED',
+}
+
+const sendNewTokenToIFrame = (newToken: string | null) => {
+  const iframe = document.getElementById(H5P_EDITOR_IFRAME_ID) as HTMLIFrameElement | null;
+
+  if (!iframe) {
+    console.error(`There is no iframe with id '${H5P_EDITOR_IFRAME_ID}'`);
+    return;
+  }
+
+  iframe.contentWindow?.postMessage({ type: EditorMessage.TokenChanged, token: newToken }, '*');
+};
 
 export const Editor: React.FC<{
   id: 'new' | number;
@@ -17,6 +37,8 @@ export const Editor: React.FC<{
 
   const intl = useIntl();
   const lang = intl.locale.split('-')[0];
+
+  useTokenChangeListener(sendNewTokenToIFrame);
 
   useEffect(() => {
     if (id) {
@@ -80,6 +102,7 @@ export const Editor: React.FC<{
           onSubmit={onSubmit}
           loading={loading}
           lang={lang}
+          iframeId={H5P_EDITOR_IFRAME_ID}
         />
       )}
     </React.Fragment>

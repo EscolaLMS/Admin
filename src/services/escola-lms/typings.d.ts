@@ -1198,6 +1198,7 @@ declare namespace API {
       apiVersion: { majorVersion: number; minorVersion: number };
     };
     nonce: string;
+    token?: string;
     contents?: Record<
       string,
       {
