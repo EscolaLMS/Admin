@@ -10,6 +10,22 @@ import {
 import { useTokenChangeListener } from '@/hooks/useTokenChangeListener';
 import { editorSettings, updateContent } from '@/services/escola-lms/h5p';
 
+const H5P_EDITOR_IFRAME_ID = 'h5p-editor';
+enum EditorMessage {
+  TokenChanged = 'TOKEN_CHANGED',
+}
+
+const sendNewTokenToIFrame = (newToken: string | null) => {
+  const iframe = document.getElementById(H5P_EDITOR_IFRAME_ID) as HTMLIFrameElement | null;
+
+  if (!iframe) {
+    console.error(`There is no iframe with id '${H5P_EDITOR_IFRAME_ID}'`);
+    return;
+  }
+
+  iframe.contentWindow?.postMessage({ type: EditorMessage.TokenChanged, token: newToken }, '*');
+};
+
 export const Editor: React.FC<{
   id: 'new' | number;
   onSubmitted: (id: number) => void;
@@ -22,9 +38,7 @@ export const Editor: React.FC<{
   const intl = useIntl();
   const lang = intl.locale.split('-')[0];
 
-  useTokenChangeListener((newToken) =>
-    setEditorSettings((prev) => (prev ? { ...prev, token: newToken ?? '' } : prev)),
-  );
+  useTokenChangeListener(sendNewTokenToIFrame);
 
   useEffect(() => {
     if (id) {
@@ -88,6 +102,7 @@ export const Editor: React.FC<{
           onSubmit={onSubmit}
           loading={loading}
           lang={lang}
+          iframeId={H5P_EDITOR_IFRAME_ID}
         />
       )}
     </React.Fragment>
