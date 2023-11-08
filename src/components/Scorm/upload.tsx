@@ -7,22 +7,21 @@ export const UploadScorm: React.FC<{
   hideLabel?: boolean;
 }> = ({ onSuccess, onError, hideLabel }) => {
   return (
-    <SecureUpload
+    <SecureUpload<API.SCORMUPloaded>
       url="/api/admin/scorm/upload"
       name="zip"
       accept="application/zip"
       hideLabel={hideLabel}
       onChange={(info) => {
-        if (info.file.response) {
-          // @ts-ignore
-          const { response }: { response: API.DefaultResponse<API.SCORMUPloaded> } =
-            info.file.response;
-          if (response.success) {
-            onSuccess(response.data.model);
-          } else {
-            onError(response);
-          }
+        if (!info.file.response || info.file.status !== 'done') return;
+        const response = info.file.response;
+
+        if (!response.success) {
+          onError(response);
+          return;
         }
+
+        onSuccess(response.data.model);
       }}
     />
   );

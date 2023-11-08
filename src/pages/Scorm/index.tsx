@@ -48,7 +48,7 @@ const TableList: React.FC = () => {
               actionRef.current.reload();
             }
             message.success(
-              <FormattedMessage id="scorm_uploaded" defaultMessage="scorm uploaded" />,
+              intl.formatMessage({ id: 'scorm_uploaded', defaultMessage: 'Scorm uploaded' }),
             );
           }}
           onError={(error) => message.error(error.message || error.toString())}
