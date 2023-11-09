@@ -25,3 +25,7 @@
 .ant-modal-wrap {
   z-index: 100 !important;
 }
+
+div#block-menu-container {
+  z-index: 100;
+}
