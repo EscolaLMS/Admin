@@ -12,6 +12,7 @@ import fabric from './pl-PL/fabric';
 import vouchers from './pl-PL/vouchers';
 import courses from './pl-PL/courses';
 import events from './pl-PL/events';
+import recommender from './pl-PL/recommender';
 
 export default {
   courseAccessEnquiries: 'Zapytania od dostęp do kursu',
@@ -82,6 +83,7 @@ export default {
   ...vouchers,
   ...courses,
   ...events,
+  ...recommender,
   branding: 'Branding',
   product_details: 'Ustawienia produktu',
   title: 'Tytuł',
@@ -370,6 +372,7 @@ export default {
   count_answers: 'Ilość odpowiedzi',
   drag_here: 'Przeciągnij tutaj',
   add_new_lesson: 'Dodaj nową lekcję',
+  add_lesson: 'Dodaj lekcję',
   lesson: 'Lekcja',
   topic: 'Temat',
   topics: 'Tematy',

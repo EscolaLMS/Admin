@@ -12,6 +12,7 @@ import fabric from './en-US/fabric';
 import vouchers from './en-US/vouchers';
 import courses from './en-US/courses';
 import events from './en-US/events';
+import recommender from './en-US/recommender';
 
 export default {
   actions: 'Actions',
@@ -118,6 +119,7 @@ export default {
   ...vouchers,
   ...courses,
   ...events,
+  ...recommender,
   branding: 'Branding',
   product_details: 'Product details',
   title: 'Title',
@@ -363,6 +365,7 @@ export default {
   position: 'Position',
   scorm: 'SCORM',
   add_new_lesson: 'Add new lesson',
+  add_lesson: 'Add lesson',
   lesson: 'Lesson',
   topic: 'Topic',
   topics: 'Topics',

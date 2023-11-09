@@ -1,7 +1,6 @@
 import { useContext, useCallback } from 'react';
-import { FormattedMessage, history } from 'umi';
-import { Button, Spin } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { history } from 'umi';
+import { Spin } from 'antd';
 
 import { Context } from '@/components/ProgramForm/Context';
 import './index.css';
@@ -26,17 +25,7 @@ export const CurriculumList = () => {
           state.lessons.length > 0 ? '' : 'program-sidebar--empty'
         }`}
       >
-        <LessonList />
-        <Button
-          onClick={onNew}
-          type="primary"
-          className="program-sidebar__add-btn"
-          icon={<PlusOutlined />}
-        >
-          <span>
-            <FormattedMessage id="add_new_lesson" />
-          </span>
-        </Button>
+        <LessonList onNewLesson={onNew} />
       </aside>
     );
   }

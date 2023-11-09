@@ -97,3 +97,8 @@ export enum QuestionnaireQuestionType {
   Text = 'text',
   Review = 'review',
 }
+
+export enum RecommenderType {
+  Exercise = 'exercise',
+  Course = 'course',
+}
