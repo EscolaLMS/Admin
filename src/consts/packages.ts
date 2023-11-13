@@ -52,6 +52,7 @@ enum PACKAGES {
   Vouchers = 'escolalms/vouchers',
   Webinar = 'escolalms/webinar',
   Youtube = 'escolalms/youtube',
+  Recommender = 'escolalms/recommender',
 }
 
 export default PACKAGES;

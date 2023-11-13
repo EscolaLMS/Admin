@@ -39,6 +39,8 @@ import { NewLessonListItem } from '../NewLessonListItem';
 import { TopicTypesSelector } from '../TopicTypesSelector';
 import { Recommender } from '../Recommender';
 import { RecommenderTopicSelector } from '../Recommender/RecommenderTopicSelector';
+import { createHavePackageInstalled } from '@/utils/access';
+import PACKAGES from '@/consts/packages';
 
 interface NestingSettings {
   topic?: number;
@@ -65,6 +67,9 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
   const { initialState } = useModel('@@initialState');
   const intl = useIntl();
 
+  const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
+    initialState?.packages,
+  ]);
   useEffect(() => {
     setTreeData((prevState) => {
       const root: TreeItem = {
@@ -224,7 +229,9 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
             </Tooltip>
             <span className="title">{item.data.title}</span>
           </NavLink>
-          {courseId &&
+
+          {havePackageInstalled(PACKAGES.Recommender) &&
+            courseId &&
             currentEditMode?.mode === 'topic' &&
             currentEditMode?.value?.lesson_id &&
             currentEditMode?.value?.lesson_id === item.data.lesson_id &&
