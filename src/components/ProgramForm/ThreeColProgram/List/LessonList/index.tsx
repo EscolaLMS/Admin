@@ -132,8 +132,14 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
         ) as LessonDeeplyStringifyId;
 
         const lastTopic = lessonTopics?.topics?.[lessonTopics.topics.length - 1];
-
         return lastTopic?.id === currentTopicId;
+      };
+
+      const checkTopicsLength = (lessonId: number) => {
+        const lessonTopics = flatLessonsAndTopics.find((lesson) =>
+          lesson.id.includes(String(lessonId)),
+        ) as LessonDeeplyStringifyId;
+        return lessonTopics?.topics?.length && !(lessonTopics?.topics?.length % 5);
       };
 
       if (type === 'new' && item.data.isNew) {
@@ -218,25 +224,6 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
             </Tooltip>
             <span className="title">{item.data.title}</span>
           </NavLink>
-          {/* ONLY LAST TOPIC
-          {!item.hasChildren &&
-            item.data.id === flatLessonsAndTopics[flatLessonsAndTopics.length - 1]?.id &&
-            courseId && (
-              <>
-                <Recommender
-                  courseId={courseId}
-                  lessonId={item.data.lesson_id}
-                  recommenderType={
-                    item.data.order > 8 ? RecommenderType.Course : RecommenderType.Exercise
-                  }
-                />
-                <RecommenderTopicSelector
-                  onSelected={(topic_type) => onTopicCreate(item.data.lesson_id, topic_type)}
-                  // depth is 0 index based and settings are 1 index based
-                  positionsToHide={getHiddenNewTopicOptions(depth + 1)}
-                />
-              </>
-            )} */}
           {courseId &&
             currentEditMode?.mode === 'topic' &&
             currentEditMode?.value?.lesson_id &&
@@ -247,7 +234,9 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
                   courseId={courseId}
                   lessonId={currentEditMode.value.lesson_id}
                   recommenderType={
-                    item.data.order > 8 ? RecommenderType.Course : RecommenderType.Exercise
+                    checkTopicsLength(currentEditMode.value.lesson_id)
+                      ? RecommenderType.Course
+                      : RecommenderType.Exercise
                   }
                 />
                 <RecommenderTopicSelector
