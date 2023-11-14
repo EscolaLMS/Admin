@@ -794,6 +794,61 @@ declare namespace API {
     | TemplateChannelValue.pdf
     | TemplateChannelValue.sms;
 
+  type RecommenderTopicType =
+    | OEmbed
+    | PDF
+    | Video
+    | RichText
+    | Image
+    | H5P.Summary
+    | H5P.FindTheWords
+    | H5P.ImageHotspotQuestion
+    | H5P.DragText
+    | H5P.Blanks
+    | H5P.TrueFalse
+    | H5P.QuestionSet
+    | H5P.Crossword
+    | H5P.ImageJuxtaposition
+    | H5P.Accordion
+    | H5P.CoursePresentation
+    | H5P.MultiMediaChoice
+    | H5P.DragQuestion
+    | H5P.SingleChoiceSet
+    | H5P.MultiChoice
+    | H5P.Column
+    | H5P.GuessTheAnswer
+    | H5P.MemoryGame
+    | H5P.Flashcards
+    | H5P.Chart
+    | H5P.Cornell
+    | H5P.InteractiveBook
+    | H5P.Dialogcards
+    | H5P.Agamotto
+    | H5P.Collage
+    | H5P.ImageSequencing
+    | H5P.SortParagraphs
+    | H5P.InteractiveVideo
+    | H5P.Audio
+    | H5P.ImageHotspots
+    | H5P.Timeline
+    | H5P.BranchingScenario
+    | H5P.InfoWall
+    | H5P.Essay
+    | H5P.MarkTheWords
+    | H5P.PersonalityQuiz
+    | H5P.ImageSlider
+    | H5P.KewArCode
+    | H5P.ImagePair;
+
+  type Recommender = {
+    probability: number;
+  };
+
+  type RecommenderExercise = {
+    topic_type: RecommenderTopicType;
+    probability: number;
+  };
+
   type SCORM = {
     id: number;
     resource_type: null;

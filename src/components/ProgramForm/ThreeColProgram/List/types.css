@@ -4,6 +4,10 @@
   padding-left: 8px;
 }
 
+.topic-types-selector__recommender-wrapper {
+  width: 100%;
+}
+
 .topic-types-selector .ant-divider-horizontal {
   margin: 2px 0;
 }
@@ -14,4 +18,29 @@
   left: 100%;
   z-index: 1050; /* zindex equal to @zindex-dropdown */
   min-width: 48px;
+}
+.topic-types-selector__recommender {
+  display: none;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 8px;
+}
+.topic-types-selector__recommender button {
+  max-width: 32px !important;
+}
+.topic-types-selector__recommender--active {
+  display: flex;
+}
+
+.topic-types-selector__recommender--add-btn {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #1890ff;
+  background-color: transparent;
+}
+
+.topic-types-selector__recommender--add-btn:focus {
+  color: #1890ff;
+  background-color: transparent;
 }

@@ -1,6 +1,7 @@
 import PACKAGES from '@/consts/packages';
 import PERMISSIONS from '@/consts/permissions';
 import { isUserHavePermissions } from '@/services/escola-lms/permissions';
+import { createHavePackageInstalled } from './utils/access';
 
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
@@ -19,12 +20,7 @@ export default function (initialState: {
   };
 
   // TODO implement minimal versions
-  const havePackageInstalled = (
-    packageName: PACKAGES,
-    // ,minVersion: string = '0.0.0'
-  ): boolean => {
-    return Boolean(initialState?.packages?.[packageName]);
-  };
+  const havePackageInstalled = createHavePackageInstalled(initialState?.packages);
 
   const haveSettingsInDashboard = (
     settingName: string,

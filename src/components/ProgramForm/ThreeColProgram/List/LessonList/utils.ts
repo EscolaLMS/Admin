@@ -14,8 +14,8 @@ export enum MovedType {
   Lesson = 'lesson',
   Topic = 'topic',
 }
-type StringifyId<Obj extends { id?: number }> = Omit<Obj, 'id'> & { id: string };
-type LessonDeeplyStringifyId = Omit<StringifyId<API.Lesson>, 'lessons' | 'topics'> & {
+export type StringifyId<Obj extends { id?: number }> = Omit<Obj, 'id'> & { id: string };
+export type LessonDeeplyStringifyId = Omit<StringifyId<API.Lesson>, 'lessons' | 'topics'> & {
   lessons?: StringifyId<API.Lesson>[];
   topics?: StringifyId<API.Topic>[];
 };

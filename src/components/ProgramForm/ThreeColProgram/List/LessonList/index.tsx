@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { NavLink, FormattedMessage, useModel, history, useIntl } from 'umi';
-import { message, Tooltip } from 'antd';
-import { FolderOpenOutlined, FolderOutlined } from '@ant-design/icons';
+import { Button, message, Tooltip } from 'antd';
+import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
 import Tree, { mutateTree } from '@atlaskit/tree';
 import type {
   TreeData,
@@ -17,10 +17,11 @@ import {
   updateLesson as apiUpdateLesson,
   updateTopic as apiUpdateTopic,
 } from '@/services/escola-lms/course';
-import { TopicType } from '@/services/escola-lms/enums';
+import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
 import { Context } from '@/components/ProgramForm/Context';
 import { getTypeIcon } from '@/components/ProgramForm/ThreeColProgram/TopicForm';
 import { getTypeName } from '@/components/ProgramForm/ThreeColProgram/TopicForm/media';
+import type { LessonDeeplyStringifyId } from './utils';
 import {
   getRootLessons,
   getTreeDataItemsFromFlatLessonsAndTopics,
@@ -36,13 +37,21 @@ import {
 } from './utils';
 import { NewLessonListItem } from '../NewLessonListItem';
 import { TopicTypesSelector } from '../TopicTypesSelector';
+import { Recommender } from '../Recommender';
+import { RecommenderTopicSelector } from '../Recommender/RecommenderTopicSelector';
+import { createHavePackageInstalled } from '@/utils/access';
+import PACKAGES from '@/consts/packages';
 
 interface NestingSettings {
   topic?: number;
   lesson?: number;
 }
 
-export const LessonList: React.FC = () => {
+interface LessonListProps {
+  onNewLesson?: () => void;
+}
+
+export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
   const { state, currentEditMode, updateLesson, addNewTopic, addNewLesson, getLessons } =
     useContext(Context);
   const courseId = state?.id;
@@ -58,6 +67,9 @@ export const LessonList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const intl = useIntl();
 
+  const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
+    initialState?.packages,
+  ]);
   useEffect(() => {
     setTreeData((prevState) => {
       const root: TreeItem = {
@@ -114,11 +126,25 @@ export const LessonList: React.FC = () => {
     },
     [nestingSettings],
   );
-
   const renderItem = useCallback(
     ({ item, depth, provided, onExpand, onCollapse }: RenderItemParams) => {
       const [type, strId] = item.id.toString().split('-');
       const id = Number(strId);
+
+      const checkLastTopic = (lessonId: number, currentTopicId: string) => {
+        const lessonTopics = flatLessonsAndTopics.find((lesson) =>
+          lesson.id.includes(String(lessonId)),
+        ) as LessonDeeplyStringifyId;
+        const lastTopic = lessonTopics?.topics?.[lessonTopics.topics.length - 1];
+        return lastTopic?.id === currentTopicId;
+      };
+
+      const checkTopicsLength = (lessonId: number) => {
+        const lessonTopics = flatLessonsAndTopics.find((lesson) =>
+          lesson.id.includes(String(lessonId)),
+        ) as LessonDeeplyStringifyId;
+        return lessonTopics?.topics?.length && !(lessonTopics?.topics?.length % 5);
+      };
 
       if (type === 'new' && item.data.isNew) {
         return (
@@ -184,24 +210,51 @@ export const LessonList: React.FC = () => {
           </div>
         );
       }
-
       return (
-        <NavLink
-          className={`program-sidebar__link program-sidebar__list-item program-sidebar__list-item--topic ${
-            currentEditMode?.mode === 'topic' && currentEditMode.id === id
-              ? 'program-sidebar__list-item--active'
-              : ''
-          }`}
-          to={`/courses/list/${courseId}/program/?${type}=${id}`}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-        >
-          <Tooltip placement="right" title={<FormattedMessage id={getTypeName(item.data)} />}>
-            {getTypeIcon(getTypeName(item.data))}
-          </Tooltip>
-          <span className="title">{item.data.title}</span>
-        </NavLink>
+        <>
+          <NavLink
+            className={`program-sidebar__link program-sidebar__list-item program-sidebar__list-item--topic ${
+              currentEditMode?.mode === 'topic' && currentEditMode.id === id
+                ? 'program-sidebar__list-item--active'
+                : ''
+            }`}
+            to={`/courses/list/${courseId}/program/?${type}=${id}`}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+          >
+            <Tooltip placement="right" title={<FormattedMessage id={getTypeName(item.data)} />}>
+              {getTypeIcon(getTypeName(item.data))}
+            </Tooltip>
+            <span className="title">{item.data.title}</span>
+          </NavLink>
+
+          {havePackageInstalled(PACKAGES.Recommender) &&
+            courseId &&
+            currentEditMode?.mode === 'topic' &&
+            currentEditMode?.value?.lesson_id &&
+            currentEditMode?.value?.lesson_id === item.data.lesson_id &&
+            checkLastTopic(currentEditMode.value.lesson_id, item.data.id) && (
+              <>
+                <Recommender
+                  courseId={courseId}
+                  lessonId={currentEditMode.value.lesson_id}
+                  recommenderType={
+                    currentEditMode.value.isNew
+                      ? RecommenderType.Info
+                      : checkTopicsLength(currentEditMode.value.lesson_id)
+                      ? RecommenderType.Course
+                      : RecommenderType.Exercise
+                  }
+                />
+                <RecommenderTopicSelector
+                  onSelected={(topic_type) => onTopicCreate(item.data.lesson_id, topic_type)}
+                  // depth is 0 index based and settings are 1 index based
+                  positionsToHide={getHiddenNewTopicOptions(depth + 1)}
+                />
+              </>
+            )}
+        </>
       );
     },
     [courseId, currentEditMode],
@@ -553,6 +606,16 @@ export const LessonList: React.FC = () => {
         isDragEnabled
         isNestingEnabled
       />
+      <Button
+        onClick={onNewLesson}
+        type="primary"
+        className="program-sidebar__add-btn"
+        icon={<PlusOutlined />}
+      >
+        <span>
+          <FormattedMessage id="add_lesson" />
+        </span>
+      </Button>
     </div>
   );
 };
