@@ -6,6 +6,7 @@ export default {
   'recommender.no_recommendation': 'No recommendations',
   'recommender.finish': 'Finish this lesson now. ',
   'recommender.too_long': 'Lessons that are too long cause a drop in pass rates ',
+  'recommender.save_exercise': 'Save the edited exercise to get further recommendations.',
   'recommender_info.title': 'How do we know this?',
   'recommender_info.first_title': 'Recommender for better Educational results.',
   'recommender_info.first_text':

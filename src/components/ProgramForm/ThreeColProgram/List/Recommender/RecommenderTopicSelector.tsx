@@ -21,11 +21,64 @@ import { TopicType } from '@/services/escola-lms/enums';
 import { FormattedMessage, useModel } from 'umi';
 import { topicTypeToSettingName } from '@/pages/Settings/global';
 
+const topicTypes = [
+  {
+    type: TopicType.RichText,
+    icon: <FileTextOutlined />,
+    title: <FormattedMessage id="RichText" />,
+  },
+  {
+    type: TopicType.OEmbed,
+    icon: <YoutubeOutlined />,
+    title: <FormattedMessage id="OEmbed" />,
+  },
+  {
+    type: TopicType.Audio,
+    icon: <AudioOutlined />,
+    title: <FormattedMessage id="Audio" />,
+  },
+  {
+    type: TopicType.Video,
+    icon: <VideoCameraAddOutlined />,
+    title: <FormattedMessage id="Video" />,
+  },
+  {
+    type: TopicType.H5P,
+    icon: <InteractionOutlined />,
+    title: <FormattedMessage id="H5P" />,
+  },
+  {
+    type: TopicType.Image,
+    icon: <FileImageOutlined />,
+    title: <FormattedMessage id="Image" />,
+  },
+  {
+    type: TopicType.PDF,
+    icon: <FilePdfOutlined />,
+    title: <FormattedMessage id="PDF" />,
+  },
+  {
+    type: TopicType.SCORM,
+    icon: <FundOutlined />,
+    title: <FormattedMessage id="SCORM" />,
+  },
+  {
+    type: TopicType.Project,
+    icon: <CarryOutOutlined />,
+    title: <FormattedMessage id="Project" />,
+  },
+  {
+    type: TopicType.GiftQuiz,
+    icon: <PercentageOutlined />,
+    title: <FormattedMessage id="Quiz" />,
+  },
+];
+
 export const RecommenderTopicSelector: React.FC<{
   onSelected: (type: TopicType) => void;
   positionsToHide?: (TopicType | 'lesson')[];
 }> = ({ onSelected, positionsToHide }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   const { initialState } = useModel('@@initialState');
 
@@ -81,87 +134,15 @@ export const RecommenderTopicSelector: React.FC<{
         className={`${'topic-types-selector__recommender'}
           ${open ? 'topic-types-selector__recommender--active' : ''}`}
       >
-        {!positionsToHide?.includes(TopicType.RichText) &&
-          !topicTypeIsDisabled(TopicType.RichText) && (
-            <Tooltip title={<FormattedMessage id="RichText" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.RichText)}
-                icon={<FileTextOutlined />}
-              />
-            </Tooltip>
-          )}
-        {!positionsToHide?.includes(TopicType.OEmbed) && !topicTypeIsDisabled(TopicType.OEmbed) && (
-          <Tooltip title={<FormattedMessage id="OEmbed" />}>
-            <Button
-              block
-              onClick={() => setSelected(TopicType.OEmbed)}
-              icon={<YoutubeOutlined />}
-            />
-          </Tooltip>
+        {topicTypes.map(
+          (topic) =>
+            !positionsToHide?.includes(topic.type) &&
+            !topicTypeIsDisabled(topic.type) && (
+              <Tooltip title={topic.title} key={topic.type}>
+                <Button block onClick={() => setSelected(topic.type)} icon={topic.icon} />
+              </Tooltip>
+            ),
         )}
-        {!positionsToHide?.includes(TopicType.Audio) && !topicTypeIsDisabled(TopicType.Audio) && (
-          <Tooltip title={<FormattedMessage id="Audio" />}>
-            <Button block onClick={() => setSelected(TopicType.Audio)} icon={<AudioOutlined />} />
-          </Tooltip>
-        )}
-        {!positionsToHide?.includes(TopicType.Video) && !topicTypeIsDisabled(TopicType.Video) && (
-          <Tooltip title={<FormattedMessage id="Video" />}>
-            <Button
-              block
-              onClick={() => setSelected(TopicType.Video)}
-              icon={<VideoCameraAddOutlined />}
-            />
-          </Tooltip>
-        )}
-        {!positionsToHide?.includes(TopicType.H5P) && !topicTypeIsDisabled(TopicType.H5P) && (
-          <Tooltip title={<FormattedMessage id="H5P" />}>
-            <Button
-              block
-              onClick={() => setSelected(TopicType.H5P)}
-              icon={<InteractionOutlined />}
-            />
-          </Tooltip>
-        )}
-        {!positionsToHide?.includes(TopicType.Image) && !topicTypeIsDisabled(TopicType.Image) && (
-          <Tooltip title={<FormattedMessage id="Image" />}>
-            <Button
-              block
-              onClick={() => setSelected(TopicType.Image)}
-              icon={<FileImageOutlined />}
-            />
-          </Tooltip>
-        )}
-        {!positionsToHide?.includes(TopicType.PDF) && !topicTypeIsDisabled(TopicType.PDF) && (
-          <Tooltip title={<FormattedMessage id="PDF" />}>
-            <Button block onClick={() => setSelected(TopicType.PDF)} icon={<FilePdfOutlined />} />
-          </Tooltip>
-        )}
-        {!positionsToHide?.includes(TopicType.SCORM) && !topicTypeIsDisabled(TopicType.SCORM) && (
-          <Tooltip title={<FormattedMessage id="SCORM" />}>
-            <Button block onClick={() => setSelected(TopicType.SCORM)} icon={<FundOutlined />} />
-          </Tooltip>
-        )}
-        {!positionsToHide?.includes(TopicType.Project) &&
-          !topicTypeIsDisabled(TopicType.Project) && (
-            <Tooltip title={<FormattedMessage id="Project" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.Project)}
-                icon={<CarryOutOutlined />}
-              />
-            </Tooltip>
-          )}
-        {!positionsToHide?.includes(TopicType.GiftQuiz) &&
-          !topicTypeIsDisabled(TopicType.GiftQuiz) && (
-            <Tooltip title={<FormattedMessage id="Quiz" />}>
-              <Button
-                block
-                onClick={() => setSelected(TopicType.GiftQuiz)}
-                icon={<PercentageOutlined />}
-              />
-            </Tooltip>
-          )}
       </div>
     </div>
   );

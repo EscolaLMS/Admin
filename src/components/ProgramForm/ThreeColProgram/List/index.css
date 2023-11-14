@@ -164,6 +164,12 @@
 }
 
 /* RECOMMENDER */
+:root {
+  --recommender-primary: #2dac34;
+  --recommender-secondary: #dbfddc;
+  --recommender-text: #fff;
+}
+
 .recommender {
   position: relative;
   display: flex;
@@ -171,35 +177,41 @@
 
   margin: 8px;
   padding: 14px 14px 14px 0;
-  background-color: #dbfddc;
+  background-color: var(--recommender-secondary);
   border-radius: 12px;
 }
+
 .recommender__title {
-  color: #2dac34;
+  color: var(--recommender-primary);
   font-weight: 600;
   font-size: 12px;
 }
+
 .recommender__paragraph {
   font-size: 10px;
 }
+
 .recommender__paragraph--span {
-  color: #2dac34;
+  color: var(--recommender-primary);
   font-weight: 600;
 }
+
 .recommender__button {
   padding: 5px 12px;
-  color: white;
+  color: var(--recommender-text);
   font-weight: 600;
   font-size: 10px;
-  background-color: #2dac34;
-  border-color: #2dac34;
+  background-color: var(--recommender-primary);
+  border-color: var(--recommender-primary);
   border-radius: 2px;
 }
+
 .recommender__button:hover {
-  color: white;
-  background-color: #2dac34;
-  border-color: #2dac34;
+  color: var(--recommender-text);
+  background-color: var(--recommender-primary);
+  border-color: var(--recommender-primary);
 }
+
 .recommender__popover {
   position: absolute;
   top: 10px;
@@ -215,6 +227,7 @@
   font-weight: 600;
   font-size: 12px;
 }
+
 .recommender__popover-text {
   font-size: 10px;
 }

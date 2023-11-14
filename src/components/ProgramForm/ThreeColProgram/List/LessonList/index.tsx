@@ -135,7 +135,6 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
         const lessonTopics = flatLessonsAndTopics.find((lesson) =>
           lesson.id.includes(String(lessonId)),
         ) as LessonDeeplyStringifyId;
-
         const lastTopic = lessonTopics?.topics?.[lessonTopics.topics.length - 1];
         return lastTopic?.id === currentTopicId;
       };
@@ -241,7 +240,9 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
                   courseId={courseId}
                   lessonId={currentEditMode.value.lesson_id}
                   recommenderType={
-                    checkTopicsLength(currentEditMode.value.lesson_id)
+                    currentEditMode.value.isNew
+                      ? RecommenderType.Info
+                      : checkTopicsLength(currentEditMode.value.lesson_id)
                       ? RecommenderType.Course
                       : RecommenderType.Exercise
                   }

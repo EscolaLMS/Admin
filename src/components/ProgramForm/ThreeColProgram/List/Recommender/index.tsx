@@ -1,23 +1,23 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { getCourseRecommender, getExerciseRecommender } from '@/services/escola-lms/recommender';
+import React, { useCallback, useContext } from 'react';
 import { FormattedMessage, history } from 'umi';
 import { Context } from '../../../Context';
 import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
-
 import { ExerciseRecommender } from './ExerciseRecommender';
 import { CourseRecommender } from './CourseRecommender';
 import { RecommenderIcon } from '@/icons';
 import { RecommenderInfo } from './RecommenderInfo';
 import { Spin } from 'antd';
+import { getTopicType, useCourseRecommender, useExerciseRecommender } from './utils';
+import { InfoRecommender } from './InfoRecommender';
 
 export const Recommender: React.FC<{
   courseId: number;
   lessonId: number;
   recommenderType?: RecommenderType;
 }> = ({ courseId, lessonId, recommenderType = RecommenderType.Exercise }) => {
-  const [course, setCourse] = useState<API.Recommender>();
-  const [excercise, setExcercise] = useState<API.RecommenderExercise>();
   const { addNewTopic } = useContext(Context);
+  const course = useCourseRecommender(courseId);
+  const exercise = useExerciseRecommender(lessonId);
 
   const onTopicCreate = useCallback(
     (lesson_id: number, topic_type: TopicType) => {
@@ -29,32 +29,31 @@ export const Recommender: React.FC<{
     [addNewTopic],
   );
 
-  const getTopicType = (topic: API.RecommenderTopicType) => (topic.includes('H5P') ? 'H5P' : topic);
-
   const getRecommender = (type: RecommenderType) => {
     switch (type) {
+      case RecommenderType.Info:
+        return <InfoRecommender />;
       case RecommenderType.Course:
         return course && <CourseRecommender recommendedData={course} />;
       case RecommenderType.Exercise:
         return (
-          excercise && (
+          exercise && (
             <ExerciseRecommender
               createTopic={() =>
-                onTopicCreate(lessonId, TopicType[getTopicType(excercise?.topic_type)])
+                onTopicCreate(lessonId, TopicType[getTopicType(exercise?.topic_type)])
               }
-              recommendedData={excercise}
+              recommendedData={exercise}
             />
           )
         );
       default:
-        return <FormattedMessage id="no_recommendation" />;
+        return <FormattedMessage id="recommender.no_recommendation" />;
     }
   };
 
-  useEffect(() => {
-    getCourseRecommender(courseId).then((res) => res.success && setCourse(res.data));
-    getExerciseRecommender(lessonId).then((res) => res.success && setExcercise(res.data));
-  }, [courseId, lessonId]);
+  const showLoading = (type: RecommenderType) =>
+    (type === RecommenderType.Exercise && !exercise) ||
+    (type === RecommenderType.Course && !course);
 
   return (
     <div className="recommender">
@@ -63,7 +62,8 @@ export const Recommender: React.FC<{
         <h3 className="recommender__title">
           <FormattedMessage id="recommender.title" />
         </h3>
-        {!excercise && <Spin />}
+
+        {showLoading(recommenderType) && <Spin />}
         {getRecommender(recommenderType)}
       </div>
       <RecommenderInfo />

@@ -101,4 +101,5 @@ export enum QuestionnaireQuestionType {
 export enum RecommenderType {
   Exercise = 'exercise',
   Course = 'course',
+  Info = 'info',
 }

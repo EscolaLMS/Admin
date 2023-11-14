@@ -6,6 +6,7 @@ export default {
   'recommender.no_recommendation': 'Brak rekomendacji',
   'recommender.finish': 'Zakończ tę lekcję teraz. ',
   'recommender.too_long': 'Zbyt długie lekcje powodują spadek zdawalności o ',
+  'recommender.save_exercise': 'Zapisz edytowane ćwiczenie aby uzyskać kolejne rekomendacje.',
   'recommender_info.title': 'Skąd to wiemy?',
   'recommender_info.first_title': 'Rekomender dla lepszych wyników Edukacyjnych.',
   'recommender_info.first_text':

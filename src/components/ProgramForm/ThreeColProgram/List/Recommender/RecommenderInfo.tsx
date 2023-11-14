@@ -2,7 +2,7 @@ import { Popover } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';
 
-const popoverContent = (
+const PopoverContent = (
   <div className="recommender__popover-wrapper">
     <h3 className="recommender__popover-title">
       <FormattedMessage id="recommender_info.title" />
@@ -25,7 +25,7 @@ const popoverContent = (
 export const RecommenderInfo: React.FC = () => (
   <Popover
     placement="bottomLeft"
-    content={popoverContent}
+    content={PopoverContent}
     trigger="click"
     showArrow={false}
     className="recommender__popover"
