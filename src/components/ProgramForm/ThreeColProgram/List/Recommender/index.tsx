@@ -5,7 +5,7 @@ import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
 import { ExerciseRecommender } from './ExerciseRecommender';
 import { CourseRecommender } from './CourseRecommender';
 import { RecommenderIcon } from '@/icons';
-import { RecommenderInfo } from './RecommenderInfo';
+import { RecommenderPopoverInfo } from './RecommenderPopoverInfo';
 import { Spin } from 'antd';
 import { getTopicType, useCourseRecommender, useExerciseRecommender } from './utils';
 import { InfoRecommender } from './InfoRecommender';
@@ -51,9 +51,9 @@ export const Recommender: React.FC<{
     }
   };
 
-  const showLoading = (type: RecommenderType) =>
-    (type === RecommenderType.Exercise && !exercise) ||
-    (type === RecommenderType.Course && !course);
+  const isLoading =
+    (recommenderType === RecommenderType.Exercise && !exercise) ||
+    (recommenderType === RecommenderType.Course && !course);
 
   return (
     <div className="recommender">
@@ -62,11 +62,10 @@ export const Recommender: React.FC<{
         <h3 className="recommender__title">
           <FormattedMessage id="recommender.title" />
         </h3>
-
-        {showLoading(recommenderType) && <Spin />}
+        {isLoading && <Spin />}
         {getRecommender(recommenderType)}
       </div>
-      <RecommenderInfo />
+      <RecommenderPopoverInfo />
     </div>
   );
 };

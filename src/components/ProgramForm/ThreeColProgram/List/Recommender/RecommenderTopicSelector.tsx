@@ -20,6 +20,7 @@ import '../types.css';
 import { TopicType } from '@/services/escola-lms/enums';
 import { FormattedMessage, useModel } from 'umi';
 import { topicTypeToSettingName } from '@/pages/Settings/global';
+import { createHavePackageInstalled } from '@/utils/access';
 
 const topicTypes = [
   {
@@ -87,6 +88,10 @@ export const RecommenderTopicSelector: React.FC<{
     onSelected(type);
   }, []);
 
+  const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
+    initialState?.packages,
+  ]);
+
   const topicTypeIsDisabled = useCallback(
     (type: TopicType) => {
       const key = Object.keys(TopicType)
@@ -103,13 +108,13 @@ export const RecommenderTopicSelector: React.FC<{
 
       switch (type) {
         case TopicType.GiftQuiz:
-          return !(initialState?.packages && initialState?.packages?.[PACKAGES.TopicTypeGift]);
+          return !havePackageInstalled(PACKAGES.TopicTypeGift);
         case TopicType.SCORM:
-          return !(initialState?.packages && initialState?.packages?.[PACKAGES.Scorm]);
+          return !havePackageInstalled(PACKAGES.Scorm);
         case TopicType.Project:
-          return !(initialState?.packages && initialState?.packages?.[PACKAGES.TopicTypeProject]);
+          return !havePackageInstalled(PACKAGES.TopicTypeProject);
         default:
-          return !(initialState?.packages && initialState?.packages?.[PACKAGES.TopicTypes]);
+          return !havePackageInstalled(PACKAGES.TopicTypes);
       }
     },
     [initialState],
