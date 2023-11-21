@@ -30,4 +30,4 @@ export const createText = (topic: API.RecommenderTopicType) =>
   topic?.includes('.') && topic?.split('.').join(' ');
 
 export const formatRecommenderProbability = (probability: number): number =>
-  Math.floor(probability * 100);
+  Math.min(Math.floor(Math.abs(probability) * 100), 100);

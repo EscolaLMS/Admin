@@ -139,13 +139,6 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
         return lastTopic?.id === currentTopicId;
       };
 
-      const checkTopicsLength = (lessonId: number) => {
-        const lessonTopics = flatLessonsAndTopics.find((lesson) =>
-          lesson.id.includes(String(lessonId)),
-        ) as LessonDeeplyStringifyId;
-        return lessonTopics?.topics?.length && !(lessonTopics?.topics?.length % 5);
-      };
-
       if (type === 'new' && item.data.isNew) {
         return (
           <NewLessonListItem
@@ -242,14 +235,13 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
                   recommenderType={
                     currentEditMode.value.isNew
                       ? RecommenderType.Info
-                      : checkTopicsLength(currentEditMode.value.lesson_id)
+                      : flatLessonsAndTopics.length > 5
                       ? RecommenderType.Course
                       : RecommenderType.Exercise
                   }
                 />
                 <RecommenderTopicSelector
                   onSelected={(topic_type) => onTopicCreate(item.data.lesson_id, topic_type)}
-                  // depth is 0 index based and settings are 1 index based
                   positionsToHide={getHiddenNewTopicOptions(depth + 1)}
                 />
               </>
