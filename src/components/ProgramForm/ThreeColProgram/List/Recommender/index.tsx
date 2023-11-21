@@ -63,7 +63,13 @@ export const Recommender: React.FC<{
           <FormattedMessage id="recommender.title" />
         </h3>
         {isLoading && <Spin />}
-        {getRecommender(recommenderType)}
+        {getRecommender(
+          recommenderType === RecommenderType.Course &&
+            course?.probability &&
+            course?.probability > -0.0116
+            ? RecommenderType.Exercise
+            : recommenderType,
+        )}
       </div>
       <RecommenderPopoverInfo />
     </div>

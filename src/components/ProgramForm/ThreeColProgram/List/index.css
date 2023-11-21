@@ -231,3 +231,7 @@
 .recommender__popover-text {
   font-size: 10px;
 }
+.anticon {
+  display: inline-flex;
+  align-items: flex-start;
+}
