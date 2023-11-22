@@ -5,6 +5,7 @@ import ProForm, {
   ProFormSwitch,
   ModalForm,
   ProFormTextArea,
+  ProFormDigit,
 } from '@ant-design/pro-form';
 import { slugify } from '@/services/escola-lms/slug';
 import { useIntl, FormattedMessage } from 'umi';
@@ -24,6 +25,8 @@ export const CategoryModalForm: React.FC<{
 
   const [form] = Form.useForm();
 
+  const isEditing = typeof id === 'number' && id > 0;
+
   useEffect(() => {
     setDeletedIcon(false);
     if (typeof id === 'number' && id > 0) {
@@ -41,8 +44,8 @@ export const CategoryModalForm: React.FC<{
     <ModalForm
       form={form}
       title={intl.formatMessage({
-        id: typeof id === 'number' && id > 0 ? 'editCategory' : 'newCategory',
-        defaultMessage: typeof id === 'number' && id > 0 ? 'editCategory' : 'newCategory',
+        id: isEditing ? 'editCategory' : 'newCategory',
+        defaultMessage: isEditing ? 'editCategory' : 'newCategory',
       })}
       width="400px"
       visible={visible}
@@ -84,6 +87,7 @@ export const CategoryModalForm: React.FC<{
         label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
         initialValue={false}
       />
+      <ProFormDigit name="order" label={<FormattedMessage id="stacking_order" />} />
       <ProForm.Item
         name="parent_id"
         label={<FormattedMessage id="parent_category" defaultMessage="parent_category" />}
