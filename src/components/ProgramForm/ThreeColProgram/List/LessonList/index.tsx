@@ -41,6 +41,7 @@ import { Recommender } from '../Recommender';
 import { RecommenderTopicSelector } from '../Recommender/RecommenderTopicSelector';
 import { createHavePackageInstalled } from '@/utils/access';
 import PACKAGES from '@/consts/packages';
+import { CourseRecommender } from '../Recommender/CourseRecommender';
 
 interface NestingSettings {
   topic?: number;
@@ -229,15 +230,12 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
             currentEditMode?.value?.lesson_id === item.data.lesson_id &&
             checkLastTopic(currentEditMode.value.lesson_id, item.data.id) && (
               <>
+                {flatLessonsAndTopics.length > 5 && <CourseRecommender courseId={courseId} />}
                 <Recommender
                   courseId={courseId}
                   lessonId={currentEditMode.value.lesson_id}
                   recommenderType={
-                    currentEditMode.value.isNew
-                      ? RecommenderType.Info
-                      : flatLessonsAndTopics.length > 5
-                      ? RecommenderType.Course
-                      : RecommenderType.Exercise
+                    currentEditMode.value.isNew ? RecommenderType.Info : RecommenderType.Exercise
                   }
                 />
                 <RecommenderTopicSelector
