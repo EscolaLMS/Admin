@@ -1,11 +1,12 @@
 export default {
   'recommender.title': 'Rekomender Wellms',
-  'recommender.add_exercise': 'Jeśli dodasz teraz ćwiczenie ',
-  'recommender.increase': 'to ukańczalność Twojego kursu będzie wynosić ',
+  'recommender.add_exercise': 'Najlepszym ćwiczeniem jakie teraz możesz dodać to ',
+  'recommender.increase': 'Przewidywana ukańczalność tego ćwiczenia wynosi ',
   'recommender.add_button': 'Tak, dodaj',
   'recommender.no_recommendation': 'Brak rekomendacji',
-  'recommender.finish': 'Zakończ kurs teraz. ',
-  'recommender.too_long': 'Zbyt dużo ćwiczeń i lekcji powoduje spadek zdawalności o ',
+  'recommender.finish':
+    'Dodanie kolejnego ćwiczenia może spowodować spadek ukańczalności kursu na poziomie ',
+  'recommender.too_long': 'Zastanów się czy na pewno chcesz dodać kolejne ćwiczenie.',
   'recommender.save_exercise': 'Zapisz edytowane ćwiczenie aby uzyskać kolejne rekomendacje.',
   'recommender_info.title': 'Skąd to wiemy?',
   'recommender_info.first_title': 'Rekomender dla lepszych wyników Edukacyjnych.',

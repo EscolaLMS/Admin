@@ -21,7 +21,7 @@ export const ExerciseRecommender: React.FC<ExerciseRecommenderProps> = ({
       <br />
       <FormattedMessage id="recommender.increase" />
       <span className="recommender__paragraph--span">
-        {`${formatRecommenderProbability(recommendedData.probability)}%`}
+        {`${formatRecommenderProbability(recommendedData.probability)}%.`}
       </span>
     </Paragraph>
     <Button className="recommender__button" type="default" onClick={createTopic}>

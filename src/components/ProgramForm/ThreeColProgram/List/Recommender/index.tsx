@@ -3,11 +3,10 @@ import { FormattedMessage, history } from 'umi';
 import { Context } from '../../../Context';
 import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
 import { ExerciseRecommender } from './ExerciseRecommender';
-import { CourseRecommender } from './CourseRecommender';
 import { RecommenderIcon } from '@/icons';
 import { RecommenderPopoverInfo } from './RecommenderPopoverInfo';
 import { Spin } from 'antd';
-import { getTopicType, useCourseRecommender, useExerciseRecommender } from './utils';
+import { getTopicType, useExerciseRecommender } from './utils';
 import { InfoRecommender } from './InfoRecommender';
 
 export const Recommender: React.FC<{
@@ -16,7 +15,6 @@ export const Recommender: React.FC<{
   recommenderType?: RecommenderType;
 }> = ({ courseId, lessonId, recommenderType = RecommenderType.Exercise }) => {
   const { addNewTopic } = useContext(Context);
-  const course = useCourseRecommender(courseId);
   const exercise = useExerciseRecommender(lessonId);
 
   const onTopicCreate = useCallback(
@@ -33,8 +31,6 @@ export const Recommender: React.FC<{
     switch (type) {
       case RecommenderType.Info:
         return <InfoRecommender />;
-      case RecommenderType.Course:
-        return course && <CourseRecommender recommendedData={course} />;
       case RecommenderType.Exercise:
         return (
           exercise && (
@@ -51,9 +47,7 @@ export const Recommender: React.FC<{
     }
   };
 
-  const isLoading =
-    (recommenderType === RecommenderType.Exercise && !exercise) ||
-    (recommenderType === RecommenderType.Course && !course);
+  const isLoading = recommenderType === RecommenderType.Exercise && !exercise;
 
   return (
     <div className="recommender">
@@ -63,13 +57,7 @@ export const Recommender: React.FC<{
           <FormattedMessage id="recommender.title" />
         </h3>
         {isLoading && <Spin />}
-        {getRecommender(
-          recommenderType === RecommenderType.Course &&
-            course?.probability &&
-            course?.probability > -0.0116
-            ? RecommenderType.Exercise
-            : recommenderType,
-        )}
+        {getRecommender(recommenderType)}
       </div>
       <RecommenderPopoverInfo />
     </div>

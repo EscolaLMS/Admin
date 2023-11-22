@@ -1,11 +1,12 @@
 export default {
   'recommender.title': 'Recommender Wellms',
-  'recommender.add_exercise': 'If you add an exercise now ',
-  'recommender.increase': 'then the completion rate of your course will be ',
+  'recommender.add_exercise': 'The best exercise you can add right now is ',
+  'recommender.increase': 'The expected completion time for this exercise is ',
   'recommender.add_button': 'Yes, add',
   'recommender.no_recommendation': 'No recommendations',
-  'recommender.finish': 'Finish the course now. ',
-  'recommender.too_long': 'Too many exercises and lessons result in a drop in pass rates ',
+  'recommender.finish':
+    'Adding another exercise may result in a drop in completion rate for the course ',
+  'recommender.too_long': 'Consider whether you really want to add another exercise.',
   'recommender.save_exercise': 'Save the edited exercise to get further recommendations.',
   'recommender_info.title': 'How do we know this?',
   'recommender_info.first_title': 'Recommender for better Educational results.',
