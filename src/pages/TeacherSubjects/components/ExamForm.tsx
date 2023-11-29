@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history } from 'umi';
 import { Button, Col, InputNumber, Row, Spin } from 'antd';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { createExam, getExam, updateExam } from '@/services/escola-lms/exams';
 
-import { ConvertGradesModal, type ConvertedData } from './ConvertGradesModal';
 import { useTeacherSubject } from '../context';
+import { ConvertGradesModal, type ConvertedData } from './ConvertGradesModal';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 const SelectTypeButtonsGroup: React.FC<{ onSelect: (type: ExamGradeType) => void }> = ({
   onSelect,
@@ -211,6 +212,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             cardProps={{ bodyStyle: { paddingInline: 0 } }}
             search={false}
             dataSource={convertedData.exam_results}
+            pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
             columns={staticColumns}
           />
         )}

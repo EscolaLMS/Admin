@@ -5,6 +5,7 @@ import ProTable, { type ProColumns } from '@ant-design/pro-table';
 
 import { allStudentsAndGroups as fetchAllStudentsAndGroups } from '@/services/escola-lms/student_user_groups';
 import { useTeacherSubject } from '../context';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 import { CreateTeamsChatButton } from './CreateTeamsChatButton';
 
 interface TableDataProps {
@@ -91,6 +92,7 @@ export const Students: React.FC = () => {
       className="table-standalone"
       rowKey={(record) => `${record.group_id}-${record.user_id}`}
       search={{ layout: 'vertical' }}
+      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async ({ groups, first_name = '', last_name = '', email = '' }) => {
         const response = await fetchAllStudentsAndGroups({
           parent_id: teacherSubjectData?.group_id,
