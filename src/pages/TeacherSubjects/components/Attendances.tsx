@@ -10,6 +10,7 @@ import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/servi
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 type AttendanceTableItem = { id: number; full_name: string } & Record<string, API.AttendanceValue>;
 
@@ -141,7 +142,10 @@ export const Attendances: React.FC = () => {
       }}
       columns={columns}
       search={{ layout: 'vertical' }}
-      pagination={{ onChange: () => actionRef.current?.reload() }}
+      pagination={{
+        pageSize: TEACHER_SUBJECTS_PAGE_SIZE,
+        onChange: () => actionRef.current?.reload(),
+      }}
       scroll={{ x: 1500 }}
       actionRef={actionRef}
       rowKey="id"

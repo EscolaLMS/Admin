@@ -69,6 +69,7 @@ declare namespace API {
     icon_class: string;
     created_at: string;
     updated_at: string;
+    order: number;
     pivot?: {
       course_id: number;
       category_id: number;

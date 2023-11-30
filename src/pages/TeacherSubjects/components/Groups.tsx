@@ -8,6 +8,7 @@ import { ExportOutlined } from '@ant-design/icons';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { useTeacherSubject } from '../context';
 import { ExportPCGFileButton } from './ExportPCGFileButton';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 export const StudentsTableColumns: ProColumns<API.StudentUserGroup>[] = [
   {
@@ -73,6 +74,7 @@ export const Groups: React.FC = () => {
       rowKey="id"
       search={false}
       dataSource={teacherSubjectData?.groups ?? []}
+      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       columns={[
         ...TableColumns,
         {

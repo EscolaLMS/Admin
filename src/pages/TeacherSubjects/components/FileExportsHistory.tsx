@@ -11,6 +11,7 @@ import { getPCGExportsHistory } from '@/services/escola-lms/pcg-export';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { useTeacherSubject } from '../context';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 const DownloadButton: React.FC<{ url: string }> = ({ url }) => (
   <Tooltip title={<FormattedMessage id="download" />}>
@@ -159,6 +160,7 @@ export const FileExportsHistory: React.FC = () => {
       columns={columns}
       search={{ layout: 'vertical' }}
       scroll={{ x: 1500 }}
+      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
     />
   );
 };

@@ -19,6 +19,7 @@ import {
   getScalesBySubjectScaleFormId,
   getStudentExamsFromExams,
 } from '../FinalGradesDetails/utils';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from '../consts';
 import {
   getAttendanceCols,
   getExamsCols,
@@ -194,7 +195,10 @@ export const ClassRegister: React.FC = () => {
       search={{ layout: 'vertical' }}
       scroll={{ x: 1500 }}
       actionRef={actionRef}
-      pagination={{ onChange: () => actionRef.current?.reload() }}
+      pagination={{
+        pageSize: TEACHER_SUBJECTS_PAGE_SIZE,
+        onChange: () => actionRef.current?.reload(),
+      }}
       rowKey="id"
     />
   );

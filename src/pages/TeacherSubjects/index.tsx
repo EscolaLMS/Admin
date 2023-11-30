@@ -7,6 +7,7 @@ import ProTable from '@ant-design/pro-table';
 import { semesterSubjects } from '@/services/escola-lms/semester_subject';
 import { EditOutlined } from '@ant-design/icons';
 import SemesterSelect from '@/components/SemesterSelect';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './components/consts';
 
 export const TableColumns: ProColumns<API.Subjects>[] = [
   {
@@ -78,6 +79,7 @@ const TableList: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
+        pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
         request={({ pageSize, current, semester_id }) => {
           return semesterSubjects({ per_page: pageSize, page: current, semester_id }).then(
             (response) => {

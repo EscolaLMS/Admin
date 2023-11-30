@@ -26,7 +26,7 @@ const handleUpdate = async (intl: IntlShape, fields: API.CategoryListItem, id?: 
     }),
   );
   try {
-    await (id && id !== -1 ? updateCategory(id, { ...fields }) : createCategory({ ...fields }));
+    await (id && id !== -1 ? updateCategory(id, fields) : createCategory(fields));
     hide();
     message.success(
       intl.formatMessage({
@@ -302,15 +302,9 @@ const TableList: React.FC = () => {
       <CategoryModalForm
         id={modalVisible}
         visible={Number.isInteger(modalVisible)}
-        onVisibleChange={(value) => {
-          return value === false && setModalVisible(false);
-        }}
+        onVisibleChange={(value) => !value && setModalVisible(false)}
         onFinish={async (value) => {
-          const success = await handleUpdate(
-            intl,
-            value as API.CategoryListItem,
-            Number(modalVisible),
-          );
+          const success = await handleUpdate(intl, value, Number(modalVisible));
           if (success) {
             setModalVisible(false);
             if (actionRef.current) {
