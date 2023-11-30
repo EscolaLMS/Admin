@@ -10,6 +10,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { DAY_FORMAT } from '@/consts/dates';
 import { getExams, deleteExam } from '@/services/escola-lms/exams';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 import { ExamForm } from './ExamForm';
 import { ExamResults } from './ExamResults';
 import { useTeacherSubject } from '../context';
@@ -97,6 +98,7 @@ export const Exams: React.FC = () => {
       actionRef={actionRef}
       search={false}
       rowKey="id"
+      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async ({ current, pageSize }, sort) => {
         if (semester_subject_id === null)
           return {

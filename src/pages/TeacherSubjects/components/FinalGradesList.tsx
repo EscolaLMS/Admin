@@ -8,8 +8,9 @@ import { EditOutlined } from '@ant-design/icons';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { getGroupFinalGrades } from '@/services/escola-lms/grades';
-import { FinalGradesDetails } from './FinalGradesDetails';
 import { useTeacherSubject } from '../context';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
+import { FinalGradesDetails } from './FinalGradesDetails';
 
 interface TableParams {
   group_id?: number[];
@@ -77,6 +78,7 @@ export const FinalGradesList: React.FC = () => {
       className="table-standalone"
       rowKey="id"
       search={{ layout: 'vertical' }}
+      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async ({ group_id: group_ids = [], first_name = '', last_name = '' }) => {
         const allGroups = (teacherSubjectData?.groups ?? []).map(({ id }) => id);
 
