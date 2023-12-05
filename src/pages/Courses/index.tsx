@@ -16,6 +16,12 @@ import UserSelect from '@/components/UserSelect';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
 
+function getUserItems(v: number[] | API.UserItem[]): API.UserItem[] {
+  return ((v ?? []) as (API.UserItem | number)[])?.filter(
+    (i): i is API.UserItem => typeof i !== 'number',
+  );
+}
+
 export const TableColumns: ProColumns<API.CourseListItem>[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -106,6 +112,25 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
     search: false,
   },
   {
+    title: <FormattedMessage id="author_tutor" />,
+    dataIndex: 'authors',
+    key: 'authors',
+    sorter: false,
+    render: (_, record) => (
+      <>
+        {getUserItems(record.authors ?? []).map((author) => (
+          <Tag key={`${record?.id}-${author.id}`}>{`${author.first_name} ${author.last_name}`}</Tag>
+        ))}
+      </>
+    ),
+    renderFormItem: (_i, { type, defaultRender, ...rest }, form) => {
+      if (type === 'form') return null;
+      const stateType = form.getFieldValue('state');
+
+      return <UserSelect multiple {...rest} state={{ type: stateType }} />;
+    },
+  },
+  {
     title: <FormattedMessage id="categories" defaultMessage="Categories" />,
     dataIndex: 'category_id',
     key: 'category_id',
@@ -167,18 +192,6 @@ export const TableColumns: ProColumns<API.CourseListItem>[] = [
         )}
       </React.Fragment>
     ),
-  },
-  {
-    title: <FormattedMessage id="author_tutor" />,
-    dataIndex: 'authors',
-    hideInTable: true,
-    hideInDescriptions: true,
-    renderFormItem: (_i, { type, defaultRender, ...rest }, form) => {
-      if (type === 'form') return null;
-      const stateType = form.getFieldValue('state');
-
-      return <UserSelect multiple {...rest} state={{ type: stateType }} />;
-    },
   },
 ];
 
@@ -396,12 +409,13 @@ const TableList: React.FC = () => {
             dataIndex: 'option',
             valueType: 'option',
             render: (_, record) => [
-              <Link to={`/courses/list/${record.id}`}>
+              <Link key="edit" to={`/courses/list/${record.id}`}>
                 <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                  <Button type="primary" icon={<EditOutlined />}></Button>
+                  <Button type="primary" icon={<EditOutlined />} />
                 </Tooltip>
               </Link>,
               <Popconfirm
+                key="delete"
                 title={
                   <FormattedMessage
                     id="deleteQuestion"
@@ -413,21 +427,21 @@ const TableList: React.FC = () => {
                 cancelText={<FormattedMessage id="no" defaultMessage="No" />}
               >
                 <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                  <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+                  <Button type="primary" icon={<DeleteOutlined />} danger />
                 </Tooltip>
               </Popconfirm>,
 
-              <Tooltip title={<FormattedMessage id="export" defaultMessage="export" />}>
-                <Button
-                  onClick={() => handleExport(Number(record.id))}
-                  icon={<ExportOutlined />}
-                ></Button>
+              <Tooltip
+                key="export"
+                title={<FormattedMessage id="export" defaultMessage="export" />}
+              >
+                <Button onClick={() => handleExport(Number(record.id))} icon={<ExportOutlined />} />
               </Tooltip>,
-              <Tooltip title={<FormattedMessage id="clone" defaultMessage="clone" />}>
+              <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
                 <Button
                   onClick={() => record.id && handleClone(record.id)}
                   icon={<CopyOutlined />}
-                ></Button>
+                />
               </Tooltip>,
             ],
           },
