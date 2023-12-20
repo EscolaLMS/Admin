@@ -72,4 +72,12 @@ export default defineConfig({
   access: {
     strictMode: true,
   },
+  chainWebpack: (conf) => {
+    conf.module
+      .rule('mjs$')
+      .test(/\.mjs$/)
+      .include.add(/node_modules/)
+      .end()
+      .type('javascript/auto');
+  },
 });
