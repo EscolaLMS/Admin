@@ -72,4 +72,12 @@ export default defineConfig({
   access: {
     strictMode: true,
   },
+  // DUE TO BUILD ERROR
+  chainWebpack(config) {
+    config.module
+      .rule('mjs')
+      .type('javascript/auto')
+      .test(/\.mjs$/)
+      .include.add(/node_modules/);
+  },
 });
