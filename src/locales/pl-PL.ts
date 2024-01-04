@@ -765,7 +765,7 @@ export default {
   file_downloaded: 'Pobrano plik',
   file_downloaded_error: 'Nie udało się pobrać pliku',
   present: 'Obecny',
-  not_exercising: 'Nie ćwiczący',
+  not_exercising: 'Niećwiczący',
   excused_absence: 'Nieobecność usprawiedliwiona',
   pressSaveToCreateQuestions: 'Stwórz ten temat przed dodaniem pytań',
   addNewQuestion: 'Dodaj nowe pytanie',
