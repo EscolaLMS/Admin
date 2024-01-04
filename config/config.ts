@@ -74,10 +74,12 @@ export default defineConfig({
   },
   // DUE TO BUILD ERROR
   chainWebpack(config) {
+    config.resolve.extensions.add('.mjs');
     config.module
-      .rule('mjs')
-      .type('javascript/auto')
+      .rule('mjs$')
       .test(/\.mjs$/)
-      .include.add(/node_modules/);
+      .include.add(/node_modules/)
+      .end()
+      .type('javascript/auto');
   },
 });
