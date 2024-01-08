@@ -78,7 +78,7 @@ export const FinalGradesList: React.FC = () => {
       className="table-standalone"
       rowKey="id"
       search={{ layout: 'vertical' }}
-      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+      pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async ({ group_id: group_ids = [], first_name = '', last_name = '' }) => {
         const allGroups = (teacherSubjectData?.groups ?? []).map(({ id }) => id);
 

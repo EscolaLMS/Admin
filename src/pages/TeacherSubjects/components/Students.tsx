@@ -92,7 +92,7 @@ export const Students: React.FC = () => {
       className="table-standalone"
       rowKey={(record) => `${record.group_id}-${record.user_id}`}
       search={{ layout: 'vertical' }}
-      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+      pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async ({ groups, first_name = '', last_name = '', email = '' }) => {
         const response = await fetchAllStudentsAndGroups({
           parent_id: teacherSubjectData?.group_id,

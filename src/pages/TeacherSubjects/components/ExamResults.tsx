@@ -25,7 +25,7 @@ export const ExamResults: React.FC<Props> = ({ exam_id }) => {
       rowKey="user_id"
       search={false}
       headerTitle={title}
-      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+      pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async () => {
         const response = await getExam(exam_id);
 

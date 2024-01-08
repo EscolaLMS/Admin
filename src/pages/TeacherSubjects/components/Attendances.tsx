@@ -143,7 +143,7 @@ export const Attendances: React.FC = () => {
       columns={columns}
       search={{ layout: 'vertical' }}
       pagination={{
-        pageSize: TEACHER_SUBJECTS_PAGE_SIZE,
+        defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE,
         onChange: () => actionRef.current?.reload(),
       }}
       scroll={{ x: 1500 }}
