@@ -46,7 +46,7 @@ export const Attendances: React.FC = () => {
         },
       },
       {
-        title: <FormattedMessage id="nameAndSurname" defaultMessage="Name and surname" />,
+        title: <FormattedMessage id="surnameAndName" defaultMessage="Name and surname" />,
         dataIndex: 'full_name',
         fixed: 'left',
       },
