@@ -122,6 +122,7 @@ export const getFinalGradesCols = (
     align: 'center',
     render: (_n, record) => (
       <FinalGradeSelect
+        key={`${record?.final_grades?.group_id}-${term.id}`}
         defaultFinalGrade={record[`final-grade-${term.id}`]}
         finalGrades={record.final_grades}
         term={term}
