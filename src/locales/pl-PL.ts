@@ -48,6 +48,7 @@ export default {
   groupName: 'Nazwa grupy',
   studentsList: 'Lista studentów',
   nameAndSurname: 'Imię i nazwisko',
+  surnameAndName: 'Nazwisko i imię',
   attendances: 'Obecności',
   noAttendanceSchedule: 'Brak harmonogramu obecności dla tej grupy...',
   tutorName: 'Prowadzący',
