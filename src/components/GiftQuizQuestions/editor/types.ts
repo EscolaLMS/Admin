@@ -3,7 +3,7 @@ import type { QuestionType } from '@/services/escola-lms/enums';
 type BaseFormData = {
   type: QuestionType;
   question: string;
-  score: number;
+  score: API.Nullable<number>;
   category_id?: API.Nullable<number>;
 };
 
