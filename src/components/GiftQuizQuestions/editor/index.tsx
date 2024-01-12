@@ -45,7 +45,11 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
     const value = parseToGIFT(formData);
 
     const { score, category_id } = formData;
-    const status = await onSubmit({ value, score, category_id });
+    const status = await onSubmit({
+      value,
+      score: score ?? 0,
+      category_id,
+    });
 
     if (!status) {
       return;
@@ -85,11 +89,13 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
           required
         />
         <GiftQuizQuestion type={type} />
-        <ProFormDigit
-          name="score"
-          label={<FormattedMessage id="Questions.score" defaultMessage="Score" />}
-          rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
-        />
+        {type !== QuestionType.DESCRIPTION && (
+          <ProFormDigit
+            name="score"
+            label={<FormattedMessage id="Questions.score" defaultMessage="Score" />}
+            rules={[{ required: true, message: <FormattedMessage id="field_required" /> }]}
+          />
+        )}
         {competencyChallengeCategoryTreeProps && (
           <ProForm.Item
             name="category_id"
