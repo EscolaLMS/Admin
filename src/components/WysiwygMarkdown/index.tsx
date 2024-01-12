@@ -1,5 +1,5 @@
 import React from 'react';
-import RichMarkdownEditor2 from 'traverse-markdown-editor';
+import RichMarkdownEditor2 from '@escolalms/markdown-editor';
 import { upload, resizedImage } from '@/services/escola-lms/files';
 import './index.css';
 import { useIntl } from 'umi';
@@ -36,7 +36,7 @@ export const FormWysiwyg: React.FC<FormWysiwygProps> = ({
         excludeBlockMenuItems={['Sketch']}
         embeds={[
           {
-            matcher: (url) => {
+            matcher: () => {
               return true;
             },
             component: EmbedUploaded,
