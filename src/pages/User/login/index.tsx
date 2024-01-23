@@ -117,6 +117,7 @@ const Login: React.FC = () => {
         initialValues={{
           autoLogin: true,
         }}
+        isKeyPressSubmit
         submitter={{
           searchConfig: {
             submitText: isPasswordReset

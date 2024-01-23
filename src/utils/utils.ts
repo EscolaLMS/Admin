@@ -1,5 +1,5 @@
 import { SortOrder } from 'antd/lib/table/interface';
-
+import moment from 'moment';
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
@@ -544,3 +544,14 @@ export const objectToQueryString = (params: object) =>
     .filter((key) => params[key])
     .map((key) => key + '=' + params[key])
     .join('&');
+
+export const timeDisplay = (seconds: number) => {
+  const duration = moment.duration(seconds, 'seconds');
+  const secondsPart = duration.seconds() > 0 ? `${duration.seconds()}s` : '';
+  const minutesPart = duration.minutes() > 0 ? `${duration.minutes()}m` : '';
+  const hoursPart = duration.hours() > 0 ? `${duration.hours()}h` : '';
+
+  const formattedTime = [hoursPart, minutesPart, secondsPart].filter(Boolean);
+
+  return formattedTime;
+};

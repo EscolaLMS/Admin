@@ -7,9 +7,9 @@ import { FormattedMessage, useIntl } from 'umi';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
-
 import TypeButtonDrawer from '../TypeButtonDrawer';
 import { ExportStatsButton } from './ExportStatsButton';
+import { timeDisplay } from '@/utils/utils';
 
 type UserStatColumn = Record<string, number | string | API.FinishedTopicsUserStat> & {
   email: string;
@@ -29,6 +29,7 @@ export const UserProgress: React.FC<{
   stats: API.FinishedTopicsUserStats[];
 }> = ({ course_id, topics, stats }) => {
   const [showSeconds, setShowSeconds] = useState(false);
+
   const columns: ColumnsType<UserStatColumn> = useMemo(() => {
     return [
       {
@@ -50,14 +51,13 @@ export const UserProgress: React.FC<{
         return {
           render: (row: API.FinishedTopicsUserStat | undefined) => {
             let result = 0;
-            let minutes = 0;
+
             if (row) {
               if (row.started_at && row.finished_at) {
                 result = 1;
               } else if (row.started_at) {
                 result = 2;
               }
-              minutes = row.seconds / 60;
             }
 
             switch (result) {
@@ -65,14 +65,14 @@ export const UserProgress: React.FC<{
                 return (
                   <Space>
                     <Tag color="success">F</Tag>
-                    {showSeconds && <small>{minutes.toFixed(2)}m</small>}
+                    {showSeconds && row?.seconds && <small>{timeDisplay(row.seconds)}</small>}
                   </Space>
                 );
               case 2:
                 return (
                   <Space>
                     <Tag color="blue">S</Tag>
-                    {showSeconds && <small>{minutes.toFixed(2)}m</small>}
+                    {showSeconds && row?.seconds && <small>{timeDisplay(row.seconds)}</small>}
                   </Space>
                 );
               case 0:
