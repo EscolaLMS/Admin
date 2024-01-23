@@ -74,7 +74,7 @@ export const Groups: React.FC = () => {
       rowKey="id"
       search={false}
       dataSource={teacherSubjectData?.groups ?? []}
-      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+      pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       columns={[
         ...TableColumns,
         {

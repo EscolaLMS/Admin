@@ -80,6 +80,7 @@ export default {
   groupName: 'Group name',
   studentsList: 'Students list',
   nameAndSurname: 'Name and surname',
+  surnameAndName: 'Surname and name',
   attendances: 'Attendances',
   noAttendanceSchedule: 'No attendance schedule for this group...',
   msTeams: 'MS Teams',

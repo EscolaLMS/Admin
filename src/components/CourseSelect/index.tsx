@@ -117,7 +117,7 @@ export const CourseSelect: React.FC<{
       showSearch
       onSearch={fetch}
       onDeselect={onDeselect}
-      placeholder={<FormattedMessage id="select_person" defaultMessage="Select a person" />}
+      placeholder={<FormattedMessage id="select_course" defaultMessage="Select a course" />}
       optionFilterProp="children"
       filterOption={(input, option) => {
         if (option && option.children) {

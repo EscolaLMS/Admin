@@ -212,7 +212,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             cardProps={{ bodyStyle: { paddingInline: 0 } }}
             search={false}
             dataSource={convertedData.exam_results}
-            pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+            pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
             columns={staticColumns}
           />
         )}

@@ -98,7 +98,7 @@ export const Exams: React.FC = () => {
       actionRef={actionRef}
       search={false}
       rowKey="id"
-      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+      pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
       request={async ({ current, pageSize }, sort) => {
         if (semester_subject_id === null)
           return {

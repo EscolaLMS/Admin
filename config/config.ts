@@ -72,8 +72,9 @@ export default defineConfig({
   access: {
     strictMode: true,
   },
-  chainWebpack: (conf) => {
-    conf.module
+  chainWebpack(config) {
+    config.resolve.extensions.add('.mjs');
+    config.module
       .rule('mjs$')
       .test(/\.mjs$/)
       .include.add(/node_modules/)

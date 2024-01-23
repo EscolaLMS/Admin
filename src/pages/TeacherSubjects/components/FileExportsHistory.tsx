@@ -160,7 +160,7 @@ export const FileExportsHistory: React.FC = () => {
       columns={columns}
       search={{ layout: 'vertical' }}
       scroll={{ x: 1500 }}
-      pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+      pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
     />
   );
 };

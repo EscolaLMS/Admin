@@ -46,7 +46,7 @@ export const Attendances: React.FC = () => {
         },
       },
       {
-        title: <FormattedMessage id="nameAndSurname" defaultMessage="Name and surname" />,
+        title: <FormattedMessage id="surnameAndName" defaultMessage="Name and surname" />,
         dataIndex: 'full_name',
         fixed: 'left',
       },
@@ -143,7 +143,7 @@ export const Attendances: React.FC = () => {
       columns={columns}
       search={{ layout: 'vertical' }}
       pagination={{
-        pageSize: TEACHER_SUBJECTS_PAGE_SIZE,
+        defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE,
         onChange: () => actionRef.current?.reload(),
       }}
       scroll={{ x: 1500 }}

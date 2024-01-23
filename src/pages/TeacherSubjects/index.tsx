@@ -79,7 +79,7 @@ const TableList: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
-        pagination={{ pageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
+        pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
         request={({ pageSize, current, semester_id }) => {
           return semesterSubjects({ per_page: pageSize, page: current, semester_id }).then(
             (response) => {
