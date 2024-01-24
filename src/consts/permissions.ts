@@ -127,6 +127,9 @@ enum PERMISSIONS {
   ScormDelete = 'scorm_delete',
   ScormGetTrack = 'scorm_track-read',
   ScormSetTrack = 'scorm_track-update',
+  ScormListOwn = 'scorm_list-own',
+  ScormReadOwn = 'scorm_read-own',
+  ScormDeleteOwn = 'scorm_delete-own',
 
   /* -------- EscolaLMS/Reports -------- */
 
