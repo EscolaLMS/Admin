@@ -89,6 +89,7 @@ export default function (initialState: {
         PERMISSIONS.CourseList,
         PERMISSIONS.H5PList,
         PERMISSIONS.ScormList,
+        PERMISSIONS.ScormListOwn,
         PERMISSIONS.CategoryList,
         PERMISSIONS.WebinarList,
       ) && !haveSettingsInDashboard('hideInMenu-Courses', true),
@@ -109,10 +110,13 @@ export default function (initialState: {
     ),
 
     scormListPermission:
-      havePermissionsInDashboard(PERMISSIONS.ScormList) &&
+      havePermissionsInDashboard(PERMISSIONS.ScormList, PERMISSIONS.ScormListOwn) &&
       !haveSettingsInDashboard('hideInMenu-CoursesH5ps', true) &&
       !haveSettingsInDashboard('disableTopicType-SCORM', true),
-    scormDetailsPermission: havePermissionsInDashboard(PERMISSIONS.ScormRead),
+    scormDetailsPermission: havePermissionsInDashboard(
+      PERMISSIONS.ScormRead,
+      PERMISSIONS.ScormReadOwn,
+    ),
 
     pageListPermission: havePermissionsInDashboard(PERMISSIONS.PageList),
     pageDetailsPermission: havePermissionsInDashboard(PERMISSIONS.PageRead),
