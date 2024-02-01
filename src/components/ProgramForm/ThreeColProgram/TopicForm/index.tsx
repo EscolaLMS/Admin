@@ -111,11 +111,9 @@ export const Topic: React.FC = () => {
       topic.json?.ffmpeg.state === 'finished'
     )
       return;
-
     const interval = window.setInterval(() => {
       getLessons?.();
-    }, 1000);
-
+    }, 5000);
     return () => {
       window.clearInterval(interval);
     };
