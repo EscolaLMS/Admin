@@ -29,7 +29,7 @@ export default defineConfig({
   // https://umijs.org/zh-CN/plugins/plugin-locale
   locale: {
     // default zh-CN
-    default: 'en-US',
+    default: 'pt-BR',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
     baseNavigator: false,
@@ -72,7 +72,6 @@ export default defineConfig({
   access: {
     strictMode: true,
   },
-  // DUE TO BUILD ERROR
   chainWebpack(config) {
     config.resolve.extensions.add('.mjs');
     config.module
