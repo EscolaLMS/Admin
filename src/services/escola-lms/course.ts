@@ -23,6 +23,14 @@ export async function getCourse(id: number, options?: RequestOptionsInit, cache?
   });
 }
 
+/**  GET /api/topics/:id */
+export async function getTopic(id: number, options?: RequestOptionsInit) {
+  return request<API.DefaultResponse<API.Topic>>(`/api/admin/topics/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /**  POST /api/courses/${id} */
 export async function updateCourse(
   id: number,

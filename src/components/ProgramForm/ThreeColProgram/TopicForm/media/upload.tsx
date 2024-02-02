@@ -82,7 +82,7 @@ const VideoProgress: React.FC<{ topic: API.TopicVideo }> = ({ topic }) => {
         if (getLessons) {
           getLessons();
         }
-      }, 5000);
+      }, 1000);
       return () => clearTimeout(t);
     }
     return;

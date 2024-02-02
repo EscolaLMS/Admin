@@ -7,7 +7,7 @@ import Divider from 'antd/lib/divider';
 import MediaUpload from './media/upload';
 import RichTextEditor from './media/text';
 import { TopicType } from '@/services/escola-lms/enums';
-
+import { getTopic } from '@/services/escola-lms/course';
 import Oembed from './media/oembed';
 import H5PForm from './media/h5p';
 import TopicForm from './form';
@@ -89,6 +89,11 @@ export const Topic: React.FC = () => {
 
   const [sortOrder /* , setSortOrder */] = useState(topics.order);
   const [loading, setLoading] = useState(false);
+  const [currentTopic, setCurrentTopic] = useState<API.Topic>(topic);
+
+  useEffect(() => {
+    setCurrentTopic(topic);
+  }, [topic]);
 
   useEffect(() => {
     setTopics((prevState) => {
@@ -106,18 +111,27 @@ export const Topic: React.FC = () => {
   // Encoding progressbar state refresh
   useEffect(() => {
     if (
-      topic?.topicable_type !== TopicType.Video ||
-      !topic.json?.ffmpeg.state ||
-      topic.json?.ffmpeg.state === 'finished'
+      currentTopic?.topicable_type !== TopicType.Video ||
+      !currentTopic.json?.ffmpeg.state ||
+      currentTopic.json?.ffmpeg.state === 'finished'
     )
       return;
-    const interval = window.setInterval(() => {
-      getLessons?.();
-    }, 5000);
+
+    const fetchData = async () => {
+      if (topic.id) {
+        const response = await getTopic(topic.id);
+        if (response.success) {
+          setCurrentTopic(response.data);
+        }
+      }
+    };
+
+    const interval = window.setInterval(fetchData, 5000);
+
     return () => {
       window.clearInterval(interval);
     };
-  }, [topic?.topicable_type, topic.json?.ffmpeg?.state]);
+  }, [currentTopic?.topicable_type, currentTopic.json?.ffmpeg?.state]);
 
   const updateValue = useCallback(
     (key: keyof API.Topic, value: any) => {
@@ -224,7 +238,7 @@ export const Topic: React.FC = () => {
               <MediaUpload
                 folder={`course/${state?.id}`}
                 type={type}
-                topic={topic}
+                topic={currentTopic}
                 currentState={topics}
                 onChange={(info) => {
                   setLoading(true);
