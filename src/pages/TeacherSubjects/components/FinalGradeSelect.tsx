@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { FormattedMessage } from 'umi';
-import { Select } from 'antd';
+import { FormattedMessage, useIntl } from 'umi';
+import { Select, message } from 'antd';
 
 import { createFinalGrade, removeFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
+import type { ResponseError } from 'umi-request';
 
 interface Props {
   term: API.GradeTerm;
@@ -23,18 +24,27 @@ export const FinalGradeSelect: React.FC<Props> = ({
   finalGrades,
 }) => {
   const [createdGrade, setCreatedGrade] = useState(defaultFinalGrade);
-
   const [loading, setLoading] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(false);
 
+  const intl = useIntl();
   const options = useMemo(
     () => gradeScales.map(({ name, id }) => ({ value: id, label: name })),
     [gradeScales],
   );
 
+  const onError = (error: ResponseError) => {
+    setErrorStatus(true);
+    message.error(
+      intl.formatMessage({
+        id: error.data.message,
+      }),
+    );
+  };
+
   const onChange = useCallback(
     (grade_scale_id: number | undefined) => {
       if (!finalGrades?.id) return;
-
       if (grade_scale_id === undefined) {
         if (!createdGrade) return;
         setLoading(true);
@@ -51,7 +61,13 @@ export const FinalGradeSelect: React.FC<Props> = ({
         setLoading(true);
         updateFinalGrade(createdGrade.id, {
           grade_scale_id,
-        }).finally(() => setLoading(false));
+        })
+          .catch((error) => {
+            if (error?.data?.message) {
+              onError(error);
+            }
+          })
+          .finally(() => setLoading(false));
         return;
       }
 
@@ -65,6 +81,12 @@ export const FinalGradeSelect: React.FC<Props> = ({
           if (res.success) {
             const recentGrade = res.data.grades.find((grade) => grade.grade_term.id === term.id);
             setCreatedGrade(recentGrade);
+            if (errorStatus) setErrorStatus(false);
+          }
+        })
+        .catch((error) => {
+          if (error?.data?.message) {
+            onError(error);
           }
         })
         .finally(() => setLoading(false));
@@ -77,6 +99,7 @@ export const FinalGradeSelect: React.FC<Props> = ({
   return (
     <Select
       allowClear
+      status={errorStatus ? 'error' : ''}
       loading={loading}
       disabled={loading}
       placeholder={<FormattedMessage id="select_final_grade" />}
