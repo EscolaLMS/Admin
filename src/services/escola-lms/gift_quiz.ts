@@ -1,9 +1,9 @@
 import { request } from 'umi';
 
-import type { RequestOptionsInit } from 'umi-request';
+import { AxiosRequestConfig } from '@umijs/max';
 
 /** POST /api/admin/gift-questions */
-export async function createQuestion(body: API.CreateQuizQuestion, options?: RequestOptionsInit) {
+export async function createQuestion(body: API.CreateQuizQuestion, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.AttemptGiftQuestion>>(`/api/admin/gift-questions`, {
     method: 'POST',
     data: body,
@@ -15,7 +15,7 @@ export async function createQuestion(body: API.CreateQuizQuestion, options?: Req
 export async function updateQuestion(
   id: number,
   body: API.CreateQuizQuestion,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.AttemptGiftQuestion>>(`/api/admin/gift-questions/${id}`, {
     method: 'PUT',
@@ -25,7 +25,7 @@ export async function updateQuestion(
 }
 
 /** DELETE /api/admin/gift-questions */
-export async function deleteQuestion(id: number, options?: RequestOptionsInit) {
+export async function deleteQuestion(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.AttemptGiftQuestion>>(`/api/admin/gift-questions/${id}`, {
     method: 'DELETE',
     ...(options || {}),
@@ -35,7 +35,7 @@ export async function deleteQuestion(id: number, options?: RequestOptionsInit) {
 /** GET /api/admin/quiz-attempts */
 export async function getQuizAttempts(
   params: API.QuizAttemptsParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<API.QuizAttempt>>('/api/admin/quiz-attempts', {
     method: 'GET',
@@ -45,7 +45,7 @@ export async function getQuizAttempts(
 }
 
 /** GET /api/admin/quiz-attempts/{id} */
-export async function getQuizAttemptDetails(id: string | number, options?: RequestOptionsInit) {
+export async function getQuizAttemptDetails(id: string | number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.QuizAttemptDetails>>(`/api/admin/quiz-attempts/${id}`, {
     method: 'GET',
     ...(options || {}),
@@ -56,7 +56,7 @@ export async function getQuizAttemptDetails(id: string | number, options?: Reque
 export async function updateQuizAnswer(
   answer_id: number,
   body: API.UpdateGiftQuizAnswer,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.AttemptAnswer>>(`/api/admin/quiz-answers/${answer_id}`, {
     method: 'PATCH',
@@ -66,7 +66,7 @@ export async function updateQuizAnswer(
 }
 
 /** GET /api/admin/gift-quizes/{id} */
-export async function getGiftQuiz(id: string | number, options?: RequestOptionsInit) {
+export async function getGiftQuiz(id: string | number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
     method: 'GET',
     ...(options || {}),
@@ -77,7 +77,7 @@ export async function getGiftQuiz(id: string | number, options?: RequestOptionsI
 export async function updateGiftQuiz(
   id: string | number,
   body: API.UpdateGiftQuiz,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
     method: 'PUT',
@@ -89,7 +89,7 @@ export async function updateGiftQuiz(
 /** GET /api/admin/gift-questions/export */
 export async function exportQuizQuestions(
   { quiz_id, ...params }: API.ExportGiftQuizQuestionsParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<Blob | API.DefaultResponseError>(`/api/admin/gift-questions/export`, {
     method: 'GET',

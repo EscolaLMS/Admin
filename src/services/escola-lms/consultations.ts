@@ -1,10 +1,10 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/consultations */
 export async function consultations(
   params?: API.ConsultationsParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<API.Consultation>>(`/api/admin/consultations`, {
     method: 'GET',
@@ -15,7 +15,7 @@ export async function consultations(
 }
 
 /**  POST /api/consultations */
-export async function createConsultation(body?: Record<string, any>, options?: RequestOptionsInit) {
+export async function createConsultation(body?: Record<string, any>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Consultation>>(`/api/admin/consultations`, {
     method: 'POST',
     headers: {
@@ -27,7 +27,7 @@ export async function createConsultation(body?: Record<string, any>, options?: R
 }
 
 /**  GET /api/admin/consultations/:id */
-export async function getConsultation(id: number, options?: RequestOptionsInit) {
+export async function getConsultation(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Consultation>>(`/api/admin/consultations/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -39,7 +39,7 @@ export async function getConsultation(id: number, options?: RequestOptionsInit) 
 export async function updateConsultation(
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Consultation>>(`/api/admin/consultations/${id}`, {
     method: 'PUT',
@@ -52,7 +52,7 @@ export async function updateConsultation(
 }
 
 /**  GET /api/admin/consultations/:id */
-export async function deleteConsultation(id: number, options?: RequestOptionsInit) {
+export async function deleteConsultation(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Consultation>>(`/api/admin/consultations/${id}`, {
     method: 'DELETE',
     /* useCache: true */ useCache: false,
@@ -61,7 +61,7 @@ export async function deleteConsultation(id: number, options?: RequestOptionsIni
 }
 
 /**  GET /api/admin/consultations/:id/schedule */
-export async function getSchedule(id: number, options?: RequestOptionsInit) {
+export async function getSchedule(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.ConsultationAppointment[]>>(
     `/api/admin/consultations/${id}/schedule`,
     {
@@ -76,7 +76,7 @@ export async function getSchedule(id: number, options?: RequestOptionsInit) {
 export async function changeTermDate(
   termId: number,
   newDate: string,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Consultation>>(
     `/api/admin/consultations/change-term/${termId}`,

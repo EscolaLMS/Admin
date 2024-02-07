@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
+import type { AxiosRequestConfig } from 'umi-request';
 
 /**  GET /api/admin/translations */
 export async function translations(
@@ -8,7 +8,7 @@ export async function translations(
       group?: string;
       key?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<API.Translation>>(`/api/admin/translations`, {
     method: 'GET',
@@ -19,7 +19,7 @@ export async function translations(
 }
 
 /**  POST /api/admin/translations */
-export async function createTranslation(body: API.Translation, options?: RequestOptionsInit) {
+export async function createTranslation(body: API.Translation, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Translation>>(`/api/admin/translations`, {
     method: 'POST',
     headers: {
@@ -31,7 +31,7 @@ export async function createTranslation(body: API.Translation, options?: Request
 }
 
 /**  GET /api/admin/translations */
-export async function getTranslation(id: number, options?: RequestOptionsInit) {
+export async function getTranslation(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Translation>>(`/api/admin/translations/${id}`, {
     method: 'GET',
     headers: {
@@ -43,7 +43,7 @@ export async function getTranslation(id: number, options?: RequestOptionsInit) {
 }
 
 /**  GET /api/admin/translations/retrieve */
-export async function getTranslationRetrieve(key: string, options?: RequestOptionsInit) {
+export async function getTranslationRetrieve(key: string, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.TranslationRetrieve[]>>(
     `/api/admin/translations/retrieve`,
     {
@@ -63,7 +63,7 @@ export async function getTranslationRetrieve(key: string, options?: RequestOptio
 export async function updateTranslation(
   id: number,
   body: API.Translation,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Translation>>(`/api/admin/translations/${id}`, {
     method: 'PUT',
@@ -76,7 +76,7 @@ export async function updateTranslation(
 }
 
 /**  DELETE /api/admin/translations */
-export async function deleteTranslation(id: number, options?: RequestOptionsInit) {
+export async function deleteTranslation(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Translation>>(`/api/admin/translations/${id}`, {
     method: 'DELETE',
     headers: {

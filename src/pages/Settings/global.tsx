@@ -1,23 +1,23 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef, Fragment } from 'react';
-import { useIntl, FormattedMessage, useModel } from 'umi';
-import type { IntlShape } from 'react-intl';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { TopicType } from '@/services/escola-lms/enums';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, message, Popconfirm, Tooltip } from 'antd';
+import React, { Fragment, useRef, useState } from 'react';
+import type { IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl, useModel } from 'umi';
 
 import {
-  settings,
   createSettings,
-  updateSettings,
   deleteSettings,
+  settings,
+  updateSettings,
 } from '@/services/escola-lms/settings';
 
-import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import SettingsModalForm from './components/ModalForm';
 
-import { getRoutes } from '@@/core/routes';
+import { getRoutes } from '@@/core/route';
 
 const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
   const hide = message.loading(

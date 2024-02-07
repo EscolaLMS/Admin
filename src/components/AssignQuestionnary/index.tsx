@@ -1,19 +1,22 @@
-import type { ModelTypes } from '@/pages/Questionnaire/form';
-import React, { useCallback, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import {
   assignQuestionnaire,
   questionnaire,
   unassignQuestionnaire,
 } from '@/services/escola-lms/questionnaire';
-import { message, Switch } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Switch, message } from 'antd';
+import React, { useCallback, useRef } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import TypeButtonDrawer from '../TypeButtonDrawer';
 
 const ModelNames = {
   1: 'course',
 };
+
+export enum ModelTypes {
+  COURSE = 1,
+}
 
 const TableColumns: ProColumns<API.Questionnaire>[] = [
   {

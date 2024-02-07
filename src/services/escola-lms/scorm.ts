@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function scorms(
@@ -7,7 +7,7 @@ export async function scorms(
     API.PaginationParams & {
       search?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.ScormList>('/api/admin/scorm', {
     params,
@@ -25,7 +25,7 @@ export async function scormssco(
     pageSize?: number;
     search?: string;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.ScormScosList>('/api/admin/scorm/scos', {
     params: {
@@ -39,7 +39,7 @@ export async function scormssco(
   });
 }
 
-export async function deleteScorm(id: number, options?: RequestOptionsInit) {
+export async function deleteScorm(id: number, options?: AxiosRequestConfig) {
   return request<API.SCORM>(`/api/admin/scorm/${id}`, {
     method: 'DELETE',
     ...(options || {}),

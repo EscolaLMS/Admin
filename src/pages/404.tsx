@@ -1,15 +1,15 @@
+import { history, useIntl } from '@umijs/max';
 import { Button, Result } from 'antd';
 import React from 'react';
-import { history, FormattedMessage } from 'umi';
 
 const NoFoundPage: React.FC = () => (
   <Result
     status="404"
     title="404"
-    subTitle={<FormattedMessage id="404_subtitle" />}
+    subTitle={useIntl().formatMessage({ id: 'pages.404.subTitle' })}
     extra={
       <Button type="primary" onClick={() => history.push('/')}>
-        <FormattedMessage id="back_home" />
+        {useIntl().formatMessage({ id: 'pages.404.buttonText' })}
       </Button>
     }
   />

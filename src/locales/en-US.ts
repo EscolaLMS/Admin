@@ -1,20 +1,36 @@
 import component from './en-US/component';
 import globalHeader from './en-US/globalHeader';
 import menu from './en-US/menu';
+import pages from './en-US/pages';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
-import pages from './en-US/pages';
-import notifications from './en-US/notifications';
-import templates from './en-US/templates';
+
 import consultations from './en-US/consultations';
-import fabric from './en-US/fabric';
-import vouchers from './en-US/vouchers';
 import courses from './en-US/courses';
 import events from './en-US/events';
+import fabric from './en-US/fabric';
+import notifications from './en-US/notifications';
 import recommender from './en-US/recommender';
+import templates from './en-US/templates';
+import vouchers from './en-US/vouchers';
 
 export default {
+  'navBar.lang': 'Languages',
+  'layout.user.link.help': 'Help',
+  'layout.user.link.privacy': 'Privacy',
+  'layout.user.link.terms': 'Terms',
+  'app.preview.down.block': 'Download this page to your local project',
+  'app.welcome.link.fetch-blocks': 'Get all block',
+  'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
+  ...globalHeader,
+  ...menu,
+  ...settingDrawer,
+  ...settings,
+  ...pwa,
+  ...component,
+  ...pages,
+
   actions: 'Actions',
   question: 'Question',
   sort: 'Sort',
@@ -99,13 +115,7 @@ export default {
   'uploadFile.MsTeamsForms': 'Upload file from MS Teams',
   'uploadFile.MsTeams': 'Upload file from TestPortal',
   'uploadFile.TestPortal': 'Upload file from MS Teams Forms',
-  'navBar.lang': 'Languages',
-  'layout.user.link.help': 'Help',
-  'layout.user.link.privacy': 'Privacy',
-  'layout.user.link.terms': 'Terms',
-  'app.preview.down.block': 'Download this page to your local project',
-  'app.welcome.link.fetch-blocks': 'Get all block',
-  'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
+
   ...globalHeader,
   ...menu,
   ...settingDrawer,
@@ -179,6 +189,8 @@ export default {
   'menu.Competency challenges': 'Competency challenges',
   'menu.Competency challenges.List': 'List',
   'menu.Competency challenges.Competency challenge': 'Competency challenge',
+  'menu.My Profile': 'My Profile',
+  'menu.My Profile.My Profile': 'My Profile',
   'stationary_event.edit': 'Stationary event edit form',
   stationary_event: 'Stationary event',
   finished_at: 'Finished at Date',

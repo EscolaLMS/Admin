@@ -1,47 +1,47 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Alert, Button } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormDigit,
-  ProFormDatePicker,
-  ProFormSelect,
-  ProFormSwitch,
-} from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
-import {
-  useParams,
-  history,
-  useIntl,
-  FormattedMessage,
-  useAccess,
-  useModel,
-  getLocale,
-  getAllLocales,
-} from 'umi';
-import { isAfter, isBefore } from 'date-fns';
-import { PageContainer } from '@ant-design/pro-layout';
-import { getCourse, updateCourse, createCourse } from '@/services/escola-lms/course';
+import type { ModelTypes } from '@/components/AssignQuestionnary';
+import AssignQuestionnary from '@/components/AssignQuestionnary';
+import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
+import ConfirmModal from '@/components/ConfirmModal';
+import CourseStatistics from '@/components/CourseStatistics';
+import EditValidateModal from '@/components/EditValidateModal';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
-import UserSelect from '@/components/UserSelect';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
-import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
-import TagsInput from '@/components/TagsInput';
+import ProductWidget from '@/components/ProductWidget';
 import ProgramForm from '@/components/ProgramForm/';
+import { ProjectsList } from '@/components/ProjectsList';
 import ScormSelector from '@/components/Scorm';
+import TagsInput from '@/components/TagsInput';
+import UserSelect from '@/components/UserSelect';
+import UserSubmissions from '@/components/UsersSubmissions';
+import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
+import { createCourse, getCourse, updateCourse } from '@/services/escola-lms/course';
+import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
+import ProCard from '@ant-design/pro-card';
+import ProForm, {
+  ProFormDatePicker,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+} from '@ant-design/pro-form';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Alert, Button, Col, Row, Spin, message } from 'antd';
+import { isAfter, isBefore } from 'date-fns';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  FormattedMessage,
+  getAllLocales,
+  getLocale,
+  history,
+  useAccess,
+  useIntl,
+  useModel,
+  useParams,
+} from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
-import CourseStatistics from '@/components/CourseStatistics';
-import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
-import AssignQuestionnary from '@/components/AssignQuestionnary';
-import { ModelTypes } from '../Questionnaire/form';
-import useValidateFormEdit from '@/hooks/useValidateFormEdit';
-import EditValidateModal from '@/components/EditValidateModal';
-import ProductWidget from '@/components/ProductWidget';
-import UserSubmissions from '@/components/UsersSubmissions';
-import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
-import { ProjectsList } from '@/components/ProjectsList';
-import ConfirmModal from '@/components/ConfirmModal';
 
 enum TabNames {
   ATTRIBUTES = 'attributes',

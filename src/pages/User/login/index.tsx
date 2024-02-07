@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useIntl, FormattedMessage, useModel, addLocale, localeInfo } from 'umi';
-import { Alert, message } from 'antd';
-import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import { Alert, message } from 'antd';
+import React, { useState } from 'react';
+import { FormattedMessage, addLocale, localeInfo, useIntl, useModel } from 'umi';
 
 import { forgot, login } from '@/services/escola-lms/auth';
 import { packages } from '@/services/escola-lms/packages';
 import { settings } from '@/services/escola-lms/settings';
-import { refreshTokenCallback } from '@/services/token_refresh';
 import { translations } from '@/services/escola-lms/translations';
-import styles from '../components/index.less';
+import { refreshTokenCallback } from '@/services/token_refresh';
 import AuthLayout from '../components/AuthLayout';
+import styles from '../components/index.less';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -39,7 +39,7 @@ const Login: React.FC = () => {
     const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
 
     if (transl.success) {
-      const messages = {};
+      const messages: Record<string, string> = {};
       transl.data.forEach((t) => {
         Object.keys(t.text).forEach((key) => {
           if (!messages[key]) {
@@ -49,11 +49,16 @@ const Login: React.FC = () => {
         });
       });
 
-      for (const lang in messages) {
-        addLocale(lang, messages[lang], {
-          antd: localeInfo[lang]?.antd || '',
-          momentLocale: localeInfo[lang]?.momentLocale || lang,
-        });
+      try {
+        for (const lang in messages) {
+          // TODO: localeInfo is undefined!!!
+          addLocale(lang, messages[lang], {
+            antd: localeInfo[lang]?.antd || '',
+            momentLocale: localeInfo[lang]?.momentLocale || lang,
+          });
+        }
+      } catch (err) {
+        console.log('translation error', err, translations, messages);
       }
     }
 
@@ -71,6 +76,7 @@ const Login: React.FC = () => {
   const handleLogin = async (values: API.LoginRequest) => {
     try {
       const msg = await login({ ...values });
+
       if (msg.success) {
         localStorage.setItem('TOKEN', msg.data.token);
         dispatchEvent(new Event('token_change'));
@@ -81,6 +87,7 @@ const Login: React.FC = () => {
       }
       setUserLoginState(msg);
     } catch (error: any) {
+      console.log(error);
       message.error(error?.data?.message || 'Error');
     } finally {
       setSubmitting(false);
@@ -104,6 +111,7 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (values: API.LoginRequest | API.ForgotRequest) => {
+    console.log('handleSubmit');
     setSubmitting(true);
     if ('password' in values) {
       handleLogin(values);

@@ -1,10 +1,10 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/pdfs */
 export async function pdfs(
   params: EscolaLms.TemplatesPdf.Http.Requests.PdfListingAdminRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.TemplatesPdf.Models.FabricPDF>>(
     '/api/admin/pdfs',
@@ -20,7 +20,7 @@ export async function pdfs(
 
 /**  GET /api/pdf/{id} */
 
-export async function pdf(id: number, options?: RequestOptionsInit) {
+export async function pdf(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<any>>(`/api/pdfs/${id}`, {
     method: 'GET',
     ...(options || {}),
@@ -29,7 +29,7 @@ export async function pdf(id: number, options?: RequestOptionsInit) {
 
 /**  GET /api/pdf/generate/{id} */
 
-export async function generatedPdf(id: number, options?: RequestOptionsInit) {
+export async function generatedPdf(id: number, options?: AxiosRequestConfig) {
   return request<Response>(`/api/pdfs/generate/${id}`, {
     method: 'GET',
     ...(options || {}),

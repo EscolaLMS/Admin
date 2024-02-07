@@ -1,36 +1,22 @@
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
-import { notification } from 'antd';
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, getLocale, addLocale } from 'umi';
-
-import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
-import type { ResponseError, RequestOptionsInit } from 'umi-request';
+import { Footer } from '@/components';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import { getLocale, history } from '@umijs/max';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
+//import { errorConfig } from './requestErrorConfig';
+import RightContent from '@/components/RightContent';
 import { BookOutlined } from '@ant-design/icons';
+import { notification } from 'antd';
+import { FormattedMessage } from 'umi';
 import RestrictedPage from './pages/403';
+import { packages } from './services/escola-lms/packages';
 import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
 import { translations } from './services/escola-lms/translations';
-
 import { refreshTokenCallback } from './services/token_refresh';
 
-import '@/services/ybug';
-import '@/services/sentry';
-import './app.css';
-import { packages } from './services/escola-lms/packages';
-import { FormattedMessage, localeInfo } from '@@/plugin-locale/localeExports';
-
-declare const REACT_APP_API_URL: string;
-
-// const langParser = (lang: string) => lang.split('-')[0];
-
+const isDev = process.env.NODE_ENV === 'development';
+const loginPath = '/user/login';
 const authpaths = ['/user/login', '/user/reset-password'];
-
-/** 获取用户信息比较慢的时候会展示一个 loading */
-export const initialStateConfig = {
-  loading: <PageLoading />,
-};
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -54,6 +40,8 @@ export async function getInitialState(): Promise<{
       }
       return undefined;
     } catch (error) {
+      console.log('errr', error);
+
       if (authpaths.includes(history.location.pathname)) {
         history.push(`/user/login`);
       } else {
@@ -83,12 +71,15 @@ export async function getInitialState(): Promise<{
         });
       });
 
+      // TODO: fix me
+      /*
       for (const lang in messages) {
         addLocale(lang, messages[lang], {
           antd: localeInfo[lang]?.antd || '',
           momentLocale: localeInfo[lang]?.momentLocale || lang,
         });
       }
+      */
     }
 
     return {
@@ -114,7 +105,85 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// https://umijs.org/zh-CN/plugins/plugin-layout
+// ProLayout 支持的api https://procomponents.ant.design/components/layout
+// export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+//   return {
+//     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+//     avatarProps: {
+//       src: initialState?.currentUser?.avatar,
+//       title: <AvatarName />,
+//       render: (_, avatarChildren) => {
+//         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
+//       },
+//     },
+//     waterMarkProps: {
+//       content: initialState?.currentUser?.name,
+//     },
+//     footerRender: () => <Footer />,
+//     onPageChange: () => {
+//       const { location } = history;
+//       // 如果没有登录，重定向到 login
+//       if (!initialState?.currentUser && location.pathname !== loginPath) {
+//         history.push(loginPath);
+//       }
+//     },
+//     bgLayoutImgList: [
+//       {
+//         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
+//         left: 85,
+//         bottom: 100,
+//         height: '303px',
+//       },
+//       {
+//         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
+//         bottom: -68,
+//         right: -45,
+//         height: '303px',
+//       },
+//       {
+//         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
+//         bottom: 0,
+//         left: 0,
+//         width: '331px',
+//       },
+//     ],
+//     links: isDev
+//       ? [
+//           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+//             <LinkOutlined />
+//             <span>OpenAPI 文档</span>
+//           </Link>,
+//         ]
+//       : [],
+//     menuHeaderRender: undefined,
+//     // 自定义 403 页面
+//     // unAccessible: <div>unAccessible</div>,
+//     // 增加一个 loading 的状态
+//     childrenRender: (children) => {
+//       // if (initialState?.loading) return <PageLoading />;
+//       return (
+//         <>
+//           {children}
+//           {isDev && (
+//             <SettingDrawer
+//               disableUrlParams
+//               enableDarkTheme
+//               settings={initialState?.settings}
+//               onSettingChange={(settings) => {
+//                 setInitialState((preInitialState) => ({
+//                   ...preInitialState,
+//                   settings,
+//                 }));
+//               }}
+//             />
+//           )}
+//         </>
+//       );
+//     },
+//     ...initialState?.settings,
+//   };
+// };
+
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
     if (history.location.query?.redirect) {
@@ -178,28 +247,38 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
-const codeMessage = {
-  200: '200',
-  201: '201',
-  202: '202',
-  204: '204',
-  400: '400',
-  401: '401',
-  403: '403',
-  404: '404',
-  405: '405',
-  406: '406',
-  410: '410',
-  422: '422',
-  500: '500',
-  502: '502',
-  503: '503',
-  504: '504',
+const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+  const token = localStorage.getItem('TOKEN');
+  const optionHeaders = {
+    ...options.headers,
+    'X-locale': getLocale(),
+  };
+
+  if (url.includes('login')) {
+    return {
+      url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
+      options,
+      headers: optionHeaders,
+    };
+  }
+
+  return {
+    url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
+    options: {
+      ...options,
+      interceptors: true,
+      headers: token
+        ? {
+            ...options.headers,
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'X-locale': getLocale(),
+          }
+        : optionHeaders,
+    },
+  };
 };
 
-/**
- * @see https://beta-pro.ant.design/docs/request-cn
- */
 const errorHandler = (error: ResponseError) => {
   const { response, data } = error;
 
@@ -261,38 +340,6 @@ const errorHandler = (error: ResponseError) => {
   }
 
   throw error;
-};
-
-const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  const token = localStorage.getItem('TOKEN');
-  const optionHeaders = {
-    ...options.headers,
-    'X-locale': getLocale(),
-  };
-
-  if (url.includes('login')) {
-    return {
-      url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
-      options,
-      headers: optionHeaders,
-    };
-  }
-
-  return {
-    url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
-    options: {
-      ...options,
-      interceptors: true,
-      headers: token
-        ? {
-            ...options.headers,
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'X-locale': getLocale(),
-          }
-        : optionHeaders,
-    },
-  };
 };
 
 export const request: RequestConfig = {

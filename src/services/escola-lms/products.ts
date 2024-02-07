@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/products */
 export async function products(
@@ -10,7 +10,7 @@ export async function products(
       purchasable?: 0 | 1;
       free?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products`, {
     method: 'GET',
@@ -27,7 +27,7 @@ export async function products(
 /**  POST /api/admin/products */
 export async function createProduct(
   body: EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products`, {
     method: 'POST',
@@ -37,7 +37,7 @@ export async function createProduct(
 }
 
 /**  GET /api/admin/products/:id */
-export async function getProduct(id: number, options?: RequestOptionsInit) {
+export async function getProduct(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
     method: 'GET',
     ...(options || {}),
@@ -48,7 +48,7 @@ export async function getProduct(id: number, options?: RequestOptionsInit) {
 export async function updateProduct(
   id: number,
   body: EscolaLms.Cart.Http.Requests.Admin.ProductUpdateRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(
     `/api/admin/products/${id}?_method=PUT`,
@@ -61,7 +61,7 @@ export async function updateProduct(
 }
 
 /**  DELETE /api/admin/products/:id */
-export async function deleteProduct(id: number, options?: RequestOptionsInit) {
+export async function deleteProduct(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
     method: 'DELETE',
     ...(options || {}),
@@ -69,7 +69,7 @@ export async function deleteProduct(id: number, options?: RequestOptionsInit) {
 }
 
 /**  GET /api/admin/products */
-export async function productables(options?: RequestOptionsInit) {
+export async function productables(options?: AxiosRequestConfig) {
   return request<API.DefaultMetaResponse<API.ProductableListItem>>(`/api/admin/productables`, {
     method: 'GET',
     ...(options || {}),
@@ -79,7 +79,7 @@ export async function productables(options?: RequestOptionsInit) {
 /**  GET /api/admin/productables/product */
 export async function productForModel(
   params: EscolaLms.Cart.Http.Requests.Admin.ProductSearchRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(
     `/api/admin/productables/product`,
@@ -95,7 +95,7 @@ export async function productForModel(
 export async function productAttachToUser(
   id: number,
   body: EscolaLms.Cart.Http.Requests.Admin.ProductAttachRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/products/${id}/attach`, {
     method: 'POST',
@@ -108,7 +108,7 @@ export async function productAttachToUser(
 export async function productDetachToUser(
   id: number,
   body: EscolaLms.Cart.Http.Requests.Admin.ProductDetachRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.ProductableListItem>>(`/api/admin/products/${id}/detach`, {
     method: 'POST',

@@ -1,12 +1,12 @@
-import { FormattedMessage } from 'umi';
-import { Empty, Rate, Row, Spin, Typography } from 'antd';
-import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import { course } from '@/services/escola-lms/course';
 import { questionnaireStars } from '@/services/escola-lms/questionnaire';
-import React, { useEffect, useState } from 'react';
-import { useModel } from '@@/plugin-model/useModel';
-import './index.less';
 import { roundPercentageList } from '@/utils/utils';
+import ProForm, { ProFormSelect } from '@ant-design/pro-form';
+import { useModel } from '@umijs/max';
+import { Empty, Rate, Row, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage } from 'umi';
+import './index.less';
 
 interface Rates {
   1: number;

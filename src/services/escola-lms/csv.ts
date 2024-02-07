@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/csv/users */
 export async function usersCsvExport(
@@ -11,7 +11,7 @@ export async function usersCsvExport(
     role?: string;
     format?: string;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<Blob>('/api/admin/csv/users', {
     params: {

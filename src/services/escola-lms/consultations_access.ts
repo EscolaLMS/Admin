@@ -1,11 +1,11 @@
 import { request } from 'umi';
 
-import type { RequestOptionsInit } from 'umi-request';
+import { AxiosRequestConfig } from '@umijs/max';
 
 /**  GET /api/admin/consultation-access-enquiries */
 export async function consultationAccess(
   params: API.ConsultationAccessEnquiryListParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.ConsultationAccessEnquiryList>(`/api/admin/consultation-access-enquiries`, {
     method: 'GET',
@@ -18,7 +18,7 @@ export async function consultationAccess(
 export async function approveConsultationAccessTerm(
   id: number,
   body: { meeting_link: string | null },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.ConsultationAccessEnquiry>>(
     `/api/admin/consultation-access-enquiries/approve/${id}`,
@@ -34,7 +34,7 @@ export async function approveConsultationAccessTerm(
 export async function disapproveConsultationAccess(
   id: number,
   body: EscolaLms.ConsultationAccess.Http.Requests.Admin.AdminDisapproveConsultationAccessEnquiryRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.ConsultationAccessEnquiry>>(
     `/api/admin/consultation-access-enquiries/disapprove/${id}`,

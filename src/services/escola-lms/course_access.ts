@@ -1,11 +1,11 @@
 import { request } from 'umi';
 
-import type { RequestOptionsInit } from 'umi-request';
+import { AxiosRequestConfig } from '@umijs/max';
 
 /**  GET /api/admin/course-access-enquiries */
 export async function courseAccess(
   params: API.CourseAccessEnquiryListParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.CourseAccessEnquiryList>(`/api/admin/course-access-enquiries`, {
     method: 'GET',
@@ -19,7 +19,7 @@ export async function courseAccess(
 }
 
 /**  DELETE /api/admin/course-access-enquiries/:id */
-export async function deleteCourseAccess(id: number, options?: RequestOptionsInit) {
+export async function deleteCourseAccess(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.CourseAccessEnquiry>>(
     `/api/admin/course-access-enquiries/${id}`,
     {
@@ -30,7 +30,7 @@ export async function deleteCourseAccess(id: number, options?: RequestOptionsIni
 }
 
 /**  POST /api/admin/tasks/:id */
-export async function approveCourseAccess(id: number, options?: RequestOptionsInit) {
+export async function approveCourseAccess(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.CourseAccessEnquiry>>(
     `/api/admin/course-access-enquiries/approve/${id}`,
     {

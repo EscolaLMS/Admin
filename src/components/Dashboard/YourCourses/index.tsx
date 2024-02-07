@@ -1,12 +1,12 @@
-import { FormattedMessage, Link } from 'umi';
-import ProCard from '@ant-design/pro-card';
-import { Button, Spin, Typography, Image } from 'antd';
-import './index.less';
-import { useEffect, useState } from 'react';
+import ResponsiveImage from '@/components/ResponsiveImage';
 import { course } from '@/services/escola-lms/course';
 import { PlusCircleFilled } from '@ant-design/icons';
-import { useModel } from '@@/plugin-model/useModel';
-import ResponsiveImage from '@/components/ResponsiveImage';
+import ProCard from '@ant-design/pro-card';
+import { useModel } from '@umijs/max';
+import { Button, Image, Spin, Typography } from 'antd';
+import { useEffect, useState } from 'react';
+import { FormattedMessage, Link } from 'umi';
+import './index.less';
 
 const truncate = (str: string, n: number) => {
   return str.length > n ? str.substring(0, n - 1) + '...' : str;

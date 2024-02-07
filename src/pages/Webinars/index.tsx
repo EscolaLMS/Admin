@@ -1,23 +1,23 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  DollarOutlined,
-  FireOutlined,
-} from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, Tag, Select, message, Typography } from 'antd';
-import { format } from 'date-fns/esm';
-import { deleteWebinar, webinars, generateYoutubeToken } from '@/services/escola-lms/webinars';
+import { deleteWebinar, generateYoutubeToken, webinars } from '@/services/escola-lms/webinars';
 import { roundTo } from '@/utils/utils';
+import {
+  DeleteOutlined,
+  DollarOutlined,
+  EditOutlined,
+  FireOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { Button, Popconfirm, Select, Tag, Tooltip, Typography, message } from 'antd';
+import { format } from 'date-fns';
 
-import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 import Tags from '@/components/Tags';
+import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 
 import TokenForm from './components/TokenForm';
 

@@ -1,8 +1,8 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/currentUser */
-export async function categoryTree(options?: RequestOptionsInit) {
+export async function categoryTree(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Category[]>>('/api/admin/categories/tree', {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -16,7 +16,7 @@ export async function categories(
     name?: string;
     is_active?: 0 | 1;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.CategoryList>('/api/admin/categories', {
     method: 'GET',
@@ -26,7 +26,7 @@ export async function categories(
   });
 }
 
-export async function category(id: number, options?: RequestOptionsInit) {
+export async function category(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -34,7 +34,7 @@ export async function category(id: number, options?: RequestOptionsInit) {
   });
 }
 
-export async function createCategory(body?: Record<string, any>, options?: RequestOptionsInit) {
+export async function createCategory(body?: Record<string, any>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories`, {
     method: 'POST',
     headers: {
@@ -48,7 +48,7 @@ export async function createCategory(body?: Record<string, any>, options?: Reque
 export async function updateCategory(
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'POST',
@@ -63,7 +63,7 @@ export async function updateCategory(
 export async function deleteCategory(
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Category>>(`/api/admin/categories/${id}`, {
     method: 'DELETE',

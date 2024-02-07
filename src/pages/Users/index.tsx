@@ -1,31 +1,37 @@
-import React, { useMemo, useState } from 'react';
+import { Button, Dropdown, Menu, message, Popconfirm, Tag, Tooltip } from 'antd';
 import { format } from 'date-fns';
-import { useIntl, FormattedMessage, Link, history, getLocale } from 'umi';
-import { Button, Tooltip, Popconfirm, Tag, message, Dropdown, Menu } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { getLocale, history, Link, useIntl } from 'umi';
+
+import { FormattedMessage } from '@umijs/max';
+
 import {
-  PlusOutlined,
-  ExportOutlined,
-  DownloadOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   EditOutlined,
+  ExportOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
+import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import ProCard from '@ant-design/pro-card';
 
-import './index.css';
-import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
-import { DATETIME_FORMAT } from '@/consts/dates';
-import { users, deleteUser } from '@/services/escola-lms/user';
-import { FieldType } from '@/services/escola-lms/enums';
-import useModelFields from '@/hooks/useModelFields';
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
 import SecureUpload from '@/components/SecureUpload';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import useModelFields from '@/hooks/useModelFields';
+import { FieldType } from '@/services/escola-lms/enums';
+import { deleteUser, users } from '@/services/escola-lms/user';
+import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
+import './index.css';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
   return true;
 };
+//console.log('getLocale', getLocale);
+console.log(getLocale, history, Link, useIntl);
+console.log('FormattedMessage', FormattedMessage);
 
 export const TableColumns: ProColumns<API.UserItem>[] = [
   {

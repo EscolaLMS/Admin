@@ -1,3 +1,13 @@
+/**
+ * @see https://umijs.org/docs/max/access#access
+ * */
+// export default function access(initialState: { currentUser?: API.CurrentUser } | undefined) {
+//   const { currentUser } = initialState ?? {};
+//   return {
+//     canAdmin: currentUser,
+//   };
+// }
+
 import PACKAGES from '@/consts/packages';
 import PERMISSIONS from '@/consts/permissions';
 import { isUserHavePermissions } from '@/services/escola-lms/permissions';

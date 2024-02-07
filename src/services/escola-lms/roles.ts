@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/roles */
 export async function roles(
@@ -10,7 +10,7 @@ export async function roles(
     name?: string;
     search?: string;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.RolesList>(`/api/admin/roles`, {
     method: 'GET',
@@ -21,7 +21,7 @@ export async function roles(
 }
 
 /**  POST /api/admin/roles */
-export async function createRole(body?: Partial<API.Role>, options?: RequestOptionsInit) {
+export async function createRole(body?: Partial<API.Role>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Role>>(`/api/admin/roles`, {
     method: 'POST',
     headers: {
@@ -33,7 +33,7 @@ export async function createRole(body?: Partial<API.Role>, options?: RequestOpti
 }
 
 /**  DELETE /api/admin/roles/:id */
-export async function deleteRole(id: string, options?: RequestOptionsInit) {
+export async function deleteRole(id: string, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Role>>(`/api/admin/roles/${id}`, {
     method: 'DELETE',
     headers: {
@@ -44,7 +44,7 @@ export async function deleteRole(id: string, options?: RequestOptionsInit) {
 }
 
 /**  GET /api/admin/roles/:name */
-export async function permisions(name: string, options?: RequestOptionsInit) {
+export async function permisions(name: string, options?: AxiosRequestConfig) {
   return request<API.RolesList>(`/api/admin/roles/${name}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -54,7 +54,7 @@ export async function permisions(name: string, options?: RequestOptionsInit) {
 }
 
 /**  PATCH /api/admin/roles/:name */
-export async function setRolePermisions(name: string, body?: any, options?: RequestOptionsInit) {
+export async function setRolePermisions(name: string, body?: any, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Role>>(`/api/admin/roles/${name}`, {
     method: 'PATCH',
     headers: {

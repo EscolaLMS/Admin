@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 export async function reports(
   params: {
@@ -8,7 +8,7 @@ export async function reports(
     date?: string;
     limit?: number;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.ReportList>('/api/admin/reports/report', {
     params,
@@ -22,7 +22,7 @@ export async function reports(
 export async function exportStatForCourse(
   course_id: number,
   params: API.ExportStatForCourseParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<Blob | API.DefaultResponseError>(`/api/admin/stats/course/${course_id}/export`, {
     params,
@@ -40,7 +40,7 @@ export async function exportStatForCourse(
 export async function exportStatForTopic(
   topic_id: number,
   stat: API.TopicStatsKey,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<Blob | API.DefaultResponseError>(`/api/admin/stats/topic/${topic_id}/export`, {
     method: 'GET',

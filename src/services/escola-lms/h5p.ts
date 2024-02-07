@@ -1,7 +1,7 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
-export async function h5p(params: API.H5PListParams, options?: RequestOptionsInit) {
+export async function h5p(params: API.H5PListParams, options?: AxiosRequestConfig) {
   return request<API.DefaultMetaResponse<API.H5PContentListItem>>(`/api/admin/hh5p/content`, {
     method: 'GET',
     params,
@@ -9,7 +9,7 @@ export async function h5p(params: API.H5PListParams, options?: RequestOptionsIni
   });
 }
 
-export async function getH5p(id: number, options?: RequestOptionsInit) {
+export async function getH5p(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.H5PObject>>(`/api/admin/hh5p/content/${id}`, {
     method: 'GET',
     ...(options || {}),
@@ -19,7 +19,7 @@ export async function getH5p(id: number, options?: RequestOptionsInit) {
 export const editorSettings = (
   id?: string | number,
   lang: string = 'en',
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) => {
   let url: string = id ? `/api/admin/hh5p/editor/${id}` : `/api/admin/hh5p/editor`;
   url = lang ? `${url}?lang=${lang}` : url;
@@ -32,7 +32,7 @@ export const editorSettings = (
 export const contentSettings = (
   id?: string | number,
   lang: string = 'en',
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) => {
   let url: string = `/api/admin/hh5p/content/${id}`;
   url = lang ? `${url}?lang=${lang}` : url;
@@ -45,7 +45,7 @@ export const contentSettings = (
 export async function updateContent(
   body: any,
   id?: number | string | undefined,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<{ id: number }>>(
     id ? `/api/admin/hh5p/content/${id}` : `/api/admin/hh5p/content`,
@@ -66,7 +66,7 @@ export async function removeH5P(id: number) {
   });
 }
 
-export async function allContent(options?: RequestOptionsInit) {
+export async function allContent(options?: AxiosRequestConfig) {
   return request<API.DefaultMetaResponse<API.H5PContentListItem>>(
     '/api/admin/hh5p/content?per_page=0',
     {

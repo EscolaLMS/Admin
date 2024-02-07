@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
-import { getNotifications, getEventTypes } from '@/services/escola-lms/notifications';
-import { format } from 'date-fns';
-import { DATETIME_FORMAT } from '@/consts/dates';
-import UserSelect from '@/components/UserSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import UserSelect from '@/components/UserSelect';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import { getEventTypes, getNotifications } from '@/services/escola-lms/notifications';
 import { createTableOrderObject } from '@/utils/utils';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { format } from 'date-fns';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const getEventType = (event: string) => event.split('\\').pop() as string;
 

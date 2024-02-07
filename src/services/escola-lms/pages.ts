@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 export async function pages(
   params: API.PageParams &
@@ -7,7 +7,7 @@ export async function pages(
       title?: string;
       slug?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.PageList>(`/api/admin/pages`, {
     method: 'GET',
@@ -17,14 +17,14 @@ export async function pages(
   });
 }
 
-export async function page(id: number, options?: RequestOptionsInit) {
+export async function page(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-export async function createPage(body?: Partial<API.Page>, options?: RequestOptionsInit) {
+export async function createPage(body?: Partial<API.Page>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages`, {
     method: 'POST',
     headers: {
@@ -38,7 +38,7 @@ export async function createPage(body?: Partial<API.Page>, options?: RequestOpti
 export async function updatePage(
   id: number,
   body?: Partial<API.Page>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'PATCH',
@@ -50,7 +50,7 @@ export async function updatePage(
   });
 }
 
-export async function deletePage(id: number, options?: RequestOptionsInit) {
+export async function deletePage(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Page>>(`/api/admin/pages/${id}`, {
     method: 'DELETE',
     headers: {

@@ -1,13 +1,8 @@
 import type { ComponentClass } from 'react';
-import { useEffect } from 'react';
-import { useRef } from 'react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
 
-import { Button, Popconfirm, Space, Tooltip } from 'antd';
-import { arrayMoveImmutable } from 'array-move';
-import type { SortableContainerProps, SortableElementProps } from 'react-sortable-hoc';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -16,12 +11,24 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { FormattedMessage, useIntl } from 'umi';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Space, Tooltip } from 'antd';
+import { arrayMoveImmutable } from 'array-move';
+import type { SortableContainerProps, SortableElementProps } from 'react-sortable-hoc';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { FormattedMessage, useIntl } from 'umi';
 import AgendaModalForm from './ModalForm';
-import type { AgendaType } from '@/pages/StationaryEvents/form';
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+
+export interface AgendaType {
+  id: number;
+  title: string;
+  subtitle: string;
+  hour: string;
+  tutors: number[];
+  description?: string;
+  asCandidate?: boolean;
+}
 
 const SortableItem: ComponentClass<SortableElementProps & { className?: string }, any> =
   SortableElement((props: React.HTMLAttributes<HTMLTableRowElement>) => <tr {...props} />);

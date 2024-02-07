@@ -1,8 +1,8 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/vouchers */
-export async function vouchers(params?: API.Vouchers, options?: RequestOptionsInit) {
+export async function vouchers(params?: API.Vouchers, options?: AxiosRequestConfig) {
   return request<API.DefaultMetaResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -12,7 +12,7 @@ export async function vouchers(params?: API.Vouchers, options?: RequestOptionsIn
 }
 
 /**  POST /api/admin/vouchers */
-export async function createVoucher(body?: Record<string, any>, options?: RequestOptionsInit) {
+export async function createVoucher(body?: Record<string, any>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(`/api/admin/vouchers`, {
     method: 'POST',
     headers: {
@@ -24,7 +24,7 @@ export async function createVoucher(body?: Record<string, any>, options?: Reques
 }
 
 /**  GET /api/admin/vouchers/:id */
-export async function getVoucher(id: number, options?: RequestOptionsInit) {
+export async function getVoucher(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(
     `/api/admin/vouchers/${id}`,
     {
@@ -39,7 +39,7 @@ export async function getVoucher(id: number, options?: RequestOptionsInit) {
 export async function updateVoucher(
   id: number,
   body?: EscolaLms.Vouchers.Http.Requests.UpdateCouponRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Models.Coupon>>(
     `/api/admin/vouchers/${id}`,
@@ -55,7 +55,7 @@ export async function updateVoucher(
 }
 
 /**  DELETE /api/admin/vouchers/:id */
-export async function deleteVoucher(id: number, options?: RequestOptionsInit) {
+export async function deleteVoucher(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<EscolaLms.Vouchers.Http.Requests.DeleteCouponRequest>>(
     `/api/admin/vouchers/${id}`,
     {

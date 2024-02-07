@@ -1,10 +1,10 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/competency-challenges */
 export async function getCompetencyChallenges(
   params?: API.CompetencyChallengesParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<API.CompetencyChallenge>>(
     `/api/admin/competency-challenges`,
@@ -20,7 +20,7 @@ export async function getCompetencyChallenges(
 /** GET /api/admin/competency-challenges/:competency_challenge_id */
 export async function getCompetencyChallenge(
   competency_challenge_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.CompetencyChallenge>>(
     `/api/admin/competency-challenges/${competency_challenge_id}`,
@@ -35,7 +35,7 @@ export async function getCompetencyChallenge(
 /** POST /api/admin/competency-challenges */
 export async function createCompetencyChallenge(
   body: API.CreateCompetencyChallenge,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.CompetencyChallenge>>(`/api/admin/competency-challenges`, {
     method: 'POST',
@@ -51,7 +51,7 @@ export async function createCompetencyChallenge(
 export async function updateCompetencyChallenge(
   competency_challenge_id: number,
   body: API.UpdateCompetencyChallenge,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.CompetencyChallenge>>(
     `/api/admin/competency-challenges/${competency_challenge_id}`,
@@ -69,7 +69,7 @@ export async function updateCompetencyChallenge(
 /**  DELETE /api/admin/competency-challenges/:competency_challenge_id */
 export async function deleteCompetencyChallenge(
   competency_challenge_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DeleteResponse>(
     `/api/admin/competency-challenges/${competency_challenge_id}`,
@@ -83,7 +83,7 @@ export async function deleteCompetencyChallenge(
 /** POST /api/admin/competency-challenges/scales */
 export async function createCompetencyChallengeScale(
   body: API.CreateCompetencyChallengeScale,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.CompetencyChallengeScale>>(
     `/api/admin/competency-challenges/scales`,
@@ -102,7 +102,7 @@ export async function createCompetencyChallengeScale(
 export async function updateCompetencyChallengeScale(
   competency_challenge_scale_id: number,
   body: API.CreateCompetencyChallengeScale,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.CompetencyChallengeScale>>(
     `/api/admin/competency-challenges/scales/${competency_challenge_scale_id}`,
@@ -120,7 +120,7 @@ export async function updateCompetencyChallengeScale(
 /**  DELETE /api/admin/competency-challenges/scales/:competency_challenge_scale_id */
 export async function deleteCompetencyChallengeScale(
   competency_challenge_scale_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DeleteResponse>(
     `/api/admin/competency-challenges/scales/${competency_challenge_scale_id}`,

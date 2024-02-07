@@ -1,8 +1,8 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/pcg-export/groups/:group_id */
-export async function getPCGFileData(group_id: number, options?: RequestOptionsInit) {
+export async function getPCGFileData(group_id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.PCGFileData>>(`/api/admin/pcg-export/groups/${group_id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -13,7 +13,7 @@ export async function getPCGFileData(group_id: number, options?: RequestOptionsI
 /**  GET /api/admin/pcg-export */
 export async function getPCGExportsHistory(
   params?: API.PCGFileExportsHistoryParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<API.PCGFileExportsHistoryItem>>(`/api/admin/pcg-export`, {
     method: 'GET',

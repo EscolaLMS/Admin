@@ -1,7 +1,7 @@
-import { refreshToken } from './escola-lms/auth';
-import type { JwtPayload } from 'jwt-decode';
-import jwt_decode from 'jwt-decode';
 import { differenceInSeconds } from 'date-fns';
+import type { JwtPayload } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { refreshToken } from './escola-lms/auth';
 
 const logout = () => {
   localStorage.removeItem('TOKEN');
@@ -18,7 +18,7 @@ export const refreshTokenCallback = () => {
           const newToken = response.data.token;
           localStorage.setItem('TOKEN', newToken);
           dispatchEvent(new Event('token_change'));
-          const { exp } = jwt_decode(newToken) as JwtPayload;
+          const { exp } = jwtDecode(newToken) as JwtPayload;
           if (exp) {
             const diffInSecs = differenceInSeconds(new Date(exp * 1000), new Date()) - 60;
             if (diffInSecs < 3600) {

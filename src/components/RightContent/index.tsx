@@ -1,6 +1,8 @@
-import { Tag, Space } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { SelectLang as UmiSelectLang } from '@umijs/max';
+import { Space, Tag } from 'antd';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import { useModel } from 'umi';
 import NoticeIconView from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -8,8 +10,8 @@ import styles from './index.less';
 // import 'ant-design-pro/dist/ant-design-pro.css';
 export type SiderTheme = 'light' | 'dark';
 
-import { useIntl } from 'umi';
 import { useMemo } from 'react';
+import { useIntl } from 'umi';
 import { getLangInfo } from '../../utils/utils';
 
 declare const REACT_APP_ENV: string | undefined;
@@ -21,6 +23,7 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight: React.FC = () => {
+  return <pre>TODO</pre>;
   const { initialState } = useModel('@@initialState');
   const intl = useIntl();
 
@@ -54,3 +57,29 @@ const GlobalHeaderRight: React.FC = () => {
   );
 };
 export default GlobalHeaderRight;
+
+export const SelectLang = () => {
+  return (
+    <UmiSelectLang
+      style={{
+        padding: 4,
+      }}
+    />
+  );
+};
+
+export const Question = () => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        height: 26,
+      }}
+      onClick={() => {
+        window.open('https://pro.ant.design/docs/getting-started');
+      }}
+    >
+      <QuestionCircleOutlined />
+    </div>
+  );
+};

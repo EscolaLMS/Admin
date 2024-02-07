@@ -1,5 +1,5 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/user-submissions */
 export async function userSubmissions(
@@ -10,7 +10,7 @@ export async function userSubmissions(
       morphable_id?: number;
       morphable_type?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.AssignWithoutAccount.Models.UserSubmission>>(
     `/api/admin/user-submissions`,
@@ -25,7 +25,7 @@ export async function userSubmissions(
 /**  POST /api/admin/user-submissions */
 export async function assignUserSubmission(
   body?: Partial<EscolaLms.AssignWithoutAccount.Models.UserSubmission>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.AssignWithoutAccount.Models.UserSubmission>>(
     `/api/admin/user-submissions`,
@@ -41,7 +41,7 @@ export async function assignUserSubmission(
 }
 
 /**  DELETE /api/admin/user-submissions/:id */
-export async function deleteUserSubmission(id: number, options?: RequestOptionsInit) {
+export async function deleteUserSubmission(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<EscolaLms.AssignWithoutAccount.Models.UserSubmission>>(
     `/api/admin/user-submissions/${id}`,
     {

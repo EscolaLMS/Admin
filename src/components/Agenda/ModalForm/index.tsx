@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { Form } from 'antd';
 import ProForm, {
-  ProFormText,
   ModalForm,
+  ProFormText,
   ProFormTextArea,
   ProFormTimePicker,
 } from '@ant-design/pro-form';
+import { Form } from 'antd';
+import React, { useEffect } from 'react';
 
-import { useIntl, FormattedMessage } from 'umi';
+import type { AgendaType } from '@/components/Agenda';
 import UserSelect from '@/components/UserSelect';
-import type { AgendaType } from '@/pages/StationaryEvents/form';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const AgendaModalForm: React.FC<{
   id?: number | false;

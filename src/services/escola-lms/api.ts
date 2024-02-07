@@ -1,8 +1,8 @@
+import { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/currentUser */
-export async function currentUser(options?: RequestOptionsInit) {
+export async function currentUser(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.UserItem>>('/api/profile/me', {
     method: 'GET',
     /* useCache: true */ useCache: false,

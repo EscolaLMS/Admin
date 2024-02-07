@@ -1,28 +1,25 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import ProCard from '@ant-design/pro-card';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { Typography, message, Spin, Button, Form, Row, Col } from 'antd';
-import { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
-import {
-  getQuestionnaire,
-  updateQuestionare,
-  createQuestionnaire,
-  getQuestionnaireModels,
-} from '@/services/escola-lms/questionnaire';
-import ProForm from '@ant-design/pro-form';
 import { CollectionSelect } from '@/components/CollectionSelect';
-import QuestionForm from './components/Questions';
+import {
+  createQuestionnaire,
+  getQuestionnaire,
+  getQuestionnaireModels,
+  updateQuestionare,
+} from '@/services/escola-lms/questionnaire';
+import ProCard from '@ant-design/pro-card';
+import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Button, Col, Form, Row, Spin, Typography, message } from 'antd';
+import type { LabeledValue } from 'antd/lib/select';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import QuestionAnswers from './components/Answers';
+import QuestionForm from './components/Questions';
 import QuestionnaireRaports from './components/Raports';
 import './style.css';
-import type { LabeledValue } from 'antd/lib/select';
 
 const { Title } = Typography;
 
-export enum ModelTypes {
-  COURSE = 1,
-}
+import type { ModelTypes } from '@/components/AssignQuestionnary';
 
 export const QuestionareForm = () => {
   const params = useParams<{ questionnaireId?: string }>();
