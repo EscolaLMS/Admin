@@ -23,7 +23,6 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight: React.FC = () => {
-  return <pre>TODO</pre>;
   const { initialState } = useModel('@@initialState');
   const intl = useIntl();
 

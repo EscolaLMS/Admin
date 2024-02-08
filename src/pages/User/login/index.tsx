@@ -2,7 +2,9 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
-import { FormattedMessage, addLocale, localeInfo, useIntl, useModel } from 'umi';
+import { FormattedMessage, addLocale, useIntl, useModel } from 'umi';
+
+import { localeInfo } from '@@/plugin-locale/localeExports';
 
 import { forgot, login } from '@/services/escola-lms/auth';
 import { packages } from '@/services/escola-lms/packages';
@@ -39,7 +41,7 @@ const Login: React.FC = () => {
     const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
 
     if (transl.success) {
-      const messages: Record<string, string> = {};
+      const messages: Record<string, Record<string, string>> = {};
       transl.data.forEach((t) => {
         Object.keys(t.text).forEach((key) => {
           if (!messages[key]) {
@@ -51,14 +53,13 @@ const Login: React.FC = () => {
 
       try {
         for (const lang in messages) {
-          // TODO: localeInfo is undefined!!!
           addLocale(lang, messages[lang], {
             antd: localeInfo[lang]?.antd || '',
             momentLocale: localeInfo[lang]?.momentLocale || lang,
           });
         }
       } catch (err) {
-        console.log('translation error', err, translations, messages);
+        console.error('translation error', err, translations, messages);
       }
     }
 

@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { AxiosRequestConfig } from 'umi-request';
 
 /**  GET /api/admin/translations */
 export async function translations(

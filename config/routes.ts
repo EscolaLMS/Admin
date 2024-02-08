@@ -1,7 +1,7 @@
 ﻿export default [
   {
     path: '/user',
-    layout: false,
+    layout: true,
     routes: [
       {
         path: '/user',

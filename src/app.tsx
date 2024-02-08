@@ -1,13 +1,16 @@
-import { Footer } from '@/components';
+import Footer from '@/components/Footer';
+import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { getLocale, history } from '@umijs/max';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 //import { errorConfig } from './requestErrorConfig';
-import RightContent from '@/components/RightContent';
+import { localeInfo } from '@@/plugin-locale/localeExports';
 import { BookOutlined } from '@ant-design/icons';
+import { addLocale } from '@umijs/max';
 import { notification } from 'antd';
 import { FormattedMessage } from 'umi';
+import defaultSettings from '../config/defaultSettings';
 import RestrictedPage from './pages/403';
 import { packages } from './services/escola-lms/packages';
 import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
@@ -31,6 +34,7 @@ export async function getInitialState(): Promise<{
   translations?: API.Translation[];
   packages?: Record<string, string>;
 }> {
+  console.log('getInitialState to welcome');
   refreshTokenCallback();
   const fetchUserInfo = async () => {
     try {
@@ -40,8 +44,6 @@ export async function getInitialState(): Promise<{
       }
       return undefined;
     } catch (error) {
-      console.log('errr', error);
-
       if (authpaths.includes(history.location.pathname)) {
         history.push(`/user/login`);
       } else {
@@ -61,7 +63,7 @@ export async function getInitialState(): Promise<{
     const packs = await packages();
 
     if (transl.success) {
-      const messages = {};
+      const messages: Record<string, Record<string, string>> = {};
       transl.data.forEach((t) => {
         Object.keys(t.text).forEach((key) => {
           if (!messages[key]) {
@@ -72,15 +74,25 @@ export async function getInitialState(): Promise<{
       });
 
       // TODO: fix me
-      /*
+
       for (const lang in messages) {
         addLocale(lang, messages[lang], {
           antd: localeInfo[lang]?.antd || '',
           momentLocale: localeInfo[lang]?.momentLocale || lang,
         });
       }
-      */
     }
+
+    console.log('getInitialState to welcome', {
+      fetchUserInfo,
+      config: config.success ? config.data : [],
+      publicConfig: publicConfig.success ? publicConfig.data : {},
+      translations: transl.success ? transl.data : [],
+      currentUser,
+      settings: defaultSettings as Partial<LayoutSettings>,
+      collapsed: false,
+      packages: packs.success ? packs.data : {},
+    });
 
     return {
       fetchUserInfo,
@@ -88,7 +100,7 @@ export async function getInitialState(): Promise<{
       publicConfig: publicConfig.success ? publicConfig.data : {},
       translations: transl.success ? transl.data : [],
       currentUser,
-      settings: {},
+      settings: defaultSettings as Partial<LayoutSettings>,
       collapsed: false,
       packages: packs.success ? packs.data : {},
     };
@@ -99,7 +111,7 @@ export async function getInitialState(): Promise<{
     publicConfig: publicConfig.success ? publicConfig.data : {},
     translations: [],
     fetchUserInfo,
-    settings: {},
+    settings: defaultSettings as Partial<LayoutSettings>,
     collapsed: false,
     packages: {},
   };
@@ -185,7 +197,9 @@ export async function getInitialState(): Promise<{
 // };
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  console.log('redirect to welcome', initialState);
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
+    console.log('redirect to welcome', history.location.query);
     if (history.location.query?.redirect) {
       history.push(history.location.query.redirect.toString());
     } else {
@@ -218,7 +232,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         collapsed: !initialState?.collapsed,
       });
     },
-    rightContentRender: () => <RightContent />,
+    avatarProps: {
+      src: initialState?.currentUser?.avatar,
+      title: <pre></pre>,
+      render: (_, avatarChildren) => {
+        return <p>{avatarChildren}</p>;
+      },
+    },
+    //actionsRender: () => ['aaa'],
+
+    childrenRender: (children) => {
+      // if (initialState?.loading) return <PageLoading />;
+      return <>{children}</>;
+    },
+
+    actionsRender: () => [<RightContent />],
     contentStyle: { backgroundColor },
     footerRender: () => <Footer />,
     onPageChange: () => {
