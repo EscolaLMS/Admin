@@ -1,9 +1,9 @@
-import React from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { isAfter, isBefore } from 'date-fns';
-import { Button, Popconfirm, Col, Row, Space, Affix, Divider } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch, ProFormDatePicker } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
+import ProForm, { ProFormDatePicker, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import { Affix, Button, Col, Divider, Popconfirm, Row, Space } from 'antd';
+import { isAfter, isBefore } from 'date-fns';
+import React from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { ParentLesson } from '../ParentLesson';

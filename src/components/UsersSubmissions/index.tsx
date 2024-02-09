@@ -1,18 +1,18 @@
-import React, { Fragment, useCallback, useRef, useState } from 'react';
 import ProForm from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { Button, message, Popconfirm, Tag, Tooltip } from 'antd';
 
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   assignUserSubmission,
   deleteUserSubmission,
   userSubmissions,
 } from '@/services/escola-lms/users_submissions';
 import { createTableOrderObject } from '@/utils/utils';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import AddUserSubmission from './form';
 import './index.css';
 

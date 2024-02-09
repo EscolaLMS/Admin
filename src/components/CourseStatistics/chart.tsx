@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
-import ProCard from '@ant-design/pro-card';
 import { Column } from '@ant-design/plots';
+import ProCard from '@ant-design/pro-card';
+import React, { useCallback } from 'react';
 
 const Chart: React.FC<{
   config: any;

@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { Button, message } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import { getWebinar } from '@/services/escola-lms/webinars';
+import { Button, message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const WebinarRow: React.FC<{
   id: number;

@@ -1,14 +1,14 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { format } from 'date-fns';
-import { FormattedMessage, useIntl } from 'umi';
-import { message } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import { message } from 'antd';
+import { format } from 'date-fns';
+import React, { useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
+import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
-import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { useTeacherSubject } from '../context';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 

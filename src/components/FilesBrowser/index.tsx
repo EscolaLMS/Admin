@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { files, remove, findFile } from '@/services/escola-lms/files';
-import { List, Button, Typography, Space, Pagination, Input } from 'antd';
+import { files, findFile, remove } from '@/services/escola-lms/files';
+import { Button, Input, List, Pagination, Space, Typography } from 'antd';
 
-import { FolderOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useIntl, FormattedMessage } from 'umi';
+import { DeleteOutlined, DownloadOutlined, FolderOutlined } from '@ant-design/icons';
+import { FormattedMessage, useIntl } from 'umi';
 
 import SecureUpload from '@/components/SecureUpload';
 

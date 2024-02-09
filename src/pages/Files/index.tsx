@@ -1,8 +1,8 @@
-import React from 'react';
+import FilesBrowser from '@/components/FilesBrowser';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Typography } from 'antd';
+import React from 'react';
 import { FormattedMessage } from 'umi';
-import FilesBrowser from '@/components/FilesBrowser';
 
 export default (): React.ReactNode => {
   return (

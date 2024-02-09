@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import ProCard from '@ant-design/pro-card';
-import { getCourseStats, program as fetchProgram } from '@/services/escola-lms/course';
-import { Spin, Alert, Typography } from 'antd';
-import Chart from './chart';
-import { useIntl, FormattedMessage } from 'umi';
-import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { CourseTopicsStatistics } from '@/components/CourseTopicsStatistics';
+import { getFlatTopics } from '@/components/ProgramForm/Context';
+import { program as fetchProgram, getCourseStats } from '@/services/escola-lms/course';
+import ProCard from '@ant-design/pro-card';
+import { Alert, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+import Chart from './chart';
 import { UserCourseAttempts, UserCourseFinish, UserProgress } from './userProgress';
 
 type State =

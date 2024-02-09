@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button, Input, Col, Row } from 'antd';
+import { Button, Col, Input, Row } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import 'jsoneditor-react/es/editor.min.css';
 
-import { getAllLocales } from 'umi';
 import { PlusCircleFilled } from '@ant-design/icons';
+import { getAllLocales } from 'umi';
 
 const defaultValue = () =>
   getAllLocales().reduce((acc, curr) => {

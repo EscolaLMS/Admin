@@ -202,8 +202,8 @@ const TableList: React.FC = () => {
               hideInSearch: true,
               width: 100,
               render: (_n, record) => (
-                <Tag color={record?.[field.name] ? 'green' : 'red'}>
-                  {record?.[field.name] ? (
+                <Tag color={record?.[field.name as keyof typeof record] ? 'green' : 'red'}>
+                  {record?.[field.name as keyof typeof record] ? (
                     <FormattedMessage id="true" />
                   ) : (
                     <FormattedMessage id="false" />

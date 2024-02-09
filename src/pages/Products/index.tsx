@@ -1,17 +1,17 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Space, Typography, Tag } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Space, Tag, Tooltip, Typography, message } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import { createTableOrderObject } from '@/utils/utils';
 import type { PossibleType } from '@/components/TypeButtonDrawer';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { createTableOrderObject } from '@/utils/utils';
 
-import { products, deleteProduct } from '@/services/escola-lms/products';
 import ProductSelect from '@/components/ProductablesSelect';
+import { deleteProduct, products } from '@/services/escola-lms/products';
 
 const ProductableItems: React.FC<{ items: API.ProductProductable[] }> = ({ items }) => {
   return (

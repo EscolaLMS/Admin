@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { Form } from 'antd';
-import ProForm, { ProFormText, ModalForm } from '@ant-design/pro-form';
 import { slugify } from '@/services/escola-lms/slug';
-import { useIntl, FormattedMessage } from 'umi';
-import { JsonLangEditor } from './JsonLangEditor';
 import { getTranslation } from '@/services/escola-lms/translations';
+import ProForm, { ModalForm, ProFormText } from '@ant-design/pro-form';
+import { Form } from 'antd';
+import React, { useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+import { JsonLangEditor } from './JsonLangEditor';
 
 export const TranslationModalForm: React.FC<{
   id?: number | false;

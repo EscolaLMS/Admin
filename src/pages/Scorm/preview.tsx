@@ -1,11 +1,10 @@
-import React from 'react';
-import { useParams } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import { Divider, Row, Col } from 'antd';
-import ProCard from '@ant-design/pro-card';
-import { useIntl, FormattedMessage } from 'umi';
-import './preview.css';
 import ScormPreview from '@/components/Scorm/preview';
+import ProCard from '@ant-design/pro-card';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Col, Divider, Row } from 'antd';
+import React from 'react';
+import { FormattedMessage, useIntl, useParams } from 'umi';
+import './preview.css';
 
 const H5PPreviewPage: React.FC = () => {
   const intl = useIntl();

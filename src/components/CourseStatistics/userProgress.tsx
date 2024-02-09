@@ -1,15 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import { timeDisplay } from '@/utils/utils';
+import { Column } from '@ant-design/plots';
+import ProCard from '@ant-design/pro-card';
 import { Row, Select, Space, Switch, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import ProCard from '@ant-design/pro-card';
-import { Column } from '@ant-design/plots';
-import { FormattedMessage, useIntl } from 'umi';
-import ScrollContainer from 'react-indiana-drag-scroll';
 import { format } from 'date-fns';
-import { DATETIME_FORMAT } from '@/consts/dates';
+import React, { useMemo, useState } from 'react';
+import ScrollContainer from 'react-indiana-drag-scroll';
+import { FormattedMessage, useIntl } from 'umi';
 import TypeButtonDrawer from '../TypeButtonDrawer';
 import { ExportStatsButton } from './ExportStatsButton';
-import { timeDisplay } from '@/utils/utils';
 
 type UserStatColumn = Record<string, number | string | API.FinishedTopicsUserStat> & {
   email: string;
@@ -298,7 +298,7 @@ export const UserCourseAttempts: React.FC<{ stats: API.CourseAttempts[] }> = ({ 
           {...config}
           tooltip={{
             title: `${intl.formatMessage({ id: 'attempt' })}`,
-            formatter: (datum) => {
+            formatter: (datum: { seconds_total: number; attempt: string }) => {
               const minutes = Math.floor(+datum.seconds_total / 60);
               const seconds = +datum.seconds_total > 60 ? +datum.seconds_total - minutes * 60 : 0;
 

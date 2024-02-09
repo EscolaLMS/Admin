@@ -1,6 +1,6 @@
+import { ProFormTextArea } from '@ant-design/pro-form';
 import React from 'react';
 import { FormattedMessage } from 'umi';
-import { ProFormTextArea } from '@ant-design/pro-form';
 
 export const GiftQuizQuestionEssayEditor: React.FC = () => (
   <ProFormTextArea

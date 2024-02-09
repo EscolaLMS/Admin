@@ -1,6 +1,6 @@
+import { DrawerForm, ProFormText } from '@ant-design/pro-form';
 import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'umi';
-import { DrawerForm, ProFormText } from '@ant-design/pro-form';
 
 import { updateQuizAnswer } from '@/services/escola-lms/gift_quiz';
 

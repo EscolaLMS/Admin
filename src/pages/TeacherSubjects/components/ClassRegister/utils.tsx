@@ -1,18 +1,18 @@
-import { FormattedMessage } from 'umi';
-import { format } from 'date-fns';
 import type { ProColumns } from '@ant-design/pro-table';
+import { format } from 'date-fns';
+import { FormattedMessage } from 'umi';
 
-import { DAY_FORMAT } from '@/consts/dates';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
+import { DAY_FORMAT } from '@/consts/dates';
 
-import type { StudentExam } from '../FinalGradesDetails/types';
-import { FinalGradeSelect } from '../FinalGradeSelect';
 import { ExamGradeInput } from '../ExamGradeInput';
+import { FinalGradeSelect } from '../FinalGradeSelect';
+import type { StudentExam } from '../FinalGradesDetails/types';
 import type {
-  ClassRegisterTableItemAttendance,
-  ClassRegisterTableItemFinalGrade,
   ClassRegisterTableItem,
+  ClassRegisterTableItemAttendance,
   ClassRegisterTableItemExamResult,
+  ClassRegisterTableItemFinalGrade,
 } from './types';
 
 /* Attendance */

@@ -1,5 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import { history } from '@umijs/max';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import { FormattedMessage, addLocale, useIntl, useModel } from 'umi';
@@ -84,6 +85,8 @@ const Login: React.FC = () => {
         refreshTokenCallback();
         await fetchUserInfo();
         message.success(msg.message);
+        const urlParams = new URL(window.location.href).searchParams;
+        history.push(urlParams.get('redirect') || '/');
         return;
       }
       setUserLoginState(msg);
@@ -112,7 +115,6 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (values: API.LoginRequest | API.ForgotRequest) => {
-    console.log('handleSubmit');
     setSubmitting(true);
     if ('password' in values) {
       handleLogin(values);

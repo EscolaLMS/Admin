@@ -1,11 +1,11 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Spin, List, Alert, Button, Typography, Divider } from 'antd';
+import { Alert, Button, Divider, List, Spin, Typography } from 'antd';
+import React, { Fragment, useEffect, useState } from 'react';
 
-import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
-import { pdfs, pdf } from '@/services/escola-lms/pdfs';
 import PdfZipList from '@/components/Pdf/ziplist';
+import { pdf, pdfs } from '@/services/escola-lms/pdfs';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DownloadOutlined } from '@ant-design/icons';

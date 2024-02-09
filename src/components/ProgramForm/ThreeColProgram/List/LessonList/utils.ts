@@ -1,11 +1,11 @@
-import { moveItemOnTree } from '@atlaskit/tree';
 import type {
+  ItemId,
+  TreeData,
+  TreeDestinationPosition,
   TreeItem,
   TreeSourcePosition,
-  TreeDestinationPosition,
-  TreeData,
-  ItemId,
 } from '@atlaskit/tree';
+import { moveItemOnTree } from '@atlaskit/tree';
 import type { Dispatch, SetStateAction } from 'react';
 
 // UTIL TYPES

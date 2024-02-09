@@ -1,8 +1,8 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
-import './index.css';
 import ProductsForm from './components/form';
+import './index.css';
 
 const ProductsFormPage = () => {
   const params = useParams<{ id?: string; tab?: string }>();

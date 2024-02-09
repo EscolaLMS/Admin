@@ -1,7 +1,7 @@
+import { ExportOutlined } from '@ant-design/icons';
+import { Button, Tooltip, message } from 'antd';
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { Button, message, Tooltip } from 'antd';
-import { ExportOutlined } from '@ant-design/icons';
 
 import { createTeamsChat } from '@/services/escola-lms/chats';
 

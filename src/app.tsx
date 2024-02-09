@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import type { AxiosRequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { getLocale, history } from '@umijs/max';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
 //import { errorConfig } from './requestErrorConfig';
@@ -21,6 +21,13 @@ const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const authpaths = ['/user/login', '/user/reset-password'];
 
+declare global {
+  interface Window {
+    REACT_APP_API_URL?: string;
+  }
+}
+declare const REACT_APP_API_URL: string;
+
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -34,7 +41,6 @@ export async function getInitialState(): Promise<{
   translations?: API.Translation[];
   packages?: Record<string, string>;
 }> {
-  console.log('getInitialState to welcome');
   refreshTokenCallback();
   const fetchUserInfo = async () => {
     try {
@@ -73,8 +79,6 @@ export async function getInitialState(): Promise<{
         });
       });
 
-      // TODO: fix me
-
       for (const lang in messages) {
         addLocale(lang, messages[lang], {
           antd: localeInfo[lang]?.antd || '',
@@ -82,17 +86,6 @@ export async function getInitialState(): Promise<{
         });
       }
     }
-
-    console.log('getInitialState to welcome', {
-      fetchUserInfo,
-      config: config.success ? config.data : [],
-      publicConfig: publicConfig.success ? publicConfig.data : {},
-      translations: transl.success ? transl.data : [],
-      currentUser,
-      settings: defaultSettings as Partial<LayoutSettings>,
-      collapsed: false,
-      packages: packs.success ? packs.data : {},
-    });
 
     return {
       fetchUserInfo,
@@ -117,91 +110,13 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
-// export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-//   return {
-//     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
-//     avatarProps: {
-//       src: initialState?.currentUser?.avatar,
-//       title: <AvatarName />,
-//       render: (_, avatarChildren) => {
-//         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
-//       },
-//     },
-//     waterMarkProps: {
-//       content: initialState?.currentUser?.name,
-//     },
-//     footerRender: () => <Footer />,
-//     onPageChange: () => {
-//       const { location } = history;
-//       // 如果没有登录，重定向到 login
-//       if (!initialState?.currentUser && location.pathname !== loginPath) {
-//         history.push(loginPath);
-//       }
-//     },
-//     bgLayoutImgList: [
-//       {
-//         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-//         left: 85,
-//         bottom: 100,
-//         height: '303px',
-//       },
-//       {
-//         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-//         bottom: -68,
-//         right: -45,
-//         height: '303px',
-//       },
-//       {
-//         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-//         bottom: 0,
-//         left: 0,
-//         width: '331px',
-//       },
-//     ],
-//     links: isDev
-//       ? [
-//           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-//             <LinkOutlined />
-//             <span>OpenAPI 文档</span>
-//           </Link>,
-//         ]
-//       : [],
-//     menuHeaderRender: undefined,
-//     // 自定义 403 页面
-//     // unAccessible: <div>unAccessible</div>,
-//     // 增加一个 loading 的状态
-//     childrenRender: (children) => {
-//       // if (initialState?.loading) return <PageLoading />;
-//       return (
-//         <>
-//           {children}
-//           {isDev && (
-//             <SettingDrawer
-//               disableUrlParams
-//               enableDarkTheme
-//               settings={initialState?.settings}
-//               onSettingChange={(settings) => {
-//                 setInitialState((preInitialState) => ({
-//                   ...preInitialState,
-//                   settings,
-//                 }));
-//               }}
-//             />
-//           )}
-//         </>
-//       );
-//     },
-//     ...initialState?.settings,
-//   };
-// };
-
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-  console.log('redirect to welcome', initialState);
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
-    console.log('redirect to welcome', history.location.query);
-    if (history.location.query?.redirect) {
-      history.push(history.location.query.redirect.toString());
+    if (history.location.search.includes('redirect')) {
+      const url = new URLSearchParams(history.location.search).get('redirect');
+      if (url) {
+        history.push(url);
+      }
     } else {
       history.push('/welcome');
     }
@@ -224,7 +139,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   }
 
   return {
-    logo: logo,
+    ...initialState?.settings,
+    logo,
     collapsed: initialState?.collapsed,
     onCollapse: (/*collapsed: boolean*/) => {
       setInitialState({
@@ -232,19 +148,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         collapsed: !initialState?.collapsed,
       });
     },
-    avatarProps: {
-      src: initialState?.currentUser?.avatar,
-      title: <pre></pre>,
-      render: (_, avatarChildren) => {
-        return <p>{avatarChildren}</p>;
-      },
-    },
+    // avatarProps: {
+    //   src: initialState?.currentUser?.avatar,
+    //   title: <pre></pre>,
+    //   render: (_, avatarChildren) => {
+    //     return <p>{avatarChildren}</p>;
+    //   },
+    // },
     //actionsRender: () => ['aaa'],
 
-    childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
-      return <>{children}</>;
-    },
+    // childrenRender: (children) => {
+    //   // if (initialState?.loading) return <PageLoading />;
+    //   return <>{children}</>;
+    // },
 
     actionsRender: () => [<RightContent />],
     contentStyle: { backgroundColor },
@@ -271,11 +187,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menuHeaderRender: undefined,
     //  403
     unAccessible: <RestrictedPage />,
-    ...initialState?.settings,
   };
 };
 
-const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+const authHeaderInterceptor = (url: string, options: AxiosRequestConfig) => {
   const token = localStorage.getItem('TOKEN');
   const optionHeaders = {
     ...options.headers,
@@ -307,7 +222,28 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   };
 };
 
-const errorHandler = (error: ResponseError) => {
+const codeMessage = {
+  200: '200',
+  201: '201',
+  202: '202',
+  204: '204',
+  400: '400',
+  401: '401',
+  403: '403',
+  404: '404',
+  405: '405',
+  406: '406',
+  410: '410',
+  422: '422',
+  500: '500',
+  502: '502',
+  503: '503',
+  504: '504',
+};
+
+// TODO there is no type for error
+//github.com/ant-design/ant-design-pro/blob/ffff2447d6d717f932f1e9355096ad26f6ad2681/src/requestErrorConfig.ts#L42C27-L42C30
+const errorHandler = (error: any) => {
   const { response, data } = error;
 
   if (error.name === 'AbortError') {
@@ -352,7 +288,7 @@ const errorHandler = (error: ResponseError) => {
     }
   } else if (response && response.status) {
     const { status, url } = response;
-    const errorText = codeMessage[status] || response.statusText;
+    const errorText = codeMessage[status as keyof typeof codeMessage] || response.statusText;
 
     notification.error({
       message: `Error ${status}: ${url}`,
@@ -370,7 +306,7 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
-export const request: RequestConfig = {
+export const request = {
   errorHandler,
   requestInterceptors: [authHeaderInterceptor],
 };

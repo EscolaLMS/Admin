@@ -24,5 +24,6 @@ export function parseToAttendanceValue({ ch1, ch2 }: Status): AttendanceValue {
     false_true: AttendanceValue.EXCUSED_ABSENCE,
   };
 
+  //@ts-ignore
   return statusMap[statusStr] ?? AttendanceValue.ABSENT;
 }

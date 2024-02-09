@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { FormattedMessage } from 'umi';
-import { access as fetchAccess, setAccess as postSetAccess } from '@/services/escola-lms/course';
+import UserGroupSelect from '@/components/UserGroupSelect';
 import UserSelect from '@/components/UserSelect';
+import { access as fetchAccess, setAccess as postSetAccess } from '@/services/escola-lms/course';
 import ProForm from '@ant-design/pro-form';
 import { message } from 'antd';
-import UserGroupSelect from '@/components/UserGroupSelect';
+import { FormattedMessage } from 'umi';
 
 export const CourseAccessForm: React.FC<{
   id: number | string;

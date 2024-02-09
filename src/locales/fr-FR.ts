@@ -1,17 +1,17 @@
 import component from './fr-FR/component';
+import consultations from './fr-FR/consultations';
+import courses from './fr-FR/courses';
+import events from './fr-FR/events';
+import fabric from './fr-FR/fabric';
 import globalHeader from './fr-FR/globalHeader';
 import menu from './fr-FR/menu';
+import notifications from './fr-FR/notifications';
+import pages from './fr-FR/pages';
 import pwa from './fr-FR/pwa';
 import settingDrawer from './fr-FR/settingDrawer';
 import settings from './fr-FR/settings';
-import pages from './fr-FR/pages';
-import notifications from './fr-FR/notifications';
 import templates from './fr-FR/templates';
-import consultations from './fr-FR/consultations';
-import fabric from './fr-FR/fabric';
 import vouchers from './fr-FR/vouchers';
-import courses from './fr-FR/courses';
-import events from './fr-FR/events';
 
 export default {
   parent: 'Parent',

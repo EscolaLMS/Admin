@@ -1,9 +1,9 @@
-import React from 'react';
 import ProForm from '@ant-design/pro-form';
+import { Button, Col, Row } from 'antd';
 import type { UploadChangeParam } from 'antd/lib/upload';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import { FormattedMessage } from 'umi';
-import { Button, Row, Col } from 'antd';
 import SecureUploadBrowser from '../SecureUpload/browser';
 
 export const ProFormVideoUpload: React.FC<{

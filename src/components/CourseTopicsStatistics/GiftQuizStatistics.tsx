@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { format } from 'date-fns';
-import { FormattedMessage } from 'umi';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { format } from 'date-fns';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getTopicStats } from '@/services/escola-lms/course';
 import { TopicStatsKey } from '@/services/escola-lms/enums';
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { ExportTopicStatsButton } from './ExportTopicStatsButton';
 
 interface TableParams {

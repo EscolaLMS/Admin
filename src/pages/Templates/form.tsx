@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Divider, message, Space, Spin, Tag, Typography } from 'antd';
-import ProForm, { ProFormText, ProFormSelect, ProFormCheckbox } from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
-import {
-  template as fetchTemplate,
-  updateTemplate,
-  createTemplate,
-} from '@/services/escola-lms/templates';
-import { PageContainer } from '@ant-design/pro-layout';
-import PreviewButton from './components/PreviewButton';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { useCallback } from 'react';
-import TemplateFields from '@/components/TemplateFields';
-import { variables as fetchVariables } from '@/services/escola-lms/templates';
 import PdfList from '@/components/Pdf/list';
-import { TemplateChannelValue, TemplateEvents } from '@/services/escola-lms/enums';
-import { Collapse } from 'antd';
+import TemplateFields from '@/components/TemplateFields';
 import TemplateManuallyTrigger from '@/components/TemplateManuallyTrigger';
 import TemplateManuallyTriggerProduct from '@/components/TemplateManuallyTrigger/product';
+import { TemplateChannelValue, TemplateEvents } from '@/services/escola-lms/enums';
+import {
+  createTemplate,
+  template as fetchTemplate,
+  variables as fetchVariables,
+  updateTemplate,
+} from '@/services/escola-lms/templates';
+import ProCard from '@ant-design/pro-card';
+import ProForm, { ProFormCheckbox, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Collapse, Divider, Space, Spin, Tag, Typography, message } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
+import PreviewButton from './components/PreviewButton';
 
 const { Panel } = Collapse;
 
@@ -41,9 +39,9 @@ const filterNotAllowedKeys = (values: Partial<API.Template>) => {
   return Object.keys(values)
     .filter((key) => !notAllowedKeys.includes(key))
     .reduce((obj, key) => {
-      obj[key] = values[key];
+      obj[key] = values[key as keyof typeof values];
       return obj;
-    }, {});
+    }, {} as Record<string, string>);
 };
 
 type Tokens = {

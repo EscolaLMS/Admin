@@ -1,26 +1,25 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Alert, Button } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormSelect,
-  ProFormTextArea,
-  ProFormDateTimePicker,
-} from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
-import { PageContainer } from '@ant-design/pro-layout';
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { useCallback } from 'react';
-import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
-import UserSelect from '@/components/UserSelect';
-import ProFormImageUpload from '@/components/ProFormImageUpload';
-import { splitImagePath, tagsArrToIds } from '@/utils/utils';
-import TagsInput from '@/components/TagsInput';
-import useValidateFormEdit from '@/hooks/useValidateFormEdit';
-import EditValidateModal from '@/components/EditValidateModal';
-import ProductWidget from '@/components/ProductWidget';
-import UserSubmissions from '@/components/UsersSubmissions';
 import ConfirmModal from '@/components/ConfirmModal';
+import EditValidateModal from '@/components/EditValidateModal';
+import ProFormImageUpload from '@/components/ProFormImageUpload';
+import ProductWidget from '@/components/ProductWidget';
+import TagsInput from '@/components/TagsInput';
+import UserSelect from '@/components/UserSelect';
+import UserSubmissions from '@/components/UsersSubmissions';
+import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
+import { splitImagePath, tagsArrToIds } from '@/utils/utils';
+import ProCard from '@ant-design/pro-card';
+import ProForm, {
+  ProFormDateTimePicker,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Alert, Button, Col, Row, Spin, message } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 enum TabNames {
   ATTRIBUTES = 'attributes',

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { FormattedMessage } from 'umi';
 import { TreeSelect } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 import { categoryTree } from '@/services/escola-lms/category';
 import { useCompetencyChallengeContext } from '../context';

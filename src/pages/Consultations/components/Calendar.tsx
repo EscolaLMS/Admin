@@ -1,11 +1,10 @@
-import { getSchedule } from '@/services/escola-lms/consultations';
-import { Badge, Calendar, message, Tooltip, Spin, DatePicker } from 'antd';
+import { changeTermDate, getSchedule } from '@/services/escola-lms/consultations';
+import type { ProColumns } from '@ant-design/pro-table';
+import { Badge, Calendar, DatePicker, Spin, Tooltip, message } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns } from '@ant-design/pro-table';
-import { changeTermDate } from '@/services/escola-lms/consultations';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const ChangeDate: React.FC<{
   data: API.ConsultationAppointment;
@@ -54,8 +53,8 @@ export const ChangeDate: React.FC<{
   );
 };
 
-import ProTable from '@ant-design/pro-table';
 import { sortArrayByKey } from '@/utils/utils';
+import ProTable from '@ant-design/pro-table';
 
 const consultationStatus = {
   reported: 'warning',

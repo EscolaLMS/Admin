@@ -1,21 +1,21 @@
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Typography, Drawer, Tag } from 'antd';
-import React, { useRef, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import UserSelect from '@/components/UserSelect';
-import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { DeleteOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Drawer, Popconfirm, Tag, Tooltip, Typography, message } from 'antd';
+import { format } from 'date-fns';
+import React, { useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
+import { CollectionSelect } from '@/components/CollectionSelect';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import {
+  approveCourseAccess,
   courseAccess,
   deleteCourseAccess,
-  approveCourseAccess,
 } from '@/services/escola-lms/course_access';
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
-import { CollectionSelect } from '@/components/CollectionSelect';
 
 const handleRemove = async (id: number) => {
   return deleteCourseAccess(id).then((response) => {

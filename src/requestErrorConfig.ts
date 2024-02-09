@@ -1,6 +1,91 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+import { history } from '@umijs/max';
 import { message, notification } from 'antd';
+
+const codeMessage = {
+  200: '200',
+  201: '201',
+  202: '202',
+  204: '204',
+  400: '400',
+  401: '401',
+  403: '403',
+  404: '404',
+  405: '405',
+  406: '406',
+  410: '410',
+  422: '422',
+  500: '500',
+  502: '502',
+  503: '503',
+  504: '504',
+};
+
+// TODO there is no type for error
+//github.com/ant-design/ant-design-pro/blob/ffff2447d6d717f932f1e9355096ad26f6ad2681/src/requestErrorConfig.ts#L42C27-L42C30
+const errorHandler = (error: any) => {
+  const { response, data } = error;
+
+  if (error.name === 'AbortError') {
+    return;
+  }
+
+  if (data && (data as API.DefaultResponseError)) {
+    const { message, errors } = data;
+
+    if (response.status >= 404 && response.status < 422) {
+      //
+
+      if (!response.url.includes('productable_id=')) {
+        history.push('/404');
+      }
+    }
+
+    if (message && errors) {
+      notification.error({
+        message,
+        description: Object.keys(errors).map((errorKey) => (
+          <p key={errorKey}>
+            {errorKey}: {errors[errorKey].join(', ')}
+          </p>
+        )),
+      });
+    }
+    if (typeof data.error === 'string') {
+      notification.error({
+        message: 'Error',
+        description: data.error,
+      });
+    }
+
+    if (typeof data.data === 'object') {
+      if (data.data.value) {
+        notification.error({
+          description: data?.data?.value?.map((errorMessage: string) => `${errorMessage}`),
+          message: data.message,
+        });
+      }
+    }
+  } else if (response && response.status) {
+    const { status, url } = response;
+    const errorText = codeMessage[status as keyof typeof codeMessage] || response.statusText;
+
+    notification.error({
+      message: `Error ${status}: ${url}`,
+      description: errorText,
+    });
+  }
+
+  if (!response && !data) {
+    notification.error({
+      description: 'Error',
+      message: 'Error',
+    });
+  }
+
+  throw error;
+};
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {

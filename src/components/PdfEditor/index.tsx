@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
 import type { SyntheticEvent } from 'react';
+import React, { useEffect, useRef } from 'react';
 declare const REACT_APP_API_URL: string;
 
 // @ts-ignore

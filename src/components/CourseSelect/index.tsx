@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { course as fetchCourses, getCourse as fetchCourse } from '@/services/escola-lms/course';
-import { FormattedMessage } from 'umi';
-import { useCallback } from 'react';
+import { getCourse as fetchCourse, course as fetchCourses } from '@/services/escola-lms/course';
 import type { DefaultOptionType } from 'antd/lib/select';
+import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const CourseSelect: React.FC<{
   state?: {

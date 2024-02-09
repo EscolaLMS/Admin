@@ -1,7 +1,7 @@
+import UserSelect from '@/components/UserSelect';
+import ProForm from '@ant-design/pro-form';
 import React, { useCallback } from 'react';
 import { FormattedMessage } from 'umi';
-import ProForm from '@ant-design/pro-form';
-import UserSelect from '@/components/UserSelect';
 
 type SelectValue = string | number | string[] | number[];
 

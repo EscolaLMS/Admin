@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback, useState, useRef } from 'react';
-import { resources as fetchResources, deleteResource } from '@/services/escola-lms/course';
-import { List, Button } from 'antd';
-import { DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
+import { deleteResource, resources as fetchResources } from '@/services/escola-lms/course';
+import { DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Button, List } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 export const Resources: React.FC<{ topicId: number; folder: string }> = ({ topicId, folder }) => {
   const [resources, setResources] = useState<API.Resource[]>();

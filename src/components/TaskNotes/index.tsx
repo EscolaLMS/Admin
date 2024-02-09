@@ -1,6 +1,6 @@
-import { createTaskNote, updateTaskNote, deleteTaskNote } from '@/services/escola-lms/tasks';
-import { Fragment, useCallback, useState } from 'react';
+import { createTaskNote, deleteTaskNote, updateTaskNote } from '@/services/escola-lms/tasks';
 import { Button, Input, List } from 'antd';
+import { Fragment, useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 export const TaskNoteItemList: React.FC<{

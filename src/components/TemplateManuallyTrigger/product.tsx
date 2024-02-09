@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import { Space, Button, message, Tooltip } from 'antd';
-import { FormattedMessage } from 'umi';
 import { triggerManualEventForProduct } from '@/services/escola-lms/templates';
+import { Button, Space, Tooltip, message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import ProductsSelect from '../ProductsSelect';
-import { useIntl } from 'umi';
 
 export const TemplateManuallyTriggerProduct: React.FC<{
   templateId: number;

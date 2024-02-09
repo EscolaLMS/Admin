@@ -1,13 +1,13 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { format } from 'date-fns';
-import { useIntl, FormattedMessage } from 'umi';
-import { Button, Tag, Space } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { type ProColumns, type ActionType } from '@ant-design/pro-table';
+import ProTable, { type ActionType, type ProColumns } from '@ant-design/pro-table';
+import { Button, Space, Tag } from 'antd';
+import { format } from 'date-fns';
+import React, { useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
-import UserSelect from '@/components/UserSelect';
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { CollectionSelect } from '@/components/CollectionSelect';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { consultationAccess } from '@/services/escola-lms/consultations_access';
 import { ApproveForm } from './approveForm';

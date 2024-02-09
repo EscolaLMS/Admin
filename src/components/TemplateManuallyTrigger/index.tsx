@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import { Space, Button, message, Tooltip } from 'antd';
+import { triggerManualEvent } from '@/services/escola-lms/templates';
+import { Button, Space, Tooltip, message } from 'antd';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import UserSelect from '../UserSelect';
-import { triggerManualEvent } from '@/services/escola-lms/templates';
 
 import { useIntl } from 'umi';
 

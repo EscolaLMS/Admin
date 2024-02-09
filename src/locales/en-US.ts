@@ -16,7 +16,11 @@ import templates from './en-US/templates';
 import vouchers from './en-US/vouchers';
 
 export default {
+  customers: 'Customers',
+  sales: 'Sales',
   'navBar.lang': 'Languages',
+  NewUsers: 'New Users',
+  ActiveUsers: 'Active Users',
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',
   'layout.user.link.terms': 'Terms',

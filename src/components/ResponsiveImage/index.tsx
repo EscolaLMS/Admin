@@ -1,6 +1,6 @@
-import React from 'react';
-import { Image } from 'antd';
 import type { ImageProps } from 'antd';
+import { Image } from 'antd';
+import React from 'react';
 declare const REACT_APP_API_URL: string;
 
 interface ResponsiveImageProps extends ImageProps {

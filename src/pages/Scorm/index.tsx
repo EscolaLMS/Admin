@@ -1,13 +1,13 @@
-import { Button, Tooltip, Popconfirm, message } from 'antd';
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import React, { useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
-import { scorms, deleteScorm } from '@/services/escola-lms/scorm';
 import UploadScorm from '@/components/Scorm/upload';
+import { deleteScorm, scorms } from '@/services/escola-lms/scorm';
+import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
 
 const handleRemove = async (id: number) => {
   await deleteScorm(id);

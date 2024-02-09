@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import type { IntlShape } from 'react-intl';
-import { useParams, history, useModel, useIntl, FormattedMessage } from 'umi';
-import { Alert, Spin } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Alert, Spin } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import type { IntlShape } from 'react-intl';
+import { FormattedMessage, history, useIntl, useModel, useParams } from 'umi';
 
 import { configs as fetchConfigs } from '@/services/escola-lms/settings';
-import UserSettings from './user';
-import PackageForm from './package';
 import GlobalSettings from './global';
+import PackageForm from './package';
+import UserSettings from './user';
 
 function transformPackageName(rawPackageName: string): string {
   const packageName = rawPackageName.replaceAll('escolalms', '');

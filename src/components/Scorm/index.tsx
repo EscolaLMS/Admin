@@ -1,7 +1,7 @@
 import { Button, Space } from 'antd';
 import React from 'react';
-import SelectScorm from './select';
 import { FormattedMessage } from 'umi';
+import SelectScorm from './select';
 
 export const ScormSelector: React.FC<{
   value?: number | undefined;

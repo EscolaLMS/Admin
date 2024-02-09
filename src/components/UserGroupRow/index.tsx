@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { Button, message } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import { userGroup as fetchUserGroup } from '@/services/escola-lms/user_groups';
+import { Button, message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const UserGroupRow: React.FC<{
   id: number;

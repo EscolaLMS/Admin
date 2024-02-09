@@ -1,23 +1,22 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tag, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { IntlShape } from 'react-intl';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { useModel } from 'umi';
+import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
+import React, { useRef, useState } from 'react';
+import type { IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl, useModel } from 'umi';
 
 import {
-  settings,
   createSettings,
-  updateSettings,
   deleteSettings,
   settingGroups,
+  settings,
+  updateSettings,
 } from '@/services/escola-lms/settings';
 
-import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useEffect } from 'react';
+import SettingsModalForm from './components/ModalForm';
 
 const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
   const hide = message.loading(

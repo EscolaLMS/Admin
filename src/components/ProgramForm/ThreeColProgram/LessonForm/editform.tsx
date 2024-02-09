@@ -1,8 +1,8 @@
-import React from 'react';
-import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import type { FormLayout } from 'antd/lib/form/Form.js';
-import { useIntl, FormattedMessage } from 'umi';
+import Input from 'antd/lib/input';
+import React from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const LessonEditForm: React.FC<{
   lesson: API.Lesson;

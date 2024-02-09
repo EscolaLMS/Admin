@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { Button, message } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import { getStationaryEvent } from '@/services/escola-lms/stationary_events';
+import { Button, message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const StationaryEventRow: React.FC<{
   id: number;

@@ -1,23 +1,23 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tag, Tooltip, Popconfirm, Spin, Modal } from 'antd';
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import type { IntlShape } from 'react-intl';
 import { Tree } from '@/components/Tree';
+import { PlusOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Modal, Popconfirm, Spin, Tag, Tooltip, message } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type { IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl } from 'umi';
 
 import {
   categories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
   categoryTree,
+  createCategory,
+  deleteCategory,
+  updateCategory,
 } from '@/services/escola-lms/category';
-import CategoryModalForm from './components/ModalForm';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { createTableOrderObject } from '@/utils/utils';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import CategoryModalForm from './components/ModalForm';
 
 const handleUpdate = async (intl: IntlShape, fields: API.CategoryListItem, id?: number) => {
   const hide = message.loading(

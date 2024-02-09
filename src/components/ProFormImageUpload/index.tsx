@@ -1,11 +1,11 @@
+import { Button, Col, Image, Row } from 'antd';
 import React from 'react';
-import { Button, Image, Row, Col } from 'antd';
 
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import ProForm from '@ant-design/pro-form';
+import type { GroupProps } from '@ant-design/pro-form/lib/interface';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { FormattedMessage } from 'umi';
-import SecureUploadBrowser from '@/components/SecureUpload/browser';
-import type { GroupProps } from '@ant-design/pro-form/lib/interface';
 
 export const ProFormImageUpload: React.FC<{
   folder: string;

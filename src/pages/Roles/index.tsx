@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { Button, Tooltip, Popconfirm } from 'antd';
-import { useIntl, FormattedMessage, Link, history } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
+import { createRole, deleteRole, roles } from '@/services/escola-lms/roles';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { roles, deleteRole, createRole } from '@/services/escola-lms/roles';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip } from 'antd';
+import React, { useRef, useState } from 'react';
+import { FormattedMessage, Link, history, useIntl } from 'umi';
 import RolesModalForm from './components/ModalForm';
 
 export const TableColumns: ProColumns<API.Role>[] = [

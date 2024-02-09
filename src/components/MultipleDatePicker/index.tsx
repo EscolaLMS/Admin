@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
-import { Tag, DatePicker, Select } from 'antd';
+import { DatePicker, Select, Tag } from 'antd';
 import moment from 'moment';
+import React, { useCallback, useState } from 'react';
 
 import './index.css';
 

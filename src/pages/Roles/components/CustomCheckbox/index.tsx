@@ -1,15 +1,13 @@
-import { Checkbox } from 'antd';
-import React, { useEffect, useState } from 'react';
 import {
   blue,
-  orange,
   cyan,
+  geekblue,
   gold,
   green,
+  magenta,
+  orange,
   volcano,
   yellow,
-  geekblue,
-  magenta,
 } from '@ant-design/colors';
 import {
   CalendarOutlined,
@@ -31,8 +29,10 @@ import {
   SyncOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import './index.css';
+import { Checkbox } from 'antd';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import React, { useEffect, useState } from 'react';
+import './index.css';
 
 interface Props {
   name: string;

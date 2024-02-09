@@ -1,23 +1,23 @@
-import React, { useCallback, useMemo } from 'react';
-import { FormattedMessage, history } from 'umi';
-import { format } from 'date-fns';
-import { Button, Col, Divider, message, Popconfirm, Row, Spin, Tooltip, Typography } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { Button, Col, Divider, Popconfirm, Row, Spin, Tooltip, Typography, message } from 'antd';
+import { format } from 'date-fns';
+import React, { useCallback, useMemo } from 'react';
+import { FormattedMessage, history } from 'umi';
 
-import { DAY_FORMAT } from '@/consts/dates';
-import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { UserCourseAttempts, UserProgress } from '@/components/CourseStatistics/userProgress';
+import { DAY_FORMAT } from '@/consts/dates';
+import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
 import { useTeacherSubject } from '../../context';
 import {
   useFinalGrades,
-  useSubjectGradeScales,
   useGradeTerms,
-  useUserAttendanceSchedules,
   useStudentExams,
+  useSubjectGradeScales,
   useTutorGradeScales,
+  useUserAttendanceSchedules,
   useUserCoursesStats,
 } from './hooks';
 import type { StudentExam } from './types';

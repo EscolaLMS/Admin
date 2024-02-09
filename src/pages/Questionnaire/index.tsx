@@ -1,12 +1,12 @@
-import React, { useCallback, useRef } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
-import { questionnaire, deleteQuestionnaire } from '@/services/escola-lms/questionnaire';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { deleteQuestionnaire, questionnaire } from '@/services/escola-lms/questionnaire';
 import { createTableOrderObject } from '@/utils/utils';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import React, { useCallback, useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
 export const TableColumns: ProColumns<API.Questionnaire>[] = [
   {

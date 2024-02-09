@@ -1,15 +1,15 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
+import { createPage, page as fetchPage, updatePage } from '@/services/escola-lms/pages';
 import ProCard from '@ant-design/pro-card';
-import { page as fetchPage, updatePage, createPage } from '@/services/escola-lms/pages';
+import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import { Spin, message } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 import { slugify } from '@/services/escola-lms/slug';
+import { useCallback } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 export default () => {
   const intl = useIntl();

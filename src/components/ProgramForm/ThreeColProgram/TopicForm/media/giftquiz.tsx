@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
 import { Table } from '@/components/GiftQuizQuestions/table';
+import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
 import { Divider } from 'antd';
-import ProForm, { ProFormGroup, ProFormDigit } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
 import Typography from 'antd/lib/typography/Typography';
+import React, { Fragment } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];

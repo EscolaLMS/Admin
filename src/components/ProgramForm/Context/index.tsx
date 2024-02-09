@@ -1,23 +1,22 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
-import { useIntl, useLocation } from 'umi';
-import { history } from 'umi';
 import type { Location } from 'history';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { history, useIntl, useLocation } from 'umi';
 
 import {
-  program,
-  createLesson as apiCreateLesson,
-  updateLesson as apiUpdateLesson,
-  createTopic as apiCreateTopic,
-  updateTopic as apiUpdateTopic,
-  removeLesson as apiRemoveLesson,
-  removeTopic as apiRemoveTopic,
   cloneLesson as apiCloneLesson,
   cloneTopic as apiCloneTopic,
+  createLesson as apiCreateLesson,
+  createTopic as apiCreateTopic,
+  removeLesson as apiRemoveLesson,
+  removeTopic as apiRemoveTopic,
+  updateLesson as apiUpdateLesson,
+  updateTopic as apiUpdateTopic,
+  program,
 } from '@/services/escola-lms/course';
 
-import type { UploadChangeParam } from 'antd/lib/upload';
 import { TopicType } from '@/services/escola-lms/enums';
+import type { UploadChangeParam } from 'antd/lib/upload';
 
 type CurrentEditMode =
   | { mode: 'lesson'; id: number; value?: API.Lesson | null }

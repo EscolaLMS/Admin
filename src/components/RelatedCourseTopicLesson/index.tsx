@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { TreeSelect } from 'antd';
 import { course, program } from '@/services/escola-lms/course';
+import { TreeSelect } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
+import React, { useEffect, useState } from 'react';
 
 type TreeData = Omit<DefaultOptionType, 'label'>;
 

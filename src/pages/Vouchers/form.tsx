@@ -1,20 +1,20 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import { message, Spin } from 'antd';
+import CategoryTree from '@/components/CategoryTree';
+import { MoneyInput } from '@/components/MoneyInput';
+import ProductSelect from '@/components/ProductsSelect';
+import UserSelect from '@/components/UserSelect';
+import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
+import ProCard from '@ant-design/pro-card';
 import ProForm, {
-  ProFormText,
-  ProFormDigit,
   ProFormDatePicker,
+  ProFormDigit,
   ProFormRadio,
   ProFormSwitch,
+  ProFormText,
 } from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useParams, useIntl, FormattedMessage, history } from 'umi';
-import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
-import UserSelect from '@/components/UserSelect';
-import CategoryTree from '@/components/CategoryTree';
-import ProductSelect from '@/components/ProductsSelect';
-import { MoneyInput } from '@/components/MoneyInput';
+import { Spin, message } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 const mapper = <T extends { id: string | number } | string | number>(item: T): string | number =>
   typeof item === 'object' ? item.id : item;

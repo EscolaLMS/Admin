@@ -91,6 +91,7 @@
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^3.3.0",
+    "@playwright/test": "^1.41.2",
     "@testing-library/react": "^13.4.0",
     "@types/classnames": "^2.3.1",
     "@types/express": "^4.17.21",
@@ -100,6 +101,7 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/react-helmet": "^6.1.11",
+    "@types/webscopeio__react-textarea-autocomplete": "^4.7.5",
     "@umijs/fabric": "^4.0.1",
     "@umijs/lint": "^4.1.1",
     "@umijs/max": "^4.1.1",

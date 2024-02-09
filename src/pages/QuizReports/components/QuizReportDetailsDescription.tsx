@@ -1,10 +1,10 @@
+import { Descriptions, Space, Typography } from 'antd';
+import { format } from 'date-fns';
 import React from 'react';
 import { FormattedMessage } from 'umi';
-import { format } from 'date-fns';
-import { Descriptions, Space, Typography } from 'antd';
 
-import { DATETIME_FORMAT } from '@/consts/dates';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { DATETIME_FORMAT } from '@/consts/dates';
 
 interface Props {
   data: API.QuizAttemptDetails;

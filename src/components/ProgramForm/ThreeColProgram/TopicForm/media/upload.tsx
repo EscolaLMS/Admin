@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useContext, useEffect } from 'react';
-import { Row, Button, Pagination, Spin, Typography, Progress } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { TopicType } from '@/services/escola-lms/enums';
-import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
-import { Document, pdfjs, Page } from 'react-pdf';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
-import './index.css';
+import { TopicType } from '@/services/escola-lms/enums';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Pagination, Progress, Row, Spin, Typography } from 'antd';
+import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { FormattedMessage } from 'umi';
+import './index.css';
 
 import { Context } from '@/components/ProgramForm/Context';
 

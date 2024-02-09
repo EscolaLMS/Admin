@@ -1,12 +1,12 @@
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Tag } from 'antd';
-import React, { useCallback, useRef, useState } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { format } from 'date-fns';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { templates, deleteTemplate } from '@/services/escola-lms/templates';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { deleteTemplate, templates } from '@/services/escola-lms/templates';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
+import { format } from 'date-fns';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 import type { channelType } from '..';
 
 const TableList: React.FC<{ templateType: string; channel: channelType }> = ({

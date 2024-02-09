@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   assignable as fetchGetAssignables,
   assigned as fetchGetAssigned,
-  unassign as postUnassign,
   assign as postAssign,
+  unassign as postUnassign,
 } from '@/services/escola-lms/certificate';
-import { FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 import { message } from 'antd';
+import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const AssignTemplateSelect: React.FC<{
   state?: {

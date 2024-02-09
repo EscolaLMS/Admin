@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Select } from 'antd';
 import { tagsUnique } from '@/services/escola-lms/tag';
+import { Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 
 const { Option } = Select;
 

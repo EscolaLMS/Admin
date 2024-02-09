@@ -1,30 +1,30 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col, Alert, Button } from 'antd';
-import ProForm, { ProFormText, ProFormDatePicker, ProFormSelect } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
+import ProForm, { ProFormDatePicker, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import { Alert, Button, Col, Row, Spin, message } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { useCallback } from 'react';
-import UserSelect from '@/components/UserSelect';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
+import ConfirmModal from '@/components/ConfirmModal';
+import EditValidateModal from '@/components/EditValidateModal';
+import MultipleDatePicker from '@/components/MultipleDatePicker';
+import ProFormImageUpload from '@/components/ProFormImageUpload';
+import ProductWidget from '@/components/ProductWidget';
+import UserSelect from '@/components/UserSelect';
+import UserSubmissions from '@/components/UsersSubmissions';
+import { ModelStatus } from '@/consts/status';
+import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import {
   createConsultation,
   getConsultation,
   updateConsultation,
 } from '@/services/escola-lms/consultations';
-import MultipleDatePicker from '@/components/MultipleDatePicker';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
-import ProFormImageUpload from '@/components/ProFormImageUpload';
-import { ModelStatus } from '@/consts/status';
-import useValidateFormEdit from '@/hooks/useValidateFormEdit';
-import EditValidateModal from '@/components/EditValidateModal';
+import { useCallback } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import ConsultationCalendar from './components/Calendar';
-import ProductWidget from '@/components/ProductWidget';
-import UserSubmissions from '@/components/UsersSubmissions';
-import ConfirmModal from '@/components/ConfirmModal';
 import './index.css';
 
 enum TabNames {

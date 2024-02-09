@@ -1,5 +1,5 @@
-import { FormattedMessage } from 'umi';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import { FormattedMessage } from 'umi';
 
 export const InfoRecommender: React.FC = () => (
   <Paragraph className="recommender__paragraph">

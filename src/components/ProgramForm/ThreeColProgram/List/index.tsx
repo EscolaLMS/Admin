@@ -1,10 +1,10 @@
-import { useContext, useCallback } from 'react';
-import { history } from 'umi';
 import { Spin } from 'antd';
+import { useCallback, useContext } from 'react';
+import { history } from 'umi';
 
 import { Context } from '@/components/ProgramForm/Context';
-import './index.css';
 import { LessonList } from './LessonList';
+import './index.css';
 
 export const CurriculumList = () => {
   const { state, addNewLesson } = useContext(Context);

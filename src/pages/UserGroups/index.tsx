@@ -1,13 +1,13 @@
-import { Button, Tooltip, Popconfirm, Tag, Spin, Modal } from 'antd';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { userGroups, deleteUserGroup, userGroupsTree } from '@/services/escola-lms/user_groups';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import UserGroupSelect from '@/components/UserGroupSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import UserGroupSelect from '@/components/UserGroupSelect';
+import { deleteUserGroup, userGroups, userGroupsTree } from '@/services/escola-lms/user_groups';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Modal, Popconfirm, Spin, Tag, Tooltip } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
 import { Tree } from '@/components/Tree';
 import { createTableOrderObject } from '@/utils/utils';

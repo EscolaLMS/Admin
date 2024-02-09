@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { reports } from '@/services/escola-lms/reports';
+import { FileExcelOutlined } from '@ant-design/icons';
 import type { PieConfig } from '@ant-design/plots';
 import { Pie } from '@ant-design/plots';
-import { reports } from '@/services/escola-lms/reports';
-import { Spin, Alert, Button, Table } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { FileExcelOutlined } from '@ant-design/icons';
-import { ExportToCsv } from 'export-to-csv';
+import { Alert, Button, Spin, Table } from 'antd';
+import { mkConfig } from 'export-to-csv';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+
+import { download, generateCsv } from 'export-to-csv';
 
 const columns = [
   {
@@ -140,9 +142,11 @@ const PieChart: React.FC<{
         // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
       };
 
-      const csvExporter = new ExportToCsv(options);
+      const csvConfig = mkConfig(options);
 
-      csvExporter.generateCsv(state.value);
+      const csv = generateCsv(csvConfig)(state.value);
+
+      download(csvConfig)(csv);
     }
   }, [state]);
 

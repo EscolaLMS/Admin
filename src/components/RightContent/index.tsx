@@ -1,8 +1,6 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { SelectLang as UmiSelectLang } from '@umijs/max';
 import { Space, Tag } from 'antd';
 import React from 'react';
-import { useModel } from 'umi';
+import { SelectLang, useModel } from 'umi';
 import NoticeIconView from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -37,7 +35,7 @@ const GlobalHeaderRight: React.FC = () => {
   const { navTheme, layout } = initialState.settings;
   let className = styles.right;
 
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
+  if ((navTheme === 'realDark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
 
@@ -48,7 +46,7 @@ const GlobalHeaderRight: React.FC = () => {
       <Avatar />
       {REACT_APP_ENV && (
         <span>
-          <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
+          <Tag color={ENVTagColor[REACT_APP_ENV as keyof typeof ENVTagColor]}>{REACT_APP_ENV}</Tag>
         </span>
       )}
       <SelectLang className={styles.action} icon={langIcon} />
@@ -56,29 +54,3 @@ const GlobalHeaderRight: React.FC = () => {
   );
 };
 export default GlobalHeaderRight;
-
-export const SelectLang = () => {
-  return (
-    <UmiSelectLang
-      style={{
-        padding: 4,
-      }}
-    />
-  );
-};
-
-export const Question = () => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        height: 26,
-      }}
-      onClick={() => {
-        window.open('https://pro.ant.design/docs/getting-started');
-      }}
-    >
-      <QuestionCircleOutlined />
-    </div>
-  );
-};

@@ -1,5 +1,5 @@
-import React from 'react';
 import { Descriptions } from 'antd';
+import React from 'react';
 import { FormattedMessage } from 'umi';
 
 import { QuestionType } from '@/services/escola-lms/enums';

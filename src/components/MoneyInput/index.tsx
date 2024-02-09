@@ -1,9 +1,8 @@
-import { Input } from 'antd';
-import type { FC } from 'react';
-import { useEffect } from 'react';
-import React, { useState } from 'react';
 import type { FormInstance, ProFormFieldProps } from '@ant-design/pro-form';
 import { ProForm } from '@ant-design/pro-form';
+import { Input } from 'antd';
+import type { FC } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage, useModel } from 'umi';
 
 interface CurrencyInputProps extends Omit<ProFormFieldProps, 'label'> {

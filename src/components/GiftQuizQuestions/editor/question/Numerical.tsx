@@ -1,6 +1,6 @@
+import { ProFormDigit, ProFormText } from '@ant-design/pro-form';
 import React from 'react';
 import { FormattedMessage } from 'umi';
-import { ProFormDigit, ProFormText } from '@ant-design/pro-form';
 
 export const GiftQuizQuestionNumericalEditor: React.FC = () => (
   <>

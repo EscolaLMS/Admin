@@ -1,15 +1,20 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
-import React, { useState, useRef, useCallback } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { h5p, removeH5P } from '@/services/escola-lms/h5p';
-import { DeleteOutlined, EditOutlined, BookOutlined, ExportOutlined } from '@ant-design/icons';
-import UploadH5P from '@/components/H5P/upload';
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
+import UploadH5P from '@/components/H5P/upload';
+import { h5p, removeH5P } from '@/services/escola-lms/h5p';
 import { createTableOrderObject } from '@/utils/utils';
+import {
+  BookOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExportOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);

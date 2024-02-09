@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { useIntl, useModel } from 'umi';
 import {
   getNotifications,
-  readNotification,
   readAllNotification,
+  readNotification,
 } from '@/services/escola-lms/notifications';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useIntl, useModel } from 'umi';
 
 import NoticeIcon from './NoticeIcon';
 import styles from './index.less';

@@ -1,13 +1,13 @@
+import { RecommenderIcon } from '@/icons';
+import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
+import { Spin } from 'antd';
 import React, { useCallback, useContext } from 'react';
 import { FormattedMessage, history } from 'umi';
 import { Context } from '../../../Context';
-import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
 import { ExerciseRecommender } from './ExerciseRecommender';
-import { RecommenderIcon } from '@/icons';
-import { RecommenderPopoverInfo } from './RecommenderPopoverInfo';
-import { Spin } from 'antd';
-import { getTopicType, useExerciseRecommender } from './utils';
 import { InfoRecommender } from './InfoRecommender';
+import { RecommenderPopoverInfo } from './RecommenderPopoverInfo';
+import { getTopicType, useExerciseRecommender } from './utils';
 
 export const Recommender: React.FC<{
   courseId: number;

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Select, Spin } from 'antd';
 import { templates as fetchTemplates } from '@/services/escola-lms/templates';
+import { Select, Spin } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 
 export const TemplateSelect: React.FC<{
   params?: API.TemplatesParams;

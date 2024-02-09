@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useParams, history } from 'umi';
-import { FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 import H5PCard from '@/components/H5P/card';
 import { PageContainer } from '@ant-design/pro-layout';

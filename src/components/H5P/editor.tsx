@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { Col, Row, Spin, Alert, message } from 'antd';
 import {
   ContextlessEditor,
   type EditorSettings,
   type H5PEditorContent,
 } from '@escolalms/h5p-react';
+import { Alert, Col, Row, Spin, message } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { useTokenChangeListener } from '@/hooks/useTokenChangeListener';
 import { editorSettings, updateContent } from '@/services/escola-lms/h5p';

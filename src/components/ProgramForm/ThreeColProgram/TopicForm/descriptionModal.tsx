@@ -1,7 +1,7 @@
-import { Button, Modal } from 'antd';
-import ProForm from '@ant-design/pro-form';
-import { FormattedMessage } from '@@/plugin-locale/localeExports';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import { FormattedMessage } from '@@/plugin-locale/localeExports';
+import ProForm from '@ant-design/pro-form';
+import { Button, Modal } from 'antd';
 import React from 'react';
 
 interface DescriptionModalProps {

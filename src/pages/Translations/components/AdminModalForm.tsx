@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import ProForm, { ModalForm, ProFormText } from '@ant-design/pro-form';
 import { Form } from 'antd';
-import ProForm, { ProFormText, ModalForm } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
+import React, { useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import { JsonLangEditor } from './JsonLangEditor';
 
 export const TranslationModalForm: React.FC<{

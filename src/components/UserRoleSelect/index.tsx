@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { roles as getRoles } from '@/services/escola-lms/roles';
-import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const UserRoleSelect: React.FC<{
   state?: {

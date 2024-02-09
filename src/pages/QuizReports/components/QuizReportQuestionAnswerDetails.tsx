@@ -1,7 +1,7 @@
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Descriptions, Space, Tooltip, Typography } from 'antd';
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { Button, Descriptions, Space, Tooltip, Typography } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
 
 import { QuizReportEditAnswerScore } from './QuizReportEditAnswerScore';
 

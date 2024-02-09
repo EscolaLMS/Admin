@@ -1,8 +1,8 @@
-import React from 'react';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import ProForm from '@ant-design/pro-form';
 import type { UploadChangeParam } from 'antd/lib/upload';
+import React from 'react';
 import { FormattedMessage } from 'umi';
-import SecureUploadBrowser from '@/components/SecureUpload/browser';
 
 export const ProFormAudioUpload: React.FC<{
   folder: string;

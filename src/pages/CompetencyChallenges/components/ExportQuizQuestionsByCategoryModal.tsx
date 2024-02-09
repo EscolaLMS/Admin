@@ -1,6 +1,6 @@
+import ProForm, { ModalForm } from '@ant-design/pro-form';
 import React, { useCallback } from 'react';
 import { FormattedMessage } from 'umi';
-import ProForm, { ModalForm } from '@ant-design/pro-form';
 
 import { exportQuizQuestions } from '@/services/escola-lms/gift_quiz';
 import { CompetencyChallengeCategoryTree } from './CompetencyChallengeCategoryTree';

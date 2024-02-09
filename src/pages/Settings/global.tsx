@@ -2,8 +2,8 @@ import { TopicType } from '@/services/escola-lms/enums';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, message, Popconfirm, Tooltip } from 'antd';
-import React, { Fragment, useRef, useState } from 'react';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FormattedMessage, useIntl, useModel } from 'umi';
 
@@ -94,6 +94,7 @@ const snakeToCamel = (str: string) =>
   str.toLowerCase().replace(/(_\w)/g, (m) => m.toUpperCase().substr(1));
 
 const flatRoutes = (routes: Route[]): Route[] => {
+  console.log('routes', routes);
   return (
     routes.reduce((acc, curr) => {
       return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
@@ -110,6 +111,11 @@ export const pathToSettingName = (path: string) =>
 
 export const topicTypeToSettingName = (type: string) => `disableTopicType-${type}`;
 
+console.log(
+  'getRoutes()',
+  getRoutes().then((r) => console.log(r)),
+);
+
 const booleanSettings = [
   ...Object.keys(TopicType).map((type) => ({
     key: topicTypeToSettingName(type),
@@ -121,6 +127,7 @@ const booleanSettings = [
     type: 'boolean',
     data: false,
   })),
+  /*
   ...flatRoutes(getRoutes())
     .filter((route) => route.path && route.path !== '/')
     .map((route) => ({
@@ -134,6 +141,7 @@ const booleanSettings = [
       type: 'boolean',
       data: false,
     })),
+    */
   ...['ECommerce', 'Certificates'].map((feature) => ({
     key: `disable-${feature}`,
     group: 'global',
@@ -179,7 +187,7 @@ const booleanSettings = [
   return acc;
 }, {});
 
-const initialData: InitialDataRecords = {
+const preInitialData: InitialDataRecords = {
   logo: {
     id: -1,
     key: 'logo',
@@ -368,7 +376,42 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
+  const [initialData, setInitialData] = useState<InitialDataRecords>(preInitialData);
+
   const { setInitialState, initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    getRoutes().then((routes) => {
+      //@ts-ignore
+      const hideInDataRecords: InitialDataRecords = Object.values(routes.routes)
+        //@ts-ignore
+        .filter((route) => route.path && route.path !== '/' && route.layout !== false)
+        .map((route) => ({
+          path: route.path,
+          //@ts-ignore
+          key: pathToSettingName(route.path),
+          group: 'global',
+          value: 'false',
+          public: true,
+          enumerable: true,
+          sort: 1,
+          type: 'boolean',
+          data: false,
+        }));
+
+      setInitialData((prevInitialData) => ({
+        ...prevInitialData,
+        ...hideInDataRecords,
+      }));
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log('initialData', initialData);
+    if (actionRef.current) {
+      actionRef.current.reload();
+    }
+  }, [initialData]);
 
   const columns: ProColumns<API.Setting>[] = [
     {

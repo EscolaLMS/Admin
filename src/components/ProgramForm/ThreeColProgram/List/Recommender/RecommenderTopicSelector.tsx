@@ -1,26 +1,26 @@
 import PACKAGES from '@/consts/packages';
-import { useState, useCallback } from 'react';
-import { Button, Tooltip } from 'antd';
 import {
-  FundOutlined,
-  FileTextOutlined,
-  FilePdfOutlined,
-  FileImageOutlined,
-  VideoCameraAddOutlined,
   AudioOutlined,
-  YoutubeOutlined,
-  InteractionOutlined,
   CarryOutOutlined,
+  FileImageOutlined,
+  FilePdfOutlined,
+  FileTextOutlined,
+  FundOutlined,
+  InteractionOutlined,
+  MinusOutlined,
   PercentageOutlined,
   PlusOutlined,
-  MinusOutlined,
+  VideoCameraAddOutlined,
+  YoutubeOutlined,
 } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
+import { useCallback, useState } from 'react';
 
-import '../types.css';
-import { TopicType } from '@/services/escola-lms/enums';
-import { FormattedMessage, useModel } from 'umi';
 import { topicTypeToSettingName } from '@/pages/Settings/global';
+import { TopicType } from '@/services/escola-lms/enums';
 import { createHavePackageInstalled } from '@/utils/access';
+import { FormattedMessage, useModel } from 'umi';
+import '../types.css';
 
 const topicTypes = [
   {

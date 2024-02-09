@@ -1,10 +1,10 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { getUserSettings, setUserSettings } from '@/services/escola-lms/user';
+import { InteractionOutlined, PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { Button } from 'antd';
-import { PlusOutlined, InteractionOutlined } from '@ant-design/icons';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import UserSettingForm from './components/SettingModal';
 
 const TableList: React.FC<{ user: string; isProfile: boolean }> = ({ user, isProfile = false }) => {

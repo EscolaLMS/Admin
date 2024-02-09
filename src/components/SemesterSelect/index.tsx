@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Select, Spin } from 'antd';
 import { semesters as fetchSemesters } from '@/services/escola-lms/semester_subject';
+import { Select, Spin } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 
 export const SemesterSelect: React.FC<{
   state?: {

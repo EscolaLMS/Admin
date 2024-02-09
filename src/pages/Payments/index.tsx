@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import React, { useRef } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { payments } from '@/services/escola-lms/payments';
 import { format } from 'date-fns';

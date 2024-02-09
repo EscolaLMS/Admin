@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useRef, Fragment } from 'react';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
 
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import { FormattedMessage, useIntl } from 'umi';
 
-import { fields as fetchFields, deleteField } from '@/services/escola-lms/fields';
+import { deleteField, fields as fetchFields } from '@/services/escola-lms/fields';
 
 import ModelFieldsModalForm from './ModalForm';
 

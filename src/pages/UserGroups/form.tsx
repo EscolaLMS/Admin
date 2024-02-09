@@ -1,21 +1,21 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin, List, Button, Divider, Typography } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
 import {
-  userGroup as fetchUserGroup,
-  createUserGroup,
-  updateUserGroup,
   addUserToGroup,
+  createUserGroup,
+  userGroup as fetchUserGroup,
   removeUserFromGroup,
+  updateUserGroup,
 } from '@/services/escola-lms/user_groups';
+import ProCard from '@ant-design/pro-card';
+import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Button, Divider, List, Spin, Typography, message } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
-import { DeleteOutlined } from '@ant-design/icons';
 import UserSelect from '@/components/UserSelect';
+import { DeleteOutlined } from '@ant-design/icons';
 import UserGroupSelect from '../../components/UserGroupSelect';
 
 export default () => {

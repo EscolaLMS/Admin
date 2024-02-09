@@ -1,13 +1,13 @@
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import React, { useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import { pages, deletePage } from '@/services/escola-lms/pages';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { deletePage, pages } from '@/services/escola-lms/pages';
 import { createTableOrderObject } from '@/utils/utils';
 
 const handleRemove = async (id: number) => {

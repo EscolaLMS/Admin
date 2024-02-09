@@ -1,8 +1,8 @@
-import React from 'react';
-import { Form } from 'antd';
 import { ModalForm, ProFormDateTimePicker } from '@ant-design/pro-form';
+import { Form } from 'antd';
+import React from 'react';
 
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const ChangeTerm: React.FC<{
   id?: number | false;

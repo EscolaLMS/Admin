@@ -1,13 +1,12 @@
+import ProForm, { ModalForm, ProFormSwitch, ProFormTextArea } from '@ant-design/pro-form';
+import { Form, Typography } from 'antd';
 import React, { useEffect, useMemo } from 'react';
-import { Form } from 'antd';
-import ProForm, { ProFormSwitch, ModalForm, ProFormTextArea } from '@ant-design/pro-form';
-import { Typography } from 'antd';
 
-import { FormattedMessage } from 'umi';
-import { updateConfig } from '@/services/escola-lms/settings';
-import ReactJson from 'react-json-view';
-import { useIntl } from '@@/plugin-locale/localeExports';
 import SettingsValue from '@/pages/Settings/components/SettingsValue';
+import { updateConfig } from '@/services/escola-lms/settings';
+import { useIntl } from '@@/plugin-locale/localeExports';
+import ReactJson from 'react-json-view';
+import { FormattedMessage } from 'umi';
 
 const { Text } = Typography;
 

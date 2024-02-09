@@ -1,18 +1,18 @@
-import React, { useCallback, useRef } from 'react';
-import { format } from 'date-fns';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { Button, Tag, Tooltip } from 'antd';
-import ProTable from '@ant-design/pro-table';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
 import { FileSearchOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Tag, Tooltip } from 'antd';
+import { format } from 'date-fns';
+import React, { useCallback, useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import type { ProTableRequest } from '@/types';
-import { DATETIME_FORMAT } from '@/consts/dates';
-import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
-import UserSelect from '@/components/UserSelect';
 import CourseSelect from '@/components/CourseSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import UserSelect from '@/components/UserSelect';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
+import type { ProTableRequest } from '@/types';
 import { createTableOrderObject } from '@/utils/utils';
 
 export const GiftQuizTableColumns: ProColumns<API.GiftQuiz>[] = [

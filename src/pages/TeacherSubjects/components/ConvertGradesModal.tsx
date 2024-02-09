@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FormattedMessage } from 'umi';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import ProForm from '@ant-design/pro-form';
 import { Button, Image, Modal, Select, Space, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
-import ProForm from '@ant-design/pro-form';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 import SecureUpload from '@/components/SecureUpload';
 import { ExamGradeType } from '@/services/escola-lms/enums';

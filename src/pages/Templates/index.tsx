@@ -1,10 +1,10 @@
-import React from 'react';
-import { FormattedMessage, useParams, history, useAccess } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
+import { PageContainer } from '@ant-design/pro-layout';
+import React from 'react';
+import { FormattedMessage, history, useAccess, useParams } from 'umi';
 
-import ConfigList from './ConfigList/index';
 import { useCheckRoles } from '@/hooks/useCheckRoles';
+import ConfigList from './ConfigList/index';
 
 export enum channelType {
   email = 'EscolaLms\\TemplatesEmail\\Core\\EmailChannel',

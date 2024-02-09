@@ -1,47 +1,47 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { NavLink, FormattedMessage, useModel, history, useIntl } from 'umi';
-import { Button, message, Tooltip } from 'antd';
 import { FolderOpenOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
-import Tree, { mutateTree } from '@atlaskit/tree';
 import type {
-  TreeData,
-  TreeItem,
   RenderItemParams,
+  TreeData,
   TreeDestinationPosition,
+  TreeItem,
   TreeSourcePosition,
 } from '@atlaskit/tree';
+import Tree, { mutateTree } from '@atlaskit/tree';
+import { Button, Tooltip, message } from 'antd';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, NavLink, history, useIntl, useModel } from 'umi';
 
-import { getFormData } from '@/services/api';
-import {
-  sort,
-  updateLesson as apiUpdateLesson,
-  updateTopic as apiUpdateTopic,
-} from '@/services/escola-lms/course';
-import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
 import { Context } from '@/components/ProgramForm/Context';
 import { getTypeIcon } from '@/components/ProgramForm/ThreeColProgram/TopicForm';
 import { getTypeName } from '@/components/ProgramForm/ThreeColProgram/TopicForm/media';
+import PACKAGES from '@/consts/packages';
+import { getFormData } from '@/services/api';
+import {
+  updateLesson as apiUpdateLesson,
+  updateTopic as apiUpdateTopic,
+  sort,
+} from '@/services/escola-lms/course';
+import { RecommenderType, TopicType } from '@/services/escola-lms/enums';
+import { createHavePackageInstalled } from '@/utils/access';
+import { NewLessonListItem } from '../NewLessonListItem';
+import { Recommender } from '../Recommender';
+import { CourseRecommender } from '../Recommender/CourseRecommender';
+import { RecommenderTopicSelector } from '../Recommender/RecommenderTopicSelector';
+import { TopicTypesSelector } from '../TopicTypesSelector';
 import type { LessonDeeplyStringifyId } from './utils';
 import {
-  getRootLessons,
-  getTreeDataItemsFromFlatLessonsAndTopics,
-  getFlatLessonDeeplyStringifyId,
-  getFlatTopicsStringifyId,
-  reorderIdArr,
-  getOrdersFromReorderedArr,
-  insertToIndexIdArr,
-  optimisticMoveThroughTree,
+  MovedType,
   findChildrenIndexPosition,
   findParentByChildrenId,
-  MovedType,
+  getFlatLessonDeeplyStringifyId,
+  getFlatTopicsStringifyId,
+  getOrdersFromReorderedArr,
+  getRootLessons,
+  getTreeDataItemsFromFlatLessonsAndTopics,
+  insertToIndexIdArr,
+  optimisticMoveThroughTree,
+  reorderIdArr,
 } from './utils';
-import { NewLessonListItem } from '../NewLessonListItem';
-import { TopicTypesSelector } from '../TopicTypesSelector';
-import { Recommender } from '../Recommender';
-import { RecommenderTopicSelector } from '../Recommender/RecommenderTopicSelector';
-import { createHavePackageInstalled } from '@/utils/access';
-import PACKAGES from '@/consts/packages';
-import { CourseRecommender } from '../Recommender/CourseRecommender';
 
 interface NestingSettings {
   topic?: number;

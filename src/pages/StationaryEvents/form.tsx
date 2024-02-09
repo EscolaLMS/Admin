@@ -1,36 +1,36 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Row, Col } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormDigit,
-  ProFormDatePicker,
-  ProFormTextArea,
-  ProFormSelect,
-} from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
+import ProForm, {
+  ProFormDatePicker,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
+import { Col, Row, Spin, message } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { useParams, history, useIntl, FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 import UserSelect from '@/components/UserSelect';
+import { useCallback } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 import {
-  getStationaryEvent,
   createStationaryEvent,
+  getStationaryEvent,
   updateStationaryEvent,
 } from '@/services/escola-lms/stationary_events';
 
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 
+import Agenda from '@/components/Agenda';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
-import { categoriesArrToIds, splitImagePath, mapper } from '@/utils/utils';
-import './index.css';
 import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
-import Agenda from '@/components/Agenda';
+import { categoriesArrToIds, mapper, splitImagePath } from '@/utils/utils';
+import './index.css';
 
 export type StationaryEventType = Omit<
   EscolaLms.StationaryEvents.Models.StationaryEvent,

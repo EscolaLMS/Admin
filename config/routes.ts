@@ -1,7 +1,7 @@
 ﻿export default [
   {
     path: '/user',
-    layout: true,
+    layout: false,
     routes: [
       {
         path: '/user',
@@ -156,7 +156,7 @@
     path: '/sales',
     name: 'Sales',
     access: 'salesPermission',
-    icon: 'shopping-cart',
+    icon: 'shopping',
     routes: [
       {
         path: '/sales',

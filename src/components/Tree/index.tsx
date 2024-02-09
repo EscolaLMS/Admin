@@ -1,5 +1,5 @@
-import type { DataNode } from 'antd/es/tree';
 import { Tree as AntdTree } from 'antd';
+import type { DataNode } from 'antd/es/tree';
 
 export const recursiveTree = (
   branch: object[],

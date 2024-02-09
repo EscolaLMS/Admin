@@ -19,5 +19,11 @@
       "@@test/*": ["./src/.umi-test/*"]
     }
   },
-  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx", "src/services/escola-lms/typings.d.ts"]
+  "include": [
+    "./**/*.d.ts",
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./src/services/escola-lms/typings.d.ts",
+    "./node_modules/@escolalms/ts-models/models.d.ts"
+  ]
 }

@@ -1,5 +1,4 @@
-import type { ModelTypes } from '@/components/AssignQuestionnary';
-import AssignQuestionnary from '@/components/AssignQuestionnary';
+import AssignQuestionnary, { ModelTypes } from '@/components/AssignQuestionnary';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import ConfirmModal from '@/components/ConfirmModal';
 import CourseStatistics from '@/components/CourseStatistics';
@@ -86,7 +85,7 @@ export default () => {
   const tabsToHide: Record<string, boolean> =
     initialState?.config
       ?.filter((item) => item.key.includes('hideInCourseTabs'))
-      ?.reduce((acc, { key, data: settingValue }) => {
+      ?.reduce((acc: Record<string, boolean>, { key, data: settingValue }) => {
         acc[key.split('-')[1]] = settingValue;
         return acc;
       }, {}) ?? {};

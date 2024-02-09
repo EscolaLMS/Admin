@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Form } from 'antd';
-import ProForm, {
-  ProFormText,
-  ProFormSwitch,
-  ModalForm,
-  ProFormTextArea,
-  ProFormDigit,
-} from '@ant-design/pro-form';
-import { slugify } from '@/services/escola-lms/slug';
-import { useIntl, FormattedMessage } from 'umi';
 import CategoryTree from '@/components/CategoryTree';
-import { category } from '@/services/escola-lms/category';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
+import { category } from '@/services/escola-lms/category';
+import { slugify } from '@/services/escola-lms/slug';
+import ProForm, {
+  ModalForm,
+  ProFormDigit,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
+import { Form } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const CategoryModalForm: React.FC<{
   id?: number | false;

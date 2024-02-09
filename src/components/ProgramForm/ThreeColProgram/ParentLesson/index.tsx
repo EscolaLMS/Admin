@@ -1,8 +1,8 @@
-import React, { useContext, useMemo } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { ProFormTreeSelect } from '@ant-design/pro-form';
 import { Context } from '@/components/ProgramForm/Context';
+import { ProFormTreeSelect } from '@ant-design/pro-form';
 import type { DefaultOptionType } from 'antd/es/select';
+import React, { useContext, useMemo } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 type TreeData = Omit<DefaultOptionType, 'label'>;
 

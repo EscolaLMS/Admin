@@ -1,18 +1,18 @@
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { message } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import { message } from 'antd';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
-import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
-import {
-  getSubjectTutorGrades as fetchSubjectTutorGrades,
-  getGroupFinalGrades as fetchGroupFinalGrades,
-  getGradeTerms as fetchGradeTerms,
-  getSubjectGradeScales as fetchSubjectGradeScales,
-} from '@/services/escola-lms/grades';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
+import {
+  getGradeTerms as fetchGradeTerms,
+  getGroupFinalGrades as fetchGroupFinalGrades,
+  getSubjectGradeScales as fetchSubjectGradeScales,
+  getSubjectTutorGrades as fetchSubjectTutorGrades,
+} from '@/services/escola-lms/grades';
+import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
 import { useTeacherSubject } from '../../context';
 import {
   getProposedGrade,
@@ -20,6 +20,7 @@ import {
   getStudentExamsFromExams,
 } from '../FinalGradesDetails/utils';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from '../consts';
+import type { ClassRegisterTableItem } from './types';
 import {
   getAttendanceCols,
   getExamsCols,
@@ -29,7 +30,6 @@ import {
   getStudentExamResults,
   getStudentFinalGrades,
 } from './utils';
-import type { ClassRegisterTableItem } from './types';
 
 export const ClassRegister: React.FC = () => {
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();

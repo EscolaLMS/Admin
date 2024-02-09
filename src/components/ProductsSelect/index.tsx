@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { products as fetchProducts } from '@/services/escola-lms/products';
-import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const ProductsSelect: React.FC<{
   state?: {

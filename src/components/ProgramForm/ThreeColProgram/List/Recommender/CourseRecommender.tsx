@@ -1,8 +1,8 @@
-import { FormattedMessage } from 'umi';
-import Paragraph from 'antd/lib/typography/Paragraph';
-import { formatRecommenderProbability, useCourseRecommender } from './utils';
 import { RecommenderIcon } from '@/icons';
+import Paragraph from 'antd/lib/typography/Paragraph';
+import { FormattedMessage } from 'umi';
 import { RecommenderPopoverInfo } from './RecommenderPopoverInfo';
+import { formatRecommenderProbability, useCourseRecommender } from './utils';
 
 interface CourseRecommenderProps {
   courseId: number;

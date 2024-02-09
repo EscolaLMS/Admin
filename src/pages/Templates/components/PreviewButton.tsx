@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Alert, Button } from 'antd';
 import { preview as previewTemplate } from '@/services/escola-lms/templates';
+import { Alert, Button } from 'antd';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 
 type PreviewButtonState =
   | {

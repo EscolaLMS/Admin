@@ -1,6 +1,6 @@
-import { FormattedMessage } from 'umi';
-import { Button, Col, Row, Typography } from 'antd';
 import ProCard from '@ant-design/pro-card';
+import { Button, Col, Row, Typography } from 'antd';
+import { FormattedMessage } from 'umi';
 
 export const DashdoardComponent: React.FC = () => {
   const { Title, Text } = Typography;

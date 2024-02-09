@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { Space, Button, message, Tooltip } from 'antd';
-import { FormattedMessage } from 'umi';
-import { triggerManualEventForProduct } from '@/services/escola-lms/templates';
-import { useIntl } from 'umi';
-import { TemplateSelect } from '../TemplateSelect';
 import { TemplateEvents } from '@/services/escola-lms/enums';
+import { triggerManualEventForProduct } from '@/services/escola-lms/templates';
+import { Button, Space, Tooltip, message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+import { TemplateSelect } from '../TemplateSelect';
 
 export const TemplateManuallyTriggerForProduct: React.FC<{
   productId: number;
