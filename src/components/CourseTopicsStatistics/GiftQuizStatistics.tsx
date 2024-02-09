@@ -109,12 +109,15 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
     if (!topic_id) return { success: false, data: [], total: 0 };
     const response = await getTopicStats(topic_id, TopicStatsKey.QuizSummary);
 
-    if (!response.success || !response.data?.[TopicStatsKey.QuizSummary]) {
+    if (
+      !response.success ||
+      !response.data?.[TopicStatsKey.QuizSummary as keyof typeof response.data]
+    ) {
       return { success: false, data: [], total: 0 };
     }
 
     const [responseColumns, ...data] = response.data[
-      TopicStatsKey.QuizSummary
+      TopicStatsKey.QuizSummary as keyof typeof response.data
     ] as API.GiftQuizTopicStat[];
     setDynamicColumns(getQuestionColumns(responseColumns));
 

@@ -60,10 +60,12 @@ export const DashdoardComponent: React.FC = () => {
     value: item.id,
   }));
 
-  const ratingsPercentage = Object.keys(ratings?.rates || {})
+  const ratingsPercentage = Object.keys(ratings?.rates || ({} as Record<string, number>))
     .sort()
     .map((key) => {
-      const rate = ratings?.rates[key as unknown as keyof Rates];
+      // TODO: fix this
+      // @ts-ignore
+      const rate = ratings ? ratings?.rates[key as keyof Rates] : 0;
       if (rate === 0) {
         return 0;
       }
@@ -115,7 +117,7 @@ export const DashdoardComponent: React.FC = () => {
                             <Title level={5}>{index + 1}</Title>
                             <Rate disabled defaultValue={Number(index + 1)} />
                             <Title level={5} className={'dashboard-ratings-list-key'}>
-                              {ratings.rates[index + 1]}
+                              {ratings.rates[index + 1] as number}
                             </Title>
                             <Title level={5} className={'dashboard-ratings-list-percentage'}>
                               {rate}%

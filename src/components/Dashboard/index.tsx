@@ -22,7 +22,7 @@ const COLS = 2;
 const ROW_HEIGHT = 150;
 
 type Props = Record<string, any>;
-type Component<P extends Props> = (props: P) => React.ReactElement | null;
+type Component<P extends Props> = (props: P) => React.ReactElement | null | React.ReactNode;
 type DashboardComponent<P extends Props> = {
   component: Component<P>;
   props?: P;

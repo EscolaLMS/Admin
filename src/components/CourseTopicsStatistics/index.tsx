@@ -25,7 +25,7 @@ export const CourseTopicsStatistics: React.FC<Props> = ({ flatTopics }) => {
   const topicsGroupedByType = useMemo(
     () =>
       flatTopics.reduce<TopicsGroupedByType>(
-        (acc, t) => ({ ...acc, [t.topicable_type]: [...acc[t.topicable_type], t] }),
+        (acc, t) => ({ ...acc, [t.topicable_type]: [...acc[t.topicable_type as TopicType], t] }),
         {
           [TopicType.RichText]: [],
           [TopicType.OEmbed]: [],

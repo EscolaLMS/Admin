@@ -32,7 +32,8 @@
     "test": "jest",
     "test:coverage": "npm run jest -- --coverage",
     "test:update": "npm run jest -- -u",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "tsc:noemit": "tsc --noEmit"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
@@ -100,6 +101,7 @@
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "@types/react-grid-layout": "^1.3.5",
     "@types/react-helmet": "^6.1.11",
     "@types/webscopeio__react-textarea-autocomplete": "^4.7.5",
     "@umijs/fabric": "^4.0.1",

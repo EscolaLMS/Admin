@@ -1046,6 +1046,7 @@ declare namespace API {
   };
 
   type QuestionnaireStars = {
+    // TODO FIX THIS TYPE
     rates: object;
     sum_rates: number;
     count_answers: number;

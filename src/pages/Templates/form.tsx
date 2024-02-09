@@ -134,7 +134,7 @@ export default () => {
 
       const postData: Partial<API.Template> = {
         ...values,
-        channel: channels[template] as API.Template['channel'],
+        channel: channels[template as keyof typeof TemplateChannelValue] as API.Template['channel'],
         sections: createEntries(filterNotAllowedKeys(values)),
       };
 
@@ -213,7 +213,11 @@ export default () => {
               name="event"
               width="lg"
               label={<FormattedMessage id="event" />}
-              valueEnum={variables ? variablesForChannel(channels[template]) : {}}
+              valueEnum={
+                variables
+                  ? variablesForChannel(channels[template as keyof typeof TemplateChannelValue])
+                  : {}
+              }
               placeholder={intl.formatMessage({
                 id: 'event',
               })}
@@ -260,13 +264,14 @@ export default () => {
             </ProForm.Group>
           )}
 
-          {channels[template] === TemplateChannelValue.pdf && !isNew && (
-            <Collapse ghost destroyInactivePanel defaultActiveKey={[-1]}>
-              <Panel header={<FormattedMessage id="generated_pdfs" />} key={0}>
-                <PdfList template_id={Number(id)} />
-              </Panel>
-            </Collapse>
-          )}
+          {channels[template as keyof typeof TemplateChannelValue] === TemplateChannelValue.pdf &&
+            !isNew && (
+              <Collapse ghost destroyInactivePanel defaultActiveKey={[-1]}>
+                <Panel header={<FormattedMessage id="generated_pdfs" />} key={0}>
+                  <PdfList template_id={Number(id)} />
+                </Panel>
+              </Collapse>
+            )}
 
           {!tokens && !isNew ? (
             <Spin />
