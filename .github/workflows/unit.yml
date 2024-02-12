@@ -56,5 +56,5 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '20.x'
-      - run: npm i
+      - run: npm i --legacy-peer-deps
       - run: npm run tsc:noemit
