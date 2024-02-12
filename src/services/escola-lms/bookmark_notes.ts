@@ -1,9 +1,8 @@
-import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
+import { AxiosRequestConfig, request } from 'umi';
 
 export async function bookmarkNote(
   params: API.PaginationParams & API.PageParams & API.BookmarkNoteParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.BookmarkNoteList>('/api/admin/bookmarks', {
     method: 'GET',
@@ -15,7 +14,7 @@ export async function bookmarkNote(
 
 export async function createBookmarkNote(
   body?: Record<string, string | number>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.BookmarkNote>>(`/api/admin/bookmarks`, {
     method: 'POST',
@@ -30,7 +29,7 @@ export async function createBookmarkNote(
 export async function updateBookmarkNote(
   id: number,
   body?: Record<string, string | number>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.BookmarkNote>>(`/api/admin/bookmarks/${id}`, {
     method: 'PATCH',
@@ -44,8 +43,8 @@ export async function updateBookmarkNote(
 
 export async function deleteBookmarkNote(
   id: number,
-  body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  body?: Record<string, string | number>,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.BookmarkNote>>(`/api/admin/bookmarks/${id}`, {
     method: 'DELETE',
