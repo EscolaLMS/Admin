@@ -314,7 +314,7 @@ const TableList: React.FC = () => {
                 })}
                 url="/api/admin/csv/users"
                 name="file"
-                accept=".csv"
+                accept=".csv, .xlsx"
                 data={{
                   return_url: `${window.location.origin}/#/user/reset-password`,
                 }}
@@ -330,6 +330,7 @@ const TableList: React.FC = () => {
                   }
                 }}
               />,
+
               <Dropdown
                 key="dropdown-export-menu"
                 overlay={
