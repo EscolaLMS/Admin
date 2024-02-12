@@ -29,6 +29,8 @@ declare namespace API {
 
   type FieldType = Enum.FieldType;
 
+  type BookmarkableType = Enum.BookmarkableType;
+
   /// ---- ENUMS ----- ///
 
   /// ----- Ant Design Pro Types ----- ///
@@ -84,6 +86,26 @@ declare namespace API {
     morphable_id: number;
     created_at: string;
     updated_at: string;
+  };
+
+  export type BookmarkNote = {
+    id: number;
+    value: Nullable<string>;
+    bookmarkable_id: number;
+    bookmarkable_type: BookmarkableType;
+    user_id: number;
+  };
+
+  export type BookmarkNoteList = DefaultMetaResponse<BookmarkNote>;
+
+  export type BookmarkNoteParams = PaginationParams & {
+    order_by?: 'created_at' | 'id' | 'value';
+    order?: 'ASC' | 'DESC';
+    has_value?: boolean | 1 | 0;
+    bookmarkable_id?: number;
+    bookmarkable_ids?: number[];
+    bookmarkable_type?: BookmarkableType;
+    user_id?: number;
   };
 
   // TODO: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
