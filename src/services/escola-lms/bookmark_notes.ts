@@ -13,7 +13,10 @@ export async function bookmarkNote(
   });
 }
 
-export async function createBookmarkNote(body?: Record<string, any>, options?: RequestOptionsInit) {
+export async function createBookmarkNote(
+  body?: Record<string, string | number>,
+  options?: RequestOptionsInit,
+) {
   return request<API.DefaultResponse<API.BookmarkNote>>(`/api/admin/bookmarks`, {
     method: 'POST',
     headers: {
@@ -26,7 +29,7 @@ export async function createBookmarkNote(body?: Record<string, any>, options?: R
 
 export async function updateBookmarkNote(
   id: number,
-  body?: Record<string, any>,
+  body?: Record<string, string | number>,
   options?: RequestOptionsInit,
 ) {
   return request<API.DefaultResponse<API.BookmarkNote>>(`/api/admin/bookmarks/${id}`, {
