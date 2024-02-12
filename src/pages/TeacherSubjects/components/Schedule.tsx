@@ -109,6 +109,8 @@ export const Schedule: React.FC = () => {
         <FormattedMessage id="schedule" defaultMessage="Schedule" />
       </Typography.Title>
 
+      {/* TODO #1039 this is deprecated !!!
+        @ts-ignore */}
       <Calendar dateCellRender={dateCellRender} onPanelChange={handlePanelChange} />
 
       <Modal

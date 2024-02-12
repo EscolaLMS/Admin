@@ -95,7 +95,7 @@ const TableList: React.FC = () => {
         ),
       },
     },
-    // TODO: Remove this or uncomment if we will have billable_type from BE
+    // TODO: #1034 Remove this or uncomment if we will have billable_type from BE
     // {
     //   title: <FormattedMessage id="billable" defaultMessage="Billable to" />,
     //   dataIndex: 'billable',

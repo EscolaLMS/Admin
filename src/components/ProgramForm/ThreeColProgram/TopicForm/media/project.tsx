@@ -18,7 +18,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
   const onValuesChange = useCallback((values: FormValues) => {
     const key = Object.keys(values)[0];
     if (key) {
-      onChange(values[key]);
+      onChange(values[key as keyof typeof values]);
     }
   }, []);
 

@@ -30,7 +30,7 @@ const Templates: React.FC = () => {
           onChange: (key) => history.push(`/configuration/templates/${key}`),
         }}
       >
-        {/** TODO check here if all essential access is given */}
+        {/** TODO #1040 check here if all essential access is given */}
         {!hideEmailTab && (
           <ProCard.TabPane key="email" tab={<FormattedMessage id="email" />}>
             <ConfigList templateType={'email'} channel={channelType.email} />

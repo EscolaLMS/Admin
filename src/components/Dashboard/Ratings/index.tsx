@@ -16,7 +16,7 @@ interface Rates {
   5: number;
 }
 
-export const DashdoardComponent: React.FC = () => {
+export const DashboardComponent: React.FC = () => {
   const { Text, Title } = Typography;
   const [list, setList] = useState<API.Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ export const DashdoardComponent: React.FC = () => {
   const ratingsPercentage = Object.keys(ratings?.rates || ({} as Record<string, number>))
     .sort()
     .map((key) => {
-      // TODO: fix this
+      // TODO: #1010 fix this
       // @ts-ignore
       const rate = ratings ? ratings?.rates[key as keyof Rates] : 0;
       if (rate === 0) {
@@ -117,7 +117,7 @@ export const DashdoardComponent: React.FC = () => {
                             <Title level={5}>{index + 1}</Title>
                             <Rate disabled defaultValue={Number(index + 1)} />
                             <Title level={5} className={'dashboard-ratings-list-key'}>
-                              {ratings.rates[index + 1] as number}
+                              {ratings.rates[(index + 1) as keyof typeof ratings.rates] as number}
                             </Title>
                             <Title level={5} className={'dashboard-ratings-list-percentage'}>
                               {rate}%
@@ -140,4 +140,4 @@ export const DashdoardComponent: React.FC = () => {
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

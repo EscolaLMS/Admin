@@ -95,6 +95,8 @@ export const RecommenderTopicSelector: React.FC<{
   const topicTypeIsDisabled = useCallback(
     (type: TopicType) => {
       const key = Object.keys(TopicType)
+        // TODO: #1020 fix types
+        // @ts-ignore
         .filter((x) => TopicType[x] == type)
         .pop();
 

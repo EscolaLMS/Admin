@@ -86,7 +86,7 @@ declare namespace API {
     updated_at: string;
   };
 
-  // TODO: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
+  // TODO #138: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
   type Course = {
     id?: number;
     created_at?: string;
@@ -1047,7 +1047,7 @@ declare namespace API {
 
   type QuestionnaireStars = {
     // TODO FIX THIS TYPE
-    rates: object;
+    rates: Record<number, number>;
     sum_rates: number;
     count_answers: number;
     avg_rate: string;

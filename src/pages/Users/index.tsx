@@ -29,9 +29,6 @@ const handleRemove = async (id: number) => {
   await deleteUser(id);
   return true;
 };
-//console.log('getLocale', getLocale);
-console.log(getLocale, history, Link, useIntl);
-console.log('FormattedMessage', FormattedMessage);
 
 export const TableColumns: ProColumns<API.UserItem>[] = [
   {
@@ -191,7 +188,7 @@ const TableList: React.FC = () => {
         locale
       ];
 
-      // TODO add other types support
+      // TODO #1043 add other types support
       switch (field.type) {
         case FieldType.Boolean:
           return [

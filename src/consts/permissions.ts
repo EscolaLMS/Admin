@@ -1,7 +1,7 @@
 enum PERMISSIONS {
   /* -------- EscolaLMS/Core -------- */
 
-  CoreDashboardAccess = 'access dashboard', // TODO: unused in api
+  CoreDashboardAccess = 'access dashboard', // TODO: #1025 unused in api
 
   /* -------- EscolaLMS/Auth -------- */
 
@@ -15,7 +15,7 @@ enum PERMISSIONS {
   UserUpdate = 'user_update',
   UserUpdateSelf = 'user_update_self', // edit own user
   UserDelete = 'user_delete',
-  UserDeleteSelf = 'user_delete_self', // remove own user (TODO: hard or soft?)
+  UserDeleteSelf = 'user_delete_self', // remove own user (TODO: #1026 hard or soft?)
   UserList = 'user_list',
   UserListCourseOwned = 'user_list_course-authored', // listing users in courses of which you are the author
 
@@ -28,10 +28,10 @@ enum PERMISSIONS {
   UserGroupMemberAdd = 'user-group_member-add',
   UserGroupMemberRemove = 'user-group_member-remove',
   UserGroupList = 'user-group_list',
-  UserGroupListSelf = 'user-group_list_self', // TODO: unused in api
+  UserGroupListSelf = 'user-group_list_self', // TODO: #1027 unused in api
 
-  UserInterestUpdate = 'user-interest_update', // this is used to indicate which courses (or categories?) the user is interested in // TODO: unused in api
-  UserInterestUpdateSelf = 'user-interest_update_self', // TODO: unused in api
+  UserInterestUpdate = 'user-interest_update', // this is used to indicate which courses (or categories?) the user is interested in // TODO: #1029 unused in api
+  UserInterestUpdateSelf = 'user-interest_update_self', // TODO: #1028 unused in api
 
   // these permissions are for arbitrary metadata assigned to a user
   UserSettingUpdate = 'user-setting_update',
@@ -39,7 +39,7 @@ enum PERMISSIONS {
 
   /* -------- EscolaLMS/settings -------- */
 
-  SettingsManage = 'settings_manage', // TODO: unused in api
+  SettingsManage = 'settings_manage', // TODO: #1030 unused in api
   SettingsCreate = 'settings_create',
   SettingsRead = 'settings_read',
   SettingsUpdate = 'settings_update',

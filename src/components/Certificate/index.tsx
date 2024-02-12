@@ -110,7 +110,7 @@ export const AssignTemplateSelect: React.FC<{
           .then((response) => {
             if (response.success) {
               message.success(response.message);
-              // TODO: there can be only one chanel:event assign to model, so if event for this channel is in currentTemplates it replace it so should be removed from list
+              // TODO: #1007 there can be only one chanel:event assign to model, so if event for this channel is in currentTemplates it replace it so should be removed from list
             }
             if (!response.success) {
               message.error(response.message);

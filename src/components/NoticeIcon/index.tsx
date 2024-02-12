@@ -127,7 +127,7 @@ const NoticeIconView = () => {
           showViewMore
           lastElementRef={lastElementRef}
         />
-        {/* TODO:uncoment this if you need mor tabs in notifylist */}
+        {/* TODO:uncoment #1014 this if you need mor tabs in notifylist */}
         {/* <NoticeIcon.Tab
         tabKey="message"
         count={unreadMsg.message}

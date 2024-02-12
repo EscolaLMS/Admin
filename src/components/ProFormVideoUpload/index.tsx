@@ -32,7 +32,10 @@ export const ProFormVideoUpload: React.FC<{
                         form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
                         if (info.file.response?.success) {
                           setPath({
+                            // TODO: #1017 fix style
+                            // @ts-ignore
                             [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                            // @ts-ignore
                             [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
                           });
                         }

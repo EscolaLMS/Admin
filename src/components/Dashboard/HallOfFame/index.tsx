@@ -1,7 +1,7 @@
 import Statistics from '@/components/Statistics';
 import { FormattedMessage } from 'umi';
 
-export const DashdoardComponent: React.FC<{
+export const DashboardComponent: React.FC<{
   metric: Record<string, API.ReportType>;
 }> = ({ metric }) => {
   return (
@@ -18,4 +18,4 @@ export const DashdoardComponent: React.FC<{
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

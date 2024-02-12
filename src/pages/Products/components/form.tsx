@@ -372,7 +372,7 @@ const ProductsForm: React.FC<{
               fieldProps={{
                 step: 1,
                 formatter: (value) => `${value}%`,
-                parser: (value) => (value ? value.replace('%', '') : ''),
+                parser: (value) => Number(value ? value.replace('%', '') : ''),
               }}
             />
             <ProForm.Item

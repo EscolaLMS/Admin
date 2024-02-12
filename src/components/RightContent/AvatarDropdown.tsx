@@ -27,8 +27,12 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
       localStorage.removeItem('TOKEN');
       message.success(msg.message);
 
+      /*
       const { query = {} } = history.location;
       const { redirect } = query;
+      */
+
+      const redirect = new URLSearchParams(history.location.search).get('redirect');
       if (window.location.pathname !== '/user/login' && !redirect) {
         setInitialState({ ...initialState, currentUser: undefined });
       }

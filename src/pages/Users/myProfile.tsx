@@ -133,7 +133,7 @@ export default () => {
                   accept="image/*"
                   onUpload={(response) => {
                     if (response.success) {
-                      // TODO refresh avatar here
+                      // TODO #1044 refresh avatar here
                     }
                   }}
                 />

@@ -9,7 +9,7 @@ import './index.css';
 export const CurriculumList = () => {
   const { state, addNewLesson } = useContext(Context);
 
-  // TODO, there should be clone lesson button
+  // TODO, #1019 there should be clone lesson button
 
   const onNew = useCallback(() => {
     if (addNewLesson && state) {

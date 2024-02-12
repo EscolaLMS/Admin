@@ -88,7 +88,7 @@ export const FinalGradesList: React.FC = () => {
           return { success: false, total: 0, data: [] };
         }
 
-        // TODO backend filter
+        // TODO #1038 backend filter
         const data = response.data.filter(
           ({ user }) =>
             user.first_name.toLowerCase().includes(first_name.toLowerCase()) &&

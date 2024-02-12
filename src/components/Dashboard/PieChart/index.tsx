@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'umi';
 
 import PieChart from '@/components/PieChart/PieChart';
-export const DashdoardComponent: React.FC<{
+export const DashboardComponent: React.FC<{
   metric: API.ReportType;
   asDonut?: boolean;
   customLabelTitle?: (value: string) => string;
@@ -26,4 +26,4 @@ export const DashdoardComponent: React.FC<{
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

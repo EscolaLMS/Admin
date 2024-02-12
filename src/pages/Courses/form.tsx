@@ -510,7 +510,7 @@ export default () => {
               >
                 <UserSelect multiple />
               </ProForm.Item>
-              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* TODO: #1032 remove it if you are sure it is not needed on the backend */}
               {/* <ProFormCheckbox
                 width="sm"
                 name="purchasable"
@@ -522,7 +522,7 @@ export default () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               /> */}
-              {/* TODO: remove it if you are sure it is not needed on the backend */}
+              {/* TODO: #1033 remove it if you are sure it is not needed on the backend */}
               {/* <ProFormCheckbox
                 width="sm"
                 name="findable"

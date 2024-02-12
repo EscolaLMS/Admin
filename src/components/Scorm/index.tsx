@@ -12,7 +12,7 @@ export const ScormSelector: React.FC<{
     <Space size="large" align="start">
       <SelectScorm value={value} onChange={(id) => onChange && onChange(Number(id))} />
       {/*
-      // TODO this isn't working 
+      // TODO #1021 this isn't working 
       <UploadScorm
         onSuccess={(scorm) => onChange && onChange(scorm.id)}
         onError={() =>

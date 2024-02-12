@@ -12,8 +12,8 @@ import styles from '../components/index.less';
 const Reset: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const { location } = history;
-  //   TODO: validate token for future if is not valid redirect
-  // TODO: test this page
+  //   TODO: #1041 validate token for future if is not valid redirect
+  // TODO: #1042 test this page
   const token =
     location &&
     new URLSearchParams(location.search).has('token') &&

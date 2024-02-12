@@ -73,7 +73,7 @@ export async function incompleteTask(id: number, options?: AxiosRequestConfig) {
 
 /** POST /api/admin/task/notes */
 export async function createTaskNote(
-  // TODO replace with admin Request
+  // TODO #1045 replace with admin Request
   body: EscolaLms.Tasks.Http.Requests.CreateTaskNoteRequest,
 ) {
   return request<API.DefaultResponse<API.TaskNote>>(`/api/admin/tasks/notes`, {

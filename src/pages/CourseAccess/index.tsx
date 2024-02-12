@@ -37,7 +37,8 @@ const DataDisplay: React.FC<{ data: unknown }> = ({ data }) => {
         <Typography.Paragraph>
           {Object.keys(data).map((key) => (
             <p key={key}>
-              <FormattedMessage id={key} defaultMessage={key} />:<span> {data[key]}</span>
+              <FormattedMessage id={key} defaultMessage={key} />:
+              <span> {data[key as keyof typeof data]}</span>
             </p>
           ))}
         </Typography.Paragraph>

@@ -12,8 +12,11 @@ import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
-import type { ProTableRequest } from '@/types';
+//import type { ProTableRequest } from '@/types';
 import { createTableOrderObject } from '@/utils/utils';
+import type { ProTableProps } from '@ant-design/pro-components';
+
+type ProTableRequest = ProTableProps<API.QuizAttempt, API.QuizAttemptsParams>['request'];
 
 export const GiftQuizTableColumns: ProColumns<API.GiftQuiz>[] = [
   {
@@ -175,7 +178,9 @@ const QuizAttempts: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
-  const onRequest = useCallback<ProTableRequest<API.QuizAttempt, API.QuizAttemptsParams>>(
+  // TODO: #1036 fix types !
+  //@ts-ignore
+  const onRequest = useCallback<ProTableRequest>(
     async ({ current, pageSize, topic_gift_quiz_id, dateRange, course_id, user_id }, sort) => {
       const date_from = dateRange?.[0]
         ? format(new Date(dateRange[0]), DATETIME_FORMAT)

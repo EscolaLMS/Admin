@@ -275,7 +275,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
 
       // Moving new lesson
       if (movedType === MovedType.New) {
-        message.warn(intl.formatMessage({ id: 'new_lessons_cant_be_moved' }));
+        message.warning(intl.formatMessage({ id: 'new_lessons_cant_be_moved' }));
         return;
       }
 
@@ -291,7 +291,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
           maxLessonsNestingInProgram !== undefined &&
           destinationDepth > maxLessonsNestingInProgram
         ) {
-          message.warn(
+          message.warning(
             intl.formatMessage({ id: 'max_lesson_nesting' }, { max: maxLessonsNestingInProgram }),
           );
           return;
@@ -302,7 +302,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
           minTopicNestingInProgram !== undefined &&
           destinationDepth < minTopicNestingInProgram
         ) {
-          message.warn(
+          message.warning(
             intl.formatMessage({ id: 'min_topic_nesting' }, { min: minTopicNestingInProgram }),
           );
           return;
@@ -311,7 +311,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
         // Change order in one lesson
         if (destinationLesson?.id !== undefined && source.parentId === destinationLesson.id) {
           if (movedType === MovedType.Lesson) {
-            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            message.warning(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -420,7 +420,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
 
       // Topics to root case
       if (destination.parentId === 'root' && movedType === MovedType.Topic) {
-        message.warn(intl.formatMessage({ id: 'topic_cant_be_in_root' }));
+        message.warning(intl.formatMessage({ id: 'topic_cant_be_in_root' }));
         return;
       }
 
@@ -435,7 +435,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
           const maxLessonPos = lessonsIds.length - 1;
 
           if (destination.index < minLessonPos || destination.index > maxLessonPos) {
-            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            message.warning(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -455,7 +455,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
           const maxTopicPos = sourceChildren.length - 1;
 
           if (destination.index < minTopicPos || destination.index > maxTopicPos) {
-            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            message.warning(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -485,7 +485,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
           maxLessonsNestingInProgram !== undefined &&
           destinationDepth > maxLessonsNestingInProgram
         ) {
-          message.warn(
+          message.warning(
             intl.formatMessage({ id: 'max_lesson_nesting' }, { max: maxLessonsNestingInProgram }),
           );
           return;
@@ -496,7 +496,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
           minTopicNestingInProgram !== undefined &&
           destinationDepth < minTopicNestingInProgram
         ) {
-          message.warn(
+          message.warning(
             intl.formatMessage({ id: 'min_topic_nesting' }, { min: minTopicNestingInProgram }),
           );
           return;
@@ -511,7 +511,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
             (maxLessonPos !== 0 && destIndex < minLessonPos) ||
             (maxLessonPos !== 0 && destIndex > maxLessonPos)
           ) {
-            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            message.warning(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 
@@ -550,7 +550,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
             (minTopicPos !== 0 && maxTopicPos !== 0 && destIndex < minTopicPos) ||
             (minTopicPos !== 0 && maxTopicPos !== 0 && destIndex > maxTopicPos)
           ) {
-            message.warn(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
+            message.warning(intl.formatMessage({ id: 'lessons_and_topics_cant_be_mixed' }));
             return;
           }
 

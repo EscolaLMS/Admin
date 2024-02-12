@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
-export const getEventType = (event: string) => event.split('\\').pop() as string;
+import { getEventType } from '@/components/NoticeIcon/NoticeList';
 
 export const TableColumns: ProColumns<API.Notification>[] = [
   {

@@ -228,7 +228,7 @@ const parseNumericalToFormData = (
 ): NumericalFormData => {
   const question = parsedValue?.stem.text;
 
-  // TODO
+  // TODO #1012
   if (Array.isArray(parsedValue?.choices)) {
     throw new Error('Unsupported choices type: array');
   }

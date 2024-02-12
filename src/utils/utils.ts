@@ -485,7 +485,7 @@ export const roundTo = (val: number, places = 2, divider?: number): number => {
 // Example: array.sort(sortByKey<LangRow>(sortArr[0], sortArr[1] === 'ascend' ? false : true));
 export const sortByKey = <T>(myKey: string, reverse: boolean = false) => {
   return function (a: T, b: T) {
-    // TODO fix this function
+    // TODO #1047 fix this function
     //@ts-ignore
     const comparison = a[myKey].localeCompare(b[myKey], undefined, {
       sensitivity: 'base',

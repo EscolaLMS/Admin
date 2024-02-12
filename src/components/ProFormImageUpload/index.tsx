@@ -2,8 +2,8 @@ import { Button, Col, Image, Row } from 'antd';
 import React from 'react';
 
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
-import ProForm from '@ant-design/pro-form';
-import type { GroupProps } from '@ant-design/pro-form/lib/interface';
+import type { GroupProps } from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-components';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import { FormattedMessage } from 'umi';
 
@@ -48,7 +48,10 @@ export const ProFormImageUpload: React.FC<{
 
                         if (info.file.response?.success) {
                           setPath({
+                            // TODO: #1016 fix type
+                            // @ts-ignore
                             [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                            // @ts-ignore
                             [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
                           });
                         }

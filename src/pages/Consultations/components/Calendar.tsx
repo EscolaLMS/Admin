@@ -35,6 +35,8 @@ export const ChangeDate: React.FC<{
   return (
     <React.Fragment>
       <DatePicker
+        // TODO: #1031 fix type
+        // @ts-ignore
         disabledDate={(current: moment.Moment) => {
           const currDate = new Date();
 
@@ -88,6 +90,8 @@ export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
     sorter: true,
     render: (_, item) => (
       <Badge
+        // TODO: #1031 fix type
+        // @ts-ignore
         status={consultationStatus[item.status]}
         text={<FormattedMessage id={item.status} />}
       />
@@ -127,6 +131,8 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
               return (
                 <li key={item.consultation_term_id}>
                   <Badge
+                    // TODO: #1031 fix types
+                    // @ts-ignore
                     status={consultationStatus[item.status]}
                     text={
                       <React.Fragment>
@@ -152,6 +158,8 @@ const ConsultationCalendar: React.FC<{ consultation: number }> = ({ consultation
   return (
     <React.Fragment>
       {loading && <Spin />}
+      {/* TODO: #1031 fix types
+        @ts-ignore */}
       <Calendar dateCellRender={dateCellRender} />
 
       {loading ? (

@@ -199,7 +199,7 @@ export const MediaUploadForm: React.FC<{
           onChange={onInfoChange}
           name="value"
           url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
-          accept={CONFIG.acceptedTypes[type]}
+          accept={CONFIG.acceptedTypes[type as keyof typeof CONFIG.acceptedTypes]}
           data={prepareObject(data)}
           maxFiles={maxFiles}
           clearListAfterUpload={clearListAfterUpload}

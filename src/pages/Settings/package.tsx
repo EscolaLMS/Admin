@@ -83,7 +83,7 @@ const findNestedFields = (obj: object, searchKey: string, results: object[] = []
     return false;
   } else {
     Object.keys(obj).forEach((key) => {
-      const value = obj[key];
+      const value = obj[key as keyof typeof obj];
 
       if (key === searchKey) {
         results.push(obj);

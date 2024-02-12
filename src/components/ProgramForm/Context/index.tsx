@@ -184,6 +184,15 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
   const l = useLocation() as Location & { query: { lesson?: string; topic?: string } };
 
+  const params = useMemo(() => {
+    const urlParams = new URLSearchParams(l.search);
+
+    return {
+      lesson: urlParams.get('lesson'),
+      topic: urlParams.get('topic'),
+    };
+  }, [l]);
+
   useEffect(() => {
     setH5ps([]);
   }, []);
@@ -226,22 +235,22 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const currentEditMode = useMemo<CurrentEditMode>(() => {
-    if (l.query?.lesson) {
+    if (params.lesson) {
       return {
         mode: 'lesson',
-        id: Number(l.query.lesson),
-        value: flatLessons.find((lesson) => lesson.id === Number(l.query.lesson)),
+        id: Number(params.lesson),
+        value: flatLessons.find((lesson) => lesson.id === Number(params.lesson)),
       };
     }
-    if (l.query?.topic) {
+    if (params.topic) {
       return {
         mode: 'topic',
-        id: Number(l.query.topic),
-        value: flatTopics.find((t) => t.id === Number(l.query.topic)),
+        id: Number(params.topic),
+        value: flatTopics.find((t) => t.id === Number(params.topic)),
       };
     }
     return { mode: 'init' };
-  }, [l.query, state, flatLessons, flatTopics]);
+  }, [params, state, flatLessons, flatTopics]);
 
   const addNewLesson = useCallback(
     (parentId?: number) => {
@@ -392,7 +401,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           }
         });
 
-        // TODO call API to delete
+        // TODO #1018 call API to delete
         /**
          return API(`topic/delete/${id}`, token, 'POST')
         .then((response) => response.json())

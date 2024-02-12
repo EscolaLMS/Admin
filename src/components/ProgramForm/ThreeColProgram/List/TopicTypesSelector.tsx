@@ -43,7 +43,7 @@ export const TopicTypesSelector: React.FC<{
   const topicTypeIsDisabled = useCallback(
     (type: TopicType) => {
       const key = Object.keys(TopicType)
-        .filter((x) => TopicType[x] == type)
+        .filter((x) => TopicType[x as keyof typeof TopicType] == type)
         .pop();
 
       const value =

@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'umi';
 
-export const DashdoardComponent: React.FC = () => {
+export const DashboardComponent: React.FC = () => {
   return (
     <div className="dashboard-draggable__component">
       <h3>
@@ -13,4 +13,4 @@ export const DashdoardComponent: React.FC = () => {
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

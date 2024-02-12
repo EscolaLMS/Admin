@@ -25,12 +25,16 @@ export default () => {
   const initiallySelected = useRef<null | CheckboxValueType[]>(null);
 
   const fetchData = useCallback(async () => {
-    const response = await permisions(name);
-    if (response.success) {
-      const assignedItems = response.data.filter((item) => item.assigned).map((item) => item.name);
-      initiallySelected.current = assignedItems;
-      setData(response.data);
-      setSelectedPermisions(assignedItems);
+    if (name) {
+      const response = await permisions(name);
+      if (response.success) {
+        const assignedItems = response.data
+          .filter((item) => item.assigned)
+          .map((item) => item.name);
+        initiallySelected.current = assignedItems;
+        setData(response.data);
+        setSelectedPermisions(assignedItems);
+      }
     }
   }, [name]);
 
@@ -60,6 +64,9 @@ export default () => {
   const formProps = useMemo(
     () => ({
       onFinish: async () => {
+        if (!name) {
+          return;
+        }
         try {
           const request = await setRolePermisions(name, { permissions: [...selectedPermisions] });
           const response = await request;

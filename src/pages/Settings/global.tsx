@@ -94,7 +94,6 @@ const snakeToCamel = (str: string) =>
   str.toLowerCase().replace(/(_\w)/g, (m) => m.toUpperCase().substr(1));
 
 const flatRoutes = (routes: Route[]): Route[] => {
-  console.log('routes', routes);
   return (
     routes.reduce((acc, curr) => {
       return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
@@ -111,23 +110,19 @@ export const pathToSettingName = (path: string) =>
 
 export const topicTypeToSettingName = (type: string) => `disableTopicType-${type}`;
 
-console.log(
-  'getRoutes()',
-  getRoutes().then((r) => console.log(r)),
-);
-
-const booleanSettings = [
-  ...Object.keys(TopicType).map((type) => ({
-    key: topicTypeToSettingName(type),
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  /*
+const booleanSettings = (
+  [
+    ...Object.keys(TopicType).map((type) => ({
+      key: topicTypeToSettingName(type),
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    /*
   ...flatRoutes(getRoutes())
     .filter((route) => route.path && route.path !== '/')
     .map((route) => ({
@@ -142,50 +137,51 @@ const booleanSettings = [
       data: false,
     })),
     */
-  ...['ECommerce', 'Certificates'].map((feature) => ({
-    key: `disable-${feature}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  ...courseEditAdditionalSettingsKeys.map((key) => ({
-    key: `showInCourseAdditionalSettings-${key}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  ...courseEditTabsKeys.map((key) => ({
-    key: `hideInCourseTabs-${key}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  ...templateTabsKeys.map((key) => ({
-    key: `hideTemplateTab-${key}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-].reduce((acc, curr, index) => {
-  acc[curr.key] = { ...curr, id: -100 * index };
+    ...['ECommerce', 'Certificates'].map((feature) => ({
+      key: `disable-${feature}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    ...courseEditAdditionalSettingsKeys.map((key) => ({
+      key: `showInCourseAdditionalSettings-${key}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    ...courseEditTabsKeys.map((key) => ({
+      key: `hideInCourseTabs-${key}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    ...templateTabsKeys.map((key) => ({
+      key: `hideTemplateTab-${key}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+  ] as API.Setting[]
+).reduce((acc, curr, index) => {
+  acc[curr.key as string] = { ...curr, id: -100 * index };
   return acc;
-}, {});
+}, {} as InitialDataRecords);
 
 const preInitialData: InitialDataRecords = {
   logo: {
@@ -371,6 +367,8 @@ const preInitialData: InitialDataRecords = {
   ...booleanSettings,
 };
 
+const isRoute = (route: any): route is Route => typeof route.path === 'string';
+
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
   const actionRef = useRef<ActionType>();
@@ -384,7 +382,7 @@ const TableList: React.FC = () => {
     getRoutes().then((routes) => {
       //@ts-ignore
       const hideInDataRecords: InitialDataRecords = Object.values(routes.routes)
-        //@ts-ignore
+        .filter(isRoute)
         .filter((route) => route.path && route.path !== '/' && route.layout !== false)
         .map((route) => ({
           path: route.path,
@@ -407,7 +405,6 @@ const TableList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('initialData', initialData);
     if (actionRef.current) {
       actionRef.current.reload();
     }

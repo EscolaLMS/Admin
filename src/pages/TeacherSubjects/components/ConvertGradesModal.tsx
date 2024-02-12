@@ -34,7 +34,7 @@ const FileExamGradeType: React.FC<{
 
   const onUploadFile = useCallback((response: API.DefaultResponse<API.Exam>) => {
     if (response.success) {
-      // TODO error handling
+      // TODO #1037 error handling
       // filter out users that are not in selected group
       const exam_results = response.data.results.filter(({ user_id }) => user_id !== null);
       if (!exam_results.length) return;

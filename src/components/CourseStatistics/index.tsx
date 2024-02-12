@@ -21,7 +21,7 @@ type State =
     }
   | {
       mode: 'loaded';
-      // TODO add type
+      // TODO #1009 add type
       value: any;
     };
 

@@ -148,19 +148,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         collapsed: !initialState?.collapsed,
       });
     },
-    // avatarProps: {
-    //   src: initialState?.currentUser?.avatar,
-    //   title: <pre></pre>,
-    //   render: (_, avatarChildren) => {
-    //     return <p>{avatarChildren}</p>;
-    //   },
-    // },
-    //actionsRender: () => ['aaa'],
-
-    // childrenRender: (children) => {
-    //   // if (initialState?.loading) return <PageLoading />;
-    //   return <>{children}</>;
-    // },
 
     actionsRender: () => [<RightContent />],
     contentStyle: { backgroundColor },
@@ -241,7 +228,7 @@ const codeMessage = {
   504: '504',
 };
 
-// TODO there is no type for error
+// TODO #1006 there is no type for error
 //github.com/ant-design/ant-design-pro/blob/ffff2447d6d717f932f1e9355096ad26f6ad2681/src/requestErrorConfig.ts#L42C27-L42C30
 const errorHandler = (error: any) => {
   const { response, data } = error;

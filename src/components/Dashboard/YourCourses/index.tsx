@@ -12,7 +12,7 @@ const truncate = (str: string, n: number) => {
   return str.length > n ? str.substring(0, n - 1) + '...' : str;
 };
 
-export const DashdoardComponent: React.FC = () => {
+export const DashboardComponent: React.FC = () => {
   const [list, setList] = useState<API.Course[]>([]);
   const { initialState } = useModel('@@initialState');
   const [loading, setLoading] = useState(true);
@@ -103,4 +103,4 @@ export const DashdoardComponent: React.FC = () => {
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

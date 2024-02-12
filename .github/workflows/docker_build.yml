@@ -75,5 +75,7 @@ jobs:
 
       - name: Send webook to hooks to rollout all devs on k8s
         uses: distributhor/workflow-webhook@v3
+        with:
+          webhook_url: ${{ secrets.K8S_WEBHOOK_URL_ADMIN_LATEST }}
         env:
           webhook_url: ${{ secrets.K8S_WEBHOOK_URL_ADMIN_LATEST }}

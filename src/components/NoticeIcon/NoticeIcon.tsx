@@ -115,7 +115,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       overlayClassName={styles.popover}
       trigger={['click']}
       open={visible}
-      onOpenChange={setVisible}
+      onOpenChange={(e) => setVisible(e)}
     >
       {trigger}
     </HeaderDropdown>

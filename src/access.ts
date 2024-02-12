@@ -29,7 +29,7 @@ export default function (initialState: {
     return dashboardPermission && havePermissions(...permissions);
   };
 
-  // TODO implement minimal versions
+  // TODO #1005 implement minimal versions
   const havePackageInstalled = createHavePackageInstalled(initialState?.packages);
 
   const haveSettingsInDashboard = (
