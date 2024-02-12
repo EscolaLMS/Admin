@@ -103,3 +103,7 @@ export enum RecommenderType {
   Course = 'course',
   Info = 'info',
 }
+
+export enum BookmarkableType {
+  Group = 'EscolaLms\\PcgIntegration\\Models\\Group',
+}
