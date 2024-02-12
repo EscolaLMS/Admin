@@ -1,6 +1,6 @@
 import { request } from 'umi';
 
-import { AxiosRequestConfig } from '@umijs/max';
+import type { AxiosRequestConfig } from '@umijs/max';
 
 /** POST /api/admin/gift-questions */
 export async function createQuestion(body: API.CreateQuizQuestion, options?: AxiosRequestConfig) {

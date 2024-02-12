@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-underscore-dangle */
 /* globals workbox */

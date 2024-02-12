@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from '@umijs/max';
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
 
 declare const REACT_APP_API_URL: string;

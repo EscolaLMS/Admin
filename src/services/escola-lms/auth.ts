@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from '@umijs/max';
+import type { AxiosRequestConfig } from '@umijs/max';
 import { getLocale, request } from 'umi';
 
 /** POST /api/login/account */

@@ -1,6 +1,6 @@
 import { request } from 'umi';
 
-import { AxiosRequestConfig } from '@umijs/max';
+import type { AxiosRequestConfig } from '@umijs/max';
 
 /**  GET /api/admin/consultation-access-enquiries */
 export async function consultationAccess(

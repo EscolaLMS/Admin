@@ -8,3 +8,4 @@ dist
 mock
 cypress.config.ts
 /cypress
+src/service-worker.js

@@ -69,7 +69,7 @@ export default () => {
             key,
             href,
             blankTarget,
-            title,
+            title: <span style={{ color }}>{title}</span>,
           }))}
         />
 

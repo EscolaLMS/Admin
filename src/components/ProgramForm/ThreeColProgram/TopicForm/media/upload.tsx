@@ -96,7 +96,7 @@ const VideoProgress: React.FC<{ topic: API.TopicVideo }> = ({ topic }) => {
       </Typography>
     );
   }
-  return <React.Fragment></React.Fragment>;
+  return <React.Fragment />;
 };
 
 export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }> = ({

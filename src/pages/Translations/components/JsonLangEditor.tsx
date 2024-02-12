@@ -51,7 +51,7 @@ export const JsonLangEditor: React.FC<{
   return (
     <div>
       {Object.entries(state).map((entry, i) => (
-        <Row key={i}>
+        <Row key={entry[0]}>
           <Col span={6}>
             <Input
               disabled={getAllLocales().includes(entry[0])}
@@ -65,7 +65,7 @@ export const JsonLangEditor: React.FC<{
           </Col>
         </Row>
       ))}
-      <Button onClick={() => onLangAdd()} icon={<PlusCircleFilled />}></Button>
+      <Button onClick={() => onLangAdd()} icon={<PlusCircleFilled />} />
     </div>
   );
 };

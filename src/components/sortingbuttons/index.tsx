@@ -5,7 +5,11 @@ import Tooltip from 'antd/lib/tooltip';
 import React from 'react';
 import { FormattedMessage } from 'umi';
 
-export const SortingButtons = ({ mode = 'middle', onUp, onDown }) => {
+export const SortingButtons: React.FC<{ mode: string; onUp: () => void; onDown: () => void }> = ({
+  mode = 'middle',
+  onUp,
+  onDown,
+}) => {
   return (
     <React.Fragment>
       {mode !== 'first' && (

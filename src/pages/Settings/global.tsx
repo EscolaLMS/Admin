@@ -93,13 +93,13 @@ type Route = {
 const snakeToCamel = (str: string) =>
   str.toLowerCase().replace(/(_\w)/g, (m) => m.toUpperCase().substr(1));
 
-const flatRoutes = (routes: Route[]): Route[] => {
-  return (
-    routes.reduce((acc, curr) => {
-      return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
-    }, [] as Route[]) as Route[]
-  ).filter((route) => route.layout !== false && route.hideInMenu !== true);
-};
+// const flatRoutes = (routes: Route[]): Route[] => {
+//   return (
+//     routes.reduce((acc, curr) => {
+//       return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
+//     }, [] as Route[]) as Route[]
+//   ).filter((route) => route.layout !== false && route.hideInMenu !== true);
+// };
 
 const courseEditTabsKeys = ['statistics', 'user_submission', 'user_projects'];
 const courseEditAdditionalSettingsKeys = ['public'];

@@ -1,11 +1,9 @@
 //import { Prompt, useIntl } from 'umi';
 // TODO #1023 there is no Prompt in umi anymore
 
-import { FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage } from 'umi';
 
 const UnsavedPrompt = ({ show }: { show?: boolean }) => {
-  const intl = useIntl();
-
   return show ? (
     <p>
       <FormattedMessage id="unsaved_changes" />

@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from '@umijs/max';
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
 
 /**  GET /api/admin/semester-subjects/:semester_subject_id/tutors/:tutor_id/grades */

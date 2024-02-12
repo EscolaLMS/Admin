@@ -17,8 +17,6 @@ import { publicSettings as fetchPublicSettings, settings } from './services/esco
 import { translations } from './services/escola-lms/translations';
 import { refreshTokenCallback } from './services/token_refresh';
 
-const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
 const authpaths = ['/user/login', '/user/reset-password'];
 
 declare global {
@@ -149,7 +147,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       });
     },
 
-    actionsRender: () => [<RightContent />],
+    actionsRender: () => [<RightContent key="rightContent" />],
     contentStyle: { backgroundColor },
     footerRender: () => <Footer />,
     onPageChange: () => {
