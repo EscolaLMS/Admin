@@ -86,7 +86,7 @@ const BookmarkNoteModal: FC<ModalProps> = ({ visible, onClose, user }) => {
 
   const handleEditNote = async (noteId: number) => {
     const response = await updateBookmarkNote(noteId, {
-      value: editingNote?.currentText,
+      value: editingNote?.currentText || '',
       bookmarkable_id: groupId,
       bookmarkable_type: BookmarkableType.Group,
       user_id: userId,
