@@ -133,6 +133,9 @@ export default defineConfig({
   headScripts: [
     // 解决首次加载时白屏的问题
     { src: '/scripts/loading.js', async: true },
+    `window.REACT_APP_API_URL = null;
+    window.REACT_APP_SENTRYDSN = null;
+    window.REACT_APP_YBUG = null;`,
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
