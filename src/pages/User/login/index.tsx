@@ -31,7 +31,7 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResponse>();
-  const { initialState, setInitialState, refresh } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
   const [isPasswordReset, setIsPasswordReset] = useState(false);
   const intl = useIntl();
 

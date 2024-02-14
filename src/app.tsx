@@ -108,7 +108,7 @@ export async function getInitialState(): Promise<{
   };
 }
 
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState, refresh }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
     if (history.location.search.includes('redirect')) {
       const url = new URLSearchParams(history.location.search).get('redirect');

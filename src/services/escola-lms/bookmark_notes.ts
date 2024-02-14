@@ -1,4 +1,5 @@
-import { AxiosRequestConfig, request } from 'umi';
+import type { AxiosRequestConfig } from 'umi';
+import { request } from 'umi';
 
 export async function bookmarkNote(
   params: API.PaginationParams & API.PageParams & API.BookmarkNoteParams,
