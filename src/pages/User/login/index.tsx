@@ -1,9 +1,9 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { history } from '@umijs/max';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
-import { FormattedMessage, addLocale, useIntl, useModel } from 'umi';
+import { flushSync } from 'react-dom';
+import { FormattedMessage, addLocale, history, useIntl, useModel } from 'umi';
 
 import { localeInfo } from '@@/plugin-locale/localeExports';
 
@@ -31,7 +31,7 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResponse>();
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState, setInitialState, refresh } = useModel('@@initialState');
   const [isPasswordReset, setIsPasswordReset] = useState(false);
   const intl = useIntl();
 
@@ -65,12 +65,14 @@ const Login: React.FC = () => {
     }
 
     if (userInfo) {
-      setInitialState({
-        ...initialState,
-        currentUser: userInfo,
-        config: config.success ? config.data : [],
-        packages: packs.success ? packs.data : {},
-        translations: transl.success ? transl.data : [],
+      flushSync(() => {
+        setInitialState({
+          ...initialState,
+          currentUser: userInfo,
+          config: config.success ? config.data : [],
+          packages: packs.success ? packs.data : {},
+          translations: transl.success ? transl.data : [],
+        });
       });
     }
   };
@@ -85,13 +87,14 @@ const Login: React.FC = () => {
         refreshTokenCallback();
         await fetchUserInfo();
         message.success(msg.message);
+
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
       }
       setUserLoginState(msg);
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       message.error(error?.data?.message || 'Error');
     } finally {
       setSubmitting(false);
