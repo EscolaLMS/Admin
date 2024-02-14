@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { useIntl, FormattedMessage, useModel, addLocale, localeInfo } from 'umi';
-import { Alert, message } from 'antd';
-import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import { Alert, message } from 'antd';
+import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
+import { FormattedMessage, addLocale, history, useIntl, useModel } from 'umi';
+
+import { localeInfo } from '@@/plugin-locale/localeExports';
 
 import { forgot, login } from '@/services/escola-lms/auth';
 import { packages } from '@/services/escola-lms/packages';
 import { settings } from '@/services/escola-lms/settings';
-import { refreshTokenCallback } from '@/services/token_refresh';
 import { translations } from '@/services/escola-lms/translations';
-import styles from '../components/index.less';
+import { refreshTokenCallback } from '@/services/token_refresh';
 import AuthLayout from '../components/AuthLayout';
+import styles from '../components/index.less';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -39,7 +42,7 @@ const Login: React.FC = () => {
     const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
 
     if (transl.success) {
-      const messages = {};
+      const messages: Record<string, Record<string, string>> = {};
       transl.data.forEach((t) => {
         Object.keys(t.text).forEach((key) => {
           if (!messages[key]) {
@@ -49,21 +52,27 @@ const Login: React.FC = () => {
         });
       });
 
-      for (const lang in messages) {
-        addLocale(lang, messages[lang], {
-          antd: localeInfo[lang]?.antd || '',
-          momentLocale: localeInfo[lang]?.momentLocale || lang,
-        });
+      try {
+        for (const lang in messages) {
+          addLocale(lang, messages[lang], {
+            antd: localeInfo[lang]?.antd || '',
+            momentLocale: localeInfo[lang]?.momentLocale || lang,
+          });
+        }
+      } catch (err) {
+        console.error('translation error', err, translations, messages);
       }
     }
 
     if (userInfo) {
-      setInitialState({
-        ...initialState,
-        currentUser: userInfo,
-        config: config.success ? config.data : [],
-        packages: packs.success ? packs.data : {},
-        translations: transl.success ? transl.data : [],
+      flushSync(() => {
+        setInitialState({
+          ...initialState,
+          currentUser: userInfo,
+          config: config.success ? config.data : [],
+          packages: packs.success ? packs.data : {},
+          translations: transl.success ? transl.data : [],
+        });
       });
     }
   };
@@ -71,16 +80,21 @@ const Login: React.FC = () => {
   const handleLogin = async (values: API.LoginRequest) => {
     try {
       const msg = await login({ ...values });
+
       if (msg.success) {
         localStorage.setItem('TOKEN', msg.data.token);
         dispatchEvent(new Event('token_change'));
         refreshTokenCallback();
         await fetchUserInfo();
         message.success(msg.message);
+
+        const urlParams = new URL(window.location.href).searchParams;
+        history.push(urlParams.get('redirect') || '/');
         return;
       }
       setUserLoginState(msg);
     } catch (error: any) {
+      console.error(error);
       message.error(error?.data?.message || 'Error');
     } finally {
       setSubmitting(false);

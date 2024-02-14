@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import ProForm, { ModalForm, ProFormDigit, ProFormRadio, ProFormText } from '@ant-design/pro-form';
 import { Form } from 'antd';
-import ProForm, { ProFormText, ModalForm, ProFormRadio, ProFormDigit } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
+import React, { useCallback, useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { createOrUpdateField } from '@/services/escola-lms/fields';
 import JsonEditor from '../JsonEditor';

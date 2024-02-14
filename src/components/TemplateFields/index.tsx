@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
-import { Space, Typography, Tag } from 'antd';
 import ProForm, { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import { Space, Tag, Typography } from 'antd';
+import React, { useCallback } from 'react';
 import { FormattedMessage } from 'umi';
 import AutoCompleteArea from '../AutoCompleteArea';
 import PdfEditor from '../PdfEditor';

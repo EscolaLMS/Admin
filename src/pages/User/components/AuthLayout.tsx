@@ -1,7 +1,7 @@
-import React, { type PropsWithChildren, useMemo } from 'react';
 import Footer from '@/components/Footer';
-import styles from './index.less';
+import React, { useMemo, type PropsWithChildren } from 'react';
 import { Link, SelectLang, useModel } from 'umi';
+import styles from './index.less';
 
 declare const REACT_APP_API_URL: string;
 

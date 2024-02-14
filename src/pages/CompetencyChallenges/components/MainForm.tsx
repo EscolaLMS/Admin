@@ -1,16 +1,16 @@
-import React, { useCallback, useMemo } from 'react';
-import { FormattedMessage, history, useIntl, useParams } from 'umi';
-import { message } from 'antd';
 import ProForm, {
   ProFormSelect,
   ProFormSwitch,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-form';
+import { message } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 import CategoryTree from '@/components/CategoryTree';
-import UserSelect from '@/components/UserSelect';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
+import UserSelect from '@/components/UserSelect';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import {
   createCompetencyChallenge,

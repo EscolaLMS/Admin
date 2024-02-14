@@ -156,7 +156,7 @@
     path: '/sales',
     name: 'Sales',
     access: 'salesPermission',
-    icon: 'shopping-cart',
+    icon: 'shopping',
     routes: [
       {
         path: '/sales',

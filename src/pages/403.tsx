@@ -1,6 +1,6 @@
 import { Button, Result } from 'antd';
 import React from 'react';
-import { history, FormattedMessage } from 'umi';
+import { FormattedMessage, history } from 'umi';
 
 const RestrictedPage: React.FC = () => (
   <Result

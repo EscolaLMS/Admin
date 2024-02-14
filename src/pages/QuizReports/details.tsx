@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FormattedMessage, useParams } from 'umi';
-import { Collapse, Space, Spin, Typography } from 'antd';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Collapse, Space, Spin, Typography } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useParams } from 'umi';
 
 import { getQuizAttemptDetails } from '@/services/escola-lms/gift_quiz';
 import QuizReportDetailsDescription from './components/QuizReportDetailsDescription';
-import QuizReportQuestionDetails from './components/QuizReportQuestionDetails';
 import QuizReportQuestionAnswerDetails from './components/QuizReportQuestionAnswerDetails';
+import QuizReportQuestionDetails from './components/QuizReportQuestionDetails';
 
 function useQuizAttempt() {
   const { reportId } = useParams<{ reportId?: string }>();

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, Spin, Statistic } from 'antd';
 import { reports } from '@/services/escola-lms/reports';
 import { TrophyOutlined } from '@ant-design/icons';
+import { Alert, Spin, Statistic } from 'antd';
+import React, { useEffect, useState } from 'react';
 import './index.less';
 
 interface LoadedValue {

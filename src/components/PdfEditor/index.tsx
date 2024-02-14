@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
 import type { SyntheticEvent } from 'react';
+import React, { useEffect, useRef } from 'react';
 declare const REACT_APP_API_URL: string;
 
 // @ts-ignore
@@ -117,10 +117,9 @@ export const PdfEditor: React.FC<{
         fonts: [{ name: 'Open Sans', value: 'Open Sans' }],
         defaultFont: 'Open Sans',
         // src={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/scorm/play/${uuid}`}
-        //reportServerUrl: 'https://reportbro.stage.etd24.pl/reportbro/report/run', // TODO use env vars
         reportServerUrl: `${
           window.REACT_APP_API_URL || REACT_APP_API_URL
-        }/api/pdfs/reportbro/report/run`, // TODO use env vars
+        }/api/pdfs/reportbro/report/run`,
         saveCallback: () => {
           onTemplateSaved(rb.getReport());
         },

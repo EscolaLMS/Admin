@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { useIntl, useModel } from 'umi';
 import {
   getNotifications,
-  readNotification,
   readAllNotification,
+  readNotification,
 } from '@/services/escola-lms/notifications';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useIntl, useModel } from 'umi';
 
 import NoticeIcon from './NoticeIcon';
 import styles from './index.less';
@@ -127,7 +127,7 @@ const NoticeIconView = () => {
           showViewMore
           lastElementRef={lastElementRef}
         />
-        {/* TODO:uncoment this if you need mor tabs in notifylist */}
+        {/* TODO:uncoment #1014 this if you need mor tabs in notifylist */}
         {/* <NoticeIcon.Tab
         tabKey="message"
         count={unreadMsg.message}

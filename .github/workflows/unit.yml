@@ -10,52 +10,51 @@ on:
     types: [assigned, opened, synchronize, reopened]
 
 jobs:
+  #  jest:
+  #    runs-on: ubuntu-latest
 
-#  jest:
-#    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - name: Use Node.js
+  #        uses: actions/setup-node@v1
+  #        with:
+  #          node-version: '14.x'
+  #      - run: npm i
+  #      - run: npm run test
 
-#    steps:
-#      - uses: actions/checkout@v2
-#      - name: Use Node.js
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: '14.x'
-#      - run: npm i
-#      - run: npm run test
-
-#      - name: Code Coverage upload
-#        uses: codecov/codecov-action@v1
-#        with:
-#          files: ./coverage/clover.xml # optional
+  #      - name: Code Coverage upload
+  #        uses: codecov/codecov-action@v1
+  #        with:
+  #          files: ./coverage/clover.xml # optional
 
   lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [ 16, 18 ]
-    name: Lint test ${{ matrix.node }} 
-    
+        node: [20]
+    name: Lint test ${{ matrix.node }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
-      - run: npm i
-      - run: npm run lint:js
+          node-version: '20.x'
+      - run: yarn
+      - run: yarn lint:js
 
   tsc:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [ 14, 16, 18 ]
-    name: TypeScript test ${{ matrix.node }} 
-    
+        node: [20]
+    name: TypeScript test ${{ matrix.node }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
-      - run: npm i
-      - run: npm run tsc:noemit
+          node-version: '20.x'
+      - run: yarn
+      - run: yarn tsc:noemit

@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import { contentSettings } from '@/services/escola-lms/h5p';
+import type { EditorSettings, XAPIEvent } from '@escolalms/h5p-react';
 import { ContextlessPlayer } from '@escolalms/h5p-react';
-import type { EditorSettings } from '@escolalms/h5p-react';
-import { useIntl } from 'umi';
-import { Col, Row, Spin, Alert } from 'antd';
+import { Alert, Col, Divider, Row, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
-import { Divider, Typography } from 'antd';
+import { useIntl } from 'umi';
 const { Title } = Typography;
-import type { XAPIEvent } from '@escolalms/h5p-react';
 
 export const Player: React.FC<{
   id: 'new' | number;

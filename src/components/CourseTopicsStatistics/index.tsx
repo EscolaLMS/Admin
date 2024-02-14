@@ -25,7 +25,7 @@ export const CourseTopicsStatistics: React.FC<Props> = ({ flatTopics }) => {
   const topicsGroupedByType = useMemo(
     () =>
       flatTopics.reduce<TopicsGroupedByType>(
-        (acc, t) => ({ ...acc, [t.topicable_type]: [...acc[t.topicable_type], t] }),
+        (acc, t) => ({ ...acc, [t.topicable_type]: [...acc[t.topicable_type as TopicType], t] }),
         {
           [TopicType.RichText]: [],
           [TopicType.OEmbed]: [],
@@ -48,7 +48,7 @@ export const CourseTopicsStatistics: React.FC<Props> = ({ flatTopics }) => {
       {topicsGroupedByType[TopicType.GiftQuiz].length > 0 && (
         <GiftQuizStatistics quizTopics={topicsGroupedByType[TopicType.GiftQuiz]} />
       )}
-      {/* TODO add other topics statistics when they are implemented on backend */}
+      {/* TODO #1008 add other topics statistics when they are implemented on backend */}
     </>
   );
 };

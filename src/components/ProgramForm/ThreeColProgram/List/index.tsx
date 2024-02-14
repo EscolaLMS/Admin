@@ -1,15 +1,15 @@
-import { useContext, useCallback } from 'react';
-import { history } from 'umi';
 import { Spin } from 'antd';
+import { useCallback, useContext } from 'react';
+import { history } from 'umi';
 
 import { Context } from '@/components/ProgramForm/Context';
-import './index.css';
 import { LessonList } from './LessonList';
+import './index.css';
 
 export const CurriculumList = () => {
   const { state, addNewLesson } = useContext(Context);
 
-  // TODO, there should be clone lesson button
+  // TODO, #1019 there should be clone lesson button
 
   const onNew = useCallback(() => {
     if (addNewLesson && state) {

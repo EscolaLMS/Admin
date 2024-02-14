@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   assignable as fetchGetAssignables,
   assigned as fetchGetAssigned,
-  unassign as postUnassign,
   assign as postAssign,
+  unassign as postUnassign,
 } from '@/services/escola-lms/certificate';
-import { FormattedMessage } from 'umi';
-import { useCallback } from 'react';
 import { message } from 'antd';
+import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const AssignTemplateSelect: React.FC<{
   state?: {
@@ -110,7 +110,7 @@ export const AssignTemplateSelect: React.FC<{
           .then((response) => {
             if (response.success) {
               message.success(response.message);
-              // TODO: there can be only one chanel:event assign to model, so if event for this channel is in currentTemplates it replace it so should be removed from list
+              // TODO: #1007 there can be only one chanel:event assign to model, so if event for this channel is in currentTemplates it replace it so should be removed from list
             }
             if (!response.success) {
               message.error(response.message);

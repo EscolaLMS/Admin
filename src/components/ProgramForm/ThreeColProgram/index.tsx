@@ -1,12 +1,12 @@
+import { Col, Row, Spin, Typography } from 'antd';
 import { useContext } from 'react';
-import { Spin, Col, Row, Typography } from 'antd';
 
 import { Context } from '@/components/ProgramForm/Context';
 
-import List from './List/index';
-import LessonForm from './LessonForm/index';
-import TopicForm from './TopicForm/index';
 import { FormattedMessage } from 'react-intl';
+import LessonForm from './LessonForm/index';
+import List from './List/index';
+import TopicForm from './TopicForm/index';
 
 export const Curriculum = () => {
   const { state /*, sortLesson */, currentEditMode } = useContext(Context);

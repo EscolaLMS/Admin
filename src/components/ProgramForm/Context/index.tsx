@@ -1,23 +1,22 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { message } from 'antd';
-import { useIntl, useLocation } from 'umi';
-import { history } from 'umi';
 import type { Location } from 'history';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { history, useIntl, useLocation } from 'umi';
 
 import {
-  program,
-  createLesson as apiCreateLesson,
-  updateLesson as apiUpdateLesson,
-  createTopic as apiCreateTopic,
-  updateTopic as apiUpdateTopic,
-  removeLesson as apiRemoveLesson,
-  removeTopic as apiRemoveTopic,
   cloneLesson as apiCloneLesson,
   cloneTopic as apiCloneTopic,
+  createLesson as apiCreateLesson,
+  createTopic as apiCreateTopic,
+  removeLesson as apiRemoveLesson,
+  removeTopic as apiRemoveTopic,
+  updateLesson as apiUpdateLesson,
+  updateTopic as apiUpdateTopic,
+  program,
 } from '@/services/escola-lms/course';
 
-import type { UploadChangeParam } from 'antd/lib/upload';
 import { TopicType } from '@/services/escola-lms/enums';
+import type { UploadChangeParam } from 'antd/lib/upload';
 
 type CurrentEditMode =
   | { mode: 'lesson'; id: number; value?: API.Lesson | null }
@@ -185,6 +184,15 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
 
   const l = useLocation() as Location & { query: { lesson?: string; topic?: string } };
 
+  const params = useMemo(() => {
+    const urlParams = new URLSearchParams(l.search);
+
+    return {
+      lesson: urlParams.get('lesson'),
+      topic: urlParams.get('topic'),
+    };
+  }, [l]);
+
   useEffect(() => {
     setH5ps([]);
   }, []);
@@ -227,22 +235,22 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   );
 
   const currentEditMode = useMemo<CurrentEditMode>(() => {
-    if (l.query?.lesson) {
+    if (params.lesson) {
       return {
         mode: 'lesson',
-        id: Number(l.query.lesson),
-        value: flatLessons.find((lesson) => lesson.id === Number(l.query.lesson)),
+        id: Number(params.lesson),
+        value: flatLessons.find((lesson) => lesson.id === Number(params.lesson)),
       };
     }
-    if (l.query?.topic) {
+    if (params.topic) {
       return {
         mode: 'topic',
-        id: Number(l.query.topic),
-        value: flatTopics.find((t) => t.id === Number(l.query.topic)),
+        id: Number(params.topic),
+        value: flatTopics.find((t) => t.id === Number(params.topic)),
       };
     }
     return { mode: 'init' };
-  }, [l.query, state, flatLessons, flatTopics]);
+  }, [params, state, flatLessons, flatTopics]);
 
   const addNewLesson = useCallback(
     (parentId?: number) => {
@@ -393,7 +401,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
           }
         });
 
-        // TODO call API to delete
+        // TODO #1018 call API to delete
         /**
          return API(`topic/delete/${id}`, token, 'POST')
         .then((response) => response.json())

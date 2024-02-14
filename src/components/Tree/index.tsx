@@ -1,5 +1,5 @@
-import type { DataNode } from 'antd/es/tree';
 import { Tree as AntdTree } from 'antd';
+import type { DataNode } from 'antd/es/tree';
 
 export const recursiveTree = (
   branch: object[],
@@ -8,11 +8,17 @@ export const recursiveTree = (
   keyPropName: string,
 ): DataNode[] => {
   return branch.map((item) => ({
-    title: item[titlePropName] ?? '',
-    key: item[keyPropName] ?? Math.random().toString(),
+    title: item[titlePropName as keyof typeof item] ?? '',
+    key: item[keyPropName as keyof typeof item] ?? Math.random().toString(),
     children:
-      item[childrenPropName] && Array.isArray(item[childrenPropName])
-        ? recursiveTree(item[childrenPropName], titlePropName, childrenPropName, keyPropName)
+      item[childrenPropName as keyof typeof item] &&
+      Array.isArray(item[childrenPropName as keyof typeof item])
+        ? recursiveTree(
+            item[childrenPropName as keyof typeof item],
+            titlePropName,
+            childrenPropName,
+            keyPropName,
+          )
         : [],
   }));
 };

@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import moment from 'moment';
-import { FormattedMessage } from 'umi';
-import { Badge, Button, Modal, Typography, Calendar } from 'antd';
+import { Badge, Button, Calendar, Modal, Typography } from 'antd';
 import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
+import moment from 'moment';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 import { DAYTIME_FORMAT } from '@/consts/dates';
 import { allSchedules as fetchAllSchedules } from '@/services/escola-lms/schedules';
@@ -109,6 +109,8 @@ export const Schedule: React.FC = () => {
         <FormattedMessage id="schedule" defaultMessage="Schedule" />
       </Typography.Title>
 
+      {/* TODO #1039 this is deprecated !!!
+        @ts-ignore */}
       <Calendar dateCellRender={dateCellRender} onPanelChange={handlePanelChange} />
 
       <Modal

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { dataRangeStats } from '@/services/escola-lms/user';
 import { Column } from '@ant-design/plots';
 import ProCard from '@ant-design/pro-card';
-import { useIntl } from 'umi';
 import { Alert, Spin } from 'antd';
-import { dataRangeStats } from '@/services/escola-lms/user';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 
 const config = {
   isGroup: true,

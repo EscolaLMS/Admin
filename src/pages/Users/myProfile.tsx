@@ -1,15 +1,15 @@
-import { useMemo, useState, useEffect } from 'react';
-import { message, Spin } from 'antd';
-import ProForm, { ProFormText } from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
-import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
-import useModelFields from '@/hooks/useModelFields';
-import { PageContainer } from '@ant-design/pro-layout';
 import ResponsiveImage from '@/components/ResponsiveImage';
-import { useIntl, useParams, FormattedMessage, history } from 'umi';
-import UserSettings from './User/settings';
-import AdditionalField from './User/components/AdditionalField';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
+import useModelFields from '@/hooks/useModelFields';
+import { profile, updateProfile, updateProfilePassword } from '@/services/escola-lms/user';
+import ProCard from '@ant-design/pro-card';
+import ProForm, { ProFormText } from '@ant-design/pro-form';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Spin, message } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
+import AdditionalField from './User/components/AdditionalField';
+import UserSettings from './User/settings';
 
 export default () => {
   const params = useParams<{ tab?: string }>();
@@ -133,7 +133,7 @@ export default () => {
                   accept="image/*"
                   onUpload={(response) => {
                     if (response.success) {
-                      // TODO refresh avatar here
+                      // TODO #1044 refresh avatar here
                     }
                   }}
                 />

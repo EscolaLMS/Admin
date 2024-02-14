@@ -1,19 +1,18 @@
-import { useMemo, useState, useEffect, useRef } from 'react';
-import { message, Spin, Card, Row, Tooltip } from 'antd';
-import ProForm from '@ant-design/pro-form';
-import { Form } from 'antd';
-import ProCard from '@ant-design/pro-card';
 import { permisions, setRolePermisions } from '@/services/escola-lms/roles';
+import ProCard from '@ant-design/pro-card';
+import ProForm from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Card, Form, Row, Spin, Tooltip, message } from 'antd';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useParams, FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage, useParams } from 'umi';
 
-import './index.css';
 import type { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import './index.css';
 
-import CustomCheckbox from './components/CustomCheckbox';
 import { getTranslationRetrieve } from '@/services/escola-lms/translations';
+import CustomCheckbox from './components/CustomCheckbox';
 
 export default () => {
   const params = useParams<{ name: string }>();
@@ -26,12 +25,16 @@ export default () => {
   const initiallySelected = useRef<null | CheckboxValueType[]>(null);
 
   const fetchData = useCallback(async () => {
-    const response = await permisions(name);
-    if (response.success) {
-      const assignedItems = response.data.filter((item) => item.assigned).map((item) => item.name);
-      initiallySelected.current = assignedItems;
-      setData(response.data);
-      setSelectedPermisions(assignedItems);
+    if (name) {
+      const response = await permisions(name);
+      if (response.success) {
+        const assignedItems = response.data
+          .filter((item) => item.assigned)
+          .map((item) => item.name);
+        initiallySelected.current = assignedItems;
+        setData(response.data);
+        setSelectedPermisions(assignedItems);
+      }
     }
   }, [name]);
 
@@ -61,6 +64,9 @@ export default () => {
   const formProps = useMemo(
     () => ({
       onFinish: async () => {
+        if (!name) {
+          return;
+        }
         try {
           const request = await setRolePermisions(name, { permissions: [...selectedPermisions] });
           const response = await request;

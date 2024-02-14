@@ -1,20 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { WidthProvider, Responsive, type Layout } from 'react-grid-layout';
-import { Button } from 'antd';
 import { CloseSquareOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Responsive, WidthProvider, type Layout } from 'react-grid-layout';
 
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
-import './index.css';
 import Add from './Add';
 import CurrentUsers from './CurrentUsers';
 import Customers from './Customers';
 import HallOfFame from './HallOfFame';
+import PieChart from './PieChart';
 import Ratings from './Ratings';
 import Sales from './Sales';
 import Tutorial from './Tutorial';
 import YourCourses from './YourCourses';
-import PieChart from './PieChart';
+import './index.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -22,7 +22,7 @@ const COLS = 2;
 const ROW_HEIGHT = 150;
 
 type Props = Record<string, any>;
-type Component<P extends Props> = (props: P) => React.ReactElement | null;
+type Component<P extends Props> = (props: P) => React.ReactElement | null | React.ReactNode;
 type DashboardComponent<P extends Props> = {
   component: Component<P>;
   props?: P;

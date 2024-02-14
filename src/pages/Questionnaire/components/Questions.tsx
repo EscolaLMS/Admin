@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { message, Button, Tooltip, Popconfirm } from 'antd';
 import { addQuestion, deleteQuestion, editQuestion } from '@/services/escola-lms/questionnaire';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import QuestionModalForm from './QuestionModalForm';
 import { sortArrayByKey } from '@/utils/utils';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+import QuestionModalForm from './QuestionModalForm';
 
 const QuestionForm: React.FC<{
   questionnaireId: number;

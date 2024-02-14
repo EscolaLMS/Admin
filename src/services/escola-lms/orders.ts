@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/users */
 export async function orders(
@@ -8,7 +8,7 @@ export async function orders(
       // query
       status?: API.OrderStatus;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.OrderList>('/api/admin/orders', {
     params,
@@ -19,7 +19,7 @@ export async function orders(
 }
 
 /**  GET /api/admin/users */
-export async function order(id: number, options?: RequestOptionsInit) {
+export async function order(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Order>>(`/api/admin/orders/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,

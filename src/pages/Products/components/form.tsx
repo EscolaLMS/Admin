@@ -1,34 +1,34 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import { message, Spin, Row, Col, Input, Tag } from 'antd';
+import ProductablesSelect from '@/components/ProductablesSelect';
+import ProCard from '@ant-design/pro-card';
 import ProForm, {
-  ProFormText,
   ProFormDigit,
   ProFormRadio,
   ProFormSwitch,
+  ProFormText,
 } from '@ant-design/pro-form';
-import ProCard from '@ant-design/pro-card';
-import { useIntl, FormattedMessage, useModel } from 'umi';
-import ProductablesSelect from '@/components/ProductablesSelect';
+import { Col, Input, Row, Spin, Tag, message } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, useIntl, useModel } from 'umi';
 
-import {
-  getProduct,
-  createProduct,
-  updateProduct,
-  productForModel,
-} from '@/services/escola-lms/products';
-import ProFormImageUpload from '@/components/ProFormImageUpload';
 import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
+import ProFormImageUpload from '@/components/ProFormImageUpload';
+import {
+  createProduct,
+  getProduct,
+  productForModel,
+  updateProduct,
+} from '@/services/escola-lms/products';
 
-import './index.css';
-import UserAccess from './UserAccess';
-import UserSubmissions from '@/components/UsersSubmissions';
-import TagsInput from '@/components/TagsInput';
-import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
-import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
-import ProductsSelect from '@/components/ProductsSelect';
-import ProTable from '@ant-design/pro-table';
 import { MoneyInput } from '@/components/MoneyInput';
+import ProductsSelect from '@/components/ProductsSelect';
+import TagsInput from '@/components/TagsInput';
+import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
+import UserSubmissions from '@/components/UsersSubmissions';
+import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
+import ProTable from '@ant-design/pro-table';
+import UserAccess from './UserAccess';
+import './index.css';
 
 type MinimumProductProductable = {
   class: string;
@@ -372,7 +372,7 @@ const ProductsForm: React.FC<{
               fieldProps={{
                 step: 1,
                 formatter: (value) => `${value}%`,
-                parser: (value) => (value ? value.replace('%', '') : ''),
+                parser: (value) => Number(value ? value.replace('%', '') : ''),
               }}
             />
             <ProForm.Item

@@ -1,12 +1,12 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import { arrayMoveImmutable } from 'array-move';
+import { ExportOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import { ProTable } from '@ant-design/pro-table';
 import { parse } from '@escolalms/gift-pegjs';
 import { Button, Drawer, message } from 'antd';
-import { ExportOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { ProTable } from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import { arrayMoveImmutable } from 'array-move';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { FormattedMessage, useIntl } from 'umi';
 
 import SecureUpload from '@/components/SecureUpload';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
@@ -136,7 +136,7 @@ export const Table: React.FC<Props> = ({
     }
   };
 
-  // TODO types & refactor https://react.dev/learn/your-first-component#nesting-and-organizing-components
+  // TODO #1011 types & refactor https://react.dev/learn/your-first-component#nesting-and-organizing-components
   const DraggableContainer = (props: any) => (
     <SortContainer
       useDragHandle
@@ -147,7 +147,7 @@ export const Table: React.FC<Props> = ({
     />
   );
 
-  // TODO types & refactor https://react.dev/learn/your-first-component#nesting-and-organizing-components
+  // TODO #1011 types & refactor https://react.dev/learn/your-first-component#nesting-and-organizing-components
   const DraggableBodyRow = (props: any) => {
     const { className, style, ...restProps } = props;
     // function findIndex base on Table rowKey props and should always be a right array index

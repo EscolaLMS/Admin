@@ -1,15 +1,13 @@
-import { Checkbox } from 'antd';
-import React, { useEffect, useState } from 'react';
 import {
   blue,
-  orange,
   cyan,
+  geekblue,
   gold,
   green,
+  magenta,
+  orange,
   volcano,
   yellow,
-  geekblue,
-  magenta,
 } from '@ant-design/colors';
 import {
   CalendarOutlined,
@@ -31,8 +29,10 @@ import {
   SyncOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import './index.css';
+import { Checkbox } from 'antd';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import React, { useEffect, useState } from 'react';
+import './index.css';
 
 interface Props {
   name: string;
@@ -160,7 +160,7 @@ const CustomCheckbox: React.FC<Props> = ({ name, nameKey, assigned, onChange }) 
     onChange(name);
   };
 
-  const Icon = colors[action]?.component ?? React.Fragment;
+  const Icon = colors[action as keyof typeof colors]?.component ?? React.Fragment;
 
   useEffect(() => {
     setIsChecked(assigned);
@@ -172,8 +172,8 @@ const CustomCheckbox: React.FC<Props> = ({ name, nameKey, assigned, onChange }) 
       className="custom-checkbox"
       checked={isChecked}
       style={
-        colors[action]?.background && isChecked
-          ? { backgroundColor: colors[action]?.background }
+        colors[action as keyof typeof colors]?.background && isChecked
+          ? { backgroundColor: colors[action as keyof typeof colors]?.background }
           : undefined
       }
       aria-label={titleWithoutConjunctions}
@@ -181,7 +181,7 @@ const CustomCheckbox: React.FC<Props> = ({ name, nameKey, assigned, onChange }) 
     >
       <div className="custom-checkbox__content">
         {formattedTitle}
-        <Icon style={colors[action]?.color && { color: colors[action]?.color }} />
+        <Icon style={{ color: colors[action as keyof typeof colors]?.color }} />
       </div>
     </Checkbox>
   );

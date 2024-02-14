@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/notifications/:id */
 export async function getNotifications(
@@ -9,7 +9,7 @@ export async function getNotifications(
     date_to?: string;
   },
   id?: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.NotificationList>(
     id ? `/api/admin/notifications/${id}` : `/api/admin/notifications`,
@@ -22,7 +22,7 @@ export async function getNotifications(
   );
 }
 /**  GET /api/admin/notifications/events */
-export async function getEventTypes(options?: RequestOptionsInit) {
+export async function getEventTypes(options?: AxiosRequestConfig) {
   return request<API.NotificationsEventsList>(`/api/admin/notifications/events`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -32,7 +32,7 @@ export async function getEventTypes(options?: RequestOptionsInit) {
 }
 
 /**  POST /api/notifications/:id/read */
-export async function readNotification(id: string, options?: RequestOptionsInit) {
+export async function readNotification(id: string, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Notification[]>>(`/api/admin/notifications/${id}/read`, {
     method: 'POST',
     /* useCache: true */ useCache: false,
@@ -41,7 +41,7 @@ export async function readNotification(id: string, options?: RequestOptionsInit)
 }
 
 /**  POST /api/notifications/read-all */
-export async function readAllNotification(options?: RequestOptionsInit) {
+export async function readAllNotification(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Notification[]>>(`/api/admin/notifications/read-all`, {
     method: 'POST',
     /* useCache: true */ useCache: false,

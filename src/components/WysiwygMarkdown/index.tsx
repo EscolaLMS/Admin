@@ -1,8 +1,8 @@
-import React from 'react';
+import { resizedImage, upload } from '@/services/escola-lms/files';
 import RichMarkdownEditor2 from '@escolalms/markdown-editor';
-import { upload, resizedImage } from '@/services/escola-lms/files';
-import './index.css';
+import React from 'react';
 import { useIntl } from 'umi';
+import './index.css';
 
 interface FormWysiwygProps {
   value?: string;

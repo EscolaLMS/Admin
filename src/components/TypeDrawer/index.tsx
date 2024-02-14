@@ -1,21 +1,21 @@
 import { Drawer, List, Typography } from 'antd';
 import React from 'react';
 
-import ProDescriptions from '@ant-design/pro-descriptions';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import { FormattedMessage } from 'umi';
-import { TableColumns as UserTableColumns } from '@/pages/Users/index';
-import { TableColumns as OrderTableColumns } from '@/pages/Orders/index';
-import { TableColumns as CourseTableColumns } from '@/pages/Courses/index';
-import { TableColumns as UserGroupTableColumns } from '@/pages/UserGroups/index';
-import { TableColumns as QuestionnaireTableColumns } from '@/pages/Questionnaire/index';
-import { TableColumns as ConsultationsTableColumns } from '@/pages/Consultations/index';
-import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
-import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
-import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
-import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
-import { GiftQuizTableColumns } from '@/pages/QuizReports';
 import { staticColumns as categoryBaseColumns } from '@/pages/Categories';
+import { TableColumns as ConsultationsTableColumns } from '@/pages/Consultations/index';
+import { TableColumns as CourseTableColumns } from '@/pages/Courses/index';
+import { TableColumns as OrderTableColumns } from '@/pages/Orders/index';
+import { TableColumns as ProductTableColumns } from '@/pages/Products/index';
+import { TableColumns as QuestionnaireTableColumns } from '@/pages/Questionnaire/index';
+import { GiftQuizTableColumns } from '@/pages/QuizReports';
+import { TableColumns as StationaryEventsColumns } from '@/pages/StationaryEvents/index';
+import { StudentsTableColumns } from '@/pages/TeacherSubjects/components/Groups';
+import { TableColumns as UserGroupTableColumns } from '@/pages/UserGroups/index';
+import { TableColumns as UserTableColumns } from '@/pages/Users/index';
+import { TableColumns as WebinarsTableColumns } from '@/pages/Webinars/index';
+import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
+import ProDescriptions from '@ant-design/pro-descriptions';
+import { FormattedMessage } from 'umi';
 
 type TypeDrawerProps = {
   visible: boolean;

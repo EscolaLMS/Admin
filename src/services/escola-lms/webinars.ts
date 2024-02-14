@@ -1,8 +1,8 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/webinars */
-export async function webinars(params?: API.WebinarsParams, options?: RequestOptionsInit) {
+export async function webinars(params?: API.WebinarsParams, options?: AxiosRequestConfig) {
   return request<API.DefaultMetaResponse<API.Webinar>>(`/api/admin/webinars`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -12,7 +12,7 @@ export async function webinars(params?: API.WebinarsParams, options?: RequestOpt
 }
 
 /**  POST /api/webinars */
-export async function createWebinar(body?: Partial<API.Webinar>, options?: RequestOptionsInit) {
+export async function createWebinar(body?: Partial<API.Webinar>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars`, {
     method: 'POST',
     headers: {
@@ -24,7 +24,7 @@ export async function createWebinar(body?: Partial<API.Webinar>, options?: Reque
 }
 
 /**  GET /api/admin/webinars/:id */
-export async function getWebinar(id: number, options?: RequestOptionsInit) {
+export async function getWebinar(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -36,7 +36,7 @@ export async function getWebinar(id: number, options?: RequestOptionsInit) {
 export async function updateWebinar(
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}?method=PUT`, {
     method: 'POST',
@@ -49,7 +49,7 @@ export async function updateWebinar(
 }
 
 /**  DELETE /api/admin/webinars/:id */
-export async function deleteWebinar(id: number, options?: RequestOptionsInit) {
+export async function deleteWebinar(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Webinar>>(`/api/admin/webinars/${id}`, {
     method: 'DELETE',
     /* useCache: true */ useCache: false,
@@ -58,7 +58,7 @@ export async function deleteWebinar(id: number, options?: RequestOptionsInit) {
 }
 
 /**  POST /api/admin/g-token/generate */
-export async function generateYoutubeToken(body?: { email: string }, options?: RequestOptionsInit) {
+export async function generateYoutubeToken(body?: { email: string }, options?: AxiosRequestConfig) {
   return request<{ url: string }>(`/api/admin/g-token/generate`, {
     method: 'POST',
     headers: {

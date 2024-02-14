@@ -1,20 +1,20 @@
-import React, { Fragment, useCallback, useRef, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { Tag, Typography } from 'antd';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
 import {
   createTranslation,
   deleteTranslation,
   translations,
   updateTranslation,
 } from '@/services/escola-lms/translations';
-import TranslationModalForm from './components/ModalForm';
 import { createTableOrderObject } from '@/utils/utils';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import TranslationModalForm from './components/ModalForm';
 
 export const TableColumns: ProColumns<API.Translation>[] = [
   {

@@ -1,8 +1,8 @@
-import React from 'react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
+import React from 'react';
 // https://github.com/webscopeio/react-textarea-autocomplete
-import { FormattedMessage } from 'umi';
 import '@webscopeio/react-textarea-autocomplete/style.css';
+import { FormattedMessage } from 'umi';
 import './index.css';
 
 type ItemProps = {

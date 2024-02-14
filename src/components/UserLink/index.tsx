@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { Spin } from 'antd';
+import React, { useEffect, useState } from 'react';
 
 import { user as fetchUser } from '@/services/escola-lms/user';
 import { Link } from 'umi';

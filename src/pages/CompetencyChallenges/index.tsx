@@ -1,18 +1,18 @@
-import React from 'react';
-import { format } from 'date-fns';
-import { FormattedMessage, Link } from 'umi';
-import { Button, Popconfirm, Tag, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { Button, Popconfirm, Tag, Tooltip } from 'antd';
+import { format } from 'date-fns';
+import React from 'react';
+import { FormattedMessage, Link } from 'umi';
 
-import { createTableOrderObject } from '@/utils/utils';
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import {
   deleteCompetencyChallenge,
   getCompetencyChallenges,
 } from '@/services/escola-lms/competency-challenges';
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { createTableOrderObject } from '@/utils/utils';
 
 const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
   { dataIndex: 'id', title: <FormattedMessage id="ID" />, hideInSearch: true, sorter: true },

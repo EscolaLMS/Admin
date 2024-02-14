@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import React, { useRef } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { payments } from '@/services/escola-lms/payments';
 import { format } from 'date-fns';
@@ -95,7 +95,7 @@ const TableList: React.FC = () => {
         ),
       },
     },
-    // TODO: Remove this or uncomment if we will have billable_type from BE
+    // TODO: #1034 Remove this or uncomment if we will have billable_type from BE
     // {
     //   title: <FormattedMessage id="billable" defaultMessage="Billable to" />,
     //   dataIndex: 'billable',

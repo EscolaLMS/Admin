@@ -1,14 +1,13 @@
 import ProCard from '@ant-design/pro-card';
-import { useParams, history } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import UserForm from './form';
 
-import UserCategories from './components/Categories';
-import { useCallback, useEffect, useState } from 'react';
+import LogsWidget from '@/components/LogsWidget';
 import { user as fetchUser } from '@/services/escola-lms/user';
 import { categoriesArrToIds } from '@/utils/utils';
-import LogsWidget from '@/components/LogsWidget';
+import { useCallback, useEffect, useState } from 'react';
+import UserCategories from './components/Categories';
 
 export default () => {
   const params = useParams<{ user?: string; tab?: string }>();

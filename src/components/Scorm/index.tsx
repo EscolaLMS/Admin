@@ -1,7 +1,7 @@
 import { Button, Space } from 'antd';
 import React from 'react';
-import SelectScorm from './select';
 import { FormattedMessage } from 'umi';
+import SelectScorm from './select';
 
 export const ScormSelector: React.FC<{
   value?: number | undefined;
@@ -12,7 +12,7 @@ export const ScormSelector: React.FC<{
     <Space size="large" align="start">
       <SelectScorm value={value} onChange={(id) => onChange && onChange(Number(id))} />
       {/*
-      // TODO this isn't working 
+      // TODO #1021 this isn't working 
       <UploadScorm
         onSuccess={(scorm) => onChange && onChange(scorm.id)}
         onError={() =>

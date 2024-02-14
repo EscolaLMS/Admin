@@ -1,18 +1,18 @@
 import component from './pl-PL/component';
-import globalHeader from './pl-PL/globalHeader';
-import menu from './pl-PL/menu';
-import pwa from './pl-PL/pwa';
-import settingDrawer from './pl-PL/settingDrawer';
-import settings from './pl-PL/settings';
-import pages from './pl-PL/pages';
-import notifications from './pl-PL/notifications';
-import templates from './pl-PL/templates';
 import consultations from './pl-PL/consultations';
-import fabric from './pl-PL/fabric';
-import vouchers from './pl-PL/vouchers';
 import courses from './pl-PL/courses';
 import events from './pl-PL/events';
+import fabric from './pl-PL/fabric';
+import globalHeader from './pl-PL/globalHeader';
+import menu from './pl-PL/menu';
+import notifications from './pl-PL/notifications';
+import pages from './pl-PL/pages';
+import pwa from './pl-PL/pwa';
 import recommender from './pl-PL/recommender';
+import settingDrawer from './pl-PL/settingDrawer';
+import settings from './pl-PL/settings';
+import templates from './pl-PL/templates';
+import vouchers from './pl-PL/vouchers';
 
 export default {
   courseAccessEnquiries: 'Zapytania od dostęp do kursu',

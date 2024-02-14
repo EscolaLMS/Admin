@@ -1,9 +1,9 @@
-import React from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
 import { Dashboard } from '@/components/Dashboard';
-import { Button } from 'antd';
-import { useModel } from '@@/plugin-model/useModel';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Button } from 'antd';
+import React from 'react';
+import { useModel } from 'umi';
 
 export default (): React.ReactNode => {
   const { initialState } = useModel('@@initialState');

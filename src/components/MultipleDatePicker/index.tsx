@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
-import { Tag, DatePicker, Select } from 'antd';
+import { DatePicker, Select, Tag } from 'antd';
 import moment from 'moment';
+import React, { useCallback, useState } from 'react';
 
 import './index.css';
 
@@ -104,15 +104,19 @@ const MultipleDatePicker: React.FC<{
       dropdownRender={() => {
         return (
           <DatePicker
+            // TODO #1013 FIXme
+            // @ts-ignore
             disabledDate={(current: moment.Moment) => {
               const date = new Date();
 
-              return current && current.valueOf() <= date.setDate(date.getDate() - 1);
+              return current.valueOf() <= date.setDate(date.getDate() - 1);
             }}
             showTime={{ format: 'HH' }}
             disabledTime={disableMinutes}
             onChange={(date: moment.Moment | null) => date && onValueChange(date)}
             open
+            // TODO #1013 FIXme
+            // @ts-ignore
             dateRender={dateRender}
             style={{ visibility: 'hidden' }}
             getPopupContainer={({ parentNode }: any) => {

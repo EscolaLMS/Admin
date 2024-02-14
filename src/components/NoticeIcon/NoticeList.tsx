@@ -1,11 +1,10 @@
-import { List, Avatar, Button } from 'antd';
-import React from 'react';
-import classNames from 'classnames';
-import styles from './NoticeList.less';
-import { getEventType } from '@/pages/Notifications';
-import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { Avatar, Button, List } from 'antd';
+import classNames from 'classnames';
+import { format } from 'date-fns';
+import React from 'react';
 import { FormattedMessage } from 'umi';
+import styles from './NoticeList.less';
 
 export type NoticeIconTabProps = {
   count?: number;
@@ -24,7 +23,10 @@ export type NoticeIconTabProps = {
   listLength?: number;
   lastElementRef: (node: HTMLDivElement) => void;
 };
-const NoticeList: React.FC<NoticeIconTabProps> = ({
+
+export const getEventType = (event: string) => event.split('\\').pop() as string;
+
+export const NoticeList: React.FC<NoticeIconTabProps> = ({
   list = [],
   onClick,
   onClear,
@@ -107,7 +109,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           );
         }}
       />
-      {/* TODO: if you need bottom bar for some action ex: clear all */}
+      {/* TODO: #1015 if you need bottom bar for some action ex: clear all */}
       <div className={styles.bottomBar}>
         {showClear ? (
           <div>

@@ -1,9 +1,8 @@
-import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
-import { getLocale } from 'umi';
+import type { AxiosRequestConfig } from '@umijs/max';
+import { getLocale, request } from 'umi';
 
 /** POST /api/login/account */
-export async function login(body: API.LoginRequest, options?: RequestOptionsInit) {
+export async function login(body: API.LoginRequest, options?: AxiosRequestConfig) {
   return request<API.LoginResponse>('/api/auth/login', {
     method: 'POST',
     headers: {
@@ -15,7 +14,7 @@ export async function login(body: API.LoginRequest, options?: RequestOptionsInit
   });
 }
 
-export async function logout(options?: RequestOptionsInit) {
+export async function logout(options?: AxiosRequestConfig) {
   return request<API.LogoutResponse>('/api/auth/logout', {
     method: 'POST',
     headers: {
@@ -25,7 +24,7 @@ export async function logout(options?: RequestOptionsInit) {
   });
 }
 
-export async function forgot(body: API.ForgotRequest, options?: RequestOptionsInit) {
+export async function forgot(body: API.ForgotRequest, options?: AxiosRequestConfig) {
   return request<API.ForgotResponse>('/api/auth/password/forgot', {
     method: 'POST',
     headers: {
@@ -36,7 +35,7 @@ export async function forgot(body: API.ForgotRequest, options?: RequestOptionsIn
   });
 }
 
-export async function reset(body: API.ResetPasswordRequest, options?: RequestOptionsInit) {
+export async function reset(body: API.ResetPasswordRequest, options?: AxiosRequestConfig) {
   return request<API.ResetPasswordResponse>('/api/auth/password/reset', {
     method: 'POST',
     headers: {

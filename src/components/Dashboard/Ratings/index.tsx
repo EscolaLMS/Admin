@@ -1,12 +1,12 @@
-import { FormattedMessage } from 'umi';
-import { Empty, Rate, Row, Spin, Typography } from 'antd';
-import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import { course } from '@/services/escola-lms/course';
 import { questionnaireStars } from '@/services/escola-lms/questionnaire';
-import React, { useEffect, useState } from 'react';
-import { useModel } from '@@/plugin-model/useModel';
-import './index.less';
 import { roundPercentageList } from '@/utils/utils';
+import ProForm, { ProFormSelect } from '@ant-design/pro-form';
+import { useModel } from '@umijs/max';
+import { Empty, Rate, Row, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage } from 'umi';
+import './index.less';
 
 interface Rates {
   1: number;
@@ -16,7 +16,7 @@ interface Rates {
   5: number;
 }
 
-export const DashdoardComponent: React.FC = () => {
+export const DashboardComponent: React.FC = () => {
   const { Text, Title } = Typography;
   const [list, setList] = useState<API.Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,10 +60,12 @@ export const DashdoardComponent: React.FC = () => {
     value: item.id,
   }));
 
-  const ratingsPercentage = Object.keys(ratings?.rates || {})
+  const ratingsPercentage = Object.keys(ratings?.rates || ({} as Record<string, number>))
     .sort()
     .map((key) => {
-      const rate = ratings?.rates[key as unknown as keyof Rates];
+      // TODO: #1010 fix this
+      // @ts-ignore
+      const rate = ratings ? ratings?.rates[key as keyof Rates] : 0;
       if (rate === 0) {
         return 0;
       }
@@ -115,7 +117,7 @@ export const DashdoardComponent: React.FC = () => {
                             <Title level={5}>{index + 1}</Title>
                             <Rate disabled defaultValue={Number(index + 1)} />
                             <Title level={5} className={'dashboard-ratings-list-key'}>
-                              {ratings.rates[index + 1]}
+                              {ratings.rates[(index + 1) as keyof typeof ratings.rates] as number}
                             </Title>
                             <Title level={5} className={'dashboard-ratings-list-percentage'}>
                               {rate}%
@@ -138,4 +140,4 @@ export const DashdoardComponent: React.FC = () => {
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

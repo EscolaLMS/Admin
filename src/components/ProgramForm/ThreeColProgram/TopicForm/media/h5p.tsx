@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Row, Col, Divider, Button, Typography } from 'antd';
 import H5PContentSelect from '@/components/H5PContentSelect';
+import { Button, Col, Divider, Row, Typography } from 'antd';
+import React, { useState } from 'react';
 
 import UploadH5P from '@/components/H5P/upload';
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 
 import H5PCard from '@/components/H5P/card';
 

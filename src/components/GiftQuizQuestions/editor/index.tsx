@@ -1,15 +1,15 @@
+import ProForm, { ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
+import { Divider, Space } from 'antd';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import { Space, Divider } from 'antd';
-import ProForm, { ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
 
-import { QuestionType } from '@/services/escola-lms/enums';
 import {
   CompetencyChallengeCategoryTree,
   type CompetencyChallengeCategoryTreeProps,
 } from '@/pages/CompetencyChallenges/components/CompetencyChallengeCategoryTree';
+import { QuestionType } from '@/services/escola-lms/enums';
 import { GiftQuizQuestion } from './question';
-import type { QuizQuestionSubmitData, GiftQuizFormData } from './types';
+import type { GiftQuizFormData, QuizQuestionSubmitData } from './types';
 import { parseToFormData, parseToGIFT } from './utils';
 
 const VALUES_NOT_TO_RESET = ['type', 'score', 'category'];

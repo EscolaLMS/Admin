@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
-  userGroups as fetchUserGroups,
   userGroup as fetchUserGroup,
+  userGroups as fetchUserGroups,
 } from '@/services/escola-lms/user_groups';
 
-import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const UserGroupSelect: React.FC<{
   state?: {

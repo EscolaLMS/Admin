@@ -1,9 +1,9 @@
-import React from 'react';
 import ProForm from '@ant-design/pro-form';
+import { Button, Col, Row } from 'antd';
 import type { UploadChangeParam } from 'antd/lib/upload';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import { FormattedMessage } from 'umi';
-import { Button, Row, Col } from 'antd';
 import SecureUploadBrowser from '../SecureUpload/browser';
 
 export const ProFormVideoUpload: React.FC<{
@@ -32,7 +32,10 @@ export const ProFormVideoUpload: React.FC<{
                         form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
                         if (info.file.response?.success) {
                           setPath({
+                            // TODO: #1017 fix style
+                            // @ts-ignore
                             [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                            // @ts-ignore
                             [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
                           });
                         }

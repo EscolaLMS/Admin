@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { Button, Divider, Space, Spin } from 'antd';
-import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
 import { ExportOutlined } from '@ant-design/icons';
+import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
+import { Button, Divider, Space, Spin } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { Table } from '@/components/GiftQuizQuestions/table';
 import { getGiftQuiz, updateGiftQuiz } from '@/services/escola-lms/gift_quiz';

@@ -1,18 +1,18 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { FormattedMessage, useIntl, useParams } from 'umi';
-import { Button, Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ProForm, { type ProFormInstance } from '@ant-design/pro-form';
-import { EditableProTable } from '@ant-design/pro-table';
 import type { ActionType, EditableFormInstance, ProColumns } from '@ant-design/pro-table';
+import { EditableProTable } from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip } from 'antd';
+import React, { useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl, useParams } from 'umi';
 
 import {
   createCompetencyChallengeScale,
   deleteCompetencyChallengeScale,
   updateCompetencyChallengeScale,
 } from '@/services/escola-lms/competency-challenges';
-import { CompetencyChallengeCategoryTree } from './CompetencyChallengeCategoryTree';
 import { useCompetencyChallengeContext } from '../context';
+import { CompetencyChallengeCategoryTree } from './CompetencyChallengeCategoryTree';
 
 type DataSourceType = {
   id: React.Key;

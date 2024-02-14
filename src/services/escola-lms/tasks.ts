@@ -1,11 +1,11 @@
 import { request } from 'umi';
 
-import type { RequestOptionsInit } from 'umi-request';
+import type { AxiosRequestConfig } from '@umijs/max';
 
 /**  GET /api/admin/tasks */
 export async function tasks(
   params: API.TaskListParams & API.PaginationParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.TaskList>(`/api/admin/tasks`, {
     method: 'GET',
@@ -19,7 +19,7 @@ export async function tasks(
 }
 
 /**  DELETE /api/admin/tasks/:id */
-export async function deleteTask(id: number, options?: RequestOptionsInit) {
+export async function deleteTask(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/${id}`, {
     method: 'DELETE',
     ...(options || {}),
@@ -27,7 +27,7 @@ export async function deleteTask(id: number, options?: RequestOptionsInit) {
 }
 
 /**  GET /api/admin/tasks/:id */
-export async function getTask(id: number, options?: RequestOptionsInit) {
+export async function getTask(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/${id}`, {
     method: 'GET',
     ...(options || {}),
@@ -46,7 +46,7 @@ export async function createTask(body: EscolaLms.Tasks.Http.Requests.Admin.Admin
 export async function updateTask(
   id: number,
   body: EscolaLms.Tasks.Http.Requests.Admin.AdminUpdateTaskRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/${id}`, {
     method: 'PATCH',
@@ -56,7 +56,7 @@ export async function updateTask(
 }
 
 /**  POST /api/admin/tasks/complete/:id */
-export async function completeTask(id: number, options?: RequestOptionsInit) {
+export async function completeTask(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/complete/${id}`, {
     method: 'POST',
     ...(options || {}),
@@ -64,7 +64,7 @@ export async function completeTask(id: number, options?: RequestOptionsInit) {
 }
 
 /**  POST /api/admin/tasks/incomplete/:id */
-export async function incompleteTask(id: number, options?: RequestOptionsInit) {
+export async function incompleteTask(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Task>>(`/api/admin/tasks/incomplete/${id}`, {
     method: 'POST',
     ...(options || {}),
@@ -73,7 +73,7 @@ export async function incompleteTask(id: number, options?: RequestOptionsInit) {
 
 /** POST /api/admin/task/notes */
 export async function createTaskNote(
-  // TODO replace with admin Request
+  // TODO #1045 replace with admin Request
   body: EscolaLms.Tasks.Http.Requests.CreateTaskNoteRequest,
 ) {
   return request<API.DefaultResponse<API.TaskNote>>(`/api/admin/tasks/notes`, {

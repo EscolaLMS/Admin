@@ -1,7 +1,7 @@
 import Columns from '@/components/Columns';
 import { FormattedMessage } from 'umi';
 
-export const DashdoardComponent: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
+export const DashboardComponent: React.FC<{ metric: API.ReportType }> = ({ metric }) => {
   return (
     <div className="dashboard-draggable__component">
       <h3>
@@ -14,4 +14,4 @@ export const DashdoardComponent: React.FC<{ metric: API.ReportType }> = ({ metri
   );
 };
 
-export default DashdoardComponent;
+export default DashboardComponent;

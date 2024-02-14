@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'umi';
+import { changeStudentAttendance } from '@/services/escola-lms/attendances';
 import { Checkbox, Space, Tooltip } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { changeStudentAttendance } from '@/services/escola-lms/attendances';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 import type { Status } from './types';
 import { parseToAttendanceValue, parseToStatus } from './utils';

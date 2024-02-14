@@ -1,7 +1,7 @@
+import ProCard from '@ant-design/pro-card';
+import { PageContainer } from '@ant-design/pro-layout';
 import React from 'react';
 import { FormattedMessage, history } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import ProCard from '@ant-design/pro-card';
 
 import ModelFields from '@/components/ModelFields';
 

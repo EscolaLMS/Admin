@@ -1,8 +1,8 @@
-import React from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { Button, Tooltip } from 'antd';
-import ProForm, { ProFormList, ProFormText } from '@ant-design/pro-form';
 import { DeleteOutlined } from '@ant-design/icons';
+import ProForm, { ProFormList, ProFormText } from '@ant-design/pro-form';
+import { Button, Tooltip } from 'antd';
+import React from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 const INITIAL_VALUES = [{ value: '', feedback: '' }];
 

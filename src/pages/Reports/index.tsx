@@ -1,7 +1,7 @@
-import React from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
 import PieChart from '@/components/PieChart/PieChart';
 import ProCard from '@ant-design/pro-card';
+import { PageContainer } from '@ant-design/pro-layout';
+import React from 'react';
 
 export default (): React.ReactNode => {
   return (

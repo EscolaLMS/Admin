@@ -1,19 +1,22 @@
-import React, { useCallback, useRef } from 'react';
-import { format } from 'date-fns';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { Button, Tag, Tooltip } from 'antd';
-import ProTable from '@ant-design/pro-table';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
 import { FileSearchOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Tag, Tooltip } from 'antd';
+import { format } from 'date-fns';
+import React, { useCallback, useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import type { ProTableRequest } from '@/types';
-import { DATETIME_FORMAT } from '@/consts/dates';
-import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
-import UserSelect from '@/components/UserSelect';
 import CourseSelect from '@/components/CourseSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import UserSelect from '@/components/UserSelect';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
+//import type { ProTableRequest } from '@/types';
 import { createTableOrderObject } from '@/utils/utils';
+import type { ProTableProps } from '@ant-design/pro-components';
+
+type ProTableRequest = ProTableProps<API.QuizAttempt, API.QuizAttemptsParams>['request'];
 
 export const GiftQuizTableColumns: ProColumns<API.GiftQuiz>[] = [
   {
@@ -175,7 +178,9 @@ const QuizAttempts: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
-  const onRequest = useCallback<ProTableRequest<API.QuizAttempt, API.QuizAttemptsParams>>(
+  // TODO: #1036 fix types !
+  //@ts-ignore
+  const onRequest = useCallback<ProTableRequest>(
     async ({ current, pageSize, topic_gift_quiz_id, dateRange, course_id, user_id }, sort) => {
       const date_from = dateRange?.[0]
         ? format(new Date(dateRange[0]), DATETIME_FORMAT)

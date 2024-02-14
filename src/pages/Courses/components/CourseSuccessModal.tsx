@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button, Modal } from 'antd';
 import { FormattedMessage } from '@@/plugin-locale/localeExports';
+import { Button, Modal } from 'antd';
+import React from 'react';
 
 interface CourseSuccessModalProps {
   visible: boolean;

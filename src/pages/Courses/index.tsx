@@ -1,18 +1,25 @@
-import { CopyOutlined, FireOutlined, PlusCircleFilled } from '@ant-design/icons';
-import { Button, Tag, Tooltip, Popconfirm, message, Typography } from 'antd';
-import React, { useState, useRef, useCallback } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  DollarOutlined,
+  EditOutlined,
+  ExportOutlined,
+  FireOutlined,
+  PlusCircleFilled,
+} from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
-import { DeleteOutlined, EditOutlined, ExportOutlined, DollarOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tag, Tooltip, Typography, message } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import CategoryTree from '@/components/CategoryTree';
-import Tags from '@/components/Tags';
 import SecureUpload from '@/components/SecureUpload';
+import Tags from '@/components/Tags';
 import UserSelect from '@/components/UserSelect';
+import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
 

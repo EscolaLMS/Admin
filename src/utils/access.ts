@@ -1,6 +1,6 @@
 import type PACKAGES from '@/consts/packages';
 
-// TODO implement minimal versions
+// TODO #1046 implement minimal versions
 export const createHavePackageInstalled =
   (packages?: Record<string, string>) =>
   (

@@ -108,7 +108,27 @@ declare namespace API {
     user_id?: number;
   };
 
-  // TODO: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
+  export type BookmarkNote = {
+    id: number;
+    value: Nullable<string>;
+    bookmarkable_id: number;
+    bookmarkable_type: BookmarkableType;
+    user_id: number;
+  };
+
+  export type BookmarkNoteList = DefaultMetaResponse<BookmarkNote>;
+
+  export type BookmarkNoteParams = PaginationParams & {
+    order_by?: 'created_at' | 'id' | 'value';
+    order?: 'ASC' | 'DESC';
+    has_value?: boolean | 1 | 0;
+    bookmarkable_id?: number;
+    bookmarkable_ids?: number[];
+    bookmarkable_type?: BookmarkableType;
+    user_id?: number;
+  };
+
+  // TODO #138: improve the optional keys for this task https://github.com/EscolaLMS/Admin/issues/138
   type Course = {
     id?: number;
     created_at?: string;
@@ -1068,7 +1088,8 @@ declare namespace API {
   };
 
   type QuestionnaireStars = {
-    rates: object;
+    // TODO FIX THIS TYPE
+    rates: Record<number, number>;
     sum_rates: number;
     count_answers: number;
     avg_rate: string;
@@ -2063,5 +2084,11 @@ declare module 'jsoneditor-react' {
     htmlElementProps?: object;
     /** callback to get html element reference */
     innerRef?: (ref: any) => void;
+  }
+}
+
+declare global {
+  interface Window {
+    REACT_APP_API_URL?: string;
   }
 }

@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/questionnaire */
 export async function questionnaire(
@@ -7,7 +7,7 @@ export async function questionnaire(
     API.PaginationParams & {
       title?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.QuestionnaireList>(`/api/admin/questionnaire`, {
     method: 'GET',
@@ -18,7 +18,7 @@ export async function questionnaire(
 }
 
 /**  GET /api/admin/questionnaire/:id */
-export async function getQuestionnaire(id: number, options?: RequestOptionsInit) {
+export async function getQuestionnaire(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -30,7 +30,7 @@ export async function getQuestionnaire(id: number, options?: RequestOptionsInit)
 /**  POST /api/admin/questionnaire */
 export async function createQuestionnaire(
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire`, {
     method: 'POST',
@@ -46,7 +46,7 @@ export async function createQuestionnaire(
 export async function updateQuestionare(
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(`/api/admin/questionnaire/${id}`, {
     method: 'PATCH',
@@ -70,7 +70,7 @@ export async function changeQuestionareVisibility(id: number, body?: Record<stri
 }
 
 /**  DELETE /api/admin/questionnaire/:id */
-export async function deleteQuestionnaire(id: number, options?: RequestOptionsInit) {
+export async function deleteQuestionnaire(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<{ data: boolean }>>(`/api/admin/questionnaire/${id}`, {
     method: 'DELETE',
     /* useCache: true */ useCache: false,
@@ -80,7 +80,7 @@ export async function deleteQuestionnaire(id: number, options?: RequestOptionsIn
 }
 
 /**  POST /api/admin/question */
-export async function addQuestion(body?: Record<string, any>, options?: RequestOptionsInit) {
+export async function addQuestion(body?: Record<string, any>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.QuestionnaireQuestion>>(`/api/admin/question`, {
     method: 'POST',
     headers: {
@@ -95,7 +95,7 @@ export async function addQuestion(body?: Record<string, any>, options?: RequestO
 export async function editQuestion(
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.QuestionnaireQuestion>>(`/api/admin/question/${id}`, {
     method: 'PATCH',
@@ -108,7 +108,7 @@ export async function editQuestion(
 }
 
 /**  GET /api/admin/question/:id */
-export async function getQuestion(id: number, options?: RequestOptionsInit) {
+export async function getQuestion(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.QuestionnaireQuestion>>(`/api/admin/question/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -118,7 +118,7 @@ export async function getQuestion(id: number, options?: RequestOptionsInit) {
 }
 
 /**  DELETE /api/admin/question/:id */
-export async function deleteQuestion(id: number, options?: RequestOptionsInit) {
+export async function deleteQuestion(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<{ data: boolean }>>(`/api/admin/question/${id}`, {
     method: 'DELETE',
     /* useCache: true */ useCache: false,
@@ -128,7 +128,7 @@ export async function deleteQuestion(id: number, options?: RequestOptionsInit) {
 }
 
 /**  GET /api/admin/questionnaire-models */
-export async function getQuestionnaireModels(options?: RequestOptionsInit) {
+export async function getQuestionnaireModels(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.QuestionnaireModel[]>>(`/api/admin/questionnaire-models`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -142,7 +142,7 @@ export async function questionnaireReport(
   id: number,
   model_class?: number,
   model_id?: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.QuestionnaireReport[]>>(
     model_class
@@ -163,7 +163,7 @@ export async function assignQuestionnaire(
   model_id: number,
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(
     `/api/admin/questionnaire/assign/${model}/${model_id}/${id}`,
@@ -184,7 +184,7 @@ export async function unassignQuestionnaire(
   model_id: number,
   id: number,
   body?: Record<string, any>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Questionnaire>>(
     `/api/admin/questionnaire/unassign/${model}/${model_id}/${id}`,
@@ -208,7 +208,7 @@ export async function getQuestionAnswers(
       user_id?: string;
       updated_at?: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<API.QuestionAnswer>>(`/api/admin/question-answers/${id}`, {
     params,
@@ -220,7 +220,7 @@ export async function getQuestionAnswers(
 }
 
 /**  GET /api/questionnaire/stars */
-export async function questionnaireStars(model: string, id: number, options?: RequestOptionsInit) {
+export async function questionnaireStars(model: string, id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.QuestionnaireStars>>(
     `/api/questionnaire/stars/${model}/${id}`,
     {

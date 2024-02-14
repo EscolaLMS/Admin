@@ -1,6 +1,7 @@
+import { GithubOutlined } from '@ant-design/icons';
+import { DefaultFooter } from '@ant-design/pro-components';
 import { useMemo } from 'react';
 import { useModel } from 'umi';
-import { GithubOutlined, CopyrightOutlined } from '@ant-design/icons';
 
 import './index.css';
 
@@ -59,23 +60,19 @@ export default () => {
   return (
     <footer className="ant-layout-footer" style={{ padding: 0, backgroundColor }}>
       <div className="ant-pro-global-footer">
-        <div className="ant-pro-global-footer-links">
-          {links.map(({ key, href, title, blankTarget }) => (
-            <a
-              href={href}
-              key={key}
-              title={key}
-              target={blankTarget ? '_blank' : undefined}
-              rel={blankTarget ? 'noreferrer' : undefined}
-              style={{ color }}
-            >
-              {title}
-            </a>
-          ))}
-        </div>
-        <div className="ant-pro-global-footer-copyright" style={{ color }}>
-          <CopyrightOutlined /> {currentYear} EscolaSoft
-        </div>
+        <DefaultFooter
+          style={{
+            background: 'none',
+          }}
+          copyright={`${currentYear} ${companyInfo.name || 'Wellms'}`}
+          links={links.map(({ key, href, title, blankTarget }) => ({
+            key,
+            href,
+            blankTarget,
+            title: <span style={{ color }}>{title}</span>,
+          }))}
+        />
+
         {footerLogo && (
           <div className="ant-pro-global-footer-footer-logo-wrapper">
             <picture className="ant-pro-global-footer-footer-logo">

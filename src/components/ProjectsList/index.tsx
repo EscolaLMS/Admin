@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { format } from 'date-fns';
-import { Button, Tooltip, Popconfirm, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import { format } from 'date-fns';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import { DATETIME_FORMAT } from '@/consts/dates';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
-import { TopicType } from '@/services/escola-lms/enums';
+import { DATETIME_FORMAT } from '@/consts/dates';
 import { program } from '@/services/escola-lms/course';
-import { projectSolutions, deleteProjectSolution } from '@/services/escola-lms/projects';
+import { TopicType } from '@/services/escola-lms/enums';
+import { deleteProjectSolution, projectSolutions } from '@/services/escola-lms/projects';
 
 const handleRemove = async (id: number) => {
   const res = await deleteProjectSolution(id);

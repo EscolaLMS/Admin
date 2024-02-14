@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/track/routes */
 export async function track(
@@ -12,7 +12,7 @@ export async function track(
     path?: string;
     method: 'string';
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultMetaResponse<EscolaLms.Tracker.Models.TrackRoute>>(
     `/api/admin/tracks/routes`,

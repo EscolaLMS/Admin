@@ -1,21 +1,21 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
-import { consultations, deleteConsultation } from '@/services/escola-lms/consultations';
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  DollarOutlined,
-  FireOutlined,
-} from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Tag, Select, Typography } from 'antd';
 import CategoryTree from '@/components/CategoryTree';
-import { format } from 'date-fns/esm';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
+import { consultations, deleteConsultation } from '@/services/escola-lms/consultations';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
+import {
+  DeleteOutlined,
+  DollarOutlined,
+  EditOutlined,
+  FireOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Select, Tag, Tooltip, Typography, message } from 'antd';
+import { format } from 'date-fns';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
 export const TableColumns: ProColumns<API.Consultation>[] = [
   {

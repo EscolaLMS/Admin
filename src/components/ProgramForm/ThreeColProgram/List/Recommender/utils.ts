@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { getCourseRecommender, getExerciseRecommender } from '@/services/escola-lms/recommender';
+import { useEffect, useState } from 'react';
 
 export type RecommenderSimpleTopicType = 'OEmbed' | 'PDF' | 'Video' | 'RichText' | 'Image' | 'H5P';
 

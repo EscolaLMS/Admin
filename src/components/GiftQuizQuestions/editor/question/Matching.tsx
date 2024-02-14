@@ -1,6 +1,6 @@
+import ProForm, { ProFormList, ProFormText } from '@ant-design/pro-form';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import ProForm, { ProFormList, ProFormText } from '@ant-design/pro-form';
 
 const INITIAL_VALUES = [
   {

@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import { Modal, Button, Radio } from 'antd';
+import { Button, Modal, Radio } from 'antd';
 import { JsonEditor as Editor } from 'jsoneditor-react';
-import { FormattedMessage } from 'umi';
 import 'jsoneditor-react/es/editor.min.css';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 type EditorMode = 'tree' | 'view' | 'form' | 'code' | 'text';
 

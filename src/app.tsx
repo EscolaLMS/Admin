@@ -1,36 +1,30 @@
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
-import { notification } from 'antd';
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, getLocale, addLocale } from 'umi';
-
-import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import type { ResponseError, RequestOptionsInit } from 'umi-request';
+import RightContent from '@/components/RightContent';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import type { AxiosRequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import { getLocale, history } from '@umijs/max';
 import { currentUser as queryCurrentUser } from './services/escola-lms/api';
+//import { errorConfig } from './requestErrorConfig';
+import { localeInfo } from '@@/plugin-locale/localeExports';
 import { BookOutlined } from '@ant-design/icons';
+import { addLocale } from '@umijs/max';
+import { notification } from 'antd';
+import { FormattedMessage } from 'umi';
+import defaultSettings from '../config/defaultSettings';
 import RestrictedPage from './pages/403';
+import { packages } from './services/escola-lms/packages';
 import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
 import { translations } from './services/escola-lms/translations';
-
 import { refreshTokenCallback } from './services/token_refresh';
-
-import '@/services/ybug';
-import '@/services/sentry';
-import './app.css';
-import { packages } from './services/escola-lms/packages';
-import { FormattedMessage, localeInfo } from '@@/plugin-locale/localeExports';
-
-declare const REACT_APP_API_URL: string;
-
-// const langParser = (lang: string) => lang.split('-')[0];
 
 const authpaths = ['/user/login', '/user/reset-password'];
 
-/** 获取用户信息比较慢的时候会展示一个 loading */
-export const initialStateConfig = {
-  loading: <PageLoading />,
-};
+declare global {
+  interface Window {
+    REACT_APP_API_URL?: string;
+  }
+}
+declare const REACT_APP_API_URL: string;
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -73,7 +67,7 @@ export async function getInitialState(): Promise<{
     const packs = await packages();
 
     if (transl.success) {
-      const messages = {};
+      const messages: Record<string, Record<string, string>> = {};
       transl.data.forEach((t) => {
         Object.keys(t.text).forEach((key) => {
           if (!messages[key]) {
@@ -97,7 +91,7 @@ export async function getInitialState(): Promise<{
       publicConfig: publicConfig.success ? publicConfig.data : {},
       translations: transl.success ? transl.data : [],
       currentUser,
-      settings: {},
+      settings: defaultSettings as Partial<LayoutSettings>,
       collapsed: false,
       packages: packs.success ? packs.data : {},
     };
@@ -108,17 +102,19 @@ export async function getInitialState(): Promise<{
     publicConfig: publicConfig.success ? publicConfig.data : {},
     translations: [],
     fetchUserInfo,
-    settings: {},
+    settings: defaultSettings as Partial<LayoutSettings>,
     collapsed: false,
     packages: {},
   };
 }
 
-// https://umijs.org/zh-CN/plugins/plugin-layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
-    if (history.location.query?.redirect) {
-      history.push(history.location.query.redirect.toString());
+    if (history.location.search.includes('redirect')) {
+      const url = new URLSearchParams(history.location.search).get('redirect');
+      if (url) {
+        history.push(url);
+      }
     } else {
       history.push('/welcome');
     }
@@ -141,7 +137,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   }
 
   return {
-    logo: logo,
+    ...initialState?.settings,
+    logo,
     collapsed: initialState?.collapsed,
     onCollapse: (/*collapsed: boolean*/) => {
       setInitialState({
@@ -149,7 +146,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         collapsed: !initialState?.collapsed,
       });
     },
-    rightContentRender: () => <RightContent />,
+
+    actionsRender: () => [<RightContent key="rightContent" />],
     contentStyle: { backgroundColor },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -174,7 +172,38 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menuHeaderRender: undefined,
     //  403
     unAccessible: <RestrictedPage />,
-    ...initialState?.settings,
+  };
+};
+
+const authHeaderInterceptor = (url: string, options: AxiosRequestConfig) => {
+  const token = localStorage.getItem('TOKEN');
+  const optionHeaders = {
+    ...options.headers,
+    'X-locale': getLocale(),
+  };
+
+  if (url.includes('login')) {
+    return {
+      url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
+      options,
+      headers: optionHeaders,
+    };
+  }
+
+  return {
+    url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
+    options: {
+      ...options,
+      interceptors: true,
+      headers: token
+        ? {
+            ...options.headers,
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'X-locale': getLocale(),
+          }
+        : optionHeaders,
+    },
   };
 };
 
@@ -197,10 +226,9 @@ const codeMessage = {
   504: '504',
 };
 
-/**
- * @see https://beta-pro.ant.design/docs/request-cn
- */
-const errorHandler = (error: ResponseError) => {
+// TODO #1006 there is no type for error
+//github.com/ant-design/ant-design-pro/blob/ffff2447d6d717f932f1e9355096ad26f6ad2681/src/requestErrorConfig.ts#L42C27-L42C30
+const errorHandler = (error: any) => {
   const { response, data } = error;
 
   if (error.name === 'AbortError') {
@@ -245,7 +273,7 @@ const errorHandler = (error: ResponseError) => {
     }
   } else if (response && response.status) {
     const { status, url } = response;
-    const errorText = codeMessage[status] || response.statusText;
+    const errorText = codeMessage[status as keyof typeof codeMessage] || response.statusText;
 
     notification.error({
       message: `Error ${status}: ${url}`,
@@ -263,39 +291,7 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
-const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  const token = localStorage.getItem('TOKEN');
-  const optionHeaders = {
-    ...options.headers,
-    'X-locale': getLocale(),
-  };
-
-  if (url.includes('login')) {
-    return {
-      url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
-      options,
-      headers: optionHeaders,
-    };
-  }
-
-  return {
-    url: `${window.REACT_APP_API_URL || REACT_APP_API_URL}${url}`,
-    options: {
-      ...options,
-      interceptors: true,
-      headers: token
-        ? {
-            ...options.headers,
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'X-locale': getLocale(),
-          }
-        : optionHeaders,
-    },
-  };
-};
-
-export const request: RequestConfig = {
+export const request = {
   errorHandler,
   requestInterceptors: [authHeaderInterceptor],
 };

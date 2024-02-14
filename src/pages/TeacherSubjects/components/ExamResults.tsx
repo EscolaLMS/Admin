@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import { getExam } from '@/services/escola-lms/exams';

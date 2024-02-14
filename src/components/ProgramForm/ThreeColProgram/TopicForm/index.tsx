@@ -1,36 +1,36 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
-import { Alert, Row, Col, Space, Affix } from 'antd';
+import { getTopic } from '@/services/escola-lms/course';
+import { TopicType } from '@/services/escola-lms/enums';
+import { Affix, Alert, Col, Row, Space } from 'antd';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
-import MediaUpload from './media/upload';
-import RichTextEditor from './media/text';
-import { TopicType } from '@/services/escola-lms/enums';
-import { getTopic } from '@/services/escola-lms/course';
-import Oembed from './media/oembed';
-import H5PForm from './media/h5p';
-import TopicForm from './form';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import Resources from './resources';
+import TopicForm from './form';
 import { getTypeName } from './media';
+import H5PForm from './media/h5p';
+import Oembed from './media/oembed';
+import RichTextEditor from './media/text';
+import MediaUpload from './media/upload';
+import Resources from './resources';
 
-import {
-  FundOutlined,
-  FileTextOutlined,
-  FilePdfOutlined,
-  FileImageOutlined,
-  VideoCameraAddOutlined,
-  AudioOutlined,
-  YoutubeOutlined,
-  InteractionOutlined,
-  ExclamationCircleOutlined,
-  CarryOutOutlined,
-  PercentageOutlined,
-} from '@ant-design/icons';
 import ScormSelector from '@/components/Scorm';
-import Project from './media/project';
+import {
+  AudioOutlined,
+  CarryOutOutlined,
+  ExclamationCircleOutlined,
+  FileImageOutlined,
+  FilePdfOutlined,
+  FileTextOutlined,
+  FundOutlined,
+  InteractionOutlined,
+  PercentageOutlined,
+  VideoCameraAddOutlined,
+  YoutubeOutlined,
+} from '@ant-design/icons';
 import GiftQuiz from './media/giftquiz';
+import Project from './media/project';
 
 export const getTypeIcon = (type: string | undefined) => {
   if (type) {

@@ -1,4 +1,6 @@
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import UserSelect from '@/components/UserSelect';
+import { DATETIME_FORMAT } from '@/consts/dates';
 import {
   changeQuestionareVisibility,
   getQuestionAnswers,
@@ -7,11 +9,9 @@ import ProForm, { ProFormSwitch } from '@ant-design/pro-form';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Form, message } from 'antd';
+import { format } from 'date-fns';
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import UserSelect from '@/components/UserSelect';
-import { format } from 'date-fns';
-import { DATETIME_FORMAT } from '@/consts/dates';
 
 const QuestionVisibilitySwitch: React.FC<{
   record: API.QuestionAnswer;

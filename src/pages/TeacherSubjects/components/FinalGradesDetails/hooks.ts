@@ -1,18 +1,18 @@
-import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { groupAttendanceSchedule } from '@/services/escola-lms/attendances';
+import { course, getCourseStats, program } from '@/services/escola-lms/course';
+import { getExams } from '@/services/escola-lms/exams';
 import {
   getGradeTerms,
-  getUserFinalGrades,
   getSubjectGradeScales,
   getSubjectTutorGrades,
+  getUserFinalGrades,
   removeFinalGrade,
 } from '@/services/escola-lms/grades';
-import { getExams } from '@/services/escola-lms/exams';
-import { course, getCourseStats, program } from '@/services/escola-lms/course';
-import { getFlatTopics } from '@/components/ProgramForm/Context';
-import { getScalesBySubjectScaleFormId, getStudentExamsFromExams } from './utils';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { FetchedData, StudentExam } from './types';
+import { getScalesBySubjectScaleFormId, getStudentExamsFromExams } from './utils';
 
 type SetLoading = (loading: boolean) => void;
 

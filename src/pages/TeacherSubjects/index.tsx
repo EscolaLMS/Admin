@@ -1,12 +1,12 @@
-import { Button, Tooltip } from 'antd';
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import SemesterSelect from '@/components/SemesterSelect';
 import { semesterSubjects } from '@/services/escola-lms/semester_subject';
 import { EditOutlined } from '@ant-design/icons';
-import SemesterSelect from '@/components/SemesterSelect';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Tooltip } from 'antd';
+import React, { useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from './components/consts';
 
 export const TableColumns: ProColumns<API.Subjects>[] = [

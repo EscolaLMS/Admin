@@ -18,7 +18,7 @@ export default {
   'pages.getCaptchaSecondText': 'sekund',
   'pages.login.rememberMe': 'Zapamiętaj mnie',
   'pages.login.forgotPassword': 'Zapomniałeś hasła?',
-  'pages.login.submit': 'Login',
+  'pages.login.submit': 'Zaloguj',
   'pages.login.loginWith': 'Zaloguj z:',
   'pages.login.registerAccount': 'Zarejestruj konto',
   'pages.welcome.advancedComponent': 'Zaawansowany komponent',

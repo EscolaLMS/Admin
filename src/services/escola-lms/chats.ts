@@ -1,10 +1,10 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  POST /api/admin/chats/ms-teams */
 export async function createTeamsChat(
   body: API.CreateTeamsChatRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.TeamsChat>>(`/api/admin/chats/ms-teams`, {
     method: 'POST',

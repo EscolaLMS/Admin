@@ -35,9 +35,9 @@
   display: block;
   /* Calculate height for scrollbar and subtract 48px + some space for resize button */
   height: calc(100% - 64px);
+  padding: 24px;
   /* Show scrollbar when height of main box is smaller than content inside */
   overflow-y: auto;
-  padding: 24px;
   background: #ffffff;
   border-radius: 10px;
 }

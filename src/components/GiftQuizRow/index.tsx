@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
-import { Button, message } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import { getGiftQuiz } from '@/services/escola-lms/gift_quiz';
+import { Button, message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const GiftQuizRow: React.FC<{
   id: number;

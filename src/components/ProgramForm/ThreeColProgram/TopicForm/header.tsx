@@ -1,8 +1,8 @@
-import React from 'react';
-import { getTypeName } from './media';
 import Tag from 'antd/lib/tag';
+import React from 'react';
 import { FormattedMessage } from 'umi';
 import { getTypeIcon } from '.';
+import { getTypeName } from './media';
 
 const TopicHeader: React.FC<{ topic: API.Topic }> = ({ topic }) => {
   return (

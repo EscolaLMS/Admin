@@ -1,13 +1,13 @@
-import { parse } from '@escolalms/gift-pegjs';
 import type {
   Description,
   Essay,
   Matching,
+  MultipleChoice,
   Numerical,
   ShortAnswer,
   TrueFalse,
-  MultipleChoice,
 } from '@escolalms/gift-pegjs';
+import { parse } from '@escolalms/gift-pegjs';
 
 import { QuestionType } from '@/services/escola-lms/enums';
 import type {
@@ -228,7 +228,7 @@ const parseNumericalToFormData = (
 ): NumericalFormData => {
   const question = parsedValue?.stem.text;
 
-  // TODO
+  // TODO #1012
   if (Array.isArray(parsedValue?.choices)) {
     throw new Error('Unsupported choices type: array');
   }

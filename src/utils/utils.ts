@@ -1,4 +1,4 @@
-import { SortOrder } from 'antd/lib/table/interface';
+import type { SortOrder } from 'antd/lib/table/interface';
 import moment from 'moment';
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -383,7 +383,7 @@ export const getLangInfo = (
   };
 
   return (
-    defaultLangUConfigMap[langCode] || {
+    defaultLangUConfigMap[langCode as keyof typeof defaultLangUConfigMap] || {
       lang: '404',
       label: '404',
       icon: '🌐',
@@ -485,6 +485,8 @@ export const roundTo = (val: number, places = 2, divider?: number): number => {
 // Example: array.sort(sortByKey<LangRow>(sortArr[0], sortArr[1] === 'ascend' ? false : true));
 export const sortByKey = <T>(myKey: string, reverse: boolean = false) => {
   return function (a: T, b: T) {
+    // TODO #1047 fix this function
+    //@ts-ignore
     const comparison = a[myKey].localeCompare(b[myKey], undefined, {
       sensitivity: 'base',
     });
@@ -494,8 +496,8 @@ export const sortByKey = <T>(myKey: string, reverse: boolean = false) => {
 
 export const sortArrayByKey = <T>(array: T[], key: string, reverse: boolean = false): T[] => {
   const sortedArray = array.slice().sort((a, b) => {
-    const valueA = a[key];
-    const valueB = b[key];
+    const valueA = a[key as keyof T];
+    const valueB = b[key as keyof T];
 
     if (typeof valueA === 'number' && typeof valueB === 'number') {
       return valueA - valueB;
@@ -539,7 +541,7 @@ export const createTableOrderObject = (
   };
 };
 
-export const objectToQueryString = (params: object) =>
+export const objectToQueryString = (params: Record<string, unknown>) =>
   Object.keys(params)
     .filter((key) => params[key])
     .map((key) => key + '=' + params[key])

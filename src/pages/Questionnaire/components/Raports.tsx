@@ -1,9 +1,9 @@
+import { questionnaireReport } from '@/services/escola-lms/questionnaire';
 import ProCard from '@ant-design/pro-card';
-import QuestionnaireChart from './QuestionnaireChart';
 import { Select, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { questionnaireReport } from '@/services/escola-lms/questionnaire';
+import QuestionnaireChart from './QuestionnaireChart';
 
 export type QuestionnaireRaportState =
   | {

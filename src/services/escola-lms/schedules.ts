@@ -1,4 +1,4 @@
-import type { RequestOptionsInit } from 'umi-request';
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
 
 export async function allSchedules(
@@ -11,7 +11,7 @@ export async function allSchedules(
       group_id?: number;
       term_status_id?: number;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.ScheduleList>(`/api/admin/schedules`, {
     params,

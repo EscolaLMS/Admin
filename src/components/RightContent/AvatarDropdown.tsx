@@ -1,18 +1,24 @@
-import React, { useCallback } from 'react';
+import { logout } from '@/services/escola-lms/auth';
 import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
-import { Spin, message } from 'antd';
 import type { MenuProps } from 'antd';
-import { history, useModel, FormattedMessage } from 'umi';
+import { Spin, message } from 'antd';
+import type { MenuInfo } from 'rc-menu/lib/interface';
+import React, { useCallback } from 'react';
+import { FormattedMessage, history, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { logout } from '@/services/escola-lms/auth';
-import type { MenuInfo } from 'rc-menu/lib/interface';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
 
-const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
+export const AvatarName = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  return <span className="anticon">{currentUser?.name}</span>;
+};
+
+export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const loginOut = useCallback(async () => {
@@ -21,8 +27,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
       localStorage.removeItem('TOKEN');
       message.success(msg.message);
 
+      /*
       const { query = {} } = history.location;
       const { redirect } = query;
+      */
+
+      const redirect = new URLSearchParams(history.location.search).get('redirect');
       if (window.location.pathname !== '/user/login' && !redirect) {
         setInitialState({ ...initialState, currentUser: undefined });
       }

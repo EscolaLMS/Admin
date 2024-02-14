@@ -1,5 +1,5 @@
-import { Popover } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { Popover } from 'antd';
 import { RecommenderPopoverContent } from './RecommenderPopoverContent';
 
 export const RecommenderPopoverInfo: React.FC = () => (

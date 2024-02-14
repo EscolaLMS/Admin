@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo } from 'react';
-import { format } from 'date-fns';
-import { v4 as uuidv4 } from 'uuid';
-import { FormattedMessage, useIntl, useModel } from 'umi';
-import { Form, Descriptions } from 'antd';
 import { DrawerForm, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import { Descriptions, Form } from 'antd';
+import { format } from 'date-fns';
+import React, { useCallback, useMemo } from 'react';
+import { FormattedMessage, useIntl, useModel } from 'umi';
+import { v4 as uuidv4 } from 'uuid';
 
-import PACKAGES from '@/consts/packages';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import PACKAGES from '@/consts/packages';
 import { approveConsultationAccessTerm } from '@/services/escola-lms/consultations_access';
 
 enum MeetingType {

@@ -1,9 +1,9 @@
-import React from 'react';
-import ProForm, { ProFormText, ProFormSwitch } from '@ant-design/pro-form';
-import { Button } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
 import JsonEditor from '@/components/JsonEditor';
 import { DescriptionModal } from '@/components/ProgramForm/ThreeColProgram/TopicForm/descriptionModal';
+import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import { Button } from 'antd';
+import React from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import { ParentLesson } from '../ParentLesson';
 
 export const TopicForm: React.FC<{

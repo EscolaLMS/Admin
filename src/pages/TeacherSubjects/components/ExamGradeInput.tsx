@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
 import { InputNumber } from 'antd';
 import { debounce } from 'lodash';
+import React, { useCallback } from 'react';
 
 import { createExamResult } from '@/services/escola-lms/exams';
 

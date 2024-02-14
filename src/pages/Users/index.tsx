@@ -1,26 +1,29 @@
-import React, { useMemo, useState } from 'react';
+import { Button, Dropdown, Menu, message, Popconfirm, Tag, Tooltip } from 'antd';
 import { format } from 'date-fns';
-import { useIntl, FormattedMessage, Link, history, getLocale } from 'umi';
-import { Button, Tooltip, Popconfirm, Tag, message, Dropdown, Menu } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { getLocale, history, Link, useIntl } from 'umi';
+
+import { FormattedMessage } from '@umijs/max';
+
 import {
-  PlusOutlined,
-  ExportOutlined,
-  DownloadOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   EditOutlined,
+  ExportOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
+import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import ProCard from '@ant-design/pro-card';
 
-import './index.css';
-import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
-import { DATETIME_FORMAT } from '@/consts/dates';
-import { users, deleteUser } from '@/services/escola-lms/user';
-import { FieldType } from '@/services/escola-lms/enums';
-import useModelFields from '@/hooks/useModelFields';
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
 import SecureUpload from '@/components/SecureUpload';
+import { DATETIME_FORMAT } from '@/consts/dates';
+import useModelFields from '@/hooks/useModelFields';
+import { FieldType } from '@/services/escola-lms/enums';
+import { deleteUser, users } from '@/services/escola-lms/user';
+import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
+import './index.css';
 
 const handleRemove = async (id: number) => {
   await deleteUser(id);
@@ -185,7 +188,7 @@ const TableList: React.FC = () => {
         locale
       ];
 
-      // TODO add other types support
+      // TODO #1043 add other types support
       switch (field.type) {
         case FieldType.Boolean:
           return [
@@ -196,8 +199,8 @@ const TableList: React.FC = () => {
               hideInSearch: true,
               width: 100,
               render: (_n, record) => (
-                <Tag color={record?.[field.name] ? 'green' : 'red'}>
-                  {record?.[field.name] ? (
+                <Tag color={record?.[field.name as keyof typeof record] ? 'green' : 'red'}>
+                  {record?.[field.name as keyof typeof record] ? (
                     <FormattedMessage id="true" />
                   ) : (
                     <FormattedMessage id="false" />

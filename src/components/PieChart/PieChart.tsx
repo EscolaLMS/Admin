@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { reports } from '@/services/escola-lms/reports';
+import { FileExcelOutlined } from '@ant-design/icons';
 import type { PieConfig } from '@ant-design/plots';
 import { Pie } from '@ant-design/plots';
-import { reports } from '@/services/escola-lms/reports';
-import { Spin, Alert, Button, Table } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { FileExcelOutlined } from '@ant-design/icons';
-import { ExportToCsv } from 'export-to-csv';
+import { Alert, Button, Spin, Table } from 'antd';
+import { mkConfig } from 'export-to-csv';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
+
+import { download, generateCsv } from 'export-to-csv';
 
 const columns = [
   {
@@ -48,7 +50,7 @@ const PieChart: React.FC<{
   const intl = useIntl();
 
   const config: Omit<PieConfig, 'data'> = {
-    appendPadding: 10,
+    //appendPadding: 10,
     angleField: 'value',
     colorField: 'label',
     radius: 0.9,
@@ -65,10 +67,12 @@ const PieChart: React.FC<{
         textAlign: 'center',
       },
     },
-    interactions: [{ type: 'element-active' }],
+    //interactions: [{ type: 'element-active' }],
     legend: {
       itemValue: {
         alignRight: true,
+        // TODO: #1048 fix types
+        // @ts-ignore
         formatter: (text, item) => {
           if (customLabelContent && 'value' in state) {
             const value = state.value.find(({ label }) => label === item.name);
@@ -80,6 +84,8 @@ const PieChart: React.FC<{
     },
   };
 
+  // TODO: #1048 fix type
+  // @ts-ignore
   const donutConfig: Pick<PieConfig, 'innerRadius' | 'label' | 'appendPadding' | 'legend'> = {
     appendPadding: 20,
     innerRadius: 0.6,
@@ -90,10 +96,14 @@ const PieChart: React.FC<{
     legend: {
       itemWidth: undefined,
       itemName: {
+        // TODO: #1048 fix type
+        // @ts-ignore
         formatter: (text) => (customLabelTitle ? customLabelTitle(text) : text),
       },
       offsetX: -24,
       itemValue: {
+        // TODO: #1048 fix type
+        // @ts-ignore
         formatter: (_, item) => {
           if (customLabelContent && 'value' in state) {
             const value = state.value.find(({ label }) => label === item.value);
@@ -140,9 +150,13 @@ const PieChart: React.FC<{
         // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
       };
 
-      const csvExporter = new ExportToCsv(options);
+      // TODO: #1048 fix type
+      // @ts-ignore
+      const csvConfig = mkConfig(options);
 
-      csvExporter.generateCsv(state.value);
+      const csv = generateCsv(csvConfig)(state.value);
+
+      download(csvConfig)(csv);
     }
   }, [state]);
 
@@ -170,6 +184,8 @@ const PieChart: React.FC<{
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <div>
+          {/*  TODO: #1048: fix type
+            @ts-ignore*/}
           <Pie {...completeConfig} data={state.value} />
           {header && (
             <Table pagination={false} size="small" dataSource={state.value} columns={columns} />

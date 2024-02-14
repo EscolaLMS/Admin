@@ -1,9 +1,9 @@
-import React from 'react';
 import { Column } from '@ant-design/plots';
+import React from 'react';
 
-import { Spin, Alert } from 'antd';
-import { FormattedMessage, useIntl } from 'umi';
 import ProCard from '@ant-design/pro-card';
+import { Alert, Spin } from 'antd';
+import { FormattedMessage, useIntl } from 'umi';
 import type { QuestionnaireRaportState } from './Raports';
 
 const config = {

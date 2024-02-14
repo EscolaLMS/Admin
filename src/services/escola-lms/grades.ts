@@ -1,11 +1,11 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/semester-subjects/:semester_subject_id/tutors/:tutor_id/grades */
 export async function getSubjectTutorGrades(
   semester_subject_id: number,
   tutor_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.SubjectTutorGrades>>(
     `/api/admin/semester-subjects/${semester_subject_id}/tutors/${tutor_id}/grades`,
@@ -22,7 +22,7 @@ export async function createSubjectTutorGrades(
   semester_subject_id: number,
   tutor_id: number,
   body: API.CreateSubjectTutorGradesRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.GradeScale[]>>(
     `/api/admin/semester-subjects/${semester_subject_id}/tutors/${tutor_id}/grades`,
@@ -37,7 +37,7 @@ export async function createSubjectTutorGrades(
 /**  GET /api/admin/lesson-group-users */
 export async function getGroupFinalGrades(
   group_id: number | number[],
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.FinalGradeItem[]>>(`/api/admin/lesson-group-users`, {
     method: 'GET',
@@ -51,7 +51,7 @@ export async function getGroupFinalGrades(
 export async function getUserFinalGrades(
   group_id: number,
   user_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.FinalGradeItem>>(
     `/api/admin/lesson-group-users/groups/${group_id}/users/${user_id}`,
@@ -64,7 +64,7 @@ export async function getUserFinalGrades(
 }
 
 /** GET /api/admin/grade-terms */
-export async function getGradeTerms(options?: RequestOptionsInit) {
+export async function getGradeTerms(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.GradeTerm[]>>(`/api/admin/grade-terms`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -75,7 +75,7 @@ export async function getGradeTerms(options?: RequestOptionsInit) {
 /** GET /api/admin/grade-scales/:s_subject_scale_form_id */
 export async function getSubjectGradeScales(
   s_subject_scale_form_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.SubjectGradeScale[]>>(
     `/api/admin/grade-scales/${s_subject_scale_form_id}`,
@@ -90,7 +90,7 @@ export async function getSubjectGradeScales(
 /** POST /api/admin/final-grades */
 export async function createFinalGrade(
   body: API.CreateFinalGradeRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.FinalGradeItem>>(`/api/admin/final-grades`, {
     method: 'POST',
@@ -103,7 +103,7 @@ export async function createFinalGrade(
 export async function updateFinalGrade(
   final_grade_id: number,
   body: API.UpdateFinalGradeRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.FinalGradeItem>>(
     `/api/admin/final-grades/${final_grade_id}`,
@@ -116,7 +116,7 @@ export async function updateFinalGrade(
 }
 
 /** DELETE /api/admin/final-grades/:id */
-export async function removeFinalGrade(final_grade_id: number, options?: RequestOptionsInit) {
+export async function removeFinalGrade(final_grade_id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<undefined>>(`/api/admin/final-grades/${final_grade_id}`, {
     method: 'DELETE',
     ...(options || {}),

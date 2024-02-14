@@ -1,8 +1,8 @@
-import React from 'react';
+import { ModalForm, ProFormText } from '@ant-design/pro-form';
 import { Form } from 'antd';
-import { ProFormText, ModalForm } from '@ant-design/pro-form';
+import React from 'react';
 
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const TokenForm: React.FC<{
   id?: number | false;

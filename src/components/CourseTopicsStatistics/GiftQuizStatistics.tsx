@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { format } from 'date-fns';
-import { FormattedMessage } from 'umi';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { format } from 'date-fns';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
+import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getTopicStats } from '@/services/escola-lms/course';
 import { TopicStatsKey } from '@/services/escola-lms/enums';
-import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { ExportTopicStatsButton } from './ExportTopicStatsButton';
 
 interface TableParams {
@@ -109,12 +109,15 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
     if (!topic_id) return { success: false, data: [], total: 0 };
     const response = await getTopicStats(topic_id, TopicStatsKey.QuizSummary);
 
-    if (!response.success || !response.data?.[TopicStatsKey.QuizSummary]) {
+    if (
+      !response.success ||
+      !response.data?.[TopicStatsKey.QuizSummary as keyof typeof response.data]
+    ) {
       return { success: false, data: [], total: 0 };
     }
 
     const [responseColumns, ...data] = response.data[
-      TopicStatsKey.QuizSummary
+      TopicStatsKey.QuizSummary as keyof typeof response.data
     ] as API.GiftQuizTopicStat[];
     setDynamicColumns(getQuestionColumns(responseColumns));
 

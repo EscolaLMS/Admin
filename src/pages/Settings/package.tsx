@@ -1,11 +1,11 @@
-import { Button, Tag, Tooltip } from 'antd';
-import React, { useState, useMemo } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import { sortArrayByKey } from '@/utils/utils';
+import { EditOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { EditOutlined } from '@ant-design/icons';
+import { Button, Tag, Tooltip } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import PackageModalForm from './components/PackageModalForm';
-import { sortArrayByKey } from '@/utils/utils';
 
 const columns: ProColumns<API.ConfigEntry>[] = [
   {
@@ -83,7 +83,7 @@ const findNestedFields = (obj: object, searchKey: string, results: object[] = []
     return false;
   } else {
     Object.keys(obj).forEach((key) => {
-      const value = obj[key];
+      const value = obj[key as keyof typeof obj];
 
       if (key === searchKey) {
         results.push(obj);

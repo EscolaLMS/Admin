@@ -1,8 +1,8 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/admin/exams */
-export async function getExams(params?: API.ExamsParams, options?: RequestOptionsInit) {
+export async function getExams(params?: API.ExamsParams, options?: AxiosRequestConfig) {
   return request<API.DefaultMetaResponse<API.Exam>>(`/api/admin/exams`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -12,7 +12,7 @@ export async function getExams(params?: API.ExamsParams, options?: RequestOption
 }
 
 /**  POST /api/admin/exams */
-export async function createExam(body?: API.CreateExamRequest, options?: RequestOptionsInit) {
+export async function createExam(body?: API.CreateExamRequest, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Exam>>(`/api/admin/exams`, {
     method: 'POST',
     headers: {
@@ -27,7 +27,7 @@ export async function createExam(body?: API.CreateExamRequest, options?: Request
 export async function updateExam(
   id: number,
   body: API.CreateExamRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Exam>>(`/api/admin/exams/${id}`, {
     method: 'PUT',
@@ -38,7 +38,7 @@ export async function updateExam(
 }
 
 /**  GET /api/admin/exams/:id */
-export async function getExam(id: number, options?: RequestOptionsInit) {
+export async function getExam(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Exam>>(`/api/admin/exams/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -47,7 +47,7 @@ export async function getExam(id: number, options?: RequestOptionsInit) {
 }
 
 /**  DELETE /api/admin/exams/:id */
-export async function deleteExam(id: number, options?: RequestOptionsInit) {
+export async function deleteExam(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<undefined>>(`/api/admin/exams/${id}`, {
     method: 'DELETE',
     ...(options || {}),
@@ -59,7 +59,7 @@ export async function createExamResult(
   exam_id: number,
   user_id: number,
   body: API.CreateExamResultRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Exam>>(`/api/admin/exams/${exam_id}/users/${user_id}`, {
     method: 'POST',
@@ -75,7 +75,7 @@ export async function createExamResult(
 export async function deleteExamResult(
   exam_id: number,
   user_id: number,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<undefined>>(`/api/admin/exams/${exam_id}/users/${user_id}`, {
     method: 'DELETE',

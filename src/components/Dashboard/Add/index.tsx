@@ -1,7 +1,7 @@
+import { PlusSquareOutlined } from '@ant-design/icons';
+import { Button, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { FormattedMessage } from 'umi';
-import { Button, Row, Space, Typography } from 'antd';
-import { PlusSquareOutlined } from '@ant-design/icons';
 
 interface Props {
   onAddButtonClick: (key: string) => void;

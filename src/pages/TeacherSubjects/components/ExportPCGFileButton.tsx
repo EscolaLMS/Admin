@@ -1,7 +1,7 @@
+import { FileOutlined } from '@ant-design/icons';
+import { Button, Tooltip, message } from 'antd';
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import { Button, message, Tooltip } from 'antd';
-import { FileOutlined } from '@ant-design/icons';
 
 import { getPCGFileData } from '@/services/escola-lms/pcg-export';
 

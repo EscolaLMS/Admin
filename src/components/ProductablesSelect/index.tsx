@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Select, Spin, Tag } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { FormattedMessage } from 'umi';
 import { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
 
 import { productables as fetchProductables } from '@/services/escola-lms/products';
 

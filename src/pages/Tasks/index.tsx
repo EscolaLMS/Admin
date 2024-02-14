@@ -1,16 +1,16 @@
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Popconfirm, message, Tag } from 'antd';
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage, Link } from 'umi';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import UserSelect from '@/components/UserSelect';
-import { format } from 'date-fns';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
+import { format } from 'date-fns';
+import React, { useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
-import { tasks, deleteTask } from '@/services/escola-lms/tasks';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
+import { deleteTask, tasks } from '@/services/escola-lms/tasks';
 
 const handleRemove = async (id: number) => {
   return deleteTask(id).then((response) => {

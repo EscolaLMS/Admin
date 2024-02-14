@@ -1,16 +1,16 @@
-import GiftQuizRow from '@/components/GiftQuizRow';
-import React from 'react';
-import UserRow from '@/components/UserRow';
-import OrderRow from '@/components/OrderRow';
 import CourseRow from '@/components/CourseRow';
-import UserGroupRow from '../UserGroupRow';
-import QuestionnaireRow from '../QuestionnaireRow';
-import ConsultationRow from '../ConsultationRow';
-import WebinarRow from '../WebinarRow';
-import StationaryEventRow from '../StationaryEventRow';
-import ProductRow from '../ProductRow';
-import StudentsRow from '../StudentsRow';
+import GiftQuizRow from '@/components/GiftQuizRow';
+import OrderRow from '@/components/OrderRow';
+import UserRow from '@/components/UserRow';
+import React from 'react';
 import CategoryRow from '../CategoryRow';
+import ConsultationRow from '../ConsultationRow';
+import ProductRow from '../ProductRow';
+import QuestionnaireRow from '../QuestionnaireRow';
+import StationaryEventRow from '../StationaryEventRow';
+import StudentsRow from '../StudentsRow';
+import UserGroupRow from '../UserGroupRow';
+import WebinarRow from '../WebinarRow';
 
 type PossibleType =
   | 'App\\Models\\User'
@@ -88,7 +88,7 @@ export const TypeButton: React.FC<{
           text={text}
         />
       );
-    // TODO add onLoaded
+    // TODO #1022 add onLoaded
     case 'EscolaLms\\TopicTypeGift\\Models\\GiftQuiz':
       return (
         <GiftQuizRow id={type_id} onLoaded={(giftQuiz) => onData({ type, value: giftQuiz })} />

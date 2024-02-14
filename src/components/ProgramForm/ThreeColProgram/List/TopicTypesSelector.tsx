@@ -1,26 +1,26 @@
 import PACKAGES from '@/consts/packages';
-import { useState, useCallback } from 'react';
-import { Button, Tooltip, Space, Divider } from 'antd';
 import {
-  FundOutlined,
-  FileTextOutlined,
-  FilePdfOutlined,
-  FileImageOutlined,
-  VideoCameraAddOutlined,
   AudioOutlined,
-  YoutubeOutlined,
-  InteractionOutlined,
   CarryOutOutlined,
+  FileImageOutlined,
+  FilePdfOutlined,
+  FileTextOutlined,
+  FundOutlined,
+  InteractionOutlined,
   //CaretUpOutlined,
   //CaretDownOutlined,
   PercentageOutlined,
-  PlusOutlined,
   PicCenterOutlined,
+  PlusOutlined,
+  VideoCameraAddOutlined,
+  YoutubeOutlined,
 } from '@ant-design/icons';
+import { Button, Divider, Space, Tooltip } from 'antd';
+import { useCallback, useState } from 'react';
 
-import './types.css';
 import { TopicType } from '@/services/escola-lms/enums';
-import { FormattedMessage, useModel, useIntl } from 'umi';
+import { FormattedMessage, useIntl, useModel } from 'umi';
+import './types.css';
 
 import { topicTypeToSettingName } from '@/pages/Settings/global';
 
@@ -43,7 +43,7 @@ export const TopicTypesSelector: React.FC<{
   const topicTypeIsDisabled = useCallback(
     (type: TopicType) => {
       const key = Object.keys(TopicType)
-        .filter((x) => TopicType[x] == type)
+        .filter((x) => TopicType[x as keyof typeof TopicType] == type)
         .pop();
 
       const value =

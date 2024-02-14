@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Tree, Spin } from 'antd';
+import { Spin, Tree } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { categoryTree } from '@/services/escola-lms/category';
 

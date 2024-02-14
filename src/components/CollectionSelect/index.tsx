@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Select, Spin } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { course as getCourses, getCourse } from '@/services/escola-lms/course';
-import { webinars as getWebinars, getWebinar } from '@/services/escola-lms/webinars';
 import {
-  consultations as getConsultations,
   getConsultation,
+  consultations as getConsultations,
 } from '@/services/escola-lms/consultations';
-import { FormattedMessage } from 'umi';
+import { getCourse, course as getCourses } from '@/services/escola-lms/course';
+import { getWebinar, webinars as getWebinars } from '@/services/escola-lms/webinars';
 import type { DefaultOptionType, LabeledValue } from 'antd/lib/select';
+import { FormattedMessage } from 'umi';
 
 type CollectionModelItem = {
   id: number;

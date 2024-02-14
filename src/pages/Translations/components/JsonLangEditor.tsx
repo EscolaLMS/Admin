@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button, Input, Col, Row } from 'antd';
+import { Button, Col, Input, Row } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import 'jsoneditor-react/es/editor.min.css';
 
-import { getAllLocales } from 'umi';
 import { PlusCircleFilled } from '@ant-design/icons';
+import { getAllLocales } from 'umi';
 
 const defaultValue = () =>
   getAllLocales().reduce((acc, curr) => {
@@ -51,7 +51,7 @@ export const JsonLangEditor: React.FC<{
   return (
     <div>
       {Object.entries(state).map((entry, i) => (
-        <Row key={i}>
+        <Row key={entry[0]}>
           <Col span={6}>
             <Input
               disabled={getAllLocales().includes(entry[0])}
@@ -65,7 +65,7 @@ export const JsonLangEditor: React.FC<{
           </Col>
         </Row>
       ))}
-      <Button onClick={() => onLangAdd()} icon={<PlusCircleFilled />}></Button>
+      <Button onClick={() => onLangAdd()} icon={<PlusCircleFilled />} />
     </div>
   );
 };

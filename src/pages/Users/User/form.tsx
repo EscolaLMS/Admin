@@ -1,21 +1,18 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { message, Spin, Form, Button, Space, Typography, Divider, Row } from 'antd';
-import ProForm, { ProFormText, ProFormSwitch, ProFormCheckbox } from '@ant-design/pro-form';
-import { updateUser, createUser, resendEmail } from '@/services/escola-lms/user';
-import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import ResponsiveImage from '@/components/ResponsiveImage';
+import SecureUploadBrowser from '@/components/SecureUpload/browser';
 import UserGroupSelect from '@/components/UserGroupSelect';
-import { useParams, history, useModel, Link } from 'umi';
-import { useCallback } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import useModelFields from '@/hooks/useModelFields';
 import { roles as getRoles } from '@/services/escola-lms/roles';
-import { deleteUserAvatar } from '@/services/escola-lms/user';
+import { createUser, deleteUserAvatar, resendEmail, updateUser } from '@/services/escola-lms/user';
 import {
-  userGroupsTree,
   addUserToGroup,
   removeUserFromGroup,
+  userGroupsTree,
 } from '@/services/escola-lms/user_groups';
-import useModelFields from '@/hooks/useModelFields';
+import ProForm, { ProFormCheckbox, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import { Button, Divider, Form, Row, Space, Spin, Typography, message } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormattedMessage, Link, history, useIntl, useModel, useParams } from 'umi';
 import AdditionalField from './components/AdditionalField';
 
 function useUserGroups(user_id: number) {

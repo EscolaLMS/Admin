@@ -1,18 +1,18 @@
-import React, { useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Space, Tag } from 'antd';
 import { format } from 'date-fns';
+import React, { useRef } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
-import { orders } from '@/services/escola-lms/orders';
 import UserSelect from '@/components/UserSelect';
+import { orders } from '@/services/escola-lms/orders';
 
+import ProductsSelect from '@/components/ProductsSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
-import ProductsSelect from '@/components/ProductsSelect';
-import { roundTo, createTableOrderObject } from '@/utils/utils';
+import { createTableOrderObject, roundTo } from '@/utils/utils';
 import type { PresetStatusColorType } from 'antd/lib/_util/colors';
 
 const getTagColorByStatus = (status: API.PaymentStatus): PresetStatusColorType => {

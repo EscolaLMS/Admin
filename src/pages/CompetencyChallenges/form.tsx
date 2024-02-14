@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react';
-import { history, FormattedMessage, useIntl, useParams } from 'umi';
-import { Spin } from 'antd';
-import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Spin } from 'antd';
+import React, { useMemo } from 'react';
+import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
-import { CompetencyChallengeContextProvider, useCompetencyChallengeContext } from './context';
+import { DiagnosticTest } from './components/DiagnosticTest';
 import { MainForm } from './components/MainForm';
 import { Scales } from './components/Scales';
-import { DiagnosticTest } from './components/DiagnosticTest';
+import { CompetencyChallengeContextProvider, useCompetencyChallengeContext } from './context';
 
 const CompetencyChallengeContent: React.FC = () => {
   const { competencyChallenge } = useCompetencyChallengeContext();
@@ -27,7 +27,7 @@ const CompetencyChallengeContent: React.FC = () => {
       title={pageTitle}
       header={{
         breadcrumb: {
-          routes: [
+          items: [
             {
               path: 'competency-challenges',
               breadcrumbName: intl.formatMessage({

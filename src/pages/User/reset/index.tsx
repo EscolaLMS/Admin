@@ -1,20 +1,27 @@
 import { LockOutlined } from '@ant-design/icons';
+import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { message } from 'antd';
 import React, { useState } from 'react';
-import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { useIntl, history, FormattedMessage } from 'umi';
+import { FormattedMessage, history, useIntl } from 'umi';
 
 import { reset as passwordReset } from '@/services/escola-lms/auth';
 
-import styles from '../components/index.less';
 import AuthLayout from '../components/AuthLayout';
+import styles from '../components/index.less';
 
 const Reset: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const { location } = history;
-  //   TODO: validate token for future if is not valid redirect
-  const token = location && location.query && location.query.token;
-  const email = location && location.query && location.query.email;
+  //   TODO: #1041 validate token for future if is not valid redirect
+  // TODO: #1042 test this page
+  const token =
+    location &&
+    new URLSearchParams(location.search).has('token') &&
+    new URLSearchParams(location.search).get('token');
+  const email =
+    location &&
+    new URLSearchParams(location.search).has('email') &&
+    new URLSearchParams(location.search).get('email');
 
   const intl = useIntl();
 

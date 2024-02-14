@@ -1,20 +1,20 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
-import { EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
 import {
   createTranslation,
   translations,
   updateTranslation,
 } from '@/services/escola-lms/translations';
-import AdminModalForm from './components/AdminModalForm';
-import { getAllLocales, localeInfo, addLocale } from 'umi';
 import { sortByKey } from '@/utils/utils';
+import { localeInfo } from '@@/plugin-locale/localeExports';
+import { EditOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Tooltip } from 'antd';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, addLocale, getAllLocales, useIntl } from 'umi';
+import AdminModalForm from './components/AdminModalForm';
 
-type LangRow = { lang: string; key: string; value: string; id: string };
+type LangRow = { lang: string; key: string; value: string | number; id: string };
 
 export const TableColumns: ProColumns<LangRow>[] = [
   {
@@ -54,14 +54,14 @@ const Translations: React.FC = () => {
     const langs = Object.keys(localeInfo);
 
     for (const lang of langs) {
-      const messages: Record<string, string>[] | undefined = localeInfo[lang].messages;
+      const messages: Record<string, string> | undefined = localeInfo[lang].messages;
       if (messages) {
         Object.keys(messages).forEach((key) => {
           rows.push({
             id: `${lang}-${key}`,
             lang: lang,
             key: key,
-            value: messages[key],
+            value: messages[key as keyof typeof messages] || '',
           });
         });
       }
@@ -70,12 +70,16 @@ const Translations: React.FC = () => {
   }, [rndNumber]);
 
   const onEditClick = useCallback((key: string) => {
+    //FIXME
+    //@ts-ignore
     const defaultValue = getRows.reduce((acc, row) => {
       if (row.key === key) {
         return { ...acc, [row.lang]: row.value };
       }
       return acc;
     }, {} as Record<string, string>);
+    //FIXME
+    //@ts-ignore
     setEditTranslationKey({ key, defaultValue });
   }, []);
 

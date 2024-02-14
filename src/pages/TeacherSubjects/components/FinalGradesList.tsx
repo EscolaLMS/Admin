@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
-import type { Location } from 'history';
-import { FormattedMessage, Link, useLocation } from 'umi';
-import { Button, Tooltip, Typography } from 'antd';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns } from '@ant-design/pro-table';
 import { EditOutlined } from '@ant-design/icons';
+import type { ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Tooltip, Typography } from 'antd';
+import type { Location } from 'history';
+import React, { useMemo } from 'react';
+import { FormattedMessage, Link, useLocation } from 'umi';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { getGroupFinalGrades } from '@/services/escola-lms/grades';
 import { useTeacherSubject } from '../context';
-import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 import { FinalGradesDetails } from './FinalGradesDetails';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 interface TableParams {
   group_id?: number[];
@@ -88,7 +88,7 @@ export const FinalGradesList: React.FC = () => {
           return { success: false, total: 0, data: [] };
         }
 
-        // TODO backend filter
+        // TODO #1038 backend filter
         const data = response.data.filter(
           ({ user }) =>
             user.first_name.toLowerCase().includes(first_name.toLowerCase()) &&

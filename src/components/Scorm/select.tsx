@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Select, Spin, Modal, Button, Space } from 'antd';
-import { FormattedMessage } from 'umi';
-import { scorms as fetchScorms } from '@/services/escola-lms/scorm';
-import { useCallback } from 'react';
 import ScormPreview from '@/components/Scorm/preview';
+import { scorms as fetchScorms } from '@/services/escola-lms/scorm';
+import { Button, Modal, Select, Space, Spin } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 export const ScormSelect: React.FC<{
   state?: {

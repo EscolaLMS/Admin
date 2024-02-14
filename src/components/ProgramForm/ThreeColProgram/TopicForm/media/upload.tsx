@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useContext, useEffect } from 'react';
-import { Row, Button, Pagination, Spin, Typography, Progress } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { TopicType } from '@/services/escola-lms/enums';
-import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
-import { Document, pdfjs, Page } from 'react-pdf';
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
-import './index.css';
+import { TopicType } from '@/services/escola-lms/enums';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Pagination, Progress, Row, Spin, Typography } from 'antd';
+import type { UploadChangeParam, UploadFile } from 'antd/lib/upload';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { FormattedMessage } from 'umi';
+import './index.css';
 
 import { Context } from '@/components/ProgramForm/Context';
 
@@ -96,7 +96,7 @@ const VideoProgress: React.FC<{ topic: API.TopicVideo }> = ({ topic }) => {
       </Typography>
     );
   }
-  return <React.Fragment></React.Fragment>;
+  return <React.Fragment />;
 };
 
 export const MediaUploadPreview: React.FC<{ topic: API.Topic; type: TopicType }> = ({
@@ -199,7 +199,7 @@ export const MediaUploadForm: React.FC<{
           onChange={onInfoChange}
           name="value"
           url={topic.isNew ? `/api/admin/topics` : `/api/admin/topics/${topic.id}?_method=PUT`}
-          accept={CONFIG.acceptedTypes[type]}
+          accept={CONFIG.acceptedTypes[type as keyof typeof CONFIG.acceptedTypes]}
           data={prepareObject(data)}
           maxFiles={maxFiles}
           clearListAfterUpload={clearListAfterUpload}

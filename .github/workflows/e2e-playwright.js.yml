@@ -11,7 +11,6 @@ on:
   pull_request:
 
 jobs:
-
   playwright-e2e:
     runs-on: ubuntu-latest
 
@@ -28,25 +27,24 @@ jobs:
           POSTGRES_DB: default
           POSTGRES_USER: default
           POSTGRES_PASSWORD: secret
-          TZ:  Europe/Warsaw
+          TZ: Europe/Warsaw
         ports:
           - 5432:5432
 
       redis:
         image: redis
 
-      api: 
+      api:
         image: escolalms/api:latest
         ports:
           - 80:80
 
         options: >-
-          --name api 
-          --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
+          --name api  --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
+
 
     steps:
-
-      - run: | 
+      - run: |
           docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
           APP_ENV=local \
           APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
@@ -77,7 +75,7 @@ jobs:
           TRACKER_ENABLED=false" >> .env
 
       - run: docker exec -u 1000 api cat .env
-      - run: docker exec -u 1000 api php artisan config:cache 
+      - run: docker exec -u 1000 api php artisan config:cache
       - run: docker exec -u 1000 api composer dumpautoload
       - run: docker exec -u 1000 api php artisan key:generate --force --no-interaction
       - run: docker exec -u 1000 api php artisan passport:keys --force --no-interaction
@@ -85,14 +83,13 @@ jobs:
       - run: docker exec -u 1000 api php artisan passport:client --personal --no-interaction
       - run: docker exec -u 1000 api php artisan db:seed --force --no-interaction
 
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
 
       - name: Cache node modules
         id: cache-npm
@@ -116,8 +113,8 @@ jobs:
       - name: Node dependencies
         run: npm i --legacy-peer-deps
 
-      - name: Build 
-        run: cp .env.ci .env && REACT_APP_API_URL=http://localhost npm run --openssl-legacy-provider build 
+      - name: Build
+        run: cp .env.ci .env && REACT_APP_API_URL=http://localhost npm run --openssl-legacy-provider build
 
       - name: Install Playwright
         run: npx playwright install --with-deps
@@ -129,4 +126,3 @@ jobs:
         with:
           name: test-results
           path: test-results
-

@@ -1,23 +1,23 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Tooltip, Popconfirm } from 'antd';
-import React, { useState, useRef, Fragment } from 'react';
-import { useIntl, FormattedMessage, useModel } from 'umi';
-import type { IntlShape } from 'react-intl';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { TopicType } from '@/services/escola-lms/enums';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Tooltip, message } from 'antd';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import type { IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl, useModel } from 'umi';
 
 import {
-  settings,
   createSettings,
-  updateSettings,
   deleteSettings,
+  settings,
+  updateSettings,
 } from '@/services/escola-lms/settings';
 
-import SettingsModalForm from './components/ModalForm';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import SettingsModalForm from './components/ModalForm';
 
-import { getRoutes } from '@@/core/routes';
+import { getRoutes } from '@@/core/route';
 
 const handleUpdate = async (intl: IntlShape, fields: API.Setting, id?: number) => {
   const hide = message.loading(
@@ -93,13 +93,13 @@ type Route = {
 const snakeToCamel = (str: string) =>
   str.toLowerCase().replace(/(_\w)/g, (m) => m.toUpperCase().substr(1));
 
-const flatRoutes = (routes: Route[]): Route[] => {
-  return (
-    routes.reduce((acc, curr) => {
-      return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
-    }, [] as Route[]) as Route[]
-  ).filter((route) => route.layout !== false && route.hideInMenu !== true);
-};
+// const flatRoutes = (routes: Route[]): Route[] => {
+//   return (
+//     routes.reduce((acc, curr) => {
+//       return [...acc, ...(curr.routes ? flatRoutes(curr.routes) : []), curr];
+//     }, [] as Route[]) as Route[]
+//   ).filter((route) => route.layout !== false && route.hideInMenu !== true);
+// };
 
 const courseEditTabsKeys = ['statistics', 'user_submission', 'user_projects'];
 const courseEditAdditionalSettingsKeys = ['public'];
@@ -110,17 +110,19 @@ export const pathToSettingName = (path: string) =>
 
 export const topicTypeToSettingName = (type: string) => `disableTopicType-${type}`;
 
-const booleanSettings = [
-  ...Object.keys(TopicType).map((type) => ({
-    key: topicTypeToSettingName(type),
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
+const booleanSettings = (
+  [
+    ...Object.keys(TopicType).map((type) => ({
+      key: topicTypeToSettingName(type),
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    /*
   ...flatRoutes(getRoutes())
     .filter((route) => route.path && route.path !== '/')
     .map((route) => ({
@@ -134,52 +136,54 @@ const booleanSettings = [
       type: 'boolean',
       data: false,
     })),
-  ...['ECommerce', 'Certificates'].map((feature) => ({
-    key: `disable-${feature}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  ...courseEditAdditionalSettingsKeys.map((key) => ({
-    key: `showInCourseAdditionalSettings-${key}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  ...courseEditTabsKeys.map((key) => ({
-    key: `hideInCourseTabs-${key}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-  ...templateTabsKeys.map((key) => ({
-    key: `hideTemplateTab-${key}`,
-    group: 'global',
-    value: 'false',
-    public: true,
-    enumerable: true,
-    sort: 1,
-    type: 'boolean',
-    data: false,
-  })),
-].reduce((acc, curr, index) => {
-  acc[curr.key] = { ...curr, id: -100 * index };
+    */
+    ...['ECommerce', 'Certificates'].map((feature) => ({
+      key: `disable-${feature}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    ...courseEditAdditionalSettingsKeys.map((key) => ({
+      key: `showInCourseAdditionalSettings-${key}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    ...courseEditTabsKeys.map((key) => ({
+      key: `hideInCourseTabs-${key}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+    ...templateTabsKeys.map((key) => ({
+      key: `hideTemplateTab-${key}`,
+      group: 'global',
+      value: 'false',
+      public: true,
+      enumerable: true,
+      sort: 1,
+      type: 'boolean',
+      data: false,
+    })),
+  ] as API.Setting[]
+).reduce((acc, curr, index) => {
+  acc[curr.key as string] = { ...curr, id: -100 * index };
   return acc;
-}, {});
+}, {} as InitialDataRecords);
 
-const initialData: InitialDataRecords = {
+const preInitialData: InitialDataRecords = {
   logo: {
     id: -1,
     key: 'logo',
@@ -363,12 +367,48 @@ const initialData: InitialDataRecords = {
   ...booleanSettings,
 };
 
+const isRoute = (route: any): route is Route => typeof route.path === 'string';
+
 const TableList: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<number | Partial<API.Setting> | false>(false);
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
 
+  const [initialData, setInitialData] = useState<InitialDataRecords>(preInitialData);
+
   const { setInitialState, initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    getRoutes().then((routes) => {
+      //@ts-ignore
+      const hideInDataRecords: InitialDataRecords = Object.values(routes.routes)
+        .filter(isRoute)
+        .filter((route) => route.path && route.path !== '/' && route.layout !== false)
+        .map((route) => ({
+          path: route.path,
+          //@ts-ignore
+          key: pathToSettingName(route.path),
+          group: 'global',
+          value: 'false',
+          public: true,
+          enumerable: true,
+          sort: 1,
+          type: 'boolean',
+          data: false,
+        }));
+
+      setInitialData((prevInitialData) => ({
+        ...prevInitialData,
+        ...hideInDataRecords,
+      }));
+    });
+  }, []);
+
+  useEffect(() => {
+    if (actionRef.current) {
+      actionRef.current.reload();
+    }
+  }, [initialData]);
 
   const columns: ProColumns<API.Setting>[] = [
     {

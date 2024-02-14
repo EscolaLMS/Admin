@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useParams } from 'umi';
-import { FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage, useIntl, useParams } from 'umi';
 
 import H5Player from '@/components/H5P/player';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Row, Col } from 'antd';
+import { Col, Row } from 'antd';
 
 import ProCard from '@ant-design/pro-card';
 

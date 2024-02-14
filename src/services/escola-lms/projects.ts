@@ -1,10 +1,10 @@
-import type { RequestOptionsInit } from 'umi-request';
+import type { AxiosRequestConfig } from '@umijs/max';
 
 import { request } from 'umi';
 
 export async function projectSolutions(
   params: API.ProjectSolutionListParams,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.ProjectSolutionList>('/api/admin/topic-project-solutions', {
     params: {
@@ -18,7 +18,7 @@ export async function projectSolutions(
   });
 }
 
-export async function deleteProjectSolution(id: number, options?: RequestOptionsInit) {
+export async function deleteProjectSolution(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.ProjectSolution>>(
     `/api/admin/topic-project-solutions/${id}`,
     {

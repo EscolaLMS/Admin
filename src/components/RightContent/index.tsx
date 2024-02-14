@@ -1,6 +1,6 @@
-import { Tag, Space } from 'antd';
+import { Space, Tag } from 'antd';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import { SelectLang, useModel } from 'umi';
 import NoticeIconView from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -8,8 +8,8 @@ import styles from './index.less';
 // import 'ant-design-pro/dist/ant-design-pro.css';
 export type SiderTheme = 'light' | 'dark';
 
-import { useIntl } from 'umi';
 import { useMemo } from 'react';
+import { useIntl } from 'umi';
 import { getLangInfo } from '../../utils/utils';
 
 declare const REACT_APP_ENV: string | undefined;
@@ -35,7 +35,7 @@ const GlobalHeaderRight: React.FC = () => {
   const { navTheme, layout } = initialState.settings;
   let className = styles.right;
 
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
+  if ((navTheme === 'realDark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
 
@@ -46,7 +46,7 @@ const GlobalHeaderRight: React.FC = () => {
       <Avatar />
       {REACT_APP_ENV && (
         <span>
-          <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
+          <Tag color={ENVTagColor[REACT_APP_ENV as keyof typeof ENVTagColor]}>{REACT_APP_ENV}</Tag>
         </span>
       )}
       <SelectLang className={styles.action} icon={langIcon} />

@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 declare const REACT_APP_API_URL: string;
 
@@ -10,7 +10,7 @@ export async function files(
     directory: string;
     page?: number;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.FileList>('/api/admin/file/list', {
     method: 'GET',
@@ -25,7 +25,7 @@ export async function findFile(
     name: string;
     page?: number;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.FileList>(`/api/admin/file/find`, {
     method: 'GET',
@@ -35,7 +35,7 @@ export async function findFile(
 }
 
 /**  GET /api/currentUser */
-export async function upload(file: File, directory: string, options?: RequestOptionsInit) {
+export async function upload(file: File, directory: string, options?: AxiosRequestConfig) {
   const formData = new FormData();
   formData.append('file[]', file);
   formData.append('target', directory);
@@ -51,7 +51,7 @@ export const resizedImage = (path: string, width = 1000) =>
   `${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/images/img?path=${path}&w=${width}`;
 
 /**  GET /api/currentUser */
-export async function remove(url: string, options?: RequestOptionsInit) {
+export async function remove(url: string, options?: AxiosRequestConfig) {
   return request<API.FileList>('/api/admin/file/delete', {
     method: 'DELETE',
     data: {

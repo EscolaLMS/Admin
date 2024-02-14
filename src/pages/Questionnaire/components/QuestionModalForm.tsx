@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import { Form } from 'antd';
+import { QuestionnaireQuestionType } from '@/services/escola-lms/enums';
+import { getQuestion } from '@/services/escola-lms/questionnaire';
 import {
-  ProFormText,
-  ProFormSwitch,
   ModalForm,
   ProFormDigit,
   ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
 } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
-import { getQuestion } from '@/services/escola-lms/questionnaire';
+import { Form } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
-import { QuestionnaireQuestionType } from '@/services/escola-lms/enums';
+import React, { useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 export const QuestionModalForm: React.FC<{
   id?: number | false;

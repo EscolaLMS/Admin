@@ -1,13 +1,13 @@
-import React from 'react';
-import { FormattedMessage, useIntl } from 'umi';
-import { Button, Tooltip } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import ProForm, {
   ProFormCheckbox,
   ProFormDigit,
   ProFormList,
   ProFormText,
 } from '@ant-design/pro-form';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
+import React from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { QuestionType } from '@/services/escola-lms/enums';
 

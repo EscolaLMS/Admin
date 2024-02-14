@@ -1,7 +1,7 @@
+import { ExportOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import { Button } from 'antd';
-import { ExportOutlined } from '@ant-design/icons';
 
 import { exportStatForTopic } from '@/services/escola-lms/reports';
 

@@ -1,17 +1,17 @@
-import React, { Fragment, useCallback, useRef, useState } from 'react';
-import ProForm from '@ant-design/pro-form';
 import UserSelect from '@/components/UserSelect';
-import { useIntl, FormattedMessage } from 'umi';
 import {
+  getProduct,
   productAttachToUser,
   productDetachToUser,
-  getProduct,
 } from '@/services/escola-lms/products';
+import ProForm from '@ant-design/pro-form';
 import { Button, Tooltip } from 'antd';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { DeleteOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 
 export type MinimumUser = {
   id: number;

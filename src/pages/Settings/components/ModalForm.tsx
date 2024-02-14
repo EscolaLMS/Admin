@@ -1,22 +1,22 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Form, Button, Input, AutoComplete } from 'antd';
 import ProForm, {
-  ProFormText,
-  ProFormSwitch,
   ModalForm,
-  ProFormRadio,
-  ProFormTextArea,
   ProFormCheckbox,
   ProFormDigit,
+  ProFormRadio,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
 } from '@ant-design/pro-form';
+import { AutoComplete, Button, Form, Input } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { useIntl, FormattedMessage } from 'umi';
 import { setting } from '@/services/escola-lms/settings';
+import { FormattedMessage, useIntl } from 'umi';
 
-import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import FilesBrowser from '@/components/FilesBrowser';
-import ReactJson from 'react-json-view';
+import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import ReactJson from 'react-json-view';
 
 export const FilesSelector: React.FC<{
   value?: string;

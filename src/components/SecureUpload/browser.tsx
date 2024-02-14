@@ -1,13 +1,13 @@
-import { useCallback, useState } from 'react';
-import type { UploadChangeParam } from 'antd/lib/upload';
-import { Button, message, Modal } from 'antd';
-import SecureUpload from '@/components/SecureUpload';
 import FilesBrowser from '@/components/FilesBrowser';
-import request from 'umi-request';
-import type { RequestOptionsInit } from 'umi-request';
-import { FormattedMessage } from 'umi';
+import SecureUpload from '@/components/SecureUpload';
 import { FolderOpenOutlined } from '@ant-design/icons';
+import { Button, Modal, message } from 'antd';
+import type { UploadChangeParam } from 'antd/lib/upload';
 import type { PropsWithChildren } from 'react';
+import { useCallback, useState } from 'react';
+import { FormattedMessage } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
+import request from 'umi-request';
 import type { SecureUploadType } from './index';
 
 type AnyResponse = API.DefaultResponse<any>;

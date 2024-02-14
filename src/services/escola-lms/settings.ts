@@ -1,8 +1,8 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /* GET /api/settings */
-export async function publicSettings(options?: RequestOptionsInit) {
+export async function publicSettings(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.PublicSettings>>(`/api/settings`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -17,7 +17,7 @@ export async function settings(
     per_page?: number;
     group?: string;
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.SettingsList>(`/api/admin/settings`, {
     method: 'GET',
@@ -30,7 +30,7 @@ export async function settings(
   });
 }
 
-export async function setting(id: number, options?: RequestOptionsInit) {
+export async function setting(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -38,7 +38,7 @@ export async function setting(id: number, options?: RequestOptionsInit) {
   });
 }
 
-export async function createSettings(body?: Partial<API.Setting>, options?: RequestOptionsInit) {
+export async function createSettings(body?: Partial<API.Setting>, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings`, {
     method: 'POST',
     headers: {
@@ -52,7 +52,7 @@ export async function createSettings(body?: Partial<API.Setting>, options?: Requ
 export async function updateSettings(
   id: number,
   body?: Partial<API.Setting>,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'PUT',
@@ -64,7 +64,7 @@ export async function updateSettings(
   });
 }
 
-export async function deleteSettings(id: number, options?: RequestOptionsInit) {
+export async function deleteSettings(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/settings/${id}`, {
     method: 'DELETE',
     headers: {
@@ -74,7 +74,7 @@ export async function deleteSettings(id: number, options?: RequestOptionsInit) {
   });
 }
 
-export async function settingGroups(options?: RequestOptionsInit) {
+export async function settingGroups(options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<string[]>>(`/api/admin/settings/groups`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -82,7 +82,7 @@ export async function settingGroups(options?: RequestOptionsInit) {
   });
 }
 
-export async function configs(options?: RequestOptionsInit) {
+export async function configs(options?: AxiosRequestConfig) {
   return request<API.ConfigsList>(`/api/admin/config`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
@@ -98,7 +98,7 @@ export async function updateConfig(
     key: string;
     value: string | string[];
   },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.Setting>>(`/api/admin/config`, {
     method: 'POST',

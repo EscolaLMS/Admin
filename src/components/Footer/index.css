@@ -18,9 +18,9 @@ div.ant-pro-global-footer {
 .ant-pro-global-footer-footer-logo-wrapper {
   display: flex;
   justify-content: center;
+  padding-top: 8px;
 
   background-color: #fff;
-  padding-top: 8px;
 }
 
 .ant-pro-global-footer-footer-logo {

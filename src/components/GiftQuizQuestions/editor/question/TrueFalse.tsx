@@ -1,6 +1,6 @@
+import { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import React from 'react';
 import { FormattedMessage } from 'umi';
-import { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 
 export const GiftQuizQuestionTrueFalseEditor: React.FC = () => (
   <>

@@ -1,5 +1,5 @@
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 
 /**  GET /api/model-fields */
 export async function fields(
@@ -7,7 +7,7 @@ export async function fields(
     API.PaginationParams & {
       class_type: string;
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata[]>>(
     `/api/model-fields`,
@@ -22,7 +22,7 @@ export async function fields(
 /**  POST /api/aadmin/model-fields */
 export async function createOrUpdateField(
   body: EscolaLms.ModelFields.Http.Requests.MetadataCreateOrUpdateRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata>>(
     `/api/admin/model-fields`,
@@ -37,7 +37,7 @@ export async function createOrUpdateField(
 /**  DELETE /api/admin/model-fields */
 export async function deleteField(
   body: EscolaLms.ModelFields.Http.Requests.MetadataDeleteRequest,
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<boolean>>(`/api/admin/model-fields`, {
     method: 'DELETE',

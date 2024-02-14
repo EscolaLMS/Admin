@@ -1,4 +1,4 @@
-import type { RequestOptionsInit } from 'umi-request';
+import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
 
 export async function allStudentsAndGroups(
@@ -10,7 +10,7 @@ export async function allStudentsAndGroups(
       user_id?: number;
       'id[]'?: number[];
     },
-  options?: RequestOptionsInit,
+  options?: AxiosRequestConfig,
 ) {
   return request<API.StudentGroupRow>(`/api/admin/user-groups/users`, {
     params,
@@ -20,7 +20,7 @@ export async function allStudentsAndGroups(
   });
 }
 
-export async function studentUserGroup(id: number, options?: RequestOptionsInit) {
+export async function studentUserGroup(id: number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.StudentUserGroup>>(`/api/admin/user-groups/${id}`, {
     method: 'GET',
     /* useCache: true */ useCache: false,

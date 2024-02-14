@@ -1,11 +1,15 @@
-import React from 'react';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import Divider from 'antd/lib/divider';
 import Button from 'antd/lib/button';
+import Divider from 'antd/lib/divider';
 import Tooltip from 'antd/lib/tooltip';
+import React from 'react';
 import { FormattedMessage } from 'umi';
 
-export const SortingButtons = ({ mode = 'middle', onUp, onDown }) => {
+export const SortingButtons: React.FC<{ mode: string; onUp: () => void; onDown: () => void }> = ({
+  mode = 'middle',
+  onUp,
+  onDown,
+}) => {
   return (
     <React.Fragment>
       {mode !== 'first' && (
