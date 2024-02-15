@@ -41,7 +41,7 @@ export async function getGroupFinalGrades(
 ) {
   return request<API.DefaultResponse<API.FinalGradeItem[]>>(`/api/admin/lesson-group-users`, {
     method: 'GET',
-    params: { 'groups[]': group_id },
+    params: { groups: group_id },
     /* useCache: true */ useCache: false,
     ...(options || {}),
   });
