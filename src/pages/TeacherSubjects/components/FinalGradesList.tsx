@@ -2,7 +2,6 @@ import { EditOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Button, Tooltip, Typography } from 'antd';
-import type { Location } from 'history';
 import React, { useMemo } from 'react';
 import { FormattedMessage, Link, useLocation } from 'umi';
 
@@ -48,19 +47,10 @@ const staticColumns: ProColumns<API.FinalGradeItem>[] = [
 ];
 
 export const FinalGradesList: React.FC = () => {
-  const location = useLocation() as Location & { query: { user_id?: string; group_id?: string } };
-  const { user_id, group_id } = useMemo(
-    () => ({
-      user_id: Number.isNaN(Number(location.query?.user_id))
-        ? null
-        : Number(location.query?.user_id),
-      group_id: Number.isNaN(Number(location.query?.group_id))
-        ? null
-        : Number(location.query?.group_id),
-    }),
-
-    [location.query?.user_id, location.query?.group_id],
-  );
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const user_id = searchParams.get('user_id') ?? null;
+  const group_id = searchParams.get('group_id') ?? null;
 
   const { teacherSubjectData, semester_subject_id } = useTeacherSubject();
 
@@ -70,7 +60,7 @@ export const FinalGradesList: React.FC = () => {
   );
 
   if (user_id !== null && group_id !== null) {
-    return <FinalGradesDetails user_id={user_id} group_id={group_id} />;
+    return <FinalGradesDetails user_id={Number(user_id)} group_id={Number(group_id)} />;
   }
 
   return (

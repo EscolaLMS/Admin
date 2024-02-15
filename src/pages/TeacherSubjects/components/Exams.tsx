@@ -3,8 +3,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { format } from 'date-fns';
-import type { Location } from 'history';
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { FormattedMessage, Link, useLocation } from 'umi';
 
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
@@ -76,12 +75,10 @@ const staticColumns: ProColumns<API.Exam>[] = [
 export const Exams: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const { semester_subject_id } = useTeacherSubject();
-  const location = useLocation() as Location & { query: { exam_id?: string; results?: string } };
-
-  const { exam_id, results } = useMemo(
-    () => ({ exam_id: location.query?.exam_id ?? null, results: location.query?.results }),
-    [location.query?.exam_id, location.query?.results],
-  );
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const exam_id = searchParams.get('exam_id') ?? null;
+  const results = searchParams.get('results');
 
   if (results !== null && !Number.isNaN(Number(results))) {
     return <ExamResults exam_id={Number(results)} />;
