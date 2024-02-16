@@ -211,7 +211,9 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             }}
             cardProps={{ bodyStyle: { paddingInline: 0 } }}
             search={false}
-            dataSource={convertedData.exam_results}
+            dataSource={convertedData.exam_results.sort((a, b) =>
+              a.last_name.localeCompare(b.last_name),
+            )}
             pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
             columns={staticColumns}
           />
