@@ -116,7 +116,7 @@ export const ClassRegister: React.FC = () => {
         sticky
         className="table-standalone"
         request={async ({ group_id = groupOptions[0]?.value, full_name = '' }) => {
-          const finalGradesRes = await fetchGroupFinalGrades(group_id);
+          const finalGradesRes = await fetchGroupFinalGrades([group_id]);
           const selectedGroup = groupOptions.find(({ value }) => value === group_id);
           if (
             !finalGradesRes.success ||
