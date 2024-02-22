@@ -42,7 +42,8 @@ export const mapper = <T extends { id: string | number } | string | number>(
 ): string | number => (typeof item === 'object' ? item.id : item);
 
 export const splitImagePath = (path: string) => {
-  return path?.split('storage')[1];
+  const slashIndex = path.indexOf('/', path.indexOf('storage') + 1);
+  return path?.substring(slashIndex + 1);
 };
 
 export const capitalize = (s: string) => s && s[0].toUpperCase() + s.slice(1);

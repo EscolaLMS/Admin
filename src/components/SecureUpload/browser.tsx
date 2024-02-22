@@ -6,13 +6,13 @@ import type { UploadChangeParam } from 'antd/lib/upload';
 import type { PropsWithChildren } from 'react';
 import { useCallback, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
-import request from 'umi-request';
+import type { AxiosRequestConfig } from '@umijs/max';
+import { request } from 'umi';
 import type { SecureUploadType } from './index';
 
-type AnyResponse = API.DefaultResponse<any>;
+type PostResponse = API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata>;
 
-const post = async (url: string, body: Record<string, string>, options?: RequestOptionsInit) => {
+const post = async (url: string, body: Record<string, string>, options?: AxiosRequestConfig) => {
   return request<API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata>>(url, {
     method: 'POST',
     data: body,
@@ -58,7 +58,7 @@ function SecureUploadBrowser<Type = API.File>({
   onResponse,
   ...props
 }: PropsWithChildren<
-  SecureUploadType<Type> & { folder: string; onResponse?: (response: AnyResponse) => void }
+  SecureUploadType<Type> & { folder: string; onResponse?: (response: PostResponse) => void }
 >) {
   const [showBrowser, setShowBrowser] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -84,8 +84,11 @@ function SecureUploadBrowser<Type = API.File>({
             onFile={(file, dir) => {
               if (dir) {
                 setLoading(true);
-                post(url, { ...data, [name]: getPath(dir, file) })
-                  .then((response: AnyResponse) => {
+                post(url, {
+                  ...data,
+                  [name]: getPath(dir, file),
+                })
+                  .then((response: PostResponse) => {
                     setLoading(false);
                     if (onResponse) {
                       onResponse(response);
