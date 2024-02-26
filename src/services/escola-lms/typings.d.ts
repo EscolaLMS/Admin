@@ -1741,7 +1741,7 @@ declare namespace API {
   type ScheduleList = DefaultResponse<ScheduleData[]>;
 
   type ExamResult = {
-    result: number;
+    result: number | string;
     user_id: number;
     first_name: string;
     last_name: string;
@@ -1761,7 +1761,7 @@ declare namespace API {
     semester: ExamSemester;
     title: string;
     type: Enum.ExamGradeType;
-    weight: number;
+    weight?: number;
     passed_at: Date | string;
     results: ExamResult[];
     created_at: Date | string;
@@ -1771,21 +1771,21 @@ declare namespace API {
 
   type CreateExamResult = {
     user_id: number;
-    result: number;
+    result: number | string;
   };
 
   type CreateExamRequest = {
     semester_subject_id: number;
     title: string;
     type: string;
-    weight: number;
+    weight?: number;
     group_id: number;
     passed_at: Date | string;
     results: CreateExamResult[];
   };
 
   type CreateExamResultRequest = {
-    result: number;
+    result: number | string;
   };
 
   type ParseExamFileRequest = {

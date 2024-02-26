@@ -5,6 +5,7 @@ import { FormattedMessage } from 'umi';
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
 
+import { ExamGradeType } from '@/services/escola-lms/enums';
 import { ExamGradeInput } from '../ExamGradeInput';
 import { FinalGradeSelect } from '../FinalGradeSelect';
 import type { StudentExam } from '../FinalGradesDetails/types';
@@ -73,12 +74,18 @@ export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableIt
       ...acc,
       {
         dataIndex: `exam-${exam.id}`,
-        title: <FormattedMessage id="examTitleWithWeight" values={exam} />,
+        title:
+          exam.type === ExamGradeType.Manual ? (
+            <FormattedMessage id="examTitleWithWeight" values={exam} />
+          ) : (
+            <FormattedMessage id="examTitleWithoutWeight" values={exam} />
+          ),
         hideInSearch: true,
         width: 100,
         render: (_n, record) =>
           record?.[`exam-${exam.id}`]?.result !== undefined ? (
             <ExamGradeInput
+              type={exam.type}
               result={record?.[`exam-${exam.id}`].result}
               exam_id={exam.id}
               student_id={record.id}

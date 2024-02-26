@@ -8,7 +8,7 @@ import { FormattedMessage, history } from 'umi';
 
 import { useTeacherSubject } from '../context';
 import { ConvertGradesModal, type ConvertedData } from './ConvertGradesModal';
-import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
+import { TEACHER_SUBJECTS_PAGE_SIZE, gradesOptions, passOptions } from './consts';
 
 const SelectTypeButtonsGroup: React.FC<{ onSelect: (type: ExamGradeType) => void }> = ({
   onSelect,
@@ -34,31 +34,25 @@ const SelectTypeButtonsGroup: React.FC<{ onSelect: (type: ExamGradeType) => void
         <FormattedMessage id="uploadGradesManually" defaultMessage="uploadGradesManually" />
       </Button>
     </Col>
+    <Col span={12}>
+      <Button type="primary" onClick={() => onSelect(ExamGradeType.ManualPass)}>
+        <FormattedMessage id="uploadGradesManuallyPass" defaultMessage="uploadGradesManuallyPass" />
+      </Button>
+    </Col>
+    <Col span={12}>
+      <Button type="primary" onClick={() => onSelect(ExamGradeType.ManualGrades)}>
+        <FormattedMessage
+          id="uploadGradesManuallyGrades"
+          defaultMessage="uploadGradesManuallyGrades"
+        />
+      </Button>
+    </Col>
   </Row>
 );
 
 const staticColumns: ProColumns<API.ExamResult>[] = [
   { title: <FormattedMessage id="first_name" />, dataIndex: 'first_name', editable: false },
   { title: <FormattedMessage id="last_name" />, dataIndex: 'last_name', editable: false },
-  {
-    title: <FormattedMessage id="examResult" />,
-    dataIndex: 'result',
-    valueType: 'percent',
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: <FormattedMessage id="field_required" />,
-        },
-        {
-          type: 'number',
-          min: 0,
-          max: 100,
-          message: <FormattedMessage id="number_between" values={{ min: 0, max: 100 }} />,
-        },
-      ],
-    },
-  },
 ];
 
 interface ExamFormValues {
@@ -129,12 +123,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
         form={form}
         submitter={selectedType === undefined || !convertedData ? false : undefined}
         onFinish={async (formData: ExamFormValues) => {
-          // Validation since table has other form instance
-          const areExamResultsValid = convertedData?.exam_results?.every(
-            ({ result }) => typeof result === 'number' && result >= 0 && result <= 100,
-          );
-
-          if (convertedData && areExamResultsValid && typeof semester_subject_id === 'number') {
+          if (convertedData && typeof semester_subject_id === 'number') {
             const { title, passed_at, weight } = formData;
             const numExamId = Number(exam_id);
             const { exam_results, group_id } = convertedData;
@@ -183,21 +172,24 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             width="lg"
             name="passed_at"
           />
-          <ProForm.Item
-            name="weight"
-            label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
-            rules={[
-              { required: true, message: <FormattedMessage id="field_required" /> },
-              {
-                type: 'number',
-                min: 1,
-                max: 100,
-                message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
-              },
-            ]}
-          >
-            <InputNumber />
-          </ProForm.Item>
+
+          {selectedType === ExamGradeType.Manual && (
+            <ProForm.Item
+              name="weight"
+              label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
+              rules={[
+                { required: true, message: <FormattedMessage id="field_required" /> },
+                {
+                  type: 'number',
+                  min: 1,
+                  max: 100,
+                  message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
+                },
+              ]}
+            >
+              <InputNumber />
+            </ProForm.Item>
+          )}
         </ProForm.Group>
         {selectedType && convertedData && (
           <ProTable
@@ -215,7 +207,53 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
               a.last_name.localeCompare(b.last_name),
             )}
             pagination={{ defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE }}
-            columns={staticColumns}
+            columns={[
+              ...staticColumns,
+              (() => {
+                switch (selectedType) {
+                  case ExamGradeType.ManualPass:
+                    return {
+                      title: <FormattedMessage id="examResult" />,
+                      dataIndex: 'result',
+                      valueType: 'select',
+                      fieldProps: {
+                        options: passOptions,
+                      },
+                    };
+                  case ExamGradeType.ManualGrades:
+                    return {
+                      title: <FormattedMessage id="examResult" />,
+                      dataIndex: 'result',
+                      valueType: 'select',
+                      fieldProps: {
+                        options: gradesOptions,
+                      },
+                    };
+                  default:
+                    return {
+                      title: <FormattedMessage id="examResult" />,
+                      dataIndex: 'result',
+                      valueType: 'percent',
+                      formItemProps: {
+                        rules: [
+                          {
+                            required: true,
+                            message: <FormattedMessage id="field_required" />,
+                          },
+                          {
+                            type: 'number',
+                            min: 0,
+                            max: 100,
+                            message: (
+                              <FormattedMessage id="number_between" values={{ min: 0, max: 100 }} />
+                            ),
+                          },
+                        ],
+                      },
+                    };
+                }
+              })(),
+            ]}
           />
         )}
         {!convertedData && <SelectTypeButtonsGroup onSelect={setSelectedType} />}

@@ -70,9 +70,16 @@ export enum AttendanceValue {
 
 export enum ExamGradeType {
   Manual = 'manual',
+  ManualPass = 'manual_pass',
+  ManualGrades = 'manual_grades',
   TeamsForms = 'teams_forms',
   TeamsLecture = 'teams_lecture',
   TestPortal = 'test_portal',
+}
+
+export enum ExamGradePassType {
+  Passed = 'zal',
+  Failed = 'nie zal',
 }
 
 export enum CompetencyChallengeType {

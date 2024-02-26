@@ -1,1 +1,0 @@
-export const TEACHER_SUBJECTS_PAGE_SIZE = 30;
