@@ -6,8 +6,14 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import SecureUpload from '@/components/SecureUpload';
+import { defaultResaltGrade } from '@/pages/TeacherSubjects/components/utils';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { useTeacherSubject } from '../context';
+
+const checkManualExamType = (type: ExamGradeType) =>
+  type === ExamGradeType.Manual ||
+  type === ExamGradeType.ManualPass ||
+  type === ExamGradeType.ManualGrades;
 
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
@@ -70,7 +76,8 @@ const FileExamGradeType: React.FC<{
 
 const ManualExamGradeType: React.FC<{
   onDataConverted: (convertedData: ConvertedData) => void;
-}> = ({ onDataConverted }) => {
+  examType: ExamGradeType;
+}> = ({ onDataConverted, examType }) => {
   const { teacherSubjectData, groupUsers } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
 
@@ -102,7 +109,7 @@ const ManualExamGradeType: React.FC<{
               first_name,
               last_name,
               user_id: id,
-              result: 0,
+              result: defaultResaltGrade(examType),
             },
           ];
         },
@@ -145,6 +152,8 @@ const EXAM_GRADE_IMAGES: Record<ExamGradeType, string[]> = {
     '/teacher-examples/teamsLectureWithoutMail.png',
   ],
   [ExamGradeType.Manual]: [],
+  [ExamGradeType.ManualPass]: [],
+  [ExamGradeType.ManualGrades]: [],
 };
 
 const ExampleImagesPreview: React.FC<{ images: string[] }> = ({ images }) => {
@@ -198,7 +207,7 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
   const [convertedData, setConvertedData] = useState<ConvertedData>();
 
   useEffect(() => {
-    if (type === ExamGradeType.Manual && open) {
+    if (checkManualExamType(type) && open) {
       teacherSubjectData?.groups?.forEach(({ id }) => fetchGroupUsers(id));
     }
   }, [type, open]);
@@ -229,7 +238,9 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
           groupSelectDisabled={!!convertedData}
         />
       )}
-      {type === ExamGradeType.Manual && <ManualExamGradeType onDataConverted={setConvertedData} />}
+      {checkManualExamType(type) && (
+        <ManualExamGradeType onDataConverted={setConvertedData} examType={type} />
+      )}
     </Modal>
   );
 };

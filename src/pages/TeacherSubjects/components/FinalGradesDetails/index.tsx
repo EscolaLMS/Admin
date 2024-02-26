@@ -77,7 +77,7 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   {
     title: <FormattedMessage id="grade" />,
     dataIndex: 'result',
-    render: (_n, row) => `${row.result.result}%`,
+    render: (_n, row) => `${row.result.result} ${row.weight ? '%' : ''}`,
   },
 ];
 

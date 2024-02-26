@@ -43,7 +43,7 @@ const staticColumns: ProColumns<API.Exam>[] = [
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
     sorter: true,
-    render: (_, record) => record.weight + '%',
+    render: (_, record) => (record.weight ? record.weight + '%' : ''),
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,

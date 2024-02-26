@@ -13,9 +13,16 @@ export const getProposedGrade = (
   tutorGradeScales: API.GradeScale[],
 ): string => {
   const [sum, weightsSum] = studentExams.reduce<[number, number]>(
-    (acc, { result, weight }) => [acc[0] + result.result * weight, acc[1] + weight],
+    (acc, { result, weight }) => {
+      if (weight && typeof result.result === 'number') {
+        return [acc[0] + result.result * weight, acc[1] + weight];
+      } else {
+        return acc;
+      }
+    },
     [0, 0],
   );
+
   const weightedAverage = Number.isNaN(sum / weightsSum) ? 0 : sum / weightsSum;
 
   const sortedGradeScales = tutorGradeScales
