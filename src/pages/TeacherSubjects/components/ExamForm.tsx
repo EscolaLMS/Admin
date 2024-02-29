@@ -173,7 +173,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             name="passed_at"
           />
 
-          {selectedType === ExamGradeType.Manual && (
+          {selectedType !== ExamGradeType.ManualGrades && selectedType !==ExamGradeType.ManualPass && (
             <ProForm.Item
               name="weight"
               label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
