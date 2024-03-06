@@ -127,7 +127,9 @@ export const ClassRegister: React.FC = () => {
               intl.formatMessage({ id: 'groupDataMissing' }, { group_name: selectedGroup?.label }),
             );
 
-            return { data: [], total: 0, success: false };
+            setSelectedGroupName(selectedGroup?.label);
+            setDynamicCols([]);
+            return { data: [], total: 0, success: true };
           }
 
           const [
