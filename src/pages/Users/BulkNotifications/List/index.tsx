@@ -1,7 +1,7 @@
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { bulkNotifications } from '@/services/escola-lms/bulk-notifications';
-import { BulkNotificationChannelsEnum, BulkNotificationSectionsKeysEnum } from '@/services/escola-lms/enums';
+import { type BulkNotificationChannelsEnum, BulkNotificationSectionsKeysEnum } from '@/services/escola-lms/enums';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import React, { useRef } from 'react';

@@ -8,6 +8,9 @@ import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 const getChanngelType = (template?: 'push') => {
+  if (template === 'push') {
+    return BulkNotificationChannelsEnum.PUSH;
+  }
   return BulkNotificationChannelsEnum.PUSH;
 };
 

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useModel } from 'umi';
-import PERMISSIONS from '@/consts/permissions';
+import type PERMISSIONS from '@/consts/permissions';
 
 export const usePermissions = () => {
   const { initialState } = useModel('@@initialState');
