@@ -13,6 +13,7 @@ import settingDrawer from './pl-PL/settingDrawer';
 import settings from './pl-PL/settings';
 import templates from './pl-PL/templates';
 import vouchers from './pl-PL/vouchers';
+import bulkNotifications from './pl-PL/bulkNotifications';
 
 export default {
   courseAccessEnquiries: 'Zapytania od dostęp do kursu',
@@ -89,6 +90,7 @@ export default {
   ...courses,
   ...events,
   ...recommender,
+  ...bulkNotifications,
   branding: 'Branding',
   product_details: 'Ustawienia produktu',
   title: 'Tytuł',
@@ -141,6 +143,7 @@ export default {
   'menu.Courses.Details': 'Szczegóły',
   'menu.Courses.Access Requests': 'Prośby o dostęp',
   'menu.Users.User Groups': 'Grupy',
+  'menu.Users.Notifications': 'Powiadomienia',
   'menu.Configuration.Templates': 'Szablony',
   'menu.Configuration.Translations': 'Tłumaczenia',
   'menu.Other activities.Questionnaire': 'Ankiety',
@@ -474,7 +477,7 @@ export default {
   json: 'JSON Metadata',
   additional: 'Dodatkowe',
   json_tooltip:
-    'To pole słuzy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
+    'To pole służy programistom aby dodać dodatkowe dane do Tematu, do obsługi przy wyświetlaniu kursu',
   open_editor: 'Otwórz edytor',
   json_editor: 'Otwórz edytor JSON',
   introduction: 'Wprowadzenie',
@@ -487,7 +490,7 @@ export default {
     'Nie powinno sie edytować tego kursu bo kurs już trwa. Klikająć ok edycja bedzie możliwa ale robisz to na własną odpowiedzialność',
   limit_total: 'Limit ogólny',
   limit_total_tooltip: 'Maksymalna liczba produktów, które będzie można zakupić',
-  limit_per_user: 'Limit per uzytkownik',
+  limit_per_user: 'Limit per użytkownik',
   limit_per_user_tooltip:
     'Limit kupna na osobę. Przykładowo wartość 1 pozwoli użytkownikowi na zakup jednego produktu',
   extra_fees: 'Extra opłaty {currency}',
@@ -587,6 +590,8 @@ export default {
   created_before: 'Utworzony przed',
   created_after: 'Utworzony po',
   redirect: 'przekierowanie',
+  redirect_url: 'URL do przekierowania',
+  image_url: 'URL do obrazka',
   logotype: 'Logotyp',
   published_unactivated: 'Opublikowany nieaktywny',
   active_from_extra: 'Wybierz datę rozpoczęcia sprzedaży',

@@ -280,6 +280,26 @@
         component: './Users/fields',
         hideInMenu: true,
       },
+      {
+        name: 'Notifications',
+        path: '/users/notifications',
+        access: 'UserBulkNotificationListPermission',
+        component: './Users/BulkNotifications',
+      },
+      {
+        name: 'Notifications',
+        path: '/users/notifications/:template',
+        access: 'UserBulkNotificationListPermission',
+        component: './Users/BulkNotifications',
+        hideInMenu: true,
+      },
+      {
+        path: '/users/notifications/:template/:id',
+        name: 'Notifications',
+        access: 'UserBulkNotificationCreatePermission',
+        component: './Users/BulkNotifications/form',
+        hideInMenu: true,
+      },
     ],
   },
   {

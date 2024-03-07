@@ -19,6 +19,8 @@ import CategoryTree from '@/components/CategoryTree';
 import SecureUpload from '@/components/SecureUpload';
 import Tags from '@/components/Tags';
 import UserSelect from '@/components/UserSelect';
+import PERMISSIONS from '@/consts/permissions';
+import { usePermissions } from '@/hooks/usePermissions';
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
@@ -206,10 +208,9 @@ const { Title, Text } = Typography;
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-
   const actionRef = useRef<ActionType>();
-
   const intl = useIntl();
+  const { checkPermission } = usePermissions();
 
   const handleRemove = useCallback(
     async (id: number) => {
@@ -313,35 +314,37 @@ const TableList: React.FC = () => {
             </Title>
           </Link>
         </ProCard>
-        <ProCard
-          layout="center"
-          style={{
-            height: '100%',
-          }}
-        >
-          <div className={'course-upload'}>
-            <SecureUpload
-              key="upload"
-              title={intl.formatMessage({
-                id: 'import_file',
-              })}
-              url="/api/admin/courses/zip/import"
-              name="file"
-              accept=".zip"
-              onChange={(info) => {
-                if (info.file.status === 'done') {
-                  if (info.file.response && info.file.response.success) {
-                    message.success(intl.formatMessage({ id: info.file.response.message }));
+        {checkPermission(PERMISSIONS.CourseImport) && (
+          <ProCard
+            layout="center"
+            style={{
+              height: '100%',
+            }}
+          >
+            <div className={'course-upload'}>
+              <SecureUpload
+                key="upload"
+                title={intl.formatMessage({
+                  id: 'import_file',
+                })}
+                url="/api/admin/courses/zip/import"
+                name="file"
+                accept=".zip"
+                onChange={(info) => {
+                  if (info.file.status === 'done') {
+                    if (info.file.response && info.file.response.success) {
+                      message.success(intl.formatMessage({ id: info.file.response.message }));
+                    }
                   }
-                }
-                if (info.file.response && info.file.status === 'error') {
-                  message.error(intl.formatMessage({ id: info.file.response.message }));
-                  console.error(info.file.response);
-                }
-              }}
-            />
-          </div>
-        </ProCard>
+                  if (info.file.response && info.file.status === 'error') {
+                    message.error(intl.formatMessage({ id: info.file.response.message }));
+                    console.error(info.file.response);
+                  }
+                }}
+              />
+            </div>
+          </ProCard>
+        )}
         <ProCard
           layout="center"
           style={{
@@ -438,18 +441,24 @@ const TableList: React.FC = () => {
                 </Tooltip>
               </Popconfirm>,
 
-              <Tooltip
-                key="export"
-                title={<FormattedMessage id="export" defaultMessage="export" />}
-              >
-                <Button onClick={() => handleExport(Number(record.id))} icon={<ExportOutlined />} />
-              </Tooltip>,
-              <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
+              (checkPermission(PERMISSIONS.CourseExport) ||
+                checkPermission(PERMISSIONS.CourseExportAuthored)) && (
+                <Tooltip
+                  key="export"
+                  title={<FormattedMessage id="export" defaultMessage="export" />}
+                >
+                  <Button
+                    onClick={() => handleExport(Number(record.id))}
+                    icon={<ExportOutlined />}
+                  />
+                </Tooltip>
+              ),
+              (checkPermission(PERMISSIONS.COURSES_CLONE) && <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
                 <Button
                   onClick={() => record.id && handleClone(record.id)}
                   icon={<CopyOutlined />}
                 />
-              </Tooltip>,
+              </Tooltip>),
             ],
           },
         ]}
