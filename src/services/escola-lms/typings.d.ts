@@ -1375,6 +1375,7 @@ declare namespace API {
     key: string;
     text: Record<string, string>;
     id?: number;
+    public?: boolean;
   };
 
   export type TranslationRetrieve = {
@@ -2011,6 +2012,42 @@ declare namespace API {
   export type ExportGiftQuizQuestionsParams =
     | ExportGiftQuizQuestionsParamsByIds
     | ExportGiftQuizQuestionsParamsByCategoryIds;
+
+  // BulkNotifications
+
+  type BulkNotificationsParams = PaginationParams & {
+    channel?: BulkNotificationChannelsEnum
+  };
+
+  type BulkNotificationSections = {
+    id: number;
+    key: BulkNotificationSectionsKeysEnum;
+    value: string;
+  }
+
+  type BulkNotificationSectionsPost = {
+    title: string;
+    body: string;
+    image_url?: string;
+    redirect_url?: string;
+    data?: object;
+    users_ids?: number[];
+  }
+
+  type BulkNotification = {
+    id?: number;
+    channel: BulkNotificationChannelsEnum;
+    sections: BulkNotificationSections[];
+    users?: number[];
+  };
+
+  type BulkNotificationBody = {
+    channel: BulkNotificationChannelsEnum;
+    sections: BulkNotificationSectionsPost;
+    user_ids?: number[];
+  };
+
+  type BulkNotificationsList = DefaultMetaResponse<BulkNotification>;
 }
 
 declare module 'jsoneditor-react' {

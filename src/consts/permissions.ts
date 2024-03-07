@@ -18,6 +18,8 @@ enum PERMISSIONS {
   UserDeleteSelf = 'user_delete_self', // remove own user (TODO: #1026 hard or soft?)
   UserList = 'user_list',
   UserListCourseOwned = 'user_list_course-authored', // listing users in courses of which you are the author
+  UserBulkNotificationList = 'bulk-notification_list', // listing bulk notifications
+  UserBulkNotificationCreate = 'bulk-notification_create', // create (send) bulk notification
 
   // USER GROUP
   UserGroupCreate = 'user-group_create',
@@ -140,6 +142,7 @@ enum PERMISSIONS {
   CourseExport = 'course-import-export_export',
   CourseImport = 'course-import-export_import',
   CourseExportAuthored = 'course-import-export_export_authored',
+  COURSES_CLONE = 'course-import-export_clone',
 
   /* -------- EscolaLMS/Permissions -------- */
 

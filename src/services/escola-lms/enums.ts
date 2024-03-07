@@ -114,3 +114,14 @@ export enum RecommenderType {
 export enum BookmarkableType {
   Group = 'EscolaLms\\PcgIntegration\\Models\\Group',
 }
+
+export enum BulkNotificationChannelsEnum {
+  PUSH = 'EscolaLms\\BulkNotifications\\Channels\\PushNotificationChannel',
+}
+
+export enum BulkNotificationSectionsKeysEnum {
+  TITLE = 'title',
+  BODY = 'body',
+  IMAGE = 'image_url',
+  REDIRECT_URL = 'redirect_url'
+}
