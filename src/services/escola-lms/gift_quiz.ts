@@ -96,8 +96,8 @@ export async function exportQuizQuestions(
     responseType: 'blob',
     params: {
       topic_gift_quiz_id: quiz_id,
-      'category_ids[]': 'category_ids' in params ? params.category_ids : undefined,
-      'ids[]': 'ids' in params ? params.ids : undefined,
+      category_ids: 'category_ids' in params ? params.category_ids : undefined,
+      ids: 'ids' in params ? params.ids : undefined,
     },
     ...(options || {}),
   });
