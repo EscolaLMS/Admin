@@ -127,7 +127,6 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             const { title, passed_at, weight } = formData;
             const numExamId = Number(exam_id);
             const { exam_results, group_id } = convertedData;
-
             const reqData: API.CreateExamRequest = {
               type: selectedType!,
               semester_subject_id,
@@ -173,23 +172,24 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             name="passed_at"
           />
 
-          {selectedType !== ExamGradeType.ManualGrades && selectedType !==ExamGradeType.ManualPass && (
-            <ProForm.Item
-              name="weight"
-              label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
-              rules={[
-                { required: true, message: <FormattedMessage id="field_required" /> },
-                {
-                  type: 'number',
-                  min: 1,
-                  max: 100,
-                  message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
-                },
-              ]}
-            >
-              <InputNumber />
-            </ProForm.Item>
-          )}
+          {selectedType !== ExamGradeType.ManualGrades &&
+            selectedType !== ExamGradeType.ManualPass && (
+              <ProForm.Item
+                name="weight"
+                label={<FormattedMessage id="examImportance" defaultMessage="examImportance" />}
+                rules={[
+                  { required: true, message: <FormattedMessage id="field_required" /> },
+                  {
+                    type: 'number',
+                    min: 1,
+                    max: 100,
+                    message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
+                  },
+                ]}
+              >
+                <InputNumber />
+              </ProForm.Item>
+            )}
         </ProForm.Group>
         {selectedType && convertedData && (
           <ProTable

@@ -1741,7 +1741,7 @@ declare namespace API {
   type ScheduleList = DefaultResponse<ScheduleData[]>;
 
   type ExamResult = {
-    result: number | string;
+    result: number | string | null;
     user_id: number;
     first_name: string;
     last_name: string;
@@ -1771,7 +1771,7 @@ declare namespace API {
 
   type CreateExamResult = {
     user_id: number;
-    result: number | string;
+    result: number | string | null;
   };
 
   type CreateExamRequest = {
@@ -1785,7 +1785,7 @@ declare namespace API {
   };
 
   type CreateExamResultRequest = {
-    result: number | string;
+    result: number | string | null;
   };
 
   type ParseExamFileRequest = {

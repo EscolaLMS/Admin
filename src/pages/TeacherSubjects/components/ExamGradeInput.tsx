@@ -3,13 +3,13 @@ import { debounce } from 'lodash';
 import React, { useCallback } from 'react';
 
 import { gradesOptions, passOptions } from '@/pages/TeacherSubjects/components/consts';
-import { defaultResaltGrade } from '@/pages/TeacherSubjects/components/utils';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { createExamResult } from '@/services/escola-lms/exams';
+import { FormattedMessage } from 'umi';
 
 interface Props {
   exam_id: number;
-  result: number | string;
+  result: number | string | null;
   student_id: number;
   type: ExamGradeType;
   onSuccess?: (exam: API.Exam) => void;
@@ -24,13 +24,11 @@ export const ExamGradeInput: React.FC<Props> = ({
 }) => {
   const onChange = useCallback(
     debounce((value: number | string | null) => {
-      createExamResult(exam_id, student_id, { result: value ?? defaultResaltGrade(type) }).then(
-        (res) => {
-          if (res.success) {
-            onSuccess?.(res.data);
-          }
-        },
-      );
+      createExamResult(exam_id, student_id, { result: value }).then((res) => {
+        if (res.success) {
+          onSuccess?.(res.data);
+        }
+      });
     }, 300),
     [exam_id, result, student_id],
   );
@@ -44,7 +42,8 @@ export const ExamGradeInput: React.FC<Props> = ({
             style={{ width: '100%' }}
             onChange={onChange}
             options={passOptions}
-            defaultValue={String(result)}
+            defaultValue={result}
+            placeholder={<FormattedMessage id="select_grade" />}
           />
         );
       case ExamGradeType.ManualGrades:
@@ -54,7 +53,8 @@ export const ExamGradeInput: React.FC<Props> = ({
             style={{ width: '100%' }}
             onChange={onChange}
             options={gradesOptions}
-            defaultValue={Number(result)}
+            defaultValue={result}
+            placeholder={<FormattedMessage id="select_grade" />}
           />
         );
       default:
@@ -64,7 +64,7 @@ export const ExamGradeInput: React.FC<Props> = ({
             min={0}
             max={100}
             onChange={onChange}
-            defaultValue={Number(result)}
+            defaultValue={result ?? undefined}
           />
         );
     }

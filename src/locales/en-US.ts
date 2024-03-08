@@ -302,6 +302,7 @@ export default {
   select_course: 'Select a course',
   select_groups: 'Select a groups',
   select_group: 'Select a group',
+  select_grade: 'Select a grade',
   select_final_grade: 'Select a final grade',
   select_all: 'Select all',
   deselect_all: 'Deselect all',
