@@ -1,11 +1,9 @@
+import AttendanceCheckbox from '@/components/AttendanceCheckbox';
+import { DAY_FORMAT } from '@/consts/dates';
+import { ExamGradeType } from '@/services/escola-lms/enums';
 import type { ProColumns } from '@ant-design/pro-table';
 import { format } from 'date-fns';
 import { FormattedMessage } from 'umi';
-
-import AttendanceCheckbox from '@/components/AttendanceCheckbox';
-import { DAY_FORMAT } from '@/consts/dates';
-
-import { ExamGradeType } from '@/services/escola-lms/enums';
 import { ExamGradeInput } from '../ExamGradeInput';
 import { FinalGradeSelect } from '../FinalGradeSelect';
 import type { StudentExam } from '../FinalGradesDetails/types';
@@ -25,14 +23,14 @@ export const getAttendanceCols = (
       ...acc,
       {
         title: format(new Date(curr.date_from), DAY_FORMAT),
-        dataIndex: `attendance-${curr.date_from}`,
+        dataIndex: `attendance-${curr.id}`,
         hideInSearch: true,
         width: 100,
         align: 'center',
         render: (_, record) => (
           <AttendanceCheckbox
             groupAttendanceScheduleId={curr.id}
-            attendance={record[`attendance-${curr?.date_from}`]}
+            attendance={record[`attendance-${curr?.id}`]}
             studentId={record.id}
           />
         ),
@@ -63,7 +61,7 @@ export const getStudentAttendances = (
 
     return {
       ...innerAcc,
-      [`attendance-${groupAttendanceSchedule.date_from}`]: studentAttendance.value,
+      [`attendance-${groupAttendanceSchedule.id}`]: studentAttendance.value,
     };
   }, {});
 

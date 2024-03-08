@@ -285,6 +285,7 @@ export default {
   select_course: 'Wybierz kurs',
   select_groups: 'Wybierz grupy',
   select_group: 'Wybierz grupę',
+  select_grade: 'Wybierz ocenę',
   select_final_grade: 'Wybierz ocenę końcową',
   select_all: 'Zaznacz wszystkie',
   deselect_all: 'Odznacz wszystkie',

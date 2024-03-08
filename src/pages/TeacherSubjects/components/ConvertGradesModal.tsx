@@ -6,7 +6,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import SecureUpload from '@/components/SecureUpload';
-import { defaultResaltGrade } from '@/pages/TeacherSubjects/components/utils';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { useTeacherSubject } from '../context';
 
@@ -77,7 +76,7 @@ const FileExamGradeType: React.FC<{
 const ManualExamGradeType: React.FC<{
   onDataConverted: (convertedData: ConvertedData) => void;
   examType: ExamGradeType;
-}> = ({ onDataConverted, examType }) => {
+}> = ({ onDataConverted }) => {
   const { teacherSubjectData, groupUsers } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
 
@@ -109,13 +108,12 @@ const ManualExamGradeType: React.FC<{
               first_name,
               last_name,
               user_id: id,
-              result: defaultResaltGrade(examType),
+              result: null,
             },
           ];
         },
         [],
       );
-
       onDataConverted({ group_id, exam_results });
     },
     [groupUsers.byId],

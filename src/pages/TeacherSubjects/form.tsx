@@ -1,12 +1,10 @@
+import PERMISSIONS from '@/consts/permissions';
+import { isUserHavePermissions } from '@/services/escola-lms/permissions';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Spin } from 'antd';
 import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage, Link, history, useIntl, useModel, useParams } from 'umi';
-
-import PERMISSIONS from '@/consts/permissions';
-import { isUserHavePermissions } from '@/services/escola-lms/permissions';
-import { Attendances } from './components/Attendances';
 import { ClassRegister } from './components/ClassRegister';
 import { Exams } from './components/Exams';
 import { FileExportsHistory } from './components/FileExportsHistory';
@@ -112,9 +110,10 @@ const TeacherSubjectsFormContent: React.FC<{ tab: string }> = ({ tab }) => {
         <ProCard.TabPane key="class-register" tab={<FormattedMessage id="class-register" />}>
           <ClassRegister />
         </ProCard.TabPane>
-        <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
+        {/* TODO: Uncomment when attendances tab needed */}
+        {/* <ProCard.TabPane key="attendance" tab={<FormattedMessage id="attendance" />}>
           <Attendances />
-        </ProCard.TabPane>
+        </ProCard.TabPane> */}
         {showGradeScale && (
           <ProCard.TabPane key="grades-scale" tab={<FormattedMessage id="grades-scale" />}>
             <GradesScale />
