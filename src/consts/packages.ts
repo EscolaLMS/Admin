@@ -53,6 +53,7 @@ enum PACKAGES {
   Webinar = 'escolalms/webinar',
   Youtube = 'escolalms/youtube',
   Recommender = 'escolalms/recommender',
+  Dictionary = 'escolalms/dictionaries',
 }
 
 export default PACKAGES;

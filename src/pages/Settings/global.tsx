@@ -396,7 +396,6 @@ const TableList: React.FC = () => {
           type: 'boolean',
           data: false,
         }));
-
       setInitialData((prevInitialData) => ({
         ...prevInitialData,
         ...hideInDataRecords,
