@@ -1,7 +1,10 @@
+import PACKAGES from '@/consts/packages';
+import { createHavePackageInstalled } from '@/utils/access';
 import { CloseSquareOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Responsive, WidthProvider, type Layout } from 'react-grid-layout';
+import { useModel } from 'umi';
 
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
@@ -17,7 +20,6 @@ import YourCourses from './YourCourses';
 import './index.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
 const COLS = 2;
 const ROW_HEIGHT = 150;
 
@@ -111,6 +113,15 @@ const components: DashboardData = {
 
 type ComponentsKeys = keyof typeof components;
 
+const defaultStageAwfComponents: ComponentsKeys[] = [
+  'your-courses',
+  'pie-chart-CoursesMoneySpentMetric',
+  'pie-chart-CoursesPopularityMetric',
+  'pie-chart-CoursesSecondsSpentMetric',
+  'pie-chart-TutorsPopularityMetric',
+  'add',
+];
+
 const defaultStageComponents: ComponentsKeys[] = [
   'tutorial',
   'hall-of-fame',
@@ -142,7 +153,16 @@ interface LayoutConfigObject {
 }
 
 export const Dashboard: React.FC = () => {
-  const [stageComponents, setStageComponents] = useState<ComponentsKeys[]>(defaultStageComponents);
+  const { initialState } = useModel('@@initialState');
+  const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
+    initialState?.packages,
+  ]);
+
+  const [stageComponents, setStageComponents] = useState<ComponentsKeys[]>(
+    havePackageInstalled(PACKAGES.PCGIntegration)
+      ? defaultStageAwfComponents
+      : defaultStageComponents,
+  );
 
   const keysToAdd = useMemo(() => {
     return Object.keys(components).filter((key) => !stageComponents.includes(key) && key !== 'add');
@@ -217,7 +237,7 @@ export const Dashboard: React.FC = () => {
     };
     saveToLS('layout', changedLayouts);
   };
-
+  console.log(stageComponents);
   return (
     <main>
       <ResponsiveGridLayout
