@@ -54,6 +54,7 @@ const DictionaryWordsTableList: React.FC = () => {
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
       dataIndex: 'option',
       valueType: 'option',
+      width: 100,
       render: (_, record) => [
         <Link to={`/other/dictionary/${dictionaryId}/${tab}/${record.id}/${DictionaryWordsTabNames.FORM}`} key="edit">
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
@@ -110,6 +111,7 @@ const DictionaryWordsTableList: React.FC = () => {
           per_page: pageSize,
           page: current,
           word,
+          dictionary_id: Number(dictionaryId),
           ...createTableOrderObject(sort, 'created_at'),
         }).then((response) => {
           if (response.success) {

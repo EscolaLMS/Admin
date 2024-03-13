@@ -2086,6 +2086,13 @@ declare namespace API {
     name_with_breadcrumbs: string;
   };
 
+  type DictionaryWordData = {
+    id?: number;
+    title?: string;
+    description?: string;
+    video_url?: string;
+  }
+
   type DictionaryWords = {
     id: number;
     dictionary_id: number;
@@ -2094,6 +2101,9 @@ declare namespace API {
     created_at: string;
     updated_at: string;
     categories: DictionaryWordsCategory[];
+    data?: {
+      descriptions?: API.DictionaryWordData[];
+    };
   };
 
   type DictionaryWordsList = DefaultMetaResponse<DictionaryWords>;
@@ -2103,7 +2113,9 @@ declare namespace API {
     dictionary_id: number;
     description: string;
     categories?: number[];
-    data?: any;
+    data?: {
+      descriptions?: API.DictionaryWordData[];
+    };
   };
 }
 

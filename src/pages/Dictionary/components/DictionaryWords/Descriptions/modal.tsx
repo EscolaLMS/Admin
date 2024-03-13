@@ -1,37 +1,34 @@
-import ProForm, { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
-import { Form } from 'antd';
+import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import { Col, Form, Row } from 'antd';
 import React, { useEffect } from 'react';
-
-import type { AgendaType } from '@/components/Agenda';
 import { FormattedMessage, useIntl } from 'umi';
 
 export const DictionaryWordsDescriptionsModal: React.FC<{
-  id?: number | false;
-  fields: AgendaType | null;
+  selectedField: API.DictionaryWordData | null;
   isOpen: boolean;
   onOpenChange: (visible: boolean) => void;
-  onFinish: (formData: API.Setting) => Promise<boolean | void>;
+  onFinish: (formData: API.DictionaryWordData) => Promise<boolean | void>;
 }> = (props) => {
   const intl = useIntl();
 
-  const { isOpen, fields, onOpenChange, onFinish, id } = props;
+  const { isOpen, selectedField, onOpenChange, onFinish } = props;
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (fields) {
-      form.setFieldsValue(fields);
+    if (selectedField) {
+      form.setFieldsValue(selectedField);
       return;
     }
     form.resetFields();
-  }, [fields]);
+  }, [selectedField]);
 
   return (
     <ModalForm
       form={form}
       title={intl.formatMessage({
-        id: id ? 'editSetting' : 'newSetting',
-        defaultMessage: id ? 'editSetting' : 'newSetting',
+        id: selectedField?.id ? 'editSetting' : 'newSetting',
+        defaultMessage: selectedField?.id ? 'editSetting' : 'newSetting',
       })}
       width="40vw"
       open={isOpen}
@@ -41,30 +38,44 @@ export const DictionaryWordsDescriptionsModal: React.FC<{
       }}
       onFinish={(formData) => {
         form.resetFields();
-        return onFinish({ ...formData, id: fields?.id || null });
+        return onFinish({ ...formData, id: selectedField?.id || null });
       }}
     >
-      <ProForm.Group>
-        <ProFormText
-          label={<FormattedMessage id="title" defaultMessage="title" />}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-          name="title"
-        />
-
-        <ProFormTextArea
-          label={<FormattedMessage id="description" defaultMessage="description" />}
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-          name="description"
-        />
-      </ProForm.Group>
+      <Row>
+        <Col span={24}>
+          <ProFormText
+            label={<FormattedMessage id="title" defaultMessage="title" />}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            name="title"
+          />
+        </Col>
+        <Col span={24}>
+          <ProFormText
+            label={<FormattedMessage id="video_url" defaultMessage="video_url" />}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            name="video_url"
+          />
+        </Col>
+        <Col span={24}>
+          <ProFormTextArea
+            label={<FormattedMessage id="description" defaultMessage="description" />}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            name="description"
+          />
+        </Col>
+      </Row>
     </ModalForm>
   );
 };

@@ -125,7 +125,6 @@ export default () => {
                     id: 'Free views count',
                   })}
                   min={0}
-                  required
                 />
               </Col>
             </Row>

@@ -24,6 +24,9 @@ type FormValues = {
   description: string;
   dictionary_id: number;
   categories?: number[];
+  data?: {
+    descriptions?: API.DictionaryWordData[];
+  };
 };
 
 export type DictionaryWordType = Omit<API.DictionaryWords, 'categories'> & {
@@ -41,7 +44,7 @@ export default () => {
   const { dictionaryId, tab, dictionaryWordId, dictionaryWordTab } = params;
   const isNew = dictionaryWordId === 'new';
 
-  const [data, setData] = useState<Partial<DictionaryWordType>>();
+  const [dictionaryWordData, setDictionaryWordData] = useState<Partial<DictionaryWordType>>();
   const [loading, setLoading] = useState(false);
   const [form] = ProForm.useForm();
 
@@ -49,7 +52,7 @@ export default () => {
     setLoading(true);
     const response = await getDictionaryWord(Number(dictionaryWordId));
     if (response.success) {
-      setData({
+      setDictionaryWordData({
         ...(response.data as Omit<DictionaryWordType, 'categories'>),
         categories: response?.data?.categories?.map(mapper),
       });
@@ -59,7 +62,7 @@ export default () => {
 
   useEffect(() => {
     if (dictionaryWordId === 'new') {
-      setData({});
+      setDictionaryWordData({});
       return;
     }
 
@@ -71,7 +74,7 @@ export default () => {
       onFinish: async (values: FormValues) => {
         let response: API.DefaultResponse<API.DictionaryWords>;
         const body = {
-          ...(data as FormValues), // This is necessary for save data from other tabs without error
+          ...(dictionaryWordData as FormValues), // This is necessary for save data from other tabs without error
           ...values,
           dictionary_id: Number(dictionaryId),
         };
@@ -89,12 +92,48 @@ export default () => {
 
         message.success(response.message);
       },
-      initialValues: data,
+      initialValues: dictionaryWordData,
     }),
-    [data, dictionaryWordId, dictionaryId, tab, dictionaryWordTab],
+    [dictionaryWordData, dictionaryWordId, dictionaryId, tab, dictionaryWordTab],
   );
 
-  if (!data) {
+  const updateData = useCallback(
+    (updatedData: API.DictionaryWordData) => {
+      let newData = dictionaryWordData?.data?.descriptions || [];
+      if (updatedData.id) {
+        // Update existing data
+        newData = newData?.map((descriptionItem) =>
+          descriptionItem.id === updatedData.id ? updatedData : descriptionItem,
+        );
+      } else {
+        // Add new data
+        newData?.push({
+          ...updatedData,
+          id: Date.now(),
+        });
+      }
+      setDictionaryWordData((prev) => ({
+        ...prev,
+        data: {
+          ...(prev?.data || {}),
+          descriptions: newData,
+        },
+      }));
+    },
+    [dictionaryWordData],
+  );
+
+  const onDelete = useCallback((deleteId: number) => {
+    setDictionaryWordData((prev) => ({
+      ...prev,
+      data: {
+        ...(prev?.data || {}),
+        descriptions: prev?.data?.descriptions?.filter(({ id }) => id !== deleteId),
+      },
+    }));
+  }, []);
+
+  if (!dictionaryWordData) {
     return <Spin />;
   }
 
@@ -171,7 +210,11 @@ export default () => {
             tab={<FormattedMessage id="descriptions" />}
           >
             <ProForm {...formProps} form={form}>
-              <DictionaryWordsDescriptions />
+              <DictionaryWordsDescriptions
+                updateData={updateData}
+                dataSource={dictionaryWordData.data?.descriptions || []}
+                onDelete={onDelete}
+              />
             </ProForm>
           </ProCard.TabPane>
         )}

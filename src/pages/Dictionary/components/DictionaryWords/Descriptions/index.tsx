@@ -1,50 +1,88 @@
 import DictionaryWordsDescriptionsModal from '@/pages/Dictionary/components/DictionaryWords/Descriptions/modal';
-import { PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { Button, Popconfirm, Tooltip } from 'antd';
 import { useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
-type DictionaryWordsDescriptionsType = {
-  title: string;
-  description: string;
-  url: string;
+interface Props {
+  dataSource: API.DictionaryWordData[];
+  updateData: (values: API.DictionaryWordData) => void;
+  onDelete: (id: number) => void;
 }
 
-const DictionaryWordsDescriptions = ({}) => {
+const DictionaryWordsDescriptions = ({ dataSource, updateData, onDelete }: Props) => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
-  const [dataSource, setDataSource] = useState([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedField, setSelectedField] = useState<API.DictionaryWordData | null>(null);
 
-  const columns: ProColumns<DictionaryWordsDescriptionsType>[] = [
-    {
-      title: <FormattedMessage id="ID" defaultMessage="ID" />,
-      dataIndex: 'id',
-      hideInSearch: true,
-      sorter: true,
-      width: '80px',
-    },
+  const columns: ProColumns<API.DictionaryWordData>[] = [
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
       dataIndex: 'title',
-      sorter: true,
+      sorter: false,
     },
     {
       title: <FormattedMessage id="description" defaultMessage="description" />,
       dataIndex: 'description',
-      sorter: true,
+      sorter: false,
     },
     {
       title: <FormattedMessage id="video_url" defaultMessage="Video URL" />,
       dataIndex: 'video_url',
-      sorter: true,
+      sorter: false,
+    },
+    {
+      width: 100,
+      hideInSearch: true,
+      title: <FormattedMessage id="pages.searchTable.titleOption" />,
+      dataIndex: 'option',
+      valueType: 'option',
+      render: (_, record) => [
+        <Button
+          key="edit"
+          type="primary"
+          icon={<EditOutlined />}
+          onClick={() => {
+            setSelectedField(record);
+            setModalVisible(true);
+          }}
+        />,
+        <Popconfirm
+          key="delete"
+          title={
+            <FormattedMessage
+              id="deleteQuestion"
+              defaultMessage="Are you sure to delete this record?"
+            />
+          }
+          onConfirm={async () => {
+            if (selectedField?.id) {
+              onDelete(selectedField.id);
+            }
+          }}
+          okText={<FormattedMessage id="yes" />}
+          cancelText={<FormattedMessage id="no" />}
+        >
+          <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+            <Button
+              type="primary"
+              icon={<DeleteOutlined />}
+              danger
+              onClick={() => {
+                setSelectedField(record);
+              }}
+            />
+          </Tooltip>
+        </Popconfirm>,
+      ],
     },
   ];
 
   return (
     <>
-      <ProTable<DictionaryWordsDescriptionsType>
+      <ProTable<API.DictionaryWordData>
         actionRef={actionRef}
         rowKey="id"
         search={false}
@@ -53,14 +91,28 @@ const DictionaryWordsDescriptions = ({}) => {
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>,
         ]}
-        dataSource={dataSource}
+        // We need set data source as a clone of the observable value for auto reload table
+        dataSource={[...dataSource]}
         columns={columns}
+        pagination={false}
+        revalidateOnFocus={true}
       />
-      {/* <DictionaryWordsDescriptionsModal
+      <DictionaryWordsDescriptionsModal
         isOpen={modalVisible}
-        onOpenChange={() => {}}
-        onFinish={(formData: any) => {}}
-      /> */}
+        onOpenChange={(newVisibleValue) => {
+          if (!newVisibleValue) {
+            setSelectedField(null);
+          }
+          setModalVisible(newVisibleValue);
+        }}
+        onFinish={async (formData: API.DictionaryWordData) => {
+          updateData(formData);
+          setSelectedField(null);
+          setModalVisible(false);
+          return;
+        }}
+        selectedField={selectedField}
+      />
     </>
   );
 };
