@@ -1,6 +1,6 @@
 import DictionaryWordsDescriptionsModal from '@/pages/Dictionary/components/DictionaryWords/Descriptions/modal';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { type ActionType, type ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
