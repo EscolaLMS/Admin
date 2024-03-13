@@ -16,6 +16,7 @@ import {
 } from '@/services/escola-lms/course';
 
 import { TopicType } from '@/services/escola-lms/enums';
+import { fields } from '@/services/escola-lms/fields';
 import type { UploadChangeParam } from 'antd/lib/upload';
 
 type CurrentEditMode =
@@ -181,6 +182,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   }, [state]);
 
   const [h5ps, setH5ps] = useState([]);
+  const [assistantId, setAssistantId] = useState<number | undefined>(undefined);
 
   const l = useLocation() as Location & { query: { lesson?: string; topic?: string } };
 
@@ -193,7 +195,18 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     };
   }, [l]);
 
+  const getAssistantId = useCallback(async () => {
+    const res = await fields({
+      class_type: 'EscolaLms\\Courses\\Models\\Lesson',
+    });
+    if (res.success) {
+      const foundAssistantId = res.data.find(({ name }) => name === 'assistant_id');
+      setAssistantId(foundAssistantId?.id);
+    }
+  }, []);
+
   useEffect(() => {
+    getAssistantId();
     setH5ps([]);
   }, []);
 
@@ -280,7 +293,9 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     (lesson_id: number, formData: FormData) => {
       const newLesson = flatLessons.find((lesson) => lesson.id === lesson_id);
       const isNew = newLesson && newLesson.isNew;
-
+      if (assistantId) {
+        formData.append('assistant_id', `${assistantId}`);
+      }
       return (isNew ? apiCreateLesson(formData) : apiUpdateLesson(lesson_id, formData)).then(
         (data) => {
           message.success(data.message);
@@ -312,7 +327,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         },
       );
     },
-    [state],
+    [state, assistantId],
   );
 
   const deleteLesson = useCallback(
