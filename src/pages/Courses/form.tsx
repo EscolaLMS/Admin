@@ -561,9 +561,9 @@ export default () => {
             tab={<FormattedMessage id="media" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <ProForm {...formProps}>
+            <ProForm {...formProps} layout='horizontal'>
               <Row>
-                <Col>
+                <Col span={24}>
                   <ProFormImageUpload
                     folder={`course/${course}`}
                     title="image"
@@ -577,9 +577,10 @@ export default () => {
                         ...removedPath,
                       }))
                     }
+                    hideLabel
                   />
                 </Col>
-                <Col>
+                <Col span={24}>
                   <ProFormVideoUpload
                     folder={`course/${course}`}
                     action={`/api/admin/courses/${course}`}
@@ -592,9 +593,10 @@ export default () => {
                         ...removedPath,
                       }))
                     }
+                    hideLabel
                   />
                 </Col>
-                <Col>
+                <Col span={24}>
                   <ProFormImageUpload
                     folder={`course/${course}`}
                     title="poster"
@@ -608,6 +610,7 @@ export default () => {
                         ...removedPath,
                       }))
                     }
+                    hideLabel
                   />
                 </Col>
               </Row>

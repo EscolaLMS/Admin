@@ -1,4 +1,4 @@
-import { Button, Col, Image, Row } from 'antd';
+import { Button, Image } from 'antd';
 import React from 'react';
 
 import SecureUploadBrowser from '@/components/SecureUpload/browser';
@@ -17,6 +17,7 @@ export const ProFormImageUpload: React.FC<{
   setPath: (state: Record<string, string>) => void;
   wrapInForm?: boolean;
   proFormGroupProps?: GroupProps;
+  hideLabel?: boolean;
 }> = ({
   title,
   action,
@@ -27,62 +28,58 @@ export const ProFormImageUpload: React.FC<{
   wrapInForm = true,
   folder,
   proFormGroupProps,
+  hideLabel = false,
 }) => {
   return (
     <ProForm.Group title={<FormattedMessage id={title} />} {...proFormGroupProps}>
-      <Row>
-        <Col>
-          <ProForm.Item shouldUpdate>
-            {(form) => {
-              return (
-                <React.Fragment>
-                  <SecureUploadBrowser
-                    folder={folder}
-                    wrapInForm={wrapInForm}
-                    accept="image/*"
-                    name={form_name}
-                    url={action}
-                    onChange={(info) => {
-                      if (info.file.status === 'done') {
-                        form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
+      <ProForm.Item shouldUpdate>
+        {(form) => {
+          return (
+            <React.Fragment>
+              <SecureUploadBrowser
+                folder={folder}
+                wrapInForm={wrapInForm}
+                accept="image/*"
+                name={form_name}
+                url={action}
+                onChange={(info) => {
+                  if (info.file.status === 'done') {
+                    form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
 
-                        if (info.file.response?.success) {
-                          setPath({
-                            // TODO: #1016 fix type
-                            // @ts-ignore
-                            [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
-                            // @ts-ignore
-                            [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
-                          });
-                        }
-                      }
-                    }}
-                  />
-                  <Button
-                    danger
-                    onClick={() => [
+                    if (info.file.response?.success) {
                       setPath({
-                        [`${form_name}_url`]: '',
-                        [`${form_name}_path`]: '',
-                      }),
-                      form.setFieldsValue({ [src_name]: '' }),
-                    ]}
-                  >
-                    <FormattedMessage id="delete" />
-                  </Button>
-                </React.Fragment>
-              );
-            }}
-          </ProForm.Item>
-        </Col>
-        <Col span={24}>
-          <ProForm.Item shouldUpdate>
-            {(form) => {
-              return <Image width={200} src={form.getFieldValue(src_name)} />;
-            }}
-          </ProForm.Item>
-        </Col>
-      </Row>
+                        // TODO: #1016 fix type
+                        // @ts-ignore
+                        [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
+                        // @ts-ignore
+                        [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
+                      });
+                    }
+                  }
+                }}
+                hideLabel={hideLabel}
+              />
+              <Button
+                danger
+                onClick={() => [
+                  setPath({
+                    [`${form_name}_url`]: '',
+                    [`${form_name}_path`]: '',
+                  }),
+                  form.setFieldsValue({ [src_name]: '' }),
+                ]}
+              >
+                <FormattedMessage id="delete" />
+              </Button>
+            </React.Fragment>
+          );
+        }}
+      </ProForm.Item>
+      <ProForm.Item shouldUpdate>
+        {(form) => {
+          return <Image width={200} src={form.getFieldValue(src_name)} />;
+        }}
+      </ProForm.Item>
     </ProForm.Group>
   );
 };
