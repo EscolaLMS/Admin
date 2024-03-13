@@ -255,7 +255,7 @@ export const SettingsModalForm: React.FC<{
 
         {type === 'boolean' ? (
           <ProFormSwitch
-            name="data"
+            name="value"
             label={<FormattedMessage id="value" />}
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
