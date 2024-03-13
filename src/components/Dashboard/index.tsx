@@ -237,7 +237,6 @@ export const Dashboard: React.FC = () => {
     };
     saveToLS('layout', changedLayouts);
   };
-  console.log(stageComponents);
   return (
     <main>
       <ResponsiveGridLayout
