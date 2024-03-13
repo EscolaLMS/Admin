@@ -3,7 +3,7 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { type ActionType, type ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { useRef, useState } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage } from 'umi';
 
 interface Props {
   dataSource: API.DictionaryWordData[];
@@ -12,7 +12,6 @@ interface Props {
 }
 
 const DictionaryWordsDescriptions = ({ dataSource, updateData, onDelete }: Props) => {
-  const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedField, setSelectedField] = useState<API.DictionaryWordData | null>(null);
