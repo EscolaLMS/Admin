@@ -2090,6 +2090,7 @@ declare namespace API {
     id: number;
     dictionary_id: number;
     word: string;
+    description: string;
     created_at: string;
     updated_at: string;
     categories: DictionaryWordsCategory[];

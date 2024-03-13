@@ -609,7 +609,7 @@
         hideInMenu: true,
       },
       {
-        path: '/other/dictionary/:dictionaryId/:tab/:dictionaryWordId',
+        path: '/other/dictionary/:dictionaryId/:tab/:dictionaryWordId/:dictionaryWordTab',
         name: 'Word',
         icon: 'read',
         access: 'dictionaryWordCreate',

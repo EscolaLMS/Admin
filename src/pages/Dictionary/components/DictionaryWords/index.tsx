@@ -4,10 +4,9 @@ import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl, useParams } from 'umi';
-
-import { DictionaryTabNames } from '@/pages/Dictionary/form';
 import { deleteDictionaryWord, dictionaryWords } from '@/services/escola-lms/dictionary';
 import { createTableOrderObject } from '@/utils/utils';
+import { DictionaryWordsTabNames } from '@/pages/Dictionary/components/DictionaryWords/form';
 
 const handleRemove = async (id: number) => {
   return deleteDictionaryWord(id).then((response) => {
@@ -56,7 +55,7 @@ const DictionaryWordsTableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <Link to={`/other/dictionary/${dictionaryId}/${tab}/${record.id}`} key="edit">
+        <Link to={`/other/dictionary/${dictionaryId}/${tab}/${record.id}/${DictionaryWordsTabNames.FORM}`} key="edit">
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
             <Button type="primary" icon={<EditOutlined />} />
           </Tooltip>
@@ -100,7 +99,7 @@ const DictionaryWordsTableList: React.FC = () => {
         layout: 'vertical',
       }}
       toolBarRender={() => [
-        <Link to={`/other/dictionary/${dictionaryId}/${tab}/new`} key="new">
+        <Link to={`/other/dictionary/${dictionaryId}/${tab}/new/${DictionaryWordsTabNames.FORM}`} key="new">
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>

@@ -870,4 +870,6 @@ export default {
   word: 'Słowo',
   new_dictionary_word: 'Dodaj nowe słowo',
   edit_dictionary_word: 'Edytuj słowo',
+  descriptions: 'Opisy',
+  video_url: 'URL do filmu',
 };

@@ -85,12 +85,11 @@ export default () => {
           type: 'card',
           activeKey: tab,
           onChange: (key) => {
-            console.log('onChange key: ', key);
             history.push(`/other/dictionary/${dictionaryId}/${key}`);
           },
         }}
       >
-        <ProCard.TabPane key={DictionaryTabNames.FORM} tab={<FormattedMessage id="form" />}>
+        <ProCard.TabPane key={DictionaryTabNames.FORM} tab={<FormattedMessage id="attributes" />}>
           <ProForm {...formProps} form={form}>
             <Row gutter={[16, 16]}>
               <Col xs={{ span: 24 }} md={{ span: 12 }}>
