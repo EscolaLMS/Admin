@@ -1,13 +1,12 @@
 import FilesBrowser from '@/components/FilesBrowser';
 import SecureUpload from '@/components/SecureUpload';
 import { FolderOpenOutlined } from '@ant-design/icons';
+import type { AxiosRequestConfig } from '@umijs/max';
 import { Button, Modal, message } from 'antd';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import type { PropsWithChildren } from 'react';
 import { useCallback, useState } from 'react';
-import { FormattedMessage } from 'umi';
-import type { AxiosRequestConfig } from '@umijs/max';
-import { request } from 'umi';
+import { FormattedMessage, request } from 'umi';
 import type { SecureUploadType } from './index';
 
 type PostResponse = API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata>;
@@ -69,14 +68,20 @@ function SecureUploadBrowser<Type = API.File>({
   }, []);
 
   return (
-    <div>
+    <>
       <Button onClick={() => setShowBrowser(true)} icon={<FolderOpenOutlined />}>
         {' '}
         <FormattedMessage id="browse" />
       </Button>
 
       {showBrowser && (
-        <Modal open={showBrowser} onCancel={closeModal} onOk={closeModal} width="60vw">
+        <Modal
+          open={showBrowser}
+          onCancel={closeModal}
+          onOk={closeModal}
+          width="60vw"
+          closeIcon={false}
+        >
           <FilesBrowser
             forceLoading={loading}
             hideDeleteBtn={true}
@@ -118,7 +123,7 @@ function SecureUploadBrowser<Type = API.File>({
       <div style={{ marginTop: '10px' }}>
         <SecureUpload {...props} />
       </div>
-    </div>
+    </>
   );
 }
 
