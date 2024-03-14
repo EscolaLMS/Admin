@@ -592,6 +592,30 @@
         component: './Tasks/form',
         hideInMenu: true,
       },
+
+      {
+        path: '/other/dictionary',
+        name: 'Dictionary',
+        icon: 'read',
+        access: 'dictionaryList',
+        component: './Dictionary',
+      },
+      {
+        path: '/other/dictionary/:dictionaryId/:tab',
+        name: 'Form',
+        icon: 'read',
+        access: 'dictionaryCreate',
+        component: './Dictionary/form',
+        hideInMenu: true,
+      },
+      {
+        path: '/other/dictionary/:dictionaryId/:tab/:dictionaryWordId/:dictionaryWordTab',
+        name: 'Word',
+        icon: 'read',
+        access: 'dictionaryWordCreate',
+        component: './Dictionary/components/DictionaryWords/form',
+        hideInMenu: true,
+      },
     ],
   },
   {

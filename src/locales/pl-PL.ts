@@ -1,3 +1,4 @@
+import bulkNotifications from './pl-PL/bulkNotifications';
 import component from './pl-PL/component';
 import consultations from './pl-PL/consultations';
 import courses from './pl-PL/courses';
@@ -13,7 +14,6 @@ import settingDrawer from './pl-PL/settingDrawer';
 import settings from './pl-PL/settings';
 import templates from './pl-PL/templates';
 import vouchers from './pl-PL/vouchers';
-import bulkNotifications from './pl-PL/bulkNotifications';
 
 export default {
   courseAccessEnquiries: 'Zapytania od dostęp do kursu',
@@ -162,6 +162,7 @@ export default {
   'menu.Other activities.Consultation Requests': 'Prośby o konsultacje',
   'menu.Other activities.StationaryEvents': 'Wydarzenia stacjonarne',
   'menu.Other activities.Questionnaire Form': 'Ankiety',
+  'menu.Other activities.Dictionary': 'Słownik',
   'stationary_event.edit': 'Formularz Wydarzenia stacjonarne',
   stationary_event: 'Wydarzenie stacjonarne',
   'menu.reset': 'reset',
@@ -860,4 +861,15 @@ export default {
   Unknown: 'Nieznany',
   edit_score: 'Edytuj wynik',
   see_file_example_image: 'Zobacz zdjęcie przykładowego pliku',
+  edit_dictionary: 'Edytuj słownik',
+  new_dictionary: 'Dodaj słownik',
+  free_views_count: 'Liczba bezpłatnych wyświetleń',
+  free_views_count_tooltip:
+    'Liczba bezpłatnych wyświetleń po których zostanie zablokowana dalsza możliwość korzystania ze słownika',
+  words: 'Słowa',
+  word: 'Słowo',
+  new_dictionary_word: 'Dodaj nowe słowo',
+  edit_dictionary_word: 'Edytuj słowo',
+  descriptions: 'Opisy',
+  video_url: 'URL do filmu',
 };

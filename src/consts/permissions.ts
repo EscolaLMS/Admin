@@ -310,6 +310,18 @@ enum PERMISSIONS {
   UpdateCompetencyChallenges = 'competency-challenges_update',
   DeleteCompetencyChallenges = 'competency-challenges_delete',
   ListCompetencyChallenges = 'competency-challenges_list',
+
+  /* -------- EscolaLMS/dictionary -------- */
+  DictionaryList = 'dictionary_list',
+  DictionaryCreate = 'dictionary_create',
+  DictionaryRead = 'dictionary_read',
+  DictionaryUpdate = 'dictionary_update',
+  DictionaryDelete = 'dictionary_delete',
+  DictionaryWordList = 'dictionary-word_list',
+  DictionaryWordCreate = 'dictionary-word_create',
+  DictionaryWordRead = 'dictionary-word_read',
+  DictionaryWordUpdate = 'dictionary-word_update',
+  DictionaryWordDelete = 'dictionary-word_delete',
 }
 
 export default PERMISSIONS;

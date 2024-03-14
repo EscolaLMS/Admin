@@ -74,8 +74,12 @@ export default function (initialState: {
     userDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserRead),
     userCreatePermission: havePermissionsInDashboard(PERMISSIONS.UserCreate),
 
-    UserBulkNotificationListPermission: havePermissionsInDashboard(PERMISSIONS.UserBulkNotificationList),
-    UserBulkNotificationCreatePermission: havePermissionsInDashboard(PERMISSIONS.UserBulkNotificationCreate),
+    UserBulkNotificationListPermission: havePermissionsInDashboard(
+      PERMISSIONS.UserBulkNotificationList,
+    ),
+    UserBulkNotificationCreatePermission: havePermissionsInDashboard(
+      PERMISSIONS.UserBulkNotificationCreate,
+    ),
 
     userGroupListPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupList),
     userGroupDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserGroupRead),
@@ -291,5 +295,20 @@ export default function (initialState: {
         PERMISSIONS.CompetencyChallengeScaleDelete,
       ),
     tasksPermission: () => true,
+    // DICTIONARY
+    dictionaryList:
+      !haveSettingsInDashboard('hideInMenu-OtherDictionary', true) &&
+      havePackageInstalled(PACKAGES.Dictionary) &&
+      havePermissionsInDashboard(PERMISSIONS.DictionaryList, PERMISSIONS.DictionaryRead),
+    dictionaryCreate:
+      havePackageInstalled(PACKAGES.Dictionary) &&
+      havePermissionsInDashboard(PERMISSIONS.DictionaryCreate),
+
+    dictionaryWordList:
+      havePackageInstalled(PACKAGES.Dictionary) &&
+      havePermissionsInDashboard(PERMISSIONS.DictionaryWordList, PERMISSIONS.DictionaryWordRead),
+      dictionaryWordCreate:
+      havePackageInstalled(PACKAGES.Dictionary) &&
+      havePermissionsInDashboard(PERMISSIONS.DictionaryWordCreate),
   };
 }

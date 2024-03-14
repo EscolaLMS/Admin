@@ -2016,14 +2016,14 @@ declare namespace API {
   // BulkNotifications
 
   type BulkNotificationsParams = PaginationParams & {
-    channel?: BulkNotificationChannelsEnum
+    channel?: BulkNotificationChannelsEnum;
   };
 
   type BulkNotificationSections = {
     id: number;
     key: BulkNotificationSectionsKeysEnum;
     value: string;
-  }
+  };
 
   type BulkNotificationSectionsPost = {
     title: string;
@@ -2032,7 +2032,7 @@ declare namespace API {
     redirect_url?: string;
     data?: object;
     users_ids?: number[];
-  }
+  };
 
   type BulkNotification = {
     id?: number;
@@ -2048,6 +2048,75 @@ declare namespace API {
   };
 
   type BulkNotificationsList = DefaultMetaResponse<BulkNotification>;
+
+  // DICTIONARY
+
+  type DictionariesParams = PaginationParams & {
+    name?: string;
+    slug?: string;
+  };
+
+  type Dictionaries = {
+    id: number;
+    name: string;
+    slug: string;
+    free_views_count: number;
+    created_at: string;
+    updated_at: string;
+  };
+
+  type DictionariesList = DefaultMetaResponse<Dictionaries>;
+
+  type DictionariesCreate = {
+    name: string;
+    free_views_count: number;
+  };
+
+  // DICTIONARY WORDS
+
+  type DictionaryWordsParams = PaginationParams & {
+    word?: string;
+    dictionary_id?: number;
+    'category_ids[]'?: number[];
+  };
+
+  type DictionaryWordsCategory = {
+    id: number;
+    name: string;
+    name_with_breadcrumbs: string;
+  };
+
+  type DictionaryWordData = {
+    id?: number;
+    title?: string;
+    description?: string;
+    video_url?: string;
+  }
+
+  type DictionaryWords = {
+    id: number;
+    dictionary_id: number;
+    word: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+    categories: DictionaryWordsCategory[];
+    data?: {
+      descriptions?: API.DictionaryWordData[];
+    };
+  };
+
+  type DictionaryWordsList = DefaultMetaResponse<DictionaryWords>;
+
+  type DictionaryWordCreate = {
+    word: string;
+    dictionary_id: number;
+    description: string;
+    categories?: number[];
+    data?: {
+      descriptions?: API.DictionaryWordData[];
+    };
+  };
 }
 
 declare module 'jsoneditor-react' {
