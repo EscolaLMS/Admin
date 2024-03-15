@@ -12,7 +12,7 @@ const getStateLesson = (lesson: API.Lesson): StateLesson => ({
 });
 
 export const Lesson: React.FC = () => {
-  const { currentEditMode } = useContext(Context);
+  const { updateLesson, deleteLesson, cloneLesson, currentEditMode } = useContext(Context);
 
   const lesson =
     currentEditMode && currentEditMode.mode === 'lesson' && currentEditMode.value
@@ -21,7 +21,6 @@ export const Lesson: React.FC = () => {
   const [state, setState] = useState<StateLesson>(getStateLesson(lesson));
   const [, setTopicList] = useState<API.Topic[]>([]);
   const [loading, setLoading] = useState(false);
-  const { updateLesson, deleteLesson, cloneLesson } = useContext(Context);
 
   const params = useParams<{ course?: string; tab?: string }>();
 

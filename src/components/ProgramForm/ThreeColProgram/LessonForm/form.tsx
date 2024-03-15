@@ -2,9 +2,10 @@ import ProCard from '@ant-design/pro-card';
 import ProForm, { ProFormDatePicker, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
 import { Affix, Button, Col, Divider, Popconfirm, Row, Space } from 'antd';
 import { isAfter, isBefore } from 'date-fns';
-import React from 'react';
+import React, { useContext } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import { Context } from '@/components/ProgramForm/Context';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { ParentLesson } from '../ParentLesson';
 import type { StateLesson } from './types';
@@ -18,6 +19,7 @@ export const LessonForm: React.FC<{
   initialValues: any;
   loading: boolean;
 }> = ({ onFinish, onValuesChange, onDelete, onClone, initialValues, lesson, loading = false }) => {
+  const { isAssistant } = useContext(Context);
   const [form] = ProForm.useForm();
   const activeFrom = ProForm.useWatch('active_from', form);
   const activeTo = ProForm.useWatch('active_to', form);
@@ -77,7 +79,7 @@ export const LessonForm: React.FC<{
           );
         },
       }}
-      layout="horizontal"
+      layout="vertical"
       onFinish={onFinish}
       onValuesChange={onValuesChange}
       initialValues={{ ...initialValues, summary: initialValues.summary || '' }}
@@ -134,7 +136,7 @@ export const LessonForm: React.FC<{
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
             <ProFormDatePicker
               allowClear={false}
-              width="md"
+              width="lg"
               name="active_from"
               label={<FormattedMessage id="active_from" />}
               placeholder={intl.formatMessage({
@@ -155,7 +157,7 @@ export const LessonForm: React.FC<{
             />
             <ProFormDatePicker
               allowClear={false}
-              width="md"
+              width="lg"
               name="active_to"
               label={<FormattedMessage id="active_to" />}
               placeholder={intl.formatMessage({
@@ -176,6 +178,16 @@ export const LessonForm: React.FC<{
               ]}
             />
             <ParentLesson name="parent_id" currentLessonId={lesson?.id} />
+            {isAssistant && (
+              <ProFormText
+                name="assistant_id"
+                label={<FormattedMessage id="assistant_id" defaultMessage="Assistant ID" />}
+                tooltip={<FormattedMessage id="assistant_id_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'Assistant ID',
+                })}
+              />
+            )}
           </aside>
         </Col>
       </Row>
