@@ -43,6 +43,7 @@ type ProgramContext = {
   cloneTopic?: (topic_id: number) => void;
   cloneLesson?: (lesson_id: number) => void;
   getLessons?: () => void;
+  isAssistant?: boolean;
 };
 
 export const Context = React.createContext<ProgramContext>({});
@@ -182,7 +183,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
   }, [state]);
 
   const [h5ps, setH5ps] = useState([]);
-  const [assistantId, setAssistantId] = useState<number | undefined>(undefined);
+  const [isAssistant, setIsAssistant] = useState<boolean>(false);
 
   const l = useLocation() as Location & { query: { lesson?: string; topic?: string } };
 
@@ -201,7 +202,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     });
     if (res.success) {
       const foundAssistantId = res.data.find(({ name }) => name === 'assistant_id');
-      setAssistantId(foundAssistantId?.id);
+      setIsAssistant(!!foundAssistantId?.id);
     }
   }, []);
 
@@ -293,9 +294,6 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     (lesson_id: number, formData: FormData) => {
       const newLesson = flatLessons.find((lesson) => lesson.id === lesson_id);
       const isNew = newLesson && newLesson.isNew;
-      if (assistantId) {
-        formData.append('assistant_id', `${assistantId}`);
-      }
       return (isNew ? apiCreateLesson(formData) : apiUpdateLesson(lesson_id, formData)).then(
         (data) => {
           message.success(data.message);
@@ -327,7 +325,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
         },
       );
     },
-    [state, assistantId],
+    [state],
   );
 
   const deleteLesson = useCallback(
@@ -639,6 +637,7 @@ export const AppContext: React.FC<{ children: React.ReactNode; id: number }> = (
     cloneLesson,
     currentEditMode,
     getLessons,
+    isAssistant,
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
