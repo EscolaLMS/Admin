@@ -12,7 +12,7 @@ const ConsultationFields: React.FC = () => {
         tabs={{
           type: 'card',
           activeKey: 'fields',
-          onChange: (key) => history.push(`/other/consultations`),
+          onChange: () => history.push('/other/consultations'),
         }}
       >
         <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />} />
