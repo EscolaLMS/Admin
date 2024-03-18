@@ -28,7 +28,7 @@ import ProForm, {
 import { PageContainer } from '@ant-design/pro-layout';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
 import { isAfter, isBefore } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   FormattedMessage,
   getAllLocales,
@@ -41,6 +41,8 @@ import {
 } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
+import AdditionalField from "@/pages/Users/User/components/AdditionalField";
+import useModelFields from "@/hooks/useModelFields";
 
 enum TabNames {
   ATTRIBUTES = 'attributes',
@@ -72,6 +74,7 @@ export default () => {
     courseId: 0,
   });
   const [isFirstTimeEdit, setIsFirstTimeEdit] = useState(true);
+  const additionalFields = useModelFields('EscolaLms\\Courses\\Models\\Course');
 
   const locales: string[] = getAllLocales() || [];
 
@@ -534,6 +537,12 @@ export default () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               /> */}
+            </ProForm.Group>
+            <ProForm.Group label={<FormattedMessage id="model_fields" />}>
+              {additionalFields.state === 'loaded' &&
+                additionalFields.list.map((field: API.ModelField) => (
+                  <AdditionalField key={field.id} field={field} />
+                ))}
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>

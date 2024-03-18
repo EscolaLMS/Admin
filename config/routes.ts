@@ -48,6 +48,13 @@
         component: './Courses',
       },
       {
+        path: '/courses/fields',
+        icon: 'fire',
+        access: 'courseListPermission',
+        component: './Courses/fields',
+        hideInMenu: true,
+      },
+      {
         path: '/courses/list/:course',
         name: 'Form',
         icon: 'book',
@@ -508,6 +515,14 @@
         icon: 'interaction',
         access: 'consultationListPermission',
         component: './Consultations',
+      },
+      {
+        path: '/other/consultations/fields',
+        name: 'Consultations Model Fields',
+        icon: 'interaction',
+        access: 'consultationDetailsPermission',
+        component: './Consultations/fields',
+        hideInMenu: true,
       },
       {
         path: '/other/consultation-access',

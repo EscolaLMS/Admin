@@ -1,7 +1,7 @@
 import ProCard from '@ant-design/pro-card';
-import ProForm, { ProFormDatePicker, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormDatePicker, ProFormDigit, ProFormSelect, ProFormText } from '@ant-design/pro-form';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -26,6 +26,8 @@ import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import ConsultationCalendar from './components/Calendar';
 import './index.css';
+import useModelFields from "@/hooks/useModelFields";
+import AdditionalField from "@/pages/Users/User/components/AdditionalField";
 
 enum TabNames {
   ATTRIBUTES = 'attributes',
@@ -45,6 +47,7 @@ const ConsultationForm = () => {
   const [data, setData] = useState<Partial<API.Consultation>>();
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [form] = ProForm.useForm();
+  const additionalFields = useModelFields('EscolaLms\\Consultations\\Models\\Consultation');
 
   const fetchData = useCallback(async () => {
     const response = await getConsultation(Number(consultation));
@@ -296,6 +299,20 @@ const ConsultationForm = () => {
               >
                 <UserSelect />
               </ProForm.Item>
+              <ProFormDigit
+                initialValue={isNew ? null : undefined}
+                width="sm"
+                name="max_session_students"
+                label={<FormattedMessage id="max_session_students" />}
+                tooltip={<FormattedMessage id="max_session_students_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'max_session_students',
+                  defaultMessage: 'max_session_students',
+                })}
+                min={1}
+                max={99}
+                fieldProps={{ step: 1 }}
+              />
             </ProForm.Group>
             <ProForm.Group>
               <ProForm.Item
@@ -317,6 +334,12 @@ const ConsultationForm = () => {
               >
                 <MultipleDatePicker />
               </ProForm.Item>
+            </ProForm.Group>
+            <ProForm.Group>
+              {additionalFields.state === 'loaded' &&
+                additionalFields.list.map((field: API.ModelField) => (
+                  <AdditionalField key={field.id} field={field} />
+                ))}
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>

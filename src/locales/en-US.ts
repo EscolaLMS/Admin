@@ -876,4 +876,6 @@ export default {
   Unknown: 'Unknown',
   edit_score: 'Edit score',
   see_file_example_image: 'See file example image',
+  max_session_students: 'Max session students',
+  model_fields: 'Model fields'
 };
