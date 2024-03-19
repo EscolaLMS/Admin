@@ -166,6 +166,88 @@ const TableList: React.FC = () => {
     [data],
   );
 
+  const columns: ProColumns<API.CategoryListItem>[] = [
+    ...staticColumns,
+    {
+      hideInSearch: true,
+      title: <FormattedMessage id="parent_id" defaultMessage="parent_id" />,
+      dataIndex: 'parent_id',
+      tip: intl.formatMessage({
+        id: 'parent_id_tooltip',
+        defaultMessage: 'Parent category',
+      }),
+      render: (_, record) => {
+        const parentCat = data.find((cat) => cat.id === record.parent_id);
+        if (parentCat) {
+          return (
+            <Button size="small" onClick={() => setModalVisible(parentCat.id)}>
+              {parentCat.name}
+            </Button>
+          );
+        }
+        return (
+          <React.Fragment>
+            <FormattedMessage id="none" />
+          </React.Fragment>
+        );
+      },
+    },
+
+    {
+      hideInSearch: true,
+      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
+      dataIndex: 'option',
+      valueType: 'option',
+      render: (_, record) => [
+        <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => setModalVisible(record.id)}
+          />
+        </Tooltip>,
+        categoryHasChildren(record.id) ? (
+          <Tooltip
+            key="delete"
+            title={
+              <FormattedMessage
+                id="cantDelete"
+                defaultMessage="You can't delete this category because it's parent to others"
+              />
+            }
+          >
+            <Button disabled={true} type="primary" icon={<DeleteOutlined />} danger />
+          </Tooltip>
+        ) : (
+          <Popconfirm
+            key="delete"
+            title={
+              <FormattedMessage
+                id="deleteQuestion"
+                defaultMessage="Are you sure to delete this record?"
+              />
+            }
+            onConfirm={async () => {
+              const success = await handleRemove(intl, record.id);
+              if (success) {
+                setModalVisible(false);
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+            cancelText={<FormattedMessage id="no" defaultMessage="No" />}
+          >
+            <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+              <Button type="primary" icon={<DeleteOutlined />} danger />
+            </Tooltip>
+          </Popconfirm>
+        ),
+      ],
+    },
+  ];
+
   return (
     <PageContainer>
       <Modal open={showTree} onCancel={() => setShowTree(false)} onOk={() => setShowTree(false)}>
@@ -214,86 +296,7 @@ const TableList: React.FC = () => {
             return [];
           });
         }}
-        columns={[
-          ...staticColumns,
-          {
-            hideInSearch: true,
-            title: <FormattedMessage id="parent_id" defaultMessage="parent_id" />,
-            dataIndex: 'parent_id',
-            tip: intl.formatMessage({
-              id: 'parent_id_tooltip',
-              defaultMessage: 'Parent category',
-            }),
-            render: (_, record) => {
-              const parentCat = data.find((cat) => cat.id === record.parent_id);
-              if (parentCat) {
-                return (
-                  <Button size="small" onClick={() => setModalVisible(parentCat.id)}>
-                    {parentCat.name}
-                  </Button>
-                );
-              }
-              return (
-                <React.Fragment>
-                  <FormattedMessage id="none" />
-                </React.Fragment>
-              );
-            },
-          },
-          {
-            hideInSearch: true,
-            title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
-            dataIndex: 'option',
-            valueType: 'option',
-            render: (_, record) => [
-              <Tooltip key="edit" title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                <Button
-                  type="primary"
-                  icon={<EditOutlined />}
-                  onClick={() => setModalVisible(record.id)}
-                />
-              </Tooltip>,
-              categoryHasChildren(record.id) ? (
-                <Tooltip
-                  key="delete"
-                  title={
-                    <FormattedMessage
-                      id="cantDelete"
-                      defaultMessage="You can't delete this category because it's parent to others"
-                    />
-                  }
-                >
-                  <Button disabled={true} type="primary" icon={<DeleteOutlined />} danger />
-                </Tooltip>
-              ) : (
-                <Popconfirm
-                  key="delete"
-                  title={
-                    <FormattedMessage
-                      id="deleteQuestion"
-                      defaultMessage="Are you sure to delete this record?"
-                    />
-                  }
-                  onConfirm={async () => {
-                    const success = await handleRemove(intl, record.id);
-                    if (success) {
-                      setModalVisible(false);
-                      if (actionRef.current) {
-                        actionRef.current.reload();
-                      }
-                    }
-                  }}
-                  okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
-                  cancelText={<FormattedMessage id="no" defaultMessage="No" />}
-                >
-                  <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                    <Button type="primary" icon={<DeleteOutlined />} danger />
-                  </Tooltip>
-                </Popconfirm>
-              ),
-            ],
-          },
-        ]}
+        columns={columns}
       />
 
       <CategoryModalForm
