@@ -36,6 +36,7 @@ const MultipleDatePicker: React.FC<{
 
   const dateRender = useCallback(
     (currentDate: moment.Moment) => {
+      console.log('currentDate: ', currentDate);
       const isSelected = selectedDate.indexOf(getTimestamp(currentDate)) > -1;
 
       return (
@@ -98,8 +99,8 @@ const MultipleDatePicker: React.FC<{
       open={open}
       onFocus={() => setOpen(true)}
       onBlur={() => setOpen(false)}
-      dropdownMatchSelectWidth={false}
-      dropdownClassName={'multipleDropdownClassName'}
+      popupMatchSelectWidth={false}
+      popupClassName={'multipleDropdownClassName'}
       dropdownStyle={{ height: '310px', width: '335px', minWidth: '0' }}
       dropdownRender={() => {
         return (
@@ -117,7 +118,7 @@ const MultipleDatePicker: React.FC<{
             open
             // TODO #1013 FIXme
             // @ts-ignore
-            dateRender={dateRender}
+            cellRender={dateRender}
             style={{ visibility: 'hidden' }}
             getPopupContainer={({ parentNode }: any) => {
               return parentNode;

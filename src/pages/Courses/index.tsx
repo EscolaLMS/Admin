@@ -16,17 +16,18 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
 import CategoryTree from '@/components/CategoryTree';
+import ModelFields from '@/components/ModelFields';
 import SecureUpload from '@/components/SecureUpload';
 import Tags from '@/components/Tags';
 import UserSelect from '@/components/UserSelect';
 import PERMISSIONS from '@/consts/permissions';
+import useModelFields from '@/hooks/useModelFields';
 import { usePermissions } from '@/hooks/usePermissions';
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
+import { FieldType } from '@/services/escola-lms/enums';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
+import { getLocale, history, useParams } from 'umi';
 import './style.less';
-import useModelFields from "@/hooks/useModelFields";
-import { getLocale, history } from 'umi';
-import { FieldType } from "@/services/escola-lms/enums";
 
 function getUserItems(v: number[] | API.UserItem[]): API.UserItem[] {
   return ((v ?? []) as (API.UserItem | number)[])?.filter(
@@ -215,6 +216,7 @@ const TableList: React.FC = () => {
   const intl = useIntl();
   const { checkPermission } = usePermissions();
   const additionalFields = useModelFields('EscolaLms\\Courses\\Models\\Course');
+  const { courseTab } = useParams<{ courseTab?: string }>();
 
   const dynamicAdditionalFieldsColumns: ProColumns<API.CourseListItem>[] = useMemo(() => {
     if (additionalFields.state !== 'loaded') return [];
@@ -223,7 +225,7 @@ const TableList: React.FC = () => {
       const locale = getLocale();
       const fieldTranslatedTitle = field?.extra?.find((i: Record<string, string>) => i?.[locale])?.[
         locale
-        ];
+      ];
 
       // TODO #1043 add other types support
       switch (field.type) {
@@ -260,7 +262,6 @@ const TableList: React.FC = () => {
       }
     }, []);
   }, [additionalFields]);
-
 
   const handleRemove = useCallback(
     async (id: number) => {
@@ -427,16 +428,9 @@ const TableList: React.FC = () => {
       <ProCard
         tabs={{
           type: 'card',
-          activeKey: 'list',
+          activeKey: courseTab,
           onChange: (key) => {
-            switch (key) {
-              case 'list':
-                return history.push(`/courses/list`);
-              case 'fields':
-                return history.push(`/courses/fields`);
-              default:
-                return history.push(`/courses/${key}`);
-            }
+            history.push(`/courses/${key}`);
           },
         }}
       >
@@ -521,18 +515,25 @@ const TableList: React.FC = () => {
                       />
                     </Tooltip>
                   ),
-                  (checkPermission(PERMISSIONS.COURSES_CLONE) && <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
-                    <Button
-                      onClick={() => record.id && handleClone(record.id)}
-                      icon={<CopyOutlined />}
-                    />
-                  </Tooltip>),
+                  checkPermission(PERMISSIONS.COURSES_CLONE) && (
+                    <Tooltip
+                      key="clone"
+                      title={<FormattedMessage id="clone" defaultMessage="clone" />}
+                    >
+                      <Button
+                        onClick={() => record.id && handleClone(record.id)}
+                        icon={<CopyOutlined />}
+                      />
+                    </Tooltip>
+                  ),
                 ],
               },
             ]}
           />
         </ProCard.TabPane>
-        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />} />
+        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />}>
+          <ModelFields class_type="EscolaLms\Courses\Models\Course" />
+        </ProCard.TabPane>
       </ProCard>
     </PageContainer>
   );

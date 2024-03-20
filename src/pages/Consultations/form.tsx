@@ -1,7 +1,12 @@
 import ProCard from '@ant-design/pro-card';
-import ProForm, { ProFormDatePicker, ProFormDigit, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormDatePicker,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-form';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -15,7 +20,9 @@ import ProductWidget from '@/components/ProductWidget';
 import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { ModelStatus } from '@/consts/status';
+import useModelFields from '@/hooks/useModelFields';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import AdditionalField from '@/pages/Users/User/components/AdditionalField';
 import {
   createConsultation,
   getConsultation,
@@ -26,10 +33,8 @@ import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import ConsultationCalendar from './components/Calendar';
 import './index.css';
-import useModelFields from "@/hooks/useModelFields";
-import AdditionalField from "@/pages/Users/User/components/AdditionalField";
 
-enum TabNames {
+export enum TabNames {
   ATTRIBUTES = 'attributes',
   PRODUCT = 'product',
   MEDIA = 'media',
@@ -320,6 +325,9 @@ const ConsultationForm = () => {
                 label={<FormattedMessage id="description" />}
                 tooltip={<FormattedMessage id="description_tooltip" />}
                 valuePropName="value"
+                style={{
+                  width: 440,
+                }}
                 required
               >
                 <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />

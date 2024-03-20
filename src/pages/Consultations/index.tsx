@@ -1,7 +1,12 @@
 import CategoryTree from '@/components/CategoryTree';
+import ModelFields from '@/components/ModelFields';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
+import useModelFields from '@/hooks/useModelFields';
+import { TabNames } from '@/pages/Consultations/form';
 import { consultations, deleteConsultation } from '@/services/escola-lms/consultations';
+import { FieldType } from '@/services/escola-lms/enums';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
+import { useParams } from '@@/exports';
 import {
   DeleteOutlined,
   DollarOutlined,
@@ -9,18 +14,14 @@ import {
   FireOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Select, Tag, Tooltip, Typography, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { FormattedMessage, Link, useIntl } from 'umi';
-import ProCard from "@ant-design/pro-card";
-import useModelFields from "@/hooks/useModelFields";
-import { getLocale, history } from 'umi';
-import { FieldType } from "@/services/escola-lms/enums";
-import {useParams} from "@@/exports";
+import { FormattedMessage, Link, getLocale, history, useIntl } from 'umi';
 
 export const TableColumns: ProColumns<API.Consultation>[] = [
   {
@@ -191,7 +192,7 @@ const Consultations: React.FC = () => {
       const locale = getLocale();
       const fieldTranslatedTitle = field?.extra?.find((i: Record<string, string>) => i?.[locale])?.[
         locale
-        ];
+      ];
 
       // TODO #1043 add other types support
       switch (field.type) {
@@ -254,7 +255,7 @@ const Consultations: React.FC = () => {
     [actionRef],
   );
 
-  const {consultation} = useParams<{ consultation?: string; }>();
+  const { consultation } = useParams<{ consultation?: string }>();
   return (
     <PageContainer>
       <ProCard
@@ -262,100 +263,99 @@ const Consultations: React.FC = () => {
           type: 'card',
           activeKey: consultation,
           onChange: (key) => {
-            switch (key) {
-              // case 'list':
-              //   return history.push(`/other/consultations`);
-              // case 'fields':
-              //   return history.push(`/other/consultations/fields`);
-              default:
-                return history.push(`/other/consultations/${key}`);
-            }
+            history.push(`/other/consultations/${key}`);
           },
         }}
       >
         <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}>
-        <ProTable<API.Consultation, API.ConsultationsParams>
-          headerTitle={intl.formatMessage({
-            id: 'Consultations',
-            defaultMessage: 'Consultations',
-          })}
-          loading={loading}
-          actionRef={actionRef}
-          rowKey="id"
-          search={{
-            layout: 'vertical',
-          }}
-          toolBarRender={() => [
-            <Link key="addnew" to="/other/consultations/new">
-              <Button type="primary" key="primary">
-                <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
-              </Button>
-            </Link>,
-          ]}
-          request={({ name, status, dateRange, category_id, pageSize, current }, sort) => {
-            setLoading(true);
-            const date_from =
-              dateRange && dateRange[0] ? format(new Date(dateRange[0]), DATETIME_FORMAT) : undefined;
-            const date_to =
-              dateRange && dateRange[1] ? format(new Date(dateRange[1]), DATETIME_FORMAT) : undefined;
+          <ProTable<API.Consultation, API.ConsultationsParams>
+            headerTitle={intl.formatMessage({
+              id: 'Consultations',
+              defaultMessage: 'Consultations',
+            })}
+            loading={loading}
+            actionRef={actionRef}
+            rowKey="id"
+            search={{
+              layout: 'vertical',
+            }}
+            toolBarRender={() => [
+              <Link key="addnew" to={`/other/consultations/new/${TabNames.ATTRIBUTES}`}>
+                <Button type="primary" key="primary">
+                  <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+                </Button>
+              </Link>,
+            ]}
+            request={({ name, status, dateRange, category_id, pageSize, current }, sort) => {
+              setLoading(true);
+              const date_from =
+                dateRange && dateRange[0]
+                  ? format(new Date(dateRange[0]), DATETIME_FORMAT)
+                  : undefined;
+              const date_to =
+                dateRange && dateRange[1]
+                  ? format(new Date(dateRange[1]), DATETIME_FORMAT)
+                  : undefined;
 
-            return consultations({
-              name: name || undefined,
-              'categories[]': category_id,
-              per_page: pageSize,
-              page: current,
-              date_from,
-              date_to,
-              status,
-              ...createTableOrderObject(sort, 'created_at'),
-            }).then((response) => {
-              setLoading(false);
-              if (response.success) {
-                return {
-                  data: response.data,
-                  total: response.meta.total,
-                  success: true,
-                };
-              }
-              return [];
-            });
-          }}
-          columns={[
-            ...TableColumns,
-            ...dynamicAdditionalFieldsColumns,
-            {
-              title: <FormattedMessage id="options" defaultMessage="options" />,
-              dataIndex: 'option',
-              valueType: 'option',
-              width: '10%',
-              render: (_, record) => [
-                <Link key="edit" to={`/other/consultations/${record.id}`}>
-                  <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                    <Button type="primary" icon={<EditOutlined />} />
-                  </Tooltip>
-                </Link>,
-                <Popconfirm
-                  key="delete"
-                  title={
-                    <FormattedMessage
-                      id="deleteQuestion"
-                      defaultMessage="Are you sure to delete this record?"
-                    />
-                  }
-                  onConfirm={() => record.id && handleRemove(record.id)}
-                  okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
-                  cancelText={<FormattedMessage id="no" defaultMessage="No" />}
-                >
-                  <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                    <Button type="primary" icon={<DeleteOutlined />} danger />
-                  </Tooltip>
-                </Popconfirm>,
-              ],
-            },
-          ]}
-        />
+              return consultations({
+                name: name || undefined,
+                'categories[]': category_id,
+                per_page: pageSize,
+                page: current,
+                date_from,
+                date_to,
+                status,
+                ...createTableOrderObject(sort, 'created_at'),
+              }).then((response) => {
+                setLoading(false);
+                if (response.success) {
+                  return {
+                    data: response.data,
+                    total: response.meta.total,
+                    success: true,
+                  };
+                }
+                return [];
+              });
+            }}
+            columns={[
+              ...TableColumns,
+              ...dynamicAdditionalFieldsColumns,
+              {
+                title: <FormattedMessage id="options" defaultMessage="options" />,
+                dataIndex: 'option',
+                valueType: 'option',
+                width: '10%',
+                render: (_, record) => [
+                  <Link key="edit" to={`/other/consultations/${record.id}/${TabNames.ATTRIBUTES}`}>
+                    <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                      <Button type="primary" icon={<EditOutlined />} />
+                    </Tooltip>
+                  </Link>,
+                  <Popconfirm
+                    key="delete"
+                    title={
+                      <FormattedMessage
+                        id="deleteQuestion"
+                        defaultMessage="Are you sure to delete this record?"
+                      />
+                    }
+                    onConfirm={() => record.id && handleRemove(record.id)}
+                    okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+                    cancelText={<FormattedMessage id="no" defaultMessage="No" />}
+                  >
+                    <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                      <Button type="primary" icon={<DeleteOutlined />} danger />
+                    </Tooltip>
+                  </Popconfirm>,
+                ],
+              },
+            ]}
+          />
         </ProCard.TabPane>
-        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />} />
+        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />}>
+          <ModelFields class_type="EscolaLms\Consultations\Models\Consultation" />
+        </ProCard.TabPane>
       </ProCard>
     </PageContainer>
   );

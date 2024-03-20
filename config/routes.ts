@@ -41,18 +41,18 @@
         access: 'coursesPermission',
       },
       {
+        path: '/courses/:courseTab',
+        icon: 'fire',
+        access: 'courseListPermission',
+        component: './Courses',
+        hideInMenu: true,
+      },
+      {
         path: '/courses/list',
         name: 'List',
         icon: 'fire',
         access: 'courseListPermission',
         component: './Courses',
-      },
-      {
-        path: '/courses/fields',
-        icon: 'fire',
-        access: 'courseListPermission',
-        component: './Courses/fields',
-        hideInMenu: true,
       },
       {
         path: '/courses/list/:course',
@@ -516,14 +516,6 @@
         access: 'consultationListPermission',
         component: './Consultations',
       },
-      // {
-      //   path: '/other/consultations/fields',
-      //   name: 'Consultations Model Fields',
-      //   icon: 'interaction',
-      //   access: 'consultationDetailsPermission',
-      //   component: './Consultations/fields',
-      //   hideInMenu: true,
-      // },
       {
         path: '/other/consultation-access',
         name: 'Consultation Requests',
@@ -534,7 +526,7 @@
       {
         path: '/other/consultations/:consultation',
         access: 'consultationDetailsPermission',
-        component: './Consultations/fields',
+        component: './Consultations',
         hideInMenu: true,
       },
       {
