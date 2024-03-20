@@ -876,4 +876,5 @@ export default {
   Unknown: 'Unknown',
   edit_score: 'Edit score',
   see_file_example_image: 'See file example image',
+  import_dictionary: 'Import dictionary',
 };

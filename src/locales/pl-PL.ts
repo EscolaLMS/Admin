@@ -874,4 +874,5 @@ export default {
   video_url: 'URL do filmu',
   assistant_id: 'ID asystenta',
   assistant_id_tooltip: 'ID asystenta dla czatu AI',
+  import_dictionary: 'Importuj słownik',
 };
