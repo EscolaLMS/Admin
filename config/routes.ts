@@ -516,14 +516,14 @@
         access: 'consultationListPermission',
         component: './Consultations',
       },
-      {
-        path: '/other/consultations/fields',
-        name: 'Consultations Model Fields',
-        icon: 'interaction',
-        access: 'consultationDetailsPermission',
-        component: './Consultations/fields',
-        hideInMenu: true,
-      },
+      // {
+      //   path: '/other/consultations/fields',
+      //   name: 'Consultations Model Fields',
+      //   icon: 'interaction',
+      //   access: 'consultationDetailsPermission',
+      //   component: './Consultations/fields',
+      //   hideInMenu: true,
+      // },
       {
         path: '/other/consultation-access',
         name: 'Consultation Requests',
@@ -534,7 +534,7 @@
       {
         path: '/other/consultations/:consultation',
         access: 'consultationDetailsPermission',
-        component: './Consultations/form',
+        component: './Consultations/fields',
         hideInMenu: true,
       },
       {

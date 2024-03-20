@@ -24,9 +24,8 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 import './style.less';
-import { history } from "@@/core/history";
 import useModelFields from "@/hooks/useModelFields";
-import { getLocale } from "@@/exports";
+import { getLocale, history } from 'umi';
 import { FieldType } from "@/services/escola-lms/enums";
 
 function getUserItems(v: number[] | API.UserItem[]): API.UserItem[] {

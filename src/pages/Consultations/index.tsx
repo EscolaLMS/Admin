@@ -16,11 +16,11 @@ import { Button, Popconfirm, Select, Tag, Tooltip, Typography, message } from 'a
 import { format } from 'date-fns';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
-import { history } from "@@/core/history";
 import ProCard from "@ant-design/pro-card";
 import useModelFields from "@/hooks/useModelFields";
-import { getLocale } from "@@/exports";
+import { getLocale, history } from 'umi';
 import { FieldType } from "@/services/escola-lms/enums";
+import {useParams} from "@@/exports";
 
 export const TableColumns: ProColumns<API.Consultation>[] = [
   {
@@ -254,18 +254,19 @@ const Consultations: React.FC = () => {
     [actionRef],
   );
 
+  const {consultation} = useParams<{ consultation?: string; }>();
   return (
     <PageContainer>
       <ProCard
         tabs={{
           type: 'card',
-          activeKey: 'list',
+          activeKey: consultation,
           onChange: (key) => {
             switch (key) {
-              case 'list':
-                return history.push(`/other/consultations`);
-              case 'fields':
-                return history.push(`/other/consultations/fields`);
+              // case 'list':
+              //   return history.push(`/other/consultations`);
+              // case 'fields':
+              //   return history.push(`/other/consultations/fields`);
               default:
                 return history.push(`/other/consultations/${key}`);
             }
