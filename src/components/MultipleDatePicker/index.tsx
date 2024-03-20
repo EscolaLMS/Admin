@@ -99,7 +99,7 @@ const MultipleDatePicker: React.FC<{
       onClear={() => onChange && onChange([])}
       tagRender={renderTag}
       open={open}
-      onFocus={() => setOpen(true)}
+      onClick={() => setOpen(true)}
       onBlur={() => setOpen(false)}
       popupMatchSelectWidth={false}
       popupClassName={'multipleDropdownClassName'}
@@ -125,10 +125,8 @@ const MultipleDatePicker: React.FC<{
             // TODO #1013 FIXme
             // @ts-ignore
             cellRender={dateRender}
-            style={{ visibility: 'hidden' }}
-            getPopupContainer={({ parentNode }: any) => {
-              return parentNode;
-            }}
+            // @ts-ignore
+            getPopupContainer={(node: HTMLElement) => node.parentNode}
             defaultValue={moment('00:00', 'HH')}
           />
         );
