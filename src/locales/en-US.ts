@@ -894,4 +894,5 @@ export default {
   trial_period_tooltip: 'Select the trial duration: daily, monthly or yearly',
   trial_duration: 'Trial duration',
   trial_duration_tooltip: 'The duration of the trial period expressed as a number in days, months or years',
+  import_dictionary: 'Import dictionary',
 };

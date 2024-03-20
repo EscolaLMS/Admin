@@ -317,6 +317,8 @@ enum PERMISSIONS {
   DictionaryRead = 'dictionary_read',
   DictionaryUpdate = 'dictionary_update',
   DictionaryDelete = 'dictionary_delete',
+  DictionaryImport = 'dictionary-word_import',
+
   DictionaryWordList = 'dictionary-word_list',
   DictionaryWordCreate = 'dictionary-word_create',
   DictionaryWordRead = 'dictionary-word_read',

@@ -172,10 +172,7 @@ const TableList: React.FC = () => {
       hideInSearch: true,
       title: <FormattedMessage id="parent_id" defaultMessage="parent_id" />,
       dataIndex: 'parent_id',
-      tip: intl.formatMessage({
-        id: 'parent_id_tooltip',
-        defaultMessage: 'Parent category',
-      }),
+      tooltip: <FormattedMessage id="parent_id_tooltip" defaultMessage="Parent category" />,
       render: (_, record) => {
         const parentCat = data.find((cat) => cat.id === record.parent_id);
         if (parentCat) {

@@ -1,12 +1,15 @@
+import SecureUpload from '@/components/SecureUpload';
+import PERMISSIONS from '@/consts/permissions';
+import { usePermissions } from '@/hooks/usePermissions';
+import { DictionaryWordsTabNames } from '@/pages/Dictionary/components/DictionaryWords/form';
+import { deleteDictionaryWord, dictionaryWords } from '@/services/escola-lms/dictionary';
+import { createTableOrderObject } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl, useParams } from 'umi';
-import { deleteDictionaryWord, dictionaryWords } from '@/services/escola-lms/dictionary';
-import { createTableOrderObject } from '@/utils/utils';
-import { DictionaryWordsTabNames } from '@/pages/Dictionary/components/DictionaryWords/form';
 
 const handleRemove = async (id: number) => {
   return deleteDictionaryWord(id).then((response) => {
@@ -22,6 +25,7 @@ const DictionaryWordsTableList: React.FC = () => {
   const intl = useIntl();
   const params = useParams<{ dictionaryId?: string; tab?: string }>();
   const { dictionaryId, tab } = params;
+  const { checkPermission } = usePermissions();
 
   const columns: ProColumns<API.DictionaryWords>[] = [
     {
@@ -56,7 +60,10 @@ const DictionaryWordsTableList: React.FC = () => {
       valueType: 'option',
       width: 100,
       render: (_, record) => [
-        <Link to={`/other/dictionary/${dictionaryId}/${tab}/${record.id}/${DictionaryWordsTabNames.FORM}`} key="edit">
+        <Link
+          to={`/other/dictionary/${dictionaryId}/${tab}/${record.id}/${DictionaryWordsTabNames.FORM}`}
+          key="edit"
+        >
           <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
             <Button type="primary" icon={<EditOutlined />} />
           </Tooltip>
@@ -100,11 +107,46 @@ const DictionaryWordsTableList: React.FC = () => {
         layout: 'vertical',
       }}
       toolBarRender={() => [
-        <Link to={`/other/dictionary/${dictionaryId}/${tab}/new/${DictionaryWordsTabNames.FORM}`} key="new">
+        <Link
+          to={`/other/dictionary/${dictionaryId}/${tab}/new/${DictionaryWordsTabNames.FORM}`}
+          key="new"
+        >
           <Button type="primary" key="primary">
             <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
           </Button>
         </Link>,
+        checkPermission(PERMISSIONS.DictionaryImport) ? (
+          <div className='import-dictionary'>
+            <SecureUpload
+              title={intl.formatMessage({
+                id: 'import_dictionary',
+                defaultMessage: 'Import dictionary'
+              })}
+              url="/api/admin/dictionary-words/import"
+              name="file"
+              accept=".csv, .xlsx"
+              data={{
+                dictionary_id: Number(dictionaryId),
+              }}
+              onChange={(info) => {
+                if (info.file.status === 'done') {
+                  if (info.file.response && info.file.response.success) {
+                    message.success(info.file.response.message);
+                    actionRef.current?.reload();
+                  }
+                }
+                if (info.file.response && info.file.status === 'error') {
+                  message.error(info.file.response.message);
+                  console.error(info.file.response);
+                }
+              }}
+              hideLabel
+              wrapInForm={false}
+              maxFiles={1}
+              clearListAfterUpload
+            />
+          </div>
+        ) : undefined,
       ]}
       request={({ pageSize, current, word }, sort) => {
         return dictionaryWords({
