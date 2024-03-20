@@ -95,7 +95,8 @@ export default () => {
           >
             <UserSelect multiple />
           </ProForm.Item>
-          <ProFormText
+          {/* Uncomment when functionality will be ready on front */}
+          {/* <ProFormText
             name="redirect_url"
             label={<FormattedMessage id="redirect_url" />}
             placeholder={intl.formatMessage({
@@ -108,7 +109,7 @@ export default () => {
             placeholder={intl.formatMessage({
               id: 'image_url',
             })}
-          />
+          /> */}
         </ProForm>
       </ProCard>
     </PageContainer>
