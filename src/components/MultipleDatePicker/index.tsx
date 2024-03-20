@@ -5,7 +5,10 @@ import React, { useCallback, useState } from 'react';
 import './index.css';
 
 const getTimestamp = (value: moment.Moment) => {
-  return value.local().valueOf();
+  if (moment.isMoment(value)) {
+    return value.valueOf();
+  }
+  return value;
 };
 
 const MultipleDatePicker: React.FC<{
@@ -36,7 +39,6 @@ const MultipleDatePicker: React.FC<{
 
   const dateRender = useCallback(
     (currentDate: moment.Moment) => {
-      console.log('currentDate: ', currentDate);
       const isSelected = selectedDate.indexOf(getTimestamp(currentDate)) > -1;
 
       return (
@@ -60,7 +62,7 @@ const MultipleDatePicker: React.FC<{
               : {}
           }
         >
-          {currentDate.date()}
+          {moment.isMoment(currentDate) ? currentDate.date() : currentDate}
         </div>
       );
     },
@@ -114,7 +116,11 @@ const MultipleDatePicker: React.FC<{
             }}
             showTime={{ format: 'HH' }}
             disabledTime={disableMinutes}
-            onChange={(date: moment.Moment | null) => date && onValueChange(date)}
+            onChange={(date: moment.Moment | null) => {
+              if (date) {
+                onValueChange(date);
+              }
+            }}
             open
             // TODO #1013 FIXme
             // @ts-ignore
