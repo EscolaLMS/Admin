@@ -38,7 +38,7 @@ export async function createProduct(
 
 /**  GET /api/admin/products/:id */
 export async function getProduct(id: number, options?: AxiosRequestConfig) {
-  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product>>(`/api/admin/products/${id}`, {
+  return request<API.DefaultResponse<EscolaLms.Cart.Models.Product & { has_trial?: boolean }>>(`/api/admin/products/${id}`, {
     method: 'GET',
     ...(options || {}),
   });

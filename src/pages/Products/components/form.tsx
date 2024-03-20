@@ -26,9 +26,23 @@ import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrig
 import UserSubmissions from '@/components/UsersSubmissions';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
+import { ProFormSelect } from '@ant-design/pro-components';
 import ProTable from '@ant-design/pro-table';
 import UserAccess from './UserAccess';
 import './index.css';
+
+enum ProductTypes {
+  SINGLE = 'single',
+  BUNDLE = 'bundle',
+  SUBSCRIPTION = 'subscription',
+  SUBSCRIPTION_ALL_IN = 'subscription-all-in',
+}
+
+enum SubscriptionPeriod {
+  DAILY = 'daily',
+  MONTHLY = 'monthly',
+  YEARLY = 'yearly',
+}
 
 type MinimumProductProductable = {
   class: string;
@@ -101,6 +115,8 @@ const ProductsForm: React.FC<{
   )?.value;
 
   const [multiple, setMultiple] = useState<boolean>(false);
+  const [productType, setProductType] = useState<ProductTypes>(ProductTypes.BUNDLE);
+  const [hasTrial, setHasTrial] = useState<boolean>(false);
 
   useEffect(() => {
     if (productable && productable.class_id && productable.class_type) {
@@ -158,7 +174,9 @@ const ProductsForm: React.FC<{
         );
         form.setFieldsValue(newData);
 
-        setMultiple(response.data.type === 'bundle');
+        setMultiple(response.data.type === ProductTypes.BUNDLE);
+        setProductType(response.data.type as ProductTypes);
+        setHasTrial(!!response.data.has_trial);
       }
     }
     setLoading(false);
@@ -176,11 +194,16 @@ const ProductsForm: React.FC<{
         values: EscolaLms.Cart.Http.Requests.Admin.ProductUpdateRequest &
           EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest & {
             productables: string[] | string;
-            type: 'bundle' | 'single';
+            type: ProductTypes;
+            has_trial?: boolean;
           },
       ) => {
         if (values.type) {
-          setMultiple(values.type === 'bundle');
+          setMultiple(values.type === ProductTypes.BUNDLE);
+          setProductType(values.type);
+        }
+        if (typeof values.has_trial === 'boolean') {
+          setHasTrial(values.has_trial);
         }
       },
 
@@ -293,7 +316,9 @@ const ProductsForm: React.FC<{
             >
               <ProductablesSelect
                 multiple={multiple}
-                disabled={productable !== undefined}
+                disabled={
+                  productable !== undefined || productType === ProductTypes.SUBSCRIPTION_ALL_IN
+                }
                 onChange={(p) =>
                   setCurrProductables(
                     getProductables(p as string[] | string | API.ProductableResourceListItem[]),
@@ -319,16 +344,31 @@ const ProductsForm: React.FC<{
                     id: 'single',
                     defaultMessage: 'single',
                   }),
-                  value: 'single',
+                  value: ProductTypes.SINGLE,
                 },
                 {
                   label: intl.formatMessage({
                     id: 'bundle',
                     defaultMessage: 'bundle',
                   }),
-                  value: 'bundle',
+                  value: ProductTypes.BUNDLE,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'subscription',
+                    defaultMessage: 'Subscription',
+                  }),
+                  value: ProductTypes.SUBSCRIPTION,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'subscription_all_in',
+                    defaultMessage: 'Subscription all in',
+                  }),
+                  value: ProductTypes.SUBSCRIPTION_ALL_IN,
                 },
               ]}
+              shouldUpdate
             />
             <ProFormSwitch
               name="purchasable"
@@ -473,6 +513,127 @@ const ProductsForm: React.FC<{
               fieldProps={{ step: 1 }}
             />
           </ProForm.Group>
+          {(productType === ProductTypes.SUBSCRIPTION ||
+            productType === ProductTypes.SUBSCRIPTION_ALL_IN) && (
+            <>
+              <ProForm.Group title={<FormattedMessage id="subscription" />}>
+                <ProFormSelect
+                  name="subscription_period"
+                  tooltip={<FormattedMessage id="subscription_period_tooltip" />}
+                  label={intl.formatMessage({
+                    id: 'subscription_period',
+                    defaultMessage: 'Subscription period',
+                  })}
+                  options={[
+                    {
+                      label: intl.formatMessage({
+                        id: 'daily',
+                        defaultMessage: 'Daily',
+                      }),
+                      value: SubscriptionPeriod.DAILY,
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'monthly',
+                        defaultMessage: 'Monthly',
+                      }),
+                      value: SubscriptionPeriod.MONTHLY,
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'yearly',
+                        defaultMessage: 'Yearly',
+                      }),
+                      value: SubscriptionPeriod.YEARLY,
+                    },
+                  ]}
+                  placeholder={intl.formatMessage({
+                    id: 'select',
+                    defaultMessage: 'Select',
+                  })}
+                  rules={[{ required: true }]}
+                />
+                <ProFormDigit
+                  width="sm"
+                  name="subscription_duration"
+                  label={<FormattedMessage id="subscription_duration" />}
+                  tooltip={<FormattedMessage id="subscription_duration_tooltip" />}
+                  placeholder={intl.formatMessage({
+                    id: 'subscription_duration',
+                    defaultMessage: 'subscription_duration',
+                  })}
+                  min={1}
+                  max={99999}
+                  fieldProps={{ step: 1 }}
+                  rules={[{ required: true }]}
+                />
+                <ProFormSwitch
+                  name="recursive"
+                  label={<FormattedMessage id="recursive" />}
+                  tooltip={<FormattedMessage id="recursive_tooltip" />}
+                />
+              </ProForm.Group>
+              <ProForm.Group>
+                <ProFormSwitch
+                  name="has_trial"
+                  label={<FormattedMessage id="has_trial" />}
+                  tooltip={<FormattedMessage id="has_trial_tooltip" />}
+                />
+                <ProFormSelect
+                  name="trial_period"
+                  tooltip={<FormattedMessage id="trial_period_tooltip" />}
+                  label={intl.formatMessage({
+                    id: 'trial_period',
+                    defaultMessage: 'Trial period',
+                  })}
+                  options={[
+                    {
+                      label: intl.formatMessage({
+                        id: 'daily',
+                        defaultMessage: 'Daily',
+                      }),
+                      value: SubscriptionPeriod.DAILY,
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'monthly',
+                        defaultMessage: 'Monthly',
+                      }),
+                      value: SubscriptionPeriod.MONTHLY,
+                    },
+                    {
+                      label: intl.formatMessage({
+                        id: 'yearly',
+                        defaultMessage: 'Yearly',
+                      }),
+                      value: SubscriptionPeriod.YEARLY,
+                    },
+                  ]}
+                  placeholder={intl.formatMessage({
+                    id: 'select',
+                    defaultMessage: 'Select',
+                  })}
+                  rules={[{ required: hasTrial }]}
+                  disabled={!hasTrial}
+                />
+                <ProFormDigit
+                  width="sm"
+                  name="trial_duration"
+                  label={<FormattedMessage id="trial_duration" />}
+                  tooltip={<FormattedMessage id="trial_duration_tooltip" />}
+                  placeholder={intl.formatMessage({
+                    id: 'trial_duration',
+                    defaultMessage: 'trial_duration',
+                  })}
+                  min={1}
+                  max={99999}
+                  fieldProps={{ step: 1 }}
+                  rules={[{ required: hasTrial }]}
+                  disabled={!hasTrial}
+                />
+              </ProForm.Group>
+            </>
+          )}
           <ProForm.Group title={<FormattedMessage id="additional_fields" />}>
             <ProFormText
               width="sm"
