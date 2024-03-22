@@ -41,6 +41,13 @@
         access: 'coursesPermission',
       },
       {
+        path: '/courses/:courseTab',
+        icon: 'fire',
+        access: 'courseListPermission',
+        component: './Courses',
+        hideInMenu: true,
+      },
+      {
         path: '/courses/list',
         name: 'List',
         icon: 'fire',
@@ -519,7 +526,7 @@
       {
         path: '/other/consultations/:consultation',
         access: 'consultationDetailsPermission',
-        component: './Consultations/form',
+        component: './Consultations',
         hideInMenu: true,
       },
       {

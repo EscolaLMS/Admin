@@ -64,7 +64,7 @@
     "@sentry/tracing": "^7.99.0",
     "@umijs/route-utils": "^2.2.2",
     "@webscopeio/react-textarea-autocomplete": "^4.9.2",
-    "antd": "^5.13.2",
+    "antd": "^5.15.3",
     "antd-style": "^3.6.1",
     "array-move": "^4.0.0",
     "classnames": "^2.5.1",

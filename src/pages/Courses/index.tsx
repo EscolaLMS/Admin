@@ -12,17 +12,21 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, Typography, message } from 'antd';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
 import CategoryTree from '@/components/CategoryTree';
+import ModelFields from '@/components/ModelFields';
 import SecureUpload from '@/components/SecureUpload';
 import Tags from '@/components/Tags';
 import UserSelect from '@/components/UserSelect';
 import PERMISSIONS from '@/consts/permissions';
+import useModelFields from '@/hooks/useModelFields';
 import { usePermissions } from '@/hooks/usePermissions';
 import { cloneCourse, course, exportCourse, removeCourse } from '@/services/escola-lms/course';
+import { FieldType } from '@/services/escola-lms/enums';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
+import { getLocale, history, useParams } from 'umi';
 import './style.less';
 
 function getUserItems(v: number[] | API.UserItem[]): API.UserItem[] {
@@ -211,6 +215,53 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const { checkPermission } = usePermissions();
+  const additionalFields = useModelFields('EscolaLms\\Courses\\Models\\Course');
+  const { courseTab } = useParams<{ courseTab?: string }>();
+
+  const dynamicAdditionalFieldsColumns: ProColumns<API.CourseListItem>[] = useMemo(() => {
+    if (additionalFields.state !== 'loaded') return [];
+
+    return (additionalFields?.list ?? []).reduce<ProColumns<API.CourseListItem>[]>((acc, field) => {
+      const locale = getLocale();
+      const fieldTranslatedTitle = field?.extra?.find((i: Record<string, string>) => i?.[locale])?.[
+        locale
+      ];
+
+      // TODO #1043 add other types support
+      switch (field.type) {
+        case FieldType.Boolean:
+          return [
+            ...acc,
+            {
+              title: fieldTranslatedTitle ?? <FormattedMessage id={field.name} />,
+              dataIndex: field.name,
+              hideInSearch: true,
+              width: 100,
+              render: (_n, record) => (
+                <Tag color={record?.[field.name as keyof typeof record] ? 'green' : 'red'}>
+                  {record?.[field.name as keyof typeof record] ? (
+                    <FormattedMessage id="true" />
+                  ) : (
+                    <FormattedMessage id="false" />
+                  )}
+                </Tag>
+              ),
+            },
+          ];
+        case FieldType.Varchar:
+          return [
+            ...acc,
+            {
+              title: fieldTranslatedTitle ?? <FormattedMessage id={field.name} />,
+              dataIndex: field.name,
+              hideInSearch: true,
+            },
+          ];
+        default:
+          return acc;
+      }
+    }, []);
+  }, [additionalFields]);
 
   const handleRemove = useCallback(
     async (id: number) => {
@@ -374,95 +425,116 @@ const TableList: React.FC = () => {
           </a>
         </ProCard>
       </ProCard>{' '}
-      <ProTable<API.CourseListItem, API.CourseParams>
-        loading={loading}
-        headerTitle={intl.formatMessage({
-          id: 'menu.Courses',
-          defaultMessage: 'Courses List',
-        })}
-        actionRef={actionRef}
-        rowKey="id"
-        search={{
-          layout: 'vertical',
-        }}
-        request={(
-          { pageSize, current, title, active, category_id, tag, status, authors },
-          sort,
-        ) => {
-          setLoading(true);
-          return course({
-            title: title || undefined,
-            status,
-            per_page: pageSize,
-            page: current,
-            category_id,
-            'tag[]': tag ? [tag] : undefined,
-            authors,
-            active: active && active,
-            ...createTableOrderObject(sort, 'created_at'),
-          }).then((response) => {
-            setLoading(false);
-            if (response.success) {
-              return {
-                data: response.data,
-                total: response.meta.total,
-                success: true,
-              };
-            }
-            return [];
-          });
-        }}
-        columns={[
-          ...TableColumns,
-          {
-            title: <FormattedMessage id="options" defaultMessage="options" />,
-            dataIndex: 'option',
-            valueType: 'option',
-            render: (_, record) => [
-              <Link key="edit" to={`/courses/list/${record.id}`}>
-                <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                  <Button type="primary" icon={<EditOutlined />} />
-                </Tooltip>
-              </Link>,
-              <Popconfirm
-                key="delete"
-                title={
-                  <FormattedMessage
-                    id="deleteQuestion"
-                    defaultMessage="Are you sure to delete this record?"
-                  />
-                }
-                onConfirm={() => record.id && handleRemove(record.id)}
-                okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
-                cancelText={<FormattedMessage id="no" defaultMessage="No" />}
-              >
-                <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                  <Button type="primary" icon={<DeleteOutlined />} danger />
-                </Tooltip>
-              </Popconfirm>,
-
-              (checkPermission(PERMISSIONS.CourseExport) ||
-                checkPermission(PERMISSIONS.CourseExportAuthored)) && (
-                <Tooltip
-                  key="export"
-                  title={<FormattedMessage id="export" defaultMessage="export" />}
-                >
-                  <Button
-                    onClick={() => handleExport(Number(record.id))}
-                    icon={<ExportOutlined />}
-                  />
-                </Tooltip>
-              ),
-              (checkPermission(PERMISSIONS.COURSES_CLONE) && <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
-                <Button
-                  onClick={() => record.id && handleClone(record.id)}
-                  icon={<CopyOutlined />}
-                />
-              </Tooltip>),
-            ],
+      <ProCard
+        tabs={{
+          type: 'card',
+          activeKey: courseTab,
+          onChange: (key) => {
+            history.push(`/courses/${key}`);
           },
-        ]}
-      />
+        }}
+      >
+        <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}>
+          <ProTable<API.CourseListItem, API.CourseParams>
+            loading={loading}
+            headerTitle={intl.formatMessage({
+              id: 'menu.Courses',
+              defaultMessage: 'Courses List',
+            })}
+            actionRef={actionRef}
+            rowKey="id"
+            search={{
+              layout: 'vertical',
+            }}
+            request={(
+              { pageSize, current, title, active, category_id, tag, status, authors },
+              sort,
+            ) => {
+              setLoading(true);
+              return course({
+                title: title || undefined,
+                status,
+                per_page: pageSize,
+                page: current,
+                category_id,
+                'tag[]': tag ? [tag] : undefined,
+                authors,
+                active: active && active,
+                ...createTableOrderObject(sort, 'created_at'),
+              }).then((response) => {
+                setLoading(false);
+                if (response.success) {
+                  return {
+                    data: response.data,
+                    total: response.meta.total,
+                    success: true,
+                  };
+                }
+                return [];
+              });
+            }}
+            columns={[
+              ...TableColumns,
+              ...dynamicAdditionalFieldsColumns,
+              {
+                title: <FormattedMessage id="options" defaultMessage="options" />,
+                dataIndex: 'option',
+                valueType: 'option',
+                render: (_, record) => [
+                  <Link key="edit" to={`/courses/list/${record.id}`}>
+                    <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                      <Button type="primary" icon={<EditOutlined />} />
+                    </Tooltip>
+                  </Link>,
+                  <Popconfirm
+                    key="delete"
+                    title={
+                      <FormattedMessage
+                        id="deleteQuestion"
+                        defaultMessage="Are you sure to delete this record?"
+                      />
+                    }
+                    onConfirm={() => record.id && handleRemove(record.id)}
+                    okText={<FormattedMessage id="yes" defaultMessage="Yes" />}
+                    cancelText={<FormattedMessage id="no" defaultMessage="No" />}
+                  >
+                    <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                      <Button type="primary" icon={<DeleteOutlined />} danger />
+                    </Tooltip>
+                  </Popconfirm>,
+
+                  (checkPermission(PERMISSIONS.CourseExport) ||
+                    checkPermission(PERMISSIONS.CourseExportAuthored)) && (
+                    <Tooltip
+                      key="export"
+                      title={<FormattedMessage id="export" defaultMessage="export" />}
+                    >
+                      <Button
+                        onClick={() => handleExport(Number(record.id))}
+                        icon={<ExportOutlined />}
+                      />
+                    </Tooltip>
+                  ),
+                  checkPermission(PERMISSIONS.COURSES_CLONE) && (
+                    <Tooltip
+                      key="clone"
+                      title={<FormattedMessage id="clone" defaultMessage="clone" />}
+                    >
+                      <Button
+                        onClick={() => record.id && handleClone(record.id)}
+                        icon={<CopyOutlined />}
+                      />
+                    </Tooltip>
+                  ),
+                ],
+              },
+            ]}
+          />
+        </ProCard.TabPane>
+        <ProCard.TabPane key={'fields'} tab={<FormattedMessage id="ModelFields" />}>
+          <ModelFields class_type="EscolaLms\Courses\Models\Course" />
+        </ProCard.TabPane>
+      </ProCard>
     </PageContainer>
   );
 };

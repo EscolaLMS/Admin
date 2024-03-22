@@ -5,7 +5,10 @@ import React, { useCallback, useState } from 'react';
 import './index.css';
 
 const getTimestamp = (value: moment.Moment) => {
-  return value.local().valueOf();
+  if (moment.isMoment(value)) {
+    return value.valueOf();
+  }
+  return value;
 };
 
 const MultipleDatePicker: React.FC<{
@@ -59,7 +62,7 @@ const MultipleDatePicker: React.FC<{
               : {}
           }
         >
-          {currentDate.date()}
+          {moment.isMoment(currentDate) ? currentDate.date() : currentDate}
         </div>
       );
     },
@@ -96,10 +99,10 @@ const MultipleDatePicker: React.FC<{
       onClear={() => onChange && onChange([])}
       tagRender={renderTag}
       open={open}
-      onFocus={() => setOpen(true)}
+      onClick={() => setOpen(true)}
       onBlur={() => setOpen(false)}
-      dropdownMatchSelectWidth={false}
-      dropdownClassName={'multipleDropdownClassName'}
+      popupMatchSelectWidth={false}
+      popupClassName={'multipleDropdownClassName'}
       dropdownStyle={{ height: '310px', width: '335px', minWidth: '0' }}
       dropdownRender={() => {
         return (
@@ -113,15 +116,17 @@ const MultipleDatePicker: React.FC<{
             }}
             showTime={{ format: 'HH' }}
             disabledTime={disableMinutes}
-            onChange={(date: moment.Moment | null) => date && onValueChange(date)}
+            onChange={(date: moment.Moment | null) => {
+              if (date) {
+                onValueChange(date);
+              }
+            }}
             open
             // TODO #1013 FIXme
             // @ts-ignore
-            dateRender={dateRender}
-            style={{ visibility: 'hidden' }}
-            getPopupContainer={({ parentNode }: any) => {
-              return parentNode;
-            }}
+            cellRender={dateRender}
+            // @ts-ignore
+            getPopupContainer={(node: HTMLElement) => node.parentNode}
             defaultValue={moment('00:00', 'HH')}
           />
         );

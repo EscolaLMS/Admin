@@ -1,5 +1,10 @@
 import ProCard from '@ant-design/pro-card';
-import ProForm, { ProFormDatePicker, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormDatePicker,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-form';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -15,7 +20,9 @@ import ProductWidget from '@/components/ProductWidget';
 import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { ModelStatus } from '@/consts/status';
+import useModelFields from '@/hooks/useModelFields';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import AdditionalField from '@/pages/Users/User/components/AdditionalField';
 import {
   createConsultation,
   getConsultation,
@@ -27,7 +34,7 @@ import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import ConsultationCalendar from './components/Calendar';
 import './index.css';
 
-enum TabNames {
+export enum TabNames {
   ATTRIBUTES = 'attributes',
   PRODUCT = 'product',
   MEDIA = 'media',
@@ -45,6 +52,7 @@ const ConsultationForm = () => {
   const [data, setData] = useState<Partial<API.Consultation>>();
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [form] = ProForm.useForm();
+  const additionalFields = useModelFields('EscolaLms\\Consultations\\Models\\Consultation');
 
   const fetchData = useCallback(async () => {
     const response = await getConsultation(Number(consultation));
@@ -296,6 +304,20 @@ const ConsultationForm = () => {
               >
                 <UserSelect />
               </ProForm.Item>
+              <ProFormDigit
+                initialValue={isNew ? null : undefined}
+                width="sm"
+                name="max_session_students"
+                label={<FormattedMessage id="max_session_students" />}
+                tooltip={<FormattedMessage id="max_session_students_tooltip" />}
+                placeholder={intl.formatMessage({
+                  id: 'max_session_students',
+                  defaultMessage: 'max_session_students',
+                })}
+                min={1}
+                max={99}
+                fieldProps={{ step: 1 }}
+              />
             </ProForm.Group>
             <ProForm.Group>
               <ProForm.Item
@@ -303,6 +325,9 @@ const ConsultationForm = () => {
                 label={<FormattedMessage id="description" />}
                 tooltip={<FormattedMessage id="description_tooltip" />}
                 valuePropName="value"
+                style={{
+                  width: 440,
+                }}
                 required
               >
                 <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />
@@ -317,6 +342,12 @@ const ConsultationForm = () => {
               >
                 <MultipleDatePicker />
               </ProForm.Item>
+            </ProForm.Group>
+            <ProForm.Group>
+              {additionalFields.state === 'loaded' &&
+                additionalFields.list.map((field: API.ModelField) => (
+                  <AdditionalField key={field.id} field={field} />
+                ))}
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>

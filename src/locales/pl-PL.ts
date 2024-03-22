@@ -874,6 +874,8 @@ export default {
   video_url: 'URL do filmu',
   assistant_id: 'ID asystenta',
   assistant_id_tooltip: 'ID asystenta dla czatu AI',
+  max_session_students: 'Maksymalna liczba studentów w sesji',
+  model_fields: 'Model fields',
   subscription: 'Subskrypcja',
   subscription_all_in: 'Subskrypcja na wszystkie moduły',
   daily: 'Dzienny',
