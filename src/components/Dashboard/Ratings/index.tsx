@@ -42,7 +42,7 @@ export const DashboardComponent: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     const fetchQuestionnaireStars = async () => {
-      const request = await questionnaireStars('Course', Number(courseId));
+      const request = await questionnaireStars('course', Number(courseId));
 
       if (request.success) {
         setRatings(request.data);
