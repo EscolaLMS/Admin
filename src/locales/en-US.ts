@@ -897,4 +897,5 @@ export default {
   trial_duration: 'Trial duration',
   trial_duration_tooltip: 'The duration of the trial period expressed as a number in days, months or years',
   import_dictionary: 'Import dictionary',
+  course_fields: 'Additional fields',
 };

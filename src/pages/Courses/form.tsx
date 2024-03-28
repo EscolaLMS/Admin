@@ -41,8 +41,7 @@ import {
 } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
-import AdditionalField from "@/pages/Users/User/components/AdditionalField";
-import useModelFields from "@/hooks/useModelFields";
+import JsonEditor from "@/components/JsonEditor";
 
 enum TabNames {
   ATTRIBUTES = 'attributes',
@@ -74,7 +73,6 @@ export default () => {
     courseId: 0,
   });
   const [isFirstTimeEdit, setIsFirstTimeEdit] = useState(true);
-  const additionalFields = useModelFields('EscolaLms\\Courses\\Models\\Course');
 
   const locales: string[] = getAllLocales() || [];
 
@@ -538,12 +536,13 @@ export default () => {
                 disabled={manageCourseEdit.disableEdit}
               /> */}
             </ProForm.Group>
-            <ProForm.Group label={<FormattedMessage id="model_fields" />}>
-              {additionalFields.state === 'loaded' &&
-                additionalFields.list.map((field: API.ModelField) => (
-                  <AdditionalField key={field.id} field={field} />
-                ))}
-            </ProForm.Group>
+            <ProForm.Item
+              name="fields"
+              label={<FormattedMessage id="course_fields" />}
+              valuePropName="value"
+            >
+              <JsonEditor />
+            </ProForm.Item>
           </ProForm>
         </ProCard.TabPane>
         {!isNew && access.salesPermission && (

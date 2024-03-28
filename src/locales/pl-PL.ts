@@ -895,4 +895,5 @@ export default {
   trial_duration: 'Czas trwania okresu próbnego',
   trial_duration_tooltip: 'Czas trwania okresu próbnego określony liczbą w dniach, miesiącach lub latach',
   import_dictionary: 'Importuj słownik',
+  course_fields: 'Dodatkowe pola',
 };
