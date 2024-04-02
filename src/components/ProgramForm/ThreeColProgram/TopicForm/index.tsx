@@ -83,6 +83,7 @@ export const Topic: React.FC = () => {
   const [topics, setTopics] = useState<API.Topic>({
     ...topic,
     value: topic?.topicable?.value,
+    can_skip: topic.isNew ? true : topic.can_skip,
   });
 
   const type = topics.topicable_type;
