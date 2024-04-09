@@ -96,7 +96,7 @@ export const Students: React.FC = () => {
       request={async ({ groups, first_name = '', last_name = '', email = '' }) => {
         const response = await fetchAllStudentsAndGroups({
           parent_id: teacherSubjectData?.group_id,
-          'id[]': groups,
+          id: groups,
         });
 
         if (!response.success) {
