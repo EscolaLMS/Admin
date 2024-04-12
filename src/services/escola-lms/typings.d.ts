@@ -301,7 +301,7 @@ declare namespace API {
       active?: boolean;
       status?: string;
       group_id?: number;
-      tag?: string | string[];
+      tag?: string;
     };
 
   type CategoryParams = PageParams &
