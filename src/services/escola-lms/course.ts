@@ -9,7 +9,7 @@ export async function course(
   return request<API.CourseList>(`/api/admin/courses`, {
     method: 'GET',
     /* useCache: true */ useCache: false,
-    params: { ...params, 'authors[]': authors },
+    params: { ...params, authors },
     ...(options || {}),
   });
 }
@@ -91,7 +91,7 @@ export async function getCourseStats(
 ) {
   return request<API.DefaultResponse<API.CourseStats>>(`/api/admin/stats/course/${id}`, {
     method: 'GET',
-    params: { 'stats[]': stats },
+    params: { stats },
     ...(options || {}),
   });
 }
@@ -102,7 +102,7 @@ export async function getTopicStats(
   options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.TopicStats>>(`/api/admin/stats/topic/${topic_id}`, {
-    params: { 'stats[]': stats },
+    params: { stats },
     ...(options ?? {}),
   });
 }

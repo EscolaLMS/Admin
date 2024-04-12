@@ -8,7 +8,7 @@ export async function allStudentsAndGroups(
       search?: string;
       parent_id?: number;
       user_id?: number;
-      'id[]'?: number[];
+      id?: number[];
     },
   options?: AxiosRequestConfig,
 ) {

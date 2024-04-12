@@ -396,7 +396,7 @@ const TableList: React.FC = () => {
             per_page: pageSize,
             page: current,
             category_id,
-            'tag[]': tag ? [tag] : undefined,
+            tag,
             authors,
             active: active && active,
             ...createTableOrderObject(sort, 'created_at'),
@@ -453,12 +453,14 @@ const TableList: React.FC = () => {
                   />
                 </Tooltip>
               ),
-              (checkPermission(PERMISSIONS.COURSES_CLONE) && <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
-                <Button
-                  onClick={() => record.id && handleClone(record.id)}
-                  icon={<CopyOutlined />}
-                />
-              </Tooltip>),
+              checkPermission(PERMISSIONS.COURSES_CLONE) && (
+                <Tooltip key="clone" title={<FormattedMessage id="clone" defaultMessage="clone" />}>
+                  <Button
+                    onClick={() => record.id && handleClone(record.id)}
+                    icon={<CopyOutlined />}
+                  />
+                </Tooltip>
+              ),
             ],
           },
         ]}

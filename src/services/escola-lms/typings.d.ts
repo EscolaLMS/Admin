@@ -298,11 +298,10 @@ declare namespace API {
       title?: string;
       category_id?: number;
       authors?: number | number[];
-      tag?: string;
       active?: boolean;
       status?: string;
       group_id?: number;
-      'tag[]'?: string | string[];
+      tag?: string | string[];
     };
 
   type CategoryParams = PageParams &
@@ -2091,7 +2090,7 @@ declare namespace API {
     title?: string;
     description?: string;
     video_url?: string;
-  }
+  };
 
   type DictionaryWords = {
     id: number;
