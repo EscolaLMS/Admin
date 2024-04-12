@@ -53,7 +53,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.8.1",
     "@ant-design/plots": "^2.1.13",
-    "@ant-design/pro-components": "^2.6.48",
+    "@ant-design/pro-components": "^2.7.0",
     "@atlaskit/tree": "^8.8.7",
     "@escolalms/gift-pegjs": "^0.2.8",
     "@escolalms/h5p-react": "^0.2.18",
