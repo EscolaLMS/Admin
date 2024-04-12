@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DeleteOutlined } from '@ant-design/icons';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';

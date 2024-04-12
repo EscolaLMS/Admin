@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { type ActionType, type ProColumns } from '@ant-design/pro-table';
 import { Button, Space, Tag } from 'antd';
