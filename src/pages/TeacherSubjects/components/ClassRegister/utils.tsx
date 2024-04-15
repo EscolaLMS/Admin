@@ -80,17 +80,14 @@ export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableIt
           ),
         hideInSearch: true,
         width: 100,
-        render: (_n, record) =>
-          record?.[`exam-${exam.id}`]?.result !== undefined ? (
-            <ExamGradeInput
-              type={exam.type}
-              result={record?.[`exam-${exam.id}`].result}
-              exam_id={exam.id}
-              student_id={record.id}
-            />
-          ) : (
-            '-'
-          ),
+        render: (_n, record) => (
+          <ExamGradeInput
+            type={exam.type}
+            result={record?.[`exam-${exam.id}`]?.result}
+            exam_id={exam.id}
+            student_id={record.id}
+          />
+        ),
       },
     ],
     [],
