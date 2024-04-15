@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { type ActionType, type ProColumns } from '@ant-design/pro-table';
 import { Button, Space, Tag } from 'antd';
@@ -24,6 +23,7 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.ConsultationAccessEnquiryListItem>[] = useMemo(
     () => [
+      // @ts-ignore TODO: remove this comment after fixing the issue
       {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
         dataIndex: 'id',

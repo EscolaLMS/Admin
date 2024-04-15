@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { DeleteOutlined } from '@ant-design/icons';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
@@ -53,6 +52,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
 
   const columns: ProColumns<API.ProjectSolution>[] = useMemo(
     () => [
+      // @ts-ignore TODO: remove this comment after fixing the issue
       {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
         dataIndex: 'id',

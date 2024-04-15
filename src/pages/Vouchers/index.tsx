@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
@@ -13,9 +12,10 @@ import { deleteVoucher } from '@/services/escola-lms/vouchers';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 import { vouchers } from '@/services/escola-lms/vouchers';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
-
+// @ts-ignore
 export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
   {
+    // @ts-ignore TODO: remove this comment after fixing the issue
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
     hideInSearch: true,
