@@ -50,7 +50,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
     [projectTopics],
   );
 
-  const columns: ProColumns<API.ProjectSolution>[] = useMemo(
+  const columns: ProColumns[] = useMemo(
     () => [
       {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -162,7 +162,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
   }, [courseId]);
 
   return (
-    <ProTable<API.ProjectSolution, API.ProjectSolutionListParams>
+    <ProTable
       headerTitle={intl.formatMessage({
         id: 'project_solutions',
         defaultMessage: 'Project Uploaded Solutions',
