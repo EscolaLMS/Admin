@@ -57,4 +57,4 @@ jobs:
         with:
           node-version: '20.x'
       - run: yarn
-      - run: yarn NODE_OPTIONS='--max-old-space-size=16384' tsc:noemit
+      - run: NODE_OPTIONS='--max-old-space-size=16384' yarn tsc:noemit
