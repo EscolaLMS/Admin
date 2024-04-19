@@ -330,8 +330,8 @@ declare namespace API {
       date_from?: string;
       date_to?: string;
       'categories[]'?: number;
-      'tags[]'?: string | string[];
-      tag?: string;
+      tags?: string | string[];
+      tag?: string | string[];
     };
 
   type H5PListParams = PageParams &

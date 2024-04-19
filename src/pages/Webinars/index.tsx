@@ -245,7 +245,7 @@ const Webinars: React.FC = () => {
             date_from,
             date_to,
             status,
-            'tags[]': tag ? [tag] : undefined,
+            tags: tag,
             order_by: sortArr && sortArr[0],
             order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
           })

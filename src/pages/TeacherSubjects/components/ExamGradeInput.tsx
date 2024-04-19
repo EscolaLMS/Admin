@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import { gradesOptions, passOptions } from '@/pages/TeacherSubjects/components/consts';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { createExamResult } from '@/services/escola-lms/exams';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 
 interface Props {
   exam_id: number;
@@ -22,6 +22,7 @@ export const ExamGradeInput: React.FC<Props> = ({
   type,
   onSuccess,
 }) => {
+  const intl = useIntl();
   const onChange = useCallback(
     debounce((value: number | string | null) => {
       createExamResult(exam_id, student_id, { result: value }).then((res) => {
@@ -42,7 +43,7 @@ export const ExamGradeInput: React.FC<Props> = ({
             style={{ width: '100%' }}
             onChange={onChange}
             options={passOptions}
-            defaultValue={result}
+            defaultValue={result ?? undefined}
             placeholder={<FormattedMessage id="select_grade" />}
           />
         );
@@ -53,7 +54,7 @@ export const ExamGradeInput: React.FC<Props> = ({
             style={{ width: '100%' }}
             onChange={onChange}
             options={gradesOptions}
-            defaultValue={result}
+            defaultValue={result ?? undefined}
             placeholder={<FormattedMessage id="select_grade" />}
           />
         );
@@ -65,6 +66,7 @@ export const ExamGradeInput: React.FC<Props> = ({
             max={100}
             onChange={onChange}
             defaultValue={result ?? undefined}
+            placeholder={intl.formatMessage({ id: 'select_grade' })}
           />
         );
     }

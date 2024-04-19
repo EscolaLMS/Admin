@@ -21,7 +21,7 @@ const TableList: React.FC = () => {
   const [approveTerm, setApproveTerm] =
     useState<EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiryProposedTerm>();
 
-  const columns: ProColumns<API.ConsultationAccessEnquiryListItem>[] = useMemo(
+  const columns: ProColumns[] = useMemo(
     () => [
       {
         title: <FormattedMessage id="ID" defaultMessage="ID" />,
@@ -110,20 +110,24 @@ const TableList: React.FC = () => {
             </>
           ) : (
             <Space direction="vertical">
-              {record.proposed_terms.map((term) => (
-                <Button
-                  key={term.id}
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    setApproveTerm(term);
-                  }}
-                >
-                  <FormattedMessage id="approve" defaultMessage="Approve Term" />
-                  {':'}
-                  {format(new Date(term.proposed_at), DATETIME_FORMAT)}
-                </Button>
-              ))}
+              {record.proposed_terms.map(
+                (
+                  term: EscolaLms.ConsultationAccess.Models.ConsultationAccessEnquiryProposedTerm,
+                ) => (
+                  <Button
+                    key={term.id}
+                    size="small"
+                    type="primary"
+                    onClick={() => {
+                      setApproveTerm(term);
+                    }}
+                  >
+                    <FormattedMessage id="approve" defaultMessage="Approve Term" />
+                    {':'}
+                    {format(new Date(term.proposed_at), DATETIME_FORMAT)}
+                  </Button>
+                ),
+              )}
             </Space>
           );
         },
@@ -198,7 +202,7 @@ const TableList: React.FC = () => {
         onSuccess={() => actionRef.current?.reload()}
       />
 
-      <ProTable<API.ConsultationAccessEnquiryListItem, API.ConsultationAccessEnquiryListParams>
+      <ProTable
         headerTitle={intl.formatMessage({
           id: 'menu.Other activities.Consultation Requests',
         })}

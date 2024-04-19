@@ -13,7 +13,7 @@ import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 import { vouchers } from '@/services/escola-lms/vouchers';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
 
-export const TableColumns: ProColumns<EscolaLms.Vouchers.Models.Coupon>[] = [
+export const TableColumns: ProColumns[] = [
   {
     title: <FormattedMessage id="ID" defaultMessage="ID" />,
     dataIndex: 'id',
@@ -128,7 +128,7 @@ const Vouchers: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<EscolaLms.Vouchers.Models.Coupon, API.Vouchers>
+      <ProTable
         headerTitle={intl.formatMessage({
           id: 'menu.Sales.Vouchers',
           defaultMessage: 'Vouchers',
