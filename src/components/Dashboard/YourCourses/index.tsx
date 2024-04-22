@@ -55,7 +55,7 @@ export const DashboardComponent: React.FC = () => {
             zIndex: 1,
           }}
         >
-          <ProCard layout="center">
+          <ProCard layout="center" onMouseDown={(e) => e.stopPropagation()}>
             <Link to={`/courses/list/new`} key={'new_course'}>
               <PlusCircleFilled
                 style={{
@@ -85,6 +85,7 @@ export const DashboardComponent: React.FC = () => {
               </div>
             )}
             <ProCard
+              onMouseDown={(e) => e.stopPropagation()}
               actions={[
                 <Link to={`/courses/list/${item.id}`} key={item.id}>
                   <Button>
