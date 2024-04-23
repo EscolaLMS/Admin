@@ -1,7 +1,9 @@
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
 import { ExamGradeType } from '@/services/escola-lms/enums';
+import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
+import { Space } from 'antd';
 import { format } from 'date-fns';
 import { FormattedMessage } from 'umi';
 import { ExamGradeInput } from '../ExamGradeInput';
@@ -15,14 +17,34 @@ import type {
 } from './types';
 
 /* Attendance */
-export const getAttendanceCols = (
-  groupAttendanceSchedule: API.GroupAttendanceSchedule[],
-): ProColumns<ClassRegisterTableItem> => {
+interface AttendanceProps {
+  groupAttendanceSchedule: API.GroupAttendanceSchedule[];
+  handleDeleteColumn: (columnIndex: number, columnTitle: string) => void;
+  scheduleDeletePermission?: boolean;
+}
+
+export const getAttendanceCols = ({
+  groupAttendanceSchedule,
+  handleDeleteColumn,
+  scheduleDeletePermission = false,
+}: AttendanceProps): ProColumns<ClassRegisterTableItem> => {
   const dynamicCols = groupAttendanceSchedule.reduce<ProColumns<ClassRegisterTableItem>[]>(
     (acc, curr) => [
       ...acc,
       {
-        title: format(new Date(curr.date_from), DAY_FORMAT),
+        title: (
+          <Space>
+            {format(new Date(curr.date_from), DAY_FORMAT)}
+            {scheduleDeletePermission && curr.is_outdated && (
+              <DeleteOutlined
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteColumn(curr.id, format(new Date(curr.date_from), DAY_FORMAT));
+                }}
+              />
+            )}
+          </Space>
+        ),
         dataIndex: `attendance-${curr.id}`,
         hideInSearch: true,
         width: 100,

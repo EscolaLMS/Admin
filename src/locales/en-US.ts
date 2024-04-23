@@ -91,6 +91,7 @@ export default {
   exams: 'Exams (partial grades)',
   schedule: 'Schedule',
   attendance: 'Attendance',
+  scheduleDeleteConfirm: 'Are you sure you want to delete the column {columnId}?',
   'grades-scale': 'Grades scale',
   'final-grades': 'Final grades',
   'file-exports-history': 'Data exports history',
@@ -895,7 +896,8 @@ export default {
   trial_period: 'Trial period',
   trial_period_tooltip: 'Select the trial duration: daily, monthly or yearly',
   trial_duration: 'Trial duration',
-  trial_duration_tooltip: 'The duration of the trial period expressed as a number in days, months or years',
+  trial_duration_tooltip:
+    'The duration of the trial period expressed as a number in days, months or years',
   import_dictionary: 'Import dictionary',
   course_fields: 'Additional fields',
 };

@@ -36,6 +36,7 @@ export default {
   exams: 'Egzaminy (oceny cząstkowe)',
   schedule: 'Harmonogram',
   attendance: 'Obecności',
+  scheduleDeleteConfirm: 'Czy na pewno chcesz usunąć kolumnę {columnId}?',
   'grades-scale': 'Skala ocen',
   'final-grades': 'Oceny końcowe',
   'file-exports-history': 'Historia eksportowania danych',
@@ -893,7 +894,8 @@ export default {
   trial_period: 'Okres trwania wersji próbnej',
   trial_period_tooltip: 'Wybierz okres trwania wersji próbnej: dzienny, miesięczny lub roczny',
   trial_duration: 'Czas trwania okresu próbnego',
-  trial_duration_tooltip: 'Czas trwania okresu próbnego określony liczbą w dniach, miesiącach lub latach',
+  trial_duration_tooltip:
+    'Czas trwania okresu próbnego określony liczbą w dniach, miesiącach lub latach',
   import_dictionary: 'Importuj słownik',
   course_fields: 'Dodatkowe pola',
 };
