@@ -70,7 +70,7 @@ jobs:
         run: |
           echo "{\"text\":\"There is a new version ${{ github.ref_name }} [escolalms/admin:latest](https://hub.docker.com/r/escolalms/admin/tags?page=1&name=latest) image built. k8s rollout will happen soon\"}" > mattermost.json
       - uses: mattermost/action-mattermost-notify@master
-        env:
+        with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 
       - name: Send webook to hooks to rollout all devs on k8s
