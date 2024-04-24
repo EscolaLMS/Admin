@@ -55,3 +55,7 @@ jobs:
       - uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          PAYLOAD: |-
+            {
+              "text": "There is a [admin-stage.escolalms.com](https://admin-stage.escolalms.com/) available"
+            }
