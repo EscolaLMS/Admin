@@ -296,6 +296,8 @@ enum PERMISSIONS {
   PCGListSelfSemesterSubjects = 'pcg-integration_semester-subject_list-self',
   PCGReadSemesterSubjects = 'pcg-integration_semester-subject_read',
   PCGReadSelfSemesterSubjects = 'pcg-integration_semester-subject_read-self',
+  PCGSchedulesDeleteOwn = 'pcg-integration_schedules_delete-own',
+  PCGSchedulesDelete = 'pcg-integration_schedules_delete',
 
   /* -------- EscolaLMS/sds-integration -------- */
   SDSExport = 'sds-integration_export',

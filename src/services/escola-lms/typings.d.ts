@@ -1702,6 +1702,7 @@ declare namespace API {
     teacher_id: number;
     term_status_id: number;
     attendances: StudentAttendance[];
+    is_outdated: boolean;
   };
 
   type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule[]>;

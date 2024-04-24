@@ -29,3 +29,10 @@ export async function changeStudentAttendance(
     ...(options || {}),
   });
 }
+
+export async function removeAttendanceColumn(id: number, options?: AxiosRequestConfig) {
+  return request<API.AttendanceScheduleList>(`/api/admin/schedules/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}

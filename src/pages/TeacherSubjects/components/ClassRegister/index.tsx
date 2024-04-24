@@ -1,11 +1,16 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Tooltip, message } from 'antd';
+import { Button, Modal, Tooltip, message } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import BookmarkNoteModal from '@/components/BookmarkNoteModal';
-import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
+import PERMISSIONS from '@/consts/permissions';
+import { usePermissions } from '@/hooks/usePermissions';
+import {
+  groupAttendanceSchedule as fetchGroupAttendanceSchedule,
+  removeAttendanceColumn,
+} from '@/services/escola-lms/attendances';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
 import {
   getGradeTerms as fetchGradeTerms,
@@ -43,13 +48,29 @@ export const ClassRegister: React.FC = () => {
     groupId: number;
   } | null>(null);
   const intl = useIntl();
+  const actionRef = useRef<ActionType>();
+  const { checkPermission } = usePermissions();
+
+  const showDeleteConfirmationModal = (columnTitle: string, onConfirm: () => void) => {
+    Modal.confirm({
+      title: intl.formatMessage({ id: 'scheduleDeleteConfirm' }, { columnId: columnTitle }),
+      okText: intl.formatMessage({ id: 'delete' }),
+      cancelText: intl.formatMessage({ id: 'cancel' }),
+      onOk: onConfirm,
+    });
+  };
+
+  const handleDeleteColumn = (id: number, title: string) => {
+    showDeleteConfirmationModal(title, () => {
+      removeAttendanceColumn(id);
+      actionRef.current?.reload();
+    });
+  };
 
   const groupOptions = useMemo(
     () => (teacherSubjectData?.groups ?? []).map(({ id, name }) => ({ value: id, label: name })),
     [teacherSubjectData?.groups],
   );
-
-  const actionRef = useRef<ActionType>();
 
   const columns: ProColumns[] = useMemo(
     () => [
@@ -164,7 +185,13 @@ export const ClassRegister: React.FC = () => {
           setSelectedGroupName(selectedGroup.label);
 
           /* COLS */
-          const attendanceCols = getAttendanceCols(groupAttendanceScheduleRes.data);
+          const attendanceCols = getAttendanceCols({
+            groupAttendanceSchedule: groupAttendanceScheduleRes.data,
+            handleDeleteColumn,
+            scheduleDeletePermission:
+              checkPermission(PERMISSIONS.PCGSchedulesDelete) ||
+              checkPermission(PERMISSIONS.PCGSchedulesDeleteOwn),
+          });
           const examsCols = getExamsCols(examsRes.data);
           const finalGradeCols = getFinalGradesCols(gradeTermsRes.data, subjectGradeScalesRes.data);
 
