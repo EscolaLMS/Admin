@@ -237,6 +237,7 @@ export const Dashboard: React.FC = () => {
     };
     saveToLS('layout', changedLayouts);
   };
+
   return (
     <main>
       <ResponsiveGridLayout
@@ -260,6 +261,7 @@ export const Dashboard: React.FC = () => {
                   icon={<CloseSquareOutlined />}
                   className="dashboard-draggable__remove_btn"
                   onClick={() => onRemove(key)}
+                  onMouseDown={(e) => e.stopPropagation()}
                 />
               </div>
             );
