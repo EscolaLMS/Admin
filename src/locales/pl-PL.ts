@@ -898,4 +898,8 @@ export default {
     'Czas trwania okresu próbnego określony liczbą w dniach, miesiącach lub latach',
   import_dictionary: 'Importuj słownik',
   course_fields: 'Dodatkowe pola',
+  app_store: 'Identyfikator w App Store',
+  app_store_tooltip: 'Identyfikator produktu w App Store dla płatności mobilnej',
+  play_store: 'Identyfikator w Play Store',
+  play_store_tooltip: 'Identyfikator produktu w Play Store dla płatności mobilnej',
 };

@@ -54,6 +54,7 @@ enum PACKAGES {
   Youtube = 'escolalms/youtube',
   Recommender = 'escolalms/recommender',
   Dictionary = 'escolalms/dictionaries',
+  RevenuecatIntegration = 'escolalms/revenuecat-integration',
 }
 
 export default PACKAGES;
