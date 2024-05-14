@@ -25,6 +25,8 @@ import TagsInput from '@/components/TagsInput';
 import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrigger/forProduct';
 import UserSubmissions from '@/components/UsersSubmissions';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import PACKAGES from '@/consts/packages';
+import { createHavePackageInstalled } from '@/utils/access';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 import { ProFormSelect } from '@ant-design/pro-components';
 import ProTable from '@ant-design/pro-table';
@@ -117,6 +119,9 @@ const ProductsForm: React.FC<{
   const [multiple, setMultiple] = useState<boolean>(false);
   const [productType, setProductType] = useState<ProductTypes>(ProductTypes.BUNDLE);
   const [hasTrial, setHasTrial] = useState<boolean>(false);
+  const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
+    initialState?.packages,
+  ]);
 
   useEffect(() => {
     if (productable && productable.class_id && productable.class_type) {
@@ -164,6 +169,8 @@ const ProductsForm: React.FC<{
           productables: response.data.productables
             ? transformProductablesFromAPI(response.data.productables as API.ProductProductable[])
             : [],
+          app_store: response.data.fields?.in_app_purchase_ids?.revenuecat?.app_store,
+          play_store: response.data.fields?.in_app_purchase_ids?.revenuecat?.play_store,
         };
         if (response.data && response?.data?.productables) {
           setProductableType(response?.data?.productables[0]?.productable_type);
@@ -212,6 +219,8 @@ const ProductsForm: React.FC<{
           Omit<EscolaLms.Cart.Http.Requests.Admin.ProductCreateRequest, 'related_products'> & {
             productables: string[] | string;
             related_products: EscolaLms.Cart.Models.Product[] | number[];
+            app_store: string;
+            play_store: string;
           },
       ) => {
         const related_products = values.related_products?.every(
@@ -230,6 +239,14 @@ const ProductsForm: React.FC<{
               )
             : undefined,
           ...(values.related_products ? { related_products } : {}),
+          fields: {
+            in_app_purchase_ids: {
+              revenuecat: {
+                app_store: values.app_store,
+                play_store: values.play_store,
+              }
+            }
+          }
         };
 
         let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;
@@ -683,6 +700,30 @@ const ProductsForm: React.FC<{
                 defaultMessage: 'teaser_url',
               })}
             />
+            {havePackageInstalled(PACKAGES.RevenuecatIntegration) && (
+              <>
+                <ProFormText
+                  width="sm"
+                  name="app_store"
+                  label={<FormattedMessage id="app_store" />}
+                  tooltip={<FormattedMessage id="app_store_tooltip" />}
+                  placeholder={intl.formatMessage({
+                    id: 'app_store',
+                    defaultMessage: 'app_store',
+                  })}
+                />
+                <ProFormText
+                  width="sm"
+                  name="play_store"
+                  label={<FormattedMessage id="play_store" />}
+                  tooltip={<FormattedMessage id="play_store_tooltip" />}
+                  placeholder={intl.formatMessage({
+                    id: 'play_store',
+                    defaultMessage: 'play_store',
+                  })}
+                />
+              </>
+            )}
           </ProForm.Group>{' '}
           <ProForm.Item
             shouldUpdate
