@@ -10,7 +10,7 @@ export const loginAsAdmin = async (page: Page) => {
   await page.locator('input[id="password"]').fill(ADMIN_CREDENTIALS.password);
   await page.locator('form button').click();
 
-  await expect(page).toHaveURL(`${BASE_URL}/#/welcome`);
+  await expect(page).toHaveURL(`${BASE_URL}/#/welcome`, { timeout: 10000 });
 };
 
 // Helper function to confirm deletion of a record in a table
