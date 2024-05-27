@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { BASE_URL } from './consts';
-import { loginAsAdmin } from './helpers';
+import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
 
 test.describe('New course', () => {
   test.beforeEach(async ({ page }) => {
@@ -8,17 +8,17 @@ test.describe('New course', () => {
   });
 
   test('create and delete new course', async ({ page }) => {
-    const COURSE_NAME = 'new course abc' + Math.round(Math.random() * 10000);
+    const COURSE_NAME = generateRandomName('new course abc');
 
     await page.goto(`${BASE_URL}/#/courses/list`);
     await page.locator('text=Create new').click();
     await expect(page).toHaveURL(`${BASE_URL}/#/courses/list/new`);
+
     await page.locator('#title').fill(COURSE_NAME);
-    await page.type('#active_from', '2022-08-01');
-    await page.keyboard.press('Enter');
-    await page.type('#active_to', '2022-12-31');
-    await page.keyboard.press('Enter');
-    await page.type('#level', 'test');
+    await page.locator('#active_from').fill('2022-08-01');
+    await page.keyboard.press('Tab');
+    await page.locator('#active_to').fill('2022-12-31');
+    await page.locator('#level').fill('test');
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
     await page.keyboard.press('Enter');
@@ -32,17 +32,11 @@ test.describe('New course', () => {
 
     await page.goto(`${BASE_URL}/#/courses/list`);
     await page.waitForSelector('.ant-table-tbody .ant-table-row-level-0', { state: 'visible' }); // w8 for initial list before querying
-    await page.type('#title', COURSE_NAME);
-    await page.locator('button:has-text("Query")').click();
-    await page.waitForSelector(`text=${COURSE_NAME}`, { state: 'visible' });
-    //await page.locator('text=new course abcDraft- >> button').nth(1).click();
-    await page.locator(`tr:has-text("${COURSE_NAME}")`).locator('.ant-btn-dangerous').click();
 
-    const ConfirmDeleteCourse = await page.locator('.ant-popover-message');
-    await expect(ConfirmDeleteCourse).toContainText('Are you sure to delete this record?');
-    await page.locator('button:has-text("Yes")').click();
+    await searchRecord(page, COURSE_NAME, '#title');
 
-    // await expect (page.getByText('Course deleted successfully')).toBeVisible();
+    await confirmDeletion(page, COURSE_NAME);
+
     await page.waitForSelector('text=Course deleted successfully', { state: 'visible' });
   });
 });

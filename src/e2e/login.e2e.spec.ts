@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { BASE_URL, ADMIN_CREDENTIALS } from './consts';
+import { ADMIN_CREDENTIALS, BASE_URL } from './consts';
 
 test(`test route page login`, async ({ page }) => {
   await page.goto(`${BASE_URL}/#/user/login`);
