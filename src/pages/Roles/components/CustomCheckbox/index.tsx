@@ -30,9 +30,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Checkbox } from 'antd';
-import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import React, { useEffect, useState } from 'react';
 import './index.css';
+
+type CheckboxValueType = string | number | boolean;
 
 interface Props {
   name: string;
