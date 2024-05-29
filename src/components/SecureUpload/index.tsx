@@ -52,7 +52,7 @@ function SecureUpload<Type = API.File>({
     // eslint-disable-next-line no-param-reassign
     delete data[name];
   }
-  console.log('asdasdasd');
+
   return (
     <ConditionalWrap
       condition={wrapInForm}
