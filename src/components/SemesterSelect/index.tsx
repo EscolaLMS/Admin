@@ -87,7 +87,8 @@ export const SemesterSelect: React.FC<{
     >
       {semesters.map((item) => (
         <Select.Option key={item.id} value={item.id}>
-          {`${item.name} ${item.speciality ? ` (${item.speciality})` : ''}`}
+          {item.name}
+          {!!item.speciality && ` (${item.speciality})`}
         </Select.Option>
       ))}
     </Select>
