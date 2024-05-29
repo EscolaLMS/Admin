@@ -55,6 +55,7 @@ const getUploadChangeSuccessParam = (data: any): UploadChangeParam => ({
 function SecureUploadBrowser<Type = API.File>({
   folder,
   onResponse,
+  onUpload,
   ...props
 }: PropsWithChildren<
   SecureUploadType<Type> & { folder: string; onResponse?: (response: PostResponse) => void }
@@ -65,6 +66,33 @@ function SecureUploadBrowser<Type = API.File>({
 
   const closeModal = useCallback(() => {
     setShowBrowser(false);
+  }, []);
+
+  const handleFile = useCallback(async (file: API.File, dir: string | undefined) => {
+    if (!dir) return;
+
+    setLoading(true);
+
+    try {
+      const response: PostResponse = await post(url, {
+        ...data,
+        [name]: getPath(dir, file),
+      });
+
+      onResponse && onResponse(response);
+
+      if (response.success) {
+        closeModal();
+        onChange && onChange(getUploadChangeSuccessParam(response));
+      } else {
+        message.error(response.message);
+      }
+    } catch (err: any) {
+      setLoading(false);
+      message.error('data' in err ? err.data.message : 'Unknown Error');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   return (
@@ -86,42 +114,12 @@ function SecureUploadBrowser<Type = API.File>({
             forceLoading={loading}
             hideDeleteBtn={true}
             defaultDirectory={folder}
-            onFile={(file, dir) => {
-              if (dir) {
-                setLoading(true);
-                post(url, {
-                  ...data,
-                  [name]: getPath(dir, file),
-                })
-                  .then((response: PostResponse) => {
-                    setLoading(false);
-                    if (onResponse) {
-                      onResponse(response);
-                    }
-                    if (response.success) {
-                      closeModal();
-                      if (onChange) {
-                        onChange(getUploadChangeSuccessParam(response));
-                      }
-                    } else {
-                      message.error(response.message);
-                    }
-                  })
-                  .catch((err) => {
-                    setLoading(false);
-                    if ('data' in err) {
-                      message.error(err.data.message);
-                    } else {
-                      message.error('Unknown Error');
-                    }
-                  });
-              }
-            }}
+            onFile={(file, dir) => handleFile(file, dir)}
           />
         </Modal>
       )}
       <div style={{ marginTop: '10px' }}>
-        <SecureUpload {...props} />
+        <SecureUpload onUpload={onUpload} {...props} />
       </div>
     </>
   );
