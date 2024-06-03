@@ -79,11 +79,15 @@ function SecureUploadBrowser<Type = API.File>({
         [name]: getPath(dir, file),
       });
 
-      onResponse && onResponse(response);
+      if (onResponse) {
+        onResponse(response);
+      }
 
       if (response.success) {
         closeModal();
-        onChange && onChange(getUploadChangeSuccessParam(response));
+        if (onChange) {
+          onChange(getUploadChangeSuccessParam(response));
+        }
       } else {
         message.error(response.message);
       }

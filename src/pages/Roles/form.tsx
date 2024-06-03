@@ -11,9 +11,8 @@ import { FormattedMessage, useParams } from 'umi';
 import './index.css';
 
 import { getTranslationRetrieve } from '@/services/escola-lms/translations';
-import CustomCheckbox, { CheckboxValueType } from './components/CustomCheckbox';
-
-type CheckboxValueType = string | number | boolean;
+import type { CheckboxValueType } from './components/CustomCheckbox';
+import CustomCheckbox from './components/CustomCheckbox';
 
 export default () => {
   const params = useParams<{ name: string }>();
