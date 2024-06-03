@@ -13,6 +13,8 @@ import './index.css';
 import { getTranslationRetrieve } from '@/services/escola-lms/translations';
 import CustomCheckbox, { CheckboxValueType } from './components/CustomCheckbox';
 
+type CheckboxValueType = string | number | boolean;
+
 export default () => {
   const params = useParams<{ name: string }>();
   const { name } = params;

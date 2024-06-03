@@ -212,9 +212,12 @@ export const ClassRegister: React.FC = () => {
             .reduce<ClassRegisterTableItem[]>(
               (acc, { id, academic_teacher_id, first_name, last_name }) => {
                 const studentFullName = `${last_name} ${first_name}`;
-                // filter out tutor & first name and second name filter
+                const studentInFinalGrades = finalGradesRes.data.some(
+                  (teacher) => teacher.user.id === id,
+                );
+
                 if (
-                  academic_teacher_id !== null ||
+                  (academic_teacher_id !== null && !studentInFinalGrades) ||
                   !studentFullName.toLowerCase().includes(full_name.toLowerCase())
                 )
                   return acc;

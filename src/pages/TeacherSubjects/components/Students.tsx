@@ -1,3 +1,4 @@
+import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
 import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useMemo } from 'react';
@@ -56,25 +57,30 @@ const getGroupsOptions = (subjectGroups: API.SubjectGroups[]): DefaultOptionType
     value: id,
   }));
 
-const getTableData = (studentUserGroups: API.StudentUserGroup[]): TableDataProps[] =>
+const getTableData = (
+  studentUserGroups: API.StudentUserGroup[],
+  finalGrades: API.FinalGradeItem[],
+): TableDataProps[] =>
   studentUserGroups.reduce<TableDataProps[]>((acc, curr) => {
-    const userTable = curr?.users?.reduce<TableDataProps[]>(
-      (innerAcc, currentUser) =>
-        currentUser.academic_teacher_id !== null
-          ? innerAcc
-          : [
-              ...innerAcc,
-              {
-                group_id: curr.id,
-                group_name: curr.name,
-                user_id: currentUser.id,
-                first_name: currentUser.first_name,
-                last_name: currentUser.last_name,
-                email: currentUser.email,
-              },
-            ],
-      [],
-    );
+    if (!curr?.users) return acc;
+
+    const userTable = curr.users.reduce<TableDataProps[]>((innerAcc, currentUser) => {
+      const studentInFinalGrades = finalGrades.some((grade) => grade.user.id === currentUser.id);
+
+      return currentUser.academic_teacher_id !== null && !studentInFinalGrades
+        ? innerAcc
+        : [
+            ...innerAcc,
+            {
+              group_id: curr.id,
+              group_name: curr.name,
+              user_id: currentUser.id,
+              first_name: currentUser.first_name,
+              last_name: currentUser.last_name,
+              email: currentUser.email,
+            },
+          ];
+    }, []);
 
     return [...acc, ...userTable];
   }, []);
@@ -103,7 +109,12 @@ export const Students: React.FC = () => {
           return { data: [], total: 0, success: false };
         }
 
-        const tableData = getTableData(response.data).filter(
+        const finalGradesRes = await fetchGroupFinalGrades(response.data.map((group) => group.id));
+        if (!finalGradesRes.success) {
+          return { data: [], success: false };
+        }
+
+        const tableData = getTableData(response.data, finalGradesRes.data).filter(
           (record) =>
             record.first_name.toLowerCase().includes(first_name.toLowerCase()) &&
             record.last_name.toLowerCase().includes(last_name.toLowerCase()) &&
