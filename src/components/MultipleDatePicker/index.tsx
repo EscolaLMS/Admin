@@ -107,9 +107,7 @@ const MultipleDatePicker: React.FC<{
       dropdownRender={() => {
         return (
           <DatePicker
-            // TODO #1013 FIXme
-            // @ts-ignore
-            disabledDate={(current: moment.Moment) => {
+            disabledDate={(current) => {
               const date = new Date();
 
               return current.valueOf() <= date.setDate(date.getDate() - 1);
