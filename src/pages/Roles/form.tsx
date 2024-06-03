@@ -8,11 +8,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useCallback } from 'react';
 import { FormattedMessage, useParams } from 'umi';
 
-import type { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import './index.css';
 
 import { getTranslationRetrieve } from '@/services/escola-lms/translations';
 import CustomCheckbox from './components/CustomCheckbox';
+
+type CheckboxValueType = string | number | boolean;
 
 export default () => {
   const params = useParams<{ name: string }>();

@@ -1,12 +1,12 @@
+import SecureUpload from '@/components/SecureUpload';
+import { ExamGradeType } from '@/services/escola-lms/enums';
+import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import ProForm from '@ant-design/pro-form';
 import { Button, Image, Modal, Select, Space, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
-
-import SecureUpload from '@/components/SecureUpload';
-import { ExamGradeType } from '@/services/escola-lms/enums';
 import { useTeacherSubject } from '../context';
 
 const checkManualExamType = (type: ExamGradeType) =>
@@ -91,30 +91,42 @@ const ManualExamGradeType: React.FC<{
   );
 
   const onSelectedGroupChange = useCallback(
-    (group_id: number) => {
+    async (group_id: number) => {
       setSelectedGroup(group_id);
       const currGroup = groupUsers.byId?.[group_id];
       if (!currGroup) return;
 
-      const exam_results = currGroup.users.reduce<API.ExamResult[]>(
-        (acc, { id, email, first_name, last_name, academic_teacher_id }) => {
-          // filter out tutors
-          if (academic_teacher_id !== null) return acc;
+      try {
+        const finalGradesRes = await fetchGroupFinalGrades([group_id]);
+        if (!finalGradesRes.success) return;
 
-          return [
-            ...acc,
-            {
-              email,
-              first_name,
-              last_name,
-              user_id: id,
-              result: null,
-            },
-          ];
-        },
-        [],
-      );
-      onDataConverted({ group_id, exam_results });
+        const exam_results = currGroup.users.reduce<API.ExamResult[]>(
+          (acc, { id, email, first_name, last_name, academic_teacher_id }) => {
+            const studentInFinalGrades = finalGradesRes.data.some(
+              (teacher) => teacher.user.id === id,
+            );
+
+            // filter out tutors
+            if (academic_teacher_id !== null && !studentInFinalGrades) return acc;
+
+            return [
+              ...acc,
+              {
+                email,
+                first_name,
+                last_name,
+                user_id: id,
+                result: null,
+              },
+            ];
+          },
+          [],
+        );
+
+        onDataConverted({ group_id, exam_results });
+      } catch (error) {
+        console.error('Error fetching final grades:', error);
+      }
     },
     [groupUsers.byId],
   );
