@@ -33,7 +33,7 @@ import { Checkbox } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './index.css';
 
-type CheckboxValueType = string | number | boolean;
+export type CheckboxValueType = string | number | boolean;
 
 interface Props {
   name: string;

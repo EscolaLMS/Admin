@@ -6,30 +6,33 @@ import ProCard from '@ant-design/pro-card';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Spin, message } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import AdditionalField from './User/components/AdditionalField';
 import UserSettings from './User/settings';
 
 export default () => {
+  const [isDataLoading, setIsDataLoading] = useState(false);
   const params = useParams<{ tab?: string }>();
   const intl = useIntl();
   const { tab = 'general' } = params;
   const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
   const [data, setData] = useState<API.UserItem>();
 
-  useEffect(() => {
-    const fetch = async () => {
-      const response = await profile();
-      if (response.success) {
-        setData({
-          ...response.data,
-          bio: response.data.bio || '',
-        });
-      }
-    };
+  const fetchProfileData = useCallback(async () => {
+    setIsDataLoading(true);
+    const response = await profile();
+    if (response.success) {
+      setData({
+        ...response.data,
+        bio: response.data.bio || '',
+      });
+    }
+    setIsDataLoading(false);
+  }, []);
 
-    fetch();
+  useEffect(() => {
+    fetchProfileData();
   }, []);
 
   const formPropsGeneral = useMemo(
@@ -121,23 +124,31 @@ export default () => {
             </ProForm.Group>
 
             <ProForm.Group>
-              <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
-                {data.path_avatar && (
-                  <ResponsiveImage path={data.path_avatar} size={600} width={200} />
-                )}
-
-                <SecureUploadBrowser
-                  folder={`avatars/${data.id}`}
-                  url="/api/profile/upload-avatar"
-                  name="avatar"
-                  accept="image/*"
-                  onUpload={(response) => {
-                    if (response.success) {
-                      // TODO #1044 refresh avatar here
-                    }
+              {isDataLoading ? (
+                <Spin
+                  style={{
+                    marginBottom: 30,
                   }}
                 />
-              </ProForm.Item>
+              ) : (
+                <ProForm.Item name="avatar" label={<FormattedMessage id="avatar" />}>
+                  {data.path_avatar && (
+                    <ResponsiveImage path={data.path_avatar} size={600} width={200} />
+                  )}
+
+                  <SecureUploadBrowser
+                    folder={`avatars/${data.id}`}
+                    url="/api/profile/upload-avatar"
+                    name="avatar"
+                    accept="image/*"
+                    onUpload={(response) => {
+                      if (response.success) {
+                        fetchProfileData();
+                      }
+                    }}
+                  />
+                </ProForm.Item>
+              )}
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>
