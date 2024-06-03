@@ -35,9 +35,7 @@ export const ChangeDate: React.FC<{
   return (
     <React.Fragment>
       <DatePicker
-        // TODO: #1031 fix type
-        // @ts-ignore
-        disabledDate={(current: moment.Moment) => {
+        disabledDate={(current) => {
           const currDate = new Date();
 
           return current && current.valueOf() <= currDate.setDate(currDate.getDate() - 1);
