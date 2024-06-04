@@ -48,10 +48,8 @@ export const ProFormImageUpload: React.FC<{
                     if (info.file.response?.success) {
                       const data = info.file.response.data;
                       setPath({
-                        [`${form_name}_url` as string]:
-                          data[`${form_name}_url` as keyof typeof data],
-                        [`${form_name}_path` as string]:
-                          data[`${form_name}_path` as keyof typeof data],
+                        [`${form_name}_url`]: data[`${form_name}_url` as keyof typeof data],
+                        [`${form_name}_path`]: data[`${form_name}_path` as keyof typeof data],
                       });
                     }
                   }
