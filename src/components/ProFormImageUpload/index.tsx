@@ -45,14 +45,13 @@ export const ProFormImageUpload: React.FC<{
                 onChange={(info) => {
                   if (info.file.status === 'done') {
                     form.setFieldsValue({ [src_name]: getUploadedSrcField(info) });
-
                     if (info.file.response?.success) {
+                      const data = info.file.response.data;
                       setPath({
-                        // TODO: #1016 fix type
-                        // @ts-ignore
-                        [`${form_name}_url`]: info.file.response.data[`${form_name}_url`],
-                        // @ts-ignore
-                        [`${form_name}_path`]: info.file.response.data[`${form_name}_path`],
+                        [`${form_name}_url` as string]:
+                          data[`${form_name}_url` as keyof typeof data],
+                        [`${form_name}_path` as string]:
+                          data[`${form_name}_path` as keyof typeof data],
                       });
                     }
                   }

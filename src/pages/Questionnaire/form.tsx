@@ -43,11 +43,8 @@ export const QuestionareForm = () => {
 
   const parseData = useCallback((array: API.QuestionnaireQuestionModel[], key: string) => {
     return array.reduce((result: Record<number, number[]>, obj: API.QuestionnaireQuestionModel) => {
-      // TODO: #1035 fix types
-      // @ts-ignore
-      (result[obj[key]] =
-        // @ts-ignore
-        result[obj[key]] || []).push(obj.model_id);
+      (result[obj[key as keyof API.QuestionnaireQuestionModel]] =
+        result[obj[key as keyof API.QuestionnaireQuestionModel]] || []).push(obj.model_id);
       return result;
     }, {});
   }, []);
@@ -91,14 +88,12 @@ export const QuestionareForm = () => {
     const mappedData: Record<string, number>[] = [];
     Object.keys(items).map((key) => {
       mappedData.push(
-        // TODO: #1035 fix type
-        // @ts-ignore
-        ...items[key as keyof typeof items].map((item) => ({
-          // @ts-ignore
-          model_id: Number(item),
-          // @ts-ignore
-          model_type_id: Number(key),
-        })),
+        ...items[key as unknown as keyof typeof items].map(
+          (item: string | number | LabeledValue) => ({
+            model_id: Number(item),
+            model_type_id: Number(key),
+          }),
+        ),
       );
     });
     return mappedData;
