@@ -43,8 +43,11 @@ export const QuestionareForm = () => {
 
   const parseData = useCallback((array: API.QuestionnaireQuestionModel[], key: string) => {
     return array.reduce((result: Record<number, number[]>, obj: API.QuestionnaireQuestionModel) => {
-      (result[obj[key as keyof API.QuestionnaireQuestionModel]] =
-        result[obj[key as keyof API.QuestionnaireQuestionModel]] || []).push(obj.model_id);
+      // TODO: #1035 fix types
+      // @ts-ignore
+      (result[obj[key]] =
+        // @ts-ignore
+        result[obj[key]] || []).push(obj.model_id);
       return result;
     }, {});
   }, []);
