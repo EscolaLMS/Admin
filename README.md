@@ -4,6 +4,20 @@
 
 This project is initialized with [Ant.design PRO](https://pro.ant.design). Follow is the quick guide for how to use.
 
+Documentation on how to use admin panel are available at [docs.wellms.io](https://docs.wellms.io/)
+
+## Environmental Variables 
+
+You need to provide URL to API for Admin to work 
+
+example 
+
+```
+REACT_APP_API_URL='https://api-stage.escolalms.com'
+```
+
+those can be in `.env` file or in Environmental Variables 
+
 ## Environment Prepare
 
 Install `node_modules`:
@@ -30,27 +44,6 @@ yarn start
 yarn build
 ```
 
-### Check code style
-
-```bash
-yarn lint
-```
-
-You can also use script to auto fix some lint error:
-
-```bash
-yarn lint:fix
-```
-
-### Test code
-
-There are tests in this repo. See badges above.
-
-#### Jest code covarage
-
-```bash
-yarn test
-```
 
 #### e2e tests
 
@@ -68,4 +61,3 @@ yarn e2e:test
 
 ## More
 
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
