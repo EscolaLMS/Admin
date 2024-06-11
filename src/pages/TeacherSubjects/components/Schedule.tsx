@@ -1,6 +1,10 @@
-import { Badge, Button, Calendar, Modal, Typography } from 'antd';
+import { Badge, Button, Modal, Typography } from 'antd';
+import generateCalendar from 'antd/es/calendar/generateCalendar';
 import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
+import type { Moment } from 'moment';
 import moment from 'moment';
+import momentGenerateConfig from 'rc-picker/es/generate/moment';
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
@@ -21,6 +25,8 @@ interface EventCalendarProps {
   subject: string;
   ms_teams_join_url: string | null;
 }
+
+const ScheduleCalendar = generateCalendar<Moment>(momentGenerateConfig);
 
 export const Schedule: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventCalendarProps | null>(null);
@@ -109,9 +115,7 @@ export const Schedule: React.FC = () => {
         <FormattedMessage id="schedule" defaultMessage="Schedule" />
       </Typography.Title>
 
-      {/* TODO #1039 this is deprecated !!!
-        @ts-ignore */}
-      <Calendar dateCellRender={dateCellRender} onPanelChange={handlePanelChange} />
+      <ScheduleCalendar cellRender={dateCellRender} onPanelChange={handlePanelChange} />
 
       <Modal
         open={selectedEvent !== null}
