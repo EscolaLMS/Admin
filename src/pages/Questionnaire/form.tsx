@@ -91,14 +91,12 @@ export const QuestionareForm = () => {
     const mappedData: Record<string, number>[] = [];
     Object.keys(items).map((key) => {
       mappedData.push(
-        // TODO: #1035 fix type
-        // @ts-ignore
-        ...items[key as keyof typeof items].map((item) => ({
-          // @ts-ignore
-          model_id: Number(item),
-          // @ts-ignore
-          model_type_id: Number(key),
-        })),
+        ...items[key as unknown as keyof typeof items].map(
+          (item: string | number | LabeledValue) => ({
+            model_id: Number(item),
+            model_type_id: Number(key),
+          }),
+        ),
       );
     });
     return mappedData;
