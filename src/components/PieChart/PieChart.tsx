@@ -50,14 +50,12 @@ const PieChart: React.FC<{
   const intl = useIntl();
 
   const config: Omit<PieConfig, 'data'> = {
-    //appendPadding: 10,
     angleField: 'value',
     colorField: 'label',
     radius: 0.9,
     label: {
       type: 'inner',
       offset: '-30%',
-
       content: function content(_ref: Record<string, any>) {
         const percent = _ref.percent as number;
         return percent >= 0.01 ? ''.concat((percent * 100).toFixed(0), '%') : '';
@@ -67,13 +65,10 @@ const PieChart: React.FC<{
         textAlign: 'center',
       },
     },
-    //interactions: [{ type: 'element-active' }],
     legend: {
       itemValue: {
         alignRight: true,
-        // TODO: #1048 fix types
-        // @ts-ignore
-        formatter: (text, item) => {
+        formatter: (text: string, item: { name: string }) => {
           if (customLabelContent && 'value' in state) {
             const value = state.value.find(({ label }) => label === item.name);
             return value ? customLabelContent(value) : text;
@@ -84,9 +79,7 @@ const PieChart: React.FC<{
     },
   };
 
-  // TODO: #1048 fix type
-  // @ts-ignore
-  const donutConfig: Pick<PieConfig, 'innerRadius' | 'label' | 'appendPadding' | 'legend'> = {
+  const donutConfig: Partial<PieConfig> = {
     appendPadding: 20,
     innerRadius: 0.6,
     label: {
@@ -96,15 +89,11 @@ const PieChart: React.FC<{
     legend: {
       itemWidth: undefined,
       itemName: {
-        // TODO: #1048 fix type
-        // @ts-ignore
-        formatter: (text) => (customLabelTitle ? customLabelTitle(text) : text),
+        formatter: (text: string) => (customLabelTitle ? customLabelTitle(text) : text),
       },
       offsetX: -24,
       itemValue: {
-        // TODO: #1048 fix type
-        // @ts-ignore
-        formatter: (_, item) => {
+        formatter: (_: string, item: { value: string }) => {
           if (customLabelContent && 'value' in state) {
             const value = state.value.find(({ label }) => label === item.value);
             return value ? customLabelContent(value) : undefined;
@@ -139,7 +128,7 @@ const PieChart: React.FC<{
       const options = {
         filename: metric.split('\\').join('-'),
         fieldSeparator: ',',
-        quoteStrings: '"',
+        quoteStrings: false,
         decimalSeparator: '.',
         showLabels: true,
         showTitle: true,
@@ -150,8 +139,6 @@ const PieChart: React.FC<{
         // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
       };
 
-      // TODO: #1048 fix type
-      // @ts-ignore
       const csvConfig = mkConfig(options);
 
       const csv = generateCsv(csvConfig)(state.value);
@@ -184,8 +171,6 @@ const PieChart: React.FC<{
       {state.mode === 'loading' && <Spin />}
       {state.mode === 'loaded' && (
         <div>
-          {/*  TODO: #1048: fix type
-            @ts-ignore*/}
           <Pie {...completeConfig} data={state.value} />
           {header && (
             <Table pagination={false} size="small" dataSource={state.value} columns={columns} />
