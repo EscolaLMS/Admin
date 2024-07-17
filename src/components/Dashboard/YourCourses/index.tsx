@@ -19,8 +19,14 @@ export const DashboardComponent: React.FC = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      const userIds = initialState?.currentUser?.id;
       const request = await course({
-        authors: initialState?.currentUser?.id,
+        authors:
+          Array.isArray(userIds) && typeof userIds[0] === 'number'
+            ? userIds
+            : typeof userIds === 'number'
+            ? [userIds]
+            : undefined,
         // Default get courses by latest
         order: 'DESC',
         order_by: 'created_at',
