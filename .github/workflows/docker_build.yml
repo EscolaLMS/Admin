@@ -27,19 +27,19 @@ jobs:
           yarn
           yarn build
 
-      - name: Create Sentry release
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: sentry
-          SENTRY_PROJECT: wellms-all
-          SENTRY_URL: https://sentry.etd24.pl/
-        with:
-          environment: production
-          sourcemaps: ./dist
-          version: admin-${{github.ref_name}}
-          ignore_missing: true
-          ignore_empty: true
+      # - name: Create Sentry release
+      #   uses: getsentry/action-release@v1
+      #   env:
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #     SENTRY_ORG: sentry
+      #     SENTRY_PROJECT: wellms-all
+      #     SENTRY_URL: https://sentry.etd24.pl/
+      #   with:
+      #     environment: production
+      #     sourcemaps: ./dist
+      #     version: admin-${{github.ref_name}}
+      #     ignore_missing: true
+      #     ignore_empty: true
 
   build:
     runs-on: ubuntu-latest
