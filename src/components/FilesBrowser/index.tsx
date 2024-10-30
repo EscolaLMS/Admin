@@ -14,6 +14,7 @@ interface FormWysiwygProps {
   hideDeleteBtn?: boolean;
   forceLoading?: boolean;
   defaultDirectory?: string;
+  hideAddBtn?: boolean;
   onFile?: (file: API.File, directory?: string) => void;
 }
 
@@ -59,6 +60,7 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({
   onFile,
   hideDeleteBtn = false,
   forceLoading = false,
+  hideAddBtn = false,
 }) => {
   const intl = useIntl();
   const [state, setState] = useState<FileBrowserState>({
@@ -211,28 +213,32 @@ export const FilesBrowser: React.FC<FormWysiwygProps> = ({
         itemLayout="horizontal"
         dataSource={state.data}
         header={
-          <FilesBrowserActions
-            directory={state.directory}
-            onUploaded={(dir, file) => {
-              if (file) {
-                fetchFiles(dir);
-                if (onFile) {
-                  onFile(file, dir);
+          hideAddBtn ? null : (
+            <FilesBrowserActions
+              directory={state.directory}
+              onUploaded={(dir, file) => {
+                if (file) {
+                  fetchFiles(dir);
+                  if (onFile) {
+                    onFile(file, dir);
+                  }
                 }
-              }
-            }}
-          />
+              }}
+            />
+          )
         }
         footer={
-          <FilesBrowserActions
-            directory={state.directory}
-            onUploaded={(dir, file) => {
-              fetchFiles(dir);
-              if (file && onFile) {
-                onFile(file, dir);
-              }
-            }}
-          />
+          hideAddBtn ? null : (
+            <FilesBrowserActions
+              directory={state.directory}
+              onUploaded={(dir, file) => {
+                fetchFiles(dir);
+                if (file && onFile) {
+                  onFile(file, dir);
+                }
+              }}
+            />
+          )
         }
         renderItem={(item) => (
           <List.Item
