@@ -305,7 +305,8 @@ const ConsultationForm = () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
-              <ProForm.Item
+              {/* NOTE: deprecated */}
+              {/* <ProForm.Item
                 name="author_id"
                 label={<FormattedMessage id="tutor" />}
                 tooltip={<FormattedMessage id="tutor_consultation_tooltip" />}
@@ -313,6 +314,15 @@ const ConsultationForm = () => {
                 required
               >
                 <UserSelect />
+              </ProForm.Item>{' '} */}
+              <ProForm.Item
+                name="teachers"
+                label={<FormattedMessage id="tutors" />}
+                tooltip={<FormattedMessage id="tutor_consultation_tooltip" />}
+                valuePropName="value"
+                required
+              >
+                <UserSelect multiple />
               </ProForm.Item>
               <ProFormDigit
                 initialValue={isNew ? null : undefined}
