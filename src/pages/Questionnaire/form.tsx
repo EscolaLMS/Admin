@@ -96,8 +96,6 @@ export const QuestionareForm = () => {
     (items: Record<number, (string | number | LabeledValue)[]>) => {
       const mappedData: Record<string, number>[] = [];
 
-      console.log('formModelSpecifics', formModelSpecifics.getFieldsValue());
-
       Object.keys(items).map((key) => {
         mappedData.push(
           ...items[key as unknown as keyof typeof items].map(
