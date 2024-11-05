@@ -151,6 +151,7 @@ export default {
   duration_freemode: 'Duration (hours)',
   duration: 'Duration',
   duration_tooltip: 'Duration, example "1 hour"',
+  display_frequency_minutes: 'Display frequency minutes',
   categories: 'Categories',
   tags: 'Tags',
   H5Ps: 'H5Ps',

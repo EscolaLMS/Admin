@@ -6,9 +6,14 @@ import {
   updateQuestionare,
 } from '@/services/escola-lms/questionnaire';
 import ProCard from '@ant-design/pro-card';
-import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
+import ProForm, {
+  ProFormDigit,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+} from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Col, Form, Row, Spin, Typography, message } from 'antd';
+import { Button, Form, Spin, Typography, message } from 'antd';
 import type { LabeledValue } from 'antd/lib/select';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
@@ -28,12 +33,12 @@ export const QuestionareForm = () => {
 
   const isNew = questionnaireId === 'new';
   const [formQuestionnaire] = Form.useForm();
-
+  const [formModelSpecifics] = Form.useForm();
   const [data, setData] = useState<Partial<API.Questionnaire>>();
   const [tab, setTab] = useState('questionnaire');
   const [listOfModels, setListOfModels] = useState<API.QuestionnaireModel[]>();
   const [models, setModels] = useState<Record<number, (string | number | LabeledValue)[]>>({});
-
+  const [modelNames, setModelNames] = useState<Record<number, string>>({});
   const fetchModels = useCallback(async () => {
     const response = await getQuestionnaireModels();
     if (response.success) {
@@ -87,20 +92,32 @@ export const QuestionareForm = () => {
     [],
   );
 
-  const formatData = useCallback((items: Record<number, (string | number | LabeledValue)[]>) => {
-    const mappedData: Record<string, number>[] = [];
-    Object.keys(items).map((key) => {
-      mappedData.push(
-        ...items[key as unknown as keyof typeof items].map(
-          (item: string | number | LabeledValue) => ({
-            model_id: Number(item),
-            model_type_id: Number(key),
-          }),
-        ),
-      );
-    });
-    return mappedData;
-  }, []);
+  const formatData = useCallback(
+    (items: Record<number, (string | number | LabeledValue)[]>) => {
+      const mappedData: Record<string, number>[] = [];
+
+      console.log('formModelSpecifics', formModelSpecifics.getFieldsValue());
+
+      Object.keys(items).map((key) => {
+        mappedData.push(
+          ...items[key as unknown as keyof typeof items].map(
+            (item: string | number | LabeledValue) => ({
+              model_id: Number(item),
+              model_type_id: Number(key),
+              target_group: formModelSpecifics.getFieldValue(
+                `models.${Number(key)}.${Number(item)}.target_group`,
+              ),
+              display_frequency_minutes: formModelSpecifics.getFieldValue(
+                `models.${Number(key)}.${Number(item)}.display_frequency_minutes`,
+              ),
+            }),
+          ),
+        );
+      });
+      return mappedData;
+    },
+    [formModelSpecifics],
+  );
 
   const formProps = useMemo(
     () => ({
@@ -131,9 +148,46 @@ export const QuestionareForm = () => {
     [data, models, fetchData, formatData, isNew],
   );
 
+  const getCurrentModel = useCallback(
+    (modelTitle: string) => {
+      return data && data.models?.filter((item) => item.model_type_title === modelTitle);
+    },
+    [data],
+  );
+
+  const getModelName = useCallback(
+    (id: number, modelTitle: string, index: number, modelId: number) => {
+      return (
+        getCurrentModel(modelTitle)?.find((item) => item.model_id === Number(id))?.model_title ||
+        modelNames[modelId][index]
+      );
+    },
+    [getCurrentModel, modelNames],
+  );
+
+  const initialValues = useMemo(() => {
+    return data?.models?.reduce((acc, item) => {
+      const key = `models.${item.model_type_id}.${item.model_id}`;
+      acc[`${key}.target_group`] = item.target_group;
+      acc[`${key}.display_frequency_minutes`] = item.display_frequency_minutes;
+      return acc;
+    }, {} as Record<string, string | number | null>);
+  }, [data?.models]);
+
   if (!data) {
     return <Spin />;
   }
+
+  const listOptions = [
+    {
+      label: <FormattedMessage id="author" />,
+      value: 'author',
+    },
+    {
+      label: <FormattedMessage id="users" />,
+      value: 'user',
+    },
+  ];
 
   return (
     <PageContainer
@@ -179,29 +233,26 @@ export const QuestionareForm = () => {
         >
           <Title level={3}>
             <FormattedMessage id="questionnaire" defaultMessage="questionnaire" />
-          </Title>{' '}
+          </Title>
           <ProForm {...formProps} form={formQuestionnaire}>
-            <Row>
-              <Col span={6}>
-                <ProFormText
-                  label={<FormattedMessage id="title" defaultMessage="title" />}
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                  width="md"
-                  name="title"
-                />
-              </Col>
-              <Col>
-                <ProFormSwitch
-                  initialValue={true}
-                  name="active"
-                  label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
-                />
-              </Col>
-            </Row>
+            <ProForm.Group>
+              <ProFormText
+                label={<FormattedMessage id="title" defaultMessage="title" />}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                width="md"
+                name="title"
+              />
+              <ProFormSwitch
+                width="md"
+                initialValue={true}
+                name="active"
+                label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
+              />{' '}
+            </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>
         <ProCard.TabPane
@@ -249,11 +300,53 @@ export const QuestionareForm = () => {
                     })) || []
                 }
                 multiple
-                onChange={(values) =>
-                  handleModelChange(values as (string | number | LabeledValue)[], model.id)
-                }
+                onChange={(values, option) => [
+                  handleModelChange(values as (string | number | LabeledValue)[], model.id),
+                  setModelNames((prevState) => ({
+                    ...prevState,
+                    [model.id]: option.map((item: { label: string }) => item.label as string),
+                  })),
+                ]}
                 modelType={model.title?.toUpperCase()}
               />
+
+              <ProForm
+                form={formModelSpecifics}
+                submitter={false}
+                initialValues={initialValues}
+                style={{ marginTop: '20px' }}
+              >
+                {models[model.id] &&
+                  models[model.id]?.map((key, index) => (
+                    <div key={String(key)}>
+                      <Title level={5}>
+                        {getModelName(Number(key), model.title, index, model.id)}
+                      </Title>
+
+                      <ProForm.Group>
+                        <ProFormSelect
+                          width="md"
+                          name={`models.${model.id}.${key}.target_group`}
+                          label={
+                            <FormattedMessage id="target_group" defaultMessage="target_group" />
+                          }
+                          options={listOptions}
+                        />
+                        <ProFormDigit
+                          width="md"
+                          name={`models.${model.id}.${key}.display_frequency_minutes`}
+                          label={
+                            <FormattedMessage
+                              id="display_frequency_minutes"
+                              defaultMessage="display_frequency_minutes"
+                            />
+                          }
+                        />
+                      </ProForm.Group>
+                    </div>
+                  ))}
+              </ProForm>
+
               <Button
                 className="submit-btn"
                 type="primary"
