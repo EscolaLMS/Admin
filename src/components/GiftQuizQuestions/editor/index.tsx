@@ -67,7 +67,7 @@ export const GiftQuizQuestionEditor: React.FC<Props> = ({
       const fields = form.getFieldsValue();
       const fieldsToReset = Object.keys(fields).filter((key) => !VALUES_NOT_TO_RESET.includes(key));
 
-      form.resetFields(fieldsToReset);
+      form.resetFields(fieldsToReset as any);
     }
   }, [type]);
 
