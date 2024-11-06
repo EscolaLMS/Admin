@@ -55,6 +55,7 @@ export default {
   duration_freemode: 'Durée',
   duration: 'Durée',
   duration_tooltip: 'Durée, exemple "1 heure"',
+  display_frequency_minutes: "Durée de l'affichage",
   categories: 'Catégories',
   tags: 'Mots-clés',
   H5Ps: 'H5Ps',

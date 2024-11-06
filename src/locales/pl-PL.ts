@@ -103,6 +103,7 @@ export default {
   duration_freemode: 'Czas trwania (godz)',
   duration: 'Czas trwania',
   duration_tooltip: 'Czas trwania, przykładowo "1 godzina"',
+  display_frequency_minutes: 'Częstotliwość wyświetlania minuty',
   categories: 'Kategorie',
   tags: 'Tagi',
   H5P: 'H5P',

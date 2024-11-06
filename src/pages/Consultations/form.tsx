@@ -22,12 +22,14 @@ import UserSubmissions from '@/components/UsersSubmissions';
 import { ModelStatus } from '@/consts/status';
 import useModelFields from '@/hooks/useModelFields';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import ScreenSaves from '@/pages/Consultations/components/ScreenSaves';
 import AdditionalField from '@/pages/Users/User/components/AdditionalField';
 import {
   createConsultation,
   getConsultation,
   updateConsultation,
 } from '@/services/escola-lms/consultations';
+import { settings } from '@/services/escola-lms/settings';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
@@ -42,6 +44,7 @@ export enum TabNames {
   BRANDING = 'branding',
   USER_SUBMISSION = 'user_submission',
   CALENDAR = 'calendar',
+  SCREENSAVES = 'screensaves',
 }
 
 const ConsultationForm = () => {
@@ -54,7 +57,14 @@ const ConsultationForm = () => {
   const [form] = ProForm.useForm();
   const additionalFields = useModelFields('EscolaLms\\Consultations\\Models\\Consultation');
 
+  const [showScreenSaves, setShowScreenSaves] = useState<boolean>(false);
+
   const fetchData = useCallback(async () => {
+    const config = await settings({ per_page: -1 });
+
+    if ('data' in config) {
+      setShowScreenSaves(config.data.find((c) => c.key === 'show_screen_saves')?.value === '1');
+    }
     const response = await getConsultation(Number(consultation));
     if (response.success) {
       if (tab === 'attributes') {
@@ -295,7 +305,8 @@ const ConsultationForm = () => {
                 })}
                 disabled={manageCourseEdit.disableEdit}
               />
-              <ProForm.Item
+              {/* NOTE: deprecated */}
+              {/* <ProForm.Item
                 name="author_id"
                 label={<FormattedMessage id="tutor" />}
                 tooltip={<FormattedMessage id="tutor_consultation_tooltip" />}
@@ -303,6 +314,15 @@ const ConsultationForm = () => {
                 required
               >
                 <UserSelect />
+              </ProForm.Item>{' '} */}
+              <ProForm.Item
+                name="teachers"
+                label={<FormattedMessage id="tutors" />}
+                tooltip={<FormattedMessage id="tutor_consultation_tooltip" />}
+                valuePropName="value"
+                required
+              >
+                <UserSelect multiple />
               </ProForm.Item>
               <ProFormDigit
                 initialValue={isNew ? null : undefined}
@@ -414,7 +434,7 @@ const ConsultationForm = () => {
               </Col>
             </Row>
           </ProCard.TabPane>
-        )}{' '}
+        )}
         {!isNew && (
           <ProCard.TabPane
             key={TabNames.BRANDING}
@@ -460,6 +480,14 @@ const ConsultationForm = () => {
             tab={<FormattedMessage id="consultations.calendar" />}
           >
             <ConsultationCalendar consultation={Number(consultation)} />
+          </ProCard.TabPane>
+        )}
+        {!isNew && showScreenSaves && (
+          <ProCard.TabPane
+            key={TabNames.SCREENSAVES}
+            tab={<FormattedMessage id="consultations.screenSaves" />}
+          >
+            <ScreenSaves consultation={Number(consultation)} />
           </ProCard.TabPane>
         )}
       </ProCard>

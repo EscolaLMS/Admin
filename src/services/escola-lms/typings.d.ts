@@ -1057,6 +1057,8 @@ declare namespace API {
     model_type_class: string;
     model_type_id: number;
     model_type_title: string;
+    display_frequency_minutes: number | null;
+    target_group: 'user' | 'author' | null;
   };
 
   type Questionnaire = Pick<
