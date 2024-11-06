@@ -63,7 +63,6 @@ const TableList: React.FC<{ user: string; isProfile: boolean }> = ({ user, isPro
                   <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" />
                 </Button>,
                 <Button
-                  color="yellow"
                   type="primary"
                   key="primary"
                   onClick={() => {
