@@ -328,6 +328,7 @@ export const QuestionareForm = () => {
                           label={
                             <FormattedMessage id="target_group" defaultMessage="target_group" />
                           }
+                          initialValue={'user'}
                           options={listOptions}
                         />
                         <ProFormDigit
