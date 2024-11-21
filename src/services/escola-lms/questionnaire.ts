@@ -229,3 +229,22 @@ export async function questionnaireStars(model: string, id: number, options?: Ax
     },
   );
 }
+
+/**  GET /api/admin/questionnaire/:modelTypeTitle/modelId/id */
+export async function getQuestionnaireRaport(
+  modelTypeTitle: string,
+  modelId: number,
+  id: number,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.Questionnaire>>(
+    `/api/admin/questionnaire/${modelTypeTitle}/${modelId}/${id}/export`,
+    {
+      method: 'GET',
+      responseType: 'blob',
+      /* useCache: true */ useCache: false,
+
+      ...(options || {}),
+    },
+  );
+}
