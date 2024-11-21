@@ -40,7 +40,6 @@ const QuestionnaireRaports: React.FC<{
       );
 
       if (response instanceof Blob) {
-        console.log('response', response);
         const downloadLink = document.createElement('a');
         downloadLink.href = window.URL.createObjectURL(response);
         downloadLink.download = `raport_questionaire_${splitedData[2]}_${questionnaireId}.xlsx`;
