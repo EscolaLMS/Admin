@@ -114,9 +114,6 @@ const QuestionAnswers: React.FC<{
       hideInForm: true,
       hideInTable: true,
       valueType: 'date',
-      fieldProps: {
-        allowEmpty: [true],
-      },
     },
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
@@ -199,6 +196,7 @@ const QuestionAnswers: React.FC<{
           order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
         }).then((response) => {
           if (response.success) {
+            console.log(response.data);
             return {
               data: response.data,
               success: true,
