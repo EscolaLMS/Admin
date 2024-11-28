@@ -110,6 +110,7 @@ const ConsultationForm = () => {
 
         const postData = {
           ...values,
+          teachers: values?.teachers?.map((t) => (typeof t === 'object' ? t.id : t)),
           image_url: data && data.image_url,
           image_path: data && data.image_url && splitImagePath(data.image_url),
           logotype_url: data && data.logotype_url,

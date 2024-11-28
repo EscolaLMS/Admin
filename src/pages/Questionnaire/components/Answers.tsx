@@ -114,9 +114,6 @@ const QuestionAnswers: React.FC<{
       hideInForm: true,
       hideInTable: true,
       valueType: 'date',
-      fieldProps: {
-        allowEmpty: [true],
-      },
     },
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,

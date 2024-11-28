@@ -944,6 +944,7 @@ declare namespace API {
     duration: string;
     author_id: number;
     author?: UserItem;
+    teachers: UserItem[] | number[];
     base_price: number;
     active_to: string;
     active_from: string;

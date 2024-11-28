@@ -33,7 +33,7 @@ export const TableColumns: ProColumns<API.ConsultationAppointment>[] = [
     title: <FormattedMessage id="date" defaultMessage="date" />,
     dataIndex: 'date',
     sorter: true,
-    render: (_, item) => moment(item.date).format('yyyy-MM-DD HH:mm'),
+    render: (_, item) => moment(item.date).format('YYYY-MM-DD HH:mm'),
   },
   {
     title: <FormattedMessage id="status" defaultMessage="status" />,
