@@ -1336,11 +1336,11 @@ declare namespace API {
     created_at: string;
     updated_at: string;
     trainers: UserItem[] | number[];
-    image_path?: string;
+    image_path?: string | null;
     image_url?: string;
     tags?: Tag[] | string[];
     logotype_url?: string;
-    logotype_path?: string;
+    logotype_path?: string | null;
     product?: EscolaLms.Cart.Models.Product;
   };
 
