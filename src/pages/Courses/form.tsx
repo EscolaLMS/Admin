@@ -3,6 +3,7 @@ import CategoryCheckboxTree from '@/components/CategoryCheckboxTree';
 import ConfirmModal from '@/components/ConfirmModal';
 import CourseStatistics from '@/components/CourseStatistics';
 import EditValidateModal from '@/components/EditValidateModal';
+import JsonEditor from '@/components/JsonEditor';
 import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProFormVideoUpload from '@/components/ProFormVideoUpload';
 import ProductWidget from '@/components/ProductWidget';
@@ -28,7 +29,7 @@ import ProForm, {
 import { PageContainer } from '@ant-design/pro-layout';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
 import { isAfter, isBefore } from 'date-fns';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   FormattedMessage,
   getAllLocales,
@@ -41,7 +42,6 @@ import {
 } from 'umi';
 import CourseAccess from './components/CourseAccess';
 import CourseCertificateForm from './components/CourseCertificateForm';
-import JsonEditor from "@/components/JsonEditor";
 
 enum TabNames {
   ATTRIBUTES = 'attributes',
@@ -569,7 +569,7 @@ export default () => {
             tab={<FormattedMessage id="media" />}
             disabled={manageCourseEdit.disableEdit}
           >
-            <ProForm {...formProps} layout='horizontal'>
+            <ProForm {...formProps} layout="horizontal">
               <Row>
                 <Col span={24}>
                   <ProFormImageUpload
