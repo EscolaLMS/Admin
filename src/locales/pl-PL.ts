@@ -254,6 +254,7 @@ export default {
   notes: 'Notatki',
   new_note: 'Nowa notatka',
   add_note: 'Dodaj nową notatkę',
+  from: 'Od',
   to: 'do',
   notifications: 'Powiadomienia',
   change_password: 'Zmień hasło',

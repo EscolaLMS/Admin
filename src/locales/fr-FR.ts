@@ -186,6 +186,7 @@ export default {
   course: 'Cours',
   select: 'Sélectionner',
   select_tags: 'Sélectionner des tags',
+  from: 'De',
   to: 'à',
   select_person: 'Sélectionner une personne',
   select_course: 'Sélectionner un cours',

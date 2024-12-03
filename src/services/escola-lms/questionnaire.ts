@@ -207,6 +207,8 @@ export async function getQuestionAnswers(
       question_id?: number;
       user_id?: string;
       updated_at?: string;
+      updated_at_from?: string;
+      updated_at_to?: string;
     },
   options?: AxiosRequestConfig,
 ) {
