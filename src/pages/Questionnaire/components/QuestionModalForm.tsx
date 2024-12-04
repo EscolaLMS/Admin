@@ -64,7 +64,7 @@ export const QuestionModalForm: React.FC<{
         name="type"
         options={questionTypeOptions}
         label={<FormattedMessage id="type" />}
-        initialValue={QuestionnaireQuestionType.Rate}
+        initialValue={QuestionnaireQuestionType.Text}
         onChange={(value) => {
           if (value === QuestionnaireQuestionType.Review) {
             setShowScore(true);
