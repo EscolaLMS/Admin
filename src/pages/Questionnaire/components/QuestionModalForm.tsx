@@ -20,7 +20,7 @@ export const QuestionModalForm: React.FC<{
   questionsList: API.QuestionnaireQuestion[];
 }> = (props) => {
   const intl = useIntl();
-
+  const [showScore, setShowScore] = React.useState(false);
   const { visible, onVisibleChange, onFinish, id, questionsList } = props;
 
   const [form] = Form.useForm();
@@ -64,7 +64,14 @@ export const QuestionModalForm: React.FC<{
         name="type"
         options={questionTypeOptions}
         label={<FormattedMessage id="type" />}
-        initialValue={QuestionnaireQuestionType.Rate}
+        initialValue={QuestionnaireQuestionType.Text}
+        onChange={(value) => {
+          if (value === QuestionnaireQuestionType.Review) {
+            setShowScore(true);
+          } else {
+            setShowScore(false);
+          }
+        }}
       />
       <ProFormText
         width="lg"
@@ -84,6 +91,22 @@ export const QuestionModalForm: React.FC<{
           id: 'description',
         })}
       />
+      {showScore && (
+        <ProFormDigit
+          width="lg"
+          name="max_score"
+          label={<FormattedMessage id="max_score" />}
+          tooltip={<FormattedMessage id="max_score" />}
+          placeholder={intl.formatMessage({
+            id: 'max_score',
+            defaultMessage: 'max_score',
+          })}
+          min={0}
+          max={9999}
+          fieldProps={{ step: 1 }}
+        />
+      )}
+
       <ProFormDigit
         width="lg"
         name="position"
