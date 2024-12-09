@@ -28,7 +28,12 @@ export const QuestionModalForm: React.FC<{
   useEffect(() => {
     if (typeof id === 'number' && id > 0) {
       getQuestion(id).then((response) => {
-        if (response.success) form.setFieldsValue(response.data);
+        if (response.success) {
+          form.setFieldsValue(response.data);
+          if (response.data.type === QuestionnaireQuestionType.Review) {
+            setShowScore(true);
+          }
+        }
       });
     } else {
       form.resetFields();

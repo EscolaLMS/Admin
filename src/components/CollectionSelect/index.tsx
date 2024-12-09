@@ -50,7 +50,7 @@ export const CollectionSelect: React.FC<{
   const abortController = useRef<AbortController>();
 
   const modelCollectionMethod = useCallback(
-    (params: Parameters<typeof getCourses>[0]) => {
+    (params: Partial<API.CourseParams & API.WebinarsParams & API.ConsultationsParams>) => {
       switch (modelType) {
         case 'COURSE':
           return getCourses(params, { signal: abortController?.current?.signal });
@@ -89,14 +89,20 @@ export const CollectionSelect: React.FC<{
 
       abortController.current = new AbortController();
 
-      modelCollectionMethod(search ? { title: search } : {})
+      modelCollectionMethod(
+        search
+          ? { name: search }
+          : ({} as Partial<API.CourseParams & API.WebinarsParams & API.ConsultationsParams>),
+      )
         .then((response) => {
           if (response.success) {
             setModelCollection(prepareObj(response.data));
           }
-          setFetching(false);
         })
-        .catch(() => setFetching(false));
+        .catch(() => setFetching(false))
+        .finally(() => {
+          setFetching(false);
+        });
     },
     [modelType],
   );
@@ -146,6 +152,7 @@ export const CollectionSelect: React.FC<{
         }
         return true;
       }}
+      loading={fetching}
       notFoundContent={fetching ? <Spin size="small" /> : null}
       optionLabelProp="label"
     >
