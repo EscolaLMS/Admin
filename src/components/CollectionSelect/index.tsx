@@ -99,7 +99,7 @@ export const CollectionSelect: React.FC<{
             setModelCollection(prepareObj(response.data));
           }
         })
-        .catch(() => setFetching(false))
+        .catch((error) => console.error(error))
         .finally(() => {
           setFetching(false);
         });
