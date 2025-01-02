@@ -61,6 +61,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v4
+        env:
+          ADMIN_VERSION: ${{github.ref_name}}
         with:
           push: true
           # with QEMU it takes more then 3 hours to push,
