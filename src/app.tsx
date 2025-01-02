@@ -15,8 +15,8 @@ import RestrictedPage from './pages/403';
 import { packages } from './services/escola-lms/packages';
 import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
 import { translations } from './services/escola-lms/translations';
+import './services/sentry';
 import { refreshTokenCallback } from './services/token_refresh';
-
 const authpaths = ['/user/login', '/user/reset-password'];
 
 declare global {
