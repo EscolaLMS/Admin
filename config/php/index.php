@@ -36,7 +36,7 @@ foreach (getenv() as $key => $value) {
 }
 
 if (is_file('version')) {
-    $setup['REACT_APP_SENTRY_RELEASE'] = "admin@" . file_get_contents('version');
+    $setup['REACT_APP_SENTRY_RELEASE'] = "admin@" . trim(file_get_contents('version'));
 }
 
 
