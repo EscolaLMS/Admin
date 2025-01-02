@@ -40,12 +40,12 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: sentry
-          SENTRY_PROJECT: wellms-all
-          SENTRY_URL: https://sentry.etd24.pl/
+          SENTRY_PROJECT: admin-panel
+          SENTRY_URL: https://sentry.escolait.pl/
         with:
-          environment: staging
+          environment: production
           sourcemaps: ./dist
-          version: admin-${{github.ref_name}}
+          version: admin@${{github.ref_name}}
           ignore_missing: true
           ignore_empty: true
 
