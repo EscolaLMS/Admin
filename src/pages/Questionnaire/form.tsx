@@ -244,12 +244,13 @@ export const QuestionareForm = () => {
                 width="md"
                 name="title"
               />
+
               <ProFormSwitch
                 width="md"
                 initialValue={true}
                 name="active"
                 label={<FormattedMessage id="is_active" defaultMessage="is_active" />}
-              />{' '}
+              />
             </ProForm.Group>
           </ProForm>
         </ProCard.TabPane>

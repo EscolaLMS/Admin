@@ -299,6 +299,7 @@ export default {
   course: 'Course',
   select: 'Please select',
   select_tags: 'Select tags',
+  from: 'from',
   to: 'to',
   select_person: 'Select a person',
   select_course: 'Select a course',

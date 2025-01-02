@@ -108,15 +108,20 @@ const QuestionAnswers: React.FC<{
       sorter: true,
     },
     {
-      title: <FormattedMessage id="updated_at" defaultMessage="updated_at" />,
+      title: <FormattedMessage id="from" defaultMessage="from" />,
       dataIndex: 'date',
       hideInSearch: false,
       hideInForm: true,
       hideInTable: true,
       valueType: 'date',
-      fieldProps: {
-        allowEmpty: [true],
-      },
+    },
+    {
+      title: <FormattedMessage id="to" defaultMessage="to" />,
+      dataIndex: 'dateto',
+      hideInSearch: false,
+      hideInForm: true,
+      hideInTable: true,
+      valueType: 'date',
     },
     {
       title: <FormattedMessage id="title" defaultMessage="title" />,
@@ -177,7 +182,7 @@ const QuestionAnswers: React.FC<{
   return (
     <ProTable<
       API.QuestionAnswer,
-      API.PageParams & { question_id?: number; user_id?: string; date?: string }
+      API.PageParams & { question_id?: number; user_id?: string; date?: string; dateto?: string }
     >
       headerTitle={intl.formatMessage({
         id: 'answers',
@@ -187,14 +192,15 @@ const QuestionAnswers: React.FC<{
         layout: 'vertical',
       }}
       rowKey="id"
-      request={({ pageSize, current, question_id, user_id, date }, sort) => {
+      request={({ pageSize, current, question_id, user_id, date, dateto }, sort) => {
         const sortArr = sort && Object.entries(sort)[0];
         return getQuestionAnswers(questionnaireId, {
           per_page: pageSize,
           page: current,
           question_id,
           user_id,
-          updated_at: date ? format(new Date(date), DATETIME_FORMAT) : undefined,
+          updated_at_from: date ? format(new Date(date), DATETIME_FORMAT) : undefined,
+          updated_at_to: dateto ? format(new Date(dateto), DATETIME_FORMAT) : undefined,
           order_by: sortArr && sortArr[0],
           order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
         }).then((response) => {

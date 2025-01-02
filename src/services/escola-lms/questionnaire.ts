@@ -207,6 +207,8 @@ export async function getQuestionAnswers(
       question_id?: number;
       user_id?: string;
       updated_at?: string;
+      updated_at_from?: string;
+      updated_at_to?: string;
     },
   options?: AxiosRequestConfig,
 ) {
@@ -225,6 +227,25 @@ export async function questionnaireStars(model: string, id: number, options?: Ax
     `/api/questionnaire/stars/${model}/${id}`,
     {
       method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+/**  GET /api/admin/questionnaire/:modelTypeTitle/modelId/id */
+export async function getQuestionnaireRaport(
+  modelTypeTitle: string,
+  modelId: number,
+  id: number,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.Questionnaire>>(
+    `/api/admin/questionnaire/${modelTypeTitle}/${modelId}/${id}/export`,
+    {
+      method: 'GET',
+      responseType: 'blob',
+      /* useCache: true */ useCache: false,
+
       ...(options || {}),
     },
   );

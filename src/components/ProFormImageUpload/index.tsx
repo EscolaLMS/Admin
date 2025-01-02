@@ -56,6 +56,7 @@ export const ProFormImageUpload: React.FC<{
                 }}
                 hideLabel={hideLabel}
               />
+              <br />
               <Button
                 danger
                 onClick={() => [
