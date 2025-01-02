@@ -33,7 +33,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: sentry
           SENTRY_PROJECT: admin-panel
-          SENTRY_URL: https://sentry.escolait.pl/
+          SENTRY_URL: https://sentry.escolait.pl
         with:
           environment: production
           sourcemaps: ./dist
