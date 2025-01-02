@@ -136,6 +136,7 @@ export default defineConfig({
     `window.REACT_APP_API_URL = null;
     window.REACT_APP_SENTRYDSN = null;
     window.REACT_APP_YBUG = null;`,
+    `<!-- inject env variables -->`,
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
