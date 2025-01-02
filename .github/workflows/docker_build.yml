@@ -68,6 +68,8 @@ jobs:
           # with QEMU it takes more then 3 hours to push,
           #platforms: linux/amd64,linux/arm64
           tags: escolalms/admin:${{github.ref_name}}, escolalms/admin:latest
+          build-args: |
+            ADMIN_VERSION=${{github.ref_name}}
 
       # - name: Create the Mattermost Message
       #   run: |
