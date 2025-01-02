@@ -26,6 +26,7 @@ jobs:
           node -v 
           yarn
           yarn build
+          echo "${{github.ref_name}}" >> dist/version
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
