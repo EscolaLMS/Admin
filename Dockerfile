@@ -11,7 +11,7 @@ FROM php:apache AS httpd
 ENV API_URL="http://localhost:1000"
 ENV SENTRYDSN=""
 ENV YBUG=""
-ENV ADMIN_VERSION="dev-main"
+ARG ADMIN_VERSION="dev-main"
 COPY entrypoint.sh /usr/local/bin/docker-php-entrypoint
 COPY --from=base /home/node/app/dist /var/www/html
 COPY config/php/index.php /var/www/html/index.php
