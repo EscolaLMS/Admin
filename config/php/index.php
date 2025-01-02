@@ -5,6 +5,7 @@ $content = file_get_contents("index.html");
 // check variables first 
 
 $domains = [];
+$token = '<!-- inject env variables -->';
 
 if (isset($_ENV['MULTI_DOMAINS'])) {
     foreach (explode(",", $_ENV['MULTI_DOMAINS']) as $domain) {
@@ -23,18 +24,18 @@ if (is_file(dirname(__FILE__) . "/env_config.php")) {
     include_once "env_config.php";
 }
 
-if (key_exists($_SERVER['HTTP_HOST'], $domains)) {
-    $setup = $domains[$_SERVER['HTTP_HOST']];
-
+if (key_exists($_SERVER['HTTP_HOST'], $domains) || key_exists($_SERVER['SERVER_NAME'], $domains)) {
+    $setup = key_exists($_SERVER['HTTP_HOST'], $domains) ? $domains[$_SERVER['HTTP_HOST']] : $domains[$_SERVER['SERVER_NAME']];
+    foreach (getenv() as $key => $value) {
+        if (str_starts_with($key, 'VITE_APP_') || str_starts_with($key, 'REACT_APP_')) {
+            $setup[$key] = $value;
+        }
+    }
     if (isset($setup)) {
-        if (isset($setup['REACT_APP_API_URL'])) {
-            $content = preg_replace('/(?<=window.REACT_APP_API_URL=")(.*)(?=")/', $setup['REACT_APP_API_URL'], $content);
-        }
-        if (isset($setup['REACT_APP_SENTRYDSN'])) {
-            $content = preg_replace('/(?<=window.REACT_APP_SENTRYDSN=")(.*)(?=")/', $setup['REACT_APP_SENTRYDSN'], $content);
-        }
-        if (isset($setup['REACT_APP_YBUG'])) {
-            $content = preg_replace('/(?<=window.REACT_APP_YBUG=")(.*)(?=")/', $setup['REACT_APP_YBUG'], $content);
+        foreach ($setup as $key => $value) {
+            if (str_starts_with($key, 'VITE_APP_') || str_starts_with($key, 'REACT_APP_')) {
+                $content = str_replace($token, "\n" . 'window.' . $key . '="' . $value . '";' . $token, $content);
+            }
         }
     }
 }
