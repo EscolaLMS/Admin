@@ -15,4 +15,4 @@ ENV ADMIN_VERSION="dev-main"
 COPY entrypoint.sh /usr/local/bin/docker-php-entrypoint
 COPY --from=base /home/node/app/dist /var/www/html
 COPY config/php/index.php /var/www/html/index.php
-RUN echo "ADMIN_VERSION=${ADMIN_VERSION}" > /var/www/html/version
+RUN echo "${ADMIN_VERSION}" > /var/www/html/version
