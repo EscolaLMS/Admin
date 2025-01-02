@@ -244,9 +244,9 @@ const ProductsForm: React.FC<{
               revenuecat: {
                 app_store: values.app_store,
                 play_store: values.play_store,
-              }
-            }
-          }
+              },
+            },
+          },
         };
 
         let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;

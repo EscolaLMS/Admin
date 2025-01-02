@@ -1,9 +1,9 @@
+import TableList from '@/pages/Users/BulkNotifications/List';
+import { BulkNotificationChannelsEnum } from '@/services/escola-lms/enums';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import React from 'react';
 import { FormattedMessage, history, useParams } from 'umi';
-import TableList from '@/pages/Users/BulkNotifications/List';
-import { BulkNotificationChannelsEnum } from '@/services/escola-lms/enums';
 
 const BulkNotifications: React.FC = () => {
   const params = useParams<{ template?: string }>();

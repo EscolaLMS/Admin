@@ -64,13 +64,10 @@ export async function dictionaryWords(
 
 /**  GET /api/admin/dictionary-words/:id */
 export async function getDictionaryWord(id: number, options?: AxiosRequestConfig) {
-  return request<API.DefaultResponse<API.DictionaryWords>>(
-    `/api/admin/dictionary-words/${id}`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
+  return request<API.DefaultResponse<API.DictionaryWords>>(`/api/admin/dictionary-words/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
 }
 
 /** POST /api/admin/dictionary-words */
@@ -87,23 +84,17 @@ export async function updateDictionaryWord(
   body: API.DictionaryWordCreate,
   options?: AxiosRequestConfig,
 ) {
-  return request<API.DefaultResponse<API.DictionaryWords>>(
-    `/api/admin/dictionary-words/${id}`,
-    {
-      method: 'PUT',
-      data: body,
-      ...(options || {}),
-    },
-  );
+  return request<API.DefaultResponse<API.DictionaryWords>>(`/api/admin/dictionary-words/${id}`, {
+    method: 'PUT',
+    data: body,
+    ...(options || {}),
+  });
 }
 
 /**  DELETE /api/admin/dictionary-words/:id */
 export async function deleteDictionaryWord(id: number, options?: AxiosRequestConfig) {
-  return request<API.DefaultResponse<API.DictionaryWords>>(
-    `/api/admin/dictionary-words/${id}`,
-    {
-      method: 'DELETE',
-      ...(options || {}),
-    },
-  );
+  return request<API.DefaultResponse<API.DictionaryWords>>(`/api/admin/dictionary-words/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
 }

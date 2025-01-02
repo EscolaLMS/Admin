@@ -6,17 +6,17 @@ This project is initialized with [Ant.design PRO](https://pro.ant.design). Follo
 
 Documentation on how to use admin panel are available at [docs.wellms.io](https://docs.wellms.io/)
 
-## Environmental Variables 
+## Environmental Variables
 
-You need to provide URL to API for Admin to work 
+You need to provide URL to API for Admin to work
 
-example 
+example
 
 ```
 REACT_APP_API_URL='https://api-stage.escolalms.com'
 ```
 
-those can be in `.env` file or in Environmental Variables 
+those can be in `.env` file or in Environmental Variables
 
 ## Environment Prepare
 
@@ -44,7 +44,6 @@ yarn start
 yarn build
 ```
 
-
 #### e2e tests
 
 Locally
@@ -60,4 +59,3 @@ yarn e2e:test
 ```
 
 ## More
-

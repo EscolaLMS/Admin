@@ -6,9 +6,9 @@ import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import { DictionaryTabNames } from '@/pages/Dictionary/form';
 import { deleteDictionary, dictionaries } from '@/services/escola-lms/dictionary';
 import { createTableOrderObject } from '@/utils/utils';
-import { DictionaryTabNames } from '@/pages/Dictionary/form';
 
 const handleRemove = async (id: number) => {
   return deleteDictionary(id).then((response) => {

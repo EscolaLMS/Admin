@@ -1,15 +1,18 @@
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
+import PERMISSIONS from '@/consts/permissions';
+import { usePermissions } from '@/hooks/usePermissions';
 import { bulkNotifications } from '@/services/escola-lms/bulk-notifications';
-import { type BulkNotificationChannelsEnum, BulkNotificationSectionsKeysEnum } from '@/services/escola-lms/enums';
+import {
+  type BulkNotificationChannelsEnum,
+  BulkNotificationSectionsKeysEnum,
+} from '@/services/escola-lms/enums';
+import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import React, { useRef } from 'react';
-import { FormattedMessage, useIntl, Link } from 'umi';
 import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { usePermissions } from '@/hooks/usePermissions';
-import PERMISSIONS from '@/consts/permissions';
+import React, { useRef } from 'react';
+import { FormattedMessage, Link, useIntl } from 'umi';
 
 export const TableColumns: ProColumns<API.BulkNotification>[] = [
   {
@@ -41,7 +44,8 @@ export const TableColumns: ProColumns<API.BulkNotification>[] = [
     sorter: false,
     valueType: 'select',
     render: (_, record) =>
-      record.sections.find(({ key }) => key === BulkNotificationSectionsKeysEnum.TITLE)?.value || ''
+      record.sections.find(({ key }) => key === BulkNotificationSectionsKeysEnum.TITLE)?.value ||
+      '',
   },
   {
     title: <FormattedMessage id="content" defaultMessage="content" />,
@@ -50,7 +54,7 @@ export const TableColumns: ProColumns<API.BulkNotification>[] = [
     sorter: false,
     valueType: 'select',
     render: (_, record) =>
-      record.sections.find(({ key }) => key === BulkNotificationSectionsKeysEnum.BODY)?.value || ''
+      record.sections.find(({ key }) => key === BulkNotificationSectionsKeysEnum.BODY)?.value || '',
   },
 ];
 
@@ -71,13 +75,17 @@ const TableList: React.FC<{ templateType: string; channel: BulkNotificationChann
       actionRef={actionRef}
       rowKey="id"
       search={false}
-      toolBarRender={() => checkPermission(PERMISSIONS.UserBulkNotificationCreate) ? [
-        <Link key={'new'} to={`/users/notifications/${templateType}/new`}>
-          <Button type="primary" key="primary">
-            <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
-          </Button>
-        </Link>,
-      ] : []}
+      toolBarRender={() =>
+        checkPermission(PERMISSIONS.UserBulkNotificationCreate)
+          ? [
+              <Link key={'new'} to={`/users/notifications/${templateType}/new`}>
+                <Button type="primary" key="primary">
+                  <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+                </Button>
+              </Link>,
+            ]
+          : []
+      }
       request={({ pageSize, current }, sort) => {
         const sortArr = sort && Object.entries(sort)[0];
         return bulkNotifications({

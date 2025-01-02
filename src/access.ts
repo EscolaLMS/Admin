@@ -307,7 +307,7 @@ export default function (initialState: {
     dictionaryWordList:
       havePackageInstalled(PACKAGES.Dictionary) &&
       havePermissionsInDashboard(PERMISSIONS.DictionaryWordList, PERMISSIONS.DictionaryWordRead),
-      dictionaryWordCreate:
+    dictionaryWordCreate:
       havePackageInstalled(PACKAGES.Dictionary) &&
       havePermissionsInDashboard(PERMISSIONS.DictionaryWordCreate),
   };

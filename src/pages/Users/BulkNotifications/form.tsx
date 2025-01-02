@@ -1,5 +1,8 @@
 import UserSelect from '@/components/UserSelect';
-import { sendBulkNotificationForAll, sendBulkNotification } from '@/services/escola-lms/bulk-notifications';
+import {
+  sendBulkNotification,
+  sendBulkNotificationForAll,
+} from '@/services/escola-lms/bulk-notifications';
 import { BulkNotificationChannelsEnum } from '@/services/escola-lms/enums';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-components';

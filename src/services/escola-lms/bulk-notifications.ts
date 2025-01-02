@@ -14,7 +14,10 @@ export async function bulkNotifications(
   });
 }
 
-export async function sendBulkNotification(body: API.BulkNotificationBody, options?: AxiosRequestConfig) {
+export async function sendBulkNotification(
+  body: API.BulkNotificationBody,
+  options?: AxiosRequestConfig,
+) {
   return request<API.DefaultResponse<API.BulkNotification>>(`/api/admin/bulk-notifications/send`, {
     method: 'POST',
     headers: {
@@ -25,13 +28,19 @@ export async function sendBulkNotification(body: API.BulkNotificationBody, optio
   });
 }
 
-export async function sendBulkNotificationForAll(body: API.BulkNotificationBody, options?: AxiosRequestConfig) {
-  return request<API.DefaultResponse<API.BulkNotification>>(`/api/admin/bulk-notifications/send/multicast`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+export async function sendBulkNotificationForAll(
+  body: API.BulkNotificationBody,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.BulkNotification>>(
+    `/api/admin/bulk-notifications/send/multicast`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
     },
-    data: body,
-    ...(options || {}),
-  });
+  );
 }

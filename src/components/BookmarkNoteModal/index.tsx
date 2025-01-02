@@ -1,13 +1,13 @@
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
-import { Modal, Form, Input, Button, List, Space, Typography } from 'antd';
 import {
   bookmarkNote,
   createBookmarkNote,
-  updateBookmarkNote,
   deleteBookmarkNote,
+  updateBookmarkNote,
 } from '@/services/escola-lms/bookmark_notes';
 import { BookmarkableType } from '@/services/escola-lms/enums';
+import { Button, Form, Input, List, Modal, Space, Typography } from 'antd';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 interface UserProps {

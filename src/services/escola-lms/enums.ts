@@ -123,5 +123,5 @@ export enum BulkNotificationSectionsKeysEnum {
   TITLE = 'title',
   BODY = 'body',
   IMAGE = 'image_url',
-  REDIRECT_URL = 'redirect_url'
+  REDIRECT_URL = 'redirect_url',
 }

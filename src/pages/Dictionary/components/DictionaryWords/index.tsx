@@ -116,11 +116,11 @@ const DictionaryWordsTableList: React.FC = () => {
           </Button>
         </Link>,
         checkPermission(PERMISSIONS.DictionaryImport) ? (
-          <div className='import-dictionary'>
+          <div className="import-dictionary">
             <SecureUpload
               title={intl.formatMessage({
                 id: 'import_dictionary',
-                defaultMessage: 'Import dictionary'
+                defaultMessage: 'Import dictionary',
               })}
               url="/api/admin/dictionary-words/import"
               name="file"
