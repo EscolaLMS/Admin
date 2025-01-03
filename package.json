@@ -5,7 +5,7 @@
   "description": "An out-of-box UI solution for enterprise applications",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 max build",
-    "build": "max build",
+    "build": "max build && yarn sentry:sourcemaps",
     "deploy": "npm run build && npm run gh-pages",
     "dev": "env-cmd -f .env npm run start:dev",
     "gh-pages": "gh-pages -d dist",
@@ -37,7 +37,8 @@
     "playwright": "PORT=8000 playwright install && playwright test",
     "playwright:headed": "PORT=8000 playwright install && playwright test --headed --project=chromium",
     "playwright:debug": "PORT=8000 playwright install && playwright test --debug",
-    "playwright:local": "PORT=8000 playwright test"
+    "playwright:local": "PORT=8000 playwright test",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org sentry --project admin-panel ./dist && sentry-cli --url https://sentry.escolait.pl/ sourcemaps upload --org sentry --project admin-panel ./dist"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
@@ -60,7 +61,7 @@
     "@escolalms/h5p-react": "^0.2.18",
     "@escolalms/markdown-editor": "^12.0.6",
     "@escolalms/ts-models": "^0.0.35",
-    "@sentry/cli": "^2.28.0",
+    "@sentry/cli": "^2.40.0",
     "@sentry/react": "^8",
     "@testing-library/jest-dom": "^6.4.5",
     "@umijs/route-utils": "^2.2.2",
