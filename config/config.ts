@@ -158,4 +158,5 @@ export default defineConfig({
     REACT_APP_SENTRY_RELEASE:
       typeof REACT_APP_SENTRY_RELEASE !== 'undefined' ? REACT_APP_SENTRY_RELEASE : '',
   },
+  devtool: 'source-map',
 });

@@ -5,7 +5,7 @@
   "description": "An out-of-box UI solution for enterprise applications",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 max build",
-    "build": "max build",
+    "build": "max build  --sourcemap --outdir=app/assets/builds",
     "deploy": "npm run build && npm run gh-pages",
     "dev": "env-cmd -f .env npm run start:dev",
     "gh-pages": "gh-pages -d dist",
@@ -62,6 +62,7 @@
     "@escolalms/markdown-editor": "^12.0.6",
     "@escolalms/ts-models": "^0.0.35",
     "@sentry/cli": "^2.40.0",
+    "@sentry/esbuild-plugin": "^2.22.7",
     "@sentry/react": "^8",
     "@testing-library/jest-dom": "^6.4.5",
     "@umijs/route-utils": "^2.2.2",
