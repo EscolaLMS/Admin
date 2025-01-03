@@ -1,0 +1,1 @@
+{"version":3,"file":"p__Scorm__preview.70a363fc.chunk.css","mappings":"AAAA,MAAM,CAAC,qBACL,QAAS,MACT,MAAO,KACP,WAAY,KACZ,OAAQ,IACV","sources":["webpack://ant-design-pro/./src/pages/Scorm/preview.css"],"sourcesContent":["iframe.scorm-preview-player {\n  display: block;\n  width: 100%;\n  min-height: 80vh;\n  border: none;\n}\n"],"names":[],"sourceRoot":""}
