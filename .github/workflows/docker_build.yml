@@ -28,6 +28,7 @@ jobs:
           yarn
           yarn build
           echo "${{github.ref_name}}" >> dist/version
+          yarn sentry:sourcemaps
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
