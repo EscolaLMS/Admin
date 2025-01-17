@@ -14,6 +14,7 @@ import TagsInput from '@/components/TagsInput';
 import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
+import { useShowNotification } from '@/hooks/useMessage';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
 import { createCourse, getCourse, updateCourse } from '@/services/escola-lms/course';
@@ -27,7 +28,7 @@ import ProForm, {
   ProFormText,
 } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Alert, Button, Col, Row, Spin, message } from 'antd';
+import { Alert, Button, Col, Row, Spin } from 'antd';
 import { isAfter, isBefore } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -73,7 +74,7 @@ export default () => {
     courseId: 0,
   });
   const [isFirstTimeEdit, setIsFirstTimeEdit] = useState(true);
-
+  const { showNotification } = useShowNotification();
   const locales: string[] = getAllLocales() || [];
 
   const { setInitialState, initialState } = useModel('@@initialState');
@@ -179,7 +180,9 @@ export default () => {
         } else {
           response = await updateCourse(Number(course), postData);
         }
-        message.success(intl.formatMessage({ id: response.message }));
+
+        showNotification(response.message);
+
         setManageCourseEdit({
           ...manageCourseEdit,
           showConfirmModal: false,

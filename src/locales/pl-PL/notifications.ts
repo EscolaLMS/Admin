@@ -32,4 +32,6 @@ export default {
   'notifications.SettingPackageConfigUpdated': 'Zaktualizowano konfigurację pakietu',
   'notifications.CourseTutorAssigned': 'Instruktor przypisany',
   'notifications.AccountConfirmed': 'Konto potwierdzone',
+  'notifications.updateSuccessfully': `{id} zaktualizowano pomyślnie`,
+  'notifications.createSuccessfully': `{id} utworzono pomyślnie`,
 };

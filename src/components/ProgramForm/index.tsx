@@ -8,7 +8,7 @@ export const ProgramForm: React.FC<{
 }> = ({ id }) => {
   return (
     <AppContext id={Number(id)}>
-      <ThreeColProgram />{' '}
+      <ThreeColProgram />
     </AppContext>
   );
 };

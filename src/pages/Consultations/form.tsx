@@ -5,7 +5,7 @@ import ProForm, {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-form';
-import { Alert, Button, Col, Row, Spin, message } from 'antd';
+import { Alert, Button, Col, Row, Spin } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
@@ -20,6 +20,7 @@ import ProductWidget from '@/components/ProductWidget';
 import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { ModelStatus } from '@/consts/status';
+import { useShowNotification } from '@/hooks/useMessage';
 import useModelFields from '@/hooks/useModelFields';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
 import ScreenSaves from '@/pages/Consultations/components/ScreenSaves';
@@ -58,7 +59,7 @@ const ConsultationForm = () => {
   const additionalFields = useModelFields('EscolaLms\\Consultations\\Models\\Consultation');
 
   const [showScreenSaves, setShowScreenSaves] = useState<boolean>(false);
-
+  const { showNotification } = useShowNotification();
   const fetchData = useCallback(async () => {
     const config = await settings({ per_page: -1 });
 
@@ -129,7 +130,8 @@ const ConsultationForm = () => {
             history.push(`/other/consultations/${response.data.id}/${tab}`);
           }
         }
-        message.success(response.message);
+        showNotification(response.message);
+
         setManageCourseEdit({
           ...manageCourseEdit,
           showConfirmModal: false,
