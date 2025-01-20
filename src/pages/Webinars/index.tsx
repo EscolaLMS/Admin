@@ -195,7 +195,7 @@ const Webinars: React.FC = () => {
         await deleteWebinar(id).then((response) => {
           setLoading(false);
           if (response.success) {
-            showNotification(response.message);
+            showNotification(response);
           }
         });
         hide();

@@ -33,4 +33,6 @@ export default {
   'notifications.AccountConfirmed': 'Account confirmed',
   'notifications.updateSuccessfully': '{id} updated successfully',
   'notifications.createSuccessfully': '{id} created successfully',
+  'notifications.updated': `{id} updated`,
+  'notifications.unexpectedError': 'Unexpected error',
 };

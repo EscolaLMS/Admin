@@ -130,7 +130,7 @@ const ConsultationForm = () => {
             history.push(`/other/consultations/${response.data.id}/${tab}`);
           }
         }
-        showNotification(response.message);
+        showNotification(response);
 
         setManageCourseEdit({
           ...manageCourseEdit,

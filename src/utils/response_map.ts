@@ -9,6 +9,11 @@ const messagePatterns = [
     translationKey: 'notifications.createSuccessfully',
     extractModel: (message: string) => message.split(' ')[0],
   },
+  {
+    regex: /^(Product) updated$/,
+    translationKey: 'notifications.updated',
+    extractModel: (message: string) => message.split(' ')[0],
+  },
 
   //TODO:  set other models and messages from backend here
 ];

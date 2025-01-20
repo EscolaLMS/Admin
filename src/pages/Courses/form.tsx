@@ -181,7 +181,7 @@ export default () => {
           response = await updateCourse(Number(course), postData);
         }
 
-        showNotification(response.message);
+        showNotification(response);
 
         setManageCourseEdit({
           ...manageCourseEdit,

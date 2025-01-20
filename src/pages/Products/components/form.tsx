@@ -6,7 +6,7 @@ import ProForm, {
   ProFormSwitch,
   ProFormText,
 } from '@ant-design/pro-form';
-import { Col, Input, Row, Spin, Tag, message } from 'antd';
+import { Col, Input, Row, Spin, Tag } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl, useModel } from 'umi';
 
@@ -26,6 +26,7 @@ import TemplateManuallyTriggerForProduct from '@/components/TemplateManuallyTrig
 import UserSubmissions from '@/components/UsersSubmissions';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import PACKAGES from '@/consts/packages';
+import { useShowNotification } from '@/hooks/useMessage';
 import { createHavePackageInstalled } from '@/utils/access';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
 import { ProFormSelect } from '@ant-design/pro-components';
@@ -122,6 +123,7 @@ const ProductsForm: React.FC<{
   const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
     initialState?.packages,
   ]);
+  const { showNotification } = useShowNotification();
 
   useEffect(() => {
     if (productable && productable.class_id && productable.class_type) {
@@ -233,11 +235,17 @@ const ProductsForm: React.FC<{
 
         const postData = {
           ...values,
-          productables: currProductables
-            ? getProductables(
-                currProductables as string[] | string | API.ProductableResourceListItem[],
-              )
-            : undefined,
+          productables: [
+            {
+              id: 134,
+              morph_class: 'App\\Models\\awdawd',
+              productable_id: 134,
+              productable_type: 'App\\Models\\awdwa',
+              quantity: 1,
+              name: 'new21412421',
+              description: 'adawd',
+            },
+          ],
           ...(values.related_products ? { related_products } : {}),
           fields: {
             in_app_purchase_ids: {
@@ -248,28 +256,34 @@ const ProductsForm: React.FC<{
             },
           },
         };
-
-        let response: API.DefaultResponse<EscolaLms.Cart.Models.Product>;
-
-        if (isNew) {
-          response = await createProduct(postData);
-          if (response.success) {
-            if (onProductSaved) {
-              onProductSaved(response.data);
+        let response: API.DefaultResponse<EscolaLms.Cart.Models.Product> = {
+          success: false,
+          message: '',
+          errors: {},
+        };
+        try {
+          if (isNew) {
+            response = await createProduct(postData);
+            if (response.success) {
+              if (onProductSaved) {
+                onProductSaved(response.data);
+              }
+              setProductId(response.data.id);
+              form.setFieldsValue(response.data);
             }
-            setProductId(response.data.id);
-            form.setFieldsValue(response.data);
-          }
-        } else {
-          response = await updateProduct(Number(productId), postData);
-          if (response.success) {
-            if (onProductSaved) {
-              onProductSaved(response.data);
+          } else {
+            response = await updateProduct(Number(productId), postData);
+            if (response.success) {
+              if (onProductSaved) {
+                onProductSaved(response.data);
+              }
             }
           }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          showNotification(response);
         }
-
-        message.success(response.message);
       },
     }),
     [productId, onProductSaved, currProductables],

@@ -34,4 +34,6 @@ export default {
   'notifications.AccountConfirmed': 'Konto potwierdzone',
   'notifications.updateSuccessfully': `{id} zaktualizowano pomyślnie`,
   'notifications.createSuccessfully': `{id} utworzono pomyślnie`,
+  'notifications.updated': `{id} zaktualizowano`,
+  'notifications.unexpectedError': 'Nieoczekiwany błąd',
 };
