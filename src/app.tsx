@@ -110,17 +110,17 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   if (initialState?.currentUser && authpaths.includes(history.location.pathname)) {
-    if (history.location.search.includes('redirect')) {
-      const url = new URLSearchParams(history.location.search).get('redirect');
-      if (url) {
-        history.push(url);
-      }
+    const redirectUrl = localStorage.getItem('redirect');
+    if (redirectUrl) {
+      history.push(redirectUrl);
+      localStorage.removeItem('redirect');
     } else {
       history.push('/welcome');
     }
   }
   if (!initialState?.currentUser && !authpaths.includes(history.location.pathname)) {
     const url = history.location.pathname + history.location.search;
+    localStorage.setItem('redirect', url);
     history.push(`/user/login?redirect=${url}`);
   }
 

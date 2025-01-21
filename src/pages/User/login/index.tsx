@@ -88,8 +88,9 @@ const Login: React.FC = () => {
         await fetchUserInfo();
         message.success(msg.message);
 
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        const redirectUrl = localStorage.getItem('redirect');
+        history.push(redirectUrl || '/');
+        localStorage.removeItem('redirect');
         return;
       }
       setUserLoginState(msg);
