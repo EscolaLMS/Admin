@@ -113,6 +113,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     const redirectUrl = localStorage.getItem('redirect');
     if (redirectUrl) {
       history.push(redirectUrl);
+      localStorage.removeItem('redirect');
     } else {
       history.push('/welcome');
     }
