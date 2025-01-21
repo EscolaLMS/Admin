@@ -201,6 +201,23 @@ const StationaryEventForm = () => {
                   defaultMessage: 'name',
                 })}
                 required
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'field_required',
+                              defaultMessage: 'field_required',
+                            }),
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
               <ProFormText
                 width="md"
@@ -212,6 +229,23 @@ const StationaryEventForm = () => {
                   defaultMessage: 'place',
                 })}
                 required
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'field_required',
+                              defaultMessage: 'field_required',
+                            }),
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
               <ProForm.Item
                 name="authors"
@@ -252,16 +286,21 @@ const StationaryEventForm = () => {
                     defaultMessage: 'archived',
                   }),
                 }}
-                initialValue={{
-                  draft: intl.formatMessage({
-                    id: 'draft',
-                    defaultMessage: 'draft',
-                  }),
-                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="select" />,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
             </ProForm.Group>
 

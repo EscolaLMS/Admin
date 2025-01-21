@@ -2,6 +2,7 @@ import CategoryTree from '@/components/CategoryTree';
 import { MoneyInput } from '@/components/MoneyInput';
 import ProductSelect from '@/components/ProductsSelect';
 import UserSelect from '@/components/UserSelect';
+import { useShowNotification } from '@/hooks/useMessage';
 import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
 import ProCard from '@ant-design/pro-card';
 import ProForm, {
@@ -12,7 +13,7 @@ import ProForm, {
   ProFormText,
 } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Spin, message } from 'antd';
+import { Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
@@ -40,7 +41,7 @@ const VoucherForm = () => {
   const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
   const isProductType = voucherType === 'product_fixed' || voucherType === 'product_percent';
-
+  const { showNotification } = useShowNotification();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
@@ -83,20 +84,21 @@ const VoucherForm = () => {
             response = await createVoucher(postData);
             if (response.success) {
               history.push(`/sales/vouchers/${response.data.id}`);
-              message.success(<FormattedMessage id="success" defaultMessage="success" />);
+              showNotification(response);
             }
           } catch (error) {
-            message.error(<FormattedMessage id="error" defaultMessage="error" />);
+            showNotification(error as API.DefaultResponseError);
           }
         } else {
           try {
             response = await updateVoucher(Number(voucherId), postData);
             if (response.success) {
               history.push(`/sales/vouchers/${response.data.id}`);
-              message.success(<FormattedMessage id="success" defaultMessage="success" />);
+
+              showNotification(response);
             }
           } catch (error) {
-            message.error(<FormattedMessage id="error" defaultMessage="error" />);
+            showNotification(error as API.DefaultResponseError);
           }
         }
       },

@@ -1,16 +1,21 @@
 const messagePatterns = [
   {
-    regex: /^(Consultation|Course|Webinar|Questionnaire|Dictionary) updated successfully$/,
+    regex: /^(Consultation|Course|Webinar|Questionnaire|Dictionary|Voucher) updated successfully$/,
     translationKey: 'notifications.updateSuccessfully',
     extractModel: (message: string) => message.split(' ')[0],
   },
   {
-    regex: /^(Consultation|Course|Webinar|Questionnaire|Dictionary) saved successfully$/,
+    regex: /^(Consultation|Course|Webinar|Questionnaire|Dictionary|Voucher) saved successfully$/,
     translationKey: 'notifications.createSuccessfully',
     extractModel: (message: string) => message.split(' ')[0],
   },
   {
-    regex: /^(Product) updated$/,
+    regex: /^(Consultation|Course|Webinar|Questionnaire|Dictionary|Voucher) created successfully$/,
+    translationKey: 'notifications.createSuccessfully',
+    extractModel: (message: string) => message.split(' ')[0],
+  },
+  {
+    regex: /^(Product|Group) updated$/,
     translationKey: 'notifications.updated',
     extractModel: (message: string) => message.split(' ')[0],
   },

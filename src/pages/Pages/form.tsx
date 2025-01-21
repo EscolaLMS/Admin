@@ -95,6 +95,23 @@ export default () => {
                 id: 'title',
               })}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProFormText
               width="md"
@@ -106,6 +123,23 @@ export default () => {
               })}
               disabled
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
           </ProForm.Group>
@@ -116,6 +150,23 @@ export default () => {
             tooltip={<FormattedMessage id="content_tooltip" />}
             valuePropName="value"
             required
+            rules={[
+              {
+                validator: async (_, value) => {
+                  if (!value) {
+                    return Promise.reject(
+                      new Error(
+                        intl.formatMessage({
+                          id: 'field_required',
+                          defaultMessage: 'field_required',
+                        }),
+                      ),
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
           >
             <WysiwygMarkdown directory={`pages/${page}/wysiwyg`} />
           </ProForm.Item>

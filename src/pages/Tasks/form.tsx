@@ -107,6 +107,23 @@ export default () => {
                 id: 'title',
               })}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProForm.Item
               name="user_id"
@@ -114,6 +131,18 @@ export default () => {
               tooltip={<FormattedMessage id="assignee" />}
               valuePropName="value"
               required
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="select" />,
+                  validator: (_, value) => {
+                    if (!value) {
+                      return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             >
               <UserSelect />
             </ProForm.Item>

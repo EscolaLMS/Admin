@@ -235,17 +235,11 @@ const ProductsForm: React.FC<{
 
         const postData = {
           ...values,
-          productables: [
-            {
-              id: 134,
-              morph_class: 'App\\Models\\awdawd',
-              productable_id: 134,
-              productable_type: 'App\\Models\\awdwa',
-              quantity: 1,
-              name: 'new21412421',
-              description: 'adawd',
-            },
-          ],
+          productables: currProductables
+            ? getProductables(
+                currProductables as string[] | string | API.ProductableResourceListItem[],
+              )
+            : undefined,
           ...(values.related_products ? { related_products } : {}),
           fields: {
             in_app_purchase_ids: {
@@ -336,6 +330,23 @@ const ProductsForm: React.FC<{
                 defaultMessage: 'name',
               })}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProForm.Item
               shouldUpdate
@@ -426,7 +437,19 @@ const ProductsForm: React.FC<{
             <ProFormDigit
               rules={[
                 {
-                  required: true,
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
                 },
               ]}
               width="xs"

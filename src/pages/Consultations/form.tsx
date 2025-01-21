@@ -19,7 +19,6 @@ import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProductWidget from '@/components/ProductWidget';
 import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
-import { ModelStatus } from '@/consts/status';
 import { useShowNotification } from '@/hooks/useMessage';
 import useModelFields from '@/hooks/useModelFields';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
@@ -245,6 +244,23 @@ const ConsultationForm = () => {
                 })}
                 required
                 disabled={manageCourseEdit.disableEdit}
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'field_required',
+                              defaultMessage: 'field_required',
+                            }),
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
 
               <ProFormText
@@ -277,11 +293,21 @@ const ConsultationForm = () => {
                     defaultMessage: 'archived',
                   }),
                 }}
-                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="select" />,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
                 disabled={manageCourseEdit.disableEdit}
               />
             </ProForm.Group>
@@ -352,6 +378,23 @@ const ConsultationForm = () => {
                   width: 440,
                 }}
                 required
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'field_required',
+                              defaultMessage: 'field_required',
+                            }),
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               >
                 <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />
               </ProForm.Item>
