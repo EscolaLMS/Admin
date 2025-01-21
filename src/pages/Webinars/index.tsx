@@ -19,6 +19,7 @@ import { format } from 'date-fns';
 import Tags from '@/components/Tags';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 
+import { useShowNotification } from '@/hooks/useMessage';
 import TokenForm from './components/TokenForm';
 
 export const TableColumns: ProColumns<API.Webinar>[] = [
@@ -184,6 +185,7 @@ const Webinars: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
+  const { showNotification } = useShowNotification();
 
   const handleRemove = useCallback(
     async (id: number) => {
@@ -193,7 +195,7 @@ const Webinars: React.FC = () => {
         await deleteWebinar(id).then((response) => {
           setLoading(false);
           if (response.success) {
-            message.success(response.message);
+            showNotification(response);
           }
         });
         hide();

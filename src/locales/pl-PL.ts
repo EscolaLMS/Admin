@@ -476,6 +476,7 @@ export default {
   reset: 'Wyczyść',
   reset_password: 'Resetuj hasło',
   search_file: 'Wyszukaj plik',
+  Product: 'Produkt',
   product: 'Produkt',
   'product.edit': 'Edycja Produktu',
   'menu.Other activities.Products': 'Produkty',
