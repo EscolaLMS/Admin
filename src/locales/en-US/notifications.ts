@@ -31,4 +31,8 @@ export default {
   'notifications.SettingPackageConfigUpdated': 'Setting package config updated',
   'notifications.CourseTutorAssigned': 'Course tutor assigned',
   'notifications.AccountConfirmed': 'Account confirmed',
+  'notifications.updateSuccessfully': '{id} updated successfully',
+  'notifications.createSuccessfully': '{id} created successfully',
+  'notifications.updated': `{id} updated`,
+  'notifications.unexpectedError': 'Unexpected error',
 };

@@ -518,6 +518,7 @@ export default {
   contentHtml: 'HTML Content',
   contentMjml: 'Mjml Content',
   html_tooltip: 'HTML content',
+  Product: 'Product',
   product: 'Product',
   'product.edit': 'Edit Product',
   'menu.Other activities.Products': 'Products',
