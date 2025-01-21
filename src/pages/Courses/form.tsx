@@ -127,10 +127,12 @@ export default () => {
   const formProps = useMemo(
     () => ({
       onValuesChange: (values: API.Course) => {
+        console.log('values', values);
         setManageCourseEdit({
           ...manageCourseEdit,
           valuesChanged: true,
         });
+
         if (values.active_from) {
           setFromDateValidation(values.active_from);
         }
@@ -188,6 +190,7 @@ export default () => {
         });
       },
       initialValues: data,
+      validate: true,
       form,
     }),
     [course, data, manageCourseEdit, form],
@@ -481,17 +484,22 @@ export default () => {
                     defaultMessage: 'published_unactivated',
                   }),
                 }}
-                initialValue={{
-                  draft: intl.formatMessage({
-                    id: 'draft',
-                    defaultMessage: 'draft',
-                  }),
-                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
                 disabled={manageCourseEdit.disableEdit}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="select" />,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
               <ProFormText
                 width="sm"

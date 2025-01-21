@@ -101,6 +101,7 @@ const VoucherForm = () => {
         }
       },
       initialValues: data,
+      validate: true,
     }),
     [data, voucherId, tab],
   );
@@ -135,6 +136,23 @@ const VoucherForm = () => {
                 defaultMessage: 'name',
               })}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProFormText
               width="md"
@@ -146,6 +164,23 @@ const VoucherForm = () => {
                 defaultMessage: 'vouchers.code',
               })}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
           </ProForm.Group>
           <ProForm.Group>
@@ -195,6 +230,23 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProFormDatePicker
               width="md"
@@ -207,6 +259,23 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProFormDigit
               width="md"
@@ -219,6 +288,23 @@ const VoucherForm = () => {
               })}
               required
               disabled={!voucherType}
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <ProFormDigit
               width="md"
@@ -231,6 +317,23 @@ const VoucherForm = () => {
               })}
               required
               disabled={!voucherType}
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
           </ProForm.Group>
           <ProForm.Group>
@@ -246,6 +349,23 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             <MoneyInput
               form={form}
@@ -259,6 +379,23 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: async (_, value) => {
+                    if (!value) {
+                      return Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: 'field_required',
+                            defaultMessage: 'field_required',
+                          }),
+                        ),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             />
             {voucherType?.includes('percent') ? (
               <ProFormDigit
@@ -279,6 +416,23 @@ const VoucherForm = () => {
                 })}
                 required
                 disabled={!voucherType}
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'field_required',
+                              defaultMessage: 'field_required',
+                            }),
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
                 min={1}
                 max={100}
               />
@@ -296,6 +450,23 @@ const VoucherForm = () => {
                 })}
                 form={form}
                 required
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (!value) {
+                        return Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'field_required',
+                              defaultMessage: 'field_required',
+                            }),
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
             )}
           </ProForm.Group>
