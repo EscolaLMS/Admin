@@ -128,7 +128,6 @@ export default () => {
   const formProps = useMemo(
     () => ({
       onValuesChange: (values: API.Course) => {
-        console.log('values', values);
         setManageCourseEdit({
           ...manageCourseEdit,
           valuesChanged: true,

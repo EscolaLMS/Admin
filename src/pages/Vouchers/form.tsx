@@ -4,6 +4,7 @@ import ProductSelect from '@/components/ProductsSelect';
 import UserSelect from '@/components/UserSelect';
 import { useShowNotification } from '@/hooks/useMessage';
 import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import ProCard from '@ant-design/pro-card';
 import ProForm, {
   ProFormDatePicker,
@@ -37,6 +38,7 @@ const VoucherForm = () => {
   const params = useParams<{ voucherId?: string; tab?: string }>();
   const { voucherId, tab = 'attributes' } = params;
   const isNew = voucherId === 'new';
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
@@ -140,19 +142,7 @@ const VoucherForm = () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -168,19 +158,7 @@ const VoucherForm = () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -234,19 +212,7 @@ const VoucherForm = () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -263,19 +229,7 @@ const VoucherForm = () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -292,19 +246,7 @@ const VoucherForm = () => {
               disabled={!voucherType}
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -321,19 +263,7 @@ const VoucherForm = () => {
               disabled={!voucherType}
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -353,19 +283,7 @@ const VoucherForm = () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -383,19 +301,7 @@ const VoucherForm = () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -420,19 +326,7 @@ const VoucherForm = () => {
                 disabled={!voucherType}
                 rules={[
                   {
-                    validator: async (_, value) => {
-                      if (!value) {
-                        return Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'field_required',
-                              defaultMessage: 'field_required',
-                            }),
-                          ),
-                        );
-                      }
-                      return Promise.resolve();
-                    },
+                    validator: requiredValidator,
                   },
                 ]}
                 min={1}
@@ -454,19 +348,7 @@ const VoucherForm = () => {
                 required
                 rules={[
                   {
-                    validator: async (_, value) => {
-                      if (!value) {
-                        return Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'field_required',
-                              defaultMessage: 'field_required',
-                            }),
-                          ),
-                        );
-                      }
-                      return Promise.resolve();
-                    },
+                    validator: requiredValidator,
                   },
                 ]}
               />

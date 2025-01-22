@@ -31,6 +31,7 @@ import {
 } from '@/services/escola-lms/consultations';
 import { settings } from '@/services/escola-lms/settings';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import ConsultationCalendar from './components/Calendar';
@@ -56,7 +57,7 @@ const ConsultationForm = () => {
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [form] = ProForm.useForm();
   const additionalFields = useModelFields('EscolaLms\\Consultations\\Models\\Consultation');
-
+  const requiredValidator = createRequiredFieldValidator(intl);
   const [showScreenSaves, setShowScreenSaves] = useState<boolean>(false);
   const { showNotification } = useShowNotification();
   const fetchData = useCallback(async () => {
@@ -246,19 +247,7 @@ const ConsultationForm = () => {
                 disabled={manageCourseEdit.disableEdit}
                 rules={[
                   {
-                    validator: async (_, value) => {
-                      if (!value) {
-                        return Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'field_required',
-                              defaultMessage: 'field_required',
-                            }),
-                          ),
-                        );
-                      }
-                      return Promise.resolve();
-                    },
+                    validator: requiredValidator,
                   },
                 ]}
               />
@@ -380,19 +369,7 @@ const ConsultationForm = () => {
                 required
                 rules={[
                   {
-                    validator: async (_, value) => {
-                      if (!value) {
-                        return Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'field_required',
-                              defaultMessage: 'field_required',
-                            }),
-                          ),
-                        );
-                      }
-                      return Promise.resolve();
-                    },
+                    validator: requiredValidator,
                   },
                 ]}
               >

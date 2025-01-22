@@ -30,6 +30,7 @@ import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { categoriesArrToIds, mapper, splitImagePath } from '@/utils/utils';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import './index.css';
 
 export type StationaryEventType = Omit<
@@ -61,6 +62,7 @@ const StationaryEventForm = () => {
   const [data, setData] = useState<Partial<StationaryEventType>>();
   const [form] = ProForm.useForm();
   const [lastDataUpdateDate, setLastDataUpdateDate] = useState(new Date());
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
   //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
@@ -203,19 +205,7 @@ const StationaryEventForm = () => {
                 required
                 rules={[
                   {
-                    validator: async (_, value) => {
-                      if (!value) {
-                        return Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'field_required',
-                              defaultMessage: 'field_required',
-                            }),
-                          ),
-                        );
-                      }
-                      return Promise.resolve();
-                    },
+                    validator: requiredValidator,
                   },
                 ]}
               />
@@ -231,19 +221,7 @@ const StationaryEventForm = () => {
                 required
                 rules={[
                   {
-                    validator: async (_, value) => {
-                      if (!value) {
-                        return Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'field_required',
-                              defaultMessage: 'field_required',
-                            }),
-                          ),
-                        );
-                      }
-                      return Promise.resolve();
-                    },
+                    validator: requiredValidator,
                   },
                 ]}
               />
