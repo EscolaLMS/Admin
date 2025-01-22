@@ -16,6 +16,7 @@ import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 import UserSelect from '@/components/UserSelect';
 import { useShowNotification } from '@/hooks/useMessage';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { DeleteOutlined } from '@ant-design/icons';
 import UserGroupSelect from '../../components/UserGroupSelect';
 
@@ -26,6 +27,7 @@ export default () => {
   const isNew = group === 'new';
   const { showNotification } = useShowNotification();
   const [data, setData] = useState<Partial<API.UserGroup>>();
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const fetchData = useCallback(async () => {
     const response = await fetchUserGroup(Number(group));
@@ -129,19 +131,7 @@ export default () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />

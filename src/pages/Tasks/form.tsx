@@ -16,6 +16,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 
 import { Related } from '@/components/RelatedCourseTopicLesson';
 import { TaskNotes } from '@/components/TaskNotes';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
@@ -24,6 +25,7 @@ export default () => {
   const params = useParams<{ task?: string }>();
   const { task } = params;
   const isNew = task === 'new';
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const [data, setData] = useState<Partial<API.Task>>();
   const [loading, setLoading] = useState(false);
@@ -109,19 +111,7 @@ export default () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />

@@ -29,6 +29,7 @@ import PACKAGES from '@/consts/packages';
 import { useShowNotification } from '@/hooks/useMessage';
 import { createHavePackageInstalled } from '@/utils/access';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { ProFormSelect } from '@ant-design/pro-components';
 import ProTable from '@ant-design/pro-table';
 import UserAccess from './UserAccess';
@@ -102,7 +103,7 @@ const ProductsForm: React.FC<{
   onProductSaved?: (model: EscolaLms.Cart.Models.Product) => void;
 }> = ({ tab = 'attributes', onTabChange, id, productable, onProductSaved, type = 'card' }) => {
   const intl = useIntl();
-
+  const requiredValidator = createRequiredFieldValidator(intl);
   const [productId, setProductId] = useState<string | number | undefined>(id);
   const [currProductables, setCurrProductables] = useState<MinimumProductProductable[]>([]);
   const isNew = useMemo(() => productId === 'new', [productId]);
@@ -332,19 +333,7 @@ const ProductsForm: React.FC<{
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -437,19 +426,7 @@ const ProductsForm: React.FC<{
             <ProFormDigit
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
               width="xs"

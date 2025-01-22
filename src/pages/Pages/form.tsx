@@ -8,6 +8,7 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
 import { slugify } from '@/services/escola-lms/slug';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
@@ -16,6 +17,7 @@ export default () => {
   const params = useParams<{ page?: string }>();
   const { page } = params;
   const isNew = page === 'new';
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const [data, setData] = useState<Partial<API.Page>>();
   const [form] = ProForm.useForm();
@@ -97,19 +99,7 @@ export default () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -125,19 +115,7 @@ export default () => {
               required
               rules={[
                 {
-                  validator: async (_, value) => {
-                    if (!value) {
-                      return Promise.reject(
-                        new Error(
-                          intl.formatMessage({
-                            id: 'field_required',
-                            defaultMessage: 'field_required',
-                          }),
-                        ),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
+                  validator: requiredValidator,
                 },
               ]}
             />
@@ -152,19 +130,7 @@ export default () => {
             required
             rules={[
               {
-                validator: async (_, value) => {
-                  if (!value) {
-                    return Promise.reject(
-                      new Error(
-                        intl.formatMessage({
-                          id: 'field_required',
-                          defaultMessage: 'field_required',
-                        }),
-                      ),
-                    );
-                  }
-                  return Promise.resolve();
-                },
+                validator: requiredValidator,
               },
             ]}
           >
