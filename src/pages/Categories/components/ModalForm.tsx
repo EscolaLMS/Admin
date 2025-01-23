@@ -64,6 +64,18 @@ export const CategoryModalForm: React.FC<{
         rules={[
           {
             required: true,
+            validator: async (_, value) => {
+              if (!value) {
+                return Promise.reject(
+                  new Error(
+                    intl.formatMessage({
+                      id: 'field_required',
+                    }),
+                  ),
+                );
+              }
+              return Promise.resolve();
+            },
           },
         ]}
         name="name"

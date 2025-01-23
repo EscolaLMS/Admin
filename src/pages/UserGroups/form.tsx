@@ -8,13 +8,15 @@ import {
 import ProCard from '@ant-design/pro-card';
 import ProForm, { ProFormSwitch, ProFormText } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Divider, List, Spin, Typography, message } from 'antd';
+import { Button, Divider, List, Spin, Typography } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
 import UserSelect from '@/components/UserSelect';
+import { useShowNotification } from '@/hooks/useMessage';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { DeleteOutlined } from '@ant-design/icons';
 import UserGroupSelect from '../../components/UserGroupSelect';
 
@@ -23,8 +25,9 @@ export default () => {
   const params = useParams<{ group?: string }>();
   const { group } = params;
   const isNew = group === 'new';
-
+  const { showNotification } = useShowNotification();
   const [data, setData] = useState<Partial<API.UserGroup>>();
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const fetchData = useCallback(async () => {
     const response = await fetchUserGroup(Number(group));
@@ -97,7 +100,7 @@ export default () => {
           response = await updateUserGroup(Number(group), postData);
         }
 
-        message.success(response.message);
+        showNotification(response);
       },
       initialValues: data,
     }),
@@ -126,6 +129,11 @@ export default () => {
                 id: 'name',
               })}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProForm.Item
               style={{ minWidth: '300px' }}

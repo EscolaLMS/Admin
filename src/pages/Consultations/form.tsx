@@ -19,7 +19,6 @@ import ProFormImageUpload from '@/components/ProFormImageUpload';
 import ProductWidget from '@/components/ProductWidget';
 import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
-import { ModelStatus } from '@/consts/status';
 import { useShowNotification } from '@/hooks/useMessage';
 import useModelFields from '@/hooks/useModelFields';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
@@ -32,6 +31,7 @@ import {
 } from '@/services/escola-lms/consultations';
 import { settings } from '@/services/escola-lms/settings';
 import { categoriesArrToIds, splitImagePath } from '@/utils/utils';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 import ConsultationCalendar from './components/Calendar';
@@ -57,7 +57,7 @@ const ConsultationForm = () => {
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
   const [form] = ProForm.useForm();
   const additionalFields = useModelFields('EscolaLms\\Consultations\\Models\\Consultation');
-
+  const requiredValidator = createRequiredFieldValidator(intl);
   const [showScreenSaves, setShowScreenSaves] = useState<boolean>(false);
   const { showNotification } = useShowNotification();
   const fetchData = useCallback(async () => {
@@ -245,6 +245,11 @@ const ConsultationForm = () => {
                 })}
                 required
                 disabled={manageCourseEdit.disableEdit}
+                rules={[
+                  {
+                    validator: requiredValidator,
+                  },
+                ]}
               />
 
               <ProFormText
@@ -277,11 +282,21 @@ const ConsultationForm = () => {
                     defaultMessage: 'archived',
                   }),
                 }}
-                initialValue={ModelStatus.draft}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="select" />,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
                 disabled={manageCourseEdit.disableEdit}
               />
             </ProForm.Group>
@@ -352,6 +367,11 @@ const ConsultationForm = () => {
                   width: 440,
                 }}
                 required
+                rules={[
+                  {
+                    validator: requiredValidator,
+                  },
+                ]}
               >
                 <WysiwygMarkdown directory={`consultation/${consultation}/wysiwyg`} />
               </ProForm.Item>

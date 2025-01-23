@@ -19,14 +19,18 @@ export const useShowNotification = () => {
             id: translationKey,
           },
           {
-            model: model ? intl.formatMessage({ id: model }) : undefined,
+            id: model ? intl.formatMessage({ id: model.toLocaleLowerCase() }) : undefined,
           },
         ),
       );
     } else {
       message[isSuccess ? 'success' : 'error'](
         isSuccess
-          ? (response.message as string)
+          ? response.message
+            ? (response.message as string)
+            : intl.formatMessage({
+                id: 'updated_at',
+              })
           : intl.formatMessage({
               id: 'notifications.unexpectedError',
             }),

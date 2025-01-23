@@ -1,3 +1,4 @@
+import { useShowNotification } from '@/hooks/useMessage';
 import DictionaryWordsTableList from '@/pages/Dictionary/components/DictionaryWords';
 import {
   createDictionary,
@@ -7,7 +8,7 @@ import {
 import ProCard from '@ant-design/pro-card';
 import ProForm, { ProFormDigit, ProFormText } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Col, Row, Spin, message } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
@@ -26,7 +27,7 @@ export default () => {
   const params = useParams<{ dictionaryId?: string; tab?: string }>();
   const { dictionaryId, tab } = params;
   const isNew = dictionaryId === 'new';
-
+  const { showNotification } = useShowNotification();
   const [data, setData] = useState<Partial<API.Dictionaries>>();
   const [loading, setLoading] = useState(false);
   const [form] = ProForm.useForm();
@@ -63,7 +64,7 @@ export default () => {
           response = await updateDictionary(Number(dictionaryId), values);
         }
 
-        message.success(response.message);
+        showNotification(response);
       },
       initialValues: data,
     }),
@@ -101,6 +102,23 @@ export default () => {
                     id: 'Name',
                   })}
                   required
+                  rules={[
+                    {
+                      validator: async (_, value) => {
+                        if (!value) {
+                          return Promise.reject(
+                            new Error(
+                              intl.formatMessage({
+                                id: 'field_required',
+                                defaultMessage: 'field_required',
+                              }),
+                            ),
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
                 />
               </Col>
               {!isNew && (

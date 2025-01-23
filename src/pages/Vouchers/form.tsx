@@ -2,7 +2,9 @@ import CategoryTree from '@/components/CategoryTree';
 import { MoneyInput } from '@/components/MoneyInput';
 import ProductSelect from '@/components/ProductsSelect';
 import UserSelect from '@/components/UserSelect';
+import { useShowNotification } from '@/hooks/useMessage';
 import { createVoucher, getVoucher, updateVoucher } from '@/services/escola-lms/vouchers';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import ProCard from '@ant-design/pro-card';
 import ProForm, {
   ProFormDatePicker,
@@ -12,7 +14,7 @@ import ProForm, {
   ProFormText,
 } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Spin, message } from 'antd';
+import { Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
@@ -36,11 +38,12 @@ const VoucherForm = () => {
   const params = useParams<{ voucherId?: string; tab?: string }>();
   const { voucherId, tab = 'attributes' } = params;
   const isNew = voucherId === 'new';
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const [data, setData] = useState<Partial<CouponType>>();
   const [voucherType, setVoucherType] = useState<API.VouchersTypes>();
   const isProductType = voucherType === 'product_fixed' || voucherType === 'product_percent';
-
+  const { showNotification } = useShowNotification();
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
@@ -83,24 +86,26 @@ const VoucherForm = () => {
             response = await createVoucher(postData);
             if (response.success) {
               history.push(`/sales/vouchers/${response.data.id}`);
-              message.success(<FormattedMessage id="success" defaultMessage="success" />);
+              showNotification(response);
             }
           } catch (error) {
-            message.error(<FormattedMessage id="error" defaultMessage="error" />);
+            showNotification(error as API.DefaultResponseError);
           }
         } else {
           try {
             response = await updateVoucher(Number(voucherId), postData);
             if (response.success) {
               history.push(`/sales/vouchers/${response.data.id}`);
-              message.success(<FormattedMessage id="success" defaultMessage="success" />);
+
+              showNotification(response);
             }
           } catch (error) {
-            message.error(<FormattedMessage id="error" defaultMessage="error" />);
+            showNotification(error as API.DefaultResponseError);
           }
         }
       },
       initialValues: data,
+      validate: true,
     }),
     [data, voucherId, tab],
   );
@@ -135,6 +140,11 @@ const VoucherForm = () => {
                 defaultMessage: 'name',
               })}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProFormText
               width="md"
@@ -146,6 +156,11 @@ const VoucherForm = () => {
                 defaultMessage: 'vouchers.code',
               })}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
           </ProForm.Group>
           <ProForm.Group>
@@ -195,6 +210,11 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProFormDatePicker
               width="md"
@@ -207,6 +227,11 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProFormDigit
               width="md"
@@ -219,6 +244,11 @@ const VoucherForm = () => {
               })}
               required
               disabled={!voucherType}
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProFormDigit
               width="md"
@@ -231,6 +261,11 @@ const VoucherForm = () => {
               })}
               required
               disabled={!voucherType}
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
           </ProForm.Group>
           <ProForm.Group>
@@ -246,6 +281,11 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <MoneyInput
               form={form}
@@ -259,6 +299,11 @@ const VoucherForm = () => {
               })}
               disabled={!voucherType}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             {voucherType?.includes('percent') ? (
               <ProFormDigit
@@ -279,6 +324,11 @@ const VoucherForm = () => {
                 })}
                 required
                 disabled={!voucherType}
+                rules={[
+                  {
+                    validator: requiredValidator,
+                  },
+                ]}
                 min={1}
                 max={100}
               />
@@ -296,6 +346,11 @@ const VoucherForm = () => {
                 })}
                 form={form}
                 required
+                rules={[
+                  {
+                    validator: requiredValidator,
+                  },
+                ]}
               />
             )}
           </ProForm.Group>

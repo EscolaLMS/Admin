@@ -118,6 +118,7 @@ const WebinarForm = () => {
         });
       },
       initialValues: data,
+      validate: true,
       form,
     }),
     [data, webinar, tab, manageCourseEdit, form],
@@ -223,6 +224,16 @@ const WebinarForm = () => {
                   defaultMessage: 'name',
                 })}
                 required
+                rules={
+                  manageCourseEdit.disableEdit
+                    ? []
+                    : [
+                        {
+                          required: true,
+                          message: <FormattedMessage id="field_required" />,
+                        },
+                      ]
+                }
                 disabled={manageCourseEdit.disableEdit}
               />
 
@@ -255,16 +266,21 @@ const WebinarForm = () => {
                     defaultMessage: 'archived',
                   }),
                 }}
-                initialValue={{
-                  draft: intl.formatMessage({
-                    id: 'draft',
-                    defaultMessage: 'draft',
-                  }),
-                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="select" />,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
                 disabled={manageCourseEdit.disableEdit}
               />
             </ProForm.Group>

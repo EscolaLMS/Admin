@@ -8,6 +8,7 @@ import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import { PageContainer } from '@ant-design/pro-layout';
 
 import { slugify } from '@/services/escola-lms/slug';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { useCallback } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
 
@@ -16,6 +17,7 @@ export default () => {
   const params = useParams<{ page?: string }>();
   const { page } = params;
   const isNew = page === 'new';
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   const [data, setData] = useState<Partial<API.Page>>();
   const [form] = ProForm.useForm();
@@ -95,6 +97,11 @@ export default () => {
                 id: 'title',
               })}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProFormText
               width="md"
@@ -106,6 +113,11 @@ export default () => {
               })}
               disabled
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProFormSwitch name="active" label={<FormattedMessage id="is_active" />} />
           </ProForm.Group>
@@ -116,6 +128,11 @@ export default () => {
             tooltip={<FormattedMessage id="content_tooltip" />}
             valuePropName="value"
             required
+            rules={[
+              {
+                validator: requiredValidator,
+              },
+            ]}
           >
             <WysiwygMarkdown directory={`pages/${page}/wysiwyg`} />
           </ProForm.Item>

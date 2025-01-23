@@ -29,6 +29,7 @@ import PACKAGES from '@/consts/packages';
 import { useShowNotification } from '@/hooks/useMessage';
 import { createHavePackageInstalled } from '@/utils/access';
 import { categoriesArrToIds, tagsArrToIds } from '@/utils/utils';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import { ProFormSelect } from '@ant-design/pro-components';
 import ProTable from '@ant-design/pro-table';
 import UserAccess from './UserAccess';
@@ -102,7 +103,7 @@ const ProductsForm: React.FC<{
   onProductSaved?: (model: EscolaLms.Cart.Models.Product) => void;
 }> = ({ tab = 'attributes', onTabChange, id, productable, onProductSaved, type = 'card' }) => {
   const intl = useIntl();
-
+  const requiredValidator = createRequiredFieldValidator(intl);
   const [productId, setProductId] = useState<string | number | undefined>(id);
   const [currProductables, setCurrProductables] = useState<MinimumProductProductable[]>([]);
   const isNew = useMemo(() => productId === 'new', [productId]);
@@ -235,17 +236,11 @@ const ProductsForm: React.FC<{
 
         const postData = {
           ...values,
-          productables: [
-            {
-              id: 134,
-              morph_class: 'App\\Models\\awdawd',
-              productable_id: 134,
-              productable_type: 'App\\Models\\awdwa',
-              quantity: 1,
-              name: 'new21412421',
-              description: 'adawd',
-            },
-          ],
+          productables: currProductables
+            ? getProductables(
+                currProductables as string[] | string | API.ProductableResourceListItem[],
+              )
+            : undefined,
           ...(values.related_products ? { related_products } : {}),
           fields: {
             in_app_purchase_ids: {
@@ -336,6 +331,11 @@ const ProductsForm: React.FC<{
                 defaultMessage: 'name',
               })}
               required
+              rules={[
+                {
+                  validator: requiredValidator,
+                },
+              ]}
             />
             <ProForm.Item
               shouldUpdate
@@ -426,7 +426,7 @@ const ProductsForm: React.FC<{
             <ProFormDigit
               rules={[
                 {
-                  required: true,
+                  validator: requiredValidator,
                 },
               ]}
               width="xs"

@@ -30,6 +30,7 @@ import ProductWidget from '@/components/ProductWidget';
 import UnsavedPrompt from '@/components/UnsavedPrompt';
 import UserSubmissions from '@/components/UsersSubmissions';
 import { categoriesArrToIds, mapper, splitImagePath } from '@/utils/utils';
+import { createRequiredFieldValidator } from '@/utils/validate';
 import './index.css';
 
 export type StationaryEventType = Omit<
@@ -61,6 +62,7 @@ const StationaryEventForm = () => {
   const [data, setData] = useState<Partial<StationaryEventType>>();
   const [form] = ProForm.useForm();
   const [lastDataUpdateDate, setLastDataUpdateDate] = useState(new Date());
+  const requiredValidator = createRequiredFieldValidator(intl);
 
   //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
   //  Promise<API.DefaultResponse<EscolaLms.StationaryEvents.Models.StationaryEvent>>
@@ -201,6 +203,11 @@ const StationaryEventForm = () => {
                   defaultMessage: 'name',
                 })}
                 required
+                rules={[
+                  {
+                    validator: requiredValidator,
+                  },
+                ]}
               />
               <ProFormText
                 width="md"
@@ -212,6 +219,11 @@ const StationaryEventForm = () => {
                   defaultMessage: 'place',
                 })}
                 required
+                rules={[
+                  {
+                    validator: requiredValidator,
+                  },
+                ]}
               />
               <ProForm.Item
                 name="authors"
@@ -252,16 +264,21 @@ const StationaryEventForm = () => {
                     defaultMessage: 'archived',
                   }),
                 }}
-                initialValue={{
-                  draft: intl.formatMessage({
-                    id: 'draft',
-                    defaultMessage: 'draft',
-                  }),
-                }}
                 placeholder={intl.formatMessage({
                   id: 'status',
                 })}
-                rules={[{ required: true, message: <FormattedMessage id="select" /> }]}
+                rules={[
+                  {
+                    required: true,
+                    message: <FormattedMessage id="select" />,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error(intl.formatMessage({ id: 'select' })));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               />
             </ProForm.Group>
 
