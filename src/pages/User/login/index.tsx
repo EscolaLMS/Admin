@@ -78,8 +78,6 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async (values: API.LoginRequest) => {
-    const redirectUrl = localStorage.getItem('redirect');
-    console.log(history.location.pathname);
     try {
       const msg = await login({ ...values });
 
@@ -90,6 +88,7 @@ const Login: React.FC = () => {
         await fetchUserInfo();
         message.success(msg.message);
 
+        const redirectUrl = localStorage.getItem('redirect');
         history.push(redirectUrl || '/');
         localStorage.removeItem('redirect');
         return;
