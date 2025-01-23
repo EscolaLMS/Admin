@@ -38,6 +38,7 @@ const H5PPreviewPage: React.FC = () => {
         <Row>
           <Col span={24}>
             <Divider />
+
             {uuid && <ScormPreview uuid={uuid} />}
           </Col>
         </Row>

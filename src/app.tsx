@@ -41,6 +41,7 @@ export async function getInitialState(): Promise<{
 }> {
   refreshTokenCallback();
   const fetchUserInfo = async () => {
+    const url = history.location.pathname + history.location.search;
     try {
       const currentUser = await queryCurrentUser();
       if (currentUser.success) {
@@ -49,10 +50,18 @@ export async function getInitialState(): Promise<{
       return undefined;
     } catch (error) {
       if (authpaths.includes(history.location.pathname)) {
-        history.push(`/user/login`);
+        if (!url.includes('redirect')) {
+          history.push(`/user/login`);
+          if (localStorage.getItem('redirect')) {
+            localStorage.removeItem('redirect');
+          }
+        }
       } else {
-        const url = history.location.pathname + history.location.search;
         history.push(`/user/login?redirect=${url}`);
+      }
+    } finally {
+      if (url.includes('redirect') && !localStorage.getItem('redirect')) {
+        localStorage.setItem('redirect', url.split('redirect=')[1]);
       }
     }
     return undefined;
