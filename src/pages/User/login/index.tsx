@@ -126,6 +126,7 @@ const Login: React.FC = () => {
       handleForgot({ ...values, return_url: `${window.location.origin}/#/user/reset-password` });
     }
   };
+
   return (
     <AuthLayout>
       <ProForm
