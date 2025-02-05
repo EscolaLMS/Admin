@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AICC, Scorm12API, Scorm2004API } from 'scorm-again';
 
 declare const REACT_APP_API_URL: string;
@@ -19,10 +19,18 @@ declare global {
 }
 
 const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [iframeUrl, setIframeUrl] = useState<string>('');
+  const [state, setState] = useState<{
+    loading: boolean;
+    iframeUrl: string | null;
+    error: string | null;
+  }>({
+    loading: false,
+    iframeUrl: null,
+    error: null,
+  });
+
   const API_URL = REACT_APP_API_URL || window.REACT_APP_API_URL;
-  const iframeContainer = useRef<HTMLDivElement>(null);
+
   // Register the Service Worker
   const registerServiceWorker = async (
     url: string = '/service-worker-scorm.js',
@@ -43,24 +51,78 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
     }
   };
 
-  // SCORM Initialization Functions
-  const initializeScorm12 = (settings: ScormSettings['data']): void => {
-    console.log({ settings });
-    window.API = new Scorm12API({
-      entryUrlZip: settings.entry_url_zip,
-      entryUrl: settings.entry_url,
+  // **Backend Communication Functions**
+  const post = async (data: any) => {
+    console.log('TODO: Implement your BACKEND endpoint for set data:', data);
+    // try {
+    //   const response = await fetch(`${API_URL}/api/scorm/set/${uuid}`, {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(data),
+    //   });
+    //   if (!response.ok) throw new Error('Failed to save SCORM data');
+    // } catch (error) {
+    //   console.error('SCORM Post Error:', error);
+    // }
+    return new Promise((resolve, reject) => {
+      resolve(data);
     });
+  };
+
+  const get = async (key: string) => {
+    console.log('TODO: Implement your BACKEND endpoint for get key:', key);
+    // try {
+    //   const response = await fetch(`${API_URL}/api/scorm/get/${uuid}/${key}`);
+    //   if (!response.ok) throw new Error('Failed to get SCORM data');
+    //   return await response.json();
+    // } catch (error) {
+    //   console.error('SCORM Get Error:', error);
+    //   return null;
+    // }
+    return new Promise((resolve, reject) => {
+      resolve(key);
+    });
+  };
+
+  // **SCORM Initialization Functions**
+  const initializeScorm12 = (settings: ScormSettings['data']): void => {
+    window.API = new Scorm12API(settings as any);
     console.log('SCORM 1.2 Initialized');
+
+    // window.API.on('LMSSetValue.cmi.*', (CMIElement: string, value: any) => {
+    //   post({ cmi: { [CMIElement]: value } });
+    // });
+
+    // window.API.on('LMSGetValue.cmi.*', async (CMIElement: string) => {
+    //   const value = await get(CMIElement);
+    //   window.API.LMSSetValue(CMIElement, value);
+    // });
+
+    // window.API.on('LMSCommit', () => {
+    //   post({ cmi: window.API.cmi });
+    // });
   };
 
   const initializeScorm2004 = (settings: ScormSettings['data']): void => {
-    console.log({ settings });
-    window.API_1484_11 = new Scorm2004API(settings);
+    window.API_1484_11 = new Scorm2004API(settings as any);
     console.log('SCORM 2004 Initialized');
+
+    // window.API_1484_11.on('SetValue.cmi.*', (CMIElement: string, value: any) => {
+    //   post({ cmi: { [CMIElement]: value } });
+    // });
+
+    // window.API_1484_11.on('GetValue.cmi.*', async (CMIElement: string) => {
+    //   const value = await get(CMIElement);
+    //   window.API_1484_11.SetValue(CMIElement, value);
+    // });
+
+    // window.API_1484_11.on('Commit', () => {
+    //   post({ cmi: window.API_1484_11.cmi });
+    // });
   };
 
   const initializeAICC = (settings: ScormSettings['data']): void => {
-    window.API = new AICC(settings);
+    window.API = new AICC(settings as any);
     console.log('AICC Initialized');
   };
 
@@ -93,7 +155,6 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
       }
 
       navigator.serviceWorker.addEventListener('message', (event: MessageEvent) => {
-        console.log('Service Worker Message:', event.data);
         const { scormObj } = event.data;
         const scormSettings = window.ScormSettings?.data;
 
@@ -112,9 +173,13 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
           default:
             initializeScorm12(scormSettings);
         }
+        console.log('SCORM Object:', scormObj, scormSettings);
 
-        setIframeUrl(`${scormObj.PREFIX}/${scormSettings.entry_url}`);
-        setLoading(false);
+        setState({
+          ...state,
+          loading: false,
+          iframeUrl: `${scormObj.PREFIX}/${scormSettings.entry_url}`,
+        });
       });
     } catch (error) {
       console.error('Failed to load SCORM SCO:', error);
@@ -124,32 +189,36 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
   // Effect to initialize the component
   useEffect(() => {
     const init = async () => {
-      setLoading(true);
+      setState({ ...state, loading: true });
       const registration = await registerServiceWorker();
       if (registration) {
         await loadScormSCO(uuid, registration);
       } else {
         console.error('Service Worker registration failed.');
+        setState({ ...state, error: 'Service Worker registration failed.' });
       }
     };
     init();
   }, [uuid]);
 
-  return (
-    <div>
-      {loading ? (
-        <div id="loading" style={{ textAlign: 'center', padding: '20px' }}>
-          Loading SCORM...
-        </div>
-      ) : (
-        <iframe
-          src={iframeUrl}
-          style={{ width: '100%', height: '1000px' }}
-          title="SCORM Content"
-        ></iframe>
-      )}
-    </div>
-  );
+  if (state.loading) {
+    return <div style={{ textAlign: 'center', padding: '20px' }}>Loading SCORM...</div>;
+  }
+
+  if (state.error) {
+    return <div>error</div>;
+  }
+  // TODO: if we want to have hash router we need to resolve /# redirect from scorm
+
+  if (state.iframeUrl) {
+    return (
+      <iframe
+        src={state.iframeUrl}
+        style={{ width: '100%', height: '1000px' }}
+        title="SCORM Content"
+      ></iframe>
+    );
+  }
 };
 
 export default ScormPreview;

@@ -84,7 +84,9 @@ self.addEventListener("fetch", async (e) => {
     if (zip) {
       const uri = e.request.url.split(FOLDER_PREFIX)[2].substr(1).split("?")[0];
       const ext = uri.split(".").pop();
+    
       const mime = Mimes[ext];
+      
       if (zip.files[uri]) {
         e.respondWith(
           (async () => {
@@ -96,7 +98,23 @@ self.addEventListener("fetch", async (e) => {
         );
       } else {
         console.log("zip url not exists", uri);
+        e.respondWith(
+          new Response("File not found in SCORM ZIP", {
+            status: 404,
+            statusText: "Not Found",
+            headers: { "Content-Type": "text/plain" },
+          })
+        );
       }
+    } else {
+      console.log("zip url not exists", uri);
+         e.respondWith(
+        new Response("No SCORM ZIP found for this request", {
+          status: 404,
+          statusText: "Not Found",
+          headers: { "Content-Type": "text/plain" },
+        })
+      );
     }
   }
 });

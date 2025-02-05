@@ -20,7 +20,7 @@ export default defineConfig({
    */
   hash: true,
 
-  history: { type: 'hash' },
+  history: { type: 'browser' },
 
   /**
    * @name 兼容性设置
