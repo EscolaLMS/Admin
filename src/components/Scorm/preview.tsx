@@ -139,22 +139,18 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
 
       const zipUrl = settings.data.entry_url_zip;
       const zipExists = await fetch(zipUrl, { method: 'HEAD' });
-
-      if (zipExists.ok) {
-        console.log('Zip file exists:', zipUrl);
-        registration.active?.postMessage(zipUrl);
-      } else {
+      if (!zipExists.ok) {
+        // Attempt to create the ZIP if it doesn't exist
         console.log('Zip file does not exist:', zipUrl);
-        const createZip = await fetch(`${API_URL}/api/scorm/zip/${uuid}`);
-        if (createZip.ok) {
-          console.log('Zip file created:', zipUrl);
-          await loadScormSCO(scormUuid, registration);
-        } else {
-          throw new Error('Failed to create SCORM zip file');
-        }
+        const createZip = await fetch(`${API_URL}/api/scorm/zip/${scormUuid}`);
+        if (!createZip.ok) throw new Error('Failed to create SCORM zip file');
+        console.log('Zip file created:', zipUrl);
       }
 
-      navigator.serviceWorker.addEventListener('message', (event: MessageEvent) => {
+      // Ask the SW to load the ZIP
+      registration.active?.postMessage(zipUrl);
+
+      navigator.serviceWorker.addEventListener('message', async (event: MessageEvent) => {
         const { scormObj } = event.data;
         const scormSettings = window.ScormSettings?.data;
 
@@ -173,32 +169,44 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
           default:
             initializeScorm12(scormSettings);
         }
-        console.log('SCORM Object:', scormObj, scormSettings);
+        // Construct the URL we want to load in the iframe
+        const potentialIframeUrl = `${scormObj.PREFIX}/${scormSettings.entry_url}`;
 
-        setState({
-          ...state,
-          loading: false,
-          iframeUrl: `${scormObj.PREFIX}/${scormSettings.entry_url}`,
-        });
+        // 5) Double-check the file is actually served (avoid “app in app”).
+        try {
+          const headCheck = await fetch(potentialIframeUrl, { method: 'HEAD' });
+          if (!headCheck.ok) {
+            throw new Error(`SCORM entry file missing: ${headCheck.status}`);
+          }
+          setState({
+            ...state,
+            loading: false,
+            iframeUrl: `${scormObj.PREFIX}/${scormSettings.entry_url}`,
+          });
+        } catch (err) {
+          console.error('SCORM entry file missing or not accessible:', err);
+          setState({ ...state, error: 'SCORM entry file missing or not accessible.' });
+        }
       });
     } catch (error) {
       console.error('Failed to load SCORM SCO:', error);
+      setState({ ...state, error: 'Failed to load SCORM SCO.' });
     }
   };
 
   // Effect to initialize the component
   useEffect(() => {
-    const init = async () => {
+    (async () => {
       setState({ ...state, loading: true });
+
       const registration = await registerServiceWorker();
-      if (registration) {
-        await loadScormSCO(uuid, registration);
-      } else {
+      if (!registration) {
         console.error('Service Worker registration failed.');
         setState({ ...state, error: 'Service Worker registration failed.' });
+        return;
       }
-    };
-    init();
+      await loadScormSCO(uuid, registration);
+    })();
   }, [uuid]);
 
   if (state.loading) {
@@ -206,9 +214,8 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
   }
 
   if (state.error) {
-    return <div>error</div>;
+    return <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>{state.error}</div>;
   }
-  // TODO: if we want to have hash router we need to resolve /# redirect from scorm
 
   if (state.iframeUrl) {
     return (
@@ -219,6 +226,9 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
       ></iframe>
     );
   }
+
+  // If none of the above, return nothing or a fallback
+  return null;
 };
 
 export default ScormPreview;
