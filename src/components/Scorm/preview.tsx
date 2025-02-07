@@ -36,7 +36,7 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
     url: string = '/service-worker-scorm.js',
   ): Promise<ServiceWorkerRegistration | null> => {
     try {
-      const registration = await navigator.serviceWorker.register(url);
+      const registration = await navigator.serviceWorker.register(url, { scope: '/' });
       if (registration.active) {
         return registration;
       }
@@ -175,6 +175,7 @@ const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
         // 5) Double-check the file is actually served (avoid “app in app”).
         try {
           const headCheck = await fetch(potentialIframeUrl, { method: 'HEAD' });
+          console.log({ headCheck });
           if (!headCheck.ok) {
             throw new Error(`SCORM entry file missing: ${headCheck.status}`);
           }

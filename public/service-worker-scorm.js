@@ -76,19 +76,19 @@ self.addEventListener("message", async (event) => {
 
 // Fetching content using Service Worker
 self.addEventListener("fetch", async (e) => {
+
   if (e.request.url.includes(FOLDER_PREFIX)) {
     const id = e.request.url.split(FOLDER_PREFIX)[1].split("/").join("");
     const zip = resolvers[id];
 
-    // find zip ID
     if (zip) {
       const uri = e.request.url.split(FOLDER_PREFIX)[2].substr(1).split("?")[0];
       const ext = uri.split(".").pop();
-    console.log({ext})
+
       const mime = Mimes[ext];
-        console.log(mime)
+       
       if (zip.files[uri]) {
-        console.log(zip.files[uri], zip.files, uri);
+
         e.respondWith(
           (async () => {
             const responseBody = await zip.file(uri).async("blob");
