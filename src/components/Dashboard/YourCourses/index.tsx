@@ -3,7 +3,7 @@ import { course } from '@/services/escola-lms/course';
 import { PlusCircleFilled } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import { useModel } from '@umijs/max';
-import { Button, Spin, Typography } from 'antd';
+import { Button, Image, Spin, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { FormattedMessage, Link } from 'umi';
 import './index.less';
@@ -87,7 +87,7 @@ export const DashboardComponent: React.FC = () => {
               />
             ) : (
               <div className="dashboard__card-img-placeholder">
-                {/* <Image width={240} src={'image_placeholder.svg'} preview={false} alt="LMS Image" /> */}
+                <Image width={240} src={'image_placeholder.svg'} preview={false} alt="LMS Image" />
               </div>
             )}
             <ProCard
