@@ -1,13 +1,20 @@
+import { ScormPreview as ScormPlayer } from '@escolalms/scorm-player';
 import React from 'react';
 declare const REACT_APP_API_URL: string;
 
-const ScormPreview: React.FC<{ uuid: string }> = ({ uuid }) => {
+interface ScormPreviewProps {
+  uuid: string;
+}
+
+const ScormPreview: React.FC<ScormPreviewProps> = ({ uuid }) => {
+  const API_URL = REACT_APP_API_URL || window.REACT_APP_API_URL;
+
+  // Register the Service Worker
+
   return (
-    <iframe
-      style={{ border: 'none', background: 'none', width: '100%', height: '100%' }}
-      className="scorm-preview-player"
-      src={`${window.REACT_APP_API_URL || REACT_APP_API_URL}/api/scorm/play/${uuid}`}
-    />
+    <div style={{ height: '100vh' }}>
+      <ScormPlayer uuid={uuid} apiUrl={API_URL || ''} serviceWorkerUrl="/service-worker-scorm.js" />
+    </div>
   );
 };
 

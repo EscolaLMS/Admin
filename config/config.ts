@@ -19,8 +19,8 @@ export default defineConfig({
    * @doc https://umijs.org/docs/api/config#hash
    */
   hash: true,
-
-  history: { type: 'hash' },
+  base: '/',
+  history: { type: 'browser' },
 
   /**
    * @name 兼容性设置
@@ -159,4 +159,5 @@ export default defineConfig({
       typeof REACT_APP_SENTRY_RELEASE !== 'undefined' ? REACT_APP_SENTRY_RELEASE : '',
   },
   devtool: 'source-map',
+  plugins: [require.resolve('./plugin-scorm.ts')],
 });
