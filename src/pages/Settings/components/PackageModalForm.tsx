@@ -119,7 +119,13 @@ export const SettingsPackageModalForm: React.FC<{
       ) : (
         <>
           <ProForm.Item shouldUpdate label={<FormattedMessage id="value" />}>
-            {() => <SettingsValue field={form.getFieldValue('rules')} name={'value'} />}
+            {() => (
+              <SettingsValue
+                field={form.getFieldValue('rules')}
+                name={'value'}
+                keyName={value.key}
+              />
+            )}
           </ProForm.Item>
         </>
       )}
