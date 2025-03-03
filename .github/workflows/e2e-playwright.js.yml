@@ -38,8 +38,9 @@ jobs:
         image: escolalms/api:latest
         ports:
           - 80:80
+
         options: >-
-          --name api --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2 --entrypoint sh -- -c "until nc -z postgres 5432; do echo waiting for database; sleep 2; done; php-fpm"
+          --name api  --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
 
 
     steps:
