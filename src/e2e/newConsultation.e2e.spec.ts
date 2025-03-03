@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL } from './consts';
+import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
 
 test.describe('New consultation', () => {
@@ -10,10 +10,10 @@ test.describe('New consultation', () => {
   test('create and delete consultation', async ({ page }) => {
     const CONSULTATION_NAME = generateRandomName('new consultation');
 
-    await page.goto(`${BASE_URL}/#/other/consultations`);
+    await page.goto(`${BASE_URL}${routerType}other/consultations`);
 
     await page.locator('text=new').click();
-    await expect(page).toHaveURL(`${BASE_URL}/#/other/consultations/new/attributes`);
+    await expect(page).toHaveURL(`${BASE_URL}${routerType}other/consultations/new/attributes`);
 
     // Fill in the consultation form
     await page.locator('#name').fill(CONSULTATION_NAME);
@@ -37,9 +37,9 @@ test.describe('New consultation', () => {
     await page.waitForSelector('text=Consultation saved successfully', { state: 'visible' });
     await page.waitForTimeout(3000);
 
-    await page.goto(`${BASE_URL}/#/courses/list`);
+    await page.goto(`${BASE_URL}${routerType}courses/list`);
     await page.waitForTimeout(3000);
-    await page.goto(`${BASE_URL}/#/other/consultations`);
+    await page.goto(`${BASE_URL}${routerType}other/consultations`);
 
     // Search for the newly created consultation
     await searchRecord(page, CONSULTATION_NAME);

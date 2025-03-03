@@ -3,3 +3,4 @@ export const ADMIN_CREDENTIALS = {
   email: 'admin@escolalms.com',
   password: 'secret',
 };
+export const routerType = '/';
