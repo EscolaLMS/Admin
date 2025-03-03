@@ -39,41 +39,41 @@ jobs:
         ports:
           - 80:80
         env:
-          LARAVEL_APP_NAME: "Wellms Playwright Demo"
-          LARAVEL_APP_ENV: "local"
-          LARAVEL_APP_KEY: "base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw="
-          LARAVEL_APP_DEBUG: "true"
-          LARAVEL_APP_LOG_LEVEL: "debug"
-          LARAVEL_APP_URL: "http://localhost:1000"
+          LARAVEL_APP_NAME: Wellms Playwright Demo
+          LARAVEL_APP_ENV: local
+          LARAVEL_APP_KEY: base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw=
+          LARAVEL_APP_DEBUG: true
+          LARAVEL_APP_LOG_LEVEL: debug
+          LARAVEL_APP_URL: http://localhost:1000
 
-          LARAVEL_DB_CONNECTION: "pgsql"
-          LARAVEL_DB_HOST: "postgres"
-          LARAVEL_DB_PORT: "5432"
-          LARAVEL_DB_DATABASE: "default"
-          LARAVEL_DB_USERNAME: "default"
-          LARAVEL_DB_PASSWORD: "secret"
+          LARAVEL_DB_CONNECTION: pgsql
+          LARAVEL_DB_HOST: postgres
+          LARAVEL_DB_PORT: 5432
+          LARAVEL_DB_DATABASE: default
+          LARAVEL_DB_USERNAME: default
+          LARAVEL_DB_PASSWORD: secret
 
-          LARAVEL_BROADCAST_DRIVER: "log"
-          LARAVEL_CACHE_DRIVER: "redis"
-          LARAVEL_SESSION_DRIVER: "cookie"
-          LARAVEL_QUEUE_DRIVER: "redis"
-          LARAVEL_QUEUE_CONNECTION: "redis"
+          LARAVEL_BROADCAST_DRIVER: log
+          LARAVEL_CACHE_DRIVER: redis
+          LARAVEL_SESSION_DRIVER: cookie
+          LARAVEL_QUEUE_DRIVER: redis
+          LARAVEL_QUEUE_CONNECTION: redis
 
-          LARAVEL_REDIS_HOST: "redis"
-          LARAVEL_REDIS_PASSWORD: ""
-          LARAVEL_REDIS_PORT: "6379"
+          LARAVEL_REDIS_HOST: redis
+          LARAVEL_REDIS_PASSWORD:
+          LARAVEL_REDIS_PORT: 6379
+        
+          LARAVEL_MAIL_DRIVER: smtp
+          LARAVEL_MAIL_HOST: mailhog
+          LARAVEL_MAIL_PORT: 1025
+          LARAVEL_MAIL_USERNAME: null
+          LARAVEL_MAIL_PASSWORD: null
+          LARAVEL_MAIL_ENCRYPTION:
 
-          LARAVEL_MAIL_DRIVER: "smtp"
-          LARAVEL_MAIL_HOST: "mailhog"
-          LARAVEL_MAIL_PORT: "1025"
-          LARAVEL_MAIL_USERNAME: "null"
-          LARAVEL_MAIL_PASSWORD: "null"
-          LARAVEL_MAIL_ENCRYPTION: ""
-
-          LARAVEL_MJML_BINARY_PATH: "/usr/bin/mjml"
-          LARAVEL_TRACKER_ENABLED: "false"
-          DISABLE_HORIZON: "true"
-          DISABLE_SCHEDULER: "true"
+          LARAVEL_MJML_BINARY_PATH: /usr/bin/mjml
+          LARAVEL_TRACKER_ENABLED: false
+          DISABLE_HORIZON: true
+          DISABLE_SCHEDULER: true
 
     steps:
       - name: Wait for container to be healthy
