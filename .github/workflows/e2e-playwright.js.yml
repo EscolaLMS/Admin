@@ -83,14 +83,6 @@ jobs:
           done
           echo "Container is healthy, proceeding to next step."
 
-      - name: Test login endpoint
-        run: |
-            docker ps && \
-            curl -X POST "http://api:1000/api/auth/login" \
-                 -H "Content-Type: application/json" \
-                 -d '{"email": "admin@escolalms.com", "password": "secret"}' \
-                 -i
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
@@ -123,6 +115,14 @@ jobs:
 
       - name: Build
         run: cp .env.ci .env && REACT_APP_API_URL=http://localhost npm run --openssl-legacy-provider build
+
+      - name: Test login endpoint
+        run: |
+          docker ps && \
+          curl -X POST "http://localhost/api/auth/login" \
+               -H "Content-Type: application/json" \
+               -d '{"email": "admin@escolalms.com", "password": "secret"}' \
+               -i
 
       - name: Install Playwright
         run: npx playwright install --with-deps
