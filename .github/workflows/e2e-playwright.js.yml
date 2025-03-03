@@ -83,6 +83,7 @@ jobs:
             sleep 15
           done
           echo "Container is healthy, proceeding to next step."
+          docker exec api chown -R www-data:www-data /var/www/html/storage
           docker exec -u 1000 api php artisan key:generate --force --no-interaction
           docker exec -u 1000 api php artisan passport:keys --force --no-interaction
           docker exec -u 1000 api php artisan migrate --force --no-interaction
