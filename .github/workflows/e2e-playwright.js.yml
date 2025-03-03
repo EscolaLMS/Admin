@@ -80,20 +80,13 @@ jobs:
               rm -f /etc/supervisor/custom.d/scheduler.conf && \
               /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
 
-      - name: Wait for container to be healthy
-        run: |
-          # Wait until the container is healthy
-          until docker exec api php artisan health:check; do
-            echo 'Waiting for container to be healthy...'
-            sleep 5
-          done
-          echo "Container is healthy, proceeding to next step."
-
       - name: Wait for container to be healthy and run commands
         run: |
           until docker exec api php artisan health:check; do
             echo 'Waiting for container to be healthy...'
-            sleep 5
+            docker ps
+            docker logs api || echo "No logs available for the container."
+            sleep 15
           done
           echo "Container is healthy, proceeding to next step."
 
