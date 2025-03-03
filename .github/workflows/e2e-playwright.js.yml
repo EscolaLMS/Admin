@@ -46,6 +46,8 @@ jobs:
 
         options: >-
           --name api
+          --env DISABLE_HORIZON=true
+          --env DISABLE_SCHEDULER=true
           --env LARAVEL_DB_HOST=postgres
           --env LARAVEL_DB_PORT=5432
           --env LARAVEL_DB_DATABASE=default
