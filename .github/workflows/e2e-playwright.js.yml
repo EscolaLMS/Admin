@@ -45,8 +45,14 @@ jobs:
           - 80:80
 
         options: >-
-          --name api  --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
-
+          --name api
+          --env LARAVEL_DB_HOST=postgres
+          --env LARAVEL_DB_PORT=5432
+          --env LARAVEL_DB_DATABASE=default
+          --env LARAVEL_DB_USERNAME=default
+          --env LARAVEL_DB_PASSWORD=secret
+          --env LARAVEL_REDIS_PASSWORD=
+          --env VAR2=value2
 
     steps:
       - run: |
