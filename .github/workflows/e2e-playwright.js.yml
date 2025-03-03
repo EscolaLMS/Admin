@@ -43,6 +43,8 @@ jobs:
             escolalms/api:latest \
             sh -c "rm -f /etc/supervisor/custom.d/horizon.conf && rm -f /etc/supervisor/custom.d/scheduler.conf && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
 
+      - run: docker ps
+
       - run: |
           docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
           APP_ENV=local \
@@ -73,6 +75,7 @@ jobs:
           MJML_BINARY_PATH=/usr/bin/mjml \
           TRACKER_ENABLED=false" >> .env
 
+      - run: docker exec -u 1000 api ls -
       - run: docker exec -u 1000 api cat .env
       - run: docker exec -u 1000 api php artisan config:cache
       - run: docker exec -u 1000 api composer dumpautoload
