@@ -71,6 +71,8 @@ jobs:
             escolalms/api:latest \
             sh -c "
               # Run php script
+              cd /var/www/html && \
+              chown -R www-data:www-data && \
               php docker/envs/envs.php && \
 
               # Remove unnecessary supervisor configurations and start supervisord
