@@ -38,14 +38,7 @@ jobs:
         image: escolalms/api:latest
         ports:
           - 80:80
-
-        options: >-
-          --entrypoint "sh -c"
-
-        command: >-
-            rm -f /etc/supervisor/custom.d/horizon.conf &&
-            rm -f /etc/supervisor/custom.d/scheduler.conf &&
-            /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+        entrypoint: "sh -c 'rm -f /etc/supervisor/custom.d/horizon.conf && rm -f /etc/supervisor/custom.d/scheduler.conf && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf'"
 
     steps:
       - run: |
