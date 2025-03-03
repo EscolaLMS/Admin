@@ -34,13 +34,15 @@ jobs:
       redis:
         image: redis
 
-      api:
-        image: escolalms/api:latest
-        ports:
-          - 80:80
-        entrypoint: "sh -c 'rm -f /etc/supervisor/custom.d/horizon.conf && rm -f /etc/supervisor/custom.d/scheduler.conf && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf'"
-
     steps:
+      - name: Start API container
+        run: |
+          docker run -d --name api \
+            --network github_network_${{ job.container.network }} \
+            -p 80:80 \
+            escolalms/api:latest \
+            sh -c "rm -f /etc/supervisor/custom.d/horizon.conf && rm -f /etc/supervisor/custom.d/scheduler.conf && /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+          
       - run: |
           docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
           APP_ENV=local \
