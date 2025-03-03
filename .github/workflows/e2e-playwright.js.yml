@@ -122,7 +122,7 @@ jobs:
         run: npm run test:e2e
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: test-results

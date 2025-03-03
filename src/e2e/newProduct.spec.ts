@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL } from './consts';
+import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
 
 test.describe('New product', () => {
@@ -10,9 +10,9 @@ test.describe('New product', () => {
   test('create and delete new product', async ({ page }) => {
     const PRODUCT_NAME = generateRandomName('playwright test product');
 
-    await page.goto(`${BASE_URL}/#/sales/products`);
+    await page.goto(`${BASE_URL}${routerType}sales/products`);
     await page.locator('text=new').click();
-    await expect(page).toHaveURL(`${BASE_URL}/#/sales/products/new`);
+    await expect(page).toHaveURL(`${BASE_URL}${routerType}sales/products/new`);
 
     await page.locator('#name').fill(PRODUCT_NAME);
     await page.locator('#purchasable').click();
@@ -23,7 +23,7 @@ test.describe('New product', () => {
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=Product created', { state: 'visible' });
 
-    await page.goto(`${BASE_URL}/#/sales/products`);
+    await page.goto(`${BASE_URL}${routerType}sales/products`);
 
     await searchRecord(page, PRODUCT_NAME);
     await confirmDeletion(page, PRODUCT_NAME);

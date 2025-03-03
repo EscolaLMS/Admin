@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL } from './consts';
+import { BASE_URL, routerType } from './consts';
 import { loginAsAdmin } from './helpers';
 
 test.describe('Logout test', () => {
@@ -14,7 +14,7 @@ test.describe('Logout test', () => {
     // Click text=Logout
     await page.waitForSelector('text=Logout');
     await page.locator('text=Logout').click();
-    await page.waitForURL(`${BASE_URL}/#/user/login?redirect=/welcome`);
+    await page.waitForURL(`${BASE_URL}${routerType}user/login?redirect=/welcome`);
 
     await expect(page).toHaveURL(/.*login/);
 

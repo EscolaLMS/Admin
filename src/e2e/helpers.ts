@@ -1,16 +1,16 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import { ADMIN_CREDENTIALS, BASE_URL } from './consts';
+import { ADMIN_CREDENTIALS, BASE_URL, routerType } from './consts';
 
 export const loginAsAdmin = async (page: Page) => {
-  await page.goto(`${BASE_URL}/#/user/login`);
+  await page.goto(`${BASE_URL}${routerType}user/login`);
   await page.waitForSelector('#email');
 
   await page.locator('input[id="email"]').fill(ADMIN_CREDENTIALS.email);
   await page.locator('input[id="password"]').fill(ADMIN_CREDENTIALS.password);
-  await page.locator('form button').click();
+  await page.locator('button:has-text("Login")').click();
 
-  await expect(page).toHaveURL(`${BASE_URL}/#/welcome`, { timeout: 10000 });
+  await expect(page).toHaveURL(`${BASE_URL}${routerType}welcome`, { timeout: 10000 });
 };
 
 // Helper function to confirm deletion of a record in a table

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL } from './consts';
+import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
 
 test.describe('New user', () => {
@@ -10,7 +10,7 @@ test.describe('New user', () => {
   test('create new user', async ({ page }) => {
     const email = generateRandomName('newuser') + '@pwtest.pl';
 
-    await page.goto(`${BASE_URL}/#/configuration/settings/escola_auth`);
+    await page.goto(`${BASE_URL}${routerType}configuration/settings/escola_auth`);
     await page.waitForLoadState();
     await page.waitForSelector('text=Settings', { state: 'visible' });
     await page.click('[data-row-key="return_url"] button');
@@ -20,9 +20,9 @@ test.describe('New user', () => {
     await page.waitForTimeout(2000);
     await page.waitForLoadState();
 
-    await page.goto(`${BASE_URL}/#/users/list`);
+    await page.goto(`${BASE_URL}${routerType}users/list`);
     await page.locator('text=new').click();
-    await expect(page).toHaveURL(`${BASE_URL}/#/users/list/new`);
+    await expect(page).toHaveURL(`${BASE_URL}${routerType}users/list/new`);
     await page.locator('#first_name').fill('new');
     await page.locator('#last_name').fill('user');
     await page.locator('#email').fill(email);
@@ -36,7 +36,7 @@ test.describe('New user', () => {
     // await page.waitForSelector('text=Created user', { state: 'visible' });
     await page.waitForTimeout(5000);
 
-    await page.goto(`${BASE_URL}/#/users/list`);
+    await page.goto(`${BASE_URL}${routerType}users/list`);
     await page.waitForTimeout(4000);
 
     await searchRecord(page, email, '#search');
