@@ -85,7 +85,8 @@ jobs:
 
       - name: Test login endpoint
         run: |
-            curl -X POST "http://api/api/auth/login" \
+            docker ps
+            curl -X POST "http://api:1000/api/auth/login" \
                  -H "Content-Type: application/json" \
                  -d '{"email": "admin@escolalms.com", "password": "secret"}' \
                  -i
