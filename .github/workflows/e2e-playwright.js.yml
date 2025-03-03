@@ -83,7 +83,7 @@ jobs:
             sleep 15
           done
           echo "Container is healthy, proceeding to next step."
-          docker exec mkdir /var/www/html/storage/logs
+          docker exec api mkdir /var/www/html/storage/logs
           docker exec -u 1000 api php artisan config:cache
           docker exec -u 1000 api composer dumpautoload
           docker exec -u 1000 api php artisan key:generate --force --no-interaction
