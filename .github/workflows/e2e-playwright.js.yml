@@ -72,23 +72,16 @@ jobs:
             -e DISABLE_SCHEDULER="true" \
             escolalms/api:latest
 
-      - name: Wait for container to be healthy and run commands
+      - name: Wait for container to be healthy
         run: |
           docker logs api || echo "No logs available for the container."
 
           until docker exec api php artisan health:check; do
             echo 'Waiting for container to be healthy...'
-            docker ps
             docker logs api || echo "No logs available for the container."
             sleep 15
           done
           echo "Container is healthy, proceeding to next step."
-          docker exec api chown -R www-data:www-data /var/www/html/storage
-          docker exec -u 1000 api php artisan key:generate --force --no-interaction
-          docker exec -u 1000 api php artisan passport:keys --force --no-interaction
-          docker exec -u 1000 api php artisan migrate --force --no-interaction
-          docker exec -u 1000 api php artisan passport:client --personal --no-interaction
-          docker exec -u 1000 api php artisan db:seed --force --no-interaction
 
       - uses: actions/checkout@v2
         with:
