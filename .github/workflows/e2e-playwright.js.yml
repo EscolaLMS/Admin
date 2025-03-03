@@ -53,10 +53,6 @@ jobs:
           --env LARAVEL_DB_PASSWORD=secret
           --env LARAVEL_REDIS_PASSWORD=
           --env VAR2=value2
-          --health-cmd "php artisan health:check || exit 1"
-          --health-interval 20s
-          --health-timeout 360s
-          --health-retries 15
 
     steps:
       - run: |
