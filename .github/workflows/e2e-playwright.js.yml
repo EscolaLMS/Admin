@@ -39,14 +39,14 @@ jobs:
         ports:
           - 80:80
 
-      options: >-
-        --entrypoint "sh -c"
+        options: >-
+          --entrypoint "sh -c"
 
-      command: >-
-          rm -f /etc/supervisor/custom.d/horizon.conf &&
-          rm -f /etc/supervisor/custom.d/scheduler.conf &&
-          /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
-  
+        command: >-
+            rm -f /etc/supervisor/custom.d/horizon.conf &&
+            rm -f /etc/supervisor/custom.d/scheduler.conf &&
+            /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+
     steps:
       - run: |
           docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
