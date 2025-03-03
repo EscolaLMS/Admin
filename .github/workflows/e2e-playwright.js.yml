@@ -39,17 +39,14 @@ jobs:
         ports:
           - 80:80
 
-        options: >-
-          --name api
-          --env DISABLE_HORIZON=true
-          --env DISABLE_SCHEDULER=true
-          --env LARAVEL_DB_HOST=postgres
-          --env LARAVEL_DB_PORT=5432
-          --env LARAVEL_DB_DATABASE=default
-          --env LARAVEL_DB_USERNAME=default
-          --env LARAVEL_DB_PASSWORD=secret
-          --env LARAVEL_REDIS_PASSWORD=""
+      options: >-
+        --entrypoint "sh -c"
 
+      command: >-
+          rm -f /etc/supervisor/custom.d/horizon.conf &&
+          rm -f /etc/supervisor/custom.d/scheduler.conf &&
+          /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+  
     steps:
       - run: |
           docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
