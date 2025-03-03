@@ -78,7 +78,7 @@ jobs:
               # Remove unnecessary supervisor configurations and start supervisord
               rm -f /etc/supervisor/custom.d/horizon.conf && \
               rm -f /etc/supervisor/custom.d/scheduler.conf && \
-              /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+              /usr/bin/supervisord -c /etc/supervisord.conf"
 
       - name: Wait for container to be healthy and run commands
         run: |
