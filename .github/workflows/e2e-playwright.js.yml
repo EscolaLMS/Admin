@@ -83,6 +83,13 @@ jobs:
           done
           echo "Container is healthy, proceeding to next step."
 
+      - name: Test login endpoint
+        run: |
+            curl -X POST "http://localhost/api/auth/login" \
+                 -H "Content-Type: application/json" \
+                 -d '{"email": "admin@escolalms.com", "password": "secret"}' \
+                 -i
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
