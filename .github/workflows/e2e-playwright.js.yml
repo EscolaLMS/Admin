@@ -68,17 +68,7 @@ jobs:
             -e LARAVEL_MAIL_ENCRYPTION="" \
             -e LARAVEL_MJML_BINARY_PATH="/usr/bin/mjml" \
             -e LARAVEL_TRACKER_ENABLED="false" \
-            escolalms/api:latest \
-            sh -c "
-              # Run php script
-              cd /var/www/html && \
-              chown -R www-data:www-data /var/www/html/storage && \
-              php docker/envs/envs.php && \
-
-              # Remove unnecessary supervisor configurations and start supervisord
-              rm -f /etc/supervisor/custom.d/horizon.conf && \
-              rm -f /etc/supervisor/custom.d/scheduler.conf && \
-              /usr/bin/supervisord -c /etc/supervisord.conf"
+            escolalms/api:latest
 
       - name: Wait for container to be healthy and run commands
         run: |
