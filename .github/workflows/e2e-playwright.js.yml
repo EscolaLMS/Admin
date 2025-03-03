@@ -37,7 +37,7 @@ jobs:
       api:
         image: escolalms/api:latest
         ports:
-          - 80:80
+          - 80:9000
         env:
           LARAVEL_APP_NAME: Wellms Playwright Demo
           LARAVEL_APP_ENV: local
