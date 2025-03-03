@@ -62,7 +62,7 @@ jobs:
           LARAVEL_REDIS_HOST: redis
           LARAVEL_REDIS_PASSWORD:
           LARAVEL_REDIS_PORT: 6379
-        
+
           LARAVEL_MAIL_DRIVER: smtp
           LARAVEL_MAIL_HOST: mailhog
           LARAVEL_MAIL_PORT: 1025
@@ -76,17 +76,6 @@ jobs:
           DISABLE_SCHEDULER: true
 
     steps:
-      - name: Wait for container to be healthy
-        run: |
-          docker logs api || echo "No logs available for the container."
-
-          until docker exec api php artisan health:check; do
-            echo 'Waiting for container to be healthy...'
-            docker logs api || echo "No logs available for the container."
-            sleep 15
-          done
-          echo "Container is healthy, proceeding to next step."
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
