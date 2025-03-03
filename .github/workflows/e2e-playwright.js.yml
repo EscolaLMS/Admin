@@ -72,7 +72,7 @@ jobs:
             sh -c "
               # Run php script
               cd /var/www/html && \
-              chown -R www-data:www-data && \
+              chown -R www-data:www-data /var/www/html/storage && \
               php docker/envs/envs.php && \
 
               # Remove unnecessary supervisor configurations and start supervisord
