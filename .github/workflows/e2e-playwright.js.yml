@@ -72,7 +72,7 @@ jobs:
             }
         options: >
           --entrypoint /bin/sh
-          -c "echo '$CADDY_CONFIG' > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile"
+          -c "echo \"$CADDY_CONFIG\" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile"
 
       api:
         image: escolalms/api:latest
