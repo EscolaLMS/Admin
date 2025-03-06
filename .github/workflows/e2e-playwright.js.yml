@@ -118,14 +118,7 @@ jobs:
                 header @excluded Access-Control-Allow-Origin *
                 header Access-Control-Allow-Credentials true
             }" \
-            caddy sh -c "echo \"$CADDY_CONFIG\" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile"
-
-      - name: Test login endpoint
-        run: |
-          curl -X POST "http://api.localhost/api/auth/login" \
-               -H "Content-Type: application/json" \
-               -d '{"email": "admin@escolalms.com", "password": "secret"}' \
-               -i
+            caddy sh -c 'echo "$CADDY_CONFIG" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile'
 
       - name: Cache node modules
         id: cache-npm
@@ -140,6 +133,13 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+
+      - name: Test login endpoint
+        run: |
+          curl -X POST "http://api.localhost/api/auth/login" \
+               -H "Content-Type: application/json" \
+               -d '{"email": "admin@escolalms.com", "password": "secret"}' \
+               -i
 
       - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: List the state of node modules
