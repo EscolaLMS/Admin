@@ -123,6 +123,33 @@ jobs:
         with:
           node-version: 20
 
+      - name: Run Caddy container with custom Caddyfile
+        run: |
+          docker run -d \
+            --name caddy \
+            --network ${{ job.container.network }} \
+            -e CADDY_CONFIG="http://api.localhost {
+                encode zstd gzip
+
+                reverse_proxy api:9000 {
+                    header_up -Access-Control-Allow-Origin
+                    header_down -Access-Control-Allow-Origin
+                    transport fastcgi {
+                        env SCRIPT_FILENAME /var/www/html/index.php
+                    }
+                }
+
+                @origin header Origin {http.request.header.Origin}
+                header @origin Access-Control-Allow-Origin {http.request.header.Origin}
+
+                @excluded {
+                    not header Origin {http.request.header.Origin}
+                }
+                header @excluded Access-Control-Allow-Origin *
+                header Access-Control-Allow-Credentials true
+            }" \
+            caddy sh -c "echo \"$CADDY_CONFIG\" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile"
+
       - name: Test login endpoint
         run: |
           curl -X POST "http://api.localhost/api/auth/login" \
