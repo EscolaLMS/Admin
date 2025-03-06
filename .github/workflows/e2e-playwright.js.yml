@@ -31,18 +31,14 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
 
       redis:
         image: redis
         options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
 
       api:
         image: escolalms/api:latest
@@ -151,7 +147,7 @@ jobs:
         run: npm i --legacy-peer-deps
 
       - name: Build
-        run: cp .env.ci .env && REACT_APP_API_URL=http://api.localhost npm run --openssl-legacy-provider build
+        run: cp .env.ci .env  npm run --openssl-legacy-provider build
 
       - name: Install Playwright
         run: npx playwright install --with-deps
