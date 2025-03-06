@@ -16,7 +16,9 @@ const config: PlaywrightTestConfig = {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    storageState: 'src/e2e/auth.json',
   },
+  globalSetup: 'src/e2e/globalSetup.ts',
   projects: [
     {
       name: 'chromium',

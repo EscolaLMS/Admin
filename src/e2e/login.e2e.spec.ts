@@ -10,4 +10,5 @@ test(`test route page login`, async ({ page }) => {
   await page.locator('button:has-text("Login")').click();
   // await expect(page).toHaveURL(/.*welcome/);
   await page.waitForLoadState();
+  await page.context().storageState({ path: 'src/e2e/auth.json' });
 });

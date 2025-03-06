@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New category', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
+  // test.beforeEach(async ({ page }) => {
+  //   await loginAsAdmin(page);
+  // });
 
   test('create and delete new category', async ({ page }) => {
     const CATEGORY_NAME = generateRandomName('new pwCategory');

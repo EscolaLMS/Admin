@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New course', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
+  // test.beforeEach(async ({ page }) => {
+  //   await loginAsAdmin(page);
+  // });
 
   test('create and delete new course', async ({ page }) => {
     const COURSE_NAME = generateRandomName('new course abc');

@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { format } from 'date-fns';
 import { BASE_URL, routerType } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New stationary events', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
+  // test.beforeEach(async ({ page }) => {
+  //   await loginAsAdmin(page);
+  // });
 
   test('create and delete stationary events', async ({ page }) => {
     const EVENT_NAME = generateRandomName('new event');

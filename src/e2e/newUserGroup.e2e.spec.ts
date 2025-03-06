@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New user group', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
+  // test.beforeEach(async ({ page }) => {
+  //   await loginAsAdmin(page);
+  // });
 
   test('create and delete new user group', async ({ page }) => {
     const USER_GROUP_NAME = generateRandomName('new user group');
