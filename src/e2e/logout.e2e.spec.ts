@@ -2,9 +2,6 @@ import { expect, test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
 
 test.describe('Logout test', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   await loginAsAdmin(page);
-  // });
   test(`test logout`, async ({ page }) => {
     // document.querySelector('.avatar-dropdown').dispatchEvent(new MouseEvent('mouseover', { bubbles: true}));
 

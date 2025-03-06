@@ -1,12 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New consultation', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
-
   test('create and delete consultation', async ({ page }) => {
     const CONSULTATION_NAME = generateRandomName('new consultation');
 

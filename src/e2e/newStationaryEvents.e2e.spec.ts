@@ -4,10 +4,6 @@ import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New stationary events', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   await loginAsAdmin(page);
-  // });
-
   test('create and delete stationary events', async ({ page }) => {
     const EVENT_NAME = generateRandomName('new event');
     const today = format(new Date(), 'yyyy-MM-dd');

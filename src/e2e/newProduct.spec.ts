@@ -3,10 +3,6 @@ import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New product', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   await loginAsAdmin(page);
-  // });
-
   test('create and delete new product', async ({ page }) => {
     const PRODUCT_NAME = generateRandomName('playwright test product');
 

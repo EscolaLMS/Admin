@@ -19,6 +19,7 @@ const config: PlaywrightTestConfig = {
     storageState: 'src/e2e/auth.json',
   },
   globalSetup: 'src/e2e/globalSetup.ts',
+
   projects: [
     {
       name: 'chromium',

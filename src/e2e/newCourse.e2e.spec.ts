@@ -3,10 +3,6 @@ import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New course', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   await loginAsAdmin(page);
-  // });
-
   test('create and delete new course', async ({ page }) => {
     const COURSE_NAME = generateRandomName('new course abc');
 

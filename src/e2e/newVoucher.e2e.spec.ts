@@ -3,10 +3,6 @@ import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New voucher', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   await loginAsAdmin(page);
-  // });
-
   test('create and delete new voucher', async ({ page }) => {
     const CODE_NAME = generateRandomName('test_code');
 

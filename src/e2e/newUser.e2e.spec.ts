@@ -3,10 +3,6 @@ import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New user', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   await loginAsAdmin(page);
-  // });
-
   test('create new user', async ({ page }) => {
     const email = generateRandomName('newuser') + '@pwtest.pl';
 

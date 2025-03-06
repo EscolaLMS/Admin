@@ -15,8 +15,8 @@ async function globalSetup() {
   await page.locator('input[id="password"]').fill(ADMIN_CREDENTIALS.password);
   await page.locator('button:has-text("Login")').click();
   await page.context().storageState({ path: 'src/e2e/auth.json' });
-  //   await expect(page).toHaveURL(`${BASE_URL}${routerType}welcome`, { timeout: 10000 });
-  await expect(page).toHaveURL(/.*welcome/);
+  await expect(page).toHaveURL(`${BASE_URL}${routerType}welcome`, { timeout: 10000 });
+  //   await expect(page).toHaveURL(/.*welcome/);
   // Save authentication session
   await context.storageState({ path: 'src/e2e/auth.json' });
 
