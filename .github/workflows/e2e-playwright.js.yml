@@ -30,22 +30,36 @@ jobs:
           TZ: Europe/Warsaw
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       redis:
         image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      caddy:
+        image: caddy
+        ports:
+          - 80:80
+        volumes:
+          - docker/conf/Caddyfile:/etc/caddy/Caddyfile
 
       api:
         image: escolalms/api:latest
-        ports:
-          - 80:80
-          - 9000:9000
         env:
           LARAVEL_APP_NAME: Wellms Playwright Demo
           LARAVEL_APP_ENV: local
           LARAVEL_APP_KEY: base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw=
           LARAVEL_APP_DEBUG: true
           LARAVEL_APP_LOG_LEVEL: debug
-          LARAVEL_APP_URL: http://localhost:1000
+          LARAVEL_APP_URL: http://api.localhost
 
           LARAVEL_DB_CONNECTION: pgsql
           LARAVEL_DB_HOST: postgres
@@ -73,6 +87,7 @@ jobs:
 
           LARAVEL_MJML_BINARY_PATH: /usr/bin/mjml
           LARAVEL_TRACKER_ENABLED: false
+          LARAVEL_INITIAL_USER_PASSWORD: secret
           DISABLE_HORIZON: true
           DISABLE_SCHEDULER: true
 
@@ -84,6 +99,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
+
+      - name: Test login endpoint
+        run: |
+          docker ps && docker logs api || echo "No logs available for the container." \
+          curl -X POST "http://api.localhost/api/auth/login" \
+               -H "Content-Type: application/json" \
+               -d '{"email": "admin@escolalms.com", "password": "secret"}' \
+               -i
 
       - name: Cache node modules
         id: cache-npm
@@ -108,7 +131,7 @@ jobs:
         run: npm i --legacy-peer-deps
 
       - name: Build
-        run: cp .env.ci .env && REACT_APP_API_URL=http://localhost npm run --openssl-legacy-provider build
+        run: cp .env.ci .env && REACT_APP_API_URL=http://api.localhost npm run --openssl-legacy-provider build
 
       - name: Install Playwright
         run: npx playwright install --with-deps
