@@ -125,7 +125,6 @@ jobs:
 
       - name: Test login endpoint
         run: |
-          docker ps && docker logs api || echo "No logs available for the container." \
           curl -X POST "http://api.localhost/api/auth/login" \
                -H "Content-Type: application/json" \
                -d '{"email": "admin@escolalms.com", "password": "secret"}' \
