@@ -96,7 +96,7 @@ jobs:
       - name: Run Caddy container with custom Caddyfile
         run: |
           docker run -d \
-            --port 80:80 \
+            -p 80:80 \
             --name caddy \
             --network ${{ job.container.network }} \
             -e CADDY_CONFIG="http://api.localhost {
