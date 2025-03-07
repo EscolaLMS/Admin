@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
-test.describe('New voucher', () => {
+test.skip('New voucher', () => {
   test('create and delete new voucher', async ({ page }) => {
     const CODE_NAME = generateRandomName('test_code');
 

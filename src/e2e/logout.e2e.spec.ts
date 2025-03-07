@@ -4,7 +4,7 @@ import { BASE_URL, routerType } from './consts';
 test.describe('Logout test', () => {
   test(`test logout`, async ({ page }) => {
     // document.querySelector('.avatar-dropdown').dispatchEvent(new MouseEvent('mouseover', { bubbles: true}));
-
+    await page.goto(`${BASE_URL}${routerType}`);
     await page.locator('.avatar-dropdown').dispatchEvent('mouseover', { bubbles: true });
 
     // Click text=Logout

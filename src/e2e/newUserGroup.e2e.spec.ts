@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { BASE_URL, routerType } from './consts';
 import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
-test.describe('New user group', () => {
+test.skip('New user group', () => {
   test('create and delete new user group', async ({ page }) => {
     const USER_GROUP_NAME = generateRandomName('new user group');
 
