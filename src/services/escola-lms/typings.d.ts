@@ -944,6 +944,7 @@ declare namespace API {
     duration: string;
     author_id: number;
     author?: UserItem;
+    teachers: UserItem[] | number[];
     base_price: number;
     active_to: string;
     active_from: string;
@@ -1057,6 +1058,8 @@ declare namespace API {
     model_type_class: string;
     model_type_id: number;
     model_type_title: string;
+    display_frequency_minutes: number | null;
+    target_group: 'user' | 'author' | null;
   };
 
   type Questionnaire = Pick<
@@ -1333,11 +1336,11 @@ declare namespace API {
     created_at: string;
     updated_at: string;
     trainers: UserItem[] | number[];
-    image_path?: string;
+    image_path?: string | null;
     image_url?: string;
     tags?: Tag[] | string[];
     logotype_url?: string;
-    logotype_path?: string;
+    logotype_path?: string | null;
     product?: EscolaLms.Cart.Models.Product;
   };
 
@@ -1861,6 +1864,7 @@ declare namespace API {
     tutor_id: number;
     s_subject_scale_form_id: number;
     grades: FinalGradeItemGrade[];
+    semester_closed?: boolean;
   };
 
   type UserAttendanceSchedule = Omit<API.GroupAttendanceSchedule, 'attendances'> & {
