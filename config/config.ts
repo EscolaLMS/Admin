@@ -9,6 +9,7 @@ const {
   REACT_APP_API_URL,
   REACT_APP_YBUG,
   REACT_APP_SENTRYDSN,
+  REACT_APP_USERWAY,
   BASE_PATH,
   REACT_APP_SENTRY_RELEASE,
 } = process.env;
@@ -135,7 +136,8 @@ export default defineConfig({
     { src: '/scripts/loading.js', async: true },
     `window.REACT_APP_API_URL = null;
     window.REACT_APP_SENTRYDSN = null;
-    window.REACT_APP_YBUG = null;`,
+    window.REACT_APP_YBUG = null;
+    window.REACT_APP_USERWAY = null`,
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
@@ -153,6 +155,7 @@ export default defineConfig({
   define: {
     REACT_APP_API_URL: typeof REACT_APP_API_URL !== 'undefined' ? REACT_APP_API_URL : '', // API address,
     REACT_APP_SENTRYDSN: typeof REACT_APP_SENTRYDSN !== 'undefined' ? REACT_APP_SENTRYDSN : '',
+    REACT_APP_USERWAY: typeof REACT_APP_USERWAY !== 'undefined' ? REACT_APP_USERWAY : '',
     REACT_APP_YBUG: typeof REACT_APP_YBUG !== 'undefined' ? REACT_APP_YBUG : '',
     REACT_APP_SENTRY_RELEASE:
       typeof REACT_APP_SENTRY_RELEASE !== 'undefined' ? REACT_APP_SENTRY_RELEASE : '',

@@ -17,6 +17,9 @@ if (is_file(dirname(__FILE__) . "/env_config.php")) {
             if (isset($setup['REACT_APP_YBUG'])) {
                 $content = preg_replace('/(?<=window.REACT_APP_YBUG=")(.*)(?=")/', $setup['REACT_APP_YBUG'], $content);
             }
+            if (isset($setup['REACT_APP_USERWAY'])) {
+                $content = preg_replace('/(?<=window.REACT_APP_USERWAY=")(.*)(?=")/', $setup['REACT_APP_USERWAY'], $content);
+            }
         }
     }
 }

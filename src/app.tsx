@@ -16,7 +16,7 @@ import { packages } from './services/escola-lms/packages';
 import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
 import { translations } from './services/escola-lms/translations';
 import { refreshTokenCallback } from './services/token_refresh';
-
+import './services/userWay';
 const authpaths = ['/user/login', '/user/reset-password'];
 
 declare global {
