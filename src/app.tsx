@@ -48,6 +48,9 @@ export async function getInitialState(): Promise<{
       }
       return undefined;
     } catch (error) {
+      if (history.location.pathname === '/user/reset-password') {
+        return undefined;
+      }
       if (authpaths.includes(history.location.pathname)) {
         history.push(`/user/login`);
       } else {
