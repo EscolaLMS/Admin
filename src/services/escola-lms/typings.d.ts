@@ -1864,6 +1864,7 @@ declare namespace API {
     tutor_id: number;
     s_subject_scale_form_id: number;
     grades: FinalGradeItemGrade[];
+    semester_closed?: boolean;
   };
 
   type UserAttendanceSchedule = Omit<API.GroupAttendanceSchedule, 'attendances'> & {

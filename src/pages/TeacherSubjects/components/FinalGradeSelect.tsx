@@ -101,7 +101,7 @@ export const FinalGradeSelect: React.FC<Props> = ({
       allowClear
       status={errorStatus ? 'error' : ''}
       loading={loading}
-      disabled={loading}
+      disabled={loading || finalGrades.semester_closed}
       placeholder={<FormattedMessage id="select_final_grade" />}
       style={{ width: '100%' }}
       onChange={onChange}
