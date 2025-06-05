@@ -559,3 +559,8 @@ export const timeDisplay = (seconds: number) => {
 
   return formattedTime;
 };
+
+export const redirectPrefix = () => {
+  // return routerType() === "HashRouter" ? "/#" : "";
+  return '';
+};

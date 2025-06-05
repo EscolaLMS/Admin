@@ -12,6 +12,7 @@ import { packages } from '@/services/escola-lms/packages';
 import { settings } from '@/services/escola-lms/settings';
 import { translations } from '@/services/escola-lms/translations';
 import { refreshTokenCallback } from '@/services/token_refresh';
+import { redirectPrefix } from '@/utils/utils';
 import AuthLayout from '../components/AuthLayout';
 import styles from '../components/index.less';
 
@@ -123,7 +124,10 @@ const Login: React.FC = () => {
     if ('password' in values) {
       handleLogin(values);
     } else {
-      handleForgot({ ...values, return_url: `${window.location.origin}/#/user/reset-password` });
+      handleForgot({
+        ...values,
+        return_url: `${window.location.origin}${redirectPrefix()}/user/reset-password`,
+      });
     }
   };
 

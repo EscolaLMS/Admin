@@ -41,47 +41,23 @@ export async function getInitialState(): Promise<{
 }> {
   refreshTokenCallback();
   const fetchUserInfo = async () => {
-    // Combine the current pathname and search parameters into a full URL
-    const url = history.location.pathname + history.location.search;
-
     try {
-      // Attempt to fetch the current user's data
       const currentUser = await queryCurrentUser();
-
-      // If the user query is successful, return the user data
       if (currentUser.success) {
         return currentUser.data;
       }
-
-      // If the user query fails (not successful), return undefined
       return undefined;
     } catch (error) {
-      // Check if the current path is in the list of authenticated paths
+      if (history.location.pathname === '/user/reset-password') {
+        return;
+      }
       if (authpaths.includes(history.location.pathname)) {
-        // If the URL does not already include a redirect parameter
-        if (!url.includes('redirect')) {
-          // Redirect the user to the login page
-          history.push(`/user/login`);
-
-          // If there is a "redirect" key in local storage, remove it
-          if (localStorage.getItem('redirect')) {
-            localStorage.removeItem('redirect');
-          }
-        }
+        history.push(`/user/login`);
       } else {
-        // If the path is not in the authenticated paths, redirect the user to the login page
-        // Include the current URL as the "redirect" query parameter to return after login
+        const url = history.location.pathname + history.location.search;
         history.push(`/user/login?redirect=${url}`);
       }
-    } finally {
-      // If the URL includes a "redirect" parameter and it is not already in local storage
-      if (url.includes('redirect') && !localStorage.getItem('redirect')) {
-        // Save the "redirect" value to local storage for future use
-        localStorage.setItem('redirect', url.split('redirect=')[1]);
-      }
     }
-
-    // Return undefined if no user data is fetched or an error occurs
     return undefined;
   };
 

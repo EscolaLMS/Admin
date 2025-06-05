@@ -22,7 +22,7 @@ import { DATETIME_FORMAT } from '@/consts/dates';
 import useModelFields from '@/hooks/useModelFields';
 import { FieldType } from '@/services/escola-lms/enums';
 import { deleteUser, users } from '@/services/escola-lms/user';
-import { createTableOrderObject, objectToQueryString } from '@/utils/utils';
+import { createTableOrderObject, objectToQueryString, redirectPrefix } from '@/utils/utils';
 import './index.css';
 
 const handleRemove = async (id: number) => {
@@ -316,7 +316,7 @@ const TableList: React.FC = () => {
                 name="file"
                 accept=".csv, .xlsx"
                 data={{
-                  return_url: `${window.location.origin}/#/user/reset-password`,
+                  return_url: `${window.location.origin}${redirectPrefix()}/user/reset-password`,
                 }}
                 onChange={(info) => {
                   if (info.file.status === 'done') {
