@@ -56,6 +56,9 @@ export async function getInitialState(): Promise<{
       // If the user query fails (not successful), return undefined
       return undefined;
     } catch (error) {
+      if (history.location.pathname === '/user/reset-password') {
+        return;
+      }
       // Check if the current path is in the list of authenticated paths
       if (authpaths.includes(history.location.pathname)) {
         // If the URL does not already include a redirect parameter
