@@ -18,6 +18,7 @@ const QuizReportQuestionDetails: React.FC<Props> = ({ question }) => (
     <Descriptions.Item label={<FormattedMessage id="ID" defaultMessage="ID" />}>
       {question.id}
     </Descriptions.Item>
+
     <Descriptions.Item label={<FormattedMessage id="type" defaultMessage="Type" />}>
       <FormattedMessage id={`gift_type.${question.type}`} />
     </Descriptions.Item>

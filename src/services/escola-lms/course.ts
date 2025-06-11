@@ -91,7 +91,7 @@ export async function getCourseStats(
 ) {
   return request<API.DefaultResponse<API.CourseStats>>(`/api/admin/stats/course/${id}`, {
     method: 'GET',
-    params: { stats },
+    params: { 'stats[]': stats },
     ...(options || {}),
   });
 }
@@ -102,7 +102,7 @@ export async function getTopicStats(
   options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.TopicStats>>(`/api/admin/stats/topic/${topic_id}`, {
-    params: { stats },
+    params: { 'stats[]': stats },
     ...(options ?? {}),
   });
 }
