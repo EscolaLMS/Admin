@@ -1,4 +1,4 @@
-FROM node:20-buster AS base
+FROM node:20-bullseye AS base
 
 # docker image build -t abc . && docker run -p 80:80 --env API_URL="https://api-stage.escolalms.com" abc
 
