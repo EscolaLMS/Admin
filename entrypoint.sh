@@ -14,6 +14,16 @@ echo "API URL= " $API_URL
 echo "SENTRYDSN= " $SENTRYDSN
 echo "YBUG= " $YBUG
 
+cat <<EOF > /var/www/html/.htaccess
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.php [L]
+</IfModule>
+EOF
+
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- apache2-foreground "$@"

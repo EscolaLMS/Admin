@@ -16,3 +16,6 @@ COPY entrypoint.sh /usr/local/bin/docker-php-entrypoint
 COPY --from=base /home/node/app/dist /var/www/html
 COPY config/php/index.php /var/www/html/index.php
 RUN echo "${ADMIN_VERSION}" > /var/www/html/version
+# Enable mod_rewrite and AllowOverride All
+RUN a2enmod rewrite \
+    && sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
