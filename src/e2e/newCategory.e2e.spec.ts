@@ -1,16 +1,12 @@
 import { test } from '@playwright/test';
-import { BASE_URL } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { BASE_URL, routerType } from './consts';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
 test.describe('New category', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
-
   test('create and delete new category', async ({ page }) => {
     const CATEGORY_NAME = generateRandomName('new pwCategory');
 
-    await page.goto(`${BASE_URL}/#/courses/categories`);
+    await page.goto(`${BASE_URL}${routerType}courses/categories`);
     await page.waitForLoadState();
     await page.locator('text=New').click();
     await page.waitForSelector('.ant-modal');
