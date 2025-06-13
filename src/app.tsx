@@ -161,6 +161,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
   if (configLogo) {
     logo = configLogo.data;
+
     if (!logo.includes('http')) {
       logo = `${window.REACT_APP_API_URL || REACT_APP_API_URL}/storage${logo}`;
     }

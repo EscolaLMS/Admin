@@ -67,10 +67,11 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
   const [treeData, setTreeData] = useState<TreeData>({ rootId: 0, items: {} });
   const { initialState } = useModel('@@initialState');
   const intl = useIntl();
+  // const config = initialState;
 
-  const havePackageInstalled = useCallback(createHavePackageInstalled(initialState?.packages), [
-    initialState?.packages,
-  ]);
+  const havePackageInstalled = useCallback(() => {
+    return createHavePackageInstalled(initialState?.packages);
+  }, [initialState?.packages]);
   useEffect(() => {
     setTreeData((prevState) => {
       const root: TreeItem = {
