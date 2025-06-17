@@ -99,8 +99,6 @@ export default () => {
     }
   }, [data, tab, isFirstTimeEdit]);
 
-  console.log({ initialState });
-
   useEffect(() => {
     if (course === 'new') {
       setData({
