@@ -198,6 +198,21 @@ export default () => {
     [course, data, manageCourseEdit, form],
   );
 
+  const currentLocales = useMemo(() => {
+    const l = locales
+      .map((locale) => locale.split('-')[0])
+      .reduce((a, v) => ({ ...a, [v]: v }), {});
+
+    const additionalLocales = JSON.parse(
+      initialState?.config?.find((e) => e.key === 'locales')?.value || '{}',
+    );
+
+    if (additionalLocales) {
+      return { ...l, ...additionalLocales };
+    }
+    return l;
+  }, [locales]);
+
   if (!data) {
     return <Spin />;
   }
@@ -457,9 +472,7 @@ export default () => {
                   id: 'language',
                   defaultMessage: 'language',
                 })}
-                valueEnum={locales
-                  .map((locale) => locale.split('-')[0])
-                  .reduce((a, v) => ({ ...a, [v]: v }), {})}
+                valueEnum={currentLocales}
                 initialValue={getLocale().split('-')[0]}
                 disabled={manageCourseEdit.disableEdit}
               />

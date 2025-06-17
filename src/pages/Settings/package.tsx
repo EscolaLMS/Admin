@@ -2,81 +2,10 @@ import { sortArrayByKey } from '@/utils/utils';
 import { EditOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Tag, Tooltip } from 'antd';
+import { Button, Modal, Tag, Tooltip } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 import PackageModalForm from './components/PackageModalForm';
-
-const columns: ProColumns<API.ConfigEntry>[] = [
-  {
-    title: <FormattedMessage id="key" defaultMessage="key" />,
-    dataIndex: 'key',
-    hideInSearch: false,
-    sorter: true,
-  },
-
-  {
-    title: <FormattedMessage id="readonly" defaultMessage="readonly" />,
-    dataIndex: 'readonly',
-    hideInForm: true,
-    hideInSearch: true,
-    sorter: true,
-    render: (_, record) => (
-      <Tag color={record.readonly ? 'success' : 'error'}>
-        <FormattedMessage
-          id={record.readonly ? 'true' : 'false'}
-          defaultMessage={record.readonly ? 'true' : 'false'}
-        />
-      </Tag>
-    ),
-  },
-
-  {
-    title: <FormattedMessage id="public" defaultMessage="public" />,
-    dataIndex: 'public',
-    hideInForm: true,
-    hideInSearch: true,
-    sorter: true,
-    render: (_, record) => (
-      <Tag color={record.public ? 'success' : 'error'}>
-        <FormattedMessage
-          id={record.public ? 'true' : 'false'}
-          defaultMessage={record.public ? 'true' : 'false'}
-        />
-      </Tag>
-    ),
-  },
-
-  {
-    title: <FormattedMessage id="value" defaultMessage="value" />,
-    dataIndex: 'value',
-    hideInForm: true,
-    hideInSearch: true,
-    render: (_, record) =>
-      typeof record.value === 'boolean' ? (
-        <Tag color={record.value ? 'success' : 'error'}>
-          <FormattedMessage
-            id={record.value ? 'true' : 'false'}
-            defaultMessage={record.value ? 'true' : 'false'}
-          />
-        </Tag>
-      ) : Array.isArray(record.value) ? (
-        record.value.map((item) =>
-          typeof item === 'object'
-            ? React.Children.toArray(
-                <p>
-                  {Object.keys(item)
-                    .map((key) => `${key}: ${item[key]}`)
-                    .join(', ')}
-                </p>,
-              )
-            : item,
-        )
-      ) : (
-        record.value
-      ),
-  },
-];
 
 const findNestedFields = (obj: object, searchKey: string, results: object[] = []) => {
   if (!obj || typeof obj !== 'object') {
@@ -103,12 +32,96 @@ const TableList: React.FC<{
 }> = ({ packageName, values, onValueUpdated }) => {
   const intl = useIntl();
   const [selectedEntry, setSelectedEntry] = useState<API.ConfigEntry>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState<string>('');
 
   const entries = useMemo(() => {
     const data: Record<string, API.Config> = values[packageName];
-
     return findNestedFields(data, 'rules');
   }, [values, packageName]);
+
+  const columns: ProColumns<API.ConfigEntry>[] = [
+    {
+      title: <FormattedMessage id="key" defaultMessage="key" />,
+      dataIndex: 'key',
+      hideInSearch: false,
+      sorter: true,
+    },
+    {
+      title: <FormattedMessage id="readonly" defaultMessage="readonly" />,
+      dataIndex: 'readonly',
+      hideInForm: true,
+      hideInSearch: true,
+      sorter: true,
+      render: (_, record) => (
+        <Tag color={record.readonly ? 'success' : 'error'}>
+          <FormattedMessage
+            id={record.readonly ? 'true' : 'false'}
+            defaultMessage={record.readonly ? 'true' : 'false'}
+          />
+        </Tag>
+      ),
+    },
+    {
+      title: <FormattedMessage id="public" defaultMessage="public" />,
+      dataIndex: 'public',
+      hideInForm: true,
+      hideInSearch: true,
+      sorter: true,
+      render: (_, record) => (
+        <Tag color={record.public ? 'success' : 'error'}>
+          <FormattedMessage
+            id={record.public ? 'true' : 'false'}
+            defaultMessage={record.public ? 'true' : 'false'}
+          />
+        </Tag>
+      ),
+    },
+    {
+      title: <FormattedMessage id="value" defaultMessage="value" />,
+      dataIndex: 'value',
+      hideInForm: true,
+      hideInSearch: true,
+      render: (_, record) => {
+        let displayValue = '';
+        if (typeof record.value === 'boolean') {
+          return (
+            <Tag color={record.value ? 'success' : 'error'}>
+              <FormattedMessage
+                id={record.value ? 'true' : 'false'}
+                defaultMessage={record.value ? 'true' : 'false'}
+              />
+            </Tag>
+          );
+        } else if (Array.isArray(record.value) || typeof record.value === 'object') {
+          displayValue = JSON.stringify(record.value, null, 2);
+        } else {
+          displayValue = String(record.value);
+        }
+
+        const truncated =
+          displayValue.length > 400 ? displayValue.slice(0, 400) + '...' : displayValue;
+
+        return (
+          <>
+            <span style={{ wordBreak: 'break-all' }}>{truncated}</span>
+            {displayValue.length > 400 && (
+              <Button
+                type="link"
+                size="small"
+                onClick={() => {
+                  setModalContent(displayValue);
+                  setModalVisible(true);
+                }}
+              >
+                Show more
+              </Button>
+            )}
+          </>
+        );
+      },
+    },
+  ];
 
   return (
     <React.Fragment>
@@ -174,6 +187,15 @@ const TableList: React.FC<{
           }}
         />
       )}
+      <Modal
+        open={modalVisible}
+        title="Full Value"
+        footer={null}
+        onCancel={() => setModalVisible(false)}
+        width={1200}
+      >
+        <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{modalContent}</pre>
+      </Modal>
     </React.Fragment>
   );
 };
