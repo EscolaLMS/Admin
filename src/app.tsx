@@ -13,7 +13,11 @@ import { FormattedMessage } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import RestrictedPage from './pages/403';
 import { packages } from './services/escola-lms/packages';
-import { publicSettings as fetchPublicSettings, settings } from './services/escola-lms/settings';
+import {
+  configs,
+  publicSettings as fetchPublicSettings,
+  settings,
+} from './services/escola-lms/settings';
 import { translations } from './services/escola-lms/translations';
 import './services/sentry';
 import { refreshTokenCallback } from './services/token_refresh';
@@ -38,6 +42,7 @@ export async function getInitialState(): Promise<{
   publicConfig?: API.PublicSettings;
   translations?: API.Translation[];
   packages?: Record<string, string>;
+  packagesConfigs?: API.Configs;
 }> {
   refreshTokenCallback();
   const fetchUserInfo = async () => {
@@ -93,6 +98,7 @@ export async function getInitialState(): Promise<{
 
   if (currentUser) {
     const config = await settings({ per_page: -1 });
+    const packagesConfig = await configs();
     const transl = await translations({ per_page: 10000, page: -1, current: -1, group: 'Admin' });
     const packs = await packages();
 
@@ -124,6 +130,7 @@ export async function getInitialState(): Promise<{
       settings: defaultSettings as Partial<LayoutSettings>,
       collapsed: false,
       packages: packs.success ? packs.data : {},
+      packagesConfigs: packagesConfig.success ? packagesConfig.data : {},
     };
   }
 

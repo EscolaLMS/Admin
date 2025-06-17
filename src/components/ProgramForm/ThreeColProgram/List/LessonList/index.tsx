@@ -70,8 +70,13 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
   // const config = initialState;
 
   const havePackageInstalled = useCallback(() => {
-    return createHavePackageInstalled(initialState?.packages);
+    const isRecomendarePackageEnabled =
+      initialState?.packagesConfigs?.escolalms_recommender?.enabled?.value;
+
+    const checkPackage = createHavePackageInstalled(initialState?.packages);
+    return isRecomendarePackageEnabled && checkPackage(PACKAGES.Recommender);
   }, [initialState?.packages]);
+
   useEffect(() => {
     setTreeData((prevState) => {
       const root: TreeItem = {
@@ -224,7 +229,7 @@ export const LessonList: React.FC<LessonListProps> = ({ onNewLesson }) => {
             <span className="title">{item.data.title}</span>
           </NavLink>
 
-          {havePackageInstalled(PACKAGES.Recommender) &&
+          {havePackageInstalled() &&
             courseId &&
             currentEditMode?.mode === 'topic' &&
             currentEditMode?.value?.lesson_id &&
