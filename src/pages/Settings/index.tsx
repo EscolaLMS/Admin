@@ -123,6 +123,7 @@ export default () => {
             }
           >
             <PackageForm
+              key={pkg + JSON.stringify(configs[pkg])}
               values={configs}
               packageName={pkg}
               onValueUpdated={() => refetchConfigs()}
