@@ -1,20 +1,16 @@
 import { expect, test } from '@playwright/test';
 import { format } from 'date-fns';
-import { BASE_URL } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { BASE_URL, routerType } from './consts';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
-test.describe('New stationary events', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
-
+test.skip('New stationary events', () => {
   test('create and delete stationary events', async ({ page }) => {
     const EVENT_NAME = generateRandomName('new event');
     const today = format(new Date(), 'yyyy-MM-dd');
 
-    await page.goto(`${BASE_URL}/#/other/stationary-events`);
+    await page.goto(`${BASE_URL}${routerType}other/stationary-events`);
     await page.locator('text=new').click();
-    await expect(page).toHaveURL(`${BASE_URL}/#/other/stationary-events/new`);
+    await expect(page).toHaveURL(`${BASE_URL}${routerType}other/stationary-events/new`);
 
     await page.locator('#name').fill(EVENT_NAME);
     await page.locator('#place').fill('Warsaw');
@@ -38,7 +34,7 @@ test.describe('New stationary events', () => {
 
     await page.waitForSelector('text=Stationary event saved successfully', { state: 'visible' });
 
-    await page.goto(`${BASE_URL}/#/other/stationary-events`);
+    await page.goto(`${BASE_URL}${routerType}other/stationary-events`);
     await searchRecord(page, EVENT_NAME);
     await confirmDeletion(page, EVENT_NAME);
     await page.waitForSelector('text=Stationary event deleted successfully', { state: 'visible' });

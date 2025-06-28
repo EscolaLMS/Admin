@@ -2,35 +2,24 @@
 const { spawn } = require('child_process');
 const { kill } = require('cross-port-killer');
 
-const env = Object.create(process.env);
-env.BROWSER = 'none';
-env.TEST = true;
-env.UMI_UI = 'none';
-env.PROGRESS = 'none';
-// flag to prevent multiple test
+const env = { ...process.env, BROWSER: 'none', TEST: 'true', UMI_UI: 'none', PROGRESS: 'none' };
 let once = false;
 
-const startServer = spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', ['run', 'serve'], {
+console.log('Starting development server for e2e tests...');
+
+const startServer = spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', ['run', 'dev'], {
   env,
 });
 
-startServer.stderr.on('data', (data) => {
-  // eslint-disable-next-line
-  console.log(data.toString());
-});
-
-startServer.on('exit', () => {
-  kill(process.env.PORT || 8000);
-});
-
-console.log('Starting development server for e2e tests...');
 startServer.stdout.on('data', (data) => {
-  console.log(data.toString());
-  // hack code , wait umi
-  if (!once && data.toString().indexOf('Serving your umi project!') >= 0) {
-    // eslint-disable-next-line
+  const output = data.toString();
+  console.log(output);
+
+  // Adjust based on actual Umi log output
+  if (!once && output.includes('Local:')) {
     once = true;
-    console.log('Development server is started, ready to run tests.');
+    console.log('Development server is ready, running tests...');
+
     const testCmd = spawn(
       /^win/.test(process.platform) ? 'npm.cmd' : 'npm',
       ['run', 'playwright'],
@@ -38,10 +27,20 @@ startServer.stdout.on('data', (data) => {
         stdio: 'inherit',
       },
     );
+
     testCmd.on('exit', (code) => {
-      console.log('服务已经退出，退出码：', code);
-      startServer.kill();
-      process.exit(code);
+      console.log('Tests completed, exit code:', code);
+      kill(process.env.PORT || 8000).then(() => {
+        process.kill(startServer.pid, 'SIGTERM');
+        process.exit(code);
+      });
     });
   }
+});
+
+startServer.stderr.on('data', (data) => console.error(data.toString()));
+
+startServer.on('exit', () => {
+  console.log('Server exited unexpectedly.');
+  kill(process.env.PORT || 8000);
 });
