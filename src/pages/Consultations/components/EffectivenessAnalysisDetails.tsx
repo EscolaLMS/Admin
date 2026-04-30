@@ -7,7 +7,7 @@ import type {
 } from '@/pages/Consultations/components/types';
 import { getAnalyticsChartFrames, getModelAnalytics } from '@/services/escola-lms/consultations';
 import {
-  ANALYSIS_COLORS, EmotionKey, formatRating, getLabelColorByValue,
+  ANALYSIS_COLORS, EmotionKey, formatRating,
   getRatingLabelColorByValue
 } from '@/utils/utils';
 import { PageContainer } from '@ant-design/pro-components';
@@ -15,12 +15,15 @@ import { Card, Col, Select, Space, Typography, message } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, Link, useParams, useSelectedRoutes } from 'umi';
+import {WarningOutlined} from "@ant-design/icons";
 
 const { Text } = Typography;
 
 const PageWrapper = styled.div`
   padding: 0;
   min-height: 100vh;
+  background: ${ANALYSIS_COLORS.bgLight};
+  border-radius: 10px;
 `;
 
 const StyledCard = styled(Card)`
@@ -65,6 +68,20 @@ const SectionTitle = styled(Text)`
   font-size: 16px;
 `;
 
+const VideoScreenWarning = styled.div`
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 10px;
+  color: ${ANALYSIS_COLORS.orange};
+`;
+
+const VideoScreenWarningText = styled(Text)`
+   margin: 0;
+   color: ${ANALYSIS_COLORS.orange};
+`;
+
+
 const TIME_OPTIONS = [
   { value: 15, label: <FormattedMessage id="time.seconds" values={{ value: 15 }} /> },
   { value: 30, label: <FormattedMessage id="time.seconds" values={{ value: 30 }} /> },
@@ -79,16 +96,10 @@ const EffectivenessAnalysisDetails = () => {
   const [analysisMeta, setAnalysisMeta] = useState<AnalysisMeta | null>(null);
   const [chartData, setChartData] = useState<ChartPoint[]>([]);
   const routes = useSelectedRoutes();
-  const color = useMemo(
-    () => getLabelColorByValue(analysisMeta?.rating ? analysisMeta.rating : 0),
-    [analysisMeta?.rating],
-  );
   const ratingColor = useMemo(
     () => getRatingLabelColorByValue(analysisMeta?.rating ? analysisMeta.rating : 0),
     [analysisMeta?.rating],
   );
-
-  console.log(color, 'color');
 
   const modelType = useMemo(() => {
     const currentRoute = routes[routes.length - 1]?.route as any;
@@ -220,7 +231,14 @@ const EffectivenessAnalysisDetails = () => {
               </Select>
             </ResolutionPicker>
           </ControlsRow>
-
+          {analysisMeta?.processing_video && (
+            <VideoScreenWarning>
+              <WarningOutlined/>
+              <VideoScreenWarningText>
+                <FormattedMessage id="ai_warn_video_buffer"/>
+                </VideoScreenWarningText>
+            </VideoScreenWarning>
+          )}
           {chartData && (
             <AnalysisCharts
               chartData={chartData}

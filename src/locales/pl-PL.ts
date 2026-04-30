@@ -235,6 +235,7 @@ export default {
   recording_will_be_deleted: 'Po tym czasie zostanie ono skasowane',
   engagement_rating: 'Ocena zaangażowania',
   ai_analysis_average: 'Średni wynik analizy AI dla całego nagrania {modelType}.',
+  ai_warn_video_buffer: "Video nagrania jest obecnie przetwarzane, zdjęcia podglądu nagrania na wykresie w poszczególnych przedziałach czasowych mogą być obecnie niedostępne. Spróbuj ponowanie za kilka minut.",
   consultationFragment: "konsultacji",
   webinarFragment: "webinaru",
   resolution: 'Rozdzielczość danych',
