@@ -262,7 +262,7 @@ export const EffectivenessAnalysis = ({
             page: current,
             date_from,
             date_to,
-            ...createTableOrderObject(sort, 'term'),
+            ...createTableOrderObject(sort, 'id'),
           });
 
           setLoading(false);
@@ -282,10 +282,6 @@ export const EffectivenessAnalysis = ({
         }
       }}
       columns={columns}
-      pagination={{
-        pageSize: 10,
-        showSizeChanger: true,
-      }}
     />
   );
 };
