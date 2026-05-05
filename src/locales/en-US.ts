@@ -160,6 +160,8 @@ export default {
   access: 'Access',
   answers: 'Answers',
   answer: 'Answer',
+  webinars: "Webinars",
+  'webinars.screenSaves': 'Screen saves',
   'menu.Webinars': 'Webinars',
   'menu.NewWebinar': 'New webinar',
   'menu.Courses': 'Courses',
