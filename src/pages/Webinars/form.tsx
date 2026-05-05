@@ -7,22 +7,23 @@ import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import ScreenSaves from '@/pages/Consultations/components/ScreenSaves';
+import { settings } from '@/services/escola-lms/settings';
 import { createWebinar, getWebinar, updateWebinar } from '@/services/escola-lms/webinars';
 import { splitImagePath, tagsArrToIds } from '@/utils/utils';
 import ProCard from '@ant-design/pro-card';
 import ProForm, {
   ProFormDateTimePicker,
-  ProFormSelect, ProFormSwitch,
+  ProFormSelect,
+  ProFormSwitch,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
+import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
-import ScreenSaves from "@/pages/Consultations/components/ScreenSaves";
-import {settings} from "@/services/escola-lms/settings";
-import moment from "moment";
 
 enum TabNames {
   ATTRIBUTES = 'attributes',
@@ -159,9 +160,7 @@ const WebinarForm = () => {
             },
             {
               path: '/',
-              breadcrumbName: intl.formatMessage({
-                id: String(data.name),
-              }),
+              breadcrumbName: String(data.name),
             },
             {
               path: String(tab),
@@ -459,7 +458,10 @@ const WebinarForm = () => {
             key={TabNames.SCREENSAVES}
             tab={<FormattedMessage id="webinars.screenSaves" />}
           >
-            <ScreenSaves webinar={Number(webinar)} webinarTimestamp={moment(data.active_to).unix()}/>
+            <ScreenSaves
+              webinar={Number(webinar)}
+              webinarTimestamp={moment(data.active_to).unix()}
+            />
           </ProCard.TabPane>
         )}
       </ProCard>

@@ -649,3 +649,29 @@ export const formatExpirationTime = (ms: number | null) => {
   const pad = (num: number) => num.toString().padStart(2, '0');
   return hours > 0 ? `${hours}h ${pad(minutes)}m ${pad(seconds)}s` : `${minutes}m ${pad(seconds)}s`;
 };
+
+export type SortableValue = string | number;
+export type SortAccessors<T> = Record<string, (item: T) => SortableValue>;
+
+export function applySort<T>(
+  data: T[],
+  sort: Record<string, 'ascend' | 'descend'> | undefined,
+  accessors: SortAccessors<T>,
+): T[] {
+  const sortArr = sort && Object.entries(sort)[0];
+  if (!sortArr) return data;
+
+  const [key, order] = sortArr;
+  const accessor = accessors[key];
+  if (!accessor) return data;
+
+  const asc = order === 'ascend';
+
+  return [...data].sort((a, b) => {
+    const valA = accessor(a);
+    const valB = accessor(b);
+    if (valA < valB) return asc ? -1 : 1;
+    if (valA > valB) return asc ? 1 : -1;
+    return 0;
+  });
+}

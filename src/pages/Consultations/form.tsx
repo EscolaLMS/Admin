@@ -2,7 +2,8 @@ import ProCard from '@ant-design/pro-card';
 import ProForm, {
   ProFormDatePicker,
   ProFormDigit,
-  ProFormSelect, ProFormSwitch,
+  ProFormSelect,
+  ProFormSwitch,
   ProFormText,
 } from '@ant-design/pro-form';
 import { Alert, Button, Col, Row, Spin } from 'antd';

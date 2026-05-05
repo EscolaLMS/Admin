@@ -6,7 +6,8 @@ import {
   createTableOrderObject,
   EMOTION_POOL,
   formatPercent,
-  getLabelColorByValue, getRatingLabelColorByValue,
+  getLabelColorByValue,
+  getRatingLabelColorByValue,
 } from '@/utils/utils';
 import { Link } from '@@/exports';
 import {
@@ -91,7 +92,13 @@ const ValueTag = React.memo(
       return isNaN(num) ? '0.00' : num.toFixed(2);
     }, [value, isRaw]);
 
-    const color = useMemo(() => rating ? getRatingLabelColorByValue(parseFloat(displayValue)) : getLabelColorByValue(parseFloat(displayValue)), [displayValue]);
+    const color = useMemo(
+      () =>
+        rating
+          ? getRatingLabelColorByValue(parseFloat(displayValue))
+          : getLabelColorByValue(parseFloat(displayValue)),
+      [displayValue],
+    );
 
     return (
       <StyledValueTag $color={color}>
@@ -126,8 +133,6 @@ export const EffectivenessAnalysis = ({
     },
     [modelType],
   );
-
-
 
   const columns: ProColumns<RecommenderTerm>[] = useMemo(
     () => [

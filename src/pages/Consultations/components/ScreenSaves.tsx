@@ -8,7 +8,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import FilesBrowser from '@/components/FilesBrowser';
-import { sortArrayByKey } from '@/utils/utils';
+import type { SortAccessors } from '@/utils/utils';
+import { applySort } from '@/utils/utils';
 
 const statusMap = {
   reported: 'warning',
@@ -28,6 +29,24 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
   const [webinarUsers, setWebinarUsers] = useState<API.UserItem[]>([]);
   const intl = useIntl();
   const resourceId = consultation || webinar;
+
+  const consultationSorters: SortAccessors<API.ConsultationAppointment> = useMemo(
+    () => ({
+      consultation_term_id: (i) => i.consultation_term_id ?? 0,
+      user: (i) => `${i.user?.first_name ?? ''} ${i.user?.last_name ?? ''}`.toLowerCase(),
+      date: (i) => new Date(i.date).getTime(),
+      status: (i) => i.status ?? '',
+    }),
+    [],
+  );
+
+  const webinarSorters: SortAccessors<API.UserItem> = useMemo(
+    () => ({
+      id: (i) => i.id ?? 0,
+      user: (i) => `${i.first_name ?? ''} ${i.last_name ?? ''}`.toLowerCase(),
+    }),
+    [],
+  );
 
   const consultationColumns = useMemo(
     (): ProColumns<API.ConsultationAppointment>[] => [
@@ -93,16 +112,13 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
         title: <FormattedMessage id="user" defaultMessage="user" />,
         dataIndex: 'user',
         sorter: true,
-        render: (_, item) =>
-          `${item.first_name ?? ''} ${item.last_name ?? ''} ${item.email ?? ''}`,
+        render: (_, item) => `${item.first_name ?? ''} ${item.last_name ?? ''} ${item.email ?? ''}`,
       },
       {
         title: <FormattedMessage id="active_to" />,
         dataIndex: 'active_to',
         render: () =>
-          webinarTimestamp
-            ? moment.unix(webinarTimestamp).format('YYYY-MM-DD HH:mm')
-            : '-',
+          webinarTimestamp ? moment.unix(webinarTimestamp).format('YYYY-MM-DD HH:mm') : '-',
       },
       {
         title: 'Analiza obrazu',
@@ -164,23 +180,10 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
         options={{
           reload: false,
         }}
-        dataSource={appointments}
         request={async (_params, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
-          let filteredData = appointments.filter((item) => item.status === 'approved');
-
-          if (sortArr) {
-            filteredData = sortArrayByKey<API.ConsultationAppointment>(
-              filteredData,
-              sortArr[0],
-              sortArr[1] !== 'ascend',
-            );
-          }
-          return {
-            data: filteredData,
-            total: filteredData.length,
-            success: true,
-          };
+          const filtered = appointments.filter((item) => item.status === 'approved');
+          const data = applySort(filtered, sort as any, consultationSorters);
+          return { data, total: data.length, success: true };
         }}
         columns={consultationColumns}
       />
@@ -200,23 +203,9 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
         options={{
           reload: false,
         }}
-        dataSource={webinarUsers}
         request={async (_params, sort) => {
-          const sortArr = sort && Object.entries(sort)[0];
-          let filteredData = [...webinarUsers];
-
-          if (sortArr) {
-            filteredData = sortArrayByKey<API.UserItem>(
-              filteredData,
-              sortArr[0],
-              sortArr[1] !== 'ascend',
-            );
-          }
-          return {
-            data: filteredData,
-            total: filteredData.length,
-            success: true,
-          };
+          const data = applySort(webinarUsers, sort as any, webinarSorters);
+          return { data, total: data.length, success: true };
         }}
         columns={webinarColumns}
       />
