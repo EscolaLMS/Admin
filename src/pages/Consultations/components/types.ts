@@ -4,6 +4,7 @@ export interface AnalysisMeta {
   rating: number;
   url: string | null;
   url_expiration_time_millis: number | null;
+  processing_video?: boolean;
 }
 
 export interface AnalysisData {

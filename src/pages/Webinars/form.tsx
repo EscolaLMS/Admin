@@ -20,6 +20,9 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Alert, Button, Col, Row, Spin, message } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, history, useIntl, useParams } from 'umi';
+import ScreenSaves from "@/pages/Consultations/components/ScreenSaves";
+import {settings} from "@/services/escola-lms/settings";
+import moment from "moment";
 
 enum TabNames {
   ATTRIBUTES = 'attributes',
@@ -28,6 +31,7 @@ enum TabNames {
   TAGS = 'tags',
   BRANDING = 'branding',
   USER_SUBMISSION = 'user_submission',
+  SCREENSAVES = 'screensaves',
 }
 
 const WebinarForm = () => {
@@ -37,10 +41,15 @@ const WebinarForm = () => {
   const isNew = webinar === 'new';
   const [data, setData] = useState<Partial<API.Webinar>>();
   const { manageCourseEdit, setManageCourseEdit, validateCourseEdit } = useValidateFormEdit();
-
+  const [showScreenSaves, setShowScreenSaves] = useState<boolean>(false);
   const [form] = ProForm.useForm();
 
   const fetchData = useCallback(async () => {
+    const config = await settings({ per_page: -1 });
+
+    if ('data' in config) {
+      setShowScreenSaves(config.data.find((c) => c.key === 'show_screen_saves')?.value === '1');
+    }
     const response = await getWebinar(Number(webinar));
     if (response.success) {
       if (tab === TabNames.ATTRIBUTES) {
@@ -443,6 +452,14 @@ const WebinarForm = () => {
             disabled={manageCourseEdit.disableEdit}
           >
             {webinar && <UserSubmissions id={Number(webinar)} type="App\Models\Webinar" />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && showScreenSaves && (
+          <ProCard.TabPane
+            key={TabNames.SCREENSAVES}
+            tab={<FormattedMessage id="webinars.screenSaves" />}
+          >
+            <ScreenSaves webinar={Number(webinar)} webinarTimestamp={moment(data.active_to).unix()}/>
           </ProCard.TabPane>
         )}
       </ProCard>
