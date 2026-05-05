@@ -188,6 +188,7 @@ const WebinarForm = () => {
           },
         }}
       >
+
         <ProCard.TabPane key={TabNames.ATTRIBUTES} tab={<FormattedMessage id="attributes" />}>
           {manageCourseEdit.disableEdit && (
             <Alert
