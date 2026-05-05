@@ -7,15 +7,17 @@ import type {
 } from '@/pages/Consultations/components/types';
 import { getAnalyticsChartFrames, getModelAnalytics } from '@/services/escola-lms/consultations';
 import {
-  ANALYSIS_COLORS, EmotionKey, formatRating,
-  getRatingLabelColorByValue
+  ANALYSIS_COLORS,
+  EmotionKey,
+  formatRating,
+  getRatingLabelColorByValue,
 } from '@/utils/utils';
+import { WarningOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Col, Select, Space, Typography, message } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, Link, useParams, useSelectedRoutes } from 'umi';
-import {WarningOutlined} from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -69,18 +71,17 @@ const SectionTitle = styled(Text)`
 `;
 
 const VideoScreenWarning = styled.div`
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   color: ${ANALYSIS_COLORS.orange};
 `;
 
 const VideoScreenWarningText = styled(Text)`
-   margin: 0;
-   color: ${ANALYSIS_COLORS.orange};
+  margin: 0;
+  color: ${ANALYSIS_COLORS.orange};
 `;
-
 
 const TIME_OPTIONS = [
   { value: 15, label: <FormattedMessage id="time.seconds" values={{ value: 15 }} /> },
@@ -207,12 +208,18 @@ const EffectivenessAnalysisDetails = () => {
                 <FormattedMessage id="engagement_rating" />
               </SectionTitle>
               <Space size="large">
-                <RatingValue color={ratingColor}>{formatRating(analysisMeta?.rating || 0)}</RatingValue>
+                <RatingValue color={ratingColor}>
+                  {formatRating(analysisMeta?.rating || 0)}
+                </RatingValue>
                 <RatingDescription type="secondary">
                   <FormattedMessage
                     id="ai_analysis_average"
                     values={{
-                      modelType: <FormattedMessage id={modelType === 'webinar' ? "webinarFragment" : "consultationFragment"}/>,
+                      modelType: (
+                        <FormattedMessage
+                          id={modelType === 'webinar' ? 'webinarFragment' : 'consultationFragment'}
+                        />
+                      ),
                     }}
                   />
                 </RatingDescription>
@@ -233,10 +240,10 @@ const EffectivenessAnalysisDetails = () => {
           </ControlsRow>
           {analysisMeta?.processing_video && (
             <VideoScreenWarning>
-              <WarningOutlined/>
+              <WarningOutlined />
               <VideoScreenWarningText>
-                <FormattedMessage id="ai_warn_video_buffer"/>
-                </VideoScreenWarningText>
+                <FormattedMessage id="ai_warn_video_buffer" />
+              </VideoScreenWarningText>
             </VideoScreenWarning>
           )}
           {chartData && (

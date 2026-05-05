@@ -70,15 +70,9 @@ export async function generateYoutubeToken(body?: { email: string }, options?: A
 }
 
 /**  GET /api/admin/webinars/:webinarId/users */
-export async function getWebinarUsers(
-  webinarId: number,
-  options?: AxiosRequestConfig,
-) {
-  return request<API.DefaultResponse<API.UserItem[]>>(
-    `/api/admin/webinars/${webinarId}/users`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
+export async function getWebinarUsers(webinarId: number, options?: AxiosRequestConfig) {
+  return request<API.DefaultResponse<API.UserItem[]>>(`/api/admin/webinars/${webinarId}/users`, {
+    method: 'GET',
+    ...(options || {}),
+  });
 }
