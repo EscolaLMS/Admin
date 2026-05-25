@@ -187,7 +187,7 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
               page: params.current,
               per_page: params.pageSize,
               ...(sortField && {
-                order_by: sortField === 'user' ? 'first_name' : sortField,
+                order_by: sortField === 'user' ? 'last_name' : sortField,
                 order: sortOrder === 'ascend' ? 'asc' : 'desc',
               }),
             },
