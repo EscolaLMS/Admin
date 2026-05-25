@@ -26,7 +26,6 @@ interface Props {
 const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [appointments, setAppointments] = useState<API.ConsultationAppointment[]>([]);
-  const [webinarUsers, setWebinarUsers] = useState<API.UserItem[]>([]);
   const intl = useIntl();
   const resourceId = consultation || webinar;
 
@@ -36,14 +35,6 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
       user: (i) => `${i.user?.first_name ?? ''} ${i.user?.last_name ?? ''}`.toLowerCase(),
       date: (i) => new Date(i.date).getTime(),
       status: (i) => i.status ?? '',
-    }),
-    [],
-  );
-
-  const webinarSorters: SortAccessors<API.UserItem> = useMemo(
-    () => ({
-      id: (i) => i.id ?? 0,
-      user: (i) => `${i.first_name ?? ''} ${i.last_name ?? ''}`.toLowerCase(),
     }),
     [],
   );
@@ -132,54 +123,41 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
         ),
       },
     ],
-    [resourceId],
+    [resourceId, webinarTimestamp],
   );
 
-  const fetchData = useCallback(() => {
-    if (!resourceId) return;
+  const fetchConsultations = useCallback(() => {
+    if (!consultation) return;
 
     setLoading(true);
-
-    const promise = consultation
-      ? getConsultationSchedule(consultation)
-      : getWebinarUsers(webinar as number);
-
-    promise
+    getConsultationSchedule(consultation)
       .then((response) => {
         if (!response?.success) return;
-        if (consultation) {
-          setAppointments(response.data as API.ConsultationAppointment[]);
-        } else {
-          setWebinarUsers(response.data as API.UserItem[]);
-        }
+        setAppointments(response.data as API.ConsultationAppointment[]);
       })
       .catch(() => {
         message.error(<FormattedMessage id="error" defaultMessage="error" />);
       })
       .finally(() => setLoading(false));
-  }, [consultation, webinar, resourceId]);
+  }, [consultation]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  if (loading) {
-    return <Spin />;
-  }
+    fetchConsultations();
+  }, [fetchConsultations]);
 
   if (consultation) {
+    if (loading) return <Spin />;
+
     return (
       <ProTable<API.ConsultationAppointment>
         headerTitle={intl.formatMessage({
           id: 'Consultations',
           defaultMessage: 'Consultations',
         })}
-        loading={loading}
         rowKey="consultation_term_id"
+        pagination={{ defaultPageSize: 15 }}
         search={false}
-        options={{
-          reload: false,
-        }}
+        options={{ reload: false }}
         request={async (_params, sort) => {
           const filtered = appointments.filter((item) => item.status === 'approved');
           const data = applySort(filtered, sort as any, consultationSorters);
@@ -197,15 +175,33 @@ const ScreenSaves: React.FC<Props> = ({ consultation, webinar, webinarTimestamp 
           id: 'Webinars',
           defaultMessage: 'Webinars',
         })}
-        loading={loading}
         rowKey="id"
+        pagination={{ defaultPageSize: 15 }}
         search={false}
-        options={{
-          reload: false,
-        }}
-        request={async (_params, sort) => {
-          const data = applySort(webinarUsers, sort as any, webinarSorters);
-          return { data, total: data.length, success: true };
+        options={{ reload: false }}
+        request={async (params, sort) => {
+          const [sortField, sortOrder] = Object.entries(sort)[0] ?? [];
+
+          const response = await getWebinarUsers(webinar, {
+            params: {
+              page: params.current,
+              per_page: params.pageSize,
+              ...(sortField && {
+                order_by: sortField === 'user' ? 'first_name' : sortField,
+                order: sortOrder === 'ascend' ? 'asc' : 'desc',
+              }),
+            },
+          });
+
+          if (!response?.success) {
+            return { data: [], total: 0, success: false };
+          }
+
+          return {
+            data: response.data as API.UserItem[],
+            total: response.meta?.total ?? response.data.length,
+            success: true,
+          };
         }}
         columns={webinarColumns}
       />
