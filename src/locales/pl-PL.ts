@@ -660,6 +660,9 @@ export default {
   max_score: 'Wynik maksymalny',
   gift_quiz: 'GIFT Quiz',
   quiz_report_details: 'Szczegóły raportu z quizu',
+  tutor_feedback: 'Komentarz prowadzącego',
+  no_comment: 'Brak komentarza',
+  edit_comment: 'Edytuj komentarz',
   'gift_type.multiple_choice': 'Wielokrotnego wyboru',
   'gift_type.multiple_choice_with_multiple_right_answers':
     'Wielokrotnego wyboru z wieloma właściwymi odpowiedziami',

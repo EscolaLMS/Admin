@@ -27,3 +27,21 @@ export async function deleteProjectSolution(id: number, options?: AxiosRequestCo
     },
   );
 }
+
+export async function updateProjectSolution(
+  id: number,
+  body: API.UpdateProjectSolution,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.ProjectSolution>>(
+    `/api/admin/topic-project-solutions/${id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  );
+}

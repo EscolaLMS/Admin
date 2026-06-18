@@ -52,6 +52,19 @@ export async function getQuizAttemptDetails(id: string | number, options?: Axios
   });
 }
 
+/** PATCH /api/admin/quiz-attempts/{id} */
+export async function updateQuizAttempt(
+  id: string | number,
+  body: API.UpdateQuizAttempt,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.QuizAttemptDetails>>(`/api/admin/quiz-attempts/${id}`, {
+    method: 'PATCH',
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** PATCH /api/admin/quiz-answers/{id} */
 export async function updateQuizAnswer(
   answer_id: number,

@@ -51,7 +51,7 @@ const QuizDetails: React.FC = () => {
         {!data && error && <pre>{JSON.stringify(error)}</pre>}
         {data && (
           <>
-            <QuizReportDetailsDescription data={data} />
+            <QuizReportDetailsDescription data={data} refreshData={fetchQuizAttempt} />
             {!!data.questions.length && (
               <Space direction="vertical">
                 <Typography.Text strong>
