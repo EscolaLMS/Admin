@@ -3,7 +3,7 @@ import { Button, Input, Space, Typography, message } from 'antd';
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
-const MAX_LENGTH = 2000;
+import { TUTOR_FEEDBACK_MAX_LENGTH, normalizeTutorFeedback } from '@/utils/utils';
 
 interface Props {
   value?: string | null;
@@ -23,10 +23,9 @@ const TutorFeedback: React.FC<Props> = ({ value, editable = false, onSave }) => 
   }, [value]);
 
   const handleSave = useCallback(async () => {
-    const trimmed = text.trim();
     setSubmitting(true);
     try {
-      const success = await onSave(trimmed.length ? trimmed : null);
+      const success = await onSave(normalizeTutorFeedback(text));
       if (success) {
         message.success(intl.formatMessage({ id: 'success', defaultMessage: 'success' }));
         setEditing(false);
@@ -47,7 +46,7 @@ const TutorFeedback: React.FC<Props> = ({ value, editable = false, onSave }) => 
           value={text}
           onChange={(e) => setText(e.target.value)}
           autoSize={{ minRows: 3, maxRows: 8 }}
-          maxLength={MAX_LENGTH}
+          maxLength={TUTOR_FEEDBACK_MAX_LENGTH}
           showCount
           disabled={submitting}
           placeholder={intl.formatMessage({

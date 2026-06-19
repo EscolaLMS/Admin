@@ -4,6 +4,7 @@ import React, { useCallback, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import { updateProjectSolution } from '@/services/escola-lms/projects';
+import { TUTOR_FEEDBACK_MAX_LENGTH, normalizeTutorFeedback } from '@/utils/utils';
 
 interface FormData {
   tutor_feedback: string;
@@ -25,9 +26,8 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
   const onFinish = useCallback(
     async (formData: FormData) => {
       if (solution?.id === undefined) return;
-      const value = formData.tutor_feedback?.trim();
       const res = await updateProjectSolution(solution.id, {
-        tutor_feedback: value && value.length ? value : null,
+        tutor_feedback: normalizeTutorFeedback(formData.tutor_feedback),
       });
 
       if (!res.success) {
@@ -62,7 +62,7 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
         name="tutor_feedback"
         label={<FormattedMessage id="tutor_feedback" defaultMessage="Lecturer comment" />}
         fieldProps={{
-          maxLength: 2000,
+          maxLength: TUTOR_FEEDBACK_MAX_LENGTH,
           showCount: true,
           autoSize: { minRows: 4, maxRows: 10 },
         }}
