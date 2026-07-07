@@ -19,8 +19,8 @@ const QuizReportDetailsDescription: React.FC<Props> = ({ data }) => (
       <Descriptions.Item span={3} label={<FormattedMessage id="ID" defaultMessage="ID" />}>
         {data.id}
       </Descriptions.Item>
-      <Descriptions.Item span={3} label={<FormattedMessage id="title" defaultMessage="title" />}>
-        {data.topic.title}
+      <Descriptions.Item span={3} label={<FormattedMessage id="title" defaultMessage="Title" />}>
+        {data.topic?.title}
       </Descriptions.Item>
       <Descriptions.Item
         span={1.5}
