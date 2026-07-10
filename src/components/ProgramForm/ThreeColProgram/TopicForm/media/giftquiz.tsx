@@ -1,18 +1,29 @@
 import { Table } from '@/components/GiftQuizQuestions/table';
-import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
+import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+
+type QuizChangeKey =
+  | 'max_attempts'
+  | 'max_execution_time'
+  | 'min_pass_score'
+  | typeof GRADEBOOK_FIELDS.flag
+  | typeof GRADEBOOK_FIELDS.weight;
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
-  onChange: (key: 'max_attempts' | 'max_execution_time', value: number | null) => void;
+  onChange: (key: QuizChangeKey, value: number | boolean | null) => void;
   onAdded?: () => void;
   onRemoved?: () => void;
   onEdited?: () => void;
 }> = ({ topicable, onAdded, onRemoved, onEdited, onChange }) => {
   const intl = useIntl();
+  const [addToGradebook, setAddToGradebook] = useState<boolean>(
+    Boolean(topicable?.add_to_gradebook),
+  );
 
   return (
     <Fragment>
@@ -21,12 +32,16 @@ export const GiftQuiz: React.FC<{
           max_attempts: topicable ? topicable.max_attempts : undefined,
           max_execution_time: topicable ? topicable.max_execution_time : undefined,
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
+          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.add_to_gradebook),
+          [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={(values) => {
-          const key = Object.keys(values)[0] as 'max_attempts' | 'max_execution_time';
-          if (key) {
-            onChange(key, values[key]);
+          const key = Object.keys(values)[0] as QuizChangeKey;
+          if (!key) return;
+          if (key === GRADEBOOK_FIELDS.flag) {
+            setAddToGradebook(Boolean(values[key]));
           }
+          onChange(key, values[key]);
         }}
         submitter={false}
       >
@@ -59,6 +74,52 @@ export const GiftQuiz: React.FC<{
               defaultMessage: 'min_pass_score',
             })}
           />
+        </ProFormGroup>
+        <ProFormGroup>
+          <ProFormSwitch
+            name={GRADEBOOK_FIELDS.flag}
+            label={
+              <FormattedMessage id="add_to_gradebook" defaultMessage="Add grade to gradebook" />
+            }
+            tooltip={
+              <FormattedMessage
+                id="add_to_gradebook_tooltip"
+                defaultMessage="When enabled, this grade is counted in the subject gradebook."
+              />
+            }
+          />
+          {addToGradebook && (
+            <ProFormDigit
+              name={GRADEBOOK_FIELDS.weight}
+              label={<FormattedMessage id="grade_weight" defaultMessage="Grade weight" />}
+              tooltip={
+                <FormattedMessage id="grade_weight_tooltip" defaultMessage="Default weight is 1." />
+              }
+              extra={
+                <FormattedMessage
+                  id="grade_weight_default_hint"
+                  defaultMessage="Default weight is 1."
+                />
+              }
+              min={0}
+              fieldProps={{ step: 0.25, precision: 2 }}
+              rules={[
+                {
+                  validator: (_rule, value) =>
+                    value === undefined || value === null || Number(value) > 0
+                      ? Promise.resolve()
+                      : Promise.reject(
+                          new Error(
+                            intl.formatMessage({
+                              id: 'grade_weight_must_be_positive',
+                              defaultMessage: 'Weight must be greater than 0.',
+                            }),
+                          ),
+                        ),
+                },
+              ]}
+            />
+          )}
         </ProFormGroup>
       </ProForm>
 

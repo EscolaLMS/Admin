@@ -14,7 +14,13 @@ export type ClassRegisterTableItemFinalGrade = Record<
   API.FinalGradeItemGrade
 >;
 
+export type ClassRegisterTableItemGradebook = Record<
+  `gradebook-${string}`,
+  API.GroupGradebookStudentGrade
+>;
+
 export type ClassRegisterTableItem = ClassRegisterTableItemBase &
   ClassRegisterTableItemAttendance &
   ClassRegisterTableItemExamResult &
-  ClassRegisterTableItemFinalGrade;
+  ClassRegisterTableItemFinalGrade &
+  ClassRegisterTableItemGradebook;

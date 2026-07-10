@@ -914,4 +914,21 @@ export default {
   app_store_tooltip: 'Identyfikator produktu w App Store dla płatności mobilnej',
   play_store: 'Identyfikator w Play Store',
   play_store_tooltip: 'Identyfikator produktu w Play Store dla płatności mobilnej',
+
+  // AN-8 — dziennik ocen przedmiotu (oceny z quizów/projektów)
+  gradebook: 'Dziennik ocen',
+  gradebookColumnTitle: '{title} (×{weight})',
+  add_to_gradebook: 'Dodaj ocenę do dziennika',
+  add_to_gradebook_tooltip: 'Gdy włączone, ocena jest liczona w dzienniku ocen przedmiotu.',
+  grade_weight: 'Waga oceny',
+  grade_weight_tooltip: 'Domyślna waga to 1.',
+  grade_weight_default_hint: 'Domyślna waga to 1.',
+  grade_weight_must_be_positive: 'Waga musi być większa niż 0.',
+  'gradebook.passed': 'Zaliczony',
+  'gradebook.failed': 'Niezaliczony',
+  'gradebook.pass_fail': 'Zaliczenie',
+  'gradebook.no_course_grades': 'Brak ocen z quizów i projektów.',
+  'gradebook.course_grades_title': 'Oceny z quizów i projektów',
+  'gradebook.type.GiftQuiz': 'Quiz',
+  'gradebook.type.Project': 'Projekt',
 };

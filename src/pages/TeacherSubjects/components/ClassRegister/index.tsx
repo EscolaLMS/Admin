@@ -14,6 +14,7 @@ import {
 } from '@/services/escola-lms/attendances';
 import { AttendanceValue } from '@/services/escola-lms/enums';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
+import { getGroupGradebook as fetchGroupGradebook } from '@/services/escola-lms/gradebook';
 import {
   getGradeTerms as fetchGradeTerms,
   getGroupFinalGrades as fetchGroupFinalGrades,
@@ -37,9 +38,11 @@ import {
   getExamsCols,
   getFinalGrades,
   getFinalGradesCols,
+  getGradebookCols,
   getStudentAttendances,
   getStudentExamResults,
   getStudentFinalGrades,
+  getStudentGradebookGrades,
   isGroupStudent,
 } from './utils';
 
@@ -250,7 +253,18 @@ export const ClassRegister: React.FC = () => {
             }
             setSelectedGroupName(selectedGroup.label);
 
-            /* Group-wide source of truth for the bulk "mark group" summary row:
+            // AN-8 gradebook (flagged quiz/project grades). Fetched independently with a
+          // fallback so a not-yet-available endpoint never breaks the class register.
+          const gradebookRes = await fetchGroupGradebook({
+            group_id,
+            semester_subject_id,
+          }).catch(() => null);
+          const gradebook: API.GroupGradebook =
+            gradebookRes?.success && gradebookRes.data
+              ? gradebookRes.data
+              : { columns: [], students: [] };
+
+          /* Group-wide source of truth for the bulk "mark group" summary row:
              the full roster (teacher-filtered, but independent of the name
              search) plus the current attendance value per schedule/student. */
             const groupStudents = studentUserGroupRes.data.users.filter(
@@ -287,19 +301,21 @@ export const ClassRegister: React.FC = () => {
               gradeTermsRes.data,
               subjectGradeScalesRes.data,
             );
+          const gradebookCols = getGradebookCols(gradebook.columns);
 
             setDynamicCols([
               attendanceCols,
               examsCols,
-              finalGradeCols,
-              {
-                title: <FormattedMessage id="proposed_grade" />,
-                hideInSearch: true,
-                dataIndex: 'proposed_grade',
-                align: 'center',
-                width: 100,
-              },
-            ]);
+              gradebookCols,
+            finalGradeCols,
+            {
+              title: <FormattedMessage id="proposed_grade" />,
+              hideInSearch: true,
+              dataIndex: 'proposed_grade',
+              align: 'center',
+              width: 100,
+            },
+          ]);
 
             const data = studentUserGroupRes.data.users
               .reduce<ClassRegisterTableItem[]>(
@@ -333,13 +349,16 @@ export const ClassRegister: React.FC = () => {
 
                   const finalGrades = getFinalGrades(studentFinalGrades);
 
-                  return [
-                    ...acc,
-                    {
-                      id,
-                      full_name: studentFullName,
-                      ...studentAttendances,
-                      ...studentExamResults,
+                  const gradebookGrades = getStudentGradebookGrades(gradebook, id);
+
+                return [
+                  ...acc,
+                  {
+                    id,
+                    full_name: studentFullName,
+                    ...studentAttendances,
+                    ...studentExamResults,
+                    ...gradebookGrades,
                       ...finalGrades,
                       proposed_grade,
                       final_grades: studentFinalGrades,

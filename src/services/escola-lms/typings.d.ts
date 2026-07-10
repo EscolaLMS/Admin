@@ -567,7 +567,13 @@ declare namespace API {
 
   type TopicProject = TopicBase & {
     topicable_type: TopicType.Project;
-    topicable: TopicableBase & { notify_users?: string[] };
+    topicable: TopicableBase & {
+      notify_users?: string[];
+      // AN-8 gradebook: whether this project's grade is counted in the subject gradebook
+      // and the weight it carries there (default 1). See consts/gradebook.ts.
+      add_to_gradebook?: boolean;
+      grade_weight?: number;
+    };
   };
 
   type TopicQuiz = TopicBase & {
@@ -577,6 +583,10 @@ declare namespace API {
       max_attempts?: number;
       max_execution_time?: number;
       min_pass_score?: number;
+      // AN-8 gradebook: whether this quiz's grade is counted in the subject gradebook
+      // and the weight it carries there (default 1). See consts/gradebook.ts.
+      add_to_gradebook?: boolean;
+      grade_weight?: number;
     };
   };
 
@@ -1901,6 +1911,70 @@ declare namespace API {
 
   type UpdateFinalGradeRequest = {
     grade_scale_id: number;
+  };
+
+  /* ── AN-8: Subject gradebook (quiz/project grades) ───────────────────────────
+     All shapes below describe the *assumed* backend contract consumed by the
+     gradebook feature (see consts/gradebook.ts). Adjust to match the real API
+     when the separate backend tasks land. */
+
+  /** A single quiz/project grade for one student within one course. */
+  type StudentCourseGrade = {
+    topic_id: number;
+    topic_title: string;
+    /** short type name, e.g. "GiftQuiz" | "Project" */
+    topicable_type: string;
+    /** the score/points; null when not yet graded */
+    grade: number | string | null;
+    /** pass/fail for this item; null when not applicable/graded */
+    passed: boolean | null;
+    /** whether this item is included in the gradebook (the checkbox state) */
+    add_to_gradebook: boolean;
+    /** weight the grade carries in the gradebook (default 1) */
+    grade_weight: number;
+  };
+
+  /** All quiz/project grades for one student, grouped per course. */
+  type StudentCourseGrades = {
+    course_id: number;
+    course_title: string;
+    grades: StudentCourseGrade[];
+  };
+
+  type StudentCourseGradesParams = {
+    user_id: number;
+    group_id?: number;
+    semester_subject_id?: number;
+  };
+
+  /** One gradebook column (a flagged quiz/project topic) shared by all students. */
+  type GroupGradebookColumn = {
+    topic_id: number;
+    topic_title: string;
+    topicable_type: string;
+    grade_weight: number;
+  };
+
+  type GroupGradebookStudentGrade = {
+    topic_id: number;
+    grade: number | string | null;
+    passed: boolean | null;
+  };
+
+  type GroupGradebookStudent = {
+    user_id: number;
+    grades: GroupGradebookStudentGrade[];
+  };
+
+  /** Group-level gradebook: only flagged (add_to_gradebook) items are present. */
+  type GroupGradebook = {
+    columns: GroupGradebookColumn[];
+    students: GroupGradebookStudent[];
+  };
+
+  type GroupGradebookParams = {
+    group_id: number;
+    semester_subject_id?: number;
   };
 
   type LessonTopicId = number;

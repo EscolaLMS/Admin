@@ -3,7 +3,7 @@ import { DAY_FORMAT } from '@/consts/dates';
 import { ExamGradeType } from '@/services/escola-lms/enums';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
-import { Checkbox, Space, Table, Tooltip } from 'antd';
+import { Checkbox, Space, Table, Tooltip, Typography } from 'antd';
 import { format } from 'date-fns';
 import React from 'react';
 import { FormattedMessage } from 'umi';
@@ -15,6 +15,7 @@ import type {
   ClassRegisterTableItemAttendance,
   ClassRegisterTableItemExamResult,
   ClassRegisterTableItemFinalGrade,
+  ClassRegisterTableItemGradebook,
 } from './types';
 
 /* Attendance */
@@ -242,6 +243,50 @@ export const getFinalGradesCols = (
     ),
   })),
 });
+
+/* Gradebook (AN-8) — only flagged quiz/project items reach `columns` from the backend */
+export const getGradebookCols = (
+  gradebookColumns: API.GroupGradebookColumn[],
+): ProColumns<ClassRegisterTableItem> => {
+  const dynamicCols = gradebookColumns.map<ProColumns<ClassRegisterTableItem>>((col) => ({
+    dataIndex: `gradebook-${col.topic_id}`,
+    title: (
+      <FormattedMessage
+        id="gradebookColumnTitle"
+        defaultMessage="{title} (×{weight})"
+        values={{ title: col.topic_title, weight: col.grade_weight }}
+      />
+    ),
+    hideInSearch: true,
+    width: 120,
+    align: 'center',
+    render: (_n, record) => {
+      const item = record[`gradebook-${col.topic_id}`];
+      if (!item || item.grade === null || item.grade === undefined) return '-';
+      const textType =
+        item.passed === true ? 'success' : item.passed === false ? 'danger' : undefined;
+      return <Typography.Text type={textType}>{item.grade}</Typography.Text>;
+    },
+  }));
+
+  if (!dynamicCols.length)
+    return { title: <FormattedMessage id="gradebook" />, hideInSearch: true, hideInTable: true };
+
+  return { title: <FormattedMessage id="gradebook" />, hideInSearch: true, children: dynamicCols };
+};
+
+export const getStudentGradebookGrades = (
+  gradebook: API.GroupGradebook,
+  student_id: number,
+): ClassRegisterTableItemGradebook => {
+  const student = gradebook.students.find(({ user_id }) => user_id === student_id);
+  if (!student) return {};
+
+  return student.grades.reduce<ClassRegisterTableItemGradebook>(
+    (acc, grade) => ({ ...acc, [`gradebook-${grade.topic_id}`]: grade }),
+    {},
+  );
+};
 
 export const getStudentFinalGrades = (
   finalGrades: API.FinalGradeItem[],
