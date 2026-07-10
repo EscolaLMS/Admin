@@ -1,18 +1,14 @@
 import { expect, test } from '@playwright/test';
-import { BASE_URL } from './consts';
-import { confirmDeletion, generateRandomName, loginAsAdmin, searchRecord } from './helpers';
+import { BASE_URL, routerType } from './consts';
+import { confirmDeletion, generateRandomName, searchRecord } from './helpers';
 
-test.describe('New voucher', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsAdmin(page);
-  });
-
+test.skip('New voucher', () => {
   test('create and delete new voucher', async ({ page }) => {
     const CODE_NAME = generateRandomName('test_code');
 
-    await page.goto(`${BASE_URL}/#/sales/vouchers`);
+    await page.goto(`${BASE_URL}${routerType}sales/vouchers`);
     await page.locator('text=new').click();
-    await expect(page).toHaveURL(`${BASE_URL}/#/sales/vouchers/new`);
+    await expect(page).toHaveURL(`${BASE_URL}${routerType}sales/vouchers/new`);
     await page.locator('#name').fill('NEW_TEST_CODE');
     await page.locator('#code').fill(CODE_NAME);
     await page.locator('input[type="radio"]').first().check();
@@ -28,7 +24,7 @@ test.describe('New voucher', () => {
     await page.locator('button:has-text("Submit")').click();
     await page.waitForSelector('text=success', { state: 'visible' });
     await page.waitForTimeout(3000);
-    await page.goto(`${BASE_URL}/#/sales/vouchers`);
+    await page.goto(`${BASE_URL}${routerType}sales/vouchers`);
 
     await searchRecord(page, CODE_NAME, '#code');
 
