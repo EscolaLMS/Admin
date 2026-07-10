@@ -8,7 +8,7 @@ import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import PERMISSIONS from '@/consts/permissions';
 import { usePermissions } from '@/hooks/usePermissions';
-import { updateQuizAttempt } from '@/services/escola-lms/gift_quiz';
+import { updateQuizAttemptFeedback } from '@/services/escola-lms/gift_quiz';
 
 interface Props {
   data: API.QuizAttemptDetails;
@@ -20,7 +20,7 @@ const QuizReportDetailsDescription: React.FC<Props> = ({ data, refreshData }) =>
 
   const handleSaveFeedback = useCallback(
     async (value: string | null) => {
-      const res = await updateQuizAttempt(data.id, { tutor_feedback: value });
+      const res = await updateQuizAttemptFeedback(data.id, { feedback: value });
       if (res.success) {
         refreshData();
         return true;

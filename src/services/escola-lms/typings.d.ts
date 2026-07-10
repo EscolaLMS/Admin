@@ -1431,8 +1431,8 @@ declare namespace API {
     tutor_feedback: string | null;
   };
 
-  type UpdateProjectSolution = {
-    tutor_feedback: string | null;
+  type UpdateProjectSolutionFeedback = {
+    feedback: string | null;
   };
 
   type ProjectSolutionList = DefaultMetaResponse<ProjectSolution>;
@@ -1554,8 +1554,8 @@ declare namespace API {
     tutor_feedback: string | null;
   };
 
-  type UpdateQuizAttempt = {
-    tutor_feedback: string | null;
+  type UpdateQuizAttemptFeedback = {
+    feedback: string | null;
   };
 
   type QuizAttemptDetails = QuizAttempt & {

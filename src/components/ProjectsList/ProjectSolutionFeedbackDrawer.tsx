@@ -1,9 +1,9 @@
 import { DrawerForm, ProFormTextArea } from '@ant-design/pro-form';
 import { message } from 'antd';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
-import { updateProjectSolution } from '@/services/escola-lms/projects';
+import { getProjectSolution, updateProjectSolutionFeedback } from '@/services/escola-lms/projects';
 import { TUTOR_FEEDBACK_MAX_LENGTH, normalizeTutorFeedback } from '@/utils/utils';
 
 interface FormData {
@@ -26,8 +26,8 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
   const onFinish = useCallback(
     async (formData: FormData) => {
       if (solution?.id === undefined) return;
-      const res = await updateProjectSolution(solution.id, {
-        tutor_feedback: normalizeTutorFeedback(formData.tutor_feedback),
+      const res = await updateProjectSolutionFeedback(solution.id, {
+        feedback: normalizeTutorFeedback(formData.tutor_feedback),
       });
 
       if (!res.success) {
@@ -41,15 +41,17 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
     [solution?.id, intl, onSuccess],
   );
 
-  const initialValues: Partial<FormData> = useMemo(
-    () => ({ tutor_feedback: solution?.tutor_feedback ?? '' }),
-    [solution?.tutor_feedback],
-  );
-
   return (
     <DrawerForm<FormData>
       visible={!!solution}
-      initialValues={initialValues}
+      params={{ id: solution?.id }}
+      request={async ({ id }) => {
+        if (id === undefined) return { tutor_feedback: '' };
+        const res = await getProjectSolution(id);
+        const tutor_feedback =
+          (res.success ? res.data?.tutor_feedback : solution?.tutor_feedback) ?? '';
+        return { tutor_feedback };
+      }}
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
       title={<FormattedMessage id="edit_comment" defaultMessage="Edit comment" />}

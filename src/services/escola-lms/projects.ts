@@ -28,13 +28,25 @@ export async function deleteProjectSolution(id: number, options?: AxiosRequestCo
   );
 }
 
-export async function updateProjectSolution(
+/** GET /api/admin/topic-project-solutions/{id} */
+export async function getProjectSolution(id: number, options?: AxiosRequestConfig) {
+  return request<API.DefaultResponse<API.ProjectSolution>>(
+    `/api/admin/topic-project-solutions/${id}`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+/** PATCH /api/admin/topic-project-solutions/{id}/feedback */
+export async function updateProjectSolutionFeedback(
   id: number,
-  body: API.UpdateProjectSolution,
+  body: API.UpdateProjectSolutionFeedback,
   options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.ProjectSolution>>(
-    `/api/admin/topic-project-solutions/${id}`,
+    `/api/admin/topic-project-solutions/${id}/feedback`,
     {
       method: 'PATCH',
       headers: {

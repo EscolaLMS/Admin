@@ -52,17 +52,20 @@ export async function getQuizAttemptDetails(id: string | number, options?: Axios
   });
 }
 
-/** PATCH /api/admin/quiz-attempts/{id} */
-export async function updateQuizAttempt(
+/** PATCH /api/admin/quiz-attempts/{id}/feedback */
+export async function updateQuizAttemptFeedback(
   id: string | number,
-  body: API.UpdateQuizAttempt,
+  body: API.UpdateQuizAttemptFeedback,
   options?: AxiosRequestConfig,
 ) {
-  return request<API.DefaultResponse<API.QuizAttemptDetails>>(`/api/admin/quiz-attempts/${id}`, {
-    method: 'PATCH',
-    data: body,
-    ...(options || {}),
-  });
+  return request<API.DefaultResponse<API.QuizAttemptDetails>>(
+    `/api/admin/quiz-attempts/${id}/feedback`,
+    {
+      method: 'PATCH',
+      data: body,
+      ...(options || {}),
+    },
+  );
 }
 
 /** PATCH /api/admin/quiz-answers/{id} */
