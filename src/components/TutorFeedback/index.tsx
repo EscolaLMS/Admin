@@ -66,9 +66,11 @@ const TutorFeedback: React.FC<Props> = ({ value, editable = false, onSave }) => 
     );
   }
 
+  const hasComment = !!(value && value.trim().length);
+
   return (
     <Space align="start" style={{ width: '100%', justifyContent: 'space-between' }}>
-      {value && value.trim().length ? (
+      {hasComment ? (
         <Typography.Text style={{ whiteSpace: 'pre-wrap' }}>{value}</Typography.Text>
       ) : (
         <Typography.Text type="secondary">
@@ -76,12 +78,13 @@ const TutorFeedback: React.FC<Props> = ({ value, editable = false, onSave }) => 
         </Typography.Text>
       )}
       {editable && (
-        <Button
-          type="text"
-          icon={<EditOutlined />}
-          onClick={startEditing}
-          title={intl.formatMessage({ id: 'edit_comment', defaultMessage: 'Edit comment' })}
-        />
+        <Button size="small" icon={<EditOutlined />} onClick={startEditing}>
+          {hasComment ? (
+            <FormattedMessage id="edit_comment" defaultMessage="Edit comment" />
+          ) : (
+            <FormattedMessage id="add_comment" defaultMessage="Add comment" />
+          )}
+        </Button>
       )}
     </Space>
   );

@@ -662,6 +662,7 @@ export default {
   quiz_report_details: 'Szczegóły raportu z quizu',
   tutor_feedback: 'Komentarz prowadzącego',
   no_comment: 'Brak komentarza',
+  add_comment: 'Dodaj komentarz',
   edit_comment: 'Edytuj komentarz',
   'gift_type.multiple_choice': 'Wielokrotnego wyboru',
   'gift_type.multiple_choice_with_multiple_right_answers':
