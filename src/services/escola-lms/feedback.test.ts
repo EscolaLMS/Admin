@@ -53,7 +53,6 @@ describe('updateProjectSolutionFeedback', () => {
     expect(mockRequest).toHaveBeenCalledTimes(1);
     expect(mockRequest).toHaveBeenCalledWith('/api/admin/topic-project-solutions/7/feedback', {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       data: { feedback: 'Nice solution' },
     });
   });
@@ -63,7 +62,6 @@ describe('updateProjectSolutionFeedback', () => {
 
     expect(mockRequest).toHaveBeenCalledWith('/api/admin/topic-project-solutions/7/feedback', {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       data: { feedback: null },
     });
   });

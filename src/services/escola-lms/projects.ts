@@ -49,9 +49,6 @@ export async function updateProjectSolutionFeedback(
     `/api/admin/topic-project-solutions/${id}/feedback`,
     {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       data: body,
       ...(options || {}),
     },

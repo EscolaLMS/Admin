@@ -10,6 +10,8 @@ import ProjectSolutionFeedbackDrawer from '@/components/ProjectsList/ProjectSolu
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import PERMISSIONS from '@/consts/permissions';
+import { usePermissions } from '@/hooks/usePermissions';
 import { program } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
 import { deleteProjectSolution, projectSolutions } from '@/services/escola-lms/projects';
@@ -34,7 +36,10 @@ interface Props {
 
 export const ProjectsList: React.FC<Props> = ({ courseId }) => {
   const intl = useIntl();
+  const { checkPermission } = usePermissions();
   const actionRef = useRef<ActionType>();
+
+  const canEdit = checkPermission(PERMISSIONS.CourseUpdate);
 
   const [projectTopics, setProjectTopics] = useState<API.TopicProject[]>([]);
   const [feedbackSolution, setFeedbackSolution] = useState<API.ProjectSolution>();
@@ -143,13 +148,17 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         dataIndex: 'option',
         valueType: 'option',
         render: (_d, record, _i, action) => [
-          <Tooltip key="edit-comment" title={<FormattedMessage id="edit_comment" />}>
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={() => setFeedbackSolution(record as API.ProjectSolution)}
-            />
-          </Tooltip>,
+          ...(canEdit
+            ? [
+                <Tooltip key="edit-comment" title={<FormattedMessage id="edit_comment" />}>
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    onClick={() => setFeedbackSolution(record as API.ProjectSolution)}
+                  />
+                </Tooltip>,
+              ]
+            : []),
           <Popconfirm
             key="delete"
             title={
@@ -174,7 +183,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         ],
       },
     ],
-    [enumsProjectTopics],
+    [enumsProjectTopics, canEdit],
   );
 
   useEffect(() => {

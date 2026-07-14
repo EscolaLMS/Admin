@@ -33,7 +33,7 @@ const TutorFeedback: React.FC<Props> = ({ value, editable = false, onSave }) => 
         message.error(intl.formatMessage({ id: 'error', defaultMessage: 'error' }));
       }
     } catch {
-      message.error(intl.formatMessage({ id: 'error', defaultMessage: 'error' }));
+      // Thrown request errors are surfaced globally by the request errorHandler in app.tsx
     } finally {
       setSubmitting(false);
     }
