@@ -26,6 +26,13 @@ export const searchSubstring = (string: string = '', substring: string = '') => 
   return string.toLowerCase().includes(substring.toLowerCase());
 };
 
+export const TUTOR_FEEDBACK_MAX_LENGTH = 2000;
+
+export const normalizeTutorFeedback = (value?: string | null): string | null => {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length ? trimmed : null;
+};
+
 export const categoriesArrToIds = (
   category:
     | EscolaLms.Auth.Models.User

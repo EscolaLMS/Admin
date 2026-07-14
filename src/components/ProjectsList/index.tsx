@@ -1,13 +1,17 @@
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import type { ActionType } from '@ant-design/pro-table';
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import { Button, Popconfirm, Tooltip, message } from 'antd';
+import { Button, Popconfirm, Tooltip, Typography, message } from 'antd';
 import { format } from 'date-fns';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import ProjectSolutionFeedbackDrawer from '@/components/ProjectsList/ProjectSolutionFeedbackDrawer';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
+import PERMISSIONS from '@/consts/permissions';
+import { usePermissions } from '@/hooks/usePermissions';
 import { program } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
 import { deleteProjectSolution, projectSolutions } from '@/services/escola-lms/projects';
@@ -32,8 +36,13 @@ interface Props {
 
 export const ProjectsList: React.FC<Props> = ({ courseId }) => {
   const intl = useIntl();
+  const { checkPermission } = usePermissions();
+  const actionRef = useRef<ActionType>();
+
+  const canEdit = checkPermission(PERMISSIONS.CourseUpdate);
 
   const [projectTopics, setProjectTopics] = useState<API.TopicProject[]>([]);
+  const [feedbackSolution, setFeedbackSolution] = useState<API.ProjectSolution>();
 
   const enumsProjectTopics = useMemo(
     () =>
@@ -116,11 +125,40 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         ),
       },
       {
+        title: <FormattedMessage id="tutor_feedback" defaultMessage="Lecturer comment" />,
+        dataIndex: 'tutor_feedback',
+        hideInSearch: true,
+        render: (_, record) =>
+          record.tutor_feedback ? (
+            <Typography.Paragraph
+              style={{ marginBottom: 0, maxWidth: 280, whiteSpace: 'pre-wrap' }}
+              ellipsis={{ rows: 2, tooltip: record.tutor_feedback }}
+            >
+              {record.tutor_feedback}
+            </Typography.Paragraph>
+          ) : (
+            <Typography.Text type="secondary">
+              <FormattedMessage id="no_comment" defaultMessage="No comment" />
+            </Typography.Text>
+          ),
+      },
+      {
         hideInSearch: true,
         title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
         dataIndex: 'option',
         valueType: 'option',
         render: (_d, record, _i, action) => [
+          ...(canEdit
+            ? [
+                <Tooltip key="edit-comment" title={<FormattedMessage id="edit_comment" />}>
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    onClick={() => setFeedbackSolution(record as API.ProjectSolution)}
+                  />
+                </Tooltip>,
+              ]
+            : []),
           <Popconfirm
             key="delete"
             title={
@@ -145,7 +183,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         ],
       },
     ],
-    [enumsProjectTopics],
+    [enumsProjectTopics, canEdit],
   );
 
   useEffect(() => {
@@ -162,37 +200,48 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
   }, [courseId]);
 
   return (
-    <ProTable
-      headerTitle={intl.formatMessage({
-        id: 'project_solutions',
-        defaultMessage: 'Project Uploaded Solutions',
-      })}
-      search={{
-        layout: 'vertical',
-      }}
-      rowKey="id"
-      request={async ({ pageSize, current, user_id, topic_id }, sort) => {
-        const sortArr = sort && Object.entries(sort)[0];
-        const order_by = sortArr && (sortArr[0] as API.ProjectSolutionListParams['order_by']);
-        const res = await projectSolutions({
-          pageSize,
-          current,
-          course_id: courseId,
-          user_id,
-          topic_id,
-          order_by,
-          order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
-        });
-        if (!res.success) return { data: [], total: 0, success: false };
+    <>
+      <ProTable
+        actionRef={actionRef}
+        headerTitle={intl.formatMessage({
+          id: 'project_solutions',
+          defaultMessage: 'Project Uploaded Solutions',
+        })}
+        search={{
+          layout: 'vertical',
+        }}
+        rowKey="id"
+        request={async ({ pageSize, current, user_id, topic_id }, sort) => {
+          const sortArr = sort && Object.entries(sort)[0];
+          const order_by = sortArr && (sortArr[0] as API.ProjectSolutionListParams['order_by']);
+          const res = await projectSolutions({
+            pageSize,
+            current,
+            course_id: courseId,
+            user_id,
+            topic_id,
+            order_by,
+            order: sortArr ? (sortArr[1] === 'ascend' ? 'ASC' : 'DESC') : undefined,
+          });
+          if (!res.success) return { data: [], total: 0, success: false };
 
-        return {
-          data: res.data,
-          total: res.meta.total,
-          success: true,
-        };
-      }}
-      columns={columns}
-    />
+          return {
+            data: res.data,
+            total: res.meta.total,
+            success: true,
+          };
+        }}
+        columns={columns}
+      />
+      <ProjectSolutionFeedbackDrawer
+        solution={feedbackSolution}
+        onClose={() => setFeedbackSolution(undefined)}
+        onSuccess={() => {
+          setFeedbackSolution(undefined);
+          actionRef.current?.reload();
+        }}
+      />
+    </>
   );
 };
 

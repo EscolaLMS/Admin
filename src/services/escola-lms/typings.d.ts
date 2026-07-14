@@ -1428,6 +1428,11 @@ declare namespace API {
 
   type ProjectSolution = EscolaLms.TopicTypeProject.Models.ProjectSolution & {
     file_url: string;
+    tutor_feedback: string | null;
+  };
+
+  type UpdateProjectSolutionFeedback = {
+    feedback: string | null;
   };
 
   type ProjectSolutionList = DefaultMetaResponse<ProjectSolution>;
@@ -1546,6 +1551,11 @@ declare namespace API {
     topic_gift_quiz_id: number;
     user: Pick<User, 'id' | 'first_name' | 'last_name' | 'email'>;
     user_id: number;
+    tutor_feedback: string | null;
+  };
+
+  type UpdateQuizAttemptFeedback = {
+    feedback: string | null;
   };
 
   type QuizAttemptDetails = QuizAttempt & {

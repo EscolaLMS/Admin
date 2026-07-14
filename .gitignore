@@ -44,3 +44,7 @@ build
 test-results
 # Sentry Auth Token
 .sentryclirc
+
+# agent files
+.claude
+CLAUDE.md

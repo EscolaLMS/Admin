@@ -694,6 +694,10 @@ export default {
   max_score: 'Max score',
   gift_quiz: 'GIFT Quiz',
   quiz_report_details: 'Quiz report details',
+  tutor_feedback: 'Lecturer comment',
+  no_comment: 'No comment',
+  add_comment: 'Add comment',
+  edit_comment: 'Edit comment',
   'gift_type.multiple_choice': 'Multiple choice',
   'gift_type.multiple_choice_with_multiple_right_answers':
     'Multiple choice with multiple right answers',
