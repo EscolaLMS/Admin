@@ -795,6 +795,11 @@ export default {
   present: 'Obecny',
   not_exercising: 'Niećwiczący',
   excused_absence: 'Nieobecność usprawiedliwiona',
+  markAllPresent: 'Zaznacz obecność grupy',
+  bulkAttendanceError: 'Nie udało się zaktualizować obecności grupy',
+  bulkAttendanceRowLabel: 'Zaznacz obecność grupy',
+  bulkAttendanceRowTooltip:
+    'Zaznaczenie checkboxa oznacza obecność wszystkim studentom grupy w danej dacie, odznaczenie usuwa wpisy obecności',
   pressSaveToCreateQuestions: 'Stwórz ten temat przed dodaniem pytań',
   addNewQuestion: 'Dodaj nowe pytanie',
   selectNewQuestionType: 'Wybierz typ nowego pytania',

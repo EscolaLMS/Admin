@@ -1,10 +1,11 @@
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
-import { ExamGradeType } from '@/services/escola-lms/enums';
+import { AttendanceValue, ExamGradeType } from '@/services/escola-lms/enums';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
-import { Space } from 'antd';
+import { Checkbox, Space, Table, Tooltip } from 'antd';
 import { format } from 'date-fns';
+import React from 'react';
 import { FormattedMessage } from 'umi';
 import { ExamGradeInput } from '../ExamGradeInput';
 import { FinalGradeSelect } from '../FinalGradeSelect';
@@ -86,6 +87,75 @@ export const getStudentAttendances = (
       [`attendance-${groupAttendanceSchedule.id}`]: studentAttendance.value,
     };
   }, {});
+
+interface AttendanceSummaryCellsProps {
+  dynamicCols: ProColumns<ClassRegisterTableItem>[];
+  pageData: readonly ClassRegisterTableItem[];
+  togglingScheduleId: number | null;
+  onToggle: (scheduleId: number, checked: boolean) => void;
+}
+
+export const getAttendanceSummaryCells = ({
+  dynamicCols,
+  pageData,
+  togglingScheduleId,
+  onToggle,
+}: AttendanceSummaryCellsProps): React.ReactNode[] => {
+  const attendanceChildren = (dynamicCols[0]?.children ?? []) as ProColumns<ClassRegisterTableItem>[];
+  const examsCount = (dynamicCols[1]?.children ?? []).length;
+  const finalGradeCount = (dynamicCols[2]?.children ?? []).length;
+
+  if (!attendanceChildren.length) return [];
+
+  const cells: React.ReactNode[] = [];
+  let index = 0;
+
+  cells.push(
+    <Table.Summary.Cell key="full_name" index={index++}>
+      <Tooltip title={<FormattedMessage id="bulkAttendanceRowTooltip" />}>
+        <strong>
+          <FormattedMessage id="bulkAttendanceRowLabel" />
+        </strong>
+      </Tooltip>
+    </Table.Summary.Cell>,
+  );
+
+  attendanceChildren.forEach((col) => {
+    const dataIndex = col.dataIndex as `attendance-${string}`;
+    const scheduleId = Number(String(dataIndex).replace('attendance-', ''));
+    const values = pageData.map((row) => row[dataIndex]);
+    const allPresent = values.length > 0 && values.every((value) => value === AttendanceValue.PRESENT);
+    const allEmpty = values.every((value) => value == null);
+
+    cells.push(
+      <Table.Summary.Cell key={dataIndex} index={index++} align="center">
+        <Tooltip title={<FormattedMessage id="markAllPresent" />}>
+          <Checkbox
+            checked={allPresent}
+            indeterminate={!allPresent && !allEmpty}
+            disabled={togglingScheduleId === scheduleId}
+            onChange={(e) => onToggle(scheduleId, e.target.checked)}
+          />
+        </Tooltip>
+      </Table.Summary.Cell>,
+    );
+  });
+
+  if (examsCount > 0) {
+    cells.push(<Table.Summary.Cell key="exams" index={index} colSpan={examsCount} />);
+    index += examsCount;
+  }
+
+  if (finalGradeCount > 0) {
+    cells.push(<Table.Summary.Cell key="final-grades" index={index} colSpan={finalGradeCount} />);
+    index += finalGradeCount;
+  }
+
+  cells.push(<Table.Summary.Cell key="proposed_grade" index={index++} />);
+  cells.push(<Table.Summary.Cell key="option" index={index++} />);
+
+  return cells;
+};
 
 /* Exams */
 export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableItem> => {

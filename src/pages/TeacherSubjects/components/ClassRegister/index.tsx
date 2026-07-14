@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Modal, Tooltip, message } from 'antd';
+import { Button, Modal, Table, Tooltip, message } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
@@ -8,9 +8,11 @@ import BookmarkNoteModal from '@/components/BookmarkNoteModal';
 import PERMISSIONS from '@/consts/permissions';
 import { usePermissions } from '@/hooks/usePermissions';
 import {
+  bulkChangeAttendance,
   groupAttendanceSchedule as fetchGroupAttendanceSchedule,
   removeAttendanceColumn,
 } from '@/services/escola-lms/attendances';
+import { AttendanceValue } from '@/services/escola-lms/enums';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
 import {
   getGradeTerms as fetchGradeTerms,
@@ -30,6 +32,7 @@ import { TEACHER_SUBJECTS_PAGE_SIZE } from '../consts';
 import type { ClassRegisterTableItem } from './types';
 import {
   getAttendanceCols,
+  getAttendanceSummaryCells,
   getExamsCols,
   getFinalGrades,
   getFinalGradesCols,
@@ -50,6 +53,23 @@ export const ClassRegister: React.FC = () => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const { checkPermission } = usePermissions();
+  const [togglingScheduleId, setTogglingScheduleId] = useState<number | null>(null);
+
+  const handleBulkAttendance = async (scheduleId: number, checked: boolean) => {
+    setTogglingScheduleId(scheduleId);
+    try {
+      const res = await bulkChangeAttendance(scheduleId, checked ? AttendanceValue.PRESENT : null);
+      if (res.success) {
+        actionRef.current?.reload();
+      } else {
+        message.error(intl.formatMessage({ id: 'bulkAttendanceError' }));
+      }
+    } catch {
+      message.error(intl.formatMessage({ id: 'bulkAttendanceError' }));
+    } finally {
+      setTogglingScheduleId(null);
+    }
+  };
 
   const showDeleteConfirmationModal = (columnTitle: string, onConfirm: () => void) => {
     Modal.confirm({
@@ -264,6 +284,22 @@ export const ClassRegister: React.FC = () => {
           return { data, total: data.length, success: true };
         }}
         columns={columns}
+        summary={(pageData) => {
+          const cells = getAttendanceSummaryCells({
+            dynamicCols,
+            pageData,
+            togglingScheduleId,
+            onToggle: handleBulkAttendance,
+          });
+
+          if (!cells.length) return null;
+
+          return (
+            <Table.Summary fixed="top">
+              <Table.Summary.Row>{cells}</Table.Summary.Row>
+            </Table.Summary>
+          );
+        }}
         headerTitle={
           <FormattedMessage
             id="classRegisterTitleWithGroupName"

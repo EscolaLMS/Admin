@@ -1721,6 +1721,7 @@ declare namespace API {
 
   type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule[]>;
   type ChangeStudentAttendance = DefaultResponse<StudentAttendance[]>;
+  type BulkChangeAttendance = DefaultResponse<null>;
 
   type ScheduleData = {
     id: number;

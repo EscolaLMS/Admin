@@ -828,6 +828,11 @@ export default {
   present: 'Present',
   not_exercising: 'Not exercising',
   excused_absence: 'Excused absence',
+  markAllPresent: 'Mark all present',
+  bulkAttendanceError: 'Failed to update attendance for the group',
+  bulkAttendanceRowLabel: 'Mark group',
+  bulkAttendanceRowTooltip:
+    'Checking marks the whole group present for that date; unchecking clears the attendance entries',
   pressSaveToCreateQuestions: 'Create this Topic before adding questions',
   addNewQuestion: 'Add new question',
   selectNewQuestionType: 'Select new question type',
