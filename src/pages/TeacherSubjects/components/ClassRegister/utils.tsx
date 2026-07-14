@@ -1,6 +1,6 @@
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
-import { AttendanceValue, ExamGradeType } from '@/services/escola-lms/enums';
+import { ExamGradeType } from '@/services/escola-lms/enums';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import { Checkbox, Space, Table, Tooltip } from 'antd';
@@ -19,15 +19,9 @@ import type {
 
 /* Attendance */
 
-// A user belongs to the group roster if they have no academic teacher, OR they
-// appear in the teacher's final-grades roster. Used both for the group-wide
-// summary calculation and the row-build filter so the two never drift.
-export const isGroupStudent = (
-  academicTeacherId: number | null,
-  studentId: number,
-  finalGrades: API.FinalGradeItem[],
-): boolean =>
-  academicTeacherId === null || finalGrades.some((teacher) => teacher.user.id === studentId);
+import { getScheduleAttendanceHeaderState } from './helpers';
+
+export { isGroupStudent } from './helpers';
 
 interface AttendanceProps {
   groupAttendanceSchedule: API.GroupAttendanceSchedule[];
@@ -142,15 +136,11 @@ export const getAttendanceSummaryCells = ({
     const scheduleId = Number(String(dataIndex).replace('attendance-', ''));
     // Derive from the whole group (not the current page / name filter) so the
     // header state matches what the group-wide bulk action actually writes.
-    // Only literal PRESENT counts; excused-absence rows are frozen (excluded
-    // from the calc), and absent / null / not-exercising all read as empty.
-    const valueOf = (id: number) => attendanceBySchedule[scheduleId]?.[id] ?? null;
-    const relevantIds = groupStudentIds.filter(
-      (id) => valueOf(id) !== AttendanceValue.EXCUSED_ABSENCE,
+    const { allPresent, allEmpty } = getScheduleAttendanceHeaderState(
+      attendanceBySchedule,
+      scheduleId,
+      groupStudentIds,
     );
-    const presentCount = relevantIds.filter((id) => valueOf(id) === AttendanceValue.PRESENT).length;
-    const allPresent = relevantIds.length > 0 && presentCount === relevantIds.length;
-    const allEmpty = presentCount === 0;
 
     cells.push(
       <Table.Summary.Cell key={dataIndex} index={index++} align="center">
