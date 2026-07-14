@@ -1561,7 +1561,7 @@ declare namespace API {
   type QuizAttemptDetails = QuizAttempt & {
     questions: AttemptGiftQuestion[];
     answers: AttemptAnswer[];
-    topic: Topic;
+    topic?: Topic;
   };
 
   type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &

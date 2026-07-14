@@ -18,16 +18,29 @@ import type {
 } from './types';
 
 /* Attendance */
+
+// A user belongs to the group roster if they have no academic teacher, OR they
+// appear in the teacher's final-grades roster. Used both for the group-wide
+// summary calculation and the row-build filter so the two never drift.
+export const isGroupStudent = (
+  academicTeacherId: number | null,
+  studentId: number,
+  finalGrades: API.FinalGradeItem[],
+): boolean =>
+  academicTeacherId === null || finalGrades.some((teacher) => teacher.user.id === studentId);
+
 interface AttendanceProps {
   groupAttendanceSchedule: API.GroupAttendanceSchedule[];
   handleDeleteColumn: (columnIndex: number, columnTitle: string) => void;
   scheduleDeletePermission?: boolean;
+  onAttendanceChange: (scheduleId: number, studentId: number, value: API.AttendanceValue) => void;
 }
 
 export const getAttendanceCols = ({
   groupAttendanceSchedule,
   handleDeleteColumn,
   scheduleDeletePermission = false,
+  onAttendanceChange,
 }: AttendanceProps): ProColumns<ClassRegisterTableItem> => {
   const dynamicCols = groupAttendanceSchedule.reduce<ProColumns<ClassRegisterTableItem>[]>(
     (acc, curr) => [
@@ -55,6 +68,7 @@ export const getAttendanceCols = ({
             groupAttendanceScheduleId={curr.id}
             attendance={record[`attendance-${curr?.id}`]}
             studentId={record.id}
+            onSuccess={(value) => onAttendanceChange(curr.id, record.id, value)}
           />
         ),
       },
@@ -90,18 +104,21 @@ export const getStudentAttendances = (
 
 interface AttendanceSummaryCellsProps {
   dynamicCols: ProColumns<ClassRegisterTableItem>[];
-  pageData: readonly ClassRegisterTableItem[];
+  attendanceBySchedule: Record<number, Record<number, API.AttendanceValue>>;
+  groupStudentIds: number[];
   togglingScheduleId: number | null;
   onToggle: (scheduleId: number, checked: boolean) => void;
 }
 
 export const getAttendanceSummaryCells = ({
   dynamicCols,
-  pageData,
+  attendanceBySchedule,
+  groupStudentIds,
   togglingScheduleId,
   onToggle,
 }: AttendanceSummaryCellsProps): React.ReactNode[] => {
-  const attendanceChildren = (dynamicCols[0]?.children ?? []) as ProColumns<ClassRegisterTableItem>[];
+  const attendanceChildren = (dynamicCols[0]?.children ??
+    []) as ProColumns<ClassRegisterTableItem>[];
   const examsCount = (dynamicCols[1]?.children ?? []).length;
   const finalGradeCount = (dynamicCols[2]?.children ?? []).length;
 
@@ -123,9 +140,17 @@ export const getAttendanceSummaryCells = ({
   attendanceChildren.forEach((col) => {
     const dataIndex = col.dataIndex as `attendance-${string}`;
     const scheduleId = Number(String(dataIndex).replace('attendance-', ''));
-    const values = pageData.map((row) => row[dataIndex]);
-    const allPresent = values.length > 0 && values.every((value) => value === AttendanceValue.PRESENT);
-    const allEmpty = values.every((value) => value == null);
+    // Derive from the whole group (not the current page / name filter) so the
+    // header state matches what the group-wide bulk action actually writes.
+    // Only literal PRESENT counts; excused-absence rows are frozen (excluded
+    // from the calc), and absent / null / not-exercising all read as empty.
+    const valueOf = (id: number) => attendanceBySchedule[scheduleId]?.[id] ?? null;
+    const relevantIds = groupStudentIds.filter(
+      (id) => valueOf(id) !== AttendanceValue.EXCUSED_ABSENCE,
+    );
+    const presentCount = relevantIds.filter((id) => valueOf(id) === AttendanceValue.PRESENT).length;
+    const allPresent = relevantIds.length > 0 && presentCount === relevantIds.length;
+    const allEmpty = presentCount === 0;
 
     cells.push(
       <Table.Summary.Cell key={dataIndex} index={index++} align="center">

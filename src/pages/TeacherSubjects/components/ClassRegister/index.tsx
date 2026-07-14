@@ -39,6 +39,7 @@ import {
   getStudentAttendances,
   getStudentExamResults,
   getStudentFinalGrades,
+  isGroupStudent,
 } from './utils';
 
 export const ClassRegister: React.FC = () => {
@@ -54,12 +55,42 @@ export const ClassRegister: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const { checkPermission } = usePermissions();
   const [togglingScheduleId, setTogglingScheduleId] = useState<number | null>(null);
+  // Group-wide source of truth for the bulk "mark group" summary row. Kept in
+  // sync with individual checkbox changes so the header state updates live.
+  const [attendanceBySchedule, setAttendanceBySchedule] = useState<
+    Record<number, Record<number, API.AttendanceValue>>
+  >({});
+  const [groupStudentIds, setGroupStudentIds] = useState<number[]>([]);
+
+  const handleAttendanceChange = (
+    scheduleId: number,
+    studentId: number,
+    value: API.AttendanceValue,
+  ) =>
+    setAttendanceBySchedule((prev) => ({
+      ...prev,
+      [scheduleId]: { ...(prev[scheduleId] ?? {}), [studentId]: value },
+    }));
 
   const handleBulkAttendance = async (scheduleId: number, checked: boolean) => {
     setTogglingScheduleId(scheduleId);
     try {
       const res = await bulkChangeAttendance(scheduleId, checked ? AttendanceValue.PRESENT : null);
       if (res.success) {
+        // Optimistic: rewrite only non-excused rows; excused-absence is frozen.
+        setAttendanceBySchedule((prev) => {
+          const current = prev[scheduleId] ?? {};
+          const next: Record<number, API.AttendanceValue> = {};
+          groupStudentIds.forEach((id) => {
+            if (current[id] === AttendanceValue.EXCUSED_ABSENCE) {
+              next[id] = current[id];
+            } else if (checked) {
+              next[id] = AttendanceValue.PRESENT;
+            }
+            // unchecked & non-excused -> omit == empty (absent)
+          });
+          return { ...prev, [scheduleId]: next };
+        });
         actionRef.current?.reload();
       } else {
         message.error(intl.formatMessage({ id: 'bulkAttendanceError' }));
@@ -92,7 +123,7 @@ export const ClassRegister: React.FC = () => {
     [teacherSubjectData?.groups],
   );
 
-  const columns: ProColumns[] = useMemo(
+  const columns: ProColumns<ClassRegisterTableItem>[] = useMemo(
     () => [
       {
         title: <FormattedMessage id="group" />,
@@ -124,13 +155,14 @@ export const ClassRegister: React.FC = () => {
               <Button
                 type="primary"
                 icon={<EditOutlined />}
-                onClick={() =>
+                onClick={() => {
+                  if (!record.final_grades) return;
                   setUserModalData({
                     userName: record.full_name,
                     userId: record.id,
                     groupId: record.final_grades.group_id,
-                  })
-                }
+                  });
+                }}
               />
             </Tooltip>
           </>
@@ -204,6 +236,29 @@ export const ClassRegister: React.FC = () => {
           }
           setSelectedGroupName(selectedGroup.label);
 
+          /* Group-wide source of truth for the bulk "mark group" summary row:
+             the full roster (teacher-filtered, but independent of the name
+             search) plus the current attendance value per schedule/student. */
+          const groupStudents = studentUserGroupRes.data.users.filter(
+            ({ id, academic_teacher_id }) =>
+              isGroupStudent(academic_teacher_id, id, finalGradesRes.data),
+          );
+          setGroupStudentIds(groupStudents.map(({ id }) => id));
+          setAttendanceBySchedule(
+            groupAttendanceScheduleRes.data.reduce<
+              Record<number, Record<number, API.AttendanceValue>>
+            >((acc, schedule) => {
+              acc[schedule.id] = schedule.attendances.reduce<Record<number, API.AttendanceValue>>(
+                (map, { user_id, value }) => {
+                  map[user_id] = value;
+                  return map;
+                },
+                {},
+              );
+              return acc;
+            }, {}),
+          );
+
           /* COLS */
           const attendanceCols = getAttendanceCols({
             groupAttendanceSchedule: groupAttendanceScheduleRes.data,
@@ -211,6 +266,7 @@ export const ClassRegister: React.FC = () => {
             scheduleDeletePermission:
               checkPermission(PERMISSIONS.PCGSchedulesDelete) ||
               checkPermission(PERMISSIONS.PCGSchedulesDeleteOwn),
+            onAttendanceChange: handleAttendanceChange,
           });
           const examsCols = getExamsCols(examsRes.data);
           const finalGradeCols = getFinalGradesCols(gradeTermsRes.data, subjectGradeScalesRes.data);
@@ -232,12 +288,9 @@ export const ClassRegister: React.FC = () => {
             .reduce<ClassRegisterTableItem[]>(
               (acc, { id, academic_teacher_id, first_name, last_name }) => {
                 const studentFullName = `${last_name} ${first_name}`;
-                const studentInFinalGrades = finalGradesRes.data.some(
-                  (teacher) => teacher.user.id === id,
-                );
 
                 if (
-                  (academic_teacher_id !== null && !studentInFinalGrades) ||
+                  !isGroupStudent(academic_teacher_id, id, finalGradesRes.data) ||
                   !studentFullName.toLowerCase().includes(full_name.toLowerCase())
                 )
                   return acc;
@@ -284,10 +337,11 @@ export const ClassRegister: React.FC = () => {
           return { data, total: data.length, success: true };
         }}
         columns={columns}
-        summary={(pageData) => {
+        summary={() => {
           const cells = getAttendanceSummaryCells({
             dynamicCols,
-            pageData,
+            attendanceBySchedule,
+            groupStudentIds,
             togglingScheduleId,
             onToggle: handleBulkAttendance,
           });
