@@ -14,7 +14,9 @@ import { createTableOrderObject } from '@/utils/utils';
 
 import CourseQuizSelect from './CourseQuizSelect';
 
-type ProTableRequest = ProTableProps<API.QuizAttempt, API.QuizAttemptsParams>['request'];
+type ProTableRequest = NonNullable<
+  ProTableProps<API.QuizAttempt, API.QuizAttemptsParams>['request']
+>;
 
 export const CourseQuizReports: React.FC<{ courseId: number }> = ({ courseId }) => {
   const actionRef = useRef<ActionType>();
@@ -124,8 +126,6 @@ export const CourseQuizReports: React.FC<{ courseId: number }> = ({ courseId }) 
     },
   ];
 
-  // TODO: #1036 fix types !
-  //@ts-ignore
   const onRequest = useCallback<ProTableRequest>(
     async ({ current, pageSize, topic_gift_quiz_id, dateRange }, sort) => {
       const date_from = dateRange?.[0]
