@@ -1561,7 +1561,7 @@ declare namespace API {
   type QuizAttemptDetails = QuizAttempt & {
     questions: AttemptGiftQuestion[];
     answers: AttemptAnswer[];
-    topic: Topic;
+    topic?: Topic;
   };
 
   type QuizAttemptsParams = EscolaLms.TopicTypeGift.Http.Requests.ListQuizAttemptRequest &
@@ -1721,6 +1721,7 @@ declare namespace API {
 
   type AttendanceScheduleList = DefaultResponse<GroupAttendanceSchedule[]>;
   type ChangeStudentAttendance = DefaultResponse<StudentAttendance[]>;
+  type BulkChangeAttendance = DefaultResponse<null>;
 
   type ScheduleData = {
     id: number;

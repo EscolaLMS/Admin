@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Modal, Tooltip, message } from 'antd';
+import { Button, Modal, Spin, Table, Tooltip, message } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
@@ -8,9 +8,11 @@ import BookmarkNoteModal from '@/components/BookmarkNoteModal';
 import PERMISSIONS from '@/consts/permissions';
 import { usePermissions } from '@/hooks/usePermissions';
 import {
+  bulkChangeAttendance,
   groupAttendanceSchedule as fetchGroupAttendanceSchedule,
   removeAttendanceColumn,
 } from '@/services/escola-lms/attendances';
+import { AttendanceValue } from '@/services/escola-lms/enums';
 import { getExams as fetchExams } from '@/services/escola-lms/exams';
 import {
   getGradeTerms as fetchGradeTerms,
@@ -27,15 +29,18 @@ import {
   getStudentExamsFromExams,
 } from '../FinalGradesDetails/utils';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from '../consts';
+import { isFrozenAttendance } from './helpers';
 import type { ClassRegisterTableItem } from './types';
 import {
   getAttendanceCols,
+  getAttendanceSummaryCells,
   getExamsCols,
   getFinalGrades,
   getFinalGradesCols,
   getStudentAttendances,
   getStudentExamResults,
   getStudentFinalGrades,
+  isGroupStudent,
 } from './utils';
 
 export const ClassRegister: React.FC = () => {
@@ -50,6 +55,56 @@ export const ClassRegister: React.FC = () => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const { checkPermission } = usePermissions();
+  const [togglingScheduleId, setTogglingScheduleId] = useState<number | null>(null);
+  // Group-wide source of truth for the bulk "mark group" summary row. Kept in
+  // sync with individual checkbox changes so the header state updates live.
+  const [attendanceBySchedule, setAttendanceBySchedule] = useState<
+    Record<number, Record<number, API.AttendanceValue>>
+  >({});
+  const [groupStudentIds, setGroupStudentIds] = useState<number[]>([]);
+
+  const handleAttendanceChange = (
+    scheduleId: number,
+    studentId: number,
+    value: API.AttendanceValue,
+  ) =>
+    setAttendanceBySchedule((prev) => ({
+      ...prev,
+      [scheduleId]: { ...(prev[scheduleId] ?? {}), [studentId]: value },
+    }));
+
+  const handleBulkAttendance = async (scheduleId: number, checked: boolean) => {
+    setTogglingScheduleId(scheduleId);
+    try {
+      const res = await bulkChangeAttendance(scheduleId, checked ? AttendanceValue.PRESENT : null);
+      if (res.success) {
+        // Optimistic: rewrite only non-frozen rows; excused-absence and
+        // present-not-exercising are frozen (deliberate per-student statuses).
+        setAttendanceBySchedule((prev) => {
+          const current = prev[scheduleId] ?? {};
+          const next: Record<number, API.AttendanceValue> = {};
+          groupStudentIds.forEach((id) => {
+            if (isFrozenAttendance(current[id] ?? null)) {
+              next[id] = current[id];
+            } else if (checked) {
+              next[id] = AttendanceValue.PRESENT;
+            }
+            // unchecked & non-frozen -> omit == empty (absent)
+          });
+          return { ...prev, [scheduleId]: next };
+        });
+        // Await the refetch so the header stays disabled until server truth is
+        // re-seeded — prevents a concurrent bulk toggle racing the reload.
+        await actionRef.current?.reload();
+      } else {
+        message.error(intl.formatMessage({ id: 'bulkAttendanceError' }));
+      }
+    } catch {
+      message.error(intl.formatMessage({ id: 'bulkAttendanceError' }));
+    } finally {
+      setTogglingScheduleId(null);
+    }
+  };
 
   const showDeleteConfirmationModal = (columnTitle: string, onConfirm: () => void) => {
     Modal.confirm({
@@ -72,7 +127,7 @@ export const ClassRegister: React.FC = () => {
     [teacherSubjectData?.groups],
   );
 
-  const columns: ProColumns[] = useMemo(
+  const columns: ProColumns<ClassRegisterTableItem>[] = useMemo(
     () => [
       {
         title: <FormattedMessage id="group" />,
@@ -104,13 +159,14 @@ export const ClassRegister: React.FC = () => {
               <Button
                 type="primary"
                 icon={<EditOutlined />}
-                onClick={() =>
+                onClick={() => {
+                  if (!record.final_grades) return;
                   setUserModalData({
                     userName: record.full_name,
                     userId: record.id,
                     groupId: record.final_grades.group_id,
-                  })
-                }
+                  });
+                }}
               />
             </Tooltip>
           </>
@@ -133,152 +189,204 @@ export const ClassRegister: React.FC = () => {
           }}
         />
       )}
-      <ProTable<ClassRegisterTableItem>
-        sticky
-        className="table-standalone"
-        request={async ({ group_id = groupOptions[0]?.value, full_name = '' }) => {
-          const finalGradesRes = await fetchGroupFinalGrades([group_id]);
-          const selectedGroup = groupOptions.find(({ value }) => value === group_id);
-          if (
-            !finalGradesRes.success ||
-            finalGradesRes.data[0] === undefined ||
-            semester_subject_id === null
-          ) {
-            message.error(
-              intl.formatMessage({ id: 'groupDataMissing' }, { group_name: selectedGroup?.label }),
+      {/* Lock the whole table while a bulk toggle + reload runs: the mask sets
+          pointer-events:none on the content, so no per-student write can race
+          the bulk write. */}
+      <Spin spinning={togglingScheduleId !== null}>
+        <ProTable<ClassRegisterTableItem>
+          sticky
+          className="table-standalone"
+          request={async ({ group_id = groupOptions[0]?.value, full_name = '' }) => {
+            const finalGradesRes = await fetchGroupFinalGrades([group_id]);
+            const selectedGroup = groupOptions.find(({ value }) => value === group_id);
+            if (
+              !finalGradesRes.success ||
+              finalGradesRes.data[0] === undefined ||
+              semester_subject_id === null
+            ) {
+              message.error(
+                intl.formatMessage(
+                  { id: 'groupDataMissing' },
+                  { group_name: selectedGroup?.label },
+                ),
+              );
+
+              return { data: [], total: 0, success: false };
+            }
+
+            const [
+              studentUserGroupRes,
+              groupAttendanceScheduleRes,
+              examsRes,
+              tutorGradesRes,
+              gradeTermsRes,
+              subjectGradeScalesRes,
+            ] = await Promise.all([
+              fetchStudentUserGroup(group_id),
+              fetchGroupAttendanceSchedule(group_id),
+              fetchExams({ group_id, per_page: -1 }),
+              fetchSubjectTutorGrades(semester_subject_id, finalGradesRes.data?.[0]?.tutor_id),
+              fetchGradeTerms(),
+              fetchSubjectGradeScales(finalGradesRes.data?.[0]?.s_subject_scale_form_id),
+            ]);
+
+            if (
+              !studentUserGroupRes.success ||
+              !groupAttendanceScheduleRes.success ||
+              !examsRes.success ||
+              !tutorGradesRes.success ||
+              !gradeTermsRes.success ||
+              !subjectGradeScalesRes.success ||
+              !selectedGroup
+            ) {
+              message.error(
+                intl.formatMessage(
+                  { id: 'groupDataMissing' },
+                  { group_name: selectedGroup?.label },
+                ),
+              );
+
+              return { data: [], total: 0, success: false };
+            }
+            setSelectedGroupName(selectedGroup.label);
+
+            /* Group-wide source of truth for the bulk "mark group" summary row:
+             the full roster (teacher-filtered, but independent of the name
+             search) plus the current attendance value per schedule/student. */
+            const groupStudents = studentUserGroupRes.data.users.filter(
+              ({ id, academic_teacher_id }) =>
+                isGroupStudent(academic_teacher_id, id, finalGradesRes.data),
             );
-
-            return { data: [], total: 0, success: false };
-          }
-
-          const [
-            studentUserGroupRes,
-            groupAttendanceScheduleRes,
-            examsRes,
-            tutorGradesRes,
-            gradeTermsRes,
-            subjectGradeScalesRes,
-          ] = await Promise.all([
-            fetchStudentUserGroup(group_id),
-            fetchGroupAttendanceSchedule(group_id),
-            fetchExams({ group_id, per_page: -1 }),
-            fetchSubjectTutorGrades(semester_subject_id, finalGradesRes.data?.[0]?.tutor_id),
-            fetchGradeTerms(),
-            fetchSubjectGradeScales(finalGradesRes.data?.[0]?.s_subject_scale_form_id),
-          ]);
-
-          if (
-            !studentUserGroupRes.success ||
-            !groupAttendanceScheduleRes.success ||
-            !examsRes.success ||
-            !tutorGradesRes.success ||
-            !gradeTermsRes.success ||
-            !subjectGradeScalesRes.success ||
-            !selectedGroup
-          ) {
-            message.error(
-              intl.formatMessage({ id: 'groupDataMissing' }, { group_name: selectedGroup?.label }),
-            );
-
-            return { data: [], total: 0, success: false };
-          }
-          setSelectedGroupName(selectedGroup.label);
-
-          /* COLS */
-          const attendanceCols = getAttendanceCols({
-            groupAttendanceSchedule: groupAttendanceScheduleRes.data,
-            handleDeleteColumn,
-            scheduleDeletePermission:
-              checkPermission(PERMISSIONS.PCGSchedulesDelete) ||
-              checkPermission(PERMISSIONS.PCGSchedulesDeleteOwn),
-          });
-          const examsCols = getExamsCols(examsRes.data);
-          const finalGradeCols = getFinalGradesCols(gradeTermsRes.data, subjectGradeScalesRes.data);
-
-          setDynamicCols([
-            attendanceCols,
-            examsCols,
-            finalGradeCols,
-            {
-              title: <FormattedMessage id="proposed_grade" />,
-              hideInSearch: true,
-              dataIndex: 'proposed_grade',
-              align: 'center',
-              width: 100,
-            },
-          ]);
-
-          const data = studentUserGroupRes.data.users
-            .reduce<ClassRegisterTableItem[]>(
-              (acc, { id, academic_teacher_id, first_name, last_name }) => {
-                const studentFullName = `${last_name} ${first_name}`;
-                const studentInFinalGrades = finalGradesRes.data.some(
-                  (teacher) => teacher.user.id === id,
-                );
-
-                if (
-                  (academic_teacher_id !== null && !studentInFinalGrades) ||
-                  !studentFullName.toLowerCase().includes(full_name.toLowerCase())
-                )
-                  return acc;
-
-                const studentAttendances = getStudentAttendances(
-                  groupAttendanceScheduleRes.data,
-                  id,
-                );
-
-                const studentExams = getStudentExamsFromExams(examsRes.data, id);
-
-                const studentFinalGrades = getStudentFinalGrades(finalGradesRes.data, id);
-
-                const tutorScales =
-                  getScalesBySubjectScaleFormId(
-                    studentFinalGrades?.s_subject_scale_form_id ?? 0,
-                    tutorGradesRes.data.grade_scale ?? [],
-                  ) ?? [];
-
-                const proposed_grade = getProposedGrade(studentExams, tutorScales);
-
-                const studentExamResults = getStudentExamResults(studentExams);
-
-                const finalGrades = getFinalGrades(studentFinalGrades);
-
-                return [
-                  ...acc,
-                  {
-                    id,
-                    full_name: studentFullName,
-                    ...studentAttendances,
-                    ...studentExamResults,
-                    ...finalGrades,
-                    proposed_grade,
-                    final_grades: studentFinalGrades,
+            setGroupStudentIds(groupStudents.map(({ id }) => id));
+            setAttendanceBySchedule(
+              groupAttendanceScheduleRes.data.reduce<
+                Record<number, Record<number, API.AttendanceValue>>
+              >((acc, schedule) => {
+                acc[schedule.id] = schedule.attendances.reduce<Record<number, API.AttendanceValue>>(
+                  (map, { user_id, value }) => {
+                    map[user_id] = value;
+                    return map;
                   },
-                ];
-              },
-              [],
-            )
-            // sort alphabetically
-            .sort((a, b) => a.full_name.localeCompare(b.full_name));
+                  {},
+                );
+                return acc;
+              }, {}),
+            );
 
-          return { data, total: data.length, success: true };
-        }}
-        columns={columns}
-        headerTitle={
-          <FormattedMessage
-            id="classRegisterTitleWithGroupName"
-            values={{ groupName: selectedGroupName }}
-          />
-        }
-        search={{ layout: 'vertical' }}
-        scroll={{ x: 1500 }}
-        actionRef={actionRef}
-        pagination={{
-          defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE,
-          onChange: () => actionRef.current?.reload(),
-        }}
-        rowKey="id"
-      />
+            /* COLS */
+            const attendanceCols = getAttendanceCols({
+              groupAttendanceSchedule: groupAttendanceScheduleRes.data,
+              handleDeleteColumn,
+              scheduleDeletePermission:
+                checkPermission(PERMISSIONS.PCGSchedulesDelete) ||
+                checkPermission(PERMISSIONS.PCGSchedulesDeleteOwn),
+              onAttendanceChange: handleAttendanceChange,
+            });
+            const examsCols = getExamsCols(examsRes.data);
+            const finalGradeCols = getFinalGradesCols(
+              gradeTermsRes.data,
+              subjectGradeScalesRes.data,
+            );
+
+            setDynamicCols([
+              attendanceCols,
+              examsCols,
+              finalGradeCols,
+              {
+                title: <FormattedMessage id="proposed_grade" />,
+                hideInSearch: true,
+                dataIndex: 'proposed_grade',
+                align: 'center',
+                width: 100,
+              },
+            ]);
+
+            const data = studentUserGroupRes.data.users
+              .reduce<ClassRegisterTableItem[]>(
+                (acc, { id, academic_teacher_id, first_name, last_name }) => {
+                  const studentFullName = `${last_name} ${first_name}`;
+
+                  if (
+                    !isGroupStudent(academic_teacher_id, id, finalGradesRes.data) ||
+                    !studentFullName.toLowerCase().includes(full_name.toLowerCase())
+                  )
+                    return acc;
+
+                  const studentAttendances = getStudentAttendances(
+                    groupAttendanceScheduleRes.data,
+                    id,
+                  );
+
+                  const studentExams = getStudentExamsFromExams(examsRes.data, id);
+
+                  const studentFinalGrades = getStudentFinalGrades(finalGradesRes.data, id);
+
+                  const tutorScales =
+                    getScalesBySubjectScaleFormId(
+                      studentFinalGrades?.s_subject_scale_form_id ?? 0,
+                      tutorGradesRes.data.grade_scale ?? [],
+                    ) ?? [];
+
+                  const proposed_grade = getProposedGrade(studentExams, tutorScales);
+
+                  const studentExamResults = getStudentExamResults(studentExams);
+
+                  const finalGrades = getFinalGrades(studentFinalGrades);
+
+                  return [
+                    ...acc,
+                    {
+                      id,
+                      full_name: studentFullName,
+                      ...studentAttendances,
+                      ...studentExamResults,
+                      ...finalGrades,
+                      proposed_grade,
+                      final_grades: studentFinalGrades,
+                    },
+                  ];
+                },
+                [],
+              )
+              // sort alphabetically
+              .sort((a, b) => a.full_name.localeCompare(b.full_name));
+
+            return { data, total: data.length, success: true };
+          }}
+          columns={columns}
+          summary={() => {
+            const cells = getAttendanceSummaryCells({
+              dynamicCols,
+              attendanceBySchedule,
+              groupStudentIds,
+              togglingScheduleId,
+              onToggle: handleBulkAttendance,
+            });
+
+            if (!cells.length) return null;
+
+            return (
+              <Table.Summary fixed="top">
+                <Table.Summary.Row>{cells}</Table.Summary.Row>
+              </Table.Summary>
+            );
+          }}
+          headerTitle={
+            <FormattedMessage
+              id="classRegisterTitleWithGroupName"
+              values={{ groupName: selectedGroupName }}
+            />
+          }
+          search={{ layout: 'vertical' }}
+          scroll={{ x: 1500 }}
+          actionRef={actionRef}
+          pagination={{
+            defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE,
+            onChange: () => actionRef.current?.reload(),
+          }}
+          rowKey="id"
+        />
+      </Spin>
     </>
   );
 };

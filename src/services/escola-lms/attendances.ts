@@ -36,3 +36,16 @@ export async function removeAttendanceColumn(id: number, options?: AxiosRequestC
     ...(options || {}),
   });
 }
+
+export async function bulkChangeAttendance(
+  id: number,
+  value: AttendanceValue.PRESENT | null,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.BulkChangeAttendance>(`/api/admin/schedules/${id}/attendances/bulk`, {
+    data: { value },
+    method: 'POST',
+    skipErrorHandler: true,
+    ...(options || {}),
+  });
+}
