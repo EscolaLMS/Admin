@@ -148,7 +148,9 @@ export const getAttendanceSummaryCells = ({
           <Checkbox
             checked={allPresent}
             indeterminate={!allPresent && !allEmpty}
-            disabled={togglingScheduleId === scheduleId}
+            // Disable every header while any bulk toggle runs: a scalar
+            // in-flight id can't serialize concurrent writes across schedules.
+            disabled={togglingScheduleId !== null}
             onChange={(e) => onToggle(scheduleId, e.target.checked)}
           />
         </Tooltip>

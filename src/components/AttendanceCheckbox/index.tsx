@@ -1,5 +1,5 @@
 import { changeStudentAttendance } from '@/services/escola-lms/attendances';
-import { Checkbox, Space, Tooltip } from 'antd';
+import { Checkbox, Space, Spin, Tooltip } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
@@ -31,12 +31,17 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
 
   const commit = useCallback(
     (next: Status) => {
-      setStatus(next);
+      // Server-confirmed, not optimistic: keep `status` in sync with the server
+      // by only writing it once the request succeeds. A failed write leaves
+      // local state untouched (already correct), so there's nothing to revert
+      // and local/server can't diverge. The checkbox is disabled + shows a
+      // spinner while the request is in flight.
       setLoading(true);
       const value = parseToAttendanceValue(next);
       changeStudentAttendance(groupAttendanceScheduleId, studentId, value)
         .then((res) => {
           if (res.success) {
+            setStatus(next);
             onSuccess?.(value);
           }
         })
@@ -57,14 +62,18 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
   );
 
   return (
-    <Space>
-      <Tooltip title={<FormattedMessage id="present" />}>
-        <Checkbox disabled={loading} checked={status.ch1} onChange={onCh1Change} />
-      </Tooltip>
-      <Tooltip title={<FormattedMessage id={status.ch1 ? 'not_exercising' : 'excused_absence'} />}>
-        <Checkbox disabled={loading} checked={status.ch2} onChange={onCh2Change} />
-      </Tooltip>
-    </Space>
+    <Spin spinning={loading} size="small">
+      <Space>
+        <Tooltip title={<FormattedMessage id="present" />}>
+          <Checkbox disabled={loading} checked={status.ch1} onChange={onCh1Change} />
+        </Tooltip>
+        <Tooltip
+          title={<FormattedMessage id={status.ch1 ? 'not_exercising' : 'excused_absence'} />}
+        >
+          <Checkbox disabled={loading} checked={status.ch2} onChange={onCh2Change} />
+        </Tooltip>
+      </Space>
+    </Spin>
   );
 };
 

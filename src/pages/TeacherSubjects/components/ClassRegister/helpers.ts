@@ -13,19 +13,29 @@ export const isGroupStudent = (
 ): boolean =>
   academicTeacherId === null || finalGrades.some((teacher) => teacher.user.id === studentId);
 
+// Individually-meaningful statuses the group-wide bulk action must never
+// overwrite, and which are excluded from the "all present" header calc: a
+// teacher set them deliberately per-student, so "mark group present" leaves
+// them untouched and they don't count for/against the header toggle.
+const FROZEN_STATUSES: readonly API.AttendanceValue[] = [
+  AttendanceValue.EXCUSED_ABSENCE,
+  AttendanceValue.PRESENT_NOT_EXERCISING,
+];
+
+export const isFrozenAttendance = (value: API.AttendanceValue | null): boolean =>
+  value !== null && FROZEN_STATUSES.includes(value);
+
 // Derives the "mark group present" header checkbox state for a single schedule
-// from the whole-group attendance map. Only literal PRESENT counts; excused
-// absences are frozen (excluded from the calc), and absent / null /
-// not-exercising all read as empty.
+// from the whole-group attendance map. Only literal PRESENT counts; frozen
+// statuses (excused absence, present-not-exercising) are excluded from the
+// calc, and absent / null read as empty.
 export const getScheduleAttendanceHeaderState = (
   attendanceBySchedule: Record<number, Record<number, API.AttendanceValue>>,
   scheduleId: number,
   groupStudentIds: number[],
 ): { allPresent: boolean; allEmpty: boolean } => {
   const valueOf = (id: number) => attendanceBySchedule[scheduleId]?.[id] ?? null;
-  const relevantIds = groupStudentIds.filter(
-    (id) => valueOf(id) !== AttendanceValue.EXCUSED_ABSENCE,
-  );
+  const relevantIds = groupStudentIds.filter((id) => !isFrozenAttendance(valueOf(id)));
   const presentCount = relevantIds.filter((id) => valueOf(id) === AttendanceValue.PRESENT).length;
   const allPresent = relevantIds.length > 0 && presentCount === relevantIds.length;
   const allEmpty = presentCount === 0;
