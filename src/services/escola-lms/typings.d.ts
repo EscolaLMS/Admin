@@ -1574,6 +1574,16 @@ declare namespace API {
       user_id?: number;
     };
 
+  type CourseGiftQuiz = {
+    id: number;
+    title: string;
+    topic_id: number;
+  };
+
+  type CourseGiftQuizzesParams = {
+    course_id: number;
+  };
+
   type GiftQuiz = {
     id: number;
     value: string;

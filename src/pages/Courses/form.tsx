@@ -15,6 +15,7 @@ import UserSelect from '@/components/UserSelect';
 import UserSubmissions from '@/components/UsersSubmissions';
 import WysiwygMarkdown from '@/components/WysiwygMarkdown';
 import useValidateFormEdit from '@/hooks/useValidateFormEdit';
+import CourseQuizReports from '@/pages/Courses/components/CourseQuizReports';
 import { CourseSuccessModal } from '@/pages/Courses/components/CourseSuccessModal';
 import { createCourse, getCourse, updateCourse } from '@/services/escola-lms/course';
 import { categoriesArrToIds, splitImagePath, tagsArrToIds } from '@/utils/utils';
@@ -58,6 +59,7 @@ enum TabNames {
   QUESTIONNAIRES = 'questionnaires',
   STATISTICS = 'statistics',
   USER_PROJECTS = 'user_projects',
+  QUIZ_REPORTS = 'quiz_reports',
 }
 
 export default () => {
@@ -739,6 +741,16 @@ export default () => {
             tab={<FormattedMessage id="user_projects" />}
           >
             <ProjectsList courseId={Number(course)} />
+          </ProCard.TabPane>
+        )}
+
+        {!isNew && access.coursesQuizReportsListPermission && (
+          <ProCard.TabPane
+            key={TabNames.QUIZ_REPORTS}
+            tab={<FormattedMessage id="quiz_reports" />}
+            disabled={manageCourseEdit.disableEdit}
+          >
+            {course && <CourseQuizReports courseId={Number(course)} />}
           </ProCard.TabPane>
         )}
       </ProCard>

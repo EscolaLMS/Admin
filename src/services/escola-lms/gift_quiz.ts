@@ -81,6 +81,18 @@ export async function updateQuizAnswer(
   });
 }
 
+/** GET /api/admin/gift-quizes?course_id={course_id} */
+export async function getCourseGiftQuizzes(
+  params: API.CourseGiftQuizzesParams,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.CourseGiftQuiz[]>>('/api/admin/gift-quizes', {
+    method: 'GET',
+    ...(options || {}),
+    params,
+  });
+}
+
 /** GET /api/admin/gift-quizes/{id} */
 export async function getGiftQuiz(id: string | number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {
