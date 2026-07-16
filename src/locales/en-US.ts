@@ -916,8 +916,9 @@ export default {
   // AN-8 — subject gradebook (quiz/project grades)
   gradebook: 'Gradebook',
   gradebookColumnTitle: '{title} (×{weight})',
-  add_to_gradebook: 'Add grade to gradebook',
-  add_to_gradebook_tooltip: 'When enabled, this grade is counted in the subject gradebook.',
+  counts_to_grade: 'Show in final grade',
+  counts_to_grade_tooltip:
+    'When enabled, this item appears in the final grade and qualifies for a partial grade.',
   grade_weight: 'Grade weight',
   grade_weight_tooltip: 'Default weight is 1.',
   grade_weight_default_hint: 'Default weight is 1.',

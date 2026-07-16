@@ -22,7 +22,7 @@ export const GiftQuiz: React.FC<{
 }> = ({ topicable, onAdded, onRemoved, onEdited, onChange }) => {
   const intl = useIntl();
   const [addToGradebook, setAddToGradebook] = useState<boolean>(
-    Boolean(topicable?.add_to_gradebook),
+    Boolean(topicable?.counts_to_grade),
   );
 
   return (
@@ -32,7 +32,7 @@ export const GiftQuiz: React.FC<{
           max_attempts: topicable ? topicable.max_attempts : undefined,
           max_execution_time: topicable ? topicable.max_execution_time : undefined,
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
-          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.add_to_gradebook),
+          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
           [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={(values) => {
@@ -78,13 +78,11 @@ export const GiftQuiz: React.FC<{
         <ProFormGroup>
           <ProFormSwitch
             name={GRADEBOOK_FIELDS.flag}
-            label={
-              <FormattedMessage id="add_to_gradebook" defaultMessage="Add grade to gradebook" />
-            }
+            label={<FormattedMessage id="counts_to_grade" defaultMessage="Show in final grade" />}
             tooltip={
               <FormattedMessage
-                id="add_to_gradebook_tooltip"
-                defaultMessage="When enabled, this grade is counted in the subject gradebook."
+                id="counts_to_grade_tooltip"
+                defaultMessage="When enabled, this item appears in the final grade and qualifies for a partial grade."
               />
             }
           />

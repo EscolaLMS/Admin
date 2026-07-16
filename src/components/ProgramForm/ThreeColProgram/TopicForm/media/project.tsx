@@ -21,7 +21,7 @@ interface Props {
 export const Project: React.FC<Props> = ({ onChange, topicable }) => {
   const intl = useIntl();
   const [addToGradebook, setAddToGradebook] = useState<boolean>(
-    Boolean(topicable?.add_to_gradebook),
+    Boolean(topicable?.counts_to_grade),
   );
 
   const onValuesChange = useCallback(
@@ -41,7 +41,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
       <ProForm
         initialValues={{
           notify_users: topicable?.notify_users ?? [],
-          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.add_to_gradebook),
+          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
           [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={onValuesChange}
@@ -62,13 +62,11 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
         <ProFormGroup>
           <ProFormSwitch
             name={GRADEBOOK_FIELDS.flag}
-            label={
-              <FormattedMessage id="add_to_gradebook" defaultMessage="Add grade to gradebook" />
-            }
+            label={<FormattedMessage id="counts_to_grade" defaultMessage="Show in final grade" />}
             tooltip={
               <FormattedMessage
-                id="add_to_gradebook_tooltip"
-                defaultMessage="When enabled, this grade is counted in the subject gradebook."
+                id="counts_to_grade_tooltip"
+                defaultMessage="When enabled, this item appears in the final grade and qualifies for a partial grade."
               />
             }
           />

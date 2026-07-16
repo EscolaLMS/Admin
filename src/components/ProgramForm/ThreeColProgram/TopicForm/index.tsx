@@ -189,9 +189,9 @@ export const Topic: React.FC = () => {
     // topicable value so an untouched flag/weight isn't cleared on partial edits.
     if (topic.topicable_type === TopicType.GiftQuiz || topic.topicable_type === TopicType.Project) {
       const topicable = topics.topicable as
-        | { add_to_gradebook?: boolean; grade_weight?: number }
+        | { counts_to_grade?: boolean; grade_weight?: number }
         | undefined;
-      const addToGradebook = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.add_to_gradebook);
+      const addToGradebook = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
       values[GRADEBOOK_FIELDS.flag] = addToGradebook ? 1 : 0;
       if (addToGradebook) {
         const weight = Number(values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight);

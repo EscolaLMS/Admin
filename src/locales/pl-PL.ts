@@ -918,8 +918,9 @@ export default {
   // AN-8 — dziennik ocen przedmiotu (oceny z quizów/projektów)
   gradebook: 'Dziennik ocen',
   gradebookColumnTitle: '{title} (×{weight})',
-  add_to_gradebook: 'Dodaj ocenę do dziennika',
-  add_to_gradebook_tooltip: 'Gdy włączone, ocena jest liczona w dzienniku ocen przedmiotu.',
+  counts_to_grade: 'Pokaż w ocenie końcowej',
+  counts_to_grade_tooltip:
+    'Gdy włączone, pozycja pojawia się w ocenie końcowej i kwalifikuje się do oceny cząstkowej.',
   grade_weight: 'Waga oceny',
   grade_weight_tooltip: 'Domyślna waga to 1.',
   grade_weight_default_hint: 'Domyślna waga to 1.',

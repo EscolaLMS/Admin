@@ -1,18 +1,26 @@
 /**
  * AN-8 — Subject gradebook (quiz/project grades).
  *
- * Single source of truth for the *assumed* backend contract used by the gradebook
- * feature. The backend endpoints are delivered as separate tasks; until they land
- * these values are placeholders. When the real API is available, adjust the field
- * names / endpoint paths here (and the shapes in `services/escola-lms/gradebook.ts`)
- * — the UI does not hardcode them anywhere else.
+ * Single source of truth for the backend contract used by the gradebook feature.
+ * The UI does not hardcode these field names / endpoint paths anywhere else — adjust
+ * them here (and the shapes in `services/escola-lms/gradebook.ts`) when they change.
+ *
+ * Status of the contract:
+ * - `flag` (`counts_to_grade`) is DELIVERED. It is accepted/returned by the Topic
+ *   content API (courses package) for both quiz and project topicables, and quizzes
+ *   also accept it on `PUT /api/admin/gift-quizes/{id}`. Default false.
+ * - `weight` (`grade_weight`) and the read endpoints below remain PLACEHOLDERS,
+ *   pending their separate backend tasks.
  */
 
 /** Field names sent with a quiz/project topic on create/edit. */
 export const GRADEBOOK_FIELDS = {
-  /** boolean — whether the resulting grade is counted in the subject gradebook */
-  flag: 'add_to_gradebook',
-  /** number (decimals allowed, > 0) — weight the grade carries in the gradebook */
+  /**
+   * boolean (DELIVERED) — whether this quiz/project appears in the final grade and
+   * qualifies for a partial grade. Checkbox "Show in final grade". Default false.
+   */
+  flag: 'counts_to_grade',
+  /** number (decimals allowed, > 0), PLACEHOLDER — weight the grade carries in the gradebook */
   weight: 'grade_weight',
 } as const;
 
