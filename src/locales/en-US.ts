@@ -683,6 +683,9 @@ export default {
   max_execution_time_tooltip: 'The maximum duration of the exam in minutes.',
   min_pass_score: 'Min pass score',
   min_pass_score_tooltip: 'The minimum score a student must achieve to pass (in %).',
+  randomize_questions_order: 'Randomize question order',
+  randomize_questions_order_tooltip:
+    'When enabled, each attempt shows the questions in a shuffled order.',
   status_consultation_tooltip: 'Status',
   tutor_consultation_tooltip: 'Tutor',
   proposed_terms_tooltip: 'Proposed terms',

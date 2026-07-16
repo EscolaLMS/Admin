@@ -577,6 +577,7 @@ declare namespace API {
       max_attempts?: number;
       max_execution_time?: number;
       min_pass_score?: number;
+      randomize_order?: boolean;
     };
   };
 

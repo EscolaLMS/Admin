@@ -649,6 +649,9 @@ export default {
   max_execution_time_tooltip: 'Maksymalny czas trwania egzaminu wyrażony w minutach.',
   min_pass_score: 'Minimalny pozytywny wynik',
   min_pass_score_tooltip: 'Minimalny wynik który musi uzyskać student aby zdać (wyrażony w %).',
+  randomize_questions_order: 'Losowa kolejność pytań',
+  randomize_questions_order_tooltip:
+    'Gdy włączone, każde podejście pokazuje pytania w losowej kolejności.',
   status_consultation_tooltip: 'Status',
   tutor_consultation_tooltip: 'Trener',
   proposed_terms_tooltip: 'Proponowane terminy',

@@ -184,6 +184,13 @@ export const Topic: React.FC = () => {
       values.value = 'theProject';
     }
 
+    // GIFT quiz randomize toggle: send as 1/0 (Laravel boolean-safe), and only when the
+    // user actually toggled it so an untouched edit doesn't overwrite the stored value.
+    const randomizeOrder = (topics as { randomize_order?: boolean }).randomize_order;
+    if (typeof randomizeOrder === 'boolean') {
+      (values as Record<string, unknown>).randomize_order = randomizeOrder ? 1 : 0;
+    }
+
     const formData = getFormData(values);
 
     handleSave(formData);
