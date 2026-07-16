@@ -1588,6 +1588,11 @@ declare namespace API {
     course_id: number;
   };
 
+  type ExportQuizAttemptsParams = {
+    course_id: number;
+    topic_gift_quiz_id?: number;
+  };
+
   type GiftQuiz = {
     id: number;
     value: string;

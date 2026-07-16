@@ -1,5 +1,5 @@
 import { FileSearchOutlined } from '@ant-design/icons';
-import type { ProTableProps } from '@ant-design/pro-components';
+import type { ProFormInstance, ProTableProps } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { Button, Tag, Tooltip } from 'antd';
@@ -12,6 +12,7 @@ import { DATETIME_FORMAT } from '@/consts/dates';
 import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
 import { createTableOrderObject } from '@/utils/utils';
 
+import CourseQuizReportsExportButton from './CourseQuizReportsExportButton';
 import CourseQuizSelect from './CourseQuizSelect';
 
 type ProTableRequest = NonNullable<
@@ -20,6 +21,7 @@ type ProTableRequest = NonNullable<
 
 export const CourseQuizReports: React.FC<{ courseId: number }> = ({ courseId }) => {
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<ProFormInstance>();
   const intl = useIntl();
 
   const columns: ProColumns<API.QuizAttempt>[] = [
@@ -166,9 +168,17 @@ export const CourseQuizReports: React.FC<{ courseId: number }> = ({ courseId }) 
         layout: 'vertical',
       }}
       actionRef={actionRef}
+      formRef={formRef}
       rowKey="id"
       request={onRequest}
       columns={columns}
+      toolBarRender={() => [
+        <CourseQuizReportsExportButton
+          key="export"
+          courseId={courseId}
+          topicGiftQuizId={formRef.current?.getFieldValue('topic_gift_quiz_id')}
+        />,
+      ]}
     />
   );
 };
