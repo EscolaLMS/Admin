@@ -173,11 +173,7 @@ export const CourseQuizReports: React.FC<{ courseId: number }> = ({ courseId }) 
       request={onRequest}
       columns={columns}
       toolBarRender={() => [
-        <CourseQuizReportsExportButton
-          key="export"
-          courseId={courseId}
-          topicGiftQuizId={formRef.current?.getFieldValue('topic_gift_quiz_id')}
-        />,
+        <CourseQuizReportsExportButton key="export" courseId={courseId} formRef={formRef} />,
       ]}
     />
   );
