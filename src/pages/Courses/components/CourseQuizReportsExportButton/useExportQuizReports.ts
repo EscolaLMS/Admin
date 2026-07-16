@@ -1,21 +1,19 @@
-import { ExportOutlined } from '@ant-design/icons';
 import type { ProFormInstance } from '@ant-design/pro-components';
-import { Button, message } from 'antd';
-import React, { useCallback, useState } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
+import { message } from 'antd';
+import type { MutableRefObject } from 'react';
+import { useCallback, useState } from 'react';
+import { useIntl } from 'umi';
 
 import { exportQuizAttempts } from '@/services/escola-lms/gift_quiz';
 
-interface Props {
-  courseId: number;
-  formRef: React.MutableRefObject<ProFormInstance | undefined>;
-}
-
-export const CourseQuizReportsExportButton: React.FC<Props> = ({ courseId, formRef }) => {
+export const useExportQuizReports = (
+  courseId: number,
+  formRef: MutableRefObject<ProFormInstance | undefined>,
+) => {
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
 
-  const onClick = useCallback(async () => {
+  const exportQuizReports = useCallback(async () => {
     setLoading(true);
     try {
       const response = await exportQuizAttempts({
@@ -44,11 +42,7 @@ export const CourseQuizReportsExportButton: React.FC<Props> = ({ courseId, formR
     }
   }, [courseId, formRef, intl]);
 
-  return (
-    <Button type="primary" loading={loading} onClick={onClick}>
-      <ExportOutlined /> <FormattedMessage id="export" defaultMessage="Export" />
-    </Button>
-  );
+  return { loading, exportQuizReports };
 };
 
-export default CourseQuizReportsExportButton;
+export default useExportQuizReports;
