@@ -1,15 +1,19 @@
 import UserSelect from '@/components/UserSelect';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
-import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
-import React, { useCallback, useState } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
+// DEFAULT_GRADE_WEIGHT re-imported when the weight field below is restored.
+import { GRADEBOOK_FIELDS } from '@/consts/gradebook';
+// ProFormDigit re-imported when the weight field below is restored.
+import ProForm, { ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
+// useState re-imported when the weight field below is restored.
+import React, { useCallback } from 'react';
+// useIntl re-imported when the weight field below is restored.
+import { FormattedMessage } from 'umi';
 
 type SelectValue = string | number | string[] | number[];
 
 type ProjectChangeKey =
   | 'notify_users'
-  | typeof GRADEBOOK_FIELDS.flag
-  | typeof GRADEBOOK_FIELDS.weight;
+  // | typeof GRADEBOOK_FIELDS.weight — hidden with the weight field, restore together
+  | typeof GRADEBOOK_FIELDS.flag;
 
 type ProjectChangeValue = SelectValue | boolean | number | null;
 
@@ -19,18 +23,19 @@ interface Props {
 }
 
 export const Project: React.FC<Props> = ({ onChange, topicable }) => {
-  const intl = useIntl();
-  const [addToGradebook, setAddToGradebook] = useState<boolean>(
-    Boolean(topicable?.counts_to_grade),
-  );
+  // AN-8: grade weight hidden for now — intl + this state only served the weight field.
+  // const intl = useIntl();
+  // const [addToGradebook, setAddToGradebook] = useState<boolean>(
+  //   Boolean(topicable?.counts_to_grade),
+  // );
 
   const onValuesChange = useCallback(
     (values: Record<string, ProjectChangeValue>) => {
       const key = Object.keys(values)[0] as ProjectChangeKey;
       if (!key) return;
-      if (key === GRADEBOOK_FIELDS.flag) {
-        setAddToGradebook(Boolean(values[key]));
-      }
+      // if (key === GRADEBOOK_FIELDS.flag) {
+      //   setAddToGradebook(Boolean(values[key]));
+      // }
       onChange(key, values[key]);
     },
     [onChange],
@@ -42,7 +47,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
         initialValues={{
           notify_users: topicable?.notify_users ?? [],
           [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
-          [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
+          // [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={onValuesChange}
         submitter={false}
@@ -70,6 +75,8 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
               />
             }
           />
+          {/* AN-8: grade weight hidden until its backend lands — restore together with the
+              state / initialValue / import / type union commented above.
           {addToGradebook && (
             <ProFormDigit
               name={GRADEBOOK_FIELDS.weight}
@@ -101,7 +108,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
                 },
               ]}
             />
-          )}
+          )} */}
         </ProFormGroup>
       </ProForm>
     </React.Fragment>

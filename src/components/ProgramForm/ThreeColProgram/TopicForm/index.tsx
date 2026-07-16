@@ -1,5 +1,6 @@
 import { Context } from '@/components/ProgramForm/Context';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
+// DEFAULT_GRADE_WEIGHT re-imported when the weight field is restored (see the topic forms).
+import { GRADEBOOK_FIELDS } from '@/consts/gradebook';
 import { getFormData } from '@/services/api';
 import { getTopic } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
@@ -185,21 +186,22 @@ export const Topic: React.FC = () => {
       values.value = 'theProject';
     }
 
-    // AN-8 gradebook flag + weight — quiz/project topics only. Fall back to the stored
-    // topicable value so an untouched flag/weight isn't cleared on partial edits.
+    // AN-8 gradebook flag — quiz/project topics only. Fall back to the stored topicable
+    // value so an untouched flag isn't cleared on partial edits.
     if (topic.topicable_type === TopicType.GiftQuiz || topic.topicable_type === TopicType.Project) {
       const topicable = topics.topicable as
         | { counts_to_grade?: boolean; grade_weight?: number }
         | undefined;
-      const addToGradebook = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
-      values[GRADEBOOK_FIELDS.flag] = addToGradebook ? 1 : 0;
-      if (addToGradebook) {
-        const weight = Number(values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight);
-        values[GRADEBOOK_FIELDS.weight] =
-          Number.isFinite(weight) && weight > 0 ? weight : DEFAULT_GRADE_WEIGHT;
-      } else {
-        delete values[GRADEBOOK_FIELDS.weight];
-      }
+      const countsToGrade = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
+      values[GRADEBOOK_FIELDS.flag] = countsToGrade ? 1 : 0;
+      // AN-8: grade weight hidden for now — not serialized until the field is restored.
+      // if (countsToGrade) {
+      //   const weight = Number(values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight);
+      //   values[GRADEBOOK_FIELDS.weight] =
+      //     Number.isFinite(weight) && weight > 0 ? weight : DEFAULT_GRADE_WEIGHT;
+      // } else {
+      //   delete values[GRADEBOOK_FIELDS.weight];
+      // }
     }
 
     const formData = getFormData(values);

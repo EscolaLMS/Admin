@@ -10,7 +10,9 @@
  *   content API (courses package) for both quiz and project topicables, and quizzes
  *   also accept it on `PUT /api/admin/gift-quizes/{id}`. Default false.
  * - `weight` (`grade_weight`) and the read endpoints below remain PLACEHOLDERS,
- *   pending their separate backend tasks.
+ *   pending their separate backend tasks. The weight input is currently commented
+ *   out in the quiz/project topic forms (hidden until its backend lands); this field
+ *   name is kept so it can be uncommented in place.
  */
 
 /** Field names sent with a quiz/project topic on create/edit. */

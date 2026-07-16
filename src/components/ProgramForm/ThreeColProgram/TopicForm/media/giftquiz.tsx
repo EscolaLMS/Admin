@@ -1,17 +1,19 @@
 import { Table } from '@/components/GiftQuizQuestions/table';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
+// DEFAULT_GRADE_WEIGHT re-imported when the weight field below is restored.
+import { GRADEBOOK_FIELDS } from '@/consts/gradebook';
 import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
-import React, { Fragment, useState } from 'react';
+// useState re-imported when the weight field below is restored.
+import React, { Fragment } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 type QuizChangeKey =
   | 'max_attempts'
   | 'max_execution_time'
   | 'min_pass_score'
-  | typeof GRADEBOOK_FIELDS.flag
-  | typeof GRADEBOOK_FIELDS.weight;
+  // | typeof GRADEBOOK_FIELDS.weight — hidden with the weight field, restore together
+  | typeof GRADEBOOK_FIELDS.flag;
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
@@ -21,9 +23,10 @@ export const GiftQuiz: React.FC<{
   onEdited?: () => void;
 }> = ({ topicable, onAdded, onRemoved, onEdited, onChange }) => {
   const intl = useIntl();
-  const [addToGradebook, setAddToGradebook] = useState<boolean>(
-    Boolean(topicable?.counts_to_grade),
-  );
+  // AN-8: grade weight hidden for now — this state only toggled the weight field's visibility.
+  // const [addToGradebook, setAddToGradebook] = useState<boolean>(
+  //   Boolean(topicable?.counts_to_grade),
+  // );
 
   return (
     <Fragment>
@@ -33,14 +36,14 @@ export const GiftQuiz: React.FC<{
           max_execution_time: topicable ? topicable.max_execution_time : undefined,
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
           [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
-          [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
+          // [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={(values) => {
           const key = Object.keys(values)[0] as QuizChangeKey;
           if (!key) return;
-          if (key === GRADEBOOK_FIELDS.flag) {
-            setAddToGradebook(Boolean(values[key]));
-          }
+          // if (key === GRADEBOOK_FIELDS.flag) {
+          //   setAddToGradebook(Boolean(values[key]));
+          // }
           onChange(key, values[key]);
         }}
         submitter={false}
@@ -86,6 +89,8 @@ export const GiftQuiz: React.FC<{
               />
             }
           />
+          {/* AN-8: grade weight hidden until its backend lands — restore together with the
+              state / initialValue / import / type union commented above.
           {addToGradebook && (
             <ProFormDigit
               name={GRADEBOOK_FIELDS.weight}
@@ -117,7 +122,7 @@ export const GiftQuiz: React.FC<{
                 },
               ]}
             />
-          )}
+          )} */}
         </ProFormGroup>
       </ProForm>
 
