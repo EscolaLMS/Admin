@@ -20,6 +20,9 @@ body,
 // ==========================================================================
 :root {
   --app-scrollbar-size: 14px;
+  // Thin bar for compact floating overlays (dropdowns, pickers, popovers) where
+  // the full-size bar is too heavy — see the opt-out block below.
+  --app-scrollbar-size-compact: 8px;
   --app-scrollbar-track: #f0f0f0;
   --app-scrollbar-thumb: #909399;
   --app-scrollbar-thumb-hover: #6b6e76;
@@ -65,13 +68,57 @@ body,
 }
 *::-webkit-scrollbar-thumb {
   background: var(--app-scrollbar-thumb);
-  border-radius: var(--app-scrollbar-radius);
   // Inset ring: keeps a little track visible around the thumb so it reads as a
   // grabbable handle rather than filling the whole gutter.
   border: 3px solid var(--app-scrollbar-track);
+  border-radius: var(--app-scrollbar-radius);
 }
 *::-webkit-scrollbar-thumb:hover {
   background: var(--app-scrollbar-thumb-hover);
+}
+
+// Compact overlays: keep the same styled bar, just thinner.
+// Small floating surfaces — Select / TreeSelect / AutoComplete / Cascader
+// dropdowns, DatePicker & TimePicker panels, Dropdown & table-filter menus,
+// Mentions suggestions, and Popovers — look heavy with the 14px app bar and it
+// eats width in a narrow list. We ONLY shrink the ::-webkit-scrollbar
+// pseudo-element (track + thumb kept, so the bar stays always-visible like the
+// rest of the app). Deliberately NOT setting scrollbar-width / scrollbar-color
+// here: a non-initial value makes Chromium 121+/WebKit fall back to the native
+// scrollbar, which on macOS is an auto-hiding overlay bar with no visible track.
+.ant-select-dropdown,
+.ant-cascader-dropdown,
+.ant-picker-dropdown,
+.ant-dropdown,
+.ant-mentions-dropdown,
+.ant-popover {
+  *::-webkit-scrollbar {
+    width: var(--app-scrollbar-size-compact);
+    height: var(--app-scrollbar-size-compact);
+  }
+  // Thinner inset ring so the thumb isn't swallowed on an 8px bar (the 3px
+  // global ring would leave a 2px thumb).
+  *::-webkit-scrollbar-thumb {
+    border-width: 2px;
+  }
+}
+
+// Firefox can't set an arbitrary scrollbar width (only thin/auto/none), so give
+// overlays the "thin" preset. Gated to Firefox only — matching the global
+// Firefox block — so it never sets a non-initial value in Chromium/WebKit and
+// thus never disables the pseudo-element styling above.
+@supports not selector(::-webkit-scrollbar) {
+  .ant-select-dropdown,
+  .ant-cascader-dropdown,
+  .ant-picker-dropdown,
+  .ant-dropdown,
+  .ant-mentions-dropdown,
+  .ant-popover {
+    &,
+    * {
+      scrollbar-width: thin !important;
+    }
+  }
 }
 
 // Tables using `sticky` + horizontal scroll (e.g. the class register) do NOT get
@@ -149,5 +196,5 @@ ol {
 
 // Fix margin styles in DictionaryWordsTableList component
 .import-dictionary div {
-  margin: 0!important;
+  margin: 0 !important;
 }
