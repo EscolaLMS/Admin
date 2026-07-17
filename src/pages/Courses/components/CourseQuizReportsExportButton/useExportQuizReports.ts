@@ -25,13 +25,16 @@ export const useExportQuizReports = (
 
       // A resolved blob request always yields a Blob; errors reject into the catch below.
       if (response instanceof Blob) {
+        const objectUrl = window.URL.createObjectURL(response);
         const downloadLink = document.createElement('a');
-        downloadLink.href = window.URL.createObjectURL(response);
+        downloadLink.href = objectUrl;
         downloadLink.download = `quiz_results_${courseId}.xlsx`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-        window.URL.revokeObjectURL(downloadLink.href);
+        // Defer revocation: click() starts the download asynchronously, so revoking the URL
+        // synchronously can cancel the download before the browser reads the blob.
+        setTimeout(() => window.URL.revokeObjectURL(objectUrl), 0);
       }
     } catch (error) {
       // The global errorHandler can't surface blob error bodies, so show an explicit message here.
