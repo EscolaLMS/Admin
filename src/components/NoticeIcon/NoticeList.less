@@ -4,6 +4,8 @@
   max-height: 400px;
   overflow: auto;
 
+  // Intentional exception to the global scrollbar style (src/global.less):
+  // this compact notification dropdown deliberately hides its scrollbar.
   &::-webkit-scrollbar {
     display: none;
   }

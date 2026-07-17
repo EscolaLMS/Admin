@@ -9,6 +9,101 @@ body,
     'Noto Color Emoji';
 }
 
+// ==========================================================================
+// Global scrollbar styling
+// Single, shared look for every scrollable area (tables, reports, lists, page
+// content). Always visible (styled WebKit scrollbars are non-overlay, so they
+// stay put instead of auto-hiding) and deliberately thicker so the thumb is
+// easy to grab. Covers both engines the project supports: WebKit/Chromium via
+// ::-webkit-scrollbar and Firefox via scrollbar-width/scrollbar-color.
+// Tweak the tokens below to restyle everywhere at once.
+// ==========================================================================
+:root {
+  --app-scrollbar-size: 14px;
+  --app-scrollbar-track: #f0f0f0;
+  --app-scrollbar-thumb: #909399;
+  --app-scrollbar-thumb-hover: #6b6e76;
+  --app-scrollbar-radius: 8px;
+}
+
+// Firefox (and any engine without ::-webkit-scrollbar support).
+// Scoped behind @supports on purpose: Chromium 121+ / WebKit support the
+// standard scrollbar-width/scrollbar-color, and once those are set to a
+// non-initial value on an element they DISABLE the ::-webkit-scrollbar
+// pseudo-elements below — which would drop our custom thickness. Gating on "no
+// ::-webkit-scrollbar support" keeps these rules for Firefox only.
+// !important on the color so antd's per-component scrollbar-color (it sets one
+// on .ant-table) doesn't win and leave tables with a different colored bar.
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: var(--app-scrollbar-thumb) var(--app-scrollbar-track) !important;
+  }
+}
+
+// Chromium / WebKit / Edge: antd sets `scrollbar-color` on .ant-table (see
+// antd/es/table/style — issue #47486), and because that property is inherited,
+// the table's scroll container inherits a non-initial value. In Chromium 121+
+// that DISABLES the ::-webkit-scrollbar pseudo-elements on that scroller, so the
+// class register kept antd's default thin bar while every other route worked.
+// Reset it to the initial `auto` everywhere so our pseudo-element styling below
+// always applies. Guarded to engines that support ::-webkit-scrollbar so it
+// never strips the Firefox colors above.
+@supports selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: auto !important;
+  }
+}
+
+// WebKit / Chromium / Edge
+*::-webkit-scrollbar {
+  width: var(--app-scrollbar-size);
+  height: var(--app-scrollbar-size);
+}
+*::-webkit-scrollbar-track {
+  background: var(--app-scrollbar-track);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--app-scrollbar-thumb);
+  border-radius: var(--app-scrollbar-radius);
+  // Inset ring: keeps a little track visible around the thumb so it reads as a
+  // grabbable handle rather than filling the whole gutter.
+  border: 3px solid var(--app-scrollbar-track);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--app-scrollbar-thumb-hover);
+}
+
+// Tables using `sticky` + horizontal scroll (e.g. the class register) do NOT get
+// a native scrollbar — antd draws a synthetic one as nested divs pinned to the
+// viewport bottom, so ::-webkit-scrollbar never touches it. Its defaults make it
+// easy to miss: 8px thin, a faint placeholder-gray thumb, and the container at
+// ~0.65 opacity. Restyle it to the shared look. antd's own selector is 4 classes
+// deep and sets the container height with !important via runtime CSS-in-JS
+// (injected after this file), so we match its depth, add an `html` boost, and use
+// !important to win reliably.
+html .ant-table-wrapper .ant-table-sticky .ant-table-sticky-scroll {
+  height: var(--app-scrollbar-size) !important;
+  opacity: 1;
+}
+html .ant-table-wrapper .ant-table-sticky .ant-table-sticky-scroll .ant-table-sticky-scroll-bar {
+  height: var(--app-scrollbar-size) !important;
+  background: var(--app-scrollbar-thumb) !important;
+  border-radius: var(--app-scrollbar-radius) !important;
+}
+html
+  .ant-table-wrapper
+  .ant-table-sticky
+  .ant-table-sticky-scroll
+  .ant-table-sticky-scroll-bar:hover,
+html
+  .ant-table-wrapper
+  .ant-table-sticky
+  .ant-table-sticky-scroll
+  .ant-table-sticky-scroll-bar-active {
+  background: var(--app-scrollbar-thumb-hover) !important;
+}
+
 .colorWeak {
   filter: invert(80%);
 }
