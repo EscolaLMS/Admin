@@ -60,6 +60,18 @@ export const SemesterSelect: React.FC<{
     [fetch],
   );
 
+  // When a value is provided up-front (e.g. filter restored from the URL), load the
+  // options on mount so the selection renders its semester name instead of the raw id.
+  useEffect(() => {
+    const hasValue = Array.isArray(value)
+      ? value.length > 0
+      : value !== undefined && value !== null;
+    if (hasValue) {
+      fetch();
+    }
+    // Run once on mount; only the initial restored value needs resolving here.
+  }, []);
+
   return (
     <Select
       onSelect={onSelect}
