@@ -522,6 +522,9 @@ declare namespace API {
     active?: boolean;
     preview?: boolean;
     can_skip?: boolean;
+    // GIFT quiz: nested in `topicable` on read, flattened to the top level for the PUT
+    // body (like `value`). Boolean in state, sent as 1/0 on the wire.
+    randomize_order?: boolean | number;
     json?: object &
       ?{
         ffmpeg:
