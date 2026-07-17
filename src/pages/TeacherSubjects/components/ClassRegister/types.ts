@@ -1,6 +1,7 @@
 export type ClassRegisterTableItemBase = {
   id: number;
   full_name: string;
+  weighted_average: string;
   proposed_grade: string;
   final_grades?: API.FinalGradeItem;
 };

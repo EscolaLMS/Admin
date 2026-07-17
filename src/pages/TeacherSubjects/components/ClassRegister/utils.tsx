@@ -168,6 +168,7 @@ export const getAttendanceSummaryCells = ({
     index += finalGradeCount;
   }
 
+  cells.push(<Table.Summary.Cell key="weighted_average" index={index++} />);
   cells.push(<Table.Summary.Cell key="proposed_grade" index={index++} />);
   cells.push(<Table.Summary.Cell key="option" index={index++} />);
 

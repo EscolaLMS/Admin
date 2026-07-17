@@ -27,6 +27,7 @@ import {
   getProposedGrade,
   getScalesBySubjectScaleFormId,
   getStudentExamsFromExams,
+  getWeightedAverage,
 } from '../FinalGradesDetails/utils';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from '../consts';
 import { isFrozenAttendance } from './helpers';
@@ -293,6 +294,13 @@ export const ClassRegister: React.FC = () => {
               examsCols,
               finalGradeCols,
               {
+                title: <FormattedMessage id="weighted_average" />,
+                hideInSearch: true,
+                dataIndex: 'weighted_average',
+                align: 'center',
+                width: 100,
+              },
+              {
                 title: <FormattedMessage id="proposed_grade" />,
                 hideInSearch: true,
                 dataIndex: 'proposed_grade',
@@ -329,6 +337,8 @@ export const ClassRegister: React.FC = () => {
 
                   const proposed_grade = getProposedGrade(studentExams, tutorScales);
 
+                  const weighted_average = getWeightedAverage(studentExams);
+
                   const studentExamResults = getStudentExamResults(studentExams);
 
                   const finalGrades = getFinalGrades(studentFinalGrades);
@@ -341,6 +351,7 @@ export const ClassRegister: React.FC = () => {
                       ...studentAttendances,
                       ...studentExamResults,
                       ...finalGrades,
+                      weighted_average,
                       proposed_grade,
                       final_grades: studentFinalGrades,
                     },
