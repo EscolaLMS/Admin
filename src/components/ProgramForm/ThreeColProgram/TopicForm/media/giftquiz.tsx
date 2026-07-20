@@ -1,5 +1,5 @@
 import { Table } from '@/components/GiftQuizQuestions/table';
-import ProForm, { ProFormDigit, ProFormGroup } from '@ant-design/pro-form';
+import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
 import React, { Fragment } from 'react';
@@ -7,7 +7,10 @@ import { FormattedMessage, useIntl } from 'umi';
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
-  onChange: (key: 'max_attempts' | 'max_execution_time', value: number | null) => void;
+  onChange: (
+    key: 'max_attempts' | 'max_execution_time' | 'min_pass_score' | 'randomize_order',
+    value: number | boolean | null,
+  ) => void;
   onAdded?: () => void;
   onRemoved?: () => void;
   onEdited?: () => void;
@@ -21,9 +24,14 @@ export const GiftQuiz: React.FC<{
           max_attempts: topicable ? topicable.max_attempts : undefined,
           max_execution_time: topicable ? topicable.max_execution_time : undefined,
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
+          randomize_order: topicable ? topicable.randomize_order ?? false : false,
         }}
         onValuesChange={(values) => {
-          const key = Object.keys(values)[0] as 'max_attempts' | 'max_execution_time';
+          const key = Object.keys(values)[0] as
+            | 'max_attempts'
+            | 'max_execution_time'
+            | 'min_pass_score'
+            | 'randomize_order';
           if (key) {
             onChange(key, values[key]);
           }
@@ -58,6 +66,11 @@ export const GiftQuiz: React.FC<{
               id: 'min_pass_score',
               defaultMessage: 'min_pass_score',
             })}
+          />
+          <ProFormSwitch
+            name="randomize_order"
+            label={<FormattedMessage id="randomize_questions_order" />}
+            tooltip={<FormattedMessage id="randomize_questions_order_tooltip" />}
           />
         </ProFormGroup>
       </ProForm>
