@@ -1,11 +1,12 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { type ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip } from 'antd';
 import { format } from 'date-fns';
 import React from 'react';
 import { FormattedMessage, Link } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import {
@@ -127,7 +128,7 @@ const staticColumns: ProColumns<API.CompetencyChallenge>[] = [
 
 const CompetencyChallenges: React.FC = () => (
   <PageContainer>
-    <ProTable<API.CompetencyChallenge, API.CompetencyChallengesParams>
+    <AutoSearchProTable<API.CompetencyChallenge, API.CompetencyChallengesParams>
       rowKey="id"
       search={{ layout: 'vertical' }}
       toolBarRender={() => [

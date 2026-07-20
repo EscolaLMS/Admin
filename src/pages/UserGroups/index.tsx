@@ -4,11 +4,11 @@ import { deleteUserGroup, userGroups, userGroupsTree } from '@/services/escola-l
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Modal, Popconfirm, Spin, Tag, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { Tree } from '@/components/Tree';
 import { createTableOrderObject } from '@/utils/utils';
 
@@ -149,7 +149,7 @@ const TableList: React.FC = () => {
       <Modal open={showTree} onCancel={() => setShowTree(false)} onOk={() => setShowTree(false)}>
         {showTree && <TreeModal />}
       </Modal>
-      <ProTable<API.UserGroup, API.UserGroupsParams>
+      <AutoSearchProTable<API.UserGroup, API.UserGroupsParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Users.User Groups',
           defaultMessage: 'User Groups',

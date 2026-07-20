@@ -1,9 +1,10 @@
 import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
-import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { type ProColumns } from '@ant-design/pro-table';
 import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { allStudentsAndGroups as fetchAllStudentsAndGroups } from '@/services/escola-lms/student_user_groups';
 import { useTeacherSubject } from '../context';
 import { CreateTeamsChatButton } from './CreateTeamsChatButton';
@@ -94,7 +95,7 @@ export const Students: React.FC = () => {
   );
 
   return (
-    <ProTable<TableDataProps, TableParams>
+    <AutoSearchProTable<TableDataProps, TableParams>
       className="table-standalone"
       rowKey={(record) => `${record.group_id}-${record.user_id}`}
       search={{ layout: 'vertical' }}

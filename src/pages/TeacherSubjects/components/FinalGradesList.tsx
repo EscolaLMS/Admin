@@ -1,10 +1,10 @@
 import { EditOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tooltip, Typography } from 'antd';
 import React, { useMemo } from 'react';
 import { FormattedMessage, Link, useLocation } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { getGroupFinalGrades } from '@/services/escola-lms/grades';
 import { useTeacherSubject } from '../context';
@@ -64,7 +64,7 @@ export const FinalGradesList: React.FC = () => {
   }
 
   return (
-    <ProTable<API.FinalGradeItem, TableParams>
+    <AutoSearchProTable<API.FinalGradeItem, TableParams>
       className="table-standalone"
       rowKey="id"
       search={{ layout: 'vertical' }}

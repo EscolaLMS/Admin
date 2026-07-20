@@ -4,6 +4,7 @@ import { FormattedMessage, useIntl } from 'umi';
 
 import { Button, message, Popconfirm, Tag, Tooltip } from 'antd';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import {
   assignUserSubmission,
   deleteUserSubmission,
@@ -12,7 +13,6 @@ import {
 import { createTableOrderObject } from '@/utils/utils';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import AddUserSubmission from './form';
 import './index.css';
 
@@ -83,7 +83,7 @@ export const UserSubmissions: React.FC<{
   );
   return (
     <Fragment>
-      <ProTable<
+      <AutoSearchProTable<
         EscolaLms.AssignWithoutAccount.Models.UserSubmission,
         API.PageParams & { email?: string; morphable_id?: number; morphable_type?: string }
       >

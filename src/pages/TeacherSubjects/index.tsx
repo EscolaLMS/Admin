@@ -1,9 +1,9 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import SemesterSelect from '@/components/SemesterSelect';
 import { semesterSubjects } from '@/services/escola-lms/semester_subject';
 import { EditOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 import { FormattedMessage, Link, history, useIntl, useLocation } from 'umi';
@@ -75,7 +75,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Subjects, API.SubjectParams>
+      <AutoSearchProTable<API.Subjects, API.SubjectParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Teacher.Subjects',
           defaultMessage: 'Subjects',

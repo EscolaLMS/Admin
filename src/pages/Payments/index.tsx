@@ -1,12 +1,12 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import React, { useRef } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import { payments } from '@/services/escola-lms/payments';
 import { format } from 'date-fns';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { createTableOrderObject, roundTo } from '@/utils/utils';
@@ -117,7 +117,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<
+      <AutoSearchProTable<
         API.PaymentListItem,
         API.PageParams & { dateRange: [string, string]; status: API.PaymentStatus }
       >

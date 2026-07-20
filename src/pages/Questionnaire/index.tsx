@@ -1,9 +1,9 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { deleteQuestionnaire, questionnaire } from '@/services/escola-lms/questionnaire';
 import { createTableOrderObject } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useCallback, useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
@@ -56,7 +56,7 @@ const Questionnaire: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Questionnaire>
+      <AutoSearchProTable<API.Questionnaire>
         headerTitle={intl.formatMessage({
           id: 'questionnaires',
           defaultMessage: 'questionnaires',

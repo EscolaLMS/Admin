@@ -1,10 +1,10 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import UploadScorm from '@/components/Scorm/upload';
 import { deleteScorm, scorms } from '@/services/escola-lms/scorm';
 import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
@@ -108,7 +108,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.SCORM, API.PageParams & { search: string; role: string }>
+      <AutoSearchProTable<API.SCORM, API.PageParams & { search: string; role: string }>
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.SCORMs',
           defaultMessage: 'scorms',

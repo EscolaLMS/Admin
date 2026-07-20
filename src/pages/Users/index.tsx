@@ -14,9 +14,10 @@ import {
 } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { type ProColumns } from '@ant-design/pro-table';
 
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import SecureUpload from '@/components/SecureUpload';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import useModelFields from '@/hooks/useModelFields';
@@ -287,7 +288,7 @@ const TableList: React.FC = () => {
         }}
       >
         <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}>
-          <ProTable<
+          <AutoSearchProTable<
             API.UserListItem,
             API.PageParams &
               API.PaginationParams &

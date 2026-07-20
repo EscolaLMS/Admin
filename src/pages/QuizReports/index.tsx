@@ -1,12 +1,12 @@
 import { FileSearchOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tag, Tooltip } from 'antd';
 import { format } from 'date-fns';
 import React, { useCallback, useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import CourseSelect from '@/components/CourseSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
@@ -213,7 +213,7 @@ const QuizAttempts: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.QuizAttempt, API.QuizAttemptsParams>
+      <AutoSearchProTable<API.QuizAttempt, API.QuizAttemptsParams>
         headerTitle={intl.formatMessage({
           id: 'quiz_reports',
           defaultMessage: 'Quiz Reports',

@@ -1,11 +1,11 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tooltip } from 'antd';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
@@ -142,7 +142,7 @@ export const FileExportsHistory: React.FC = () => {
   );
 
   return (
-    <ProTable<API.PCGFileExportsHistoryItem, API.PCGFileExportsHistoryParams>
+    <AutoSearchProTable<API.PCGFileExportsHistoryItem, API.PCGFileExportsHistoryParams>
       className="table-standalone"
       request={async ({
         group_id = teacherSubjectData?.groups?.[0]?.id,

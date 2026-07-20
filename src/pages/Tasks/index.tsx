@@ -1,9 +1,9 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useRef } from 'react';
@@ -151,7 +151,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.TaskListItem, API.TaskListParams>
+      <AutoSearchProTable<API.TaskListItem, API.TaskListParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Other activities.Tasks',
           defaultMessage: 'Tasks',

@@ -1,9 +1,9 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Modal, Spin, Table, Tooltip, message } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import BookmarkNoteModal from '@/components/BookmarkNoteModal';
 import PERMISSIONS from '@/consts/permissions';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -194,7 +194,7 @@ export const ClassRegister: React.FC = () => {
           pointer-events:none on the content, so no per-student write can race
           the bulk write. */}
       <Spin spinning={togglingScheduleId !== null}>
-        <ProTable<ClassRegisterTableItem>
+        <AutoSearchProTable<ClassRegisterTableItem>
           sticky
           className="table-standalone"
           request={async ({ group_id = groupOptions[0]?.value, full_name = '' }) => {

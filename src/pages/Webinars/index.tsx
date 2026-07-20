@@ -1,6 +1,5 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import React, { useCallback, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
@@ -16,6 +15,7 @@ import {
 import { Button, Popconfirm, Select, Tag, Tooltip, Typography, message } from 'antd';
 import { format } from 'date-fns';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import Tags from '@/components/Tags';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
 
@@ -212,7 +212,7 @@ const Webinars: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Webinar, API.WebinarsParams>
+      <AutoSearchProTable<API.Webinar, API.WebinarsParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.Webinars',
           defaultMessage: 'Webinars',
@@ -223,6 +223,7 @@ const Webinars: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
+        autoSearch={{ tag: 'multiSelect' }}
         toolBarRender={() => [
           <Link key="addnew" to="/courses/webinars/new">
             <Button type="primary" key="primary">

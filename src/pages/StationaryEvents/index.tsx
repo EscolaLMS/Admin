@@ -1,9 +1,9 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { deleteStationaryEvent, stationaryEvents } from '@/services/escola-lms/stationary_events';
 import { createTableOrderObject } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
@@ -72,7 +72,7 @@ const StationaryEvents: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<
+      <AutoSearchProTable<
         EscolaLms.StationaryEvents.Models.StationaryEvent,
         API.PageParams & API.PaginationParams & { name: string }
       >

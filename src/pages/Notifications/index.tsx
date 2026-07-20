@@ -5,11 +5,11 @@ import { getEventTypes, getNotifications } from '@/services/escola-lms/notificat
 import { createTableOrderObject } from '@/utils/utils';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { format } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { getEventType } from '@/components/NoticeIcon/NoticeList';
 
 export const TableColumns: ProColumns<API.Notification>[] = [
@@ -80,7 +80,7 @@ const NotificationsPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Notification>
+      <AutoSearchProTable<API.Notification>
         headerTitle={intl.formatMessage({
           id: 'notifications',
           defaultMessage: 'notifications',
