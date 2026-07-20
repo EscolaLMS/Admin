@@ -43,6 +43,8 @@ export const createAutoSearchController = (
 
   /** Snapshot of the form values as of the last request — the baseline for "did it actually change?". */
   let lastSubmitted: Record<string, unknown> = {};
+  /** Last value observed for each field (tracks in-session edits, independent of the submit snapshot). */
+  const prev: Record<string, unknown> = {};
   /** Multiselect fields touched since the last request; flushed on blur / dropdown close. */
   const dirty = new Set<string>();
   const timers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -79,21 +81,34 @@ export const createAutoSearchController = (
   };
 
   return {
-    /** Wire to the search form's `onValuesChange`. */
-    onValuesChange(changed: Record<string, unknown>) {
-      Object.entries(changed ?? {}).forEach(([name, value]) => {
+    /**
+     * Wire to the search form's `onValuesChange` — but used only as a trigger. ProForm strips nil
+     * values from the change payload, so a cleared field is invisible there; instead we re-read the
+     * whole form via `getValues()` and diff it against the tracked baseline to find what changed.
+     */
+    onValuesChange() {
+      const current = deps.getValues() ?? {};
+      const names = new Set<string>([...Object.keys(prev), ...Object.keys(current)]);
+
+      names.forEach((name) => {
+        const value = current[name];
+        const previous = prev[name];
+        if (isEqual(value, previous)) {
+          return;
+        }
+        prev[name] = value;
+
         const kind = getKind(name);
         if (kind === 'off') {
           return;
         }
 
-        // Clearing a filter fires a fresh request immediately (regardless of control type) — but
-        // only when it actually removes a previously-applied value, so emptying an already-empty
-        // field (or toggling a multiselect option on then off) doesn't fire a spurious request.
+        // Field cleared — refetch only if it actually held a value (so emptying an already-empty
+        // field doesn't fire a spurious request).
         if (isEmptyValue(value)) {
           clearTimer(name);
           dirty.delete(name);
-          if (!isEmptyValue(lastSubmitted[name]) && !isEqual(value, lastSubmitted[name])) {
+          if (!isEmptyValue(previous)) {
             doSubmit();
           }
           return;
@@ -113,9 +128,8 @@ export const createAutoSearchController = (
             break;
           case 'select':
           case 'date':
-            if (!isEqual(value, lastSubmitted[name])) {
-              doSubmit();
-            }
+            // The diff above already confirmed a real change from the last observed value.
+            doSubmit();
             break;
           case 'multiSelect':
             dirty.add(name);
@@ -152,6 +166,10 @@ export const createAutoSearchController = (
       clearAllTimers();
       dirty.clear();
       lastSubmitted = { ...(values ?? {}) };
+      // Keep the per-field baseline in sync so a later clear compares against the applied state
+      // (and a Reset, which passes {}, drops any stale per-field values).
+      Object.keys(prev).forEach((key) => delete prev[key]);
+      Object.assign(prev, lastSubmitted);
     },
 
     dispose() {
@@ -196,11 +214,19 @@ export const useAutoSearch = <T, V>({
     );
   }
 
-  useEffect(() => () => controllerRef.current?.dispose(), []);
+  useEffect(() => {
+    // Seed the baseline from the form's initial values (set by ProTable before this effect runs),
+    // so clearing a pre-populated filter — one never touched via onValuesChange nor a submit —
+    // is still recognised as removing a value and refetches.
+    const initial = formRef.current?.getFieldsValue?.() as Record<string, unknown> | undefined;
+    if (initial && Object.keys(initial).length > 0) {
+      controllerRef.current?.syncSubmitted(initial);
+    }
+    return () => controllerRef.current?.dispose();
+  }, []);
 
   return {
-    onValuesChange: (changed: Record<string, unknown>) =>
-      controllerRef.current?.onValuesChange(changed),
+    onValuesChange: () => controllerRef.current?.onValuesChange(),
     onSubmit: () =>
       controllerRef.current?.syncSubmitted(
         formRef.current?.getFieldsValue?.() as Record<string, unknown>,

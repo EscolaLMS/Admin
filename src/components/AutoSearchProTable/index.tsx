@@ -61,7 +61,7 @@ function AutoSearchProTable<
     ...form,
     onValuesChange: (changedValues, values) => {
       form?.onValuesChange?.(changedValues, values);
-      auto.onValuesChange(changedValues as Record<string, unknown>);
+      auto.onValuesChange();
     },
   };
 
