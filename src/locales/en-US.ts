@@ -325,6 +325,7 @@ export default {
   upload: 'Add file',
   preview: 'Preview',
   export: 'Export',
+  export_failed: 'Export failed',
   able_to_preview: 'Able to preview',
   loading_content: 'Loading content...',
   preview_content: 'Preview content',

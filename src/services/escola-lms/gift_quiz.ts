@@ -93,6 +93,19 @@ export async function getCourseGiftQuizzes(
   });
 }
 
+/** GET /api/admin/quiz-attempts/export */
+export async function exportQuizAttempts(
+  params: API.ExportQuizAttemptsParams,
+  options?: AxiosRequestConfig,
+) {
+  return request<Blob | API.DefaultResponseError>('/api/admin/quiz-attempts/export', {
+    method: 'GET',
+    responseType: 'blob',
+    params,
+    ...(options || {}),
+  });
+}
+
 /** GET /api/admin/gift-quizes/{id} */
 export async function getGiftQuiz(id: string | number, options?: AxiosRequestConfig) {
   return request<API.DefaultResponse<API.GiftQuiz>>(`/api/admin/gift-quizes/${id}`, {

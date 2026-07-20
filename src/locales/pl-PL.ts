@@ -309,6 +309,7 @@ export default {
   upload: 'Dodaj plik',
   preview: 'Podgląd',
   export: 'Eksport',
+  export_failed: 'Eksport nie powiódł się',
   able_to_preview: 'Możliwość podglądu',
   loading_content: 'Ładowanie treści...',
   preview_content: 'Podgląd treści',
