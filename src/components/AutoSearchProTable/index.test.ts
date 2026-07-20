@@ -177,11 +177,13 @@ describe('autosearch controller', () => {
       expect(submit).not.toHaveBeenCalled();
     });
 
-    it('does not fire when focus moves to a button (Search/Reset submits on its own)', () => {
+    it('keeps a pending change on blur-to-button, flushing on the next real focus loss', () => {
       const { submit, set, controller } = makeHarness({ authors: 'multiSelect' });
       set('authors', [1]);
-      controller.onBlur(true);
+      controller.onBlur(true); // focus moved to a button (e.g. Search) -> keep pending, no request
       expect(submit).not.toHaveBeenCalled();
+      controller.onBlur(false); // real focus loss -> flush the pending change
+      expect(submit).toHaveBeenCalledTimes(1);
     });
 
     it('fires once when a multiselect is cleared to empty (and not again on the following blur)', () => {

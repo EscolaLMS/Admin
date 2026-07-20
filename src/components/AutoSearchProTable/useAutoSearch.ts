@@ -129,11 +129,10 @@ export const createAutoSearchController = (
 
     /**
      * Wire to a blur handler on the search-form container. Flushes pending multiselect changes when
-     * focus leaves the control. Skips when focus moved to a button (e.g. "Search"/"Reset"), which
-     * submits on its own — avoids a duplicate request.
+     * focus leaves the control, unless focus went to a button (see below).
      */
     onBlur(relatedIsButton: boolean) {
-      if (dirty.size === 0) {
+      if (relatedIsButton || dirty.size === 0) {
         return;
       }
       let changedAny = false;
@@ -143,7 +142,7 @@ export const createAutoSearchController = (
         }
       });
       dirty.clear();
-      if (changedAny && !relatedIsButton) {
+      if (changedAny) {
         doSubmit();
       }
     },
@@ -211,7 +210,12 @@ export const useAutoSearch = <T, V>({ columns, overrides, formRef }: UseAutoSear
       controllerRef.current?.syncSubmitted(
         formRef.current?.getFieldsValue?.() as Record<string, unknown>,
       ),
-    onReset: () => controllerRef.current?.syncSubmitted({}),
+    onReset: () =>
+      // ProTable's Reset restores column initialValues, so baseline from the post-reset form state
+      // (not {}) — otherwise clearing a field that has an initialValue wouldn't refetch afterwards.
+      controllerRef.current?.syncSubmitted(
+        formRef.current?.getFieldsValue?.() as Record<string, unknown>,
+      ),
     onBlur: (event: React.FocusEvent<HTMLElement>) => {
       const related = event.relatedTarget as HTMLElement | null;
       const isButton = !!related && (related.tagName === 'BUTTON' || !!related.closest('button'));
