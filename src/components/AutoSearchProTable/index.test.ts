@@ -2,7 +2,7 @@ import type { ProColumns } from '@ant-design/pro-table';
 import { expect } from '@jest/globals';
 
 import type { AutoSearchKind } from './classify';
-import { classifyColumns, inferKind } from './classify';
+import { classifyColumns, inferKind, KIND_TO_TRIGGER } from './classify';
 import { DEBOUNCE_MS } from './consts';
 import { createAutoSearchController } from './useAutoSearch';
 
@@ -62,11 +62,14 @@ describe('autosearch controller', () => {
   const makeHarness = (kinds: Record<string, AutoSearchKind>) => {
     let values: Record<string, unknown> = {};
     const submit = jest.fn();
-    const controller = createAutoSearchController((name) => kinds[name] ?? 'text', {
-      submit,
-      getValue: (name) => values[name],
-      getValues: () => ({ ...values }),
-    });
+    const controller = createAutoSearchController(
+      (name) => KIND_TO_TRIGGER[kinds[name] ?? 'text'],
+      {
+        submit,
+        getValue: (name) => values[name],
+        getValues: () => ({ ...values }),
+      },
+    );
     const set = (name: string, value: unknown) => {
       if (value === undefined) delete values[name];
       else values[name] = value;

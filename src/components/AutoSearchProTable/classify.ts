@@ -1,15 +1,35 @@
 import type { ProColumns } from '@ant-design/pro-table';
 
+import { MIN_QUERY_LENGTH, TRIGGER_MODE } from './consts';
+
 /**
- * The behaviour bucket a search-form control falls into. Drives when an automatic request fires:
+ * The kind of control a search field is — the vocabulary used when a page overrides a field via the
+ * `autoSearch` prop. Each kind maps to a {@link AutoSearchTrigger} (see {@link KIND_TO_TRIGGER}):
  * - `text`        — debounced request once the value reaches {@link MIN_QUERY_LENGTH} chars.
  * - `number`      — debounced request (no minimum length).
- * - `select`      — request immediately on change (if the value actually changed).
- * - `multiSelect` — request when the control loses focus / dropdown closes (if the value changed).
- * - `date`        — request immediately on change (if the value changed).
+ * - `select`      — request immediately on change.
+ * - `date`        — request immediately on change.
+ * - `multiSelect` — request when the control loses focus / dropdown closes.
  * - `off`         — never auto-triggers (column excluded from the search form).
  */
 export type AutoSearchKind = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'off';
+
+/** When a field fires its request — the three behaviours the controller actually implements. */
+export type AutoSearchTrigger =
+  | { mode: typeof TRIGGER_MODE.DEBOUNCED; minChars: number }
+  | { mode: typeof TRIGGER_MODE.ON_CHANGE }
+  | { mode: typeof TRIGGER_MODE.ON_BLUR }
+  | { mode: typeof TRIGGER_MODE.OFF };
+
+/** Collapses the six user-facing kinds onto the three timing behaviours. */
+export const KIND_TO_TRIGGER: Record<AutoSearchKind, AutoSearchTrigger> = {
+  text: { mode: TRIGGER_MODE.DEBOUNCED, minChars: MIN_QUERY_LENGTH },
+  number: { mode: TRIGGER_MODE.DEBOUNCED, minChars: 0 },
+  select: { mode: TRIGGER_MODE.ON_CHANGE },
+  date: { mode: TRIGGER_MODE.ON_CHANGE },
+  multiSelect: { mode: TRIGGER_MODE.ON_BLUR },
+  off: { mode: TRIGGER_MODE.OFF },
+};
 
 const DATE_VALUE_TYPES = new Set([
   'date',

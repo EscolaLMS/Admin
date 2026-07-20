@@ -5,9 +5,9 @@ import { useEffect, useMemo, useRef } from 'react';
 
 import isEqual from 'lodash/isEqual';
 
-import type { AutoSearchKind } from './classify';
-import { classifyColumns } from './classify';
-import { DEBOUNCE_MS, MIN_QUERY_LENGTH } from './consts';
+import type { AutoSearchKind, AutoSearchTrigger } from './classify';
+import { classifyColumns, KIND_TO_TRIGGER } from './classify';
+import { DEBOUNCE_MS, TRIGGER_MODE } from './consts';
 
 export interface AutoSearchDeps {
   /** Trigger the actual request (ProTable form submit). */
@@ -16,11 +16,6 @@ export interface AutoSearchDeps {
   getValue: (name: string) => unknown;
   /** Read the current values of the whole search form. */
   getValues: () => Record<string, unknown>;
-}
-
-export interface AutoSearchOptions {
-  minChars?: number;
-  debounceMs?: number;
 }
 
 const isEmptyValue = (value: unknown): boolean =>
@@ -34,13 +29,9 @@ const isEmptyValue = (value: unknown): boolean =>
  * logic can be unit-tested directly with fake timers and a stub {@link AutoSearchDeps}.
  */
 export const createAutoSearchController = (
-  getKind: (name: string) => AutoSearchKind,
+  getTrigger: (name: string) => AutoSearchTrigger,
   deps: AutoSearchDeps,
-  options: AutoSearchOptions = {},
 ) => {
-  const minChars = options.minChars ?? MIN_QUERY_LENGTH;
-  const debounceMs = options.debounceMs ?? DEBOUNCE_MS;
-
   /** Snapshot of the form values as of the last request — the baseline for "did it actually change?". */
   let lastSubmitted: Record<string, unknown> = {};
   /** Last value observed for each field (tracks in-session edits, independent of the submit snapshot). */
@@ -76,7 +67,7 @@ export const createAutoSearchController = (
       setTimeout(() => {
         timers.delete(name);
         doSubmit();
-      }, debounceMs),
+      }, DEBOUNCE_MS),
     );
   };
 
@@ -98,8 +89,8 @@ export const createAutoSearchController = (
         }
         prev[name] = value;
 
-        const kind = getKind(name);
-        if (kind === 'off') {
+        const trigger = getTrigger(name);
+        if (trigger.mode === TRIGGER_MODE.OFF) {
           return;
         }
 
@@ -114,24 +105,20 @@ export const createAutoSearchController = (
           return;
         }
 
-        switch (kind) {
-          case 'text':
-            if (String(value).length >= minChars) {
+        switch (trigger.mode) {
+          case TRIGGER_MODE.DEBOUNCED:
+            // Text has a minimum length (numbers pass minChars: 0); shorter input drops the trigger.
+            if (String(value).length >= trigger.minChars) {
               scheduleDebounced(name);
             } else {
-              // 1-2 non-empty chars: never auto-fire; drop any pending trigger.
               clearTimer(name);
             }
             break;
-          case 'number':
-            scheduleDebounced(name);
-            break;
-          case 'select':
-          case 'date':
+          case TRIGGER_MODE.ON_CHANGE:
             // The diff above already confirmed a real change from the last observed value.
             doSubmit();
             break;
-          case 'multiSelect':
+          case TRIGGER_MODE.ON_BLUR:
             dirty.add(name);
             break;
           default:
@@ -184,19 +171,13 @@ export interface UseAutoSearchArgs<T, V> {
   columns?: ProColumns<T, V>[];
   overrides?: Record<string, AutoSearchKind>;
   formRef: MutableRefObject<ProFormInstance | undefined>;
-  options?: AutoSearchOptions;
 }
 
 /**
  * React binding for {@link createAutoSearchController}. Returns handlers to wire into ProTable's
  * search form (`onValuesChange`), submit/reset hooks, and a container blur handler.
  */
-export const useAutoSearch = <T, V>({
-  columns,
-  overrides,
-  formRef,
-  options,
-}: UseAutoSearchArgs<T, V>) => {
+export const useAutoSearch = <T, V>({ columns, overrides, formRef }: UseAutoSearchArgs<T, V>) => {
   const kinds = useMemo(() => classifyColumns(columns, overrides), [columns, overrides]);
   const kindsRef = useRef(kinds);
   kindsRef.current = kinds;
@@ -204,13 +185,12 @@ export const useAutoSearch = <T, V>({
   const controllerRef = useRef<AutoSearchController>();
   if (!controllerRef.current) {
     controllerRef.current = createAutoSearchController(
-      (name) => kindsRef.current[name] ?? 'text',
+      (name) => KIND_TO_TRIGGER[kindsRef.current[name] ?? 'text'],
       {
         submit: () => formRef.current?.submit(),
         getValue: (name) => formRef.current?.getFieldValue(name),
         getValues: () => (formRef.current?.getFieldsValue?.() as Record<string, unknown>) ?? {},
       },
-      options,
     );
   }
 
