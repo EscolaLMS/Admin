@@ -25,7 +25,7 @@ export type AutoSearchProTableProps<
 /**
  * Drop-in replacement for `ProTable` that automatically fires the search request as the user edits
  * the built-in QueryFilter, alongside (not replacing) the "Search" button. Rules:
- * - text: request after ≥ 3 chars and a 2 s pause; clearing fires immediately.
+ * - text: request after ≥ 3 chars and a 1 s pause; clearing fires immediately.
  * - single select / date: request on change (only if the value changed).
  * - multiselect: single request on dropdown close / focus loss (only if the value changed).
  *
