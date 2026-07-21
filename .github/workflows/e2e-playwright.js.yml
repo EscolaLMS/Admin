@@ -30,70 +30,73 @@ jobs:
           TZ: Europe/Warsaw
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U default -d default"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
 
       redis:
         image: redis
 
       api:
         image: escolalms/api:latest
+        # Config must be passed at container-start time: GitHub boots service
+        # containers before any step runs, and the escolalms/api entrypoint
+        # connects to the DB on boot. Without these it falls back to Laravel
+        # defaults (db "forge") and dies with "Connection refused".
+        env:
+          APP_NAME: Wellms Playwright Demo
+          APP_ENV: local
+          APP_KEY: base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw=
+          APP_DEBUG: "true"
+          APP_LOG_LEVEL: debug
+          APP_URL: http://localhost
+          DB_CONNECTION: pgsql
+          DB_HOST: postgres
+          DB_PORT: "5432"
+          DB_DATABASE: default
+          DB_USERNAME: default
+          DB_PASSWORD: secret
+          BROADCAST_DRIVER: log
+          CACHE_DRIVER: redis
+          SESSION_DRIVER: cookie
+          QUEUE_DRIVER: redis
+          QUEUE_CONNECTION: redis
+          REDIS_HOST: redis
+          REDIS_PORT: "6379"
+          REDIS_PASSWORD: ""
+          LARAVEL_REDIS_PASSWORD: ""
+          MAIL_DRIVER: smtp
+          MAIL_HOST: mailhog
+          MAIL_PORT: "1025"
+          MAIL_ENCRYPTION: ""
+          MJML_BINARY_PATH: /usr/bin/mjml
+          TRACKER_ENABLED: "false"
         ports:
           - 80:80
-
         options: >-
-          --name api  --env LARAVEL_REDIS_PASSWORD= --env VAR2=value2
-
+          --name api
 
     steps:
-      - run: |
-          docker exec -u 1000 api echo "APP_NAME=Wellms Playwright Demo \
-          APP_ENV=local \
-          APP_KEY=base64:pveos6JL8iCwO3MbzoyQpNx6TETMYuUpfZ18CDKl6Cw= \
-          APP_DEBUG=true \
-          APP_LOG_LEVEL=debug \
-          APP_URL=http://localhost:1000 \
-          DB_CONNECTION=pgsql \
-          DB_HOST=postgres \ 
-          DB_PORT=5432 \
-          DB_DATABASE=default \
-          DB_USERNAME=default \
-          DB_PASSWORD=secret \
-          BROADCAST_DRIVER=log \
-          CACHE_DRIVER=redis \
-          SESSION_DRIVER=cookie \
-          QUEUE_DRIVER=redis \
-          QUEUE_CONNECTION=redis \
-          REDIS_HOST=redis \
-          REDIS_PASSWORD= \
-          REDIS_PORT=6379 \
-          MAIL_DRIVER=smtp \
-          MAIL_HOST=mailhog \
-          MAIL_PORT=1025 \
-          MAIL_USERNAME=null \
-          MAIL_PASSWORD=null \
-          MAIL_ENCRYPTION= \
-          MJML_BINARY_PATH=/usr/bin/mjml \
-          TRACKER_ENABLED=false" >> .env
-
-      - run: docker exec -u 1000 api cat .env
       - run: docker exec -u 1000 api php artisan config:cache
       - run: docker exec -u 1000 api composer dumpautoload
-      - run: docker exec -u 1000 api php artisan key:generate --force --no-interaction
       - run: docker exec -u 1000 api php artisan passport:keys --force --no-interaction
       - run: docker exec -u 1000 api php artisan migrate --force --no-interaction
       - run: docker exec -u 1000 api php artisan passport:client --personal --no-interaction
       - run: docker exec -u 1000 api php artisan db:seed --force --no-interaction
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Cache node modules
         id: cache-npm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -122,7 +125,7 @@ jobs:
         run: npm run test:e2e
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: test-results
