@@ -1,12 +1,12 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useCallback, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { deleteVoucher } from '@/services/escola-lms/vouchers';
 
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
@@ -128,7 +128,7 @@ const Vouchers: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable
+      <AutoSearchProTable
         headerTitle={intl.formatMessage({
           id: 'menu.Sales.Vouchers',
           defaultMessage: 'Vouchers',

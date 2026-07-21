@@ -1,8 +1,8 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { createRole, deleteRole, roles } from '@/services/escola-lms/roles';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 import { FormattedMessage, Link, history, useIntl } from 'umi';
@@ -33,7 +33,7 @@ const RolesPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Role>
+      <AutoSearchProTable<API.Role>
         headerTitle={intl.formatMessage({
           id: 'menu.Users.Roles',
           defaultMessage: 'roles',

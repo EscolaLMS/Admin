@@ -1,11 +1,11 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Space, Tag } from 'antd';
 import { format } from 'date-fns';
 import React, { useRef } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import UserSelect from '@/components/UserSelect';
 import { orders } from '@/services/escola-lms/orders';
 
@@ -177,7 +177,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<
+      <AutoSearchProTable<
         API.OrderListItem,
         API.PageParams &
           EscolaLms.Cart.Http.Requests.Admin.OrderSearchRequest & {

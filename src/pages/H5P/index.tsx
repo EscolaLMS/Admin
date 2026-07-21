@@ -1,4 +1,5 @@
 import AuthenticatedLinkButton from '@/components/AuthenticatedLinkButton';
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import UploadH5P from '@/components/H5P/upload';
 import { h5p, removeH5P } from '@/services/escola-lms/h5p';
 import { createTableOrderObject } from '@/utils/utils';
@@ -11,7 +12,6 @@ import {
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
@@ -159,7 +159,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.H5PContentListItem, API.H5PListParams>
+      <AutoSearchProTable<API.H5PContentListItem, API.H5PListParams>
         loading={loading}
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.H5Ps',

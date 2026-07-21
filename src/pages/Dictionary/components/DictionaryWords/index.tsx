@@ -1,3 +1,4 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import SecureUpload from '@/components/SecureUpload';
 import PERMISSIONS from '@/consts/permissions';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -6,7 +7,6 @@ import { deleteDictionaryWord, dictionaryWords } from '@/services/escola-lms/dic
 import { createTableOrderObject } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl, useParams } from 'umi';
@@ -96,7 +96,7 @@ const DictionaryWordsTableList: React.FC = () => {
   ];
 
   return (
-    <ProTable<API.DictionaryWords, API.DictionaryWordsParams>
+    <AutoSearchProTable<API.DictionaryWords, API.DictionaryWordsParams>
       headerTitle={intl.formatMessage({
         id: 'words',
         defaultMessage: 'Words',
@@ -116,11 +116,11 @@ const DictionaryWordsTableList: React.FC = () => {
           </Button>
         </Link>,
         checkPermission(PERMISSIONS.DictionaryImport) ? (
-          <div className='import-dictionary'>
+          <div className="import-dictionary">
             <SecureUpload
               title={intl.formatMessage({
                 id: 'import_dictionary',
-                defaultMessage: 'Import dictionary'
+                defaultMessage: 'Import dictionary',
               })}
               url="/api/admin/dictionary-words/import"
               name="file"

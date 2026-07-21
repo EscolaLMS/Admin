@@ -1,11 +1,11 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Space, Tag, Tooltip, Typography, message } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import type { PossibleType } from '@/components/TypeButtonDrawer';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { createTableOrderObject } from '@/utils/utils';
@@ -182,7 +182,7 @@ const Products: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<
+      <AutoSearchProTable<
         EscolaLms.Cart.Models.Product,
         API.PageParams &
           API.PaginationParams &

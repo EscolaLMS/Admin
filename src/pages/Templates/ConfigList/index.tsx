@@ -1,8 +1,8 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { deleteTemplate, templates } from '@/services/escola-lms/templates';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useCallback, useRef, useState } from 'react';
@@ -91,7 +91,7 @@ const TableList: React.FC<{ templateType: string; channel: channelType }> = ({
   );
 
   return (
-    <ProTable<API.TemplateListItem, API.TemplatesParams>
+    <AutoSearchProTable<API.TemplateListItem, API.TemplatesParams>
       headerTitle={intl.formatMessage({
         id: 'templates',
         defaultMessage: 'templates',

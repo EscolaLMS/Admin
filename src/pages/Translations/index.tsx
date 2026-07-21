@@ -1,10 +1,10 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Tag, Typography } from 'antd';
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import {
   createTranslation,
   deleteTranslation,
@@ -85,7 +85,7 @@ const Translations: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<
+      <AutoSearchProTable<
         API.Translation,
         API.PageParams &
           API.PaginationParams & {

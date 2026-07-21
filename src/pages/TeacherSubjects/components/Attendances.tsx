@@ -1,11 +1,11 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { message } from 'antd';
 import { format } from 'date-fns';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { DAY_FORMAT } from '@/consts/dates';
 import { groupAttendanceSchedule as fetchGroupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { studentUserGroup as fetchStudentUserGroup } from '@/services/escola-lms/student_user_groups';
@@ -56,7 +56,7 @@ export const Attendances: React.FC = () => {
   );
 
   return (
-    <ProTable<AttendanceTableItem, AttendanceTableFilters>
+    <AutoSearchProTable<AttendanceTableItem, AttendanceTableFilters>
       className="table-standalone"
       headerTitle={`${intl.formatMessage({
         id: 'attendances',

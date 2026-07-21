@@ -1,8 +1,8 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { Tree } from '@/components/Tree';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Modal, Popconfirm, Spin, Tag, Tooltip, message } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
@@ -250,7 +250,7 @@ const TableList: React.FC = () => {
       <Modal open={showTree} onCancel={() => setShowTree(false)} onOk={() => setShowTree(false)}>
         {showTree && <TreeModal />}
       </Modal>
-      <ProTable<API.CategoryListItem, API.CategoryParams>
+      <AutoSearchProTable<API.CategoryListItem, API.CategoryParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Courses.Categories',
           defaultMessage: 'categories',

@@ -1,7 +1,7 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { sortArrayByKey } from '@/utils/utils';
 import { EditOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tag, Tooltip } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
@@ -112,7 +112,7 @@ const TableList: React.FC<{
 
   return (
     <React.Fragment>
-      <ProTable<API.ConfigEntry>
+      <AutoSearchProTable<API.ConfigEntry>
         headerTitle={intl.formatMessage({
           id: 'menu.settings',
         })}

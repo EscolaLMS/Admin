@@ -1,11 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import type { IntlShape } from 'react-intl';
 import { FormattedMessage, useIntl, useModel } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import {
   createSettings,
   deleteSettings,
@@ -184,7 +184,7 @@ const TableList: React.FC = () => {
 
   return (
     <React.Fragment>
-      <ProTable<API.Setting, API.PageParams & { group: string }>
+      <AutoSearchProTable<API.Setting, API.PageParams & { group: string }>
         headerTitle={intl.formatMessage({
           id: 'menu.settings',
         })}

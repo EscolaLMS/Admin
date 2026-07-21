@@ -1,9 +1,9 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { track } from '@/services/escola-lms/tracker';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { format } from 'date-fns';
 import React, { useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
@@ -56,7 +56,7 @@ const LogsWidget: React.FC<{ useAsWidget?: boolean; userID?: number }> = ({
   const [loading, setLoading] = useState(false);
   const intl = useIntl();
   return (
-    <ProTable<
+    <AutoSearchProTable<
       EscolaLms.Tracker.Models.TrackRoute,
       API.PageParams & {
         user_id?: number;

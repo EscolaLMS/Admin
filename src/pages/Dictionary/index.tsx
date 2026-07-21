@@ -1,14 +1,14 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
+import { DictionaryTabNames } from '@/pages/Dictionary/form';
 import { deleteDictionary, dictionaries } from '@/services/escola-lms/dictionary';
 import { createTableOrderObject } from '@/utils/utils';
-import { DictionaryTabNames } from '@/pages/Dictionary/form';
 
 const handleRemove = async (id: number) => {
   return deleteDictionary(id).then((response) => {
@@ -86,7 +86,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.Dictionaries, API.DictionariesParams>
+      <AutoSearchProTable<API.Dictionaries, API.DictionariesParams>
         headerTitle={intl.formatMessage({
           id: 'menu.Other activities.Dictionary',
           defaultMessage: 'Dictionary',

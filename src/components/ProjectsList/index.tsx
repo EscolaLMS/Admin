@@ -1,11 +1,12 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-table';
-import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { type ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, Typography, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import ProjectSolutionFeedbackDrawer from '@/components/ProjectsList/ProjectSolutionFeedbackDrawer';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
@@ -201,7 +202,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
 
   return (
     <>
-      <ProTable
+      <AutoSearchProTable
         actionRef={actionRef}
         headerTitle={intl.formatMessage({
           id: 'project_solutions',

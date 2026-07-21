@@ -3,12 +3,12 @@ import { DATETIME_FORMAT } from '@/consts/dates';
 import { DeleteOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Drawer, Popconfirm, Tag, Tooltip, Typography, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { CollectionSelect } from '@/components/CollectionSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import {
@@ -206,7 +206,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.CourseAccessEnquiryListItem, API.CourseAccessEnquiryListParams>
+      <AutoSearchProTable<API.CourseAccessEnquiryListItem, API.CourseAccessEnquiryListParams>
         headerTitle={intl.formatMessage({
           id: 'courseAccessEnquiries',
           defaultMessage: 'Course Access Enquiries',

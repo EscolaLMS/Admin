@@ -10,11 +10,11 @@ import {
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tag, Tooltip, Typography, message } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import CategoryTree from '@/components/CategoryTree';
 import SecureUpload from '@/components/SecureUpload';
 import Tags from '@/components/Tags';
@@ -374,7 +374,7 @@ const TableList: React.FC = () => {
           </a>
         </ProCard>
       </ProCard>{' '}
-      <ProTable<API.CourseListItem, API.CourseParams>
+      <AutoSearchProTable<API.CourseListItem, API.CourseParams>
         loading={loading}
         headerTitle={intl.formatMessage({
           id: 'menu.Courses',
@@ -385,6 +385,7 @@ const TableList: React.FC = () => {
         search={{
           layout: 'vertical',
         }}
+        autoSearch={{ authors: 'multiSelect', tag: 'multiSelect' }}
         request={(
           { pageSize, current, title, active, category_id, tag, status, authors },
           sort,

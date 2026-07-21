@@ -1,8 +1,8 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { addQuestion, deleteQuestion, editQuestion } from '@/services/escola-lms/questionnaire';
 import { sortArrayByKey } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
@@ -121,7 +121,7 @@ const QuestionForm: React.FC<{
 
   return (
     <>
-      <ProTable
+      <AutoSearchProTable
         headerTitle={intl.formatMessage({
           id: 'question_list',
           defaultMessage: 'question_list',

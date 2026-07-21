@@ -1,3 +1,4 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
@@ -7,7 +8,6 @@ import {
 } from '@/services/escola-lms/questionnaire';
 import ProForm, { ProFormSwitch } from '@ant-design/pro-form';
 import type { ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Form, message } from 'antd';
 import { format } from 'date-fns';
 import { useMemo } from 'react';
@@ -175,7 +175,7 @@ const QuestionAnswers: React.FC<{
   ];
 
   return (
-    <ProTable<
+    <AutoSearchProTable<
       API.QuestionAnswer,
       API.PageParams & { question_id?: number; user_id?: string; date?: string }
     >

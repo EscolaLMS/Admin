@@ -1,3 +1,4 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import CategoryTree from '@/components/CategoryTree';
 import ModelFields from '@/components/ModelFields';
 import { DATETIME_FORMAT, DAY_FORMAT } from '@/consts/dates';
@@ -17,7 +18,6 @@ import {
 import ProCard from '@ant-design/pro-card';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Select, Tag, Tooltip, Typography, message } from 'antd';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
@@ -268,7 +268,7 @@ const Consultations: React.FC = () => {
         }}
       >
         <ProCard.TabPane key="list" tab={<FormattedMessage id="list" />}>
-          <ProTable<API.Consultation, API.ConsultationsParams>
+          <AutoSearchProTable<API.Consultation, API.ConsultationsParams>
             headerTitle={intl.formatMessage({
               id: 'Consultations',
               defaultMessage: 'Consultations',

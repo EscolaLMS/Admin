@@ -1,11 +1,11 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, message } from 'antd';
 import React, { useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { deletePage, pages } from '@/services/escola-lms/pages';
 import { createTableOrderObject } from '@/utils/utils';
@@ -96,7 +96,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.PageListItem, API.PageParams>
+      <AutoSearchProTable<API.PageListItem, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages',
           defaultMessage: 'pages',

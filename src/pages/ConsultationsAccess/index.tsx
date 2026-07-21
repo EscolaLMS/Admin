@@ -1,10 +1,11 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { type ActionType, type ProColumns } from '@ant-design/pro-table';
+import { type ActionType, type ProColumns } from '@ant-design/pro-table';
 import { Button, Space, Tag } from 'antd';
 import { format } from 'date-fns';
 import React, { useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import { CollectionSelect } from '@/components/CollectionSelect';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
@@ -202,7 +203,7 @@ const TableList: React.FC = () => {
         onSuccess={() => actionRef.current?.reload()}
       />
 
-      <ProTable
+      <AutoSearchProTable
         headerTitle={intl.formatMessage({
           id: 'menu.Other activities.Consultation Requests',
         })}

@@ -1,12 +1,12 @@
 import { FileSearchOutlined } from '@ant-design/icons';
 import type { ProFormInstance, ProTableProps } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tag, Tooltip } from 'antd';
 import { format } from 'date-fns';
 import React, { useCallback, useRef } from 'react';
 import { FormattedMessage, Link, useIntl } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getQuizAttempts } from '@/services/escola-lms/gift_quiz';
@@ -159,7 +159,7 @@ export const CourseQuizReports: React.FC<{ courseId: number }> = ({ courseId }) 
   );
 
   return (
-    <ProTable<API.QuizAttempt, API.QuizAttemptsParams>
+    <AutoSearchProTable<API.QuizAttempt, API.QuizAttemptsParams>
       headerTitle={intl.formatMessage({
         id: 'quiz_reports',
         defaultMessage: 'Quiz Reports',

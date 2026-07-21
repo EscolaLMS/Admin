@@ -1,3 +1,4 @@
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import {
   createTranslation,
   translations,
@@ -8,7 +9,6 @@ import { localeInfo } from '@@/plugin-locale/localeExports';
 import { EditOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { Button, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, addLocale, getAllLocales, useIntl } from 'umi';
@@ -85,7 +85,7 @@ const Translations: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<LangRow>
+      <AutoSearchProTable<LangRow>
         headerTitle={intl.formatMessage({
           id: 'menu.Configuration.Translations',
           defaultMessage: 'Translations',

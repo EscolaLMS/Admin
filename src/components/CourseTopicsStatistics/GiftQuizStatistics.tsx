@@ -1,8 +1,9 @@
-import ProTable, { type ProColumns } from '@ant-design/pro-table';
+import { type ProColumns } from '@ant-design/pro-table';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
+import AutoSearchProTable from '@/components/AutoSearchProTable';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import { DATETIME_FORMAT } from '@/consts/dates';
 import { getTopicStats } from '@/services/escola-lms/course';
@@ -129,7 +130,7 @@ export const GiftQuizStatistics: React.FC<Props> = ({ quizTopics }) => {
   }, []);
 
   return (
-    <ProTable<API.GiftQuizTopicStat, TableParams>
+    <AutoSearchProTable<API.GiftQuizTopicStat, TableParams>
       headerTitle={<FormattedMessage id="TopicStatistics.giftQuiz.title" />}
       onSubmit={({ topic_id }) => setSelectedTopicId(topic_id)}
       onReset={() => setSelectedTopicId(quizTopics?.[0]?.id)}
