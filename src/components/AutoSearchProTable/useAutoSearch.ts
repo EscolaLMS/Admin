@@ -1,7 +1,7 @@
 import type { ProFormInstance } from '@ant-design/pro-form';
 import type { ProColumns } from '@ant-design/pro-table';
 import type { MutableRefObject } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import isEqual from 'lodash/isEqual';
 
@@ -66,7 +66,11 @@ export const createAutoSearchController = (
       name,
       setTimeout(() => {
         timers.delete(name);
-        doSubmit();
+        // Guard against a redundant submit: if an ON_CHANGE field in the same batch already fired
+        // doSubmit() (re-baselining lastSubmitted) before this timer ran, the value is unchanged.
+        if (!isEqual(deps.getValue(name), lastSubmitted[name])) {
+          doSubmit();
+        }
       }, DEBOUNCE_MS),
     );
   };
@@ -204,22 +208,33 @@ export const useAutoSearch = <T, V>({ columns, overrides, formRef }: UseAutoSear
     return () => controllerRef.current?.dispose();
   }, []);
 
-  return {
-    onValuesChange: () => controllerRef.current?.onValuesChange(),
-    onSubmit: () =>
+  // Handlers are stabilised with useCallback so their identity is referentially stable across
+  // renders. controllerRef/formRef are refs (stable), so empty/ref-only deps never go stale.
+  const onValuesChange = useCallback(() => controllerRef.current?.onValuesChange(), []);
+
+  const onSubmit = useCallback(
+    () =>
       controllerRef.current?.syncSubmitted(
         formRef.current?.getFieldsValue?.() as Record<string, unknown>,
       ),
-    onReset: () =>
+    [formRef],
+  );
+
+  const onReset = useCallback(
+    () =>
       // ProTable's Reset restores column initialValues, so baseline from the post-reset form state
       // (not {}) — otherwise clearing a field that has an initialValue wouldn't refetch afterwards.
       controllerRef.current?.syncSubmitted(
         formRef.current?.getFieldsValue?.() as Record<string, unknown>,
       ),
-    onBlur: (event: React.FocusEvent<HTMLElement>) => {
-      const related = event.relatedTarget as HTMLElement | null;
-      const isButton = !!related && (related.tagName === 'BUTTON' || !!related.closest('button'));
-      controllerRef.current?.onBlur(isButton);
-    },
-  };
+    [formRef],
+  );
+
+  const onBlur = useCallback((event: React.FocusEvent<HTMLElement>) => {
+    const related = event.relatedTarget as HTMLElement | null;
+    const isButton = !!related && (related.tagName === 'BUTTON' || !!related.closest('button'));
+    controllerRef.current?.onBlur(isButton);
+  }, []);
+
+  return { onValuesChange, onSubmit, onReset, onBlur };
 };
