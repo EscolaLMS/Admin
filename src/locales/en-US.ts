@@ -790,6 +790,7 @@ export default {
   'TeacherSubjects.FinalGrades.FinalGrade': 'Final grade',
   'TeacherSubjects.FinalGrades.ProposedGrade':
     'Proposed grade (only includes weighted grades): {grade}',
+  'TeacherSubjects.FinalGrades.WeightedAverage': 'Weighted average: {average}',
   'TeacherSubjects.FinalGrades.IssueAssessment': 'Issue an assessment',
   date: 'Date',
   issued_at: 'Issued at',
@@ -829,6 +830,7 @@ export default {
   classRegisterTitleWithGroupName: 'Class register of group {groupName}',
   gradesScalesMissing: 'There is no grading scale for the selected teacher',
   proposed_grade: 'Proposed grade',
+  weighted_average: 'Weighted average',
   groupDataMissing: 'Missing data for group {group_name}',
   file_downloaded: 'File downloaded',
   file_downloaded_error: "Can't download file",

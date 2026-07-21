@@ -21,7 +21,7 @@ import {
   useUserCoursesStats,
 } from './hooks';
 import type { StudentExam } from './types';
-import { getProposedGrade } from './utils';
+import { getProposedGrade, getWeightedAverage } from './utils';
 
 interface Props {
   user_id: number;
@@ -140,6 +140,11 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const proposedGrade = useMemo(
     () => getProposedGrade(studentExams.data ?? [], tutorGradeScales.data ?? []),
     [studentExams.data, tutorGradeScales.data],
+  );
+
+  const weightedAverage = useMemo(
+    () => getWeightedAverage(studentExams.data ?? []),
+    [studentExams.data],
   );
 
   const onFinalGradeSubmit = useCallback(
@@ -350,6 +355,12 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             options={gradesSelectOptions}
             fieldProps={{ loading: finalGrades.loading || subjectGradeScales.loading }}
           />
+          <ProForm.Item>
+            <FormattedMessage
+              id="TeacherSubjects.FinalGrades.WeightedAverage"
+              values={{ average: weightedAverage }}
+            />
+          </ProForm.Item>
           <ProForm.Item>
             <FormattedMessage
               id="TeacherSubjects.FinalGrades.ProposedGrade"

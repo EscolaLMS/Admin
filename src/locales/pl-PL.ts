@@ -757,6 +757,7 @@ export default {
   'TeacherSubjects.FinalGrades.FinalGrade': 'Ocena końcowa',
   'TeacherSubjects.FinalGrades.ProposedGrade':
     'Proponowana ocena (uwzględnia tylko oceny z wagą): {grade} ',
+  'TeacherSubjects.FinalGrades.WeightedAverage': 'Średnia ważona: {average}',
   'TeacherSubjects.FinalGrades.IssueAssessment': 'Wystaw ocenę końcową',
   date: 'Data',
   issued_at: 'Wystawiono',
@@ -796,6 +797,7 @@ export default {
   classRegisterTitleWithGroupName: 'Dziennik grupy {groupName}',
   gradesScalesMissing: 'Brak skali ocen dla wybranego dydaktyka',
   proposed_grade: 'Proponowana ocena (uwzględnia tylko oceny z wagą)',
+  weighted_average: 'Średnia ważona',
   groupDataMissing: 'Brak danych dla grupy {group_name}',
   file_downloaded: 'Pobrano plik',
   file_downloaded_error: 'Nie udało się pobrać pliku',
