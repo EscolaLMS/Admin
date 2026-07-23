@@ -755,6 +755,14 @@ export default {
   'TeacherSubjects.Exams.teams_formsConvert': 'Wgraj plik XLSX (MS Teams)',
   'TeacherSubjects.Exams.teams_lectureConvert': 'Wgraj plik (Test Portal)',
   'TeacherSubjects.Exams.test_portalConvert': 'Wgraj plik XLSX (MS Teams Forms)',
+  'TeacherSubjects.Exams.skippedStudents.title': 'Część ocen nie została wpisana',
+  'TeacherSubjects.Exams.skippedStudents.otherGroup.title': 'Studenci przypisani do innej grupy',
+  'TeacherSubjects.Exams.skippedStudents.otherGroup.description':
+    'Dla poniższych osób ocena nie została wpisana, ponieważ nie należą do tej grupy. Uzupełnij ją ręcznie w grupie, do której student jest przypisany.',
+  'TeacherSubjects.Exams.skippedStudents.notInSystem.title': 'Osoby nieznalezione w systemie',
+  'TeacherSubjects.Exams.skippedStudents.notInSystem.description':
+    'Poniższych osób nie znaleziono w systemie, więc nie można było przypisać im oceny.',
+  'TeacherSubjects.Exams.skippedStudents.groups': 'Przypisana grupa',
   degree: 'Stopień',
   grade: 'Ocena',
   max_percent: 'Max procent (%)',

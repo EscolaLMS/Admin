@@ -786,6 +786,14 @@ export default {
   'TeacherSubjects.Exams.teams_formsConvert': 'Upload MS Teams file',
   'TeacherSubjects.Exams.teams_lectureConvert': 'Upload Test Portal file',
   'TeacherSubjects.Exams.test_portalConvert': 'Upload MS Teams Forms file',
+  'TeacherSubjects.Exams.skippedStudents.title': 'Some grades were not saved',
+  'TeacherSubjects.Exams.skippedStudents.otherGroup.title': 'Students assigned to another group',
+  'TeacherSubjects.Exams.skippedStudents.otherGroup.description':
+    'The grade was not saved for the people below because they do not belong to this group. Please enter it manually in the group the student is assigned to.',
+  'TeacherSubjects.Exams.skippedStudents.notInSystem.title': 'People not found in the system',
+  'TeacherSubjects.Exams.skippedStudents.notInSystem.description':
+    'The people below were not found in the system, so no grade could be assigned to them.',
+  'TeacherSubjects.Exams.skippedStudents.groups': 'Assigned group',
   degree: 'Degree',
   grade: 'Grade',
   max_percent: 'Max percent (%)',

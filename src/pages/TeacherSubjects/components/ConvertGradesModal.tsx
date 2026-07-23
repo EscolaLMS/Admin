@@ -8,11 +8,45 @@ import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { useTeacherSubject } from '../context';
+import SkippedStudentsModal from './SkippedStudentsModal';
 
 const checkManualExamType = (type: ExamGradeType) =>
   type === ExamGradeType.Manual ||
   type === ExamGradeType.ManualPass ||
   type === ExamGradeType.ManualGrades;
+
+// TODO(AN-32): DELETE this mock and the seeded useState below once the backend returns
+// `skipped_students` from POST /api/admin/exams/parse. It exists only so the skipped-students
+// modal can be previewed before the backend dependency ships.
+const MOCK_SKIPPED_STUDENTS: API.SkippedStudent[] = [
+  {
+    result: 85,
+    first_name: 'Jan',
+    last_name: 'Kowalski',
+    email: 'jan.kowalski@example.com',
+    found_in_system: true,
+    user_groups: [
+      { id: 2, name: 'Grupa B' },
+      { id: 3, name: 'Grupa C' },
+    ],
+  },
+  {
+    result: 62,
+    first_name: 'Maria',
+    last_name: 'Wiśniewska',
+    email: 'maria.wisniewska@example.com',
+    found_in_system: true,
+    user_groups: [{ id: 4, name: 'Grupa D' }],
+  },
+  {
+    result: 74,
+    first_name: 'Anna',
+    last_name: 'Nowak',
+    email: 'anna.nowak@example.com',
+    found_in_system: false,
+    user_groups: [],
+  },
+];
 
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
@@ -21,6 +55,9 @@ const FileExamGradeType: React.FC<{
 }> = ({ type, onDataConverted, groupSelectDisabled }) => {
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+  // TODO(AN-32): revert to `useState<API.SkippedStudent[]>([])` once the backend ships
+  // `skipped_students`. Seeded with mock data only to preview the modal before that.
+  const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>(MOCK_SKIPPED_STUDENTS);
 
   const groupOptions: DefaultOptionType[] = useMemo(
     () =>
@@ -37,14 +74,18 @@ const FileExamGradeType: React.FC<{
     semester_subject_id: semester_subject_id!,
   };
 
-  const onUploadFile = useCallback((response: API.DefaultResponse<API.Exam>) => {
+  const onUploadFile = useCallback((response: API.DefaultResponse<API.ParseExamResponse>) => {
     if (response.success) {
-      // TODO #1037 error handling
-      // filter out users that are not in selected group
-      const exam_results = response.data.results.filter(({ user_id }) => user_id !== null);
-      if (!exam_results.length) return;
+      // Students the backend could not match to the selected group. Empty/absent until the
+      // backend ships `skipped_students` (blocking dependency) — in which case no modal shows.
+      setSkippedStudents(response.data.skipped_students ?? []);
 
-      onDataConverted({ exam_results, group_id: response.data.group_id });
+      // Matched rows import as before. The backend no longer emits user_id:null rows here,
+      // but keep the guard defensively.
+      const exam_results = response.data.results.filter(({ user_id }) => user_id !== null);
+      if (exam_results.length) {
+        onDataConverted({ exam_results, group_id: response.data.group_id });
+      }
     }
   }, []);
 
@@ -64,10 +105,20 @@ const FileExamGradeType: React.FC<{
         name="file"
         url="/api/admin/exams/parse"
         onUpload={onUploadFile}
-        onChange={(info) => !info.fileList.length && onDataConverted(undefined)}
+        onChange={(info) => {
+          if (!info.fileList.length) {
+            onDataConverted(undefined);
+            setSkippedStudents([]);
+          }
+        }}
         maxFiles={1}
         data={reqData}
         disabled={!selectedGroup}
+      />
+      <SkippedStudentsModal
+        open={skippedStudents.length > 0}
+        skippedStudents={skippedStudents}
+        onClose={() => setSkippedStudents([])}
       />
     </>
   );

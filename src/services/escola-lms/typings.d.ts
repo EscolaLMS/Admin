@@ -1797,6 +1797,30 @@ declare namespace API {
     email: string;
   };
 
+  type SkippedStudentGroup = {
+    id: number;
+    name: string;
+  };
+
+  // A file row that could not be matched to a user in the target group.
+  // Returned by POST /api/admin/exams/parse in the `skipped_students` array.
+  type SkippedStudent = {
+    result: number | string | null;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+    // true → user exists but belongs to another group (see `user_groups`)
+    // false → user was not found in the system at all (`user_groups` is empty)
+    found_in_system: boolean;
+    user_groups: SkippedStudentGroup[];
+  };
+
+  // Response of POST /api/admin/exams/parse — an Exam plus the skipped rows.
+  // `skipped_students` is optional so the FE degrades safely until the backend ships it.
+  type ParseExamResponse = Exam & {
+    skipped_students?: SkippedStudent[];
+  };
+
   type ExamSemester = {
     id: number;
     name: string;
