@@ -8,6 +8,10 @@ const config: PlaywrightTestConfig = {
   //testMatch: ['src/**/.*(test|spec).(js|ts|mjs)'],
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // Laravel's built-in server (used in CI) is single-threaded, and the specs share
+  // one admin login and create/delete named records — run serially in CI to avoid
+  // request contention and cross-spec data races.
+  workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     headless: true,

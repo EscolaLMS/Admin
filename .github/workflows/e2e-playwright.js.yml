@@ -73,8 +73,14 @@ jobs:
           MAIL_ENCRYPTION: ""
           MJML_BINARY_PATH: /usr/bin/mjml
           TRACKER_ENABLED: "false"
+        # escolalms/api:latest is a php-fpm-only image (supervisord runs php-fpm +
+        # horizon + scheduler, no web server), so publishing php-fpm's port speaks
+        # FastCGI, not HTTP, and the browser cannot reach the API. We instead run
+        # Laravel's built-in HTTP server inside the container on 8080 (see the
+        # "Start API HTTP server" step) and publish that to the host on :80, which
+        # is the origin the frontend is built against (REACT_APP_API_URL).
         ports:
-          - 80:80
+          - 80:8080
         options: >-
           --name api
 
@@ -97,6 +103,29 @@ jobs:
       - run: docker exec -u 0 api php artisan passport:client --personal --no-interaction
       - run: docker exec -u 0 api php artisan db:seed --force --no-interaction
       - run: docker exec -u 0 api chmod -R 777 storage bootstrap/cache
+
+      # The image has no HTTP web server, only php-fpm. Start Laravel's built-in
+      # server so the e2e browser has a real HTTP endpoint. Runs detached, after
+      # chmod so it can write to storage/, and logs to /tmp/serve.log inside the
+      # container so the readiness gate below can surface failures.
+      - name: Start API HTTP server
+        run: docker exec -d -u 0 api sh -c 'php artisan serve --host=0.0.0.0 --port=8080 > /tmp/serve.log 2>&1'
+
+      # Fail fast (and visibly) if the API never serves HTTP, instead of letting
+      # every spec silently time out at the login step. Any HTTP status proves the
+      # server is reachable; on failure, dump the server + container logs.
+      - name: Wait for API to serve HTTP
+        run: |
+          for i in $(seq 1 40); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost/api/settings || echo 000)
+            if [ "$code" != "000" ]; then echo "API serving HTTP (status $code)"; exit 0; fi
+            echo "waiting for API HTTP... attempt $i"; sleep 3
+          done
+          echo "::error::API never served HTTP on :80"
+          echo "----- artisan serve log -----"; docker exec api cat /tmp/serve.log || true
+          echo "----- docker logs api (tail) -----"; docker logs api 2>&1 | tail -200 || true
+          docker ps -a || true
+          exit 1
 
       - uses: actions/checkout@v4
         with:
