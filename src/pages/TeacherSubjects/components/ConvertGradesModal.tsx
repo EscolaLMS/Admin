@@ -15,38 +15,38 @@ const checkManualExamType = (type: ExamGradeType) =>
   type === ExamGradeType.ManualPass ||
   type === ExamGradeType.ManualGrades;
 
-// TODO(AN-32): DELETE this mock and the seeded useState below once the backend returns
-// `skipped_students` from POST /api/admin/exams/parse. It exists only so the skipped-students
-// modal can be previewed before the backend dependency ships.
-const MOCK_SKIPPED_STUDENTS: API.SkippedStudent[] = [
-  {
-    result: 85,
-    first_name: 'Jan',
-    last_name: 'Kowalski',
-    email: 'jan.kowalski@example.com',
-    found_in_system: true,
-    user_groups: [
-      { id: 2, name: 'Grupa B' },
-      { id: 3, name: 'Grupa C' },
-    ],
-  },
-  {
-    result: 62,
-    first_name: 'Maria',
-    last_name: 'Wiśniewska',
-    email: 'maria.wisniewska@example.com',
-    found_in_system: true,
-    user_groups: [{ id: 4, name: 'Grupa D' }],
-  },
-  {
-    result: 74,
-    first_name: 'Anna',
-    last_name: 'Nowak',
-    email: 'anna.nowak@example.com',
-    found_in_system: false,
-    user_groups: [],
-  },
-];
+// TODO(AN-32): DELETE this commented-out mock before merge. Uncomment it (and seed the
+// useState below with it) ONLY to preview the skipped-students modal before the backend
+// ships `skipped_students` from POST /api/admin/exams/parse.
+// const MOCK_SKIPPED_STUDENTS: API.SkippedStudent[] = [
+//   {
+//     result: 85,
+//     first_name: 'Jan',
+//     last_name: 'Kowalski',
+//     email: 'jan.kowalski@example.com',
+//     found_in_system: true,
+//     user_groups: [
+//       { id: 2, name: 'Grupa B' },
+//       { id: 3, name: 'Grupa C' },
+//     ],
+//   },
+//   {
+//     result: 62,
+//     first_name: 'Maria',
+//     last_name: 'Wiśniewska',
+//     email: 'maria.wisniewska@example.com',
+//     found_in_system: true,
+//     user_groups: [{ id: 4, name: 'Grupa D' }],
+//   },
+//   {
+//     result: 74,
+//     first_name: 'Anna',
+//     last_name: 'Nowak',
+//     email: 'anna.nowak@example.com',
+//     found_in_system: false,
+//     user_groups: [],
+//   },
+// ];
 
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
@@ -55,9 +55,9 @@ const FileExamGradeType: React.FC<{
 }> = ({ type, onDataConverted, groupSelectDisabled }) => {
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
-  // TODO(AN-32): revert to `useState<API.SkippedStudent[]>([])` once the backend ships
-  // `skipped_students`. Seeded with mock data only to preview the modal before that.
-  const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>(MOCK_SKIPPED_STUDENTS);
+  // TODO(AN-32): keep this `[]` for merge. To preview the modal before the backend ships
+  // `skipped_students`, temporarily seed the commented-out MOCK_SKIPPED_STUDENTS instead.
+  const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>([]);
 
   const groupOptions: DefaultOptionType[] = useMemo(
     () =>
