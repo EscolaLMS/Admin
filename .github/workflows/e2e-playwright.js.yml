@@ -73,14 +73,11 @@ jobs:
           MAIL_ENCRYPTION: ""
           MJML_BINARY_PATH: /usr/bin/mjml
           TRACKER_ENABLED: "false"
-        # escolalms/api:latest is a php-fpm-only image (supervisord runs php-fpm +
-        # horizon + scheduler, no web server), so publishing php-fpm's port speaks
-        # FastCGI, not HTTP, and the browser cannot reach the API. We instead run
-        # Laravel's built-in HTTP server inside the container on 8080 (see the
-        # "Start API HTTP server" step) and publish that to the host on :80, which
-        # is the origin the frontend is built against (REACT_APP_API_URL).
-        ports:
-          - 80:8080
+        # escolalms/api:latest is a php-fpm-only image (php-fpm on :9000, no bundled
+        # web server), so the browser cannot talk to it directly. An nginx reverse-
+        # proxy (see the "Start nginx reverse-proxy" step) owns host :80 — the origin
+        # the frontend is built against — and forwards FastCGI to this service at
+        # api:9000 over the docker network, so the service itself publishes no port.
         options: >-
           --name api
 
@@ -104,32 +101,39 @@ jobs:
       - run: docker exec -u 0 api php artisan db:seed --force --no-interaction
       - run: docker exec -u 0 api chmod -R 777 storage bootstrap/cache
 
-      # The image has no HTTP web server, only php-fpm. Start Laravel's built-in
-      # server so the e2e browser has a real HTTP endpoint. Runs detached, after
-      # chmod so it can write to storage/, and logs to /tmp/serve.log inside the
-      # container so the readiness gate below can surface failures.
-      - name: Start API HTTP server
-        run: docker exec -d -u 0 api sh -c 'php artisan serve --host=0.0.0.0 --port=8080 > /tmp/serve.log 2>&1'
-
-      # Fail fast (and visibly) if the API never serves HTTP, instead of letting
-      # every spec silently time out at the login step. Any HTTP status proves the
-      # server is reachable; on failure, dump the server + container logs.
-      - name: Wait for API to serve HTTP
-        run: |
-          for i in $(seq 1 40); do
-            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost/api/settings || echo 000)
-            if [ "$code" != "000" ]; then echo "API serving HTTP (status $code)"; exit 0; fi
-            echo "waiting for API HTTP... attempt $i"; sleep 3
-          done
-          echo "::error::API never served HTTP on :80"
-          echo "----- artisan serve log -----"; docker exec api cat /tmp/serve.log || true
-          echo "----- docker logs api (tail) -----"; docker logs api 2>&1 | tail -200 || true
-          docker ps -a || true
-          exit 1
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      # escolalms/api:latest has no web server (php-fpm only). Run an nginx reverse-
+      # proxy on the same docker network as the services, owning host :80 and
+      # forwarding FastCGI to php-fpm at api:9000. Its config is mounted from the repo
+      # (available now that checkout ran). This is the HTTP origin the e2e browser hits.
+      - name: Start nginx reverse-proxy
+        run: |
+          NET=$(docker inspect api --format '{{range $k,$_ := .NetworkSettings.Networks}}{{$k}}{{end}}')
+          echo "api is on docker network: $NET"
+          docker run -d --name apinginx --network "$NET" -p 80:80 \
+            -v "$PWD/config/nginx-e2e.conf":/etc/nginx/conf.d/default.conf:ro \
+            nginx:alpine
+
+      # Fail fast (and visibly) if the API never serves HTTP, instead of letting
+      # every spec silently time out at the login step. Any HTTP status proves the
+      # proxy + php-fpm are reachable; on failure, dump the nginx + api logs.
+      - name: Wait for API to serve HTTP
+        run: |
+          for i in $(seq 1 40); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost/api/settings 2>/dev/null || true)
+            case "$code" in
+              ''|000) echo "waiting for API HTTP... attempt $i (last: ${code:-none})"; sleep 3 ;;
+              *) echo "API serving HTTP (status $code)"; exit 0 ;;
+            esac
+          done
+          echo "::error::API never served HTTP on :80"
+          echo "----- docker logs apinginx -----"; docker logs apinginx 2>&1 | tail -50 || true
+          echo "----- docker logs api (tail) -----"; docker logs api 2>&1 | tail -200 || true
+          docker ps -a || true
+          exit 1
 
       - uses: actions/setup-node@v4
         with:
