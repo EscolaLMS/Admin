@@ -38,6 +38,11 @@ jobs:
 
       redis:
         image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       api:
         image: escolalms/api:latest
@@ -73,6 +78,13 @@ jobs:
           MAIL_ENCRYPTION: ""
           MJML_BINARY_PATH: /usr/bin/mjml
           TRACKER_ENABLED: "false"
+          # The e2e specs drive the admin UI synchronously and never wait on queued
+          # jobs, so the Horizon worker and scheduler aren't needed. Disabling them
+          # cuts their root-owned writes to storage/, which otherwise race php-fpm
+          # (uid 1000) mid-run. NOTE: the `chmod -R 777` step below is still required
+          # — php-fpm writes logs/cache/sessions to storage/ at request time.
+          DISABLE_HORIZON: "true"
+          DISABLE_SCHEDULER: "true"
         # escolalms/api:latest is a php-fpm-only image (php-fpm on :9000, no bundled
         # web server), so the browser cannot talk to it directly. An nginx reverse-
         # proxy (see the "Start nginx reverse-proxy" step) owns host :80 — the origin
