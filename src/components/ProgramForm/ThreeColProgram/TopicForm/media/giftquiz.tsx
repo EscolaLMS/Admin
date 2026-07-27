@@ -1,5 +1,5 @@
 import { Table } from '@/components/GiftQuizQuestions/table';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '@/consts/gradebook';
 import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
@@ -112,7 +112,7 @@ export const GiftQuiz: React.FC<{
               rules={[
                 {
                   validator: (_rule, value) =>
-                    value === undefined || value === null || Number(value) > 0
+                    isValidGradeWeight(value)
                       ? Promise.resolve()
                       : Promise.reject(
                           new Error(

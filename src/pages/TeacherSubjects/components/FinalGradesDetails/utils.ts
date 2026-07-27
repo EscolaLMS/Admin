@@ -1,3 +1,5 @@
+import type { Key } from 'react';
+
 import type { StudentExam, StudentGradeRow } from './types';
 
 export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number): StudentExam[] =>
@@ -76,6 +78,20 @@ export const getProposedGrade = (
 // AW-23: display form of a 0–100 percentage; "-" when there is no finite value.
 export const formatPercent = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
+
+// AW-23: next set of expanded row keys so the user's manual expand/collapse survives data
+// changes: keep previously-expanded keys that still exist, plus auto-expand any keys not
+// seen before (first load → every course; a newly-appearing course → expanded).
+export const mergeExpandedKeys = (
+  prevExpanded: Key[],
+  currentKeys: string[],
+  seen: Set<string>,
+): Key[] => {
+  const currentSet = new Set(currentKeys);
+  const kept = prevExpanded.filter((key) => currentSet.has(String(key)));
+  const fresh = currentKeys.filter((key) => !seen.has(key));
+  return Array.from(new Set<Key>([...kept, ...fresh]));
+};
 
 // AW-23: flatten the nested courses-grades payload into a single tree: one parent row
 // per course, with its flagged quizzes/projects as child rows. A quiz row summarises the

@@ -7,6 +7,7 @@ import {
   getProposedGrade,
   getWeightedAverage,
   getWeightedAverageValue,
+  mergeExpandedKeys,
 } from './utils';
 
 // Minimal StudentExam: getWeightedAverage only reads `weight` and `result.result`.
@@ -204,5 +205,34 @@ describe('buildGradeRows (AW-23)', () => {
   it('leaves a course with no flagged items as a childless leaf', () => {
     const [course] = buildGradeRows([mkCourse({ course_id: 2, quizzes: [], projects: [] })]);
     expect(course.children).toBeUndefined();
+  });
+});
+
+describe('mergeExpandedKeys (AW-23)', () => {
+  it('expands every course on first load (nothing seen yet)', () => {
+    expect(mergeExpandedKeys([], ['course-1', 'course-2'], new Set())).toEqual([
+      'course-1',
+      'course-2',
+    ]);
+  });
+
+  it('preserves a manual collapse of an already-seen course', () => {
+    const seen = new Set(['course-1', 'course-2']);
+    // course-1 was collapsed by the user (absent from prev); nothing new to auto-expand
+    expect(mergeExpandedKeys(['course-2'], ['course-1', 'course-2'], seen)).toEqual(['course-2']);
+  });
+
+  it('drops keys that no longer exist and auto-expands the new ones', () => {
+    const seen = new Set(['course-1']);
+    expect(mergeExpandedKeys(['course-1'], ['course-2'], seen)).toEqual(['course-2']);
+  });
+
+  it('auto-expands a newly-added course while keeping the current collapse state', () => {
+    const seen = new Set(['course-1', 'course-2']);
+    // user collapsed course-2 (absent from prev); course-3 is brand new -> expand it
+    expect(mergeExpandedKeys(['course-1'], ['course-1', 'course-2', 'course-3'], seen)).toEqual([
+      'course-1',
+      'course-3',
+    ]);
   });
 });

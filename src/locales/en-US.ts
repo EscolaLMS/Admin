@@ -931,6 +931,8 @@ export default {
   'gradebook.no_course_grades': 'No quiz or project grades yet.',
   'gradebook.completed': 'Course passed',
   'gradebook.not_completed': 'Not completed',
+  'gradebook.passed': 'Passed',
+  'gradebook.failed': 'Failed',
   'gradebook.result_percent': 'Result',
   'gradebook.score': 'Score',
   'gradebook.attempts': 'Attempts',

@@ -1,13 +1,13 @@
 import { Context } from '@/components/ProgramForm/Context';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '@/consts/gradebook';
 import { getFormData } from '@/services/api';
 import { getTopic } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
-import { Affix, Alert, Col, Row, Space } from 'antd';
+import { Affix, Alert, Col, Row, Space, message } from 'antd';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 import TopicForm from './form';
 import { getTypeName } from './media';
 import H5PForm from './media/h5p';
@@ -91,6 +91,7 @@ export const Topic: React.FC = () => {
 
   const [sortOrder /* , setSortOrder */] = useState(topics.order);
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
   const [currentTopic, setCurrentTopic] = useState<API.Topic>(topic);
 
   useEffect(() => {
@@ -204,7 +205,19 @@ export const Topic: React.FC = () => {
       const countsToGrade = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
       values[GRADEBOOK_FIELDS.flag] = countsToGrade ? 1 : 0;
       if (countsToGrade) {
-        const weight = Number(values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight);
+        const enteredWeight = values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight;
+        // Block the save on an invalid weight (the inline field error alone doesn't gate the
+        // plain onClick handler). Same rule as the topic-form field validators.
+        if (!isValidGradeWeight(enteredWeight)) {
+          message.error(
+            intl.formatMessage({
+              id: 'grade_weight_must_be_positive',
+              defaultMessage: 'Weight must be greater than 0.',
+            }),
+          );
+          return;
+        }
+        const weight = Number(enteredWeight);
         values[GRADEBOOK_FIELDS.weight] =
           Number.isFinite(weight) && weight > 0 ? weight : DEFAULT_GRADE_WEIGHT;
       } else {
@@ -215,7 +228,7 @@ export const Topic: React.FC = () => {
     const formData = getFormData(values);
 
     handleSave(formData);
-  }, [topics, handleSave, sortOrder]);
+  }, [topics, handleSave, sortOrder, intl]);
 
   const onDelete = useCallback(() => {
     if (topic?.isNew) {

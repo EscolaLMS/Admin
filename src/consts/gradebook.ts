@@ -33,6 +33,14 @@ export const GRADEBOOK_FIELDS = {
  */
 export const DEFAULT_GRADE_WEIGHT = 1;
 
+/**
+ * A grade weight is valid when it is left empty (null/undefined → falls back to the
+ * default) or is a number greater than 0. Shared by the topic-form field validators and
+ * the save guard so both enforce the same rule.
+ */
+export const isValidGradeWeight = (value: unknown): boolean =>
+  value === null || value === undefined || value === '' || Number(value) > 0;
+
 /** REST endpoints for reading gradebook data. */
 export const GRADEBOOK_ENDPOINTS = {
   /** Per-student, per-course quiz/project grades + completion (FinalGradesDetails). */

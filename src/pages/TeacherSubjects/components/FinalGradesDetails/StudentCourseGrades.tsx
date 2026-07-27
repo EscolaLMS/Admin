@@ -1,10 +1,10 @@
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import { Empty, Spin, Tag, Typography } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { Empty, Space, Spin, Tag, Typography } from 'antd';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import type { StudentGradeRow } from './types';
-import { buildGradeRows, formatPercent } from './utils';
+import { buildGradeRows, formatPercent, mergeExpandedKeys } from './utils';
 
 /**
  * AW-23 — "Final grades" grades table for a single student.
@@ -16,6 +16,23 @@ import { buildGradeRows, formatPercent } from './utils';
 
 const formatScore = (score?: number | null, maxScore?: number | null): string =>
   score === null || score === undefined ? '-' : `${score} / ${maxScore ?? '-'}`;
+
+// Pass/fail is co-located with the result. Renders nothing until the backend computes it
+// (is_passed is null for projects and currently for quizzes too).
+const PassFailTag: React.FC<{ passed?: boolean | null }> = ({ passed }) => {
+  if (passed === null || passed === undefined) {
+    return null;
+  }
+  return passed ? (
+    <Tag color="success">
+      <FormattedMessage id="gradebook.passed" defaultMessage="Passed" />
+    </Tag>
+  ) : (
+    <Tag color="error">
+      <FormattedMessage id="gradebook.failed" defaultMessage="Failed" />
+    </Tag>
+  );
+};
 
 const columns: ProColumns<StudentGradeRow>[] = [
   {
@@ -53,8 +70,16 @@ const columns: ProColumns<StudentGradeRow>[] = [
   {
     title: <FormattedMessage id="gradebook.result_percent" defaultMessage="Result" />,
     dataIndex: 'result_percent',
-    width: 120,
-    render: (_n, row) => (row.kind === 'course' ? '' : formatPercent(row.result_percent)),
+    width: 160,
+    render: (_n, row) =>
+      row.kind === 'course' ? (
+        ''
+      ) : (
+        <Space size={4}>
+          {formatPercent(row.result_percent)}
+          <PassFailTag passed={row.is_passed} />
+        </Space>
+      ),
   },
   {
     title: <FormattedMessage id="gradebook.score" defaultMessage="Score" />,
@@ -77,10 +102,15 @@ interface Props {
 export const StudentCourseGrades: React.FC<Props> = ({ data, loading }) => {
   const rows = useMemo(() => buildGradeRows(data ?? []), [data]);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+  const seenCourseKeysRef = useRef<Set<string>>(new Set());
 
-  // Expand every course by default so all results are visible without extra clicks.
+  // Expand every course on first load, then preserve the user's expand/collapse choices
+  // across data changes (only newly-appearing courses auto-expand).
   useEffect(() => {
-    setExpandedKeys(rows.map((row) => row.key));
+    const courseKeys = rows.map((row) => row.key);
+    const seen = seenCourseKeysRef.current;
+    setExpandedKeys((prev) => mergeExpandedKeys(prev, courseKeys, seen));
+    seenCourseKeysRef.current = new Set([...seen, ...courseKeys]);
   }, [rows]);
 
   if (loading && !data) {

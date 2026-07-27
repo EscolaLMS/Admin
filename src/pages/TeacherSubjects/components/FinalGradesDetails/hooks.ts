@@ -213,8 +213,6 @@ export function useStudentCoursesGrades(group_id: number, user_id: number) {
     setCourseGrades((prev) => ({ ...prev, loading: true }));
     getStudentCoursesGrades(group_id, user_id)
       .then((response) => {
-        // AW-23: log the raw payload while the endpoint contract is being confirmed.
-        console.log('[AW-23] courses-grades', response);
         if (response.success) {
           setCourseGrades((prev) => ({ ...prev, data: response.data }));
         }
