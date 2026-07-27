@@ -1,7 +1,13 @@
 import { describe, expect, it } from '@jest/globals';
 
 import type { StudentExam } from './types';
-import { getProposedGrade, getWeightedAverage, getWeightedAverageValue } from './utils';
+import {
+  buildGradeRows,
+  formatPercent,
+  getProposedGrade,
+  getWeightedAverage,
+  getWeightedAverageValue,
+} from './utils';
 
 // Minimal StudentExam: getWeightedAverage only reads `weight` and `result.result`.
 const exam = (weight: number | undefined, result: number | string | null): StudentExam =>
@@ -74,5 +80,129 @@ describe('getProposedGrade (regression: empty weighted grades no longer NaN)', (
   it('maps the weighted average onto the matching scale', () => {
     // average 3 -> reaches the grade_value:3 scale
     expect(getProposedGrade([exam(1, 3)], scales)).toBe('C');
+  });
+});
+
+describe('formatPercent (AW-23)', () => {
+  it('renders a finite value with a percent sign', () => {
+    expect(formatPercent(0)).toBe('0%');
+    expect(formatPercent(85)).toBe('85%');
+  });
+
+  it('renders "-" for null / undefined / non-finite values', () => {
+    expect(formatPercent(null)).toBe('-');
+    expect(formatPercent(undefined)).toBe('-');
+    expect(formatPercent(NaN)).toBe('-');
+  });
+});
+
+const mkAttempt = (over: Partial<API.QuizAttemptGrade> = {}): API.QuizAttemptGrade =>
+  ({
+    attempt_id: 1,
+    result_score: 10,
+    max_score: 10,
+    result_percent: 100,
+    correct_answers_count: 1,
+    is_passed: null,
+    end_at: '2026-01-01T10:00:00Z',
+    ...over,
+  } as API.QuizAttemptGrade);
+
+const mkCourse = (over: Partial<API.StudentCourseGrades> = {}): API.StudentCourseGrades =>
+  ({
+    course_id: 1,
+    course_title: 'Course',
+    is_completed: false,
+    quizzes: [],
+    projects: [],
+    ...over,
+  } as API.StudentCourseGrades);
+
+describe('buildGradeRows (AW-23)', () => {
+  it('returns an empty list for no courses', () => {
+    expect(buildGradeRows([])).toEqual([]);
+  });
+
+  it('maps a course to a parent row with quiz/project child rows keyed by course_id', () => {
+    const rows = buildGradeRows([
+      mkCourse({
+        course_id: 7,
+        course_title: 'Maths',
+        is_completed: true,
+        quizzes: [
+          {
+            quiz_id: 3,
+            topic_id: 30,
+            title: 'Quiz A',
+            attempts_count: 2,
+            // the backend-provided representative (best) attempt drives the row
+            result: mkAttempt({ attempt_id: 12, result_percent: 80, result_score: 8 }),
+            attempts: [mkAttempt({ result_percent: 50 }), mkAttempt({ result_percent: 80 })],
+          } as API.CourseQuizGrade,
+        ],
+        projects: [
+          {
+            topic_id: 40,
+            title: 'Project B',
+            solution_id: 5,
+            score: 4,
+            max_score: 5,
+            result_percent: 80,
+            graded_at: null,
+          } as API.CourseProjectGrade,
+        ],
+      }),
+    ]);
+
+    expect(rows).toHaveLength(1);
+    const course = rows[0];
+    expect(course).toMatchObject({
+      key: 'course-7',
+      name: 'Maths',
+      kind: 'course',
+      is_completed: true,
+    });
+    expect(course.children).toHaveLength(2);
+
+    // quiz child summarises the backend `result` (percent 80, score 8) + attempts_count
+    expect(course.children?.[0]).toMatchObject({
+      key: 'quiz-7-3',
+      kind: 'quiz',
+      result_percent: 80,
+      score: 8,
+      attempts: 2,
+    });
+    // project child keyed by topic_id, no pass/fail
+    expect(course.children?.[1]).toMatchObject({
+      key: 'project-7-40',
+      kind: 'project',
+      result_percent: 80,
+      score: 4,
+      is_passed: null,
+    });
+  });
+
+  it('renders an ungraded quiz/project with null result as empty values, not a crash', () => {
+    const [course] = buildGradeRows([
+      mkCourse({
+        course_id: 8,
+        quizzes: [
+          {
+            quiz_id: 1,
+            topic_id: 10,
+            title: 'Q',
+            attempts_count: 0,
+            result: null,
+            attempts: [],
+          } as API.CourseQuizGrade,
+        ],
+      }),
+    ]);
+    expect(course.children?.[0]).toMatchObject({ result_percent: null, score: null, attempts: 0 });
+  });
+
+  it('leaves a course with no flagged items as a childless leaf', () => {
+    const [course] = buildGradeRows([mkCourse({ course_id: 2, quizzes: [], projects: [] })]);
+    expect(course.children).toBeUndefined();
   });
 });

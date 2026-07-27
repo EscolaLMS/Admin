@@ -918,4 +918,22 @@ export default {
     'The duration of the trial period expressed as a number in days, months or years',
   import_dictionary: 'Import dictionary',
   course_fields: 'Additional fields',
+
+  // AW-23 — subject gradebook (quiz/project grades)
+  counts_to_grade: 'Show in final grade',
+  counts_to_grade_tooltip:
+    'When enabled, this item appears in the final grade and qualifies for a partial grade.',
+  grade_weight: 'Grade weight',
+  grade_weight_tooltip: 'Default weight is 1.',
+  grade_weight_default_hint: 'Default weight is 1.',
+  grade_weight_must_be_positive: 'Weight must be greater than 0.',
+  'gradebook.course_grades_title': 'Quiz and project grades',
+  'gradebook.no_course_grades': 'No quiz or project grades yet.',
+  'gradebook.completed': 'Course passed',
+  'gradebook.not_completed': 'Not completed',
+  'gradebook.result_percent': 'Result',
+  'gradebook.score': 'Score',
+  'gradebook.attempts': 'Attempts',
+  'gradebook.type.GiftQuiz': 'Quiz',
+  'gradebook.type.Project': 'Project',
 };

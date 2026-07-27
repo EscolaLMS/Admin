@@ -570,7 +570,13 @@ declare namespace API {
 
   type TopicProject = TopicBase & {
     topicable_type: TopicType.Project;
-    topicable: TopicableBase & { notify_users?: string[] };
+    topicable: TopicableBase & {
+      notify_users?: string[];
+      // AW-23 gradebook: whether this project appears in the final grade (delivered via the
+      // Topic content API) and the weight it carries there (FE-only). See consts/gradebook.ts.
+      counts_to_grade?: boolean;
+      grade_weight?: number;
+    };
   };
 
   type TopicQuiz = TopicBase & {
@@ -581,6 +587,11 @@ declare namespace API {
       max_execution_time?: number;
       min_pass_score?: number;
       randomize_order?: boolean;
+      // AW-23 gradebook: whether this quiz appears in the final grade (delivered via the Topic
+      // content API and PUT /api/admin/gift-quizes/{id}) and the weight it carries there
+      // (FE-only). See consts/gradebook.ts.
+      counts_to_grade?: boolean;
+      grade_weight?: number;
     };
   };
 
@@ -1910,6 +1921,55 @@ declare namespace API {
 
   type UpdateFinalGradeRequest = {
     grade_scale_id: number;
+  };
+
+  /* ── AW-23: Subject gradebook read contract (quiz/project grades) ────────────
+     Shape returned by GET /api/admin/lesson-group-users/groups/{group_id}/users/
+     {student_id}/courses-grades (confirmed against a real payload 2026-07-24).
+     Only quizzes/projects with counts_to_grade=true are present; H5P is excluded. */
+
+  /** One quiz attempt result for a student. */
+  type QuizAttemptGrade = {
+    attempt_id: number;
+    result_score: number;
+    max_score: number;
+    /** 0–100 */
+    result_percent: number;
+    correct_answers_count: number;
+    /** null when the backend does not compute pass/fail for the quiz */
+    is_passed: boolean | null;
+    end_at: string | null;
+  };
+
+  /** A flagged quiz within a course. `result` is the representative (best) attempt. */
+  type CourseQuizGrade = {
+    quiz_id: number;
+    topic_id: number;
+    title: string;
+    attempts_count: number;
+    result: QuizAttemptGrade | null;
+    attempts: QuizAttemptGrade[];
+  };
+
+  /** A flagged project within a course, with the student's grade. */
+  type CourseProjectGrade = {
+    topic_id: number;
+    title: string;
+    solution_id: number | null;
+    score: number | null;
+    max_score: number | null;
+    /** 0–100 */
+    result_percent: number | null;
+    graded_at: string | null;
+  };
+
+  /** All flagged quiz/project grades for one student within one course. */
+  type StudentCourseGrades = {
+    course_id: number;
+    course_title: string;
+    is_completed: boolean;
+    quizzes: CourseQuizGrade[];
+    projects: CourseProjectGrade[];
   };
 
   type LessonTopicId = number;

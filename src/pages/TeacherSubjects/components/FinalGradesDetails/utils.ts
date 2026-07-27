@@ -1,4 +1,4 @@
-import type { StudentExam } from './types';
+import type { StudentExam, StudentGradeRow } from './types';
 
 export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number): StudentExam[] =>
   exams.reduce<StudentExam[]>((acc, { results, ...exam }) => {
@@ -72,6 +72,48 @@ export const getProposedGrade = (
 
   return sortedGradeScales[firstFalseIndex - 1]?.name;
 };
+
+// AW-23: display form of a 0–100 percentage; "-" when there is no finite value.
+export const formatPercent = (value: number | null | undefined): string =>
+  value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
+
+// AW-23: flatten the nested courses-grades payload into a single tree: one parent row
+// per course, with its flagged quizzes/projects as child rows. A quiz row summarises the
+// backend-provided `result` (best attempt); a course with no items has no `children`
+// (rendered as a leaf).
+export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGradeRow[] =>
+  courses.map((course) => {
+    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
+      key: `quiz-${course.course_id}-${quiz.quiz_id}`,
+      name: quiz.title,
+      kind: 'quiz',
+      result_percent: quiz.result?.result_percent ?? null,
+      score: quiz.result?.result_score ?? null,
+      max_score: quiz.result?.max_score ?? null,
+      is_passed: quiz.result?.is_passed ?? null,
+      attempts: quiz.attempts_count,
+    }));
+
+    const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
+      key: `project-${course.course_id}-${project.topic_id}`,
+      name: project.title,
+      kind: 'project',
+      result_percent: project.result_percent,
+      score: project.score,
+      max_score: project.max_score,
+      is_passed: null,
+    }));
+
+    const children = [...quizRows, ...projectRows];
+
+    return {
+      key: `course-${course.course_id}`,
+      name: course.course_title,
+      kind: 'course',
+      is_completed: course.is_completed,
+      children: children.length ? children : undefined,
+    };
+  });
 
 export const getScalesBySubjectScaleFormId = (
   s_subject_scale_form_id: number,

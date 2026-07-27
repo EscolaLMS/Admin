@@ -2,6 +2,7 @@ import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { groupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
 import { getExams } from '@/services/escola-lms/exams';
+import { getStudentCoursesGrades } from '@/services/escola-lms/gradebook';
 import {
   getGradeTerms,
   getSubjectGradeScales,
@@ -201,6 +202,31 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   }, [student_id, semester_subject_id]);
 
   return { studentExams };
+}
+
+export function useStudentCoursesGrades(group_id: number, user_id: number) {
+  const [courseGrades, setCourseGrades] = useState<FetchedData<API.StudentCourseGrades[]>>({
+    loading: false,
+  });
+
+  useEffect(() => {
+    setCourseGrades((prev) => ({ ...prev, loading: true }));
+    getStudentCoursesGrades(group_id, user_id)
+      .then((response) => {
+        // AW-23: log the raw payload while the endpoint contract is being confirmed.
+        console.log('[AW-23] courses-grades', response);
+        if (response.success) {
+          setCourseGrades((prev) => ({ ...prev, data: response.data }));
+        }
+      })
+      // endpoint may not exist yet — fall back to empty state instead of tearing down the view
+      .catch(() => undefined)
+      .finally(() => {
+        setCourseGrades((prev) => ({ ...prev, loading: false }));
+      });
+  }, [group_id, user_id]);
+
+  return { courseGrades };
 }
 
 export function useUserCoursesStats(group_id: number, user_id: number) {

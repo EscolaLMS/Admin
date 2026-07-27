@@ -1,4 +1,5 @@
 import { Context } from '@/components/ProgramForm/Context';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS } from '@/consts/gradebook';
 import { getFormData } from '@/services/api';
 import { getTopic } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
@@ -171,7 +172,7 @@ export const Topic: React.FC = () => {
   );
 
   const onFormSubmit = useCallback(() => {
-    const values = {
+    const values: Record<string, any> = {
       ...topics,
       active: topics.active ? 1 : 0,
       preview: topics.preview ? 1 : 0,
@@ -188,6 +189,27 @@ export const Topic: React.FC = () => {
     // user actually toggled it so an untouched edit doesn't overwrite the stored value.
     if (typeof topics.randomize_order === 'boolean') {
       values.randomize_order = topics.randomize_order ? 1 : 0;
+    }
+
+    // AW-23 gradebook flag + weight — quiz/project topics only. Fall back to the stored
+    // topicable value so an untouched flag isn't cleared on partial edits. Weight is sent
+    // only when the item counts to the grade.
+    if (
+      topics.topicable_type === TopicType.GiftQuiz ||
+      topics.topicable_type === TopicType.Project
+    ) {
+      const topicable = topics.topicable as
+        | { counts_to_grade?: boolean; grade_weight?: number }
+        | undefined;
+      const countsToGrade = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
+      values[GRADEBOOK_FIELDS.flag] = countsToGrade ? 1 : 0;
+      if (countsToGrade) {
+        const weight = Number(values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight);
+        values[GRADEBOOK_FIELDS.weight] =
+          Number.isFinite(weight) && weight > 0 ? weight : DEFAULT_GRADE_WEIGHT;
+      } else {
+        delete values[GRADEBOOK_FIELDS.weight];
+      }
     }
 
     const formData = getFormData(values);
@@ -285,7 +307,7 @@ export const Topic: React.FC = () => {
           )}
           {type && type === TopicType.Project && (
             <Project
-              onChange={(value) => updateValue('notify_users' as keyof API.Topic, value)}
+              onChange={(key, value) => updateValue(key as keyof API.Topic, value)}
               topicable={topic.topicable as API.TopicProject['topicable']}
             />
           )}
