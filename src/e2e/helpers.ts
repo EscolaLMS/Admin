@@ -10,7 +10,10 @@ export const loginAsAdmin = async (page: Page) => {
   await page.locator('input[id="password"]').fill(ADMIN_CREDENTIALS.password);
   await page.locator('form button').click();
 
-  await expect(page).toHaveURL(`${BASE_URL}/#/welcome`, { timeout: 10000 });
+  // Post-login the app awaits several bootstrap calls (profile, settings, packages,
+  // translations) before redirecting; allow generous time as the CI API is served
+  // by a single-threaded dev server.
+  await expect(page).toHaveURL(`${BASE_URL}/#/welcome`, { timeout: 30000 });
 };
 
 // Helper function to confirm deletion of a record in a table
