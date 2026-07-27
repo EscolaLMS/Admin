@@ -16,7 +16,7 @@ test.describe('New user', () => {
     await page.click('[data-row-key="return_url"] button');
     await page.getByRole('textbox', { name: 'Please enter' }).fill('');
     await page.getByRole('textbox', { name: 'Please enter' }).fill('http://localhost');
-    await page.click('text=OK');
+    await page.locator('.ant-modal').getByRole('button', { name: 'OK', exact: true }).click();
     await page.waitForTimeout(2000);
     await page.waitForLoadState();
 

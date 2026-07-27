@@ -27,8 +27,10 @@ test.describe('New course', () => {
     await page.waitForSelector('text=Go to course page', { state: 'visible' });
     await page.locator('text=Go to course page').click();
 
-    const courseSavedAlert = await page.locator('.ant-message-notice');
-    await expect(courseSavedAlert).toContainText('Course saved successfully');
+    const courseSavedAlert = page.locator('.ant-message-notice', {
+      hasText: 'Course saved successfully',
+    });
+    await expect(courseSavedAlert).toBeVisible();
 
     await page.goto(`${BASE_URL}/#/courses/list`);
     await page.waitForSelector('.ant-table-tbody .ant-table-row-level-0', { state: 'visible' }); // w8 for initial list before querying
