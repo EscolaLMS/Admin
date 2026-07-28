@@ -19,7 +19,7 @@ import type {
 
 /* Attendance */
 
-import { getScheduleAttendanceHeaderState } from './helpers';
+import { getScheduleAttendanceHeaderState, isPercentExam } from './helpers';
 
 export { isGroupStudent } from './helpers';
 
@@ -190,14 +190,22 @@ export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableIt
           ),
         hideInSearch: true,
         width: 100,
-        render: (_n, record) => (
-          <ExamGradeInput
-            type={exam.type}
-            result={record?.[`exam-${exam.id}`]?.result}
-            exam_id={exam.id}
-            student_id={record.id}
-          />
-        ),
+        render: (_n, record) => {
+          const examResult = record?.[`exam-${exam.id}`];
+
+          // Percent-type exams show the backend-computed grade read-only. The other types
+          // keep their editable select, which already holds a grade / pass-fail value.
+          return isPercentExam(exam.type) ? (
+            examResult?.grade ?? '-'
+          ) : (
+            <ExamGradeInput
+              type={exam.type}
+              result={examResult?.result}
+              exam_id={exam.id}
+              student_id={record.id}
+            />
+          );
+        },
       },
     ],
     [],

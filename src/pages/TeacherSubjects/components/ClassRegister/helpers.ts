@@ -1,7 +1,7 @@
 // Pure attendance helpers for the ClassRegister group view. Kept import-light
 // (only the AttendanceValue enum, via a relative path) so they can be unit
 // tested without pulling in the component graph / the `@/` module alias.
-import { AttendanceValue } from '../../../../services/escola-lms/enums';
+import { AttendanceValue, ExamGradeType } from '../../../../services/escola-lms/enums';
 
 // A user belongs to the group roster if they have no academic teacher, OR they
 // appear in the teacher's final-grades roster. Used both for the group-wide
@@ -12,6 +12,18 @@ export const isGroupStudent = (
   finalGrades: API.FinalGradeItem[],
 ): boolean =>
   academicTeacherId === null || finalGrades.some((teacher) => teacher.user.id === studentId);
+
+// Exam types whose result is a 0–100 percentage. Mirrors the `default` branch of
+// ExamGradeInput's switch: ManualPass and ManualGrades render their own select and already
+// hold a pass/fail or 2–5 grade value, so anything else is a percentage — including a new
+// backend type, which lands on the percent branch in both places.
+const NON_PERCENT_EXAM_TYPES: readonly ExamGradeType[] = [
+  ExamGradeType.ManualPass,
+  ExamGradeType.ManualGrades,
+];
+
+export const isPercentExam = (type: ExamGradeType): boolean =>
+  !NON_PERCENT_EXAM_TYPES.includes(type);
 
 // Individually-meaningful statuses the group-wide bulk action must never
 // overwrite, and which are excluded from the "all present" header calc: a

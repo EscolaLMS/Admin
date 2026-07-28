@@ -10,19 +10,18 @@ export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number):
     return [...acc, { ...exam, result }];
   }, []);
 
-// Weighted average of a student's exam results. Only exams that carry a weight
-// (backend field `exam.weight`) AND a numeric result are counted; everything
-// else is skipped. Returns null when there is no weighted grade to average, or
-// when the result is not finite, so callers can render an empty state instead
-// of a divide-by-zero / NaN value.
-export const getWeightedAverageValue = (studentExams: StudentExam[]): number | null => {
+// Only exams carrying a weight AND a usable value are counted; everything else is skipped.
+// Returns null when there is nothing to average, so callers render an empty state instead of
+// a divide-by-zero / NaN value.
+const getWeightedAverageOf = (
+  studentExams: StudentExam[],
+  valueOf: (result: API.ExamResult) => number | null,
+): number | null => {
   const [sum, weightsSum] = studentExams.reduce<[number, number]>(
     (acc, { result, weight }) => {
-      if (weight && typeof result.result === 'number') {
-        return [acc[0] + result.result * weight, acc[1] + weight];
-      } else {
-        return acc;
-      }
+      const value = valueOf(result);
+
+      return weight && value !== null ? [acc[0] + value * weight, acc[1] + weight] : acc;
     },
     [0, 0],
   );
@@ -34,11 +33,26 @@ export const getWeightedAverageValue = (studentExams: StudentExam[]): number | n
   return Number.isFinite(average) ? average : null;
 };
 
-// Display form of the weighted average: mathematically rounded to 2 decimal
-// places, or "-" when there is no weighted grade to average. The Number.EPSILON
-// nudge avoids the classic float half-boundary error (e.g. 1.005 -> "1.01").
+// Percentage-based. Feeds getProposedGrade, whose scale thresholds (`grade_value`) are
+// percentages — do not switch this to grades.
+export const getWeightedAverageValue = (studentExams: StudentExam[]): number | null =>
+  getWeightedAverageOf(studentExams, ({ result }) => (typeof result === 'number' ? result : null));
+
+// Grade-based, from the backend `grade` on each exam result. A blank/absent grade must not
+// fall through to Number('') === 0, which would drag the average down.
+export const getGradeWeightedAverageValue = (studentExams: StudentExam[]): number | null =>
+  getWeightedAverageOf(studentExams, ({ grade }) => {
+    if (grade === null || grade === undefined || String(grade).trim() === '') return null;
+
+    const value = Number(grade);
+
+    return Number.isFinite(value) ? value : null;
+  });
+
+// The displayed "średnia ważona" — grades weighted by exam weight, rounded to 2 decimal
+// places. The Number.EPSILON nudge avoids the float half-boundary error (1.005 -> "1.01").
 export const getWeightedAverage = (studentExams: StudentExam[]): string => {
-  const value = getWeightedAverageValue(studentExams);
+  const value = getGradeWeightedAverageValue(studentExams);
   if (value === null) return '-';
 
   return (Math.round((value + Number.EPSILON) * 100) / 100).toFixed(2);
