@@ -16,12 +16,12 @@ export interface StudentGradeRow {
   is_completed?: boolean;
   /** item rows only — 0–100, or null when not graded */
   result_percent?: number | null;
+  /** item rows only — the grade `result_percent` maps onto; null when the backend has none */
+  grade?: string | number | null;
   /** item rows only */
   score?: number | null;
   max_score?: number | null;
   /** item rows only — pass/fail (quiz: latest attempt; project: null) */
   is_passed?: boolean | null;
-  /** quiz rows only — number of attempts */
-  attempts?: number;
   children?: StudentGradeRow[];
 }

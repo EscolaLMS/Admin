@@ -1935,6 +1935,12 @@ declare namespace API {
     max_score: number;
     /** 0–100 */
     result_percent: number;
+    /**
+     * The grade the percentage maps onto in the tutor's grade scale (e.g. 4, "B").
+     * NOT YET DELIVERED — optional until the backend ships it; the UI falls back to
+     * `result_percent` while it is absent.
+     */
+    grade?: string | number | null;
     correct_answers_count: number;
     /** null when the backend does not compute pass/fail for the quiz */
     is_passed: boolean | null;
@@ -1948,6 +1954,8 @@ declare namespace API {
     title: string;
     attempts_count: number;
     result: QuizAttemptGrade | null;
+    /** Mirror of `result.grade` in case the backend places it beside `result`. See above. */
+    grade?: string | number | null;
     attempts: QuizAttemptGrade[];
   };
 
@@ -1960,6 +1968,8 @@ declare namespace API {
     max_score: number | null;
     /** 0–100 */
     result_percent: number | null;
+    /** The grade `result_percent` maps onto. NOT YET DELIVERED — see QuizAttemptGrade.grade. */
+    grade?: string | number | null;
     graded_at: string | null;
   };
 

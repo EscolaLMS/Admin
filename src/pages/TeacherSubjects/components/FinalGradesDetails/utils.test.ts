@@ -4,6 +4,7 @@ import type { StudentExam } from './types';
 import {
   buildGradeRows,
   formatPercent,
+  getGradeDisplay,
   getProposedGrade,
   getWeightedAverage,
   getWeightedAverageValue,
@@ -97,6 +98,39 @@ describe('formatPercent (AW-23)', () => {
   });
 });
 
+describe('getGradeDisplay (AW-23)', () => {
+  it('returns both parts when the item has a grade and a percentage', () => {
+    expect(getGradeDisplay(4, 80)).toEqual({ grade: '4', percent: '80%' });
+    expect(getGradeDisplay('B', 85)).toEqual({ grade: 'B', percent: '85%' });
+  });
+
+  it('keeps a zero grade and a zero percentage (falsy but real values)', () => {
+    expect(getGradeDisplay(0, 0)).toEqual({ grade: '0', percent: '0%' });
+  });
+
+  it('returns no percentage part when there is none to show', () => {
+    expect(getGradeDisplay(4, null)).toEqual({ grade: '4', percent: null });
+    expect(getGradeDisplay(4, undefined)).toEqual({ grade: '4', percent: null });
+    expect(getGradeDisplay(4, NaN)).toEqual({ grade: '4', percent: null });
+  });
+
+  it('returns only the percentage while the backend grade field is absent', () => {
+    expect(getGradeDisplay(null, 80)).toEqual({ grade: null, percent: '80%' });
+    expect(getGradeDisplay(undefined, 80)).toEqual({ grade: null, percent: '80%' });
+    // a blank grade is treated as no grade, so the cell never renders an empty bold value
+    expect(getGradeDisplay('', 80)).toEqual({ grade: null, percent: '80%' });
+    expect(getGradeDisplay('  ', 80)).toEqual({ grade: null, percent: '80%' });
+  });
+
+  it('trims a padded grade', () => {
+    expect(getGradeDisplay(' 4 ', 80)).toEqual({ grade: '4', percent: '80%' });
+  });
+
+  it('returns neither part when the item is ungraded (cell renders "-")', () => {
+    expect(getGradeDisplay(null, null)).toEqual({ grade: null, percent: null });
+  });
+});
+
 const mkAttempt = (over: Partial<API.QuizAttemptGrade> = {}): API.QuizAttemptGrade =>
   ({
     attempt_id: 1,
@@ -137,7 +171,7 @@ describe('buildGradeRows (AW-23)', () => {
             title: 'Quiz A',
             attempts_count: 2,
             // the backend-provided representative (best) attempt drives the row
-            result: mkAttempt({ attempt_id: 12, result_percent: 80, result_score: 8 }),
+            result: mkAttempt({ attempt_id: 12, result_percent: 80, result_score: 8, grade: 4 }),
             attempts: [mkAttempt({ result_percent: 50 }), mkAttempt({ result_percent: 80 })],
           } as API.CourseQuizGrade,
         ],
@@ -149,6 +183,7 @@ describe('buildGradeRows (AW-23)', () => {
             score: 4,
             max_score: 5,
             result_percent: 80,
+            grade: 4,
             graded_at: null,
           } as API.CourseProjectGrade,
         ],
@@ -165,22 +200,72 @@ describe('buildGradeRows (AW-23)', () => {
     });
     expect(course.children).toHaveLength(2);
 
-    // quiz child summarises the backend `result` (percent 80, score 8) + attempts_count
+    // quiz child summarises the backend `result` (grade 4, percent 80, score 8)
     expect(course.children?.[0]).toMatchObject({
       key: 'quiz-7-3',
       kind: 'quiz',
+      grade: 4,
       result_percent: 80,
       score: 8,
-      attempts: 2,
     });
     // project child keyed by topic_id, no pass/fail
     expect(course.children?.[1]).toMatchObject({
       key: 'project-7-40',
       kind: 'project',
+      grade: 4,
       result_percent: 80,
       score: 4,
       is_passed: null,
     });
+  });
+
+  it('reads a quiz grade placed beside `result` instead of inside it', () => {
+    const [course] = buildGradeRows([
+      mkCourse({
+        quizzes: [
+          {
+            quiz_id: 1,
+            topic_id: 10,
+            title: 'Q',
+            attempts_count: 1,
+            grade: 3,
+            result: mkAttempt({ result_percent: 60 }),
+            attempts: [],
+          } as API.CourseQuizGrade,
+        ],
+      }),
+    ]);
+    expect(course.children?.[0]).toMatchObject({ grade: 3, result_percent: 60 });
+  });
+
+  it('leaves the grade null while the backend does not send one', () => {
+    const [course] = buildGradeRows([
+      mkCourse({
+        quizzes: [
+          {
+            quiz_id: 1,
+            topic_id: 10,
+            title: 'Q',
+            attempts_count: 1,
+            result: mkAttempt({ result_percent: 60 }),
+            attempts: [],
+          } as API.CourseQuizGrade,
+        ],
+        projects: [
+          {
+            topic_id: 40,
+            title: 'P',
+            solution_id: null,
+            score: null,
+            max_score: null,
+            result_percent: null,
+            graded_at: null,
+          } as API.CourseProjectGrade,
+        ],
+      }),
+    ]);
+    expect(course.children?.[0]).toMatchObject({ grade: null, result_percent: 60 });
+    expect(course.children?.[1]).toMatchObject({ grade: null, result_percent: null });
   });
 
   it('renders an ungraded quiz/project with null result as empty values, not a crash', () => {
@@ -199,7 +284,7 @@ describe('buildGradeRows (AW-23)', () => {
         ],
       }),
     ]);
-    expect(course.children?.[0]).toMatchObject({ result_percent: null, score: null, attempts: 0 });
+    expect(course.children?.[0]).toMatchObject({ result_percent: null, score: null, grade: null });
   });
 
   it('leaves a course with no flagged items as a childless leaf', () => {

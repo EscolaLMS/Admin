@@ -933,9 +933,7 @@ export default {
   'gradebook.not_completed': 'Not completed',
   'gradebook.passed': 'Passed',
   'gradebook.failed': 'Failed',
-  'gradebook.result_percent': 'Result',
   'gradebook.score': 'Score',
-  'gradebook.attempts': 'Attempts',
   'gradebook.type.GiftQuiz': 'Quiz',
   'gradebook.type.Project': 'Project',
 };

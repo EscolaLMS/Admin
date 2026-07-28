@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import type { StudentGradeRow } from './types';
-import { buildGradeRows, formatPercent, mergeExpandedKeys } from './utils';
+import { buildGradeRows, getGradeDisplay, mergeExpandedKeys } from './utils';
 
 /**
  * AW-23 — "Final grades" grades table for a single student.
@@ -17,7 +17,7 @@ import { buildGradeRows, formatPercent, mergeExpandedKeys } from './utils';
 const formatScore = (score?: number | null, maxScore?: number | null): string =>
   score === null || score === undefined ? '-' : `${score} / ${maxScore ?? '-'}`;
 
-// Pass/fail is co-located with the result. Renders nothing until the backend computes it
+// Pass/fail is co-located with the grade. Renders nothing until the backend computes it
 // (is_passed is null for projects and currently for quizzes too).
 const PassFailTag: React.FC<{ passed?: boolean | null }> = ({ passed }) => {
   if (passed === null || passed === undefined) {
@@ -31,6 +31,39 @@ const PassFailTag: React.FC<{ passed?: boolean | null }> = ({ passed }) => {
     <Tag color="error">
       <FormattedMessage id="gradebook.failed" defaultMessage="Failed" />
     </Tag>
+  );
+};
+
+// Tint for the grade column, the point of the table. Opaque rather than translucent: the
+// column is `fixed: 'right'`, so it overlays the cells scrolling beneath it and any
+// transparency would let them bleed through. These are the composited equivalents of 4% /
+// 8% black over the white table background.
+const GRADE_CELL_BG = '#f5f5f5';
+const GRADE_HEADER_BG = '#ebebeb';
+
+// Below this the three fixed columns (3 × 180) would squeeze the flexible name column past
+// readability, so the table scrolls horizontally instead of compressing further.
+const MIN_TABLE_WIDTH = 986;
+
+// The last column: whichever value we have leads, rendered prominently — the grade when the
+// backend sends one, otherwise the percentage (the `grade` field is not live yet). The
+// percentage is only demoted to muted context when there is a grade to outrank it.
+const GradeCell: React.FC<{ row: StudentGradeRow }> = ({ row }) => {
+  const { grade, percent } = getGradeDisplay(row.grade, row.result_percent);
+  const primary = grade ?? percent;
+
+  return (
+    <Space size={4}>
+      {primary ? (
+        <Typography.Text strong style={{ fontSize: 16 }}>
+          {primary}
+        </Typography.Text>
+      ) : (
+        '-'
+      )}
+      {grade && percent && <Typography.Text type="secondary">({percent})</Typography.Text>}
+      <PassFailTag passed={row.is_passed} />
+    </Space>
   );
 };
 
@@ -59,7 +92,7 @@ const columns: ProColumns<StudentGradeRow>[] = [
   {
     title: <FormattedMessage id="type" />,
     dataIndex: 'kind',
-    width: 120,
+    width: 180,
     render: (_n, row) =>
       row.kind === 'course' ? (
         ''
@@ -68,29 +101,23 @@ const columns: ProColumns<StudentGradeRow>[] = [
       ),
   },
   {
-    title: <FormattedMessage id="gradebook.result_percent" defaultMessage="Result" />,
-    dataIndex: 'result_percent',
-    width: 160,
-    render: (_n, row) =>
-      row.kind === 'course' ? (
-        ''
-      ) : (
-        <Space size={4}>
-          {formatPercent(row.result_percent)}
-          <PassFailTag passed={row.is_passed} />
-        </Space>
-      ),
-  },
-  {
     title: <FormattedMessage id="gradebook.score" defaultMessage="Score" />,
-    width: 120,
+    width: 180,
     render: (_n, row) => (row.kind === 'course' ? '' : formatScore(row.score, row.max_score)),
   },
   {
-    title: <FormattedMessage id="gradebook.attempts" defaultMessage="Attempts" />,
-    dataIndex: 'attempts',
-    width: 110,
-    render: (_n, row) => (row.kind === 'quiz' ? row.attempts ?? '-' : ''),
+    title: (
+      <Typography.Text strong>
+        <FormattedMessage id="grade" defaultMessage="Grade" />
+      </Typography.Text>
+    ),
+    dataIndex: 'grade',
+    width: 180,
+    // Stays pinned once the table starts scrolling horizontally (below MIN_TABLE_WIDTH).
+    fixed: 'right',
+    onHeaderCell: () => ({ style: { background: GRADE_HEADER_BG } }),
+    onCell: () => ({ style: { background: GRADE_CELL_BG } }),
+    render: (_n, row) => (row.kind === 'course' ? '' : <GradeCell row={row} />),
   },
 ];
 
@@ -138,6 +165,7 @@ export const StudentCourseGrades: React.FC<Props> = ({ data, loading }) => {
       pagination={false}
       dataSource={rows}
       columns={columns}
+      scroll={{ x: MIN_TABLE_WIDTH }}
       cardProps={{ bodyStyle: { padding: 0 } }}
       expandable={{
         expandedRowKeys: expandedKeys,

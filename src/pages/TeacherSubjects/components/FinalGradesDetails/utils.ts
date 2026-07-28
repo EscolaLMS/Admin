@@ -79,6 +79,26 @@ export const getProposedGrade = (
 export const formatPercent = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
 
+// AW-23: the two display parts of a graded item. The grade is the value that matters and
+// the percentage it was derived from is only context, so the table renders the grade
+// prominently with the percentage muted beside it. Either part can be absent:
+//   4 + 80    -> { grade: '4', percent: '80%' }
+//   4 + none  -> { grade: '4', percent: null }
+//   none + 80 -> { grade: null, percent: '80%' }  (fallback: `grade` is not live yet)
+//   neither   -> { grade: null, percent: null }   (the cell renders "-")
+export const getGradeDisplay = (
+  grade: string | number | null | undefined,
+  percent: number | null | undefined,
+): { grade: string | null; percent: string | null } => {
+  const trimmedGrade = grade === null || grade === undefined ? '' : String(grade).trim();
+  const formattedPercent = formatPercent(percent);
+
+  return {
+    grade: trimmedGrade === '' ? null : trimmedGrade,
+    percent: formattedPercent === '-' ? null : formattedPercent,
+  };
+};
+
 // AW-23: next set of expanded row keys so the user's manual expand/collapse survives data
 // changes: keep previously-expanded keys that still exist, plus auto-expand any keys not
 // seen before (first load → every course; a newly-appearing course → expanded).
@@ -104,10 +124,11 @@ export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGrade
       name: quiz.title,
       kind: 'quiz',
       result_percent: quiz.result?.result_percent ?? null,
+      // read from either side of `result` — the exact placement is not confirmed yet
+      grade: quiz.result?.grade ?? quiz.grade ?? null,
       score: quiz.result?.result_score ?? null,
       max_score: quiz.result?.max_score ?? null,
       is_passed: quiz.result?.is_passed ?? null,
-      attempts: quiz.attempts_count,
     }));
 
     const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
@@ -115,6 +136,7 @@ export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGrade
       name: project.title,
       kind: 'project',
       result_percent: project.result_percent,
+      grade: project.grade ?? null,
       score: project.score,
       max_score: project.max_score,
       is_passed: null,
