@@ -1,7 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { AttendanceValue } from '../../../../services/escola-lms/enums';
-import { getScheduleAttendanceHeaderState, isFrozenAttendance, isGroupStudent } from './helpers';
+import { AttendanceValue, ExamGradeType } from '../../../../services/escola-lms/enums';
+import {
+  getScheduleAttendanceHeaderState,
+  isFrozenAttendance,
+  isGroupStudent,
+  isPercentExam,
+} from './helpers';
 
 const finalGrade = (userId: number) => ({ user: { id: userId } } as API.FinalGradeItem);
 
@@ -85,5 +90,24 @@ describe('getScheduleAttendanceHeaderState', () => {
 
   it('is empty when the group roster is empty', () => {
     expect(state({}, [])).toEqual({ allPresent: false, allEmpty: true });
+  });
+});
+
+describe('isPercentExam', () => {
+  it('treats the manual-grade and pass/fail types as non-percent', () => {
+    // these render their own select and already hold a 2-5 grade / pass-fail value
+    expect(isPercentExam(ExamGradeType.ManualGrades)).toBe(false);
+    expect(isPercentExam(ExamGradeType.ManualPass)).toBe(false);
+  });
+
+  it('treats every other type as a 0-100 percentage', () => {
+    expect(isPercentExam(ExamGradeType.Manual)).toBe(true);
+    expect(isPercentExam(ExamGradeType.TeamsForms)).toBe(true);
+    expect(isPercentExam(ExamGradeType.TeamsLecture)).toBe(true);
+    expect(isPercentExam(ExamGradeType.TestPortal)).toBe(true);
+  });
+
+  it('defaults an unknown type to percent, matching ExamGradeInput’s default branch', () => {
+    expect(isPercentExam('some_new_backend_type' as ExamGradeType)).toBe(true);
   });
 });

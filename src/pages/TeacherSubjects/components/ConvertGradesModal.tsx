@@ -117,6 +117,7 @@ const ManualExamGradeType: React.FC<{
                 last_name,
                 user_id: id,
                 result: null,
+                grade: null,
               },
             ];
           },

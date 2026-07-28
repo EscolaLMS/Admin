@@ -1781,6 +1781,8 @@ declare namespace API {
 
   type ExamResult = {
     result: number | string | null;
+    /** Backend-computed grade for `result` (e.g. "5"); null when the result is not graded. */
+    grade: string | null;
     user_id: number;
     first_name: string;
     last_name: string;
