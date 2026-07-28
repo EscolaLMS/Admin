@@ -36,7 +36,7 @@ export const GiftQuiz: React.FC<{
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
           randomize_order: topicable ? topicable.randomize_order ?? false : false,
           [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
-          [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
+          [GRADEBOOK_FIELDS.weight]: topicable?.weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={(values) => {
           const key = Object.keys(values)[0] as QuizChangeKey;

@@ -43,7 +43,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
         initialValues={{
           notify_users: topicable?.notify_users ?? [],
           [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
-          [GRADEBOOK_FIELDS.weight]: topicable?.grade_weight ?? DEFAULT_GRADE_WEIGHT,
+          [GRADEBOOK_FIELDS.weight]: topicable?.weight ?? DEFAULT_GRADE_WEIGHT,
         }}
         onValuesChange={onValuesChange}
         submitter={false}

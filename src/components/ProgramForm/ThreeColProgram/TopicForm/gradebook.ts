@@ -1,8 +1,8 @@
 /** Field names sent with a quiz/project topic on create/edit. */
 export const GRADEBOOK_FIELDS = {
   flag: 'counts_to_grade',
-  /** number (decimals allowed, > 0) **/
-  weight: 'grade_weight',
+  /** number (decimals allowed, > 0). Sent as `weight` on PUT /api/admin/topics/{id} **/
+  weight: 'weight',
 } as const;
 
 export const DEFAULT_GRADE_WEIGHT = 1;

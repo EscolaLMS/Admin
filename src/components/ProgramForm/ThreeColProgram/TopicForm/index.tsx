@@ -197,12 +197,12 @@ export const Topic: React.FC = () => {
       topics.topicable_type === TopicType.Project
     ) {
       const topicable = topics.topicable as
-        | { counts_to_grade?: boolean; grade_weight?: number }
+        | { counts_to_grade?: boolean; weight?: number }
         | undefined;
       const countsToGrade = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
       values[GRADEBOOK_FIELDS.flag] = countsToGrade ? 1 : 0;
       if (countsToGrade) {
-        const enteredWeight = values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight;
+        const enteredWeight = values[GRADEBOOK_FIELDS.weight] ?? topicable?.weight;
         if (!isValidGradeWeight(enteredWeight)) {
           message.error(
             intl.formatMessage({

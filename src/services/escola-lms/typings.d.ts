@@ -571,7 +571,7 @@ declare namespace API {
     topicable: TopicableBase & {
       notify_users?: string[];
       counts_to_grade?: boolean;
-      grade_weight?: number;
+      weight?: number;
     };
   };
 
@@ -584,7 +584,7 @@ declare namespace API {
       min_pass_score?: number;
       randomize_order?: boolean;
       counts_to_grade?: boolean;
-      grade_weight?: number;
+      weight?: number;
     };
   };
 
