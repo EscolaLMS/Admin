@@ -522,8 +522,6 @@ declare namespace API {
     active?: boolean;
     preview?: boolean;
     can_skip?: boolean;
-    // GIFT quiz: nested in `topicable` on read, flattened to the top level for the PUT
-    // body (like `value`). Boolean in state, sent as 1/0 on the wire.
     randomize_order?: boolean | number;
     json?: object &
       ?{
@@ -572,8 +570,6 @@ declare namespace API {
     topicable_type: TopicType.Project;
     topicable: TopicableBase & {
       notify_users?: string[];
-      // AW-23 gradebook: whether this project appears in the final grade (delivered via the
-      // Topic content API) and the weight it carries there (FE-only). See consts/gradebook.ts.
       counts_to_grade?: boolean;
       grade_weight?: number;
     };
@@ -587,9 +583,6 @@ declare namespace API {
       max_execution_time?: number;
       min_pass_score?: number;
       randomize_order?: boolean;
-      // AW-23 gradebook: whether this quiz appears in the final grade (delivered via the Topic
-      // content API and PUT /api/admin/gift-quizes/{id}) and the weight it carries there
-      // (FE-only). See consts/gradebook.ts.
       counts_to_grade?: boolean;
       grade_weight?: number;
     };

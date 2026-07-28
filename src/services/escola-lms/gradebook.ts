@@ -1,8 +1,6 @@
 import type { AxiosRequestConfig } from '@umijs/max';
 import { request } from 'umi';
 
-import { GRADEBOOK_ENDPOINTS } from '@/consts/gradebook';
-
 /**
  * AW-23 — Subject gradebook read data (quiz/project grades).
  *
@@ -19,7 +17,7 @@ export async function getStudentCoursesGrades(
   options?: AxiosRequestConfig,
 ) {
   return request<API.DefaultResponse<API.StudentCourseGrades[]>>(
-    GRADEBOOK_ENDPOINTS.studentCoursesGrades(group_id, student_id),
+    `/api/admin/lesson-group-users/groups/${group_id}/users/${student_id}/courses-grades`,
     {
       method: 'GET',
       skipErrorHandler: true,

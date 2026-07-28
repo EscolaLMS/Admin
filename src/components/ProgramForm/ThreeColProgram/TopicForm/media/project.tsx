@@ -1,8 +1,8 @@
 import UserSelect from '@/components/UserSelect';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '@/consts/gradebook';
 import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '../gradebook';
 
 type SelectValue = string | number | string[] | number[];
 

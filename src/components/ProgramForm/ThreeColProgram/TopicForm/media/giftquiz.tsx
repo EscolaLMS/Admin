@@ -1,10 +1,10 @@
 import { Table } from '@/components/GiftQuizQuestions/table';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '@/consts/gradebook';
 import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
 import React, { Fragment, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '../gradebook';
 
 type QuizChangeKey =
   | 'max_attempts'

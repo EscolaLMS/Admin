@@ -75,17 +75,9 @@ export const getProposedGrade = (
   return sortedGradeScales[firstFalseIndex - 1]?.name;
 };
 
-// AW-23: display form of a 0–100 percentage; "-" when there is no finite value.
 export const formatPercent = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
 
-// AW-23: the two display parts of a graded item. The grade is the value that matters and
-// the percentage it was derived from is only context, so the table renders the grade
-// prominently with the percentage muted beside it. Either part can be absent:
-//   4 + 80    -> { grade: '4', percent: '80%' }
-//   4 + none  -> { grade: '4', percent: null }
-//   none + 80 -> { grade: null, percent: '80%' }  (fallback: `grade` is not live yet)
-//   neither   -> { grade: null, percent: null }   (the cell renders "-")
 export const getGradeDisplay = (
   grade: string | number | null | undefined,
   percent: number | null | undefined,
@@ -99,9 +91,6 @@ export const getGradeDisplay = (
   };
 };
 
-// AW-23: next set of expanded row keys so the user's manual expand/collapse survives data
-// changes: keep previously-expanded keys that still exist, plus auto-expand any keys not
-// seen before (first load → every course; a newly-appearing course → expanded).
 export const mergeExpandedKeys = (
   prevExpanded: Key[],
   currentKeys: string[],
@@ -113,10 +102,6 @@ export const mergeExpandedKeys = (
   return Array.from(new Set<Key>([...kept, ...fresh]));
 };
 
-// AW-23: flatten the nested courses-grades payload into a single tree: one parent row
-// per course, with its flagged quizzes/projects as child rows. A quiz row summarises the
-// backend-provided `result` (best attempt); a course with no items has no `children`
-// (rendered as a leaf).
 export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGradeRow[] =>
   courses.map((course) => {
     const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
@@ -124,7 +109,6 @@ export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGrade
       name: quiz.title,
       kind: 'quiz',
       result_percent: quiz.result?.result_percent ?? null,
-      // read from either side of `result` — the exact placement is not confirmed yet
       grade: quiz.result?.grade ?? quiz.grade ?? null,
       score: quiz.result?.result_score ?? null,
       max_score: quiz.result?.max_score ?? null,

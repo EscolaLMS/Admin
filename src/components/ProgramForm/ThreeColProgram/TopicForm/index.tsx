@@ -1,5 +1,4 @@
 import { Context } from '@/components/ProgramForm/Context';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '@/consts/gradebook';
 import { getFormData } from '@/services/api';
 import { getTopic } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
@@ -9,6 +8,7 @@ import Divider from 'antd/lib/divider';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 import TopicForm from './form';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from './gradebook';
 import { getTypeName } from './media';
 import H5PForm from './media/h5p';
 import Oembed from './media/oembed';
@@ -192,9 +192,6 @@ export const Topic: React.FC = () => {
       values.randomize_order = topics.randomize_order ? 1 : 0;
     }
 
-    // AW-23 gradebook flag + weight — quiz/project topics only. Fall back to the stored
-    // topicable value so an untouched flag isn't cleared on partial edits. Weight is sent
-    // only when the item counts to the grade.
     if (
       topics.topicable_type === TopicType.GiftQuiz ||
       topics.topicable_type === TopicType.Project
@@ -206,8 +203,6 @@ export const Topic: React.FC = () => {
       values[GRADEBOOK_FIELDS.flag] = countsToGrade ? 1 : 0;
       if (countsToGrade) {
         const enteredWeight = values[GRADEBOOK_FIELDS.weight] ?? topicable?.grade_weight;
-        // Block the save on an invalid weight (the inline field error alone doesn't gate the
-        // plain onClick handler). Same rule as the topic-form field validators.
         if (!isValidGradeWeight(enteredWeight)) {
           message.error(
             intl.formatMessage({
