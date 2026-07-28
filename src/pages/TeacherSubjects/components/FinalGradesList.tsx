@@ -60,7 +60,17 @@ export const FinalGradesList: React.FC = () => {
   );
 
   if (user_id !== null && group_id !== null) {
-    return <FinalGradesDetails user_id={Number(user_id)} group_id={Number(group_id)} />;
+    // Keyed so switching student remounts instead of re-rendering: the details hooks only
+    // ever set their data on success and never clear it, so without this the previous
+    // student's grades stay on screen while the next one loads (and persist if it fails),
+    // and the grades table keeps its expand/collapse state across students.
+    return (
+      <FinalGradesDetails
+        key={`${group_id}-${user_id}`}
+        user_id={Number(user_id)}
+        group_id={Number(group_id)}
+      />
+    );
   }
 
   return (

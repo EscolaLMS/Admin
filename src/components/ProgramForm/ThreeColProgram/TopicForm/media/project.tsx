@@ -78,13 +78,9 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
               tooltip={
                 <FormattedMessage id="grade_weight_tooltip" defaultMessage="Default weight is 1." />
               }
-              extra={
-                <FormattedMessage
-                  id="grade_weight_default_hint"
-                  defaultMessage="Default weight is 1."
-                />
-              }
-              min={0}
+              // Smallest positive value this field can express (precision 2), so the stepper
+              // cannot reach a value isValidGradeWeight then rejects.
+              min={0.01}
               fieldProps={{ step: 0.25, precision: 2 }}
               rules={[
                 {

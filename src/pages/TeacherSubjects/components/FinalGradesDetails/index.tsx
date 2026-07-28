@@ -326,7 +326,11 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             />
           </Typography.Text>
           <Divider style={{ margin: '12px 0' }} />
-          <StudentCourseGrades data={courseGrades.data} loading={courseGrades.loading} />
+          <StudentCourseGrades
+            data={courseGrades.data}
+            loading={courseGrades.loading}
+            error={courseGrades.error}
+          />
         </Col>
         {areStatisticsLoading && <Spin />}
         {isStatisticDataPresent &&

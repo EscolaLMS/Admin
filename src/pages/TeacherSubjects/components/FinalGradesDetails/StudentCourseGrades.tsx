@@ -1,5 +1,5 @@
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import { Empty, Space, Spin, Tag, Typography } from 'antd';
+import { Alert, Empty, Space, Spin, Tag, Typography } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
@@ -104,9 +104,10 @@ const columns: ProColumns<StudentGradeRow>[] = [
 interface Props {
   data?: API.StudentCourseGrades[];
   loading: boolean;
+  error?: boolean;
 }
 
-export const StudentCourseGrades: React.FC<Props> = ({ data, loading }) => {
+export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error }) => {
   const rows = useMemo(() => buildGradeRows(data ?? []), [data]);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const seenCourseKeysRef = useRef<Set<string>>(new Set());
@@ -119,6 +120,22 @@ export const StudentCourseGrades: React.FC<Props> = ({ data, loading }) => {
 
   if (loading && !data) {
     return <Spin />;
+  }
+
+  // Ahead of the data check: a failed reload must not keep rendering the previous result.
+  if (error) {
+    return (
+      <Alert
+        type="error"
+        showIcon
+        message={
+          <FormattedMessage
+            id="gradebook.course_grades_error"
+            defaultMessage="Could not load quiz and project grades."
+          />
+        }
+      />
+    );
   }
 
   if (!data || data.length === 0) {

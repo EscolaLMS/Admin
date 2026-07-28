@@ -4,10 +4,10 @@ import { request } from 'umi';
 /**
  * AW-23 — Subject gradebook read data (quiz/project grades).
  *
- * Thin wrapper over the per-student, per-course grades endpoint (delivered as a
- * separate backend task). `skipErrorHandler: true` is set so that, while the
- * endpoint may not yet be live, a 4xx does not trigger the global handler (which
- * redirects to /404). Consumers handle `!response.success` by showing an empty state.
+ * `skipErrorHandler: true` because this feeds one panel of the final-grades page: the
+ * global handler pushes /404 on a 4xx, which would navigate the teacher off the whole
+ * page because a single table failed. The caller reports the failure instead — see
+ * useStudentCoursesGrades.
  */
 
 /** GET per-student, per-course quiz/project grades + completion (FinalGradesDetails). */

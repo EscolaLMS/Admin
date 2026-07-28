@@ -35,8 +35,10 @@ async function withLoading<T>(setLoading: SetLoading, promiseCb: () => Promise<T
 }
 
 export function useFinalGrades(group_id: number, user_id: number) {
+  // Starts loading because this gates the whole page's spinner: at `false` the first paint
+  // of a (re)mount renders the full page with empty tables before the effect kicks in.
   const [finalGrades, setFinalGrades] = useState<FetchedData<API.FinalGradeItem>>({
-    loading: false,
+    loading: true,
   });
 
   const setLoading = useCallback(setLoadingFactory(setFinalGrades), []);
@@ -205,20 +207,27 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
 }
 
 export function useStudentCoursesGrades(group_id: number, user_id: number) {
+  // Starts loading so the first paint is a spinner, not a flash of the "no grades" state.
   const [courseGrades, setCourseGrades] = useState<FetchedData<API.StudentCourseGrades[]>>({
-    loading: false,
+    loading: true,
   });
 
   useEffect(() => {
-    setCourseGrades((prev) => ({ ...prev, loading: true }));
+    setCourseGrades((prev) => ({ ...prev, loading: true, error: false }));
     getStudentCoursesGrades(group_id, user_id)
       .then((response) => {
-        if (response.success) {
-          setCourseGrades((prev) => ({ ...prev, data: response.data }));
-        }
+        setCourseGrades((prev) =>
+          response.success
+            ? { ...prev, data: response.data, error: false }
+            : { ...prev, error: true },
+        );
       })
-      // endpoint may not exist yet — fall back to empty state instead of tearing down the view
-      .catch(() => undefined)
+      // The request sets skipErrorHandler, so nothing else reports this — surface it here
+      // rather than letting a failure read as "this student has no grades".
+      .catch((error) => {
+        console.error('Error fetching student course grades:', error);
+        setCourseGrades((prev) => ({ ...prev, error: true }));
+      })
       .finally(() => {
         setCourseGrades((prev) => ({ ...prev, loading: false }));
       });

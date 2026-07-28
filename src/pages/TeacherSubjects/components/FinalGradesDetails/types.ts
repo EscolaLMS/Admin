@@ -2,6 +2,8 @@ export type StudentExam = Omit<API.Exam, 'results'> & { result: API.ExamResult }
 export interface FetchedData<T> {
   loading: boolean;
   data?: T;
+  /** set when the fetch failed, so callers can tell "no data" from "could not load" */
+  error?: boolean;
 }
 
 // AW-23: a single row in the student's grades tree table. A `course` row is a parent
