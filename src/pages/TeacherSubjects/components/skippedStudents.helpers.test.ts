@@ -1,6 +1,11 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { formatSkippedStudentGroups, partitionSkippedStudents } from './skippedStudents.helpers';
+import {
+  formatSkippedStudentGroups,
+  NO_VALUE,
+  partitionSkippedStudents,
+  readParseExamResponse,
+} from './skippedStudents.helpers';
 
 const otherGroupStudent: API.SkippedStudent = {
   result: 85,
@@ -20,6 +25,16 @@ const notInSystemStudent: API.SkippedStudent = {
   last_name: 'Nowak',
   email: 'anna@example.com',
   found_in_system: false,
+  user_groups: [],
+};
+
+// Off-contract but plausible: the user exists, yet the backend reports no group for them.
+const foundWithoutGroupStudent: API.SkippedStudent = {
+  result: 55,
+  first_name: 'Piotr',
+  last_name: 'Zieliński',
+  email: 'piotr@example.com',
+  found_in_system: true,
   user_groups: [],
 };
 
@@ -48,6 +63,15 @@ describe('partitionSkippedStudents', () => {
     expect(notInSystem).toHaveLength(1);
   });
 
+  it('treats a student found without any group as unplaceable, not as another group', () => {
+    const { otherGroup, notInSystem } = partitionSkippedStudents([foundWithoutGroupStudent]);
+
+    // otherwise the row would render a blank "Assigned group" cell under advice telling the
+    // teacher to go to a group that does not exist
+    expect(otherGroup).toHaveLength(0);
+    expect(notInSystem).toEqual([foundWithoutGroupStudent]);
+  });
+
   it('returns empty buckets for an empty list', () => {
     const { otherGroup, notInSystem } = partitionSkippedStudents([]);
 
@@ -65,7 +89,97 @@ describe('formatSkippedStudentGroups', () => {
     expect(formatSkippedStudentGroups([{ id: 1, name: 'Group A' }])).toBe('Group A');
   });
 
-  it('returns an empty string when there are no groups', () => {
-    expect(formatSkippedStudentGroups([])).toBe('');
+  it('falls back to a placeholder when there are no groups', () => {
+    expect(formatSkippedStudentGroups([])).toBe(NO_VALUE);
+  });
+});
+
+// The reader only touches these three fields. `Pick` keeps them checked against the real
+// `ParseExamResponse` contract, so a backend rename breaks this test rather than silently
+// producing an empty modal.
+type ConsumedParseExamFields = Pick<
+  API.ParseExamResponse,
+  'results' | 'group_id' | 'skipped_students'
+>;
+
+const successResponse = (data: ConsumedParseExamFields) =>
+  ({ success: true, message: 'OK', data } as unknown as API.DefaultResponse<API.ParseExamResponse>);
+
+const matchedResult: API.ExamResult = {
+  result: 90,
+  user_id: 11,
+  first_name: 'Ewa',
+  last_name: 'Lis',
+  email: 'ewa@example.com',
+};
+
+// Shaped exactly like the payload the modal was previewed against, so this asserts the real
+// contract documented on `API.ParseExamResponse`.
+const realisticPayload: ConsumedParseExamFields = {
+  group_id: 1,
+  results: [matchedResult],
+  skipped_students: [otherGroupStudent, notInSystemStudent],
+};
+
+describe('readParseExamResponse', () => {
+  it('reads matched results, skipped students and the group id from a full payload', () => {
+    const { examResults, skippedStudents, groupId } = readParseExamResponse(
+      successResponse(realisticPayload),
+    );
+
+    expect(examResults).toEqual([matchedResult]);
+    expect(skippedStudents).toEqual([otherGroupStudent, notInSystemStudent]);
+    expect(groupId).toBe(1);
+  });
+
+  it('feeds the modal sections that a full payload should display', () => {
+    const { skippedStudents } = readParseExamResponse(successResponse(realisticPayload));
+    const { otherGroup, notInSystem } = partitionSkippedStudents(skippedStudents);
+
+    expect(otherGroup.map((student) => student.email)).toEqual(['jan@example.com']);
+    expect(formatSkippedStudentGroups(otherGroup[0].user_groups)).toBe('Group B, Group C');
+    expect(notInSystem.map((student) => student.email)).toEqual(['anna@example.com']);
+  });
+
+  it('yields no skipped students when the backend omits the field', () => {
+    const { examResults, skippedStudents } = readParseExamResponse(
+      successResponse({ group_id: 1, results: [matchedResult] }),
+    );
+
+    // this is today's backend: the import still works and no modal opens
+    expect(examResults).toEqual([matchedResult]);
+    expect(skippedStudents).toEqual([]);
+  });
+
+  it('drops rows the backend could not match to a user', () => {
+    const unmatchedResult = { ...matchedResult, user_id: null as unknown as number };
+
+    const { examResults } = readParseExamResponse(
+      successResponse({ group_id: 1, results: [matchedResult, unmatchedResult] }),
+    );
+
+    expect(examResults).toEqual([matchedResult]);
+  });
+
+  it('returns nothing importable for a failed parse', () => {
+    const failed: API.DefaultResponse<API.ParseExamResponse> = {
+      success: false,
+      message: 'Invalid file',
+      errors: { file: ['Invalid file'] },
+    };
+
+    expect(readParseExamResponse(failed)).toEqual({
+      examResults: [],
+      skippedStudents: [],
+      groupId: null,
+    });
+  });
+
+  it('returns nothing importable when the response body is missing', () => {
+    expect(readParseExamResponse(undefined)).toEqual({
+      examResults: [],
+      skippedStudents: [],
+      groupId: null,
+    });
   });
 });

@@ -4,7 +4,11 @@ import React, { useMemo } from 'react';
 import { FormattedMessage } from 'umi';
 
 import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
-import { formatSkippedStudentGroups, partitionSkippedStudents } from './skippedStudents.helpers';
+import {
+  formatSkippedStudentGroups,
+  NO_VALUE,
+  partitionSkippedStudents,
+} from './skippedStudents.helpers';
 
 interface Props {
   open: boolean;
@@ -12,10 +16,13 @@ interface Props {
   skippedStudents: API.SkippedStudent[];
 }
 
-const renderResult = (result: API.SkippedStudent['result']) => (result === null ? '-' : result);
+const renderResult = (result: API.SkippedStudent['result']) =>
+  result === null || result === undefined ? NO_VALUE : result;
 
-const rowKey = (record: API.SkippedStudent) =>
-  `${record.email ?? ''}|${record.first_name ?? ''}|${record.last_name ?? ''}`;
+// Every identifying field is nullable, so rows with no name and no email would otherwise
+// collide on the same key. The index keeps them distinct.
+const rowKey = (record: API.SkippedStudent, index?: number) =>
+  `${record.email ?? ''}|${record.first_name ?? ''}|${record.last_name ?? ''}|${index ?? 0}`;
 
 const baseColumns: ColumnsType<API.SkippedStudent> = [
   { title: <FormattedMessage id="first_name" />, dataIndex: 'first_name' },
