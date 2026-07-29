@@ -1,15 +1,14 @@
 import UserSelect from '@/components/UserSelect';
-import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
-import React, { useCallback, useState } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '../gradebook';
+import ProForm from '@ant-design/pro-form';
+import React, { useCallback } from 'react';
+import { FormattedMessage } from 'umi';
+import { AddToGradebookFields } from '../addToGradebookFields';
+import type { GradebookFieldKey } from '../gradebook';
+import { gradebookInitialValues } from '../gradebook';
 
 type SelectValue = string | number | string[] | number[];
 
-type ProjectChangeKey =
-  | 'notify_users'
-  | typeof GRADEBOOK_FIELDS.flag
-  | typeof GRADEBOOK_FIELDS.weight;
+type ProjectChangeKey = 'notify_users' | GradebookFieldKey;
 
 type ProjectChangeValue = SelectValue | boolean | number | null;
 
@@ -19,19 +18,10 @@ interface Props {
 }
 
 export const Project: React.FC<Props> = ({ onChange, topicable }) => {
-  const intl = useIntl();
-  // AW-23: the grade weight input is only relevant when the item counts to the grade.
-  const [addToGradebook, setAddToGradebook] = useState<boolean>(
-    Boolean(topicable?.counts_to_grade),
-  );
-
   const onValuesChange = useCallback(
     (values: Record<string, ProjectChangeValue>) => {
       const key = Object.keys(values)[0] as ProjectChangeKey;
       if (!key) return;
-      if (key === GRADEBOOK_FIELDS.flag) {
-        setAddToGradebook(Boolean(values[key]));
-      }
       onChange(key, values[key]);
     },
     [onChange],
@@ -42,8 +32,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
       <ProForm
         initialValues={{
           notify_users: topicable?.notify_users ?? [],
-          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
-          [GRADEBOOK_FIELDS.weight]: topicable?.weight ?? DEFAULT_GRADE_WEIGHT,
+          ...gradebookInitialValues(topicable),
         }}
         onValuesChange={onValuesChange}
         submitter={false}
@@ -60,46 +49,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
         >
           <UserSelect multiple />
         </ProForm.Item>
-        <ProFormGroup>
-          <ProFormSwitch
-            name={GRADEBOOK_FIELDS.flag}
-            label={<FormattedMessage id="counts_to_grade" defaultMessage="Show in final grade" />}
-            tooltip={
-              <FormattedMessage
-                id="counts_to_grade_tooltip"
-                defaultMessage="When enabled, this item appears in the final grade and qualifies for a partial grade."
-              />
-            }
-          />
-          {addToGradebook && (
-            <ProFormDigit
-              name={GRADEBOOK_FIELDS.weight}
-              label={<FormattedMessage id="grade_weight" defaultMessage="Grade weight" />}
-              tooltip={
-                <FormattedMessage id="grade_weight_tooltip" defaultMessage="Default weight is 1." />
-              }
-              // Smallest positive value this field can express (precision 2), so the stepper
-              // cannot reach a value isValidGradeWeight then rejects.
-              min={0.01}
-              fieldProps={{ step: 0.25, precision: 2 }}
-              rules={[
-                {
-                  validator: (_rule, value) =>
-                    isValidGradeWeight(value)
-                      ? Promise.resolve()
-                      : Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'grade_weight_must_be_positive',
-                              defaultMessage: 'Weight must be greater than 0.',
-                            }),
-                          ),
-                        ),
-                },
-              ]}
-            />
-          )}
-        </ProFormGroup>
+        <AddToGradebookFields />
       </ProForm>
     </React.Fragment>
   );

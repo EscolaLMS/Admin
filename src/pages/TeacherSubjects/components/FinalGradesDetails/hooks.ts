@@ -207,7 +207,6 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
 }
 
 export function useStudentCoursesGrades(group_id: number, user_id: number) {
-  // Starts loading so the first paint is a spinner, not a flash of the "no grades" state.
   const [courseGrades, setCourseGrades] = useState<FetchedData<API.StudentCourseGrades[]>>({
     loading: true,
   });
@@ -222,8 +221,6 @@ export function useStudentCoursesGrades(group_id: number, user_id: number) {
             : { ...prev, error: true },
         );
       })
-      // The request sets skipErrorHandler, so nothing else reports this — surface it here
-      // rather than letting a failure read as "this student has no grades".
       .catch((error) => {
         console.error('Error fetching student course grades:', error);
         setCourseGrades((prev) => ({ ...prev, error: true }));

@@ -2,17 +2,18 @@ import { Table } from '@/components/GiftQuizQuestions/table';
 import ProForm, { ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from '../gradebook';
+import type { GradebookFieldKey } from '../gradebook';
+import { gradebookInitialValues } from '../gradebook';
+import { AddToGradebookFields } from '../addToGradebookFields';
 
 type QuizChangeKey =
   | 'max_attempts'
   | 'max_execution_time'
   | 'min_pass_score'
   | 'randomize_order'
-  | typeof GRADEBOOK_FIELDS.flag
-  | typeof GRADEBOOK_FIELDS.weight;
+  | GradebookFieldKey;
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
@@ -22,10 +23,6 @@ export const GiftQuiz: React.FC<{
   onEdited?: () => void;
 }> = ({ topicable, onAdded, onRemoved, onEdited, onChange }) => {
   const intl = useIntl();
-  // AW-23: the grade weight input is only relevant when the item counts to the grade.
-  const [addToGradebook, setAddToGradebook] = useState<boolean>(
-    Boolean(topicable?.counts_to_grade),
-  );
 
   return (
     <Fragment>
@@ -35,15 +32,11 @@ export const GiftQuiz: React.FC<{
           max_execution_time: topicable ? topicable.max_execution_time : undefined,
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
           randomize_order: topicable ? topicable.randomize_order ?? false : false,
-          [GRADEBOOK_FIELDS.flag]: Boolean(topicable?.counts_to_grade),
-          [GRADEBOOK_FIELDS.weight]: topicable?.weight ?? DEFAULT_GRADE_WEIGHT,
+          ...gradebookInitialValues(topicable),
         }}
         onValuesChange={(values) => {
           const key = Object.keys(values)[0] as QuizChangeKey;
           if (!key) return;
-          if (key === GRADEBOOK_FIELDS.flag) {
-            setAddToGradebook(Boolean(values[key]));
-          }
           onChange(key, values[key]);
         }}
         submitter={false}
@@ -83,46 +76,7 @@ export const GiftQuiz: React.FC<{
             tooltip={<FormattedMessage id="randomize_questions_order_tooltip" />}
           />
         </ProFormGroup>
-        <ProFormGroup>
-          <ProFormSwitch
-            name={GRADEBOOK_FIELDS.flag}
-            label={<FormattedMessage id="counts_to_grade" defaultMessage="Show in final grade" />}
-            tooltip={
-              <FormattedMessage
-                id="counts_to_grade_tooltip"
-                defaultMessage="When enabled, this item appears in the final grade and qualifies for a partial grade."
-              />
-            }
-          />
-          {addToGradebook && (
-            <ProFormDigit
-              name={GRADEBOOK_FIELDS.weight}
-              label={<FormattedMessage id="grade_weight" defaultMessage="Grade weight" />}
-              tooltip={
-                <FormattedMessage id="grade_weight_tooltip" defaultMessage="Default weight is 1." />
-              }
-              // Smallest positive value this field can express (precision 2), so the stepper
-              // cannot reach a value isValidGradeWeight then rejects.
-              min={0.01}
-              fieldProps={{ step: 0.25, precision: 2 }}
-              rules={[
-                {
-                  validator: (_rule, value) =>
-                    isValidGradeWeight(value)
-                      ? Promise.resolve()
-                      : Promise.reject(
-                          new Error(
-                            intl.formatMessage({
-                              id: 'grade_weight_must_be_positive',
-                              defaultMessage: 'Weight must be greater than 0.',
-                            }),
-                          ),
-                        ),
-                },
-              ]}
-            />
-          )}
-        </ProFormGroup>
+        <AddToGradebookFields />
       </ProForm>
 
       <Divider />
