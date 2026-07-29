@@ -69,7 +69,9 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   {
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
-    valueType: 'percent',
+    // Not a percentage — see the Exams list column. `valueType: 'percent'` also rendered it
+    // as "2.00%", disagreeing with the "2%" that list showed for the same field.
+    render: (_n, row) => row.weight ?? '',
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
@@ -328,8 +330,9 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
           <Divider style={{ margin: '12px 0' }} />
           <StudentCourseGrades
             data={courseGrades.data}
-            loading={courseGrades.loading}
+            loading={courseGrades.loading || tutorGradeScales.loading}
             error={courseGrades.error}
+            gradeScales={tutorGradeScales.data}
           />
         </Col>
         {areStatisticsLoading && <Spin />}

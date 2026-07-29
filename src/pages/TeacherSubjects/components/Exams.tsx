@@ -43,7 +43,9 @@ const staticColumns: ProColumns<API.Exam>[] = [
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
     sorter: true,
-    render: (_, record) => (record.weight ? record.weight + '%' : ''),
+    // Not a percentage: getWeightedAverageOf uses it as a plain relative multiplier
+    // (sum(grade * weight) / sum(weight)), so weights never have to add up to 100.
+    render: (_, record) => record.weight ?? '',
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,

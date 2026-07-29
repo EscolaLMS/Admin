@@ -5,6 +5,7 @@ import {
   buildGradeRows,
   formatPercent,
   getGradeDisplay,
+  getGradeFromScales,
   getGradeWeightedAverageValue,
   getProposedGrade,
   getWeightedAverage,
@@ -175,6 +176,51 @@ describe('getGradeDisplay (AW-23)', () => {
   });
 });
 
+describe('getGradeFromScales (AW-44)', () => {
+  // deliberately unsorted, as the backend sends it
+  const scales = [
+    { grade: 4, name: 'db', grade_value: 70 },
+    { grade: 2, name: 'ndst', grade_value: 0 },
+    { grade: 5, name: 'bdb', grade_value: 90 },
+    { grade: 3, name: 'dst', grade_value: 50 },
+  ] as API.GradeScale[];
+
+  it('maps a percentage onto the highest scale it reaches', () => {
+    expect(getGradeFromScales(95, scales)).toBe(5);
+    expect(getGradeFromScales(80, scales)).toBe(4);
+    expect(getGradeFromScales(50, scales)).toBe(3);
+    expect(getGradeFromScales(10, scales)).toBe(2);
+  });
+
+  it('counts a percentage exactly on a threshold as reaching it', () => {
+    expect(getGradeFromScales(70, scales)).toBe(4);
+    expect(getGradeFromScales(90, scales)).toBe(5);
+  });
+
+  it('does not mutate the caller’s scale array', () => {
+    const input = [...scales];
+    getGradeFromScales(80, input);
+    expect(input).toEqual(scales);
+  });
+
+  it('returns null when the percentage reaches no threshold', () => {
+    expect(
+      getGradeFromScales(40, [{ grade: 5, name: 'bdb', grade_value: 90 }] as API.GradeScale[]),
+    ).toBeNull();
+  });
+
+  it('returns null without a scale, or without a usable percentage', () => {
+    expect(getGradeFromScales(80, [])).toBeNull();
+    expect(getGradeFromScales(null, scales)).toBeNull();
+    expect(getGradeFromScales(undefined, scales)).toBeNull();
+    expect(getGradeFromScales(NaN, scales)).toBeNull();
+  });
+
+  it('keeps a 0 percentage (falsy but real) rather than treating it as ungraded', () => {
+    expect(getGradeFromScales(0, scales)).toBe(2);
+  });
+});
+
 const mkAttempt = (over: Partial<API.QuizAttemptGrade> = {}): API.QuizAttemptGrade =>
   ({
     attempt_id: 1,
@@ -310,6 +356,83 @@ describe('buildGradeRows (AW-23)', () => {
     ]);
     expect(course.children?.[0]).toMatchObject({ grade: null, result_percent: 60 });
     expect(course.children?.[1]).toMatchObject({ grade: null, result_percent: null });
+  });
+
+  it('derives the missing grade from the tutor scale (AW-44)', () => {
+    const scales = [
+      { grade: 3, name: 'dst', grade_value: 50 },
+      { grade: 5, name: 'bdb', grade_value: 90 },
+    ] as API.GradeScale[];
+
+    const [course] = buildGradeRows(
+      [
+        mkCourse({
+          quizzes: [
+            {
+              quiz_id: 1,
+              topic_id: 10,
+              title: 'Q',
+              attempts_count: 1,
+              result: mkAttempt({ result_percent: 95 }),
+              attempts: [],
+            } as API.CourseQuizGrade,
+          ],
+          projects: [
+            {
+              topic_id: 40,
+              title: 'P',
+              solution_id: 5,
+              score: 6,
+              max_score: 10,
+              result_percent: 60,
+              graded_at: null,
+            } as API.CourseProjectGrade,
+          ],
+        }),
+      ],
+      scales,
+    );
+
+    expect(course.children?.[0]).toMatchObject({ grade: 5, result_percent: 95 });
+    expect(course.children?.[1]).toMatchObject({ grade: 3, result_percent: 60 });
+  });
+
+  it('prefers a backend grade over the scale-derived one (AW-44)', () => {
+    // the scale would map 95% to 5; the backend's own grade must win once it ships
+    const scales = [{ grade: 5, name: 'bdb', grade_value: 90 }] as API.GradeScale[];
+
+    const [course] = buildGradeRows(
+      [
+        mkCourse({
+          quizzes: [
+            {
+              quiz_id: 1,
+              topic_id: 10,
+              title: 'Q',
+              attempts_count: 1,
+              result: mkAttempt({ result_percent: 95, grade: 4 }),
+              attempts: [],
+            } as API.CourseQuizGrade,
+          ],
+          projects: [
+            {
+              topic_id: 40,
+              title: 'P',
+              solution_id: 5,
+              score: 10,
+              max_score: 10,
+              result_percent: 95,
+              grade: 4,
+              graded_at: null,
+            } as API.CourseProjectGrade,
+          ],
+        }),
+      ],
+      scales,
+    );
+
+    expect(course.children?.[0]).toMatchObject({ grade: 4 });
+    expect(course.children?.[1]).toMatchObject({ grade: 4 });
   });
 
   it('renders an ungraded quiz/project with null result as empty values, not a crash', () => {
