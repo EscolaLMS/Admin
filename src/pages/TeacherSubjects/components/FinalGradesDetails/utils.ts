@@ -105,6 +105,25 @@ export const getGradeDisplay = (
   };
 };
 
+// AW-44: the backend still sends no per-item grade (see QuizAttemptGrade.grade), so the
+// quiz/project table maps the item's percentage onto the tutor's grade scale the same way
+// the proposed final grade does — the highest scale whose `grade_value` threshold the
+// percentage reaches. Returns null when nothing matches, so the cell keeps showing just the
+// percentage instead of inventing a grade.
+export const getGradeFromScales = (
+  percent: number | null | undefined,
+  gradeScales: API.GradeScale[],
+): number | null => {
+  if (percent === null || percent === undefined || !Number.isFinite(percent)) return null;
+
+  const matched = [...gradeScales]
+    .sort((a, b) => a.grade_value - b.grade_value)
+    .filter(({ grade_value }) => percent >= grade_value)
+    .at(-1);
+
+  return matched?.grade ?? null;
+};
+
 export const mergeExpandedKeys = (
   prevExpanded: Key[],
   currentKeys: string[],
@@ -116,25 +135,34 @@ export const mergeExpandedKeys = (
   return Array.from(new Set<Key>([...kept, ...fresh]));
 };
 
-export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGradeRow[] =>
+// `gradeScales` are the tutor's percentage thresholds; they only kick in for items the
+// backend left ungraded (currently all of them).
+export const buildGradeRows = (
+  courses: API.StudentCourseGrades[],
+  gradeScales: API.GradeScale[] = [],
+): StudentGradeRow[] =>
   courses.map((course) => {
-    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
-      key: `quiz-${course.course_id}-${quiz.quiz_id}`,
-      name: quiz.title,
-      kind: 'quiz',
-      result_percent: quiz.result?.result_percent ?? null,
-      grade: quiz.result?.grade ?? quiz.grade ?? null,
-      score: quiz.result?.result_score ?? null,
-      max_score: quiz.result?.max_score ?? null,
-      is_passed: quiz.result?.is_passed ?? null,
-    }));
+    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => {
+      const result_percent = quiz.result?.result_percent ?? null;
+
+      return {
+        key: `quiz-${course.course_id}-${quiz.quiz_id}`,
+        name: quiz.title,
+        kind: 'quiz',
+        result_percent,
+        grade: quiz.result?.grade ?? quiz.grade ?? getGradeFromScales(result_percent, gradeScales),
+        score: quiz.result?.result_score ?? null,
+        max_score: quiz.result?.max_score ?? null,
+        is_passed: quiz.result?.is_passed ?? null,
+      };
+    });
 
     const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
       key: `project-${course.course_id}-${project.topic_id}`,
       name: project.title,
       kind: 'project',
       result_percent: project.result_percent,
-      grade: project.grade ?? null,
+      grade: project.grade ?? getGradeFromScales(project.result_percent, gradeScales),
       score: project.score,
       max_score: project.max_score,
       is_passed: null,

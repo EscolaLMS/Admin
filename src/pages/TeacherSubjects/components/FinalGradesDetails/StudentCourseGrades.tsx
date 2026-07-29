@@ -105,10 +105,12 @@ interface Props {
   data?: API.StudentCourseGrades[];
   loading: boolean;
   error?: boolean;
+  /** tutor's percentage thresholds — the grades are derived from them, see buildGradeRows */
+  gradeScales?: API.GradeScale[];
 }
 
-export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error }) => {
-  const rows = useMemo(() => buildGradeRows(data ?? []), [data]);
+export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error, gradeScales }) => {
+  const rows = useMemo(() => buildGradeRows(data ?? [], gradeScales ?? []), [data, gradeScales]);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const seenCourseKeysRef = useRef<Set<string>>(new Set());
   useEffect(() => {
