@@ -93,7 +93,9 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             const { type, results, title, weight, passed_at, group_id } = res.data;
             setSelectedType(type);
             setConvertedData({ group_id, exam_results: results });
-            form.setFieldsValue({ title, weight, passed_at });
+            // Manual-grade / pass-fail exams come back with weight null; the field is not
+            // rendered for them, and `undefined` leaves it empty rather than seeding a null.
+            form.setFieldsValue({ title, weight: weight ?? undefined, passed_at });
           }
         })
         .finally(() => setFetching(false));

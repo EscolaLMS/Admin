@@ -1802,7 +1802,9 @@ declare namespace API {
     semester: ExamSemester;
     title: string;
     type: Enum.ExamGradeType;
-    weight?: number;
+    /** Percent of a full-weight exam, 1-100. null for manual-grade / pass-fail exams,
+     * whose form hides the field — those are skipped by the weighted average. */
+    weight?: number | null;
     passed_at: Date | string;
     results: ExamResult[];
     created_at: Date | string;

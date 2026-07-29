@@ -1,29 +1,58 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { DEFAULT_GRADE_WEIGHT, gradebookInitialValues, isValidGradeWeight } from './gradebook';
+import {
+  DEFAULT_GRADE_WEIGHT,
+  MAX_GRADE_WEIGHT,
+  MIN_GRADE_WEIGHT,
+  gradebookInitialValues,
+  isValidGradeWeight,
+} from './gradebook';
 
-describe('isValidGradeWeight (AW-23)', () => {
+// AW-44: the weight is a percentage on the same 1-100 scale as the exam weight.
+describe('isValidGradeWeight', () => {
   it('treats an empty value as valid (falls back to the default weight)', () => {
     expect(isValidGradeWeight(null)).toBe(true);
     expect(isValidGradeWeight(undefined)).toBe(true);
     expect(isValidGradeWeight('')).toBe(true);
   });
 
-  it('accepts positive numbers (including numeric strings)', () => {
-    expect(isValidGradeWeight(1)).toBe(true);
-    expect(isValidGradeWeight(0.25)).toBe(true);
-    expect(isValidGradeWeight('2.5')).toBe(true);
+  it('accepts the whole 1-100 range, inclusive (including numeric strings)', () => {
+    expect(isValidGradeWeight(MIN_GRADE_WEIGHT)).toBe(true);
+    expect(isValidGradeWeight(MAX_GRADE_WEIGHT)).toBe(true);
+    expect(isValidGradeWeight(50)).toBe(true);
+    expect(isValidGradeWeight('50')).toBe(true);
+    // decimals are allowed, matching ExamForm's `type: 'number', min: 1, max: 100` rule
+    expect(isValidGradeWeight(2.5)).toBe(true);
   });
 
-  it('rejects zero, negatives and non-numeric values', () => {
+  it('rejects values below the 1% floor — the old scale treated these as valid', () => {
     expect(isValidGradeWeight(0)).toBe(false);
+    expect(isValidGradeWeight(0.25)).toBe(false);
     expect(isValidGradeWeight(-1)).toBe(false);
+  });
+
+  it('rejects values above 100%', () => {
+    expect(isValidGradeWeight(101)).toBe(false);
+    expect(isValidGradeWeight('150')).toBe(false);
+  });
+
+  it('rejects non-numeric values', () => {
     expect(isValidGradeWeight('abc')).toBe(false);
     expect(isValidGradeWeight(NaN)).toBe(false);
+    expect(isValidGradeWeight(Infinity)).toBe(false);
   });
 });
 
-describe('gradebookInitialValues (AW-23)', () => {
+describe('grade weight scale (AW-44)', () => {
+  it('defaults to a full-weight item, i.e. 100%', () => {
+    // A quiz/project left at the default must weigh the same as a 100% exam, not 1/100th
+    // of one — that 100x mismatch is what this scale change fixes.
+    expect(DEFAULT_GRADE_WEIGHT).toBe(100);
+    expect(DEFAULT_GRADE_WEIGHT).toBe(MAX_GRADE_WEIGHT);
+  });
+});
+
+describe('gradebookInitialValues', () => {
   it('defaults to not counting to grade with the default weight', () => {
     expect(gradebookInitialValues(undefined)).toEqual({
       counts_to_grade: false,

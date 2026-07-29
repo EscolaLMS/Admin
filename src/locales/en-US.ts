@@ -923,9 +923,9 @@ export default {
   counts_to_grade: 'Show in final grade',
   counts_to_grade_tooltip:
     'When enabled, this item appears in the final grade and qualifies for a partial grade.',
-  grade_weight: 'Grade weight',
-  grade_weight_tooltip: 'Default weight is 1.',
-  grade_weight_must_be_positive: 'Weight must be greater than 0.',
+  grade_weight: 'Grade weight (1-100%)',
+  grade_weight_tooltip: 'Default weight is 100%.',
+  grade_weight_out_of_range: 'Weight must be between {min} and {max}%.',
   'gradebook.course_grades_title': 'Quiz and project grades',
   'gradebook.no_course_grades': 'No quiz or project grades yet.',
   'gradebook.course_grades_error': 'Could not load quiz and project grades.',
