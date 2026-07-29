@@ -182,14 +182,23 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
                 rules={[
                   { required: true, message: <FormattedMessage id="field_required" /> },
                   {
-                    type: 'number',
+                    // Whole percent only, matching the quiz/project weight (isValidGradeWeight).
+                    type: 'integer',
                     min: 1,
                     max: 100,
-                    message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
+                    message: (
+                      <FormattedMessage id="whole_number_between" values={{ min: 1, max: 100 }} />
+                    ),
                   },
                 ]}
               >
-                <InputNumber />
+                {/*
+                 * No `precision`: it silently rounds a typed 2.5 to 3. A decimal must be
+                 * rejected by the rule above, visibly, not quietly repaired.
+                 * `decimalSeparator` makes a Polish "2,5" parse as 2.5 — the default parser
+                 * strips the comma and turns it into 25, a silent 10x error.
+                 */}
+                <InputNumber decimalSeparator="," />
               </ProForm.Item>
             )}
         </ProForm.Group>

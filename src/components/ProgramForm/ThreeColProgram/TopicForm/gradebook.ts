@@ -11,7 +11,8 @@ export type GradebookFieldKey = (typeof GRADEBOOK_FIELDS)[keyof typeof GRADEBOOK
 /**
  * AW-44: the quiz/project weight is a percentage of a full-weight item, on the same 1-100
  * scale as the exam weight (`ExamForm`), so the two can be averaged together. 100 = counts
- * fully, 50 = counts half. Keep these bounds in step with ExamForm's weight rules.
+ * fully, 50 = counts half. Whole percent only — keep these bounds and the integer rule in
+ * step with ExamForm's weight rules.
  */
 export const MIN_GRADE_WEIGHT = 1;
 export const MAX_GRADE_WEIGHT = 100;
@@ -23,7 +24,8 @@ export const isValidGradeWeight = (value: unknown): boolean => {
 
   const weight = Number(value);
 
-  return Number.isFinite(weight) && weight >= MIN_GRADE_WEIGHT && weight <= MAX_GRADE_WEIGHT;
+  // Number.isInteger also rejects NaN/Infinity, so no separate finite check is needed.
+  return Number.isInteger(weight) && weight >= MIN_GRADE_WEIGHT && weight <= MAX_GRADE_WEIGHT;
 };
 
 /** The gradebook part of a quiz/project `topicable`. */

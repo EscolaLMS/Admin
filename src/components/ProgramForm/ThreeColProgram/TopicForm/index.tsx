@@ -226,7 +226,7 @@ export const Topic: React.FC = () => {
             intl.formatMessage(
               {
                 id: 'grade_weight_out_of_range',
-                defaultMessage: 'Weight must be between {min} and {max}%.',
+                defaultMessage: 'Weight must be a whole number between {min} and {max}%.',
               },
               { min: MIN_GRADE_WEIGHT, max: MAX_GRADE_WEIGHT },
             ),
