@@ -16,13 +16,17 @@ describe('isValidGradeWeight', () => {
     expect(isValidGradeWeight('')).toBe(true);
   });
 
-  it('accepts the whole 1-100 range, inclusive (including numeric strings)', () => {
+  it('accepts whole percentages across the 1-100 range, inclusive (numeric strings too)', () => {
     expect(isValidGradeWeight(MIN_GRADE_WEIGHT)).toBe(true);
     expect(isValidGradeWeight(MAX_GRADE_WEIGHT)).toBe(true);
     expect(isValidGradeWeight(50)).toBe(true);
     expect(isValidGradeWeight('50')).toBe(true);
-    // decimals are allowed, matching ExamForm's `type: 'number', min: 1, max: 100` rule
-    expect(isValidGradeWeight(2.5)).toBe(true);
+  });
+
+  it('rejects decimals — whole percent only, matching ExamForm', () => {
+    expect(isValidGradeWeight(2.5)).toBe(false);
+    expect(isValidGradeWeight(99.9)).toBe(false);
+    expect(isValidGradeWeight('12.5')).toBe(false);
   });
 
   it('rejects values below the 1% floor — the old scale treated these as valid', () => {
@@ -69,6 +73,15 @@ describe('gradebookInitialValues', () => {
   });
 
   it('keeps the saved flag and weight', () => {
+    expect(gradebookInitialValues({ counts_to_grade: true, weight: 50 })).toEqual({
+      counts_to_grade: true,
+      weight: 50,
+    });
+  });
+
+  it('seeds a stored out-of-range weight as-is, leaving the field to flag it', () => {
+    // Pre-AW-44 rows hold small multipliers like 1 or 2.5; surfacing them unchanged is what
+    // lets the teacher see and correct the value instead of it being silently rewritten.
     expect(gradebookInitialValues({ counts_to_grade: true, weight: 2.5 })).toEqual({
       counts_to_grade: true,
       weight: 2.5,

@@ -41,11 +41,16 @@ export const AddToGradebookFields: React.FC = () => {
                   defaultMessage="Default weight is 100%."
                 />
               }
-              // Same 1-100 percent scale as the exam weight, so the stepper cannot reach a
-              // value isValidGradeWeight then rejects.
+              // Same whole-percent 1-100 scale as the exam weight, so the stepper cannot
+              // reach a value the validator then rejects. No `precision` (it would round a
+              // typed 2.5 to 3 instead of flagging it) and `decimalSeparator` so a Polish
+              // "2,5" parses as 2.5 rather than being stripped to 25.
               min={MIN_GRADE_WEIGHT}
               max={MAX_GRADE_WEIGHT}
-              fieldProps={{ step: 5 }}
+              fieldProps={{ step: 5, decimalSeparator: ',' }}
+              // Caps the item so the validation message wraps instead of stretching the
+              // field — same reasoning as ExamForm's weight input.
+              formItemProps={{ style: { maxWidth: 216 } }}
               rules={[
                 {
                   validator: (_rule, value) =>
@@ -56,7 +61,8 @@ export const AddToGradebookFields: React.FC = () => {
                             intl.formatMessage(
                               {
                                 id: 'grade_weight_out_of_range',
-                                defaultMessage: 'Weight must be between {min} and {max}%.',
+                                defaultMessage:
+                                  'Weight must be a whole number between {min} and {max}%.',
                               },
                               { min: MIN_GRADE_WEIGHT, max: MAX_GRADE_WEIGHT },
                             ),
