@@ -1,12 +1,12 @@
-import {
-  ProFormDependency,
-  ProFormDigit,
-  ProFormGroup,
-  ProFormSwitch,
-} from '@ant-design/pro-form';
+import { ProFormDependency, ProFormDigit, ProFormGroup, ProFormSwitch } from '@ant-design/pro-form';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-import { GRADEBOOK_FIELDS, isValidGradeWeight } from './gradebook';
+import {
+  GRADEBOOK_FIELDS,
+  MAX_GRADE_WEIGHT,
+  MIN_GRADE_WEIGHT,
+  isValidGradeWeight,
+} from './gradebook';
 
 /**
  * AW-23: gradebook fields shared by the quiz and project topic forms.
@@ -34,14 +34,18 @@ export const AddToGradebookFields: React.FC = () => {
           {Boolean(values[GRADEBOOK_FIELDS.flag]) && (
             <ProFormDigit
               name={GRADEBOOK_FIELDS.weight}
-              label={<FormattedMessage id="grade_weight" defaultMessage="Grade weight" />}
+              label={<FormattedMessage id="grade_weight" defaultMessage="Grade weight (1-100%)" />}
               tooltip={
-                <FormattedMessage id="grade_weight_tooltip" defaultMessage="Default weight is 1." />
+                <FormattedMessage
+                  id="grade_weight_tooltip"
+                  defaultMessage="Default weight is 100%."
+                />
               }
-              // Smallest positive value this field can express (precision 2), so the stepper
-              // cannot reach a value isValidGradeWeight then rejects.
-              min={0.01}
-              fieldProps={{ step: 0.25, precision: 2 }}
+              // Same 1-100 percent scale as the exam weight, so the stepper cannot reach a
+              // value isValidGradeWeight then rejects.
+              min={MIN_GRADE_WEIGHT}
+              max={MAX_GRADE_WEIGHT}
+              fieldProps={{ step: 5 }}
               rules={[
                 {
                   validator: (_rule, value) =>
@@ -49,10 +53,13 @@ export const AddToGradebookFields: React.FC = () => {
                       ? Promise.resolve()
                       : Promise.reject(
                           new Error(
-                            intl.formatMessage({
-                              id: 'grade_weight_must_be_positive',
-                              defaultMessage: 'Weight must be greater than 0.',
-                            }),
+                            intl.formatMessage(
+                              {
+                                id: 'grade_weight_out_of_range',
+                                defaultMessage: 'Weight must be between {min} and {max}%.',
+                              },
+                              { min: MIN_GRADE_WEIGHT, max: MAX_GRADE_WEIGHT },
+                            ),
                           ),
                         ),
                 },

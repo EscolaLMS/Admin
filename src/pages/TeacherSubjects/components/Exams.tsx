@@ -43,9 +43,10 @@ const staticColumns: ProColumns<API.Exam>[] = [
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
     sorter: true,
-    // Not a percentage: getWeightedAverageOf uses it as a plain relative multiplier
-    // (sum(grade * weight) / sum(weight)), so weights never have to add up to 100.
-    render: (_, record) => record.weight ?? '',
+    // Percent of a full-weight exam (100 = counts fully), not a share of a total — so the
+    // weights of a subject's exams do not add up to 100. Manual-grade / pass-fail exams
+    // carry no weight and come back as null, which renders blank.
+    render: (_, record) => (record.weight == null ? '' : `${record.weight}%`),
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,

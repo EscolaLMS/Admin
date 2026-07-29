@@ -69,9 +69,9 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   {
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
-    // Not a percentage — see the Exams list column. `valueType: 'percent'` also rendered it
-    // as "2.00%", disagreeing with the "2%" that list showed for the same field.
-    render: (_n, row) => row.weight ?? '',
+    // Rendered by hand rather than with `valueType: 'percent'`, which pads to "50.00%" and
+    // so disagreed with the "50%" the Exams list shows for the same field.
+    render: (_n, row) => (row.weight == null ? '' : `${row.weight}%`),
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,

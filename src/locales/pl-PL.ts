@@ -925,9 +925,9 @@ export default {
   counts_to_grade: 'Pokaż w ocenie końcowej',
   counts_to_grade_tooltip:
     'Gdy włączone, pozycja pojawia się w ocenie końcowej i kwalifikuje się do oceny cząstkowej.',
-  grade_weight: 'Waga oceny',
-  grade_weight_tooltip: 'Domyślna waga to 1.',
-  grade_weight_must_be_positive: 'Waga musi być większa niż 0.',
+  grade_weight: 'Waga oceny (1-100%)',
+  grade_weight_tooltip: 'Domyślna waga to 100%.',
+  grade_weight_out_of_range: 'Waga musi być z zakresu {min}-{max}%.',
   'gradebook.course_grades_title': 'Oceny z quizów i projektów',
   'gradebook.no_course_grades': 'Brak ocen z quizów i projektów.',
   'gradebook.course_grades_error': 'Nie udało się wczytać ocen z quizów i projektów.',
