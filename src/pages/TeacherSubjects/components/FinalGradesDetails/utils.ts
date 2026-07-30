@@ -1,6 +1,17 @@
-import type { Key } from 'react';
-
+// Relative, not `@/` — jest has no alias resolution and this module is unit tested.
+// enums.ts is import-free, so this pulls in no component graph.
+import { ExamGradeType } from '../../../../services/escola-lms/enums';
 import type { StudentExam, StudentGradeRow } from './types';
+
+/**
+ * AW-44: exams the backend generates from a counts_to_grade quiz/project topic. They are
+ * never graded by hand, so they are read-only in the Exams list, and they count towards the
+ * displayed weighted average but NOT towards the proposed grade — see getProposedGrade.
+ */
+const GENERATED_EXAM_TYPES: readonly ExamGradeType[] = [ExamGradeType.Quiz, ExamGradeType.Project];
+
+export const isGeneratedExam = (type: ExamGradeType): boolean =>
+  GENERATED_EXAM_TYPES.includes(type);
 
 export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number): StudentExam[] =>
   exams.reduce<StudentExam[]>((acc, { results, ...exam }) => {
@@ -105,79 +116,32 @@ export const getGradeDisplay = (
   };
 };
 
-// AW-44: the backend still sends no per-item grade (see QuizAttemptGrade.grade), so the
-// quiz/project table maps the item's percentage onto the tutor's grade scale the same way
-// the proposed final grade does — the highest scale whose `grade_value` threshold the
-// percentage reaches. Returns null when nothing matches, so the cell keeps showing just the
-// percentage instead of inventing a grade.
-export const getGradeFromScales = (
-  percent: number | null | undefined,
-  gradeScales: API.GradeScale[],
-): number | null => {
-  if (percent === null || percent === undefined || !Number.isFinite(percent)) return null;
-
-  const matched = [...gradeScales]
-    .sort((a, b) => a.grade_value - b.grade_value)
-    .filter(({ grade_value }) => percent >= grade_value)
-    .at(-1);
-
-  return matched?.grade ?? null;
-};
-
-export const mergeExpandedKeys = (
-  prevExpanded: Key[],
-  currentKeys: string[],
-  seen: Set<string>,
-): Key[] => {
-  const currentSet = new Set(currentKeys);
-  const kept = prevExpanded.filter((key) => currentSet.has(String(key)));
-  const fresh = currentKeys.filter((key) => !seen.has(key));
-  return Array.from(new Set<Key>([...kept, ...fresh]));
-};
-
-// `gradeScales` are the tutor's percentage thresholds; they only kick in for items the
-// backend left ungraded (currently all of them).
-export const buildGradeRows = (
-  courses: API.StudentCourseGrades[],
-  gradeScales: API.GradeScale[] = [],
-): StudentGradeRow[] =>
-  courses.map((course) => {
-    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => {
-      const result_percent = quiz.result?.result_percent ?? null;
-
-      return {
-        key: `quiz-${course.course_id}-${quiz.quiz_id}`,
-        name: quiz.title,
-        kind: 'quiz',
-        result_percent,
-        grade: quiz.result?.grade ?? quiz.grade ?? getGradeFromScales(result_percent, gradeScales),
-        score: quiz.result?.result_score ?? null,
-        max_score: quiz.result?.max_score ?? null,
-        is_passed: quiz.result?.is_passed ?? null,
-      };
-    });
-
-    const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
-      key: `project-${course.course_id}-${project.topic_id}`,
-      name: project.title,
-      kind: 'project',
-      result_percent: project.result_percent,
-      grade: project.grade ?? getGradeFromScales(project.result_percent, gradeScales),
-      score: project.score,
-      max_score: project.max_score,
-      is_passed: null,
+/**
+ * AW-44: the quiz/project grades table is built ENTIRELY from the generated exam rows. That is
+ * the one place the backend publishes each item's grade AND weight alongside its name, type and
+ * percentage — so every cell is authoritative and nothing is joined, paired or derived. There
+ * is no way for a field to land on the wrong row.
+ *
+ * The trade-off, forced by the data: an exam row carries no `course_id` and no raw score
+ * (`result_score`/`max_score` live only in courses-grades), so this table is a flat list with
+ * no per-course grouping and no score column. courses-grades is no longer read for it.
+ *
+ * Only the generated types appear — a hand-created exam is not a quiz/project grade. Every
+ * generated row has a result (the backend creates it at grading time), so there is nothing to
+ * filter out.
+ */
+export const buildGeneratedItemRows = (studentExams: StudentExam[]): StudentGradeRow[] =>
+  studentExams
+    .filter((exam) => isGeneratedExam(exam.type))
+    .map((exam) => ({
+      key: `exam-${exam.id}`,
+      name: exam.title,
+      kind: exam.type === ExamGradeType.Project ? 'project' : 'quiz',
+      weight: exam.weight ?? null,
+      grade: exam.result.grade ?? null,
+      // Only a numeric result is a percentage — a pass/fail label is not.
+      result_percent: typeof exam.result.result === 'number' ? exam.result.result : null,
     }));
-
-    const children = [...quizRows, ...projectRows];
-
-    return {
-      key: `course-${course.course_id}`,
-      name: course.course_title,
-      kind: 'course',
-      is_completed: course.is_completed,
-      children: children.length ? children : undefined,
-    };
-  });
 
 export const getScalesBySubjectScaleFormId = (
   s_subject_scale_form_id: number,

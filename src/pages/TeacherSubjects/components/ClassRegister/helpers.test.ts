@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { AttendanceValue, ExamGradeType } from '../../../../services/escola-lms/enums';
 import {
+  examTitleMessageId,
   getScheduleAttendanceHeaderState,
   isFrozenAttendance,
   isGroupStudent,
@@ -107,7 +108,31 @@ describe('isPercentExam', () => {
     expect(isPercentExam(ExamGradeType.TestPortal)).toBe(true);
   });
 
+  it('treats the generated quiz/project types as percent, so their grade renders read-only', () => {
+    expect(isPercentExam(ExamGradeType.Quiz)).toBe(true);
+    expect(isPercentExam(ExamGradeType.Project)).toBe(true);
+  });
+
   it('defaults an unknown type to percent, matching ExamGradeInput’s default branch', () => {
     expect(isPercentExam('some_new_backend_type' as ExamGradeType)).toBe(true);
+  });
+});
+
+describe('examTitleMessageId (AW-44)', () => {
+  it('shows the weight for any exam that carries one', () => {
+    // manual-percent, MS Teams, Test Portal and the generated quiz/project exams all do
+    expect(examTitleMessageId(1)).toBe('examTitleWithWeight');
+    expect(examTitleMessageId(50)).toBe('examTitleWithWeight');
+    expect(examTitleMessageId(100)).toBe('examTitleWithWeight');
+  });
+
+  it('omits the weight when the exam has none (manual-grade / pass-fail come back null)', () => {
+    expect(examTitleMessageId(null)).toBe('examTitleWithoutWeight');
+    expect(examTitleMessageId(undefined)).toBe('examTitleWithoutWeight');
+  });
+
+  it('omits the weight for 0, which the weighted average also skips', () => {
+    // a header must never advertise a weight the average ignores
+    expect(examTitleMessageId(0)).toBe('examTitleWithoutWeight');
   });
 });

@@ -765,6 +765,8 @@ export default {
   'ExamGradeType.teams_forms': 'MS Teams',
   'ExamGradeType.teams_lecture': 'Test Portal',
   'ExamGradeType.test_portal': 'MS Teams Forms',
+  'ExamGradeType.quiz': 'Quiz',
+  'ExamGradeType.project': 'Project',
   'TeacherSubjects.Exams.results': 'Results',
   'TeacherSubjects.Exams.manualConvert': 'Select the group you want to assign grades (percent) to',
   'TeacherSubjects.Exams.manual_passConvert':
@@ -929,12 +931,6 @@ export default {
   grade_weight_out_of_range: 'Weight must be a whole number between {min} and {max}%.',
   'gradebook.course_grades_title': 'Quiz and project grades',
   'gradebook.no_course_grades': 'No quiz or project grades yet.',
-  'gradebook.course_grades_error': 'Could not load quiz and project grades.',
-  'gradebook.completed': 'Course passed',
-  'gradebook.not_completed': 'Not completed',
-  'gradebook.passed': 'Passed',
-  'gradebook.failed': 'Failed',
-  'gradebook.score': 'Score',
   'gradebook.type.GiftQuiz': 'Quiz',
   'gradebook.type.Project': 'Project',
 };

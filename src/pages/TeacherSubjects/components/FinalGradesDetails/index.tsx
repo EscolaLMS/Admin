@@ -11,11 +11,10 @@ import { UserCourseAttempts, UserProgress } from '@/components/CourseStatistics/
 import { DAY_FORMAT } from '@/consts/dates';
 import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
 import { useTeacherSubject } from '../../context';
-import StudentCourseGrades from './StudentCourseGrades';
+import QuizProjectGradesTable from './QuizProjectGradesTable';
 import {
   useFinalGrades,
   useGradeTerms,
-  useStudentCoursesGrades,
   useStudentExams,
   useSubjectGradeScales,
   useTutorGradeScales,
@@ -124,7 +123,6 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     group_id,
     user_id,
   );
-  const { courseGrades } = useStudentCoursesGrades(group_id, user_id);
 
   const [form] = ProForm.useForm<FormData>();
 
@@ -328,12 +326,7 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             />
           </Typography.Text>
           <Divider style={{ margin: '12px 0' }} />
-          <StudentCourseGrades
-            data={courseGrades.data}
-            loading={courseGrades.loading || tutorGradeScales.loading}
-            error={courseGrades.error}
-            gradeScales={tutorGradeScales.data}
-          />
+          <QuizProjectGradesTable studentExams={studentExams.data} loading={studentExams.loading} />
         </Col>
         {areStatisticsLoading && <Spin />}
         {isStatisticDataPresent &&

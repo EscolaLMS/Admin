@@ -2,7 +2,6 @@ import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { groupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
 import { getExams } from '@/services/escola-lms/exams';
-import { getStudentCoursesGrades } from '@/services/escola-lms/gradebook';
 import {
   getGradeTerms,
   getSubjectGradeScales,
@@ -190,7 +189,10 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   useEffect(() => {
     if (!semester_subject_id) return;
     setStudentExams((prev) => ({ ...prev, loading: true }));
-    getExams({ student_id, semester_subject_id })
+    // per_page -1 (as the class register already does): this list is not paginated in the UI,
+    // it feeds the whole "Oceny cząstkowe" table, the weighted average AND the quiz/project
+    // grades table — a default page size would silently drop exams from all three.
+    getExams({ student_id, semester_subject_id, per_page: -1 })
       .then((response) => {
         if (response.success) {
           const data = getStudentExamsFromExams(response.data, student_id);
@@ -204,33 +206,6 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   }, [student_id, semester_subject_id]);
 
   return { studentExams };
-}
-
-export function useStudentCoursesGrades(group_id: number, user_id: number) {
-  const [courseGrades, setCourseGrades] = useState<FetchedData<API.StudentCourseGrades[]>>({
-    loading: true,
-  });
-
-  useEffect(() => {
-    setCourseGrades((prev) => ({ ...prev, loading: true, error: false }));
-    getStudentCoursesGrades(group_id, user_id)
-      .then((response) => {
-        setCourseGrades((prev) =>
-          response.success
-            ? { ...prev, data: response.data, error: false }
-            : { ...prev, error: true },
-        );
-      })
-      .catch((error) => {
-        console.error('Error fetching student course grades:', error);
-        setCourseGrades((prev) => ({ ...prev, error: true }));
-      })
-      .finally(() => {
-        setCourseGrades((prev) => ({ ...prev, loading: false }));
-      });
-  }, [group_id, user_id]);
-
-  return { courseGrades };
 }
 
 export function useUserCoursesStats(group_id: number, user_id: number) {

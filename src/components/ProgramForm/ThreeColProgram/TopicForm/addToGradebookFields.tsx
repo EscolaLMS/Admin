@@ -16,8 +16,6 @@ export const AddToGradebookFields: React.FC = () => {
   const intl = useIntl();
 
   return (
-    // The grade weight input is only relevant when the item counts to the grade, so it
-    // follows the switch value straight from the form instead of a mirrored local state.
     <ProFormDependency name={[GRADEBOOK_FIELDS.flag]}>
       {(values) => (
         <ProFormGroup>
@@ -41,15 +39,9 @@ export const AddToGradebookFields: React.FC = () => {
                   defaultMessage="Default weight is 100%."
                 />
               }
-              // Same whole-percent 1-100 scale as the exam weight, so the stepper cannot
-              // reach a value the validator then rejects. No `precision` (it would round a
-              // typed 2.5 to 3 instead of flagging it) and `decimalSeparator` so a Polish
-              // "2,5" parses as 2.5 rather than being stripped to 25.
               min={MIN_GRADE_WEIGHT}
               max={MAX_GRADE_WEIGHT}
               fieldProps={{ step: 5, decimalSeparator: ',' }}
-              // Caps the item so the validation message wraps instead of stretching the
-              // field — same reasoning as ExamForm's weight input.
               formItemProps={{ style: { maxWidth: 216 } }}
               rules={[
                 {

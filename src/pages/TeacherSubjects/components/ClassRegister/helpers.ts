@@ -1,6 +1,3 @@
-// Pure attendance helpers for the ClassRegister group view. Kept import-light
-// (only the AttendanceValue enum, via a relative path) so they can be unit
-// tested without pulling in the component graph / the `@/` module alias.
 import { AttendanceValue, ExamGradeType } from '../../../../services/escola-lms/enums';
 
 // A user belongs to the group roster if they have no academic teacher, OR they
@@ -24,6 +21,14 @@ const NON_PERCENT_EXAM_TYPES: readonly ExamGradeType[] = [
 
 export const isPercentExam = (type: ExamGradeType): boolean =>
   !NON_PERCENT_EXAM_TYPES.includes(type);
+
+// The exam column header shows the weight only when the exam carries one. Keyed on the value
+// rather than the type: manual-percent, MS Teams, Test Portal and the generated quiz/project
+// exams all have a weight, and only manual-grade / pass-fail come back null. The falsy check
+// matches the `weight &&` gate in getWeightedAverageOf, so a header can never advertise a
+// weight the average ignores.
+export const examTitleMessageId = (weight: number | null | undefined): string =>
+  weight ? 'examTitleWithWeight' : 'examTitleWithoutWeight';
 
 // Individually-meaningful statuses the group-wide bulk action must never
 // overwrite, and which are excluded from the "all present" header calc: a

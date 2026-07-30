@@ -1,16 +1,16 @@
 import { describe, expect, it } from '@jest/globals';
 
+import { ExamGradeType } from '../../../../services/escola-lms/enums';
 import type { StudentExam } from './types';
 import {
-  buildGradeRows,
+  buildGeneratedItemRows,
   formatPercent,
   getGradeDisplay,
-  getGradeFromScales,
   getGradeWeightedAverageValue,
   getProposedGrade,
   getWeightedAverage,
   getWeightedAverageValue,
-  mergeExpandedKeys,
+  isGeneratedExam,
 } from './utils';
 
 // Minimal StudentExam stubs: the averages only read `weight` plus one field of `result`.
@@ -130,6 +130,62 @@ describe('getProposedGrade (regression: empty weighted grades no longer NaN)', (
   });
 });
 
+// AW-44: `isGeneratedExam` marks the exams the backend generates from a quiz/project topic.
+// They count towards the weighted average AND the proposed grade, like any other exam.
+describe('generated quiz/project exams (AW-44)', () => {
+  const scales = [
+    { grade_value: 0, name: 'ndst' },
+    { grade_value: 50, name: 'dst' },
+    { grade_value: 90, name: 'bdb' },
+  ] as API.GradeScale[];
+
+  const typedExam = (
+    type: ExamGradeType,
+    weight: number,
+    result: number,
+    grade: string,
+  ): StudentExam => ({ type, weight, result: { result, grade } } as StudentExam);
+
+  it('flags only the generated types', () => {
+    expect(isGeneratedExam(ExamGradeType.Quiz)).toBe(true);
+    expect(isGeneratedExam(ExamGradeType.Project)).toBe(true);
+    expect(isGeneratedExam(ExamGradeType.Manual)).toBe(false);
+    expect(isGeneratedExam(ExamGradeType.ManualGrades)).toBe(false);
+    expect(isGeneratedExam(ExamGradeType.TeamsForms)).toBe(false);
+  });
+
+  it('counts generated grades in the displayed weighted average', () => {
+    // (2*100 + 5*100) / 200 = 3.5
+    const exams = [
+      typedExam(ExamGradeType.Manual, 100, 40, '2'),
+      typedExam(ExamGradeType.Quiz, 100, 100, '5'),
+    ];
+
+    expect(getWeightedAverage(exams)).toBe('3.50');
+  });
+
+  it('counts generated grades in the proposed grade too', () => {
+    // Manual 40% + Quiz 100% -> 70% -> reaches the grade_value:50 scale ("dst")
+    const exams = [
+      typedExam(ExamGradeType.Manual, 100, 40, '2'),
+      typedExam(ExamGradeType.Quiz, 100, 100, '5'),
+    ];
+
+    expect(getProposedGrade(exams, scales)).toBe('dst');
+  });
+
+  it('produces a proposed grade from generated exams alone', () => {
+    // Quiz 100% + Project 87% -> 93.5% -> reaches the grade_value:90 scale ("bdb")
+    const exams = [
+      typedExam(ExamGradeType.Quiz, 100, 100, '5'),
+      typedExam(ExamGradeType.Project, 100, 87, '4'),
+    ];
+
+    expect(getWeightedAverage(exams)).toBe('4.50');
+    expect(getProposedGrade(exams, scales)).toBe('bdb');
+  });
+});
+
 describe('formatPercent (AW-23)', () => {
   it('renders a finite value with a percent sign', () => {
     expect(formatPercent(0)).toBe('0%');
@@ -176,315 +232,75 @@ describe('getGradeDisplay (AW-23)', () => {
   });
 });
 
-describe('getGradeFromScales (AW-44)', () => {
-  // deliberately unsorted, as the backend sends it
-  const scales = [
-    { grade: 4, name: 'db', grade_value: 70 },
-    { grade: 2, name: 'ndst', grade_value: 0 },
-    { grade: 5, name: 'bdb', grade_value: 90 },
-    { grade: 3, name: 'dst', grade_value: 50 },
-  ] as API.GradeScale[];
+const generatedRow = (
+  id: number,
+  type: ExamGradeType,
+  title: string,
+  weight: number | null,
+  result: number | string | null,
+  grade: string | null,
+): StudentExam => ({ id, type, title, weight, result: { result, grade } } as StudentExam);
 
-  it('maps a percentage onto the highest scale it reaches', () => {
-    expect(getGradeFromScales(95, scales)).toBe(5);
-    expect(getGradeFromScales(80, scales)).toBe(4);
-    expect(getGradeFromScales(50, scales)).toBe(3);
-    expect(getGradeFromScales(10, scales)).toBe(2);
+// AW-44: the quiz/project table is built straight from the generated exam rows — no join.
+describe('buildGeneratedItemRows (AW-44)', () => {
+  it('returns an empty list when there are no exams', () => {
+    expect(buildGeneratedItemRows([])).toEqual([]);
   });
 
-  it('counts a percentage exactly on a threshold as reaching it', () => {
-    expect(getGradeFromScales(70, scales)).toBe(4);
-    expect(getGradeFromScales(90, scales)).toBe(5);
-  });
-
-  it('does not mutate the caller’s scale array', () => {
-    const input = [...scales];
-    getGradeFromScales(80, input);
-    expect(input).toEqual(scales);
-  });
-
-  it('returns null when the percentage reaches no threshold', () => {
-    expect(
-      getGradeFromScales(40, [{ grade: 5, name: 'bdb', grade_value: 90 }] as API.GradeScale[]),
-    ).toBeNull();
-  });
-
-  it('returns null without a scale, or without a usable percentage', () => {
-    expect(getGradeFromScales(80, [])).toBeNull();
-    expect(getGradeFromScales(null, scales)).toBeNull();
-    expect(getGradeFromScales(undefined, scales)).toBeNull();
-    expect(getGradeFromScales(NaN, scales)).toBeNull();
-  });
-
-  it('keeps a 0 percentage (falsy but real) rather than treating it as ungraded', () => {
-    expect(getGradeFromScales(0, scales)).toBe(2);
-  });
-});
-
-const mkAttempt = (over: Partial<API.QuizAttemptGrade> = {}): API.QuizAttemptGrade =>
-  ({
-    attempt_id: 1,
-    result_score: 10,
-    max_score: 10,
-    result_percent: 100,
-    correct_answers_count: 1,
-    is_passed: null,
-    end_at: '2026-01-01T10:00:00Z',
-    ...over,
-  } as API.QuizAttemptGrade);
-
-const mkCourse = (over: Partial<API.StudentCourseGrades> = {}): API.StudentCourseGrades =>
-  ({
-    course_id: 1,
-    course_title: 'Course',
-    is_completed: false,
-    quizzes: [],
-    projects: [],
-    ...over,
-  } as API.StudentCourseGrades);
-
-describe('buildGradeRows (AW-23)', () => {
-  it('returns an empty list for no courses', () => {
-    expect(buildGradeRows([])).toEqual([]);
-  });
-
-  it('maps a course to a parent row with quiz/project child rows keyed by course_id', () => {
-    const rows = buildGradeRows([
-      mkCourse({
-        course_id: 7,
-        course_title: 'Maths',
-        is_completed: true,
-        quizzes: [
-          {
-            quiz_id: 3,
-            topic_id: 30,
-            title: 'Quiz A',
-            attempts_count: 2,
-            // the backend-provided representative (best) attempt drives the row
-            result: mkAttempt({ attempt_id: 12, result_percent: 80, result_score: 8, grade: 4 }),
-            attempts: [mkAttempt({ result_percent: 50 }), mkAttempt({ result_percent: 80 })],
-          } as API.CourseQuizGrade,
-        ],
-        projects: [
-          {
-            topic_id: 40,
-            title: 'Project B',
-            solution_id: 5,
-            score: 4,
-            max_score: 5,
-            result_percent: 80,
-            grade: 4,
-            graded_at: null,
-          } as API.CourseProjectGrade,
-        ],
-      }),
+  it('keeps only the generated quiz/project exams, dropping hand-created ones', () => {
+    const rows = buildGeneratedItemRows([
+      generatedRow(1, ExamGradeType.Quiz, 'Q', 100, 100, '5'),
+      generatedRow(2, ExamGradeType.Manual, 'Written exam', 50, 80, '4'),
+      generatedRow(3, ExamGradeType.Project, 'P', 75, 87, '4'),
+      generatedRow(4, ExamGradeType.ManualGrades, 'Oral', null, null, '3'),
     ]);
 
-    expect(rows).toHaveLength(1);
-    const course = rows[0];
-    expect(course).toMatchObject({
-      key: 'course-7',
-      name: 'Maths',
-      kind: 'course',
-      is_completed: true,
-    });
-    expect(course.children).toHaveLength(2);
+    expect(rows.map((row) => row.name)).toEqual(['Q', 'P']);
+    expect(rows.map((row) => row.kind)).toEqual(['quiz', 'project']);
+  });
 
-    // quiz child summarises the backend `result` (grade 4, percent 80, score 8)
-    expect(course.children?.[0]).toMatchObject({
-      key: 'quiz-7-3',
+  it('reads name, weight, grade and percentage straight off the exam row', () => {
+    const [row] = buildGeneratedItemRows([generatedRow(9, ExamGradeType.Quiz, 'Q', 45, 100, '5')]);
+
+    expect(row).toEqual({
+      key: 'exam-9',
+      name: 'Q',
       kind: 'quiz',
-      grade: 4,
-      result_percent: 80,
-      score: 8,
-    });
-    // project child keyed by topic_id, no pass/fail
-    expect(course.children?.[1]).toMatchObject({
-      key: 'project-7-40',
-      kind: 'project',
-      grade: 4,
-      result_percent: 80,
-      score: 4,
-      is_passed: null,
+      weight: 45,
+      grade: '5',
+      result_percent: 100,
     });
   });
 
-  it('reads a quiz grade placed beside `result` instead of inside it', () => {
-    const [course] = buildGradeRows([
-      mkCourse({
-        quizzes: [
-          {
-            quiz_id: 1,
-            topic_id: 10,
-            title: 'Q',
-            attempts_count: 1,
-            grade: 3,
-            result: mkAttempt({ result_percent: 60 }),
-            attempts: [],
-          } as API.CourseQuizGrade,
-        ],
-      }),
+  it('shows every same-titled quiz with its own weight — no pairing, nothing to get wrong', () => {
+    // the real case: four quizzes all called "Quiz testowy AN", all 100%, distinct weights
+    const rows = buildGeneratedItemRows([
+      generatedRow(84, ExamGradeType.Quiz, 'Quiz testowy AN', 100, 100, '5'),
+      generatedRow(82, ExamGradeType.Quiz, 'Quiz testowy AN', 15, 100, '5'),
+      generatedRow(81, ExamGradeType.Quiz, 'Quiz testowy AN', 25, 100, '5'),
+      generatedRow(79, ExamGradeType.Quiz, 'Quiz testowy AN', 45, 100, '5'),
     ]);
-    expect(course.children?.[0]).toMatchObject({ grade: 3, result_percent: 60 });
+
+    expect(rows.map((row) => row.weight)).toEqual([100, 15, 25, 45]);
+    expect(rows.every((row) => row.grade === '5' && row.result_percent === 100)).toBe(true);
+    // each row keyed by its own exam id, so they are never confused
+    expect(rows.map((row) => row.key)).toEqual(['exam-84', 'exam-82', 'exam-81', 'exam-79']);
   });
 
-  it('leaves the grade null while the backend does not send one', () => {
-    const [course] = buildGradeRows([
-      mkCourse({
-        quizzes: [
-          {
-            quiz_id: 1,
-            topic_id: 10,
-            title: 'Q',
-            attempts_count: 1,
-            result: mkAttempt({ result_percent: 60 }),
-            attempts: [],
-          } as API.CourseQuizGrade,
-        ],
-        projects: [
-          {
-            topic_id: 40,
-            title: 'P',
-            solution_id: null,
-            score: null,
-            max_score: null,
-            result_percent: null,
-            graded_at: null,
-          } as API.CourseProjectGrade,
-        ],
-      }),
+  it('treats a non-numeric result (a pass/fail label) as no percentage', () => {
+    const [row] = buildGeneratedItemRows([
+      generatedRow(1, ExamGradeType.Quiz, 'Q', 100, 'zal', '5'),
     ]);
-    expect(course.children?.[0]).toMatchObject({ grade: null, result_percent: 60 });
-    expect(course.children?.[1]).toMatchObject({ grade: null, result_percent: null });
+
+    expect(row.result_percent).toBeNull();
+    expect(row.grade).toBe('5');
   });
 
-  it('derives the missing grade from the tutor scale (AW-44)', () => {
-    const scales = [
-      { grade: 3, name: 'dst', grade_value: 50 },
-      { grade: 5, name: 'bdb', grade_value: 90 },
-    ] as API.GradeScale[];
-
-    const [course] = buildGradeRows(
-      [
-        mkCourse({
-          quizzes: [
-            {
-              quiz_id: 1,
-              topic_id: 10,
-              title: 'Q',
-              attempts_count: 1,
-              result: mkAttempt({ result_percent: 95 }),
-              attempts: [],
-            } as API.CourseQuizGrade,
-          ],
-          projects: [
-            {
-              topic_id: 40,
-              title: 'P',
-              solution_id: 5,
-              score: 6,
-              max_score: 10,
-              result_percent: 60,
-              graded_at: null,
-            } as API.CourseProjectGrade,
-          ],
-        }),
-      ],
-      scales,
-    );
-
-    expect(course.children?.[0]).toMatchObject({ grade: 5, result_percent: 95 });
-    expect(course.children?.[1]).toMatchObject({ grade: 3, result_percent: 60 });
-  });
-
-  it('prefers a backend grade over the scale-derived one (AW-44)', () => {
-    // the scale would map 95% to 5; the backend's own grade must win once it ships
-    const scales = [{ grade: 5, name: 'bdb', grade_value: 90 }] as API.GradeScale[];
-
-    const [course] = buildGradeRows(
-      [
-        mkCourse({
-          quizzes: [
-            {
-              quiz_id: 1,
-              topic_id: 10,
-              title: 'Q',
-              attempts_count: 1,
-              result: mkAttempt({ result_percent: 95, grade: 4 }),
-              attempts: [],
-            } as API.CourseQuizGrade,
-          ],
-          projects: [
-            {
-              topic_id: 40,
-              title: 'P',
-              solution_id: 5,
-              score: 10,
-              max_score: 10,
-              result_percent: 95,
-              grade: 4,
-              graded_at: null,
-            } as API.CourseProjectGrade,
-          ],
-        }),
-      ],
-      scales,
-    );
-
-    expect(course.children?.[0]).toMatchObject({ grade: 4 });
-    expect(course.children?.[1]).toMatchObject({ grade: 4 });
-  });
-
-  it('renders an ungraded quiz/project with null result as empty values, not a crash', () => {
-    const [course] = buildGradeRows([
-      mkCourse({
-        course_id: 8,
-        quizzes: [
-          {
-            quiz_id: 1,
-            topic_id: 10,
-            title: 'Q',
-            attempts_count: 0,
-            result: null,
-            attempts: [],
-          } as API.CourseQuizGrade,
-        ],
-      }),
+  it('leaves weight and grade null when the exam row carries none', () => {
+    const [row] = buildGeneratedItemRows([
+      generatedRow(1, ExamGradeType.Quiz, 'Q', null, 66.67, null),
     ]);
-    expect(course.children?.[0]).toMatchObject({ result_percent: null, score: null, grade: null });
-  });
 
-  it('leaves a course with no flagged items as a childless leaf', () => {
-    const [course] = buildGradeRows([mkCourse({ course_id: 2, quizzes: [], projects: [] })]);
-    expect(course.children).toBeUndefined();
-  });
-});
-
-describe('mergeExpandedKeys (AW-23)', () => {
-  it('expands every course on first load (nothing seen yet)', () => {
-    expect(mergeExpandedKeys([], ['course-1', 'course-2'], new Set())).toEqual([
-      'course-1',
-      'course-2',
-    ]);
-  });
-
-  it('preserves a manual collapse of an already-seen course', () => {
-    const seen = new Set(['course-1', 'course-2']);
-    // course-1 was collapsed by the user (absent from prev); nothing new to auto-expand
-    expect(mergeExpandedKeys(['course-2'], ['course-1', 'course-2'], seen)).toEqual(['course-2']);
-  });
-
-  it('drops keys that no longer exist and auto-expands the new ones', () => {
-    const seen = new Set(['course-1']);
-    expect(mergeExpandedKeys(['course-1'], ['course-2'], seen)).toEqual(['course-2']);
-  });
-
-  it('auto-expands a newly-added course while keeping the current collapse state', () => {
-    const seen = new Set(['course-1', 'course-2']);
-    // user collapsed course-2 (absent from prev); course-3 is brand new -> expand it
-    expect(mergeExpandedKeys(['course-1'], ['course-1', 'course-2', 'course-3'], seen)).toEqual([
-      'course-1',
-      'course-3',
-    ]);
+    expect(row).toMatchObject({ weight: null, grade: null, result_percent: 66.67 });
   });
 });

@@ -12,6 +12,7 @@ import { deleteExam, getExams } from '@/services/escola-lms/exams';
 import { useTeacherSubject } from '../context';
 import { ExamForm } from './ExamForm';
 import { ExamResults } from './ExamResults';
+import { isGeneratedExam } from './FinalGradesDetails/utils';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 const staticColumns: ProColumns<API.Exam>[] = [
@@ -137,14 +138,20 @@ export const Exams: React.FC = () => {
           dataIndex: 'option',
           valueType: 'option',
           render: (_, record) => [
-            <Link
-              to={`/teacher/subjects/${record.semester_subject_id}/exams?exam_id=${record.id}`}
-              key="edit"
-            >
-              <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-                <Button type="primary" icon={<EditOutlined />} />
-              </Tooltip>
-            </Link>,
+            /* AW-44: generated quiz/project exams are produced from the topic's own result —
+               never edited or deleted by hand, so they get the read-only results view only. */
+            ...(isGeneratedExam(record.type)
+              ? []
+              : [
+                  <Link
+                    to={`/teacher/subjects/${record.semester_subject_id}/exams?exam_id=${record.id}`}
+                    key="edit"
+                  >
+                    <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
+                      <Button type="primary" icon={<EditOutlined />} />
+                    </Tooltip>
+                  </Link>,
+                ]),
             <Link
               to={`/teacher/subjects/${record.semester_subject_id}/exams?results=${record.id}`}
               key="results"
@@ -157,28 +164,32 @@ export const Exams: React.FC = () => {
                 <Button icon={<LineChartOutlined />} />
               </Tooltip>
             </Link>,
-            <Popconfirm
-              key="delete"
-              title={
-                <FormattedMessage
-                  id="deleteQuestion"
-                  defaultMessage="Are you sure to delete this record?"
-                />
-              }
-              onConfirm={async () => {
-                const response = await deleteExam(record.id);
+            ...(isGeneratedExam(record.type)
+              ? []
+              : [
+                  <Popconfirm
+                    key="delete"
+                    title={
+                      <FormattedMessage
+                        id="deleteQuestion"
+                        defaultMessage="Are you sure to delete this record?"
+                      />
+                    }
+                    onConfirm={async () => {
+                      const response = await deleteExam(record.id);
 
-                if (response.success && actionRef.current) {
-                  actionRef.current.reload();
-                }
-              }}
-              okText={<FormattedMessage id="yes" />}
-              cancelText={<FormattedMessage id="no" />}
-            >
-              <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-                <Button type="primary" icon={<DeleteOutlined />} danger />
-              </Tooltip>
-            </Popconfirm>,
+                      if (response.success && actionRef.current) {
+                        actionRef.current.reload();
+                      }
+                    }}
+                    okText={<FormattedMessage id="yes" />}
+                    cancelText={<FormattedMessage id="no" />}
+                  >
+                    <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                      <Button type="primary" icon={<DeleteOutlined />} danger />
+                    </Tooltip>
+                  </Popconfirm>,
+                ]),
           ],
         },
       ]}

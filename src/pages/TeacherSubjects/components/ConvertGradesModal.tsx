@@ -165,6 +165,10 @@ const EXAM_GRADE_IMAGES: Record<ExamGradeType, string[]> = {
   [ExamGradeType.Manual]: [],
   [ExamGradeType.ManualPass]: [],
   [ExamGradeType.ManualGrades]: [],
+  // Generated from a quiz/project topic — never imported from a file, so no example image.
+  // Listed only to keep this map exhaustive over ExamGradeType.
+  [ExamGradeType.Quiz]: [],
+  [ExamGradeType.Project]: [],
 };
 
 const ExampleImagesPreview: React.FC<{ images: string[] }> = ({ images }) => {
