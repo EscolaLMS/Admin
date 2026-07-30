@@ -920,4 +920,22 @@ export default {
   app_store_tooltip: 'Identyfikator produktu w App Store dla płatności mobilnej',
   play_store: 'Identyfikator w Play Store',
   play_store_tooltip: 'Identyfikator produktu w Play Store dla płatności mobilnej',
+
+  // AW-23 — dziennik ocen przedmiotu (oceny z quizów/projektów)
+  counts_to_grade: 'Pokaż w ocenie końcowej',
+  counts_to_grade_tooltip:
+    'Gdy włączone, pozycja pojawia się w ocenie końcowej i kwalifikuje się do oceny cząstkowej.',
+  grade_weight: 'Waga oceny',
+  grade_weight_tooltip: 'Domyślna waga to 1.',
+  grade_weight_must_be_positive: 'Waga musi być większa niż 0.',
+  'gradebook.course_grades_title': 'Oceny z quizów i projektów',
+  'gradebook.no_course_grades': 'Brak ocen z quizów i projektów.',
+  'gradebook.course_grades_error': 'Nie udało się wczytać ocen z quizów i projektów.',
+  'gradebook.completed': 'Kurs zaliczony',
+  'gradebook.not_completed': 'Niezaliczony',
+  'gradebook.passed': 'Zaliczony',
+  'gradebook.failed': 'Niezaliczony',
+  'gradebook.score': 'Punkty',
+  'gradebook.type.GiftQuiz': 'Quiz',
+  'gradebook.type.Project': 'Projekt',
 };

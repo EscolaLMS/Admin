@@ -522,8 +522,6 @@ declare namespace API {
     active?: boolean;
     preview?: boolean;
     can_skip?: boolean;
-    // GIFT quiz: nested in `topicable` on read, flattened to the top level for the PUT
-    // body (like `value`). Boolean in state, sent as 1/0 on the wire.
     randomize_order?: boolean | number;
     json?: object &
       ?{
@@ -570,7 +568,11 @@ declare namespace API {
 
   type TopicProject = TopicBase & {
     topicable_type: TopicType.Project;
-    topicable: TopicableBase & { notify_users?: string[] };
+    topicable: TopicableBase & {
+      notify_users?: string[];
+      counts_to_grade?: boolean;
+      weight?: number;
+    };
   };
 
   type TopicQuiz = TopicBase & {
@@ -581,6 +583,8 @@ declare namespace API {
       max_execution_time?: number;
       min_pass_score?: number;
       randomize_order?: boolean;
+      counts_to_grade?: boolean;
+      weight?: number;
     };
   };
 
@@ -1910,6 +1914,65 @@ declare namespace API {
 
   type UpdateFinalGradeRequest = {
     grade_scale_id: number;
+  };
+
+  /* ── AW-23: Subject gradebook read contract (quiz/project grades) ────────────
+     Shape returned by GET /api/admin/lesson-group-users/groups/{group_id}/users/
+     {student_id}/courses-grades (confirmed against a real payload 2026-07-24).
+     Only quizzes/projects with counts_to_grade=true are present; H5P is excluded. */
+
+  /** One quiz attempt result for a student. */
+  type QuizAttemptGrade = {
+    attempt_id: number;
+    result_score: number;
+    max_score: number;
+    /** 0–100 */
+    result_percent: number;
+    /**
+     * The grade the percentage maps onto in the tutor's grade scale (e.g. 4, "B").
+     * NOT YET DELIVERED — optional until the backend ships it; the UI falls back to
+     * `result_percent` while it is absent.
+     */
+    grade?: string | number | null;
+    correct_answers_count: number;
+    /** null when the backend does not compute pass/fail for the quiz */
+    is_passed: boolean | null;
+    end_at: string | null;
+  };
+
+  /** A flagged quiz within a course. `result` is the representative (best) attempt. */
+  type CourseQuizGrade = {
+    quiz_id: number;
+    topic_id: number;
+    title: string;
+    attempts_count: number;
+    result: QuizAttemptGrade | null;
+    /** Mirror of `result.grade` in case the backend places it beside `result`. See above. */
+    grade?: string | number | null;
+    attempts: QuizAttemptGrade[];
+  };
+
+  /** A flagged project within a course, with the student's grade. */
+  type CourseProjectGrade = {
+    topic_id: number;
+    title: string;
+    solution_id: number | null;
+    score: number | null;
+    max_score: number | null;
+    /** 0–100 */
+    result_percent: number | null;
+    /** The grade `result_percent` maps onto. NOT YET DELIVERED — see QuizAttemptGrade.grade. */
+    grade?: string | number | null;
+    graded_at: string | null;
+  };
+
+  /** All flagged quiz/project grades for one student within one course. */
+  type StudentCourseGrades = {
+    course_id: number;
+    course_title: string;
+    is_completed: boolean;
+    quizzes: CourseQuizGrade[];
+    projects: CourseProjectGrade[];
   };
 
   type LessonTopicId = number;

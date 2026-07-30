@@ -2,12 +2,13 @@ import { Context } from '@/components/ProgramForm/Context';
 import { getFormData } from '@/services/api';
 import { getTopic } from '@/services/escola-lms/course';
 import { TopicType } from '@/services/escola-lms/enums';
-import { Affix, Alert, Col, Row, Space } from 'antd';
+import { Affix, Alert, Col, Row, Space, message } from 'antd';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 import TopicForm from './form';
+import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from './gradebook';
 import { getTypeName } from './media';
 import H5PForm from './media/h5p';
 import Oembed from './media/oembed';
@@ -64,6 +65,18 @@ const topicCanHaveEmptyValue = (type: TopicType) => {
   return [TopicType.GiftQuiz, TopicType.Project, TopicType.GiftQuiz].includes(type);
 };
 
+type TopicSavePayload = {
+  active: 0 | 1;
+  preview: 0 | 1;
+  can_skip: 0 | 1;
+  order?: number;
+  json: string | null;
+  value?: string | number;
+  randomize_order?: boolean | number;
+  [GRADEBOOK_FIELDS.flag]?: 0 | 1;
+  [GRADEBOOK_FIELDS.weight]?: number;
+};
+
 export const Topic: React.FC = () => {
   const {
     state,
@@ -90,6 +103,7 @@ export const Topic: React.FC = () => {
 
   const [sortOrder /* , setSortOrder */] = useState(topics.order);
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
   const [currentTopic, setCurrentTopic] = useState<API.Topic>(topic);
 
   useEffect(() => {
@@ -171,7 +185,7 @@ export const Topic: React.FC = () => {
   );
 
   const onFormSubmit = useCallback(() => {
-    const values = {
+    const values: TopicSavePayload = {
       ...topics,
       active: topics.active ? 1 : 0,
       preview: topics.preview ? 1 : 0,
@@ -190,10 +204,38 @@ export const Topic: React.FC = () => {
       values.randomize_order = topics.randomize_order ? 1 : 0;
     }
 
+    if (
+      topics.topicable_type === TopicType.GiftQuiz ||
+      topics.topicable_type === TopicType.Project
+    ) {
+      const topicable = topics.topicable as
+        | { counts_to_grade?: boolean; weight?: number }
+        | undefined;
+      const countsToGrade = Boolean(values[GRADEBOOK_FIELDS.flag] ?? topicable?.counts_to_grade);
+      values[GRADEBOOK_FIELDS.flag] = countsToGrade ? 1 : 0;
+      if (countsToGrade) {
+        const enteredWeight = values[GRADEBOOK_FIELDS.weight] ?? topicable?.weight;
+        if (!isValidGradeWeight(enteredWeight)) {
+          message.error(
+            intl.formatMessage({
+              id: 'grade_weight_must_be_positive',
+              defaultMessage: 'Weight must be greater than 0.',
+            }),
+          );
+          return;
+        }
+        const weight = Number(enteredWeight);
+        values[GRADEBOOK_FIELDS.weight] =
+          Number.isFinite(weight) && weight > 0 ? weight : DEFAULT_GRADE_WEIGHT;
+      } else {
+        delete values[GRADEBOOK_FIELDS.weight];
+      }
+    }
+
     const formData = getFormData(values);
 
     handleSave(formData);
-  }, [topics, handleSave, sortOrder]);
+  }, [topics, handleSave, sortOrder, intl]);
 
   const onDelete = useCallback(() => {
     if (topic?.isNew) {
@@ -285,7 +327,7 @@ export const Topic: React.FC = () => {
           )}
           {type && type === TopicType.Project && (
             <Project
-              onChange={(value) => updateValue('notify_users' as keyof API.Topic, value)}
+              onChange={(key, value) => updateValue(key as keyof API.Topic, value)}
               topicable={topic.topicable as API.TopicProject['topicable']}
             />
           )}

@@ -4,13 +4,20 @@ import { Divider } from 'antd';
 import Typography from 'antd/lib/typography/Typography';
 import React, { Fragment } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+import type { GradebookFieldKey } from '../gradebook';
+import { gradebookInitialValues } from '../gradebook';
+import { AddToGradebookFields } from '../addToGradebookFields';
+
+type QuizChangeKey =
+  | 'max_attempts'
+  | 'max_execution_time'
+  | 'min_pass_score'
+  | 'randomize_order'
+  | GradebookFieldKey;
 
 export const GiftQuiz: React.FC<{
   topicable: API.TopicQuiz['topicable'];
-  onChange: (
-    key: 'max_attempts' | 'max_execution_time' | 'min_pass_score' | 'randomize_order',
-    value: number | boolean | null,
-  ) => void;
+  onChange: (key: QuizChangeKey, value: number | boolean | null) => void;
   onAdded?: () => void;
   onRemoved?: () => void;
   onEdited?: () => void;
@@ -25,16 +32,12 @@ export const GiftQuiz: React.FC<{
           max_execution_time: topicable ? topicable.max_execution_time : undefined,
           min_pass_score: topicable ? topicable.min_pass_score : undefined,
           randomize_order: topicable ? topicable.randomize_order ?? false : false,
+          ...gradebookInitialValues(topicable),
         }}
         onValuesChange={(values) => {
-          const key = Object.keys(values)[0] as
-            | 'max_attempts'
-            | 'max_execution_time'
-            | 'min_pass_score'
-            | 'randomize_order';
-          if (key) {
-            onChange(key, values[key]);
-          }
+          const key = Object.keys(values)[0] as QuizChangeKey;
+          if (!key) return;
+          onChange(key, values[key]);
         }}
         submitter={false}
       >
@@ -73,6 +76,7 @@ export const GiftQuiz: React.FC<{
             tooltip={<FormattedMessage id="randomize_questions_order_tooltip" />}
           />
         </ProFormGroup>
+        <AddToGradebookFields />
       </ProForm>
 
       <Divider />

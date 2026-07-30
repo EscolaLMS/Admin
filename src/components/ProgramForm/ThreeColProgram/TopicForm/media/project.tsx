@@ -2,30 +2,38 @@ import UserSelect from '@/components/UserSelect';
 import ProForm from '@ant-design/pro-form';
 import React, { useCallback } from 'react';
 import { FormattedMessage } from 'umi';
+import { AddToGradebookFields } from '../addToGradebookFields';
+import type { GradebookFieldKey } from '../gradebook';
+import { gradebookInitialValues } from '../gradebook';
 
 type SelectValue = string | number | string[] | number[];
 
-interface FormValues {
-  notify_users: SelectValue;
-}
+type ProjectChangeKey = 'notify_users' | GradebookFieldKey;
+
+type ProjectChangeValue = SelectValue | boolean | number | null;
 
 interface Props {
-  onChange: (value: SelectValue) => void;
+  onChange: (key: ProjectChangeKey, value: ProjectChangeValue) => void;
   topicable: API.TopicProject['topicable'];
 }
 
 export const Project: React.FC<Props> = ({ onChange, topicable }) => {
-  const onValuesChange = useCallback((values: FormValues) => {
-    const key = Object.keys(values)[0];
-    if (key) {
-      onChange(values[key as keyof typeof values]);
-    }
-  }, []);
+  const onValuesChange = useCallback(
+    (values: Record<string, ProjectChangeValue>) => {
+      const key = Object.keys(values)[0] as ProjectChangeKey;
+      if (!key) return;
+      onChange(key, values[key]);
+    },
+    [onChange],
+  );
 
   return (
     <React.Fragment>
       <ProForm
-        initialValues={{ notify_users: topicable?.notify_users ?? [] }}
+        initialValues={{
+          notify_users: topicable?.notify_users ?? [],
+          ...gradebookInitialValues(topicable),
+        }}
         onValuesChange={onValuesChange}
         submitter={false}
       >
@@ -41,6 +49,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
         >
           <UserSelect multiple />
         </ProForm.Item>
+        <AddToGradebookFields />
       </ProForm>
     </React.Fragment>
   );
