@@ -1,6 +1,5 @@
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
-import { ExamGradeType } from '@/services/escola-lms/enums';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import { Checkbox, Space, Table, Tooltip } from 'antd';
@@ -19,7 +18,7 @@ import type {
 
 /* Attendance */
 
-import { getScheduleAttendanceHeaderState, isPercentExam } from './helpers';
+import { examTitleMessageId, getScheduleAttendanceHeaderState, isPercentExam } from './helpers';
 
 export { isGroupStudent } from './helpers';
 
@@ -182,12 +181,7 @@ export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableIt
       ...acc,
       {
         dataIndex: `exam-${exam.id}`,
-        title:
-          exam.type === ExamGradeType.Manual ? (
-            <FormattedMessage id="examTitleWithWeight" values={exam} />
-          ) : (
-            <FormattedMessage id="examTitleWithoutWeight" values={exam} />
-          ),
+        title: <FormattedMessage id={examTitleMessageId(exam.weight)} values={exam} />,
         hideInSearch: true,
         width: 100,
         render: (_n, record) => {
