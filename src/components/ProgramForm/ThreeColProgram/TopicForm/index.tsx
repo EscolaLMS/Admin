@@ -65,6 +65,18 @@ const topicCanHaveEmptyValue = (type: TopicType) => {
   return [TopicType.GiftQuiz, TopicType.Project, TopicType.GiftQuiz].includes(type);
 };
 
+type TopicSavePayload = {
+  active: 0 | 1;
+  preview: 0 | 1;
+  can_skip: 0 | 1;
+  order?: number;
+  json: string | null;
+  value?: string | number;
+  randomize_order?: boolean | number;
+  [GRADEBOOK_FIELDS.flag]?: 0 | 1;
+  [GRADEBOOK_FIELDS.weight]?: number;
+};
+
 export const Topic: React.FC = () => {
   const {
     state,
@@ -173,7 +185,7 @@ export const Topic: React.FC = () => {
   );
 
   const onFormSubmit = useCallback(() => {
-    const values: Record<string, any> = {
+    const values: TopicSavePayload = {
       ...topics,
       active: topics.active ? 1 : 0,
       preview: topics.preview ? 1 : 0,
