@@ -1,15 +1,15 @@
 import ProTable, { type ProColumns } from '@ant-design/pro-table';
-import { Empty, Space, Spin, Typography } from 'antd';
-import React, { useMemo } from 'react';
+import { Alert, Empty, Space, Spin, Tag, Typography } from 'antd';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
-import type { StudentExam, StudentGradeRow } from './types';
-import { buildGeneratedItemRows, getGradeDisplay } from './utils';
+import type { StudentGradeRow } from './types';
+import { buildGradeRows, getGradeDisplay, mergeExpandedKeys } from './utils';
 
 const GRADE_CELL_BG = '#f5f5f5';
 const GRADE_HEADER_BG = '#ebebeb';
-// Below this the fixed columns (type 160 + weight 120 + grade 180) would squeeze the flexible
-// name column past readability, so the table scrolls horizontally instead.
+// Below this the fixed columns (type 160 + weight 120 + grade 180) plus the tree-indented name
+// column would squeeze past readability, so the table scrolls horizontally instead.
 const MIN_TABLE_WIDTH = 720;
 
 /**
@@ -37,18 +37,41 @@ const GradeCell: React.FC<{ row: StudentGradeRow }> = ({ row }) => {
   );
 };
 
+const CompletionTag: React.FC<{ completed?: boolean }> = ({ completed }) =>
+  completed ? (
+    <Tag color="success">
+      <FormattedMessage id="gradebook.completed" defaultMessage="Completed" />
+    </Tag>
+  ) : (
+    <Tag>
+      <FormattedMessage id="gradebook.not_completed" defaultMessage="Not completed" />
+    </Tag>
+  );
+
 const columns: ProColumns<StudentGradeRow>[] = [
   {
     title: <FormattedMessage id="name" />,
     dataIndex: 'name',
+    render: (_n, row) =>
+      row.kind === 'course' ? (
+        <>
+          <Typography.Text strong>{row.name}</Typography.Text>{' '}
+          <CompletionTag completed={row.is_completed} />
+        </>
+      ) : (
+        row.name
+      ),
   },
   {
     title: <FormattedMessage id="type" />,
     dataIndex: 'kind',
     width: 160,
-    render: (_n, row) => (
-      <FormattedMessage id={`gradebook.type.${row.kind === 'quiz' ? 'GiftQuiz' : 'Project'}`} />
-    ),
+    render: (_n, row) =>
+      row.kind === 'course' ? (
+        ''
+      ) : (
+        <FormattedMessage id={`gradebook.type.${row.kind === 'quiz' ? 'GiftQuiz' : 'Project'}`} />
+      ),
   },
   {
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
@@ -56,7 +79,7 @@ const columns: ProColumns<StudentGradeRow>[] = [
     width: 120,
     // Rendered by hand rather than with `valueType: 'percent'`, which pads to "100.00%" —
     // matching the Exams list and the Oceny cząstkowe table, which show the same field.
-    render: (_n, row) => (row.weight == null ? '' : `${row.weight}%`),
+    render: (_n, row) => (row.kind === 'course' || row.weight == null ? '' : `${row.weight}%`),
   },
   {
     title: (
@@ -70,21 +93,47 @@ const columns: ProColumns<StudentGradeRow>[] = [
     fixed: 'right',
     onHeaderCell: () => ({ style: { background: GRADE_HEADER_BG } }),
     onCell: () => ({ style: { background: GRADE_CELL_BG } }),
-    render: (_n, row) => <GradeCell row={row} />,
+    render: (_n, row) => (row.kind === 'course' ? '' : <GradeCell row={row} />),
   },
 ];
 
 interface Props {
-  /** the student's exams — the quiz/project grades are the generated rows among them */
-  studentExams?: StudentExam[];
+  /** the student's per-course quiz/project grades (courses-grades) */
+  data?: API.StudentCourseGrades[];
   loading: boolean;
+  error?: boolean;
 }
 
-export const QuizProjectGradesTable: React.FC<Props> = ({ studentExams, loading }) => {
-  const rows = useMemo(() => buildGeneratedItemRows(studentExams ?? []), [studentExams]);
+export const QuizProjectGradesTable: React.FC<Props> = ({ data, loading, error }) => {
+  const rows = useMemo(() => buildGradeRows(data ?? []), [data]);
 
-  if (loading && !studentExams) {
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+  const seenCourseKeysRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const courseKeys = rows.map((row) => row.key);
+    const seen = seenCourseKeysRef.current;
+    setExpandedKeys((prev) => mergeExpandedKeys(prev, courseKeys, seen));
+    seenCourseKeysRef.current = new Set([...seen, ...courseKeys]);
+  }, [rows]);
+
+  if (loading && !data) {
     return <Spin />;
+  }
+
+  // Ahead of the data check: a failed reload must not keep rendering the previous result.
+  if (error) {
+    return (
+      <Alert
+        type="error"
+        showIcon
+        message={
+          <FormattedMessage
+            id="gradebook.course_grades_error"
+            defaultMessage="Could not load quiz and project grades."
+          />
+        }
+      />
+    );
   }
 
   if (!rows.length) {
@@ -110,6 +159,10 @@ export const QuizProjectGradesTable: React.FC<Props> = ({ studentExams, loading 
       columns={columns}
       scroll={{ x: MIN_TABLE_WIDTH }}
       cardProps={{ bodyStyle: { padding: 0 } }}
+      expandable={{
+        expandedRowKeys: expandedKeys,
+        onExpandedRowsChange: (keys) => setExpandedKeys([...keys]),
+      }}
     />
   );
 };

@@ -3,7 +3,7 @@ import { describe, expect, it } from '@jest/globals';
 import { ExamGradeType } from '../../../../services/escola-lms/enums';
 import type { StudentExam } from './types';
 import {
-  buildGeneratedItemRows,
+  buildGradeRows,
   formatPercent,
   getGradeDisplay,
   getGradeWeightedAverageValue,
@@ -11,6 +11,7 @@ import {
   getWeightedAverage,
   getWeightedAverageValue,
   isGeneratedExam,
+  mergeExpandedKeys,
 } from './utils';
 
 // Minimal StudentExam stubs: the averages only read `weight` plus one field of `result`.
@@ -232,75 +233,156 @@ describe('getGradeDisplay (AW-23)', () => {
   });
 });
 
-const generatedRow = (
-  id: number,
-  type: ExamGradeType,
+const quiz = (
+  quiz_id: number,
   title: string,
-  weight: number | null,
-  result: number | string | null,
-  grade: string | null,
-): StudentExam => ({ id, type, title, weight, result: { result, grade } } as StudentExam);
+  weight: number,
+  result: Partial<API.QuizAttemptGrade> | null,
+): API.CourseQuizGrade =>
+  ({
+    quiz_id,
+    topic_id: quiz_id + 1000,
+    title,
+    weight,
+    attempts_count: result ? 1 : 0,
+    result,
+    attempts: [],
+  } as API.CourseQuizGrade);
 
-// AW-44: the quiz/project table is built straight from the generated exam rows — no join.
-describe('buildGeneratedItemRows (AW-44)', () => {
-  it('returns an empty list when there are no exams', () => {
-    expect(buildGeneratedItemRows([])).toEqual([]);
+const project = (
+  topic_id: number,
+  title: string,
+  weight: number,
+  fields: Partial<API.CourseProjectGrade>,
+): API.CourseProjectGrade =>
+  ({
+    topic_id,
+    title,
+    weight,
+    solution_id: null,
+    score: null,
+    max_score: null,
+    result_percent: null,
+    graded_at: null,
+    ...fields,
+  } as API.CourseProjectGrade);
+
+const course = (
+  course_id: number,
+  course_title: string,
+  quizzes: API.CourseQuizGrade[],
+  projects: API.CourseProjectGrade[],
+  is_completed = false,
+): API.StudentCourseGrades => ({ course_id, course_title, is_completed, quizzes, projects });
+
+// The quiz/project grades tree, grouped per course from courses-grades.
+describe('buildGradeRows', () => {
+  it('returns an empty list when there are no courses', () => {
+    expect(buildGradeRows([])).toEqual([]);
   });
 
-  it('keeps only the generated quiz/project exams, dropping hand-created ones', () => {
-    const rows = buildGeneratedItemRows([
-      generatedRow(1, ExamGradeType.Quiz, 'Q', 100, 100, '5'),
-      generatedRow(2, ExamGradeType.Manual, 'Written exam', 50, 80, '4'),
-      generatedRow(3, ExamGradeType.Project, 'P', 75, 87, '4'),
-      generatedRow(4, ExamGradeType.ManualGrades, 'Oral', null, null, '3'),
+  it('builds a course parent with its quiz and project children', () => {
+    const [row] = buildGradeRows([
+      course(
+        130,
+        'Kurs A',
+        [quiz(43, 'Quiz testowy AN', 15, { result_percent: 100, grade: '5' })],
+        [project(1039, 'Projekt testowy AN', 75, { score: 87, max_score: 100, result_percent: 87 })],
+        false,
+      ),
     ]);
 
-    expect(rows.map((row) => row.name)).toEqual(['Q', 'P']);
-    expect(rows.map((row) => row.kind)).toEqual(['quiz', 'project']);
+    expect(row).toMatchObject({
+      key: 'course-130',
+      name: 'Kurs A',
+      kind: 'course',
+      is_completed: false,
+    });
+    expect(row.children).toEqual([
+      {
+        key: 'quiz-130-43',
+        name: 'Quiz testowy AN',
+        kind: 'quiz',
+        weight: 15,
+        grade: '5',
+        result_percent: 100,
+      },
+      {
+        key: 'project-130-1039',
+        name: 'Projekt testowy AN',
+        kind: 'project',
+        weight: 75,
+        grade: null,
+        result_percent: 87,
+      },
+    ]);
   });
 
-  it('reads name, weight, grade and percentage straight off the exam row', () => {
-    const [row] = buildGeneratedItemRows([generatedRow(9, ExamGradeType.Quiz, 'Q', 45, 100, '5')]);
+  it('keys rows on ids so identically-titled courses stay separate', () => {
+    // the real case: several courses all titled "[TEST-AN] Kurs automatyczny"
+    const rows = buildGradeRows([
+      course(130, '[TEST-AN] Kurs automatyczny', [quiz(43, 'Quiz testowy AN', 15, null)], []),
+      course(131, '[TEST-AN] Kurs automatyczny', [quiz(44, 'Quiz testowy AN', 45, null)], []),
+    ]);
 
-    expect(row).toEqual({
-      key: 'exam-9',
-      name: 'Q',
-      kind: 'quiz',
-      weight: 45,
-      grade: '5',
-      result_percent: 100,
+    expect(rows.map((row) => row.key)).toEqual(['course-130', 'course-131']);
+    expect(rows.map((row) => row.children?.[0].key)).toEqual(['quiz-130-43', 'quiz-131-44']);
+  });
+
+  it('reads the quiz grade from the best attempt (result), null when absent', () => {
+    const [graded, ungraded] = buildGradeRows([
+      course(1, 'A', [quiz(10, 'Q', 20, { result_percent: 66.67, grade: 3 })], []),
+      course(2, 'B', [quiz(11, 'Q', 20, null)], []),
+    ]);
+
+    expect(graded.children?.[0]).toMatchObject({ grade: 3, result_percent: 66.67 });
+    // no attempt yet -> the cell falls back to the percentage (both null here)
+    expect(ungraded.children?.[0]).toMatchObject({ grade: null, result_percent: null });
+  });
+
+  it('leaves an ungraded project with null grade and percentage', () => {
+    const [row] = buildGradeRows([
+      course(1, 'A', [], [project(20, 'P', 30, {})]),
+    ]);
+
+    expect(row.children?.[0]).toMatchObject({
+      key: 'project-1-20',
+      weight: 30,
+      grade: null,
+      result_percent: null,
     });
   });
 
-  it('shows every same-titled quiz with its own weight — no pairing, nothing to get wrong', () => {
-    // the real case: four quizzes all called "Quiz testowy AN", all 100%, distinct weights
-    const rows = buildGeneratedItemRows([
-      generatedRow(84, ExamGradeType.Quiz, 'Quiz testowy AN', 100, 100, '5'),
-      generatedRow(82, ExamGradeType.Quiz, 'Quiz testowy AN', 15, 100, '5'),
-      generatedRow(81, ExamGradeType.Quiz, 'Quiz testowy AN', 25, 100, '5'),
-      generatedRow(79, ExamGradeType.Quiz, 'Quiz testowy AN', 45, 100, '5'),
-    ]);
+  it('gives a course with no flagged items no children (nothing to expand)', () => {
+    const [row] = buildGradeRows([course(1, 'A', [], [], true)]);
 
-    expect(rows.map((row) => row.weight)).toEqual([100, 15, 25, 45]);
-    expect(rows.every((row) => row.grade === '5' && row.result_percent === 100)).toBe(true);
-    // each row keyed by its own exam id, so they are never confused
-    expect(rows.map((row) => row.key)).toEqual(['exam-84', 'exam-82', 'exam-81', 'exam-79']);
+    expect(row).toMatchObject({ kind: 'course', is_completed: true });
+    expect(row.children).toBeUndefined();
+  });
+});
+
+describe('mergeExpandedKeys', () => {
+  it('auto-expands a course the first time it is seen', () => {
+    expect(mergeExpandedKeys([], ['course-1', 'course-2'], new Set())).toEqual([
+      'course-1',
+      'course-2',
+    ]);
   });
 
-  it('treats a non-numeric result (a pass/fail label) as no percentage', () => {
-    const [row] = buildGeneratedItemRows([
-      generatedRow(1, ExamGradeType.Quiz, 'Q', 100, 'zal', '5'),
-    ]);
-
-    expect(row.result_percent).toBeNull();
-    expect(row.grade).toBe('5');
+  it('does not re-expand a seen course the user has collapsed', () => {
+    // course-1 was seen before and is not in prevExpanded -> stays collapsed
+    expect(mergeExpandedKeys([], ['course-1'], new Set(['course-1']))).toEqual([]);
   });
 
-  it('leaves weight and grade null when the exam row carries none', () => {
-    const [row] = buildGeneratedItemRows([
-      generatedRow(1, ExamGradeType.Quiz, 'Q', null, 66.67, null),
+  it('keeps a still-present course the user had expanded', () => {
+    expect(mergeExpandedKeys(['course-1'], ['course-1'], new Set(['course-1']))).toEqual([
+      'course-1',
     ]);
+  });
 
-    expect(row).toMatchObject({ weight: null, grade: null, result_percent: 66.67 });
+  it('drops an expanded key that no longer exists', () => {
+    expect(mergeExpandedKeys(['course-9'], ['course-1'], new Set(['course-9']))).toEqual([
+      'course-1',
+    ]);
   });
 });

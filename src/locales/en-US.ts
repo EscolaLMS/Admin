@@ -931,6 +931,9 @@ export default {
   grade_weight_out_of_range: 'Weight must be a whole number between {min} and {max}%.',
   'gradebook.course_grades_title': 'Quiz and project grades',
   'gradebook.no_course_grades': 'No quiz or project grades yet.',
+  'gradebook.course_grades_error': 'Could not load quiz and project grades.',
+  'gradebook.completed': 'Completed',
+  'gradebook.not_completed': 'Not completed',
   'gradebook.type.GiftQuiz': 'Quiz',
   'gradebook.type.Project': 'Project',
 };

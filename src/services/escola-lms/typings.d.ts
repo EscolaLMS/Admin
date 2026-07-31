@@ -1906,6 +1906,68 @@ declare namespace API {
     semester_closed?: boolean;
   };
 
+  /**
+   * `courses-grades` — per-student, per-course quiz/project grades (FinalGradesDetails).
+   * Confirmed against a real payload (2026-07-31): `weight` is delivered per item as a whole
+   * percent 1–100 (% of a full-weight item — NOT a share of a course total; a course's weights
+   * can sum past 100). `grade` is NOT delivered yet and will land inside `result`
+   * (`QuizAttemptGrade.grade`). `course_title` collides across courses, so key rows on the ids.
+   */
+  type QuizAttemptGrade = {
+    attempt_id: number;
+    result_score: number;
+    max_score: number;
+    /** 0–100 (may be fractional, e.g. 66.67) */
+    result_percent: number;
+    /**
+     * The grade the percentage maps onto in the tutor's grade scale (e.g. 4, "B").
+     * Backend will add it here (AW-44) — absent in the payload so far; fall back to
+     * `result_percent` until it ships.
+     */
+    grade?: string | number | null;
+    correct_answers_count: number;
+    /** null when the backend does not compute pass/fail for the quiz */
+    is_passed: boolean | null;
+    end_at: string;
+  };
+
+  type CourseQuizGrade = {
+    quiz_id: number;
+    topic_id: number;
+    title: string;
+    /** Whole percent 1–100 (% of a full-weight item). */
+    weight: number;
+    attempts_count: number;
+    result: QuizAttemptGrade | null;
+    attempts: QuizAttemptGrade[];
+  };
+
+  type CourseProjectGrade = {
+    topic_id: number;
+    title: string;
+    /** Whole percent 1–100 (% of a full-weight item). */
+    weight: number;
+    solution_id: number | null;
+    score: number | null;
+    max_score: number | null;
+    /** 0–100 */
+    result_percent: number | null;
+    /**
+     * The grade `result_percent` maps onto. Not delivered yet (AW-44); projects have no
+     * `result` wrapper, so placement is likely top-level here — confirm when it ships.
+     */
+    grade?: string | number | null;
+    graded_at: string | null;
+  };
+
+  type StudentCourseGrades = {
+    course_id: number;
+    course_title: string;
+    is_completed: boolean;
+    quizzes: CourseQuizGrade[];
+    projects: CourseProjectGrade[];
+  };
+
   type UserAttendanceSchedule = Omit<API.GroupAttendanceSchedule, 'attendances'> & {
     attendance: API.StudentAttendance;
   };

@@ -15,6 +15,7 @@ import QuizProjectGradesTable from './QuizProjectGradesTable';
 import {
   useFinalGrades,
   useGradeTerms,
+  useStudentCoursesGrades,
   useStudentExams,
   useSubjectGradeScales,
   useTutorGradeScales,
@@ -107,6 +108,7 @@ const TABLE_PAGE_SIZE = 6;
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { semester_subject_id } = useTeacherSubject();
   const { studentExams } = useStudentExams(user_id, semester_subject_id);
+  const { studentCoursesGrades } = useStudentCoursesGrades(group_id, user_id);
   const { finalGrades, deleteFinalGrade } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
@@ -326,7 +328,11 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             />
           </Typography.Text>
           <Divider style={{ margin: '12px 0' }} />
-          <QuizProjectGradesTable studentExams={studentExams.data} loading={studentExams.loading} />
+          <QuizProjectGradesTable
+            data={studentCoursesGrades.data}
+            loading={studentCoursesGrades.loading}
+            error={studentCoursesGrades.error}
+          />
         </Col>
         {areStatisticsLoading && <Spin />}
         {isStatisticDataPresent &&

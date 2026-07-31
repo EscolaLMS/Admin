@@ -2,6 +2,7 @@ import { getFlatTopics } from '@/components/ProgramForm/Context';
 import { groupAttendanceSchedule } from '@/services/escola-lms/attendances';
 import { course, getCourseStats, program } from '@/services/escola-lms/course';
 import { getExams } from '@/services/escola-lms/exams';
+import { getStudentCoursesGrades } from '@/services/escola-lms/gradebook';
 import {
   getGradeTerms,
   getSubjectGradeScales,
@@ -206,6 +207,32 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   }, [student_id, semester_subject_id]);
 
   return { studentExams };
+}
+
+// Per-student, per-course quiz/project grades (courses-grades) feeding the grouped grades table.
+// The service uses skipErrorHandler, so a failure surfaces here as `error` instead of navigating
+// the teacher off the page — the table renders an inline alert.
+export function useStudentCoursesGrades(group_id: number, student_id: number) {
+  const [studentCoursesGrades, setStudentCoursesGrades] = useState<
+    FetchedData<API.StudentCourseGrades[]>
+  >({ loading: false });
+
+  useEffect(() => {
+    setStudentCoursesGrades({ loading: true });
+    getStudentCoursesGrades(group_id, student_id)
+      .then((response) => {
+        if (response.success) {
+          setStudentCoursesGrades({ loading: false, data: response.data });
+        } else {
+          setStudentCoursesGrades({ loading: false, error: true });
+        }
+      })
+      .catch(() => {
+        setStudentCoursesGrades({ loading: false, error: true });
+      });
+  }, [group_id, student_id]);
+
+  return { studentCoursesGrades };
 }
 
 export function useUserCoursesStats(group_id: number, user_id: number) {

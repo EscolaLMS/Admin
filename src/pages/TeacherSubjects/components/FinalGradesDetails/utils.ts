@@ -1,3 +1,5 @@
+import type { Key } from 'react';
+
 // Relative, not `@/` — jest has no alias resolution and this module is unit tested.
 // enums.ts is import-free, so this pulls in no component graph.
 import { ExamGradeType } from '../../../../services/escola-lms/enums';
@@ -116,32 +118,60 @@ export const getGradeDisplay = (
   };
 };
 
+// Which course rows to have expanded after `courses` changes. Keeps every course the user
+// already toggled that still exists, and auto-expands each course the first time it appears
+// (tracked in `seen`) so grades are visible on open without collapsing courses by hand.
+export const mergeExpandedKeys = (
+  prevExpanded: Key[],
+  currentKeys: string[],
+  seen: Set<string>,
+): Key[] => {
+  const currentSet = new Set(currentKeys);
+  const kept = prevExpanded.filter((key) => currentSet.has(String(key)));
+  const fresh = currentKeys.filter((key) => !seen.has(key));
+  return Array.from(new Set<Key>([...kept, ...fresh]));
+};
+
 /**
- * AW-44: the quiz/project grades table is built ENTIRELY from the generated exam rows. That is
- * the one place the backend publishes each item's grade AND weight alongside its name, type and
- * percentage — so every cell is authoritative and nothing is joined, paired or derived. There
- * is no way for a field to land on the wrong row.
+ * The quiz/project grades tree, grouped per course from courses-grades: a parent row per course
+ * (with its completion flag) and a child row per flagged quiz/project carrying weight and grade.
  *
- * The trade-off, forced by the data: an exam row carries no `course_id` and no raw score
- * (`result_score`/`max_score` live only in courses-grades), so this table is a flat list with
- * no per-course grouping and no score column. courses-grades is no longer read for it.
+ * Keys are built from `course_id` + `quiz_id`/`topic_id`, never the title — every course in real
+ * data can share the same title, so title-based keys collide into a blank/broken tree.
  *
- * Only the generated types appear — a hand-created exam is not a quiz/project grade. Every
- * generated row has a result (the backend creates it at grading time), so there is nothing to
- * filter out.
+ * `grade` is read from `result.grade` for quizzes (the backend's best attempt) and top-level for
+ * projects; both are absent until the backend ships them, so the cell falls back to the percentage.
  */
-export const buildGeneratedItemRows = (studentExams: StudentExam[]): StudentGradeRow[] =>
-  studentExams
-    .filter((exam) => isGeneratedExam(exam.type))
-    .map((exam) => ({
-      key: `exam-${exam.id}`,
-      name: exam.title,
-      kind: exam.type === ExamGradeType.Project ? 'project' : 'quiz',
-      weight: exam.weight ?? null,
-      grade: exam.result.grade ?? null,
-      // Only a numeric result is a percentage — a pass/fail label is not.
-      result_percent: typeof exam.result.result === 'number' ? exam.result.result : null,
+export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGradeRow[] =>
+  courses.map((course) => {
+    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
+      key: `quiz-${course.course_id}-${quiz.quiz_id}`,
+      name: quiz.title,
+      kind: 'quiz',
+      weight: quiz.weight ?? null,
+      grade: quiz.result?.grade ?? null,
+      result_percent: quiz.result?.result_percent ?? null,
     }));
+
+    const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
+      key: `project-${course.course_id}-${project.topic_id}`,
+      name: project.title,
+      kind: 'project',
+      weight: project.weight ?? null,
+      grade: project.grade ?? null,
+      result_percent: project.result_percent,
+    }));
+
+    const children = [...quizRows, ...projectRows];
+
+    return {
+      key: `course-${course.course_id}`,
+      name: course.course_title,
+      kind: 'course',
+      is_completed: course.is_completed,
+      children: children.length ? children : undefined,
+    };
+  });
 
 export const getScalesBySubjectScaleFormId = (
   s_subject_scale_form_id: number,

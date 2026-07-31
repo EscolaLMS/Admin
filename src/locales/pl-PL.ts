@@ -933,6 +933,9 @@ export default {
   grade_weight_out_of_range: 'Waga musi być liczbą całkowitą z zakresu {min}-{max}%.',
   'gradebook.course_grades_title': 'Oceny z quizów i projektów',
   'gradebook.no_course_grades': 'Brak ocen z quizów i projektów.',
+  'gradebook.course_grades_error': 'Nie udało się wczytać ocen z quizów i projektów.',
+  'gradebook.completed': 'Ukończony',
+  'gradebook.not_completed': 'Nieukończony',
   'gradebook.type.GiftQuiz': 'Quiz',
   'gradebook.type.Project': 'Projekt',
 };
