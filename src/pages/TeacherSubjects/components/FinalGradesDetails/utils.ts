@@ -105,6 +105,12 @@ export const getProposedGrade = (
 export const formatPercent = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
 
+// Grade weight for a table cell: a whole percent, blank when absent. Rendered by hand rather
+// than `valueType: 'percent'`, which pads to "100.00%" and disagrees with the "100%" the exam
+// and grade tables show. Distinct from formatPercent, which shows "-" for a missing value.
+export const formatWeightPercent = (weight: number | null | undefined): string =>
+  weight == null ? '' : `${weight}%`;
+
 export const getGradeDisplay = (
   grade: string | number | null | undefined,
   percent: number | null | undefined,

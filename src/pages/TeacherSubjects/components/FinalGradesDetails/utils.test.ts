@@ -5,6 +5,7 @@ import type { StudentExam } from './types';
 import {
   buildGradeRows,
   formatPercent,
+  formatWeightPercent,
   getGradeDisplay,
   getGradeWeightedAverageValue,
   getProposedGrade,
@@ -197,6 +198,18 @@ describe('formatPercent (AW-23)', () => {
     expect(formatPercent(null)).toBe('-');
     expect(formatPercent(undefined)).toBe('-');
     expect(formatPercent(NaN)).toBe('-');
+  });
+});
+
+describe('formatWeightPercent', () => {
+  it('renders a weight with a percent sign', () => {
+    expect(formatWeightPercent(0)).toBe('0%');
+    expect(formatWeightPercent(100)).toBe('100%');
+  });
+
+  it('renders blank (not "-") when the weight is absent', () => {
+    expect(formatWeightPercent(null)).toBe('');
+    expect(formatWeightPercent(undefined)).toBe('');
   });
 });
 

@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import type { StudentGradeRow } from './types';
-import { buildGradeRows, getGradeDisplay, mergeExpandedKeys } from './utils';
+import { buildGradeRows, formatWeightPercent, getGradeDisplay, mergeExpandedKeys } from './utils';
 
 const GRADE_CELL_BG = '#f5f5f5';
 const GRADE_HEADER_BG = '#ebebeb';
@@ -72,9 +72,7 @@ const columns: ProColumns<StudentGradeRow>[] = [
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
     width: 120,
-    // Rendered by hand rather than with `valueType: 'percent'`, which pads to "100.00%" —
-    // matching the Exams list and the Oceny cząstkowe table, which show the same field.
-    render: (_n, row) => (row.kind === 'course' || row.weight == null ? '' : `${row.weight}%`),
+    render: (_n, row) => (row.kind === 'course' ? '' : formatWeightPercent(row.weight)),
   },
   {
     title: (

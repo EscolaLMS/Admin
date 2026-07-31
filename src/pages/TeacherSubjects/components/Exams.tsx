@@ -12,7 +12,7 @@ import { deleteExam, getExams } from '@/services/escola-lms/exams';
 import { useTeacherSubject } from '../context';
 import { ExamForm } from './ExamForm';
 import { ExamResults } from './ExamResults';
-import { isGeneratedExam } from './FinalGradesDetails/utils';
+import { formatWeightPercent, isGeneratedExam } from './FinalGradesDetails/utils';
 import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
 
 const staticColumns: ProColumns<API.Exam>[] = [
@@ -47,7 +47,7 @@ const staticColumns: ProColumns<API.Exam>[] = [
     // Percent of a full-weight exam (100 = counts fully), not a share of a total — so the
     // weights of a subject's exams do not add up to 100. Manual-grade / pass-fail exams
     // carry no weight and come back as null, which renders blank.
-    render: (_, record) => (record.weight == null ? '' : `${record.weight}%`),
+    render: (_, record) => formatWeightPercent(record.weight),
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,

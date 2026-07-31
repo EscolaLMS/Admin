@@ -23,7 +23,7 @@ import {
   useUserCoursesStats,
 } from './hooks';
 import type { StudentExam } from './types';
-import { getProposedGrade, getWeightedAverage } from './utils';
+import { formatWeightPercent, getProposedGrade, getWeightedAverage } from './utils';
 
 interface Props {
   user_id: number;
@@ -69,9 +69,7 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   {
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
-    // Rendered by hand rather than with `valueType: 'percent'`, which pads to "50.00%" and
-    // so disagreed with the "50%" the Exams list shows for the same field.
-    render: (_n, row) => (row.weight == null ? '' : `${row.weight}%`),
+    render: (_n, row) => formatWeightPercent(row.weight),
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
