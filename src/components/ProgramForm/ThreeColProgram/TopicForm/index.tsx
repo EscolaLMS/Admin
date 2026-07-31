@@ -81,6 +81,7 @@ type TopicSavePayload = {
   randomize_order?: boolean | number;
   [GRADEBOOK_FIELDS.flag]?: 0 | 1;
   [GRADEBOOK_FIELDS.weight]?: number;
+  max_score?: number;
 };
 
 export const Topic: React.FC = () => {
@@ -239,6 +240,16 @@ export const Topic: React.FC = () => {
           : DEFAULT_GRADE_WEIGHT;
       } else {
         delete values[GRADEBOOK_FIELDS.weight];
+      }
+    }
+
+    if (topics.topicable_type === TopicType.Project) {
+      const topicable = topics.topicable as { max_score?: number } | undefined;
+      const enteredMaxScore = values.max_score ?? topicable?.max_score;
+      if (enteredMaxScore != null && Number.isFinite(Number(enteredMaxScore))) {
+        values.max_score = Number(enteredMaxScore);
+      } else {
+        delete values.max_score;
       }
     }
 

@@ -1,5 +1,5 @@
 import UserSelect from '@/components/UserSelect';
-import ProForm from '@ant-design/pro-form';
+import ProForm, { ProFormDigit } from '@ant-design/pro-form';
 import React, { useCallback } from 'react';
 import { FormattedMessage } from 'umi';
 import { AddToGradebookFields } from '../addToGradebookFields';
@@ -8,7 +8,7 @@ import { gradebookInitialValues } from '../gradebook';
 
 type SelectValue = string | number | string[] | number[];
 
-type ProjectChangeKey = 'notify_users' | GradebookFieldKey;
+type ProjectChangeKey = 'notify_users' | 'max_score' | GradebookFieldKey;
 
 type ProjectChangeValue = SelectValue | boolean | number | null;
 
@@ -32,6 +32,7 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
       <ProForm
         initialValues={{
           notify_users: topicable?.notify_users ?? [],
+          max_score: topicable?.max_score,
           ...gradebookInitialValues(topicable),
         }}
         onValuesChange={onValuesChange}
@@ -49,6 +50,18 @@ export const Project: React.FC<Props> = ({ onChange, topicable }) => {
         >
           <UserSelect multiple />
         </ProForm.Item>
+        <ProFormDigit
+          name="max_score"
+          label={<FormattedMessage id="max_score" defaultMessage="Max score" />}
+          tooltip={
+            <FormattedMessage
+              id="project_max_score_tooltip"
+              defaultMessage="Default maximum points for this project, pre-fills the grading input."
+            />
+          }
+          min={1}
+          fieldProps={{ step: 1, precision: 0 }}
+        />
         <AddToGradebookFields />
       </ProForm>
     </React.Fragment>

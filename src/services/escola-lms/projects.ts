@@ -54,3 +54,19 @@ export async function updateProjectSolutionFeedback(
     },
   );
 }
+
+/** PATCH /api/admin/topic-project-solutions/{id}/grade */
+export async function gradeProjectSolution(
+  id: number,
+  body: API.UpdateProjectSolutionGrade,
+  options?: AxiosRequestConfig,
+) {
+  return request<API.DefaultResponse<API.ProjectSolution>>(
+    `/api/admin/topic-project-solutions/${id}/grade`,
+    {
+      method: 'PATCH',
+      data: body,
+      ...(options || {}),
+    },
+  );
+}
