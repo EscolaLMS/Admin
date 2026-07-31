@@ -118,9 +118,8 @@ export const getGradeDisplay = (
   };
 };
 
-// Which course rows to have expanded after `courses` changes. Keeps every course the user
-// already toggled that still exists, and auto-expands each course the first time it appears
-// (tracked in `seen`) so grades are visible on open without collapsing courses by hand.
+// Keeps the courses the user still has expanded and auto-expands each one the first time it
+// appears (tracked in `seen`), so grades show on open without re-expanding by hand.
 export const mergeExpandedKeys = (
   prevExpanded: Key[],
   currentKeys: string[],
@@ -133,45 +132,43 @@ export const mergeExpandedKeys = (
 };
 
 /**
- * The quiz/project grades tree, grouped per course from courses-grades: a parent row per course
- * (with its completion flag) and a child row per flagged quiz/project carrying weight and grade.
- *
- * Keys are built from `course_id` + `quiz_id`/`topic_id`, never the title — every course in real
- * data can share the same title, so title-based keys collide into a blank/broken tree.
- *
- * `grade` is read from `result.grade` for quizzes (the backend's best attempt) and top-level for
- * projects; both are absent until the backend ships them, so the cell falls back to the percentage.
+ * The per-course quiz/project grades tree from courses-grades: a parent row per course, child
+ * rows per flagged item. Keys use ids, never titles — courses can share a title and collide.
+ * `grade` is absent until the backend ships it, so the cell falls back to the percentage.
+ * Courses with no flagged items are dropped so the table shows no empty parents.
  */
 export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGradeRow[] =>
-  courses.map((course) => {
-    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
-      key: `quiz-${course.course_id}-${quiz.quiz_id}`,
-      name: quiz.title,
-      kind: 'quiz',
-      weight: quiz.weight ?? null,
-      grade: quiz.result?.grade ?? null,
-      result_percent: quiz.result?.result_percent ?? null,
-    }));
+  courses
+    .filter((course) => course.quizzes.length || course.projects.length)
+    .map((course) => {
+      const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
+        key: `quiz-${course.course_id}-${quiz.quiz_id}`,
+        name: quiz.title,
+        kind: 'quiz',
+        weight: quiz.weight ?? null,
+        grade: quiz.result?.grade ?? null,
+        result_percent: quiz.result?.result_percent ?? null,
+      }));
 
-    const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
-      key: `project-${course.course_id}-${project.topic_id}`,
-      name: project.title,
-      kind: 'project',
-      weight: project.weight ?? null,
-      grade: project.grade ?? null,
-      result_percent: project.result_percent,
-    }));
+      const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
+        key: `project-${course.course_id}-${project.topic_id}`,
+        name: project.title,
+        kind: 'project',
+        weight: project.weight ?? null,
+        grade: project.grade ?? null,
+        result_percent: project.result_percent,
+      }));
 
-    const children = [...quizRows, ...projectRows];
+      const children = [...quizRows, ...projectRows];
 
-    return {
-      key: `course-${course.course_id}`,
-      name: course.course_title,
-      kind: 'course',
-      is_completed: course.is_completed,
-      children: children.length ? children : undefined,
-    };
-  });
+      return {
+        key: `course-${course.course_id}`,
+        name: course.course_title,
+        kind: 'course',
+        is_completed: course.is_completed,
+        children: children.length ? children : undefined,
+      };
+    });
 
 export const getScalesBySubjectScaleFormId = (
   s_subject_scale_form_id: number,

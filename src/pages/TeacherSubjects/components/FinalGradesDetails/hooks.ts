@@ -209,9 +209,8 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   return { studentExams };
 }
 
-// Per-student, per-course quiz/project grades (courses-grades) feeding the grouped grades table.
-// The service uses skipErrorHandler, so a failure surfaces here as `error` instead of navigating
-// the teacher off the page — the table renders an inline alert.
+// Per-course quiz/project grades (courses-grades) for the grouped grades table. A failure surfaces
+// as `error` (the service skips the global handler) so the table can show an inline alert.
 export function useStudentCoursesGrades(group_id: number, student_id: number) {
   const [studentCoursesGrades, setStudentCoursesGrades] = useState<
     FetchedData<API.StudentCourseGrades[]>

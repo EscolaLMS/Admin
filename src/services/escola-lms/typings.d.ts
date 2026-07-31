@@ -1908,10 +1908,8 @@ declare namespace API {
 
   /**
    * `courses-grades` — per-student, per-course quiz/project grades (FinalGradesDetails).
-   * Confirmed against a real payload (2026-07-31): `weight` is delivered per item as a whole
-   * percent 1–100 (% of a full-weight item — NOT a share of a course total; a course's weights
-   * can sum past 100). `grade` is NOT delivered yet and will land inside `result`
-   * (`QuizAttemptGrade.grade`). `course_title` collides across courses, so key rows on the ids.
+   * `weight` is a whole percent 1–100 (% of a full-weight item, NOT a share of a course total).
+   * `grade` is not delivered yet — it will land inside `result`; the UI falls back to the percent.
    */
   type QuizAttemptGrade = {
     attempt_id: number;
@@ -1919,11 +1917,7 @@ declare namespace API {
     max_score: number;
     /** 0–100 (may be fractional, e.g. 66.67) */
     result_percent: number;
-    /**
-     * The grade the percentage maps onto in the tutor's grade scale (e.g. 4, "B").
-     * Backend will add it here (AW-44) — absent in the payload so far; fall back to
-     * `result_percent` until it ships.
-     */
+    /** The grade the percentage maps onto in the tutor's scale (e.g. 4, "B"). Not delivered yet. */
     grade?: string | number | null;
     correct_answers_count: number;
     /** null when the backend does not compute pass/fail for the quiz */
@@ -1935,8 +1929,8 @@ declare namespace API {
     quiz_id: number;
     topic_id: number;
     title: string;
-    /** Whole percent 1–100 (% of a full-weight item). */
-    weight: number;
+    /** Whole percent 1–100; optional/nullable while the backend field is still WIP. */
+    weight?: number | null;
     attempts_count: number;
     result: QuizAttemptGrade | null;
     attempts: QuizAttemptGrade[];
@@ -1945,17 +1939,14 @@ declare namespace API {
   type CourseProjectGrade = {
     topic_id: number;
     title: string;
-    /** Whole percent 1–100 (% of a full-weight item). */
-    weight: number;
+    /** Whole percent 1–100; optional/nullable while the backend field is still WIP. */
+    weight?: number | null;
     solution_id: number | null;
     score: number | null;
     max_score: number | null;
     /** 0–100 */
     result_percent: number | null;
-    /**
-     * The grade `result_percent` maps onto. Not delivered yet (AW-44); projects have no
-     * `result` wrapper, so placement is likely top-level here — confirm when it ships.
-     */
+    /** The grade `result_percent` maps onto. Not delivered yet. */
     grade?: string | number | null;
     graded_at: string | null;
   };

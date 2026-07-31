@@ -287,7 +287,13 @@ describe('buildGradeRows', () => {
         130,
         'Kurs A',
         [quiz(43, 'Quiz testowy AN', 15, { result_percent: 100, grade: '5' })],
-        [project(1039, 'Projekt testowy AN', 75, { score: 87, max_score: 100, result_percent: 87 })],
+        [
+          project(1039, 'Projekt testowy AN', 75, {
+            score: 87,
+            max_score: 100,
+            result_percent: 87,
+          }),
+        ],
         false,
       ),
     ]);
@@ -341,9 +347,7 @@ describe('buildGradeRows', () => {
   });
 
   it('leaves an ungraded project with null grade and percentage', () => {
-    const [row] = buildGradeRows([
-      course(1, 'A', [], [project(20, 'P', 30, {})]),
-    ]);
+    const [row] = buildGradeRows([course(1, 'A', [], [project(20, 'P', 30, {})])]);
 
     expect(row.children?.[0]).toMatchObject({
       key: 'project-1-20',
@@ -353,11 +357,8 @@ describe('buildGradeRows', () => {
     });
   });
 
-  it('gives a course with no flagged items no children (nothing to expand)', () => {
-    const [row] = buildGradeRows([course(1, 'A', [], [], true)]);
-
-    expect(row).toMatchObject({ kind: 'course', is_completed: true });
-    expect(row.children).toBeUndefined();
+  it('drops a course with no flagged quiz/project items (no empty parents)', () => {
+    expect(buildGradeRows([course(1, 'A', [], [], true)])).toEqual([]);
   });
 });
 

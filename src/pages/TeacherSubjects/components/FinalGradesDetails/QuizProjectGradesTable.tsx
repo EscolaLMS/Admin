@@ -12,13 +12,8 @@ const GRADE_HEADER_BG = '#ebebeb';
 // column would squeeze past readability, so the table scrolls horizontally instead.
 const MIN_TABLE_WIDTH = 720;
 
-/**
- * The backend grade, with the percentage as muted context.
- *
- * No pass/fail tag: the quiz's own `is_passed` answers a different question from the subject
- * grade and can contradict it (a 66.67% quiz is is_passed:true yet maps to a 2). See the AW-44
- * history — it is deliberately not part of this table.
- */
+// The backend grade, with the percentage as muted context. No pass/fail tag: a quiz's `is_passed`
+// answers a different question from the subject grade and can contradict it (66.67% → passed, but a 2).
 const GradeCell: React.FC<{ row: StudentGradeRow }> = ({ row }) => {
   const { grade, percent } = getGradeDisplay(row.grade, row.result_percent);
   const primary = grade ?? percent;
