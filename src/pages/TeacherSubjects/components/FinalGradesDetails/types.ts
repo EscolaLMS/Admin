@@ -6,9 +6,6 @@ export interface FetchedData<T> {
   error?: boolean;
 }
 
-// A row in the student's quiz/project grades tree, built from courses-grades (buildGradeRows).
-// A `course` row is a parent (its `children` are the flagged quiz/project rows); `quiz`/`project`
-// rows are leaves. Grouping is by course_id, so identically-titled courses stay separate.
 export type StudentGradeRowKind = 'course' | 'quiz' | 'project';
 
 export interface StudentGradeRow {

@@ -1,8 +1,5 @@
 import { AttendanceValue, ExamGradeType } from '../../../../services/escola-lms/enums';
 
-// A user belongs to the group roster if they have no academic teacher, OR they
-// appear in the teacher's final-grades roster. Used both for the group-wide
-// summary calculation and the row-build filter so the two never drift.
 export const isGroupStudent = (
   academicTeacherId: number | null,
   studentId: number,
@@ -10,10 +7,6 @@ export const isGroupStudent = (
 ): boolean =>
   academicTeacherId === null || finalGrades.some((teacher) => teacher.user.id === studentId);
 
-// Exam types whose result is a 0–100 percentage. Mirrors the `default` branch of
-// ExamGradeInput's switch: ManualPass and ManualGrades render their own select and already
-// hold a pass/fail or 2–5 grade value, so anything else is a percentage — including a new
-// backend type, which lands on the percent branch in both places.
 const NON_PERCENT_EXAM_TYPES: readonly ExamGradeType[] = [
   ExamGradeType.ManualPass,
   ExamGradeType.ManualGrades,
@@ -22,18 +15,9 @@ const NON_PERCENT_EXAM_TYPES: readonly ExamGradeType[] = [
 export const isPercentExam = (type: ExamGradeType): boolean =>
   !NON_PERCENT_EXAM_TYPES.includes(type);
 
-// The exam column header shows the weight only when the exam carries one. Keyed on the value
-// rather than the type: manual-percent, MS Teams, Test Portal and the generated quiz/project
-// exams all have a weight, and only manual-grade / pass-fail come back null. The falsy check
-// matches the `weight &&` gate in getWeightedAverageOf, so a header can never advertise a
-// weight the average ignores.
 export const examTitleMessageId = (weight: number | null | undefined): string =>
   weight ? 'examTitleWithWeight' : 'examTitleWithoutWeight';
 
-// Individually-meaningful statuses the group-wide bulk action must never
-// overwrite, and which are excluded from the "all present" header calc: a
-// teacher set them deliberately per-student, so "mark group present" leaves
-// them untouched and they don't count for/against the header toggle.
 const FROZEN_STATUSES: readonly API.AttendanceValue[] = [
   AttendanceValue.EXCUSED_ABSENCE,
   AttendanceValue.PRESENT_NOT_EXERCISING,
@@ -42,10 +26,6 @@ const FROZEN_STATUSES: readonly API.AttendanceValue[] = [
 export const isFrozenAttendance = (value: API.AttendanceValue | null): boolean =>
   value !== null && FROZEN_STATUSES.includes(value);
 
-// Derives the "mark group present" header checkbox state for a single schedule
-// from the whole-group attendance map. Only literal PRESENT counts; frozen
-// statuses (excused absence, present-not-exercising) are excluded from the
-// calc, and absent / null read as empty.
 export const getScheduleAttendanceHeaderState = (
   attendanceBySchedule: Record<number, Record<number, API.AttendanceValue>>,
   scheduleId: number,

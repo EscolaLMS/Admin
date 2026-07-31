@@ -8,7 +8,6 @@ import {
   isValidGradeWeight,
 } from './gradebook';
 
-// AW-44: the weight is a percentage on the same 1-100 scale as the exam weight.
 describe('isValidGradeWeight', () => {
   it('treats an empty value as valid (falls back to the default weight)', () => {
     expect(isValidGradeWeight(null)).toBe(true);
@@ -49,8 +48,6 @@ describe('isValidGradeWeight', () => {
 
 describe('grade weight scale (AW-44)', () => {
   it('defaults to a full-weight item, i.e. 100%', () => {
-    // A quiz/project left at the default must weigh the same as a 100% exam, not 1/100th
-    // of one — that 100x mismatch is what this scale change fixes.
     expect(DEFAULT_GRADE_WEIGHT).toBe(100);
     expect(DEFAULT_GRADE_WEIGHT).toBe(MAX_GRADE_WEIGHT);
   });
@@ -80,8 +77,6 @@ describe('gradebookInitialValues', () => {
   });
 
   it('seeds a stored out-of-range weight as-is, leaving the field to flag it', () => {
-    // Pre-AW-44 rows hold small multipliers like 1 or 2.5; surfacing them unchanged is what
-    // lets the teacher see and correct the value instead of it being silently rewritten.
     expect(gradebookInitialValues({ counts_to_grade: true, weight: 2.5 })).toEqual({
       counts_to_grade: true,
       weight: 2.5,

@@ -15,17 +15,14 @@ import {
   mergeExpandedKeys,
 } from './utils';
 
-// Minimal StudentExam stubs: the averages only read `weight` plus one field of `result`.
 const exam = (weight: number | undefined, result: number | string | null): StudentExam =>
   ({ weight, result: { result } } as StudentExam);
 
 const gradeExam = (weight: number | undefined, grade: string | number | null): StudentExam =>
   ({ weight, result: { grade } } as StudentExam);
 
-// Percentage-based; still what getProposedGrade consumes.
 describe('getWeightedAverageValue', () => {
   it('computes the weighted average over weighted, numeric results', () => {
-    // (5*2 + 2*1) / (2 + 1) = 4
     expect(getWeightedAverageValue([exam(2, 5), exam(1, 2)])).toBe(4);
   });
 
@@ -41,7 +38,7 @@ describe('getWeightedAverageValue', () => {
 
 describe('getGradeWeightedAverageValue', () => {
   it('weights the backend grades by exam weight', () => {
-    // (5*2 + 2*1) / (2 + 1) = 4
+
     expect(getGradeWeightedAverageValue([gradeExam(2, '5'), gradeExam(1, '2')])).toBe(4);
   });
 
@@ -50,8 +47,6 @@ describe('getGradeWeightedAverageValue', () => {
   });
 
   it('skips a blank or absent grade rather than counting it as 0', () => {
-    // Number('') and Number(null) are both 0 — a pass/fail exam with no grade must not
-    // drag the average down to 0.
     expect(getGradeWeightedAverageValue([gradeExam(2, null), gradeExam(1, '3')])).toBe(3);
     expect(getGradeWeightedAverageValue([gradeExam(2, ''), gradeExam(1, '3')])).toBe(3);
     expect(getGradeWeightedAverageValue([gradeExam(2, '  '), gradeExam(1, '3')])).toBe(3);
@@ -71,33 +66,26 @@ describe('getGradeWeightedAverageValue', () => {
   });
 });
 
-// The displayed "średnia ważona" — grade-based.
 describe('getWeightedAverage', () => {
   it('uses only grades that have a weight; grades without weight are ignored', () => {
-    // second exam has no weight -> only the first (8 / 2 = 4) counts
     expect(getWeightedAverage([gradeExam(2, '4'), gradeExam(undefined, '5')])).toBe('4.00');
   });
 
   it('ignores grades that are not numeric', () => {
-    // null and label grades are skipped -> only 3 (weight 1) counts
     expect(getWeightedAverage([gradeExam(2, null), gradeExam(2, 'abc'), gradeExam(1, '3')])).toBe(
       '3.00',
     );
   });
 
   it('rounds mathematically to 2 decimal places', () => {
-    // 10 / 3 = 3.3333... -> 3.33
     expect(getWeightedAverage([gradeExam(1, '3'), gradeExam(1, '4'), gradeExam(1, '3')])).toBe(
       '3.33',
     );
-    // 14 / 3 = 4.6666... -> 4.67
     expect(getWeightedAverage([gradeExam(1, '4'), gradeExam(2, '5')])).toBe('4.67');
   });
 
   it('rounds half up at float boundaries (1.005 -> "1.01", not "1.00")', () => {
-    // 201 / 200 = 1.005 -> "1.01" (plain Math.round(1.005*100) would give "1.00")
     expect(getWeightedAverage([gradeExam(200, 1.005)])).toBe('1.01');
-    // 203 / 200 = 1.015 -> "1.02"
     expect(getWeightedAverage([gradeExam(200, 1.015)])).toBe('1.02');
   });
 
@@ -106,7 +94,6 @@ describe('getWeightedAverage', () => {
   });
 
   it('always shows two decimal places', () => {
-    // 14 / 4 = 3.5 -> "3.50", not "3.5"
     expect(getWeightedAverage([gradeExam(1, '5'), gradeExam(3, '3')])).toBe('3.50');
   });
 
@@ -127,13 +114,10 @@ describe('getProposedGrade (regression: empty weighted grades no longer NaN)', (
   });
 
   it('maps the weighted average onto the matching scale', () => {
-    // average 3 -> reaches the grade_value:3 scale
     expect(getProposedGrade([exam(1, 3)], scales)).toBe('C');
   });
 });
 
-// AW-44: `isGeneratedExam` marks the exams the backend generates from a quiz/project topic.
-// They count towards the weighted average AND the proposed grade, like any other exam.
 describe('generated quiz/project exams (AW-44)', () => {
   const scales = [
     { grade_value: 0, name: 'ndst' },
@@ -157,7 +141,6 @@ describe('generated quiz/project exams (AW-44)', () => {
   });
 
   it('counts generated grades in the displayed weighted average', () => {
-    // (2*100 + 5*100) / 200 = 3.5
     const exams = [
       typedExam(ExamGradeType.Manual, 100, 40, '2'),
       typedExam(ExamGradeType.Quiz, 100, 100, '5'),
@@ -167,7 +150,6 @@ describe('generated quiz/project exams (AW-44)', () => {
   });
 
   it('counts generated grades in the proposed grade too', () => {
-    // Manual 40% + Quiz 100% -> 70% -> reaches the grade_value:50 scale ("dst")
     const exams = [
       typedExam(ExamGradeType.Manual, 100, 40, '2'),
       typedExam(ExamGradeType.Quiz, 100, 100, '5'),
@@ -177,7 +159,6 @@ describe('generated quiz/project exams (AW-44)', () => {
   });
 
   it('produces a proposed grade from generated exams alone', () => {
-    // Quiz 100% + Project 87% -> 93.5% -> reaches the grade_value:90 scale ("bdb")
     const exams = [
       typedExam(ExamGradeType.Quiz, 100, 100, '5'),
       typedExam(ExamGradeType.Project, 100, 87, '4'),
@@ -232,7 +213,6 @@ describe('getGradeDisplay (AW-23)', () => {
   it('returns only the percentage while the backend grade field is absent', () => {
     expect(getGradeDisplay(null, 80)).toEqual({ grade: null, percent: '80%' });
     expect(getGradeDisplay(undefined, 80)).toEqual({ grade: null, percent: '80%' });
-    // a blank grade is treated as no grade, so the cell never renders an empty bold value
     expect(getGradeDisplay('', 80)).toEqual({ grade: null, percent: '80%' });
     expect(getGradeDisplay('  ', 80)).toEqual({ grade: null, percent: '80%' });
   });
@@ -288,7 +268,6 @@ const course = (
   is_completed = false,
 ): API.StudentCourseGrades => ({ course_id, course_title, is_completed, quizzes, projects });
 
-// The quiz/project grades tree, grouped per course from courses-grades.
 describe('buildGradeRows', () => {
   it('returns an empty list when there are no courses', () => {
     expect(buildGradeRows([])).toEqual([]);
@@ -338,7 +317,6 @@ describe('buildGradeRows', () => {
   });
 
   it('keys rows on ids so identically-titled courses stay separate', () => {
-    // the real case: several courses all titled "[TEST-AN] Kurs automatyczny"
     const rows = buildGradeRows([
       course(130, '[TEST-AN] Kurs automatyczny', [quiz(43, 'Quiz testowy AN', 15, null)], []),
       course(131, '[TEST-AN] Kurs automatyczny', [quiz(44, 'Quiz testowy AN', 45, null)], []),
@@ -355,7 +333,6 @@ describe('buildGradeRows', () => {
     ]);
 
     expect(graded.children?.[0]).toMatchObject({ grade: 3, result_percent: 66.67 });
-    // no attempt yet -> the cell falls back to the percentage (both null here)
     expect(ungraded.children?.[0]).toMatchObject({ grade: null, result_percent: null });
   });
 
@@ -384,7 +361,6 @@ describe('mergeExpandedKeys', () => {
   });
 
   it('does not re-expand a seen course the user has collapsed', () => {
-    // course-1 was seen before and is not in prevExpanded -> stays collapsed
     expect(mergeExpandedKeys([], ['course-1'], new Set(['course-1']))).toEqual([]);
   });
 

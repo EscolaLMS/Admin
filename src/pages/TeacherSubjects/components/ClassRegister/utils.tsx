@@ -133,8 +133,6 @@ export const getAttendanceSummaryCells = ({
   attendanceChildren.forEach((col) => {
     const dataIndex = col.dataIndex as `attendance-${string}`;
     const scheduleId = Number(String(dataIndex).replace('attendance-', ''));
-    // Derive from the whole group (not the current page / name filter) so the
-    // header state matches what the group-wide bulk action actually writes.
     const { allPresent, allEmpty } = getScheduleAttendanceHeaderState(
       attendanceBySchedule,
       scheduleId,
@@ -147,8 +145,6 @@ export const getAttendanceSummaryCells = ({
           <Checkbox
             checked={allPresent}
             indeterminate={!allPresent && !allEmpty}
-            // Disable every header while any bulk toggle runs: a scalar
-            // in-flight id can't serialize concurrent writes across schedules.
             disabled={togglingScheduleId !== null}
             onChange={(e) => onToggle(scheduleId, e.target.checked)}
           />
@@ -186,9 +182,6 @@ export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableIt
         width: 100,
         render: (_n, record) => {
           const examResult = record?.[`exam-${exam.id}`];
-
-          // Percent-type exams show the backend-computed grade read-only. The other types
-          // keep their editable select, which already holds a grade / pass-fail value.
           return isPercentExam(exam.type) ? (
             examResult?.grade ?? '-'
           ) : (

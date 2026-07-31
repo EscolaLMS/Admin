@@ -93,8 +93,6 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             const { type, results, title, weight, passed_at, group_id } = res.data;
             setSelectedType(type);
             setConvertedData({ group_id, exam_results: results });
-            // Manual-grade / pass-fail exams come back with weight null; the field is not
-            // rendered for them, and `undefined` leaves it empty rather than seeding a null.
             form.setFieldsValue({ title, weight: weight ?? undefined, passed_at });
           }
         })
@@ -182,7 +180,6 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
                 rules={[
                   { required: true, message: <FormattedMessage id="field_required" /> },
                   {
-                    // Whole percent only, matching the quiz/project weight (isValidGradeWeight).
                     type: 'integer',
                     min: 1,
                     max: 100,
@@ -192,12 +189,6 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
                   },
                 ]}
               >
-                {/*
-                 * No `precision`: it silently rounds a typed 2.5 to 3. A decimal must be
-                 * rejected by the rule above, visibly, not quietly repaired.
-                 * `decimalSeparator` makes a Polish "2,5" parse as 2.5 — the default parser
-                 * strips the comma and turns it into 25, a silent 10x error.
-                 */}
                 <InputNumber decimalSeparator="," />
               </ProForm.Item>
             )}

@@ -64,7 +64,6 @@ describe('getScheduleAttendanceHeaderState', () => {
       allPresent: false,
       allEmpty: true,
     });
-    // no entry for the student -> null -> empty
     expect(state({}, [1])).toEqual({ allPresent: false, allEmpty: true });
   });
 
@@ -96,7 +95,6 @@ describe('getScheduleAttendanceHeaderState', () => {
 
 describe('isPercentExam', () => {
   it('treats the manual-grade and pass/fail types as non-percent', () => {
-    // these render their own select and already hold a 2-5 grade / pass-fail value
     expect(isPercentExam(ExamGradeType.ManualGrades)).toBe(false);
     expect(isPercentExam(ExamGradeType.ManualPass)).toBe(false);
   });
@@ -120,7 +118,6 @@ describe('isPercentExam', () => {
 
 describe('examTitleMessageId (AW-44)', () => {
   it('shows the weight for any exam that carries one', () => {
-    // manual-percent, MS Teams, Test Portal and the generated quiz/project exams all do
     expect(examTitleMessageId(1)).toBe('examTitleWithWeight');
     expect(examTitleMessageId(50)).toBe('examTitleWithWeight');
     expect(examTitleMessageId(100)).toBe('examTitleWithWeight');
@@ -132,7 +129,6 @@ describe('examTitleMessageId (AW-44)', () => {
   });
 
   it('omits the weight for 0, which the weighted average also skips', () => {
-    // a header must never advertise a weight the average ignores
     expect(examTitleMessageId(0)).toBe('examTitleWithoutWeight');
   });
 });

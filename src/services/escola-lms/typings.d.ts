@@ -1781,7 +1781,6 @@ declare namespace API {
 
   type ExamResult = {
     result: number | string | null;
-    /** Backend-computed grade for `result` (e.g. "5"); null when the result is not graded. */
     grade: string | null;
     user_id: number;
     first_name: string;
@@ -1802,8 +1801,6 @@ declare namespace API {
     semester: ExamSemester;
     title: string;
     type: Enum.ExamGradeType;
-    /** Percent of a full-weight exam, 1-100. null for manual-grade / pass-fail exams,
-     * whose form hides the field — those are skipped by the weighted average. */
     weight?: number | null;
     passed_at: Date | string;
     results: ExamResult[];
@@ -1906,21 +1903,13 @@ declare namespace API {
     semester_closed?: boolean;
   };
 
-  /**
-   * `courses-grades` — per-student, per-course quiz/project grades (FinalGradesDetails).
-   * `weight` is a whole percent 1–100 (% of a full-weight item, NOT a share of a course total).
-   * `grade` is not delivered yet — it will land inside `result`; the UI falls back to the percent.
-   */
   type QuizAttemptGrade = {
     attempt_id: number;
     result_score: number;
     max_score: number;
-    /** 0–100 (may be fractional, e.g. 66.67) */
     result_percent: number;
-    /** The grade the percentage maps onto in the tutor's scale (e.g. 4, "B"). Not delivered yet. */
     grade?: string | number | null;
     correct_answers_count: number;
-    /** null when the backend does not compute pass/fail for the quiz */
     is_passed: boolean | null;
     end_at: string;
   };
@@ -1939,14 +1928,11 @@ declare namespace API {
   type CourseProjectGrade = {
     topic_id: number;
     title: string;
-    /** Whole percent 1–100; optional/nullable while the backend field is still WIP. */
     weight?: number | null;
     solution_id: number | null;
     score: number | null;
     max_score: number | null;
-    /** 0–100 */
     result_percent: number | null;
-    /** The grade `result_percent` maps onto. Not delivered yet. */
     grade?: string | number | null;
     graded_at: string | null;
   };

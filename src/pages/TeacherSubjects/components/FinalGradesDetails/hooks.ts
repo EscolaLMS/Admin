@@ -190,9 +190,6 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   useEffect(() => {
     if (!semester_subject_id) return;
     setStudentExams((prev) => ({ ...prev, loading: true }));
-    // per_page -1 (as the class register already does): this list is not paginated in the UI,
-    // it feeds the whole "Oceny cząstkowe" table, the weighted average AND the quiz/project
-    // grades table — a default page size would silently drop exams from all three.
     getExams({ student_id, semester_subject_id, per_page: -1 })
       .then((response) => {
         if (response.success) {
@@ -209,8 +206,6 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   return { studentExams };
 }
 
-// Per-course quiz/project grades (courses-grades) for the grouped grades table. A failure surfaces
-// as `error` (the service skips the global handler) so the table can show an inline alert.
 export function useStudentCoursesGrades(group_id: number, student_id: number) {
   const [studentCoursesGrades, setStudentCoursesGrades] = useState<
     FetchedData<API.StudentCourseGrades[]>

@@ -8,12 +8,8 @@ import { buildGradeRows, formatWeightPercent, getGradeDisplay, mergeExpandedKeys
 
 const GRADE_CELL_BG = '#f5f5f5';
 const GRADE_HEADER_BG = '#ebebeb';
-// Below this the fixed columns (type 160 + weight 120 + grade 180) plus the tree-indented name
-// column would squeeze past readability, so the table scrolls horizontally instead.
 const MIN_TABLE_WIDTH = 720;
 
-// The backend grade, with the percentage as muted context. No pass/fail tag: a quiz's `is_passed`
-// answers a different question from the subject grade and can contradict it (66.67% → passed, but a 2).
 const GradeCell: React.FC<{ row: StudentGradeRow }> = ({ row }) => {
   const { grade, percent } = getGradeDisplay(row.grade, row.result_percent);
   const primary = grade ?? percent;
@@ -82,7 +78,6 @@ const columns: ProColumns<StudentGradeRow>[] = [
     ),
     dataIndex: 'grade',
     width: 180,
-    // Stays pinned once the table starts scrolling horizontally (below MIN_TABLE_WIDTH).
     fixed: 'right',
     onHeaderCell: () => ({ style: { background: GRADE_HEADER_BG } }),
     onCell: () => ({ style: { background: GRADE_CELL_BG } }),
@@ -91,7 +86,6 @@ const columns: ProColumns<StudentGradeRow>[] = [
 ];
 
 interface Props {
-  /** the student's per-course quiz/project grades (courses-grades) */
   data?: API.StudentCourseGrades[];
   loading: boolean;
   error?: boolean;
@@ -113,7 +107,6 @@ export const QuizProjectGradesTable: React.FC<Props> = ({ data, loading, error }
     return <Spin />;
   }
 
-  // Ahead of the data check: a failed reload must not keep rendering the previous result.
   if (error) {
     return (
       <Alert

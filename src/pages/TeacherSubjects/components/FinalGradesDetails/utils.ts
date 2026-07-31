@@ -1,12 +1,10 @@
 import type { Key } from 'react';
 
-// Relative, not `@/` — jest has no alias resolution and this module is unit tested.
-// enums.ts is import-free, so this pulls in no component graph.
 import { ExamGradeType } from '../../../../services/escola-lms/enums';
 import type { StudentExam, StudentGradeRow } from './types';
 
 /**
- * AW-44: exams the backend generates from a counts_to_grade quiz/project topic. They are
+ * Exams the backend generates from a counts_to_grade quiz/project topic. They are
  * never graded by hand, so they are read-only in the Exams list, and they count towards the
  * displayed weighted average but NOT towards the proposed grade — see getProposedGrade.
  */
@@ -23,9 +21,6 @@ export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number):
     return [...acc, { ...exam, result }];
   }, []);
 
-// Only exams carrying a weight AND a usable value are counted; everything else is skipped.
-// Returns null when there is nothing to average, so callers render an empty state instead of
-// a divide-by-zero / NaN value.
 const getWeightedAverageOf = (
   studentExams: StudentExam[],
   valueOf: (result: API.ExamResult) => number | null,
@@ -46,13 +41,9 @@ const getWeightedAverageOf = (
   return Number.isFinite(average) ? average : null;
 };
 
-// Percentage-based. Feeds getProposedGrade, whose scale thresholds (`grade_value`) are
-// percentages — do not switch this to grades.
 export const getWeightedAverageValue = (studentExams: StudentExam[]): number | null =>
   getWeightedAverageOf(studentExams, ({ result }) => (typeof result === 'number' ? result : null));
 
-// Grade-based, from the backend `grade` on each exam result. A blank/absent grade must not
-// fall through to Number('') === 0, which would drag the average down.
 export const getGradeWeightedAverageValue = (studentExams: StudentExam[]): number | null =>
   getWeightedAverageOf(studentExams, ({ grade }) => {
     if (grade === null || grade === undefined || String(grade).trim() === '') return null;
@@ -62,8 +53,6 @@ export const getGradeWeightedAverageValue = (studentExams: StudentExam[]): numbe
     return Number.isFinite(value) ? value : null;
   });
 
-// The displayed "średnia ważona" — grades weighted by exam weight, rounded to 2 decimal
-// places. The Number.EPSILON nudge avoids the float half-boundary error (1.005 -> "1.01").
 export const getWeightedAverage = (studentExams: StudentExam[]): string => {
   const value = getGradeWeightedAverageValue(studentExams);
   if (value === null) return '-';
@@ -105,9 +94,6 @@ export const getProposedGrade = (
 export const formatPercent = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
 
-// Grade weight for a table cell: a whole percent, blank when absent. Rendered by hand rather
-// than `valueType: 'percent'`, which pads to "100.00%" and disagrees with the "100%" the exam
-// and grade tables show. Distinct from formatPercent, which shows "-" for a missing value.
 export const formatWeightPercent = (weight: number | null | undefined): string =>
   weight == null ? '' : `${weight}%`;
 
@@ -124,8 +110,6 @@ export const getGradeDisplay = (
   };
 };
 
-// Keeps the courses the user still has expanded and auto-expands each one the first time it
-// appears (tracked in `seen`), so grades show on open without re-expanding by hand.
 export const mergeExpandedKeys = (
   prevExpanded: Key[],
   currentKeys: string[],

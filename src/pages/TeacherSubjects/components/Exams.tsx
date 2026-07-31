@@ -44,9 +44,6 @@ const staticColumns: ProColumns<API.Exam>[] = [
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
     sorter: true,
-    // Percent of a full-weight exam (100 = counts fully), not a share of a total — so the
-    // weights of a subject's exams do not add up to 100. Manual-grade / pass-fail exams
-    // carry no weight and come back as null, which renders blank.
     render: (_, record) => formatWeightPercent(record.weight),
   },
   {
@@ -138,8 +135,6 @@ export const Exams: React.FC = () => {
           dataIndex: 'option',
           valueType: 'option',
           render: (_, record) => [
-            /* AW-44: generated quiz/project exams are produced from the topic's own result —
-               never edited or deleted by hand, so they get the read-only results view only. */
             ...(isGeneratedExam(record.type)
               ? []
               : [
