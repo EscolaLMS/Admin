@@ -1,10 +1,11 @@
 import { DrawerForm, ProFormTextArea } from '@ant-design/pro-form';
-import { message } from 'antd';
 import React, { useCallback } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import { getProjectSolution, updateProjectSolutionFeedback } from '@/services/escola-lms/projects';
 import { TUTOR_FEEDBACK_MAX_LENGTH, normalizeTutorFeedback } from '@/utils/utils';
+
+import { notifyResult } from './notify';
 
 interface FormData {
   tutor_feedback: string;
@@ -30,13 +31,7 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
         feedback: normalizeTutorFeedback(formData.tutor_feedback),
       });
 
-      if (!res.success) {
-        message.error(intl.formatMessage({ id: 'error', defaultMessage: 'error' }));
-        return;
-      }
-
-      message.success(intl.formatMessage({ id: 'success', defaultMessage: 'success' }));
-      onSuccess?.();
+      notifyResult(res.success, intl, onSuccess);
     },
     [solution?.id, intl, onSuccess],
   );

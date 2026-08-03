@@ -735,6 +735,7 @@ export default {
   max_score_set_on_project: 'Max score is set on the project topic and cannot be changed here.',
   score_must_be_positive: 'Score must be 0 or greater.',
   score_must_not_exceed_max: 'Score cannot exceed max score.',
+  project_max_score_required_for_grading: 'Set a max score on the project topic before grading.',
   root: 'Root',
   'Product Not Found': 'Produkt nie został znaleziony',
   'Consultation Not Found': 'Consultation Not Found',

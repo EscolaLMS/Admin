@@ -703,6 +703,8 @@ export default {
     'Wynik maksymalny jest ustawiany w temacie projektu i nie można go tutaj zmienić.',
   score_must_be_positive: 'Wynik musi być większy lub równy 0.',
   score_must_not_exceed_max: 'Wynik nie może przekraczać wyniku maksymalnego.',
+  project_max_score_required_for_grading:
+    'Ustaw wynik maksymalny w temacie projektu przed ocenianiem.',
   root: 'Węzeł początkowy',
   'Product Not Found': 'Produkt nie został znaleziony',
   'Consultation Not Found': 'Konsultacja nie została znaleziona',

@@ -1,16 +1,11 @@
 import type { RuleObject } from 'antd/es/form';
-import { message } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'umi';
 
 import { getProjectSolution, gradeProjectSolution } from '@/services/escola-lms/projects';
 
-import {
-  canSubmitGrade,
-  MIN_SCORE,
-  resolveEffectiveMaxScore,
-  validateScore,
-} from './projectSolutionGrade';
+import { notifyResult } from './notify';
+import { MIN_SCORE, resolveEffectiveMaxScore, validateScore } from './projectSolutionGrade';
 
 export interface ProjectSolutionGradeFormData {
   score?: number;
@@ -22,15 +17,9 @@ interface Params {
   onSuccess?: () => void;
 }
 
-/**
- * Encapsulates the data + validation logic for grading a project solution:
- * resolves the effective max score, loads the current score, submits the grade,
- * and builds the score-input validation rules. The drawer only renders.
- */
 export const useProjectSolutionGrade = ({ solution, maxScore, onSuccess }: Params) => {
   const intl = useIntl();
 
-  // Max score is fixed by the project topic (not editable here); shown next to the score input.
   const effectiveMaxScore = resolveEffectiveMaxScore(maxScore, solution?.max_score);
 
   const loadInitial = useCallback(
@@ -45,20 +34,16 @@ export const useProjectSolutionGrade = ({ solution, maxScore, onSuccess }: Param
 
   const onFinish = useCallback(
     async (formData: ProjectSolutionGradeFormData) => {
-      if (!canSubmitGrade(solution?.id, formData.score, effectiveMaxScore)) return;
+      if (solution?.id === undefined || formData.score == null) return;
 
-      const res = await gradeProjectSolution(solution!.id, {
-        score: Number(formData.score),
-        max_score: Number(effectiveMaxScore),
+      if (effectiveMaxScore == null) return;
+
+      const res = await gradeProjectSolution(solution.id, {
+        score: formData.score,
+        max_score: effectiveMaxScore,
       });
 
-      if (!res.success) {
-        message.error(intl.formatMessage({ id: 'error', defaultMessage: 'error' }));
-        return;
-      }
-
-      message.success(intl.formatMessage({ id: 'success', defaultMessage: 'success' }));
-      onSuccess?.();
+      notifyResult(res.success, intl, onSuccess);
     },
     [solution, effectiveMaxScore, intl, onSuccess],
   );
@@ -99,7 +84,14 @@ export const useProjectSolutionGrade = ({ solution, maxScore, onSuccess }: Param
     [effectiveMaxScore, intl],
   );
 
-  return { effectiveMaxScore, minScore: MIN_SCORE, loadInitial, onFinish, scoreRules };
+  return {
+    effectiveMaxScore,
+    hasMaxScore: effectiveMaxScore != null,
+    minScore: MIN_SCORE,
+    loadInitial,
+    onFinish,
+    scoreRules,
+  };
 };
 
 export default useProjectSolutionGrade;

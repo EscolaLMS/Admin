@@ -1,6 +1,6 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { DrawerForm, ProFormDigit } from '@ant-design/pro-form';
-import { Space, Tooltip } from 'antd';
+import { Alert, Space, Tooltip } from 'antd';
 import React from 'react';
 import { FormattedMessage } from 'umi';
 
@@ -22,7 +22,7 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
   onClose,
   onSuccess,
 }) => {
-  const { effectiveMaxScore, minScore, loadInitial, onFinish, scoreRules } =
+  const { effectiveMaxScore, hasMaxScore, minScore, loadInitial, onFinish, scoreRules } =
     useProjectSolutionGrade({ solution, maxScore, onSuccess });
 
   return (
@@ -33,20 +33,34 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
       title={<FormattedMessage id="grade_project_solution" defaultMessage="Grade project" />}
+      // Grading needs a max score from the project topic; block submit until it's set.
+      submitter={{ submitButtonProps: { disabled: !hasMaxScore } }}
       drawerProps={{
         width: 478,
         destroyOnClose: true,
       }}
     >
+      {!hasMaxScore && (
+        <Alert
+          type="warning"
+          showIcon
+          style={{ marginBottom: 16 }}
+          message={
+            <FormattedMessage
+              id="project_max_score_required_for_grading"
+              defaultMessage="Set a max score on the project topic before grading."
+            />
+          }
+        />
+      )}
       <ProFormDigit
         name="score"
         label={<FormattedMessage id="score" defaultMessage="Score" />}
         min={minScore}
+        disabled={!hasMaxScore}
         fieldProps={{
           precision: 2,
           style: { width: '100%' },
-          // The score is the only editable value; the max score is shown as a read-only
-          // suffix with a helper icon explaining where it comes from.
           addonAfter: (
             <Space size={4}>
               <span>/ {effectiveMaxScore ?? '—'}</span>

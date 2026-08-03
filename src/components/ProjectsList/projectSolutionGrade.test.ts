@@ -1,11 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import {
-  canSubmitGrade,
-  MIN_SCORE,
-  resolveEffectiveMaxScore,
-  validateScore,
-} from './projectSolutionGrade';
+import { MIN_SCORE, resolveEffectiveMaxScore, validateScore } from './projectSolutionGrade';
 
 describe('resolveEffectiveMaxScore', () => {
   it('prefers the explicit override over the solution value', () => {
@@ -48,22 +43,5 @@ describe('validateScore', () => {
   it('skips the max check when the max is unknown', () => {
     expect(validateScore(9999, undefined)).toBeNull();
     expect(validateScore(-1, undefined)).toBe('negative');
-  });
-});
-
-describe('canSubmitGrade', () => {
-  it('is true only with a solution id, a score, and a known max', () => {
-    expect(canSubmitGrade(1, 5, 10)).toBe(true);
-  });
-
-  it('allows a score of 0', () => {
-    expect(canSubmitGrade(1, 0, 10)).toBe(true);
-  });
-
-  it('is false when any of the three is missing', () => {
-    expect(canSubmitGrade(undefined, 5, 10)).toBe(false);
-    expect(canSubmitGrade(1, null, 10)).toBe(false);
-    expect(canSubmitGrade(1, undefined, 10)).toBe(false);
-    expect(canSubmitGrade(1, 5, undefined)).toBe(false);
   });
 });
