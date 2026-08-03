@@ -1,14 +1,13 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { DrawerForm, ProFormDigit } from '@ant-design/pro-form';
-import { Space, Tooltip, message } from 'antd';
-import React, { useCallback } from 'react';
-import { FormattedMessage, useIntl } from 'umi';
+import { Space, Tooltip } from 'antd';
+import React from 'react';
+import { FormattedMessage } from 'umi';
 
-import { getProjectSolution, gradeProjectSolution } from '@/services/escola-lms/projects';
-
-interface FormData {
-  score?: number;
-}
+import {
+  ProjectSolutionGradeFormData,
+  useProjectSolutionGrade,
+} from './useProjectSolutionGrade';
 
 interface Props {
   solution?: API.ProjectSolution;
@@ -23,41 +22,14 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
   onClose,
   onSuccess,
 }) => {
-  const intl = useIntl();
-
-  // Max score is fixed by the project topic (not editable here); shown next to the score input.
-  const effectiveMaxScore = maxScore ?? solution?.max_score ?? undefined;
-
-  const onFinish = useCallback(
-    async (formData: FormData) => {
-      if (solution?.id === undefined || formData.score == null || effectiveMaxScore == null) return;
-
-      const res = await gradeProjectSolution(solution.id, {
-        score: Number(formData.score),
-        max_score: Number(effectiveMaxScore),
-      });
-
-      if (!res.success) {
-        message.error(intl.formatMessage({ id: 'error', defaultMessage: 'error' }));
-        return;
-      }
-
-      message.success(intl.formatMessage({ id: 'success', defaultMessage: 'success' }));
-      onSuccess?.();
-    },
-    [solution?.id, effectiveMaxScore, intl, onSuccess],
-  );
+  const { effectiveMaxScore, minScore, loadInitial, onFinish, scoreRules } =
+    useProjectSolutionGrade({ solution, maxScore, onSuccess });
 
   return (
-    <DrawerForm<FormData>
+    <DrawerForm<ProjectSolutionGradeFormData>
       visible={!!solution}
       params={{ id: solution?.id }}
-      request={async ({ id }) => {
-        if (id === undefined) return { score: undefined };
-        const res = await getProjectSolution(id);
-        const data = res.success ? res.data : solution;
-        return { score: data?.score ?? undefined };
-      }}
+      request={loadInitial}
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
       title={<FormattedMessage id="grade_project_solution" defaultMessage="Grade project" />}
@@ -69,7 +41,7 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
       <ProFormDigit
         name="score"
         label={<FormattedMessage id="score" defaultMessage="Score" />}
-        min={0}
+        min={minScore}
         fieldProps={{
           precision: 2,
           style: { width: '100%' },
@@ -91,36 +63,7 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
             </Space>
           ),
         }}
-        rules={[
-          {
-            required: true,
-            message: <FormattedMessage id="field_required" defaultMessage="Field is required" />,
-          },
-          {
-            validator: (_rule, value) => {
-              if (value == null) return Promise.resolve();
-              if (value < 0)
-                return Promise.reject(
-                  new Error(
-                    intl.formatMessage({
-                      id: 'score_must_be_positive',
-                      defaultMessage: 'Score must be 0 or greater.',
-                    }),
-                  ),
-                );
-              if (effectiveMaxScore != null && value > effectiveMaxScore)
-                return Promise.reject(
-                  new Error(
-                    intl.formatMessage({
-                      id: 'score_must_not_exceed_max',
-                      defaultMessage: 'Score cannot exceed max score.',
-                    }),
-                  ),
-                );
-              return Promise.resolve();
-            },
-          },
-        ]}
+        rules={scoreRules}
       />
     </DrawerForm>
   );
