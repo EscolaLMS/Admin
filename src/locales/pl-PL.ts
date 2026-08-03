@@ -694,6 +694,17 @@ export default {
   notify_users: 'Użytkownicy do powiadomienia',
   notify_users_tooltip:
     'Wskaż którzy użytkownicy powinni być powiadomieni o tym, że uczeń wgrał projekt',
+  project_max_score_tooltip:
+    'Domyślna maksymalna liczba punktów za projekt, uzupełnia pole oceniania.',
+  not_graded: 'Nieocenione',
+  score: 'Wynik',
+  grade_project_solution: 'Oceń projekt',
+  max_score_set_on_project:
+    'Wynik maksymalny jest ustawiany w temacie projektu i nie można go tutaj zmienić.',
+  score_must_be_positive: 'Wynik musi być większy lub równy 0.',
+  score_must_not_exceed_max: 'Wynik nie może przekraczać wyniku maksymalnego.',
+  project_max_score_required_for_grading:
+    'Ustaw wynik maksymalny w temacie projektu przed ocenianiem.',
   root: 'Węzeł początkowy',
   'Product Not Found': 'Produkt nie został znaleziony',
   'Consultation Not Found': 'Konsultacja nie została znaleziona',

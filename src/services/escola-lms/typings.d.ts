@@ -572,6 +572,7 @@ declare namespace API {
       notify_users?: string[];
       counts_to_grade?: boolean;
       weight?: number;
+      max_score?: number;
     };
   };
 
@@ -1437,10 +1438,18 @@ declare namespace API {
   type ProjectSolution = EscolaLms.TopicTypeProject.Models.ProjectSolution & {
     file_url: string;
     tutor_feedback: string | null;
+    score: number | null;
+    max_score: number | null;
+    graded_at: string | null;
   };
 
   type UpdateProjectSolutionFeedback = {
     feedback: string | null;
+  };
+
+  type UpdateProjectSolutionGrade = {
+    score: number;
+    max_score: number;
   };
 
   type ProjectSolutionList = DefaultMetaResponse<ProjectSolution>;

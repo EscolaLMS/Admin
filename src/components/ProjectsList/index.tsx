@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, TrophyOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-table';
 import { type ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Tooltip, Typography, message } from 'antd';
@@ -8,6 +8,7 @@ import { FormattedMessage, Link, useIntl } from 'umi';
 
 import AutoSearchProTable from '@/components/AutoSearchProTable';
 import ProjectSolutionFeedbackDrawer from '@/components/ProjectsList/ProjectSolutionFeedbackDrawer';
+import ProjectSolutionGradeDrawer from '@/components/ProjectsList/ProjectSolutionGradeDrawer';
 import TypeButtonDrawer from '@/components/TypeButtonDrawer';
 import UserSelect from '@/components/UserSelect';
 import { DATETIME_FORMAT } from '@/consts/dates';
@@ -44,6 +45,7 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
 
   const [projectTopics, setProjectTopics] = useState<API.TopicProject[]>([]);
   const [feedbackSolution, setFeedbackSolution] = useState<API.ProjectSolution>();
+  const [gradeSolution, setGradeSolution] = useState<API.ProjectSolution>();
 
   const enumsProjectTopics = useMemo(
     () =>
@@ -57,6 +59,15 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         }),
         {},
       ),
+    [projectTopics],
+  );
+
+  const topicMaxScoreById = useMemo(
+    () =>
+      projectTopics.reduce<Record<number, number | undefined>>((acc, curr) => {
+        if (curr.id != null) acc[curr.id] = curr.topicable?.max_score;
+        return acc;
+      }, {}),
     [projectTopics],
   );
 
@@ -144,6 +155,21 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
           ),
       },
       {
+        title: <FormattedMessage id="grade" defaultMessage="Grade" />,
+        dataIndex: 'score',
+        hideInSearch: true,
+        render: (_, record) =>
+          record.score != null ? (
+            <Typography.Text strong>{`${record.score} / ${
+              record.max_score ?? '—'
+            }`}</Typography.Text>
+          ) : (
+            <Typography.Text type="secondary">
+              <FormattedMessage id="not_graded" defaultMessage="Not graded" />
+            </Typography.Text>
+          ),
+      },
+      {
         hideInSearch: true,
         title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="option" />,
         dataIndex: 'option',
@@ -151,6 +177,18 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         render: (_d, record, _i, action) => [
           ...(canEdit
             ? [
+                <Tooltip
+                  key="grade"
+                  title={
+                    <FormattedMessage id="grade_project_solution" defaultMessage="Grade project" />
+                  }
+                >
+                  <Button
+                    type="primary"
+                    icon={<TrophyOutlined />}
+                    onClick={() => setGradeSolution(record as API.ProjectSolution)}
+                  />
+                </Tooltip>,
                 <Tooltip key="edit-comment" title={<FormattedMessage id="edit_comment" />}>
                   <Button
                     type="primary"
@@ -239,6 +277,15 @@ export const ProjectsList: React.FC<Props> = ({ courseId }) => {
         onClose={() => setFeedbackSolution(undefined)}
         onSuccess={() => {
           setFeedbackSolution(undefined);
+          actionRef.current?.reload();
+        }}
+      />
+      <ProjectSolutionGradeDrawer
+        solution={gradeSolution}
+        maxScore={gradeSolution ? topicMaxScoreById[gradeSolution.topic_id] : undefined}
+        onClose={() => setGradeSolution(undefined)}
+        onSuccess={() => {
+          setGradeSolution(undefined);
           actionRef.current?.reload();
         }}
       />
