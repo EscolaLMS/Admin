@@ -12,7 +12,7 @@ import {
 import ProForm, { ProFormCheckbox, ProFormSwitch, ProFormText } from '@ant-design/pro-form';
 import { Button, Divider, Form, Row, Space, Spin, Typography, message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FormattedMessage, Link, history, useIntl, useModel, useParams } from 'umi';
+import { FormattedMessage, Link, history, useAccess, useIntl, useModel, useParams } from 'umi';
 import AdditionalField from './components/AdditionalField';
 
 function useUserGroups(user_id: number) {
@@ -90,6 +90,10 @@ export default ({
   setData: (data: Partial<API.UserItem>) => void;
 }) => {
   const intl = useIntl();
+  const access = useAccess();
+  // Read-only roles (e.g. dziekanat) can open user details to view history but must not see any
+  // edit controls. Gate the whole form by the existing create/update permissions.
+  const canEdit = isNew ? access.userCreatePermission : access.userUpdatePermission;
   const params = useParams<{ user?: string }>();
   const { user } = params;
   const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
@@ -173,7 +177,7 @@ export default ({
   }
 
   return (
-    <ProForm {...formProps}>
+    <ProForm {...formProps} disabled={!canEdit} submitter={canEdit ? undefined : false}>
       <ProForm.Group>
         <ProFormText
           width="md"
@@ -252,7 +256,7 @@ export default ({
 
             <Form.Item noStyle shouldUpdate>
               {() => {
-                return form.getFieldValue('email_verified') ? (
+                return form.getFieldValue('email_verified') || !canEdit ? (
                   <React.Fragment />
                 ) : (
                   <>
@@ -312,27 +316,29 @@ export default ({
               )}
             </ProForm.Item>
             <Form.Item noStyle shouldUpdate>
-              {() => (
-                <>
-                  <SecureUploadBrowser
-                    folder={`avatars/${user}`}
-                    wrapInForm={false}
-                    url={`/api/admin/users/${user}/avatar`}
-                    name="avatar"
-                    accept="image/*"
-                    onChange={(info) => {
-                      if (info.file.status === 'done') {
-                        if (info.file.response && info.file.response.success) {
-                          setData(info.file.response.data);
+              {() =>
+                canEdit ? (
+                  <>
+                    <SecureUploadBrowser
+                      folder={`avatars/${user}`}
+                      wrapInForm={false}
+                      url={`/api/admin/users/${user}/avatar`}
+                      name="avatar"
+                      accept="image/*"
+                      onChange={(info) => {
+                        if (info.file.status === 'done') {
+                          if (info.file.response && info.file.response.success) {
+                            setData(info.file.response.data);
+                          }
                         }
-                      }
-                    }}
-                  />
-                  <Button danger onClick={onDeleteAvatar}>
-                    <FormattedMessage id="delete" />
-                  </Button>
-                </>
-              )}
+                      }}
+                    />
+                    <Button danger onClick={onDeleteAvatar}>
+                      <FormattedMessage id="delete" />
+                    </Button>
+                  </>
+                ) : null
+              }
             </Form.Item>
           </ProForm.Group>
           <Row>
@@ -344,7 +350,7 @@ export default ({
               <UserGroupSelect
                 multiple
                 loading={userGroupsLoading}
-                disabled={userGroupsLoading}
+                disabled={userGroupsLoading || !canEdit}
                 value={userGroups}
                 onSelect={handleAddToGroup}
                 onDeselect={handleRemoveFromGroup}
