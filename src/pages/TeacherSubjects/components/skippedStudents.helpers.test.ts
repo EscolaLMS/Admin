@@ -28,7 +28,6 @@ const notInSystemStudent: API.SkippedStudent = {
   user_groups: [],
 };
 
-// Off-contract but plausible: the user exists, yet the backend reports no group for them.
 const foundWithoutGroupStudent: API.SkippedStudent = {
   result: 55,
   first_name: 'Piotr',
@@ -66,8 +65,6 @@ describe('partitionSkippedStudents', () => {
   it('treats a student found without any group as unplaceable, not as another group', () => {
     const { otherGroup, notInSystem } = partitionSkippedStudents([foundWithoutGroupStudent]);
 
-    // otherwise the row would render a blank "Assigned group" cell under advice telling the
-    // teacher to go to a group that does not exist
     expect(otherGroup).toHaveLength(0);
     expect(notInSystem).toEqual([foundWithoutGroupStudent]);
   });
@@ -94,9 +91,6 @@ describe('formatSkippedStudentGroups', () => {
   });
 });
 
-// The reader only touches these three fields. `Pick` keeps them checked against the real
-// `ParseExamResponse` contract, so a backend rename breaks this test rather than silently
-// producing an empty modal.
 type ConsumedParseExamFields = Pick<
   API.ParseExamResponse,
   'results' | 'group_id' | 'skipped_students'
@@ -114,8 +108,6 @@ const matchedResult: API.ExamResult = {
   email: 'ewa@example.com',
 };
 
-// Shaped exactly like the payload the modal was previewed against, so this asserts the real
-// contract documented on `API.ParseExamResponse`.
 const realisticPayload: ConsumedParseExamFields = {
   group_id: 1,
   results: [matchedResult],
@@ -147,7 +139,6 @@ describe('readParseExamResponse', () => {
       successResponse({ group_id: 1, results: [matchedResult] }),
     );
 
-    // this is today's backend: the import still works and no modal opens
     expect(examResults).toEqual([matchedResult]);
     expect(skippedStudents).toEqual([]);
   });

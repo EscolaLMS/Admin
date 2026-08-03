@@ -19,8 +19,6 @@ interface Props {
 const renderResult = (result: API.SkippedStudent['result']) =>
   result === null || result === undefined ? NO_VALUE : result;
 
-// Every identifying field is nullable, so rows with no name and no email would otherwise
-// collide on the same key. The index keeps them distinct.
 const rowKey = (record: API.SkippedStudent, index?: number) =>
   `${record.email ?? ''}|${record.first_name ?? ''}|${record.last_name ?? ''}|${index ?? 0}`;
 
