@@ -1218,6 +1218,77 @@ declare namespace API {
 
   type UserSetting = Record<string, string>;
 
+  /**
+   * STUDENT HISTORY (AW-51) — placeholder contract.
+   * The `/api/admin/users/{id}/history[/{history_id}]` endpoints are delivered by a separate,
+   * not-yet-shipped backend task. Fields below are the FE's best-guess of the documented payload
+   * (dates, group/subject names, abbreviated attendance + grades). Everything is optional/nullable
+   * so rendering stays defensive until the real shape is confirmed against a live backend.
+   */
+  type StudentHistoryAttendanceSummary = {
+    present?: number | null;
+    absent?: number | null;
+    late?: number | null;
+    excused?: number | null;
+    total?: number | null;
+    /** Whole-percent attendance, 0–100. */
+    percentage?: number | null;
+  };
+
+  type StudentHistoryGradesSummary = {
+    average?: number | null;
+    final_grade?: string | number | null;
+    count?: number | null;
+  };
+
+  type StudentHistoryItem = {
+    id: number;
+    created_at?: string | null;
+    updated_at?: string | null;
+    /** Period the snapshot covers. */
+    date_from?: string | null;
+    date_to?: string | null;
+    group_id?: number | null;
+    group_name?: string | null;
+    subject_id?: number | null;
+    subject_name?: string | null;
+    semester_name?: string | null;
+    attendance_summary?: StudentHistoryAttendanceSummary | null;
+    grades_summary?: StudentHistoryGradesSummary | null;
+  };
+
+  type StudentHistoryAttendanceEntry = {
+    id?: number | null;
+    date?: string | null;
+    value?: string | null;
+    subject_name?: string | null;
+  };
+
+  type StudentHistoryGradeEntry = {
+    id?: number | null;
+    name?: string | null;
+    grade?: string | number | null;
+    value?: number | null;
+    date?: string | null;
+    subject_name?: string | null;
+  };
+
+  /** Full snapshot returned by the per-record endpoint, shown in the detail drawer. */
+  type StudentHistoryDetail = StudentHistoryItem & {
+    attendances?: StudentHistoryAttendanceEntry[] | null;
+    grades?: StudentHistoryGradeEntry[] | null;
+  };
+
+  type StudentHistoryList = DefaultMetaResponse<StudentHistoryItem>;
+
+  type StudentHistoryRow = DefaultResponse<StudentHistoryDetail>;
+
+  type StudentHistoryParams = PageParams &
+    PaginationParams & {
+      date_from?: string;
+      date_to?: string;
+    };
+
   type UserGroup = {
     id: number;
     name: string;

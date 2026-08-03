@@ -1,7 +1,7 @@
 import { Button, Dropdown, Menu, message, Popconfirm, Tag, Tooltip } from 'antd';
 import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
-import { getLocale, history, Link, useIntl } from 'umi';
+import { getLocale, history, Link, useAccess, useIntl } from 'umi';
 
 import { FormattedMessage } from '@umijs/max';
 
@@ -10,6 +10,7 @@ import {
   DownloadOutlined,
   EditOutlined,
   ExportOutlined,
+  EyeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
@@ -177,6 +178,7 @@ export const TableColumns: ProColumns<API.UserItem>[] = [
 
 const TableList: React.FC = () => {
   const intl = useIntl();
+  const access = useAccess();
   const [params, setParams] = useState({});
   const additionalFields = useModelFields('EscolaLms\\Auth\\Models\\User');
 
@@ -238,35 +240,48 @@ const TableList: React.FC = () => {
         width: 80,
         render: (_n, record, _i, action) => [
           <Link to={`/users/${record.id}/user_info`} key="edit">
-            <Tooltip title={<FormattedMessage id="edit" defaultMessage="edit" />}>
-              <Button type="primary" icon={<EditOutlined />} />
+            <Tooltip
+              title={
+                access.userUpdatePermission ? (
+                  <FormattedMessage id="edit" defaultMessage="edit" />
+                ) : (
+                  <FormattedMessage id="details" defaultMessage="Details" />
+                )
+              }
+            >
+              <Button
+                type="primary"
+                icon={access.userUpdatePermission ? <EditOutlined /> : <EyeOutlined />}
+              />
             </Tooltip>
           </Link>,
-          <Popconfirm
-            key="delete"
-            title={
-              <FormattedMessage
-                id="deleteQuestion"
-                defaultMessage="Are you sure to delete this record?"
-              />
-            }
-            onConfirm={async () => {
-              const success = await handleRemove(record.id);
-              if (success) {
-                action?.reload();
+          access.userDeletePermission ? (
+            <Popconfirm
+              key="delete"
+              title={
+                <FormattedMessage
+                  id="deleteQuestion"
+                  defaultMessage="Are you sure to delete this record?"
+                />
               }
-            }}
-            okText={<FormattedMessage id="yes" />}
-            cancelText={<FormattedMessage id="no" />}
-          >
-            <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
-              <Button type="primary" icon={<DeleteOutlined />} danger />
-            </Tooltip>
-          </Popconfirm>,
+              onConfirm={async () => {
+                const success = await handleRemove(record.id);
+                if (success) {
+                  action?.reload();
+                }
+              }}
+              okText={<FormattedMessage id="yes" />}
+              cancelText={<FormattedMessage id="no" />}
+            >
+              <Tooltip title={<FormattedMessage id="delete" defaultMessage="delete" />}>
+                <Button type="primary" icon={<DeleteOutlined />} danger />
+              </Tooltip>
+            </Popconfirm>
+          ) : null,
         ],
       },
     ],
-    [dynamicAdditionalFieldsColumns],
+    [dynamicAdditionalFieldsColumns, access],
   );
 
   return (
@@ -308,29 +323,31 @@ const TableList: React.FC = () => {
               layout: 'vertical',
             }}
             toolBarRender={() => [
-              <SecureUpload
-                key="upload"
-                title={intl.formatMessage({
-                  id: 'import_users',
-                })}
-                url="/api/admin/csv/users"
-                name="file"
-                accept=".csv, .xlsx"
-                data={{
-                  return_url: `${window.location.origin}/#/user/reset-password`,
-                }}
-                onChange={(info) => {
-                  if (info.file.status === 'done') {
-                    if (info.file.response && info.file.response.success) {
-                      message.success(info.file.response.message);
+              access.userCreatePermission ? (
+                <SecureUpload
+                  key="upload"
+                  title={intl.formatMessage({
+                    id: 'import_users',
+                  })}
+                  url="/api/admin/csv/users"
+                  name="file"
+                  accept=".csv, .xlsx"
+                  data={{
+                    return_url: `${window.location.origin}/#/user/reset-password`,
+                  }}
+                  onChange={(info) => {
+                    if (info.file.status === 'done') {
+                      if (info.file.response && info.file.response.success) {
+                        message.success(info.file.response.message);
+                      }
                     }
-                  }
-                  if (info.file.response && info.file.status === 'error') {
-                    message.error(info.file.response.message);
-                    console.error(info.file.response);
-                  }
-                }}
-              />,
+                    if (info.file.response && info.file.status === 'error') {
+                      message.error(info.file.response.message);
+                      console.error(info.file.response);
+                    }
+                  }}
+                />
+              ) : null,
 
               <Dropdown
                 key="dropdown-export-menu"
@@ -363,11 +380,13 @@ const TableList: React.FC = () => {
                 </Button>
               </Dropdown>,
 
-              <Link to="/users/list/new" key="link">
-                <Button type="primary" key="primary">
-                  <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
-                </Button>
-              </Link>,
+              access.userCreatePermission ? (
+                <Link to="/users/list/new" key="link">
+                  <Button type="primary" key="primary">
+                    <PlusOutlined /> <FormattedMessage id="new" defaultMessage="new" />
+                  </Button>
+                </Link>
+              ) : null,
             ]}
             request={(
               { pageSize, current, search, role, from, to, gt_last_login_day, lt_last_login_day },
