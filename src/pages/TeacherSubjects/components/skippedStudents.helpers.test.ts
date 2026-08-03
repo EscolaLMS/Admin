@@ -107,6 +107,7 @@ const successResponse = (data: ConsumedParseExamFields) =>
 
 const matchedResult: API.ExamResult = {
   result: 90,
+  grade: null,
   user_id: 11,
   first_name: 'Ewa',
   last_name: 'Lis',
