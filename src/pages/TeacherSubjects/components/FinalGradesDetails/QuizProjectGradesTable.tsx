@@ -4,29 +4,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import type { StudentGradeRow } from './types';
-import { buildGradeRows, getGradeDisplay, mergeExpandedKeys } from './utils';
-
-const formatScore = (score?: number | null, maxScore?: number | null): string =>
-  score === null || score === undefined ? '-' : `${score} / ${maxScore ?? '-'}`;
-
-const PassFailTag: React.FC<{ passed?: boolean | null }> = ({ passed }) => {
-  if (passed === null || passed === undefined) {
-    return null;
-  }
-  return passed ? (
-    <Tag color="success">
-      <FormattedMessage id="gradebook.passed" defaultMessage="Passed" />
-    </Tag>
-  ) : (
-    <Tag color="error">
-      <FormattedMessage id="gradebook.failed" defaultMessage="Failed" />
-    </Tag>
-  );
-};
+import { buildGradeRows, formatWeightPercent, getGradeDisplay, mergeExpandedKeys } from './utils';
 
 const GRADE_CELL_BG = '#f5f5f5';
 const GRADE_HEADER_BG = '#ebebeb';
-const MIN_TABLE_WIDTH = 986;
+const MIN_TABLE_WIDTH = 720;
 
 const GradeCell: React.FC<{ row: StudentGradeRow }> = ({ row }) => {
   const { grade, percent } = getGradeDisplay(row.grade, row.result_percent);
@@ -42,10 +24,20 @@ const GradeCell: React.FC<{ row: StudentGradeRow }> = ({ row }) => {
         '-'
       )}
       {grade && percent && <Typography.Text type="secondary">({percent})</Typography.Text>}
-      <PassFailTag passed={row.is_passed} />
     </Space>
   );
 };
+
+const CompletionTag: React.FC<{ completed?: boolean }> = ({ completed }) =>
+  completed ? (
+    <Tag color="success">
+      <FormattedMessage id="gradebook.completed" defaultMessage="Completed" />
+    </Tag>
+  ) : (
+    <Tag>
+      <FormattedMessage id="gradebook.not_completed" defaultMessage="Not completed" />
+    </Tag>
+  );
 
 const columns: ProColumns<StudentGradeRow>[] = [
   {
@@ -55,15 +47,7 @@ const columns: ProColumns<StudentGradeRow>[] = [
       row.kind === 'course' ? (
         <>
           <Typography.Text strong>{row.name}</Typography.Text>{' '}
-          {row.is_completed ? (
-            <Tag color="success">
-              <FormattedMessage id="gradebook.completed" defaultMessage="Course passed" />
-            </Tag>
-          ) : (
-            <Tag>
-              <FormattedMessage id="gradebook.not_completed" defaultMessage="Not completed" />
-            </Tag>
-          )}
+          <CompletionTag completed={row.is_completed} />
         </>
       ) : (
         row.name
@@ -72,7 +56,7 @@ const columns: ProColumns<StudentGradeRow>[] = [
   {
     title: <FormattedMessage id="type" />,
     dataIndex: 'kind',
-    width: 180,
+    width: 160,
     render: (_n, row) =>
       row.kind === 'course' ? (
         ''
@@ -81,9 +65,10 @@ const columns: ProColumns<StudentGradeRow>[] = [
       ),
   },
   {
-    title: <FormattedMessage id="gradebook.score" defaultMessage="Score" />,
-    width: 180,
-    render: (_n, row) => (row.kind === 'course' ? '' : formatScore(row.score, row.max_score)),
+    title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
+    dataIndex: 'weight',
+    width: 120,
+    render: (_n, row) => (row.kind === 'course' ? '' : formatWeightPercent(row.weight)),
   },
   {
     title: (
@@ -93,7 +78,6 @@ const columns: ProColumns<StudentGradeRow>[] = [
     ),
     dataIndex: 'grade',
     width: 180,
-    // Stays pinned once the table starts scrolling horizontally (below MIN_TABLE_WIDTH).
     fixed: 'right',
     onHeaderCell: () => ({ style: { background: GRADE_HEADER_BG } }),
     onCell: () => ({ style: { background: GRADE_CELL_BG } }),
@@ -107,8 +91,9 @@ interface Props {
   error?: boolean;
 }
 
-export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error }) => {
+export const QuizProjectGradesTable: React.FC<Props> = ({ data, loading, error }) => {
   const rows = useMemo(() => buildGradeRows(data ?? []), [data]);
+
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const seenCourseKeysRef = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -122,7 +107,6 @@ export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error }) =
     return <Spin />;
   }
 
-  // Ahead of the data check: a failed reload must not keep rendering the previous result.
   if (error) {
     return (
       <Alert
@@ -138,7 +122,7 @@ export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error }) =
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!rows.length) {
     return (
       <Empty
         description={
@@ -169,4 +153,4 @@ export const StudentCourseGrades: React.FC<Props> = ({ data, loading, error }) =
   );
 };
 
-export default StudentCourseGrades;
+export default QuizProjectGradesTable;

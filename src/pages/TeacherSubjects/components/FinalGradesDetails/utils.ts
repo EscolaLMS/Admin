@@ -1,6 +1,17 @@
 import type { Key } from 'react';
 
+import { ExamGradeType } from '../../../../services/escola-lms/enums';
 import type { StudentExam, StudentGradeRow } from './types';
+
+/**
+ * Exams the backend generates from a counts_to_grade quiz/project topic. They are
+ * never graded by hand, so they are read-only in the Exams list, and they count towards the
+ * displayed weighted average but NOT towards the proposed grade — see getProposedGrade.
+ */
+const GENERATED_EXAM_TYPES: readonly ExamGradeType[] = [ExamGradeType.Quiz, ExamGradeType.Project];
+
+export const isGeneratedExam = (type: ExamGradeType): boolean =>
+  GENERATED_EXAM_TYPES.includes(type);
 
 export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number): StudentExam[] =>
   exams.reduce<StudentExam[]>((acc, { results, ...exam }) => {
@@ -10,19 +21,15 @@ export const getStudentExamsFromExams = (exams: API.Exam[], student_id: number):
     return [...acc, { ...exam, result }];
   }, []);
 
-// Weighted average of a student's exam results. Only exams that carry a weight
-// (backend field `exam.weight`) AND a numeric result are counted; everything
-// else is skipped. Returns null when there is no weighted grade to average, or
-// when the result is not finite, so callers can render an empty state instead
-// of a divide-by-zero / NaN value.
-export const getWeightedAverageValue = (studentExams: StudentExam[]): number | null => {
+const getWeightedAverageOf = (
+  studentExams: StudentExam[],
+  valueOf: (result: API.ExamResult) => number | null,
+): number | null => {
   const [sum, weightsSum] = studentExams.reduce<[number, number]>(
     (acc, { result, weight }) => {
-      if (weight && typeof result.result === 'number') {
-        return [acc[0] + result.result * weight, acc[1] + weight];
-      } else {
-        return acc;
-      }
+      const value = valueOf(result);
+
+      return weight && value !== null ? [acc[0] + value * weight, acc[1] + weight] : acc;
     },
     [0, 0],
   );
@@ -34,11 +41,20 @@ export const getWeightedAverageValue = (studentExams: StudentExam[]): number | n
   return Number.isFinite(average) ? average : null;
 };
 
-// Display form of the weighted average: mathematically rounded to 2 decimal
-// places, or "-" when there is no weighted grade to average. The Number.EPSILON
-// nudge avoids the classic float half-boundary error (e.g. 1.005 -> "1.01").
+export const getWeightedAverageValue = (studentExams: StudentExam[]): number | null =>
+  getWeightedAverageOf(studentExams, ({ result }) => (typeof result === 'number' ? result : null));
+
+export const getGradeWeightedAverageValue = (studentExams: StudentExam[]): number | null =>
+  getWeightedAverageOf(studentExams, ({ grade }) => {
+    if (grade === null || grade === undefined || String(grade).trim() === '') return null;
+
+    const value = Number(grade);
+
+    return Number.isFinite(value) ? value : null;
+  });
+
 export const getWeightedAverage = (studentExams: StudentExam[]): string => {
-  const value = getWeightedAverageValue(studentExams);
+  const value = getGradeWeightedAverageValue(studentExams);
   if (value === null) return '-';
 
   return (Math.round((value + Number.EPSILON) * 100) / 100).toFixed(2);
@@ -78,6 +94,9 @@ export const getProposedGrade = (
 export const formatPercent = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(value) ? '-' : `${value}%`;
 
+export const formatWeightPercent = (weight: number | null | undefined): string =>
+  weight == null ? '' : `${weight}%`;
+
 export const getGradeDisplay = (
   grade: string | number | null | undefined,
   percent: number | null | undefined,
@@ -102,40 +121,44 @@ export const mergeExpandedKeys = (
   return Array.from(new Set<Key>([...kept, ...fresh]));
 };
 
+/**
+ * The per-course quiz/project grades tree from courses-grades: a parent row per course, child
+ * rows per flagged item. Keys use ids, never titles — courses can share a title and collide.
+ * `grade` is absent until the backend ships it, so the cell falls back to the percentage.
+ * Courses with no flagged items are dropped so the table shows no empty parents.
+ */
 export const buildGradeRows = (courses: API.StudentCourseGrades[]): StudentGradeRow[] =>
-  courses.map((course) => {
-    const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
-      key: `quiz-${course.course_id}-${quiz.quiz_id}`,
-      name: quiz.title,
-      kind: 'quiz',
-      result_percent: quiz.result?.result_percent ?? null,
-      grade: quiz.result?.grade ?? quiz.grade ?? null,
-      score: quiz.result?.result_score ?? null,
-      max_score: quiz.result?.max_score ?? null,
-      is_passed: quiz.result?.is_passed ?? null,
-    }));
+  courses
+    .filter((course) => course.quizzes.length || course.projects.length)
+    .map((course) => {
+      const quizRows: StudentGradeRow[] = course.quizzes.map((quiz) => ({
+        key: `quiz-${course.course_id}-${quiz.quiz_id}`,
+        name: quiz.title,
+        kind: 'quiz',
+        weight: quiz.weight ?? null,
+        grade: quiz.result?.grade ?? null,
+        result_percent: quiz.result?.result_percent ?? null,
+      }));
 
-    const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
-      key: `project-${course.course_id}-${project.topic_id}`,
-      name: project.title,
-      kind: 'project',
-      result_percent: project.result_percent,
-      grade: project.grade ?? null,
-      score: project.score,
-      max_score: project.max_score,
-      is_passed: null,
-    }));
+      const projectRows: StudentGradeRow[] = course.projects.map((project) => ({
+        key: `project-${course.course_id}-${project.topic_id}`,
+        name: project.title,
+        kind: 'project',
+        weight: project.weight ?? null,
+        grade: project.grade ?? null,
+        result_percent: project.result_percent,
+      }));
 
-    const children = [...quizRows, ...projectRows];
+      const children = [...quizRows, ...projectRows];
 
-    return {
-      key: `course-${course.course_id}`,
-      name: course.course_title,
-      kind: 'course',
-      is_completed: course.is_completed,
-      children: children.length ? children : undefined,
-    };
-  });
+      return {
+        key: `course-${course.course_id}`,
+        name: course.course_title,
+        kind: 'course',
+        is_completed: course.is_completed,
+        children: children.length ? children : undefined,
+      };
+    });
 
 export const getScalesBySubjectScaleFormId = (
   s_subject_scale_form_id: number,

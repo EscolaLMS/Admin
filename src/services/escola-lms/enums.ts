@@ -75,6 +75,8 @@ export enum ExamGradeType {
   TeamsForms = 'teams_forms',
   TeamsLecture = 'teams_lecture',
   TestPortal = 'test_portal',
+  Quiz = 'quiz',
+  Project = 'project',
 }
 
 export enum ExamGradePassType {
@@ -123,5 +125,5 @@ export enum BulkNotificationSectionsKeysEnum {
   TITLE = 'title',
   BODY = 'body',
   IMAGE = 'image_url',
-  REDIRECT_URL = 'redirect_url'
+  REDIRECT_URL = 'redirect_url',
 }

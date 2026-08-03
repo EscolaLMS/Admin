@@ -1,11 +1,5 @@
-// Pure attendance helpers for the ClassRegister group view. Kept import-light
-// (only the AttendanceValue enum, via a relative path) so they can be unit
-// tested without pulling in the component graph / the `@/` module alias.
-import { AttendanceValue } from '../../../../services/escola-lms/enums';
+import { AttendanceValue, ExamGradeType } from '../../../../services/escola-lms/enums';
 
-// A user belongs to the group roster if they have no academic teacher, OR they
-// appear in the teacher's final-grades roster. Used both for the group-wide
-// summary calculation and the row-build filter so the two never drift.
 export const isGroupStudent = (
   academicTeacherId: number | null,
   studentId: number,
@@ -13,10 +7,17 @@ export const isGroupStudent = (
 ): boolean =>
   academicTeacherId === null || finalGrades.some((teacher) => teacher.user.id === studentId);
 
-// Individually-meaningful statuses the group-wide bulk action must never
-// overwrite, and which are excluded from the "all present" header calc: a
-// teacher set them deliberately per-student, so "mark group present" leaves
-// them untouched and they don't count for/against the header toggle.
+const NON_PERCENT_EXAM_TYPES: readonly ExamGradeType[] = [
+  ExamGradeType.ManualPass,
+  ExamGradeType.ManualGrades,
+];
+
+export const isPercentExam = (type: ExamGradeType): boolean =>
+  !NON_PERCENT_EXAM_TYPES.includes(type);
+
+export const examTitleMessageId = (weight: number | null | undefined): string =>
+  weight ? 'examTitleWithWeight' : 'examTitleWithoutWeight';
+
 const FROZEN_STATUSES: readonly API.AttendanceValue[] = [
   AttendanceValue.EXCUSED_ABSENCE,
   AttendanceValue.PRESENT_NOT_EXERCISING,
@@ -25,10 +26,6 @@ const FROZEN_STATUSES: readonly API.AttendanceValue[] = [
 export const isFrozenAttendance = (value: API.AttendanceValue | null): boolean =>
   value !== null && FROZEN_STATUSES.includes(value);
 
-// Derives the "mark group present" header checkbox state for a single schedule
-// from the whole-group attendance map. Only literal PRESENT counts; frozen
-// statuses (excused absence, present-not-exercising) are excluded from the
-// calc, and absent / null read as empty.
 export const getScheduleAttendanceHeaderState = (
   attendanceBySchedule: Record<number, Record<number, API.AttendanceValue>>,
   scheduleId: number,

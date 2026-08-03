@@ -6,8 +6,6 @@ export interface FetchedData<T> {
   error?: boolean;
 }
 
-// AW-23: a single row in the student's grades tree table. A `course` row is a parent
-// (its `children` are the flagged quiz/project rows); `quiz`/`project` rows are leaves.
 export type StudentGradeRowKind = 'course' | 'quiz' | 'project';
 
 export interface StudentGradeRow {
@@ -16,14 +14,11 @@ export interface StudentGradeRow {
   kind: StudentGradeRowKind;
   /** course rows only */
   is_completed?: boolean;
-  /** item rows only — 0–100, or null when not graded */
+  /** item rows only — 0–100, or null when the result is not a percentage */
   result_percent?: number | null;
   /** item rows only — the grade `result_percent` maps onto; null when the backend has none */
   grade?: string | number | null;
-  /** item rows only */
-  score?: number | null;
-  max_score?: number | null;
-  /** item rows only — pass/fail (quiz: latest attempt; project: null) */
-  is_passed?: boolean | null;
+  /** item rows only — percent of a full-weight item (1-100) */
+  weight?: number | null;
   children?: StudentGradeRow[];
 }

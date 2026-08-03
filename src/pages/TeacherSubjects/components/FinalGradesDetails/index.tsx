@@ -11,7 +11,7 @@ import { UserCourseAttempts, UserProgress } from '@/components/CourseStatistics/
 import { DAY_FORMAT } from '@/consts/dates';
 import { createFinalGrade, updateFinalGrade } from '@/services/escola-lms/grades';
 import { useTeacherSubject } from '../../context';
-import StudentCourseGrades from './StudentCourseGrades';
+import QuizProjectGradesTable from './QuizProjectGradesTable';
 import {
   useFinalGrades,
   useGradeTerms,
@@ -23,7 +23,7 @@ import {
   useUserCoursesStats,
 } from './hooks';
 import type { StudentExam } from './types';
-import { getProposedGrade, getWeightedAverage } from './utils';
+import { formatWeightPercent, getProposedGrade, getWeightedAverage } from './utils';
 
 interface Props {
   user_id: number;
@@ -69,7 +69,7 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   {
     title: <FormattedMessage id="TeacherSubjects.Exams.grade_weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
-    valueType: 'percent',
+    render: (_n, row) => formatWeightPercent(row.weight),
   },
   {
     title: <FormattedMessage id="created_at" defaultMessage="Created at" />,
@@ -79,7 +79,7 @@ const studentExamsColumns: ProColumns<StudentExam>[] = [
   {
     title: <FormattedMessage id="grade" />,
     dataIndex: 'result',
-    render: (_n, row) => `${row.result.result} ${row.weight ? '%' : ''}`,
+    render: (_n, row) => row.result.grade ?? '-',
   },
 ];
 
@@ -106,6 +106,7 @@ const TABLE_PAGE_SIZE = 6;
 export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
   const { semester_subject_id } = useTeacherSubject();
   const { studentExams } = useStudentExams(user_id, semester_subject_id);
+  const { studentCoursesGrades } = useStudentCoursesGrades(group_id, user_id);
   const { finalGrades, deleteFinalGrade } = useFinalGrades(group_id, user_id);
   const { gradeTerms } = useGradeTerms();
   const { subjectGradeScales } = useSubjectGradeScales(finalGrades.data?.s_subject_scale_form_id);
@@ -122,7 +123,6 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
     group_id,
     user_id,
   );
-  const { courseGrades } = useStudentCoursesGrades(group_id, user_id);
 
   const [form] = ProForm.useForm<FormData>();
 
@@ -326,10 +326,10 @@ export const FinalGradesDetails: React.FC<Props> = ({ user_id, group_id }) => {
             />
           </Typography.Text>
           <Divider style={{ margin: '12px 0' }} />
-          <StudentCourseGrades
-            data={courseGrades.data}
-            loading={courseGrades.loading}
-            error={courseGrades.error}
+          <QuizProjectGradesTable
+            data={studentCoursesGrades.data}
+            loading={studentCoursesGrades.loading}
+            error={studentCoursesGrades.error}
           />
         </Col>
         {areStatisticsLoading && <Spin />}

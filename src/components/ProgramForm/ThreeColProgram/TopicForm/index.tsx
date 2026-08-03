@@ -8,7 +8,13 @@ import Divider from 'antd/lib/divider';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 import TopicForm from './form';
-import { DEFAULT_GRADE_WEIGHT, GRADEBOOK_FIELDS, isValidGradeWeight } from './gradebook';
+import {
+  DEFAULT_GRADE_WEIGHT,
+  GRADEBOOK_FIELDS,
+  MAX_GRADE_WEIGHT,
+  MIN_GRADE_WEIGHT,
+  isValidGradeWeight,
+} from './gradebook';
 import { getTypeName } from './media';
 import H5PForm from './media/h5p';
 import Oembed from './media/oembed';
@@ -217,16 +223,20 @@ export const Topic: React.FC = () => {
         const enteredWeight = values[GRADEBOOK_FIELDS.weight] ?? topicable?.weight;
         if (!isValidGradeWeight(enteredWeight)) {
           message.error(
-            intl.formatMessage({
-              id: 'grade_weight_must_be_positive',
-              defaultMessage: 'Weight must be greater than 0.',
-            }),
+            intl.formatMessage(
+              {
+                id: 'grade_weight_out_of_range',
+                defaultMessage: 'Weight must be a whole number between {min} and {max}%.',
+              },
+              { min: MIN_GRADE_WEIGHT, max: MAX_GRADE_WEIGHT },
+            ),
           );
           return;
         }
         const weight = Number(enteredWeight);
-        values[GRADEBOOK_FIELDS.weight] =
-          Number.isFinite(weight) && weight > 0 ? weight : DEFAULT_GRADE_WEIGHT;
+        values[GRADEBOOK_FIELDS.weight] = isValidGradeWeight(weight)
+          ? weight
+          : DEFAULT_GRADE_WEIGHT;
       } else {
         delete values[GRADEBOOK_FIELDS.weight];
       }

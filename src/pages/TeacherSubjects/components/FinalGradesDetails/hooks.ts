@@ -190,7 +190,7 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   useEffect(() => {
     if (!semester_subject_id) return;
     setStudentExams((prev) => ({ ...prev, loading: true }));
-    getExams({ student_id, semester_subject_id })
+    getExams({ student_id, semester_subject_id, per_page: -1 })
       .then((response) => {
         if (response.success) {
           const data = getStudentExamsFromExams(response.data, student_id);
@@ -206,31 +206,27 @@ export function useStudentExams(student_id: number, semester_subject_id: number 
   return { studentExams };
 }
 
-export function useStudentCoursesGrades(group_id: number, user_id: number) {
-  const [courseGrades, setCourseGrades] = useState<FetchedData<API.StudentCourseGrades[]>>({
-    loading: true,
-  });
+export function useStudentCoursesGrades(group_id: number, student_id: number) {
+  const [studentCoursesGrades, setStudentCoursesGrades] = useState<
+    FetchedData<API.StudentCourseGrades[]>
+  >({ loading: false });
 
   useEffect(() => {
-    setCourseGrades((prev) => ({ ...prev, loading: true, error: false }));
-    getStudentCoursesGrades(group_id, user_id)
+    setStudentCoursesGrades({ loading: true });
+    getStudentCoursesGrades(group_id, student_id)
       .then((response) => {
-        setCourseGrades((prev) =>
-          response.success
-            ? { ...prev, data: response.data, error: false }
-            : { ...prev, error: true },
-        );
+        if (response.success) {
+          setStudentCoursesGrades({ loading: false, data: response.data });
+        } else {
+          setStudentCoursesGrades({ loading: false, error: true });
+        }
       })
-      .catch((error) => {
-        console.error('Error fetching student course grades:', error);
-        setCourseGrades((prev) => ({ ...prev, error: true }));
-      })
-      .finally(() => {
-        setCourseGrades((prev) => ({ ...prev, loading: false }));
+      .catch(() => {
+        setStudentCoursesGrades({ loading: false, error: true });
       });
-  }, [group_id, user_id]);
+  }, [group_id, student_id]);
 
-  return { courseGrades };
+  return { studentCoursesGrades };
 }
 
 export function useUserCoursesStats(group_id: number, user_id: number) {

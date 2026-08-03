@@ -117,6 +117,7 @@ const ManualExamGradeType: React.FC<{
                 last_name,
                 user_id: id,
                 result: null,
+                grade: null,
               },
             ];
           },
@@ -164,6 +165,8 @@ const EXAM_GRADE_IMAGES: Record<ExamGradeType, string[]> = {
   [ExamGradeType.Manual]: [],
   [ExamGradeType.ManualPass]: [],
   [ExamGradeType.ManualGrades]: [],
+  [ExamGradeType.Quiz]: [],
+  [ExamGradeType.Project]: [],
 };
 
 const ExampleImagesPreview: React.FC<{ images: string[] }> = ({ images }) => {

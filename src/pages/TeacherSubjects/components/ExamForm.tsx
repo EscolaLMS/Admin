@@ -93,7 +93,7 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
             const { type, results, title, weight, passed_at, group_id } = res.data;
             setSelectedType(type);
             setConvertedData({ group_id, exam_results: results });
-            form.setFieldsValue({ title, weight, passed_at });
+            form.setFieldsValue({ title, weight: weight ?? undefined, passed_at });
           }
         })
         .finally(() => setFetching(false));
@@ -180,14 +180,16 @@ export const ExamForm: React.FC<Props> = ({ exam_id }) => {
                 rules={[
                   { required: true, message: <FormattedMessage id="field_required" /> },
                   {
-                    type: 'number',
+                    type: 'integer',
                     min: 1,
                     max: 100,
-                    message: <FormattedMessage id="number_between" values={{ min: 1, max: 100 }} />,
+                    message: (
+                      <FormattedMessage id="whole_number_between" values={{ min: 1, max: 100 }} />
+                    ),
                   },
                 ]}
               >
-                <InputNumber />
+                <InputNumber decimalSeparator="," />
               </ProForm.Item>
             )}
         </ProForm.Group>

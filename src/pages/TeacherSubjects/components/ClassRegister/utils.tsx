@@ -1,6 +1,5 @@
 import AttendanceCheckbox from '@/components/AttendanceCheckbox';
 import { DAY_FORMAT } from '@/consts/dates';
-import { ExamGradeType } from '@/services/escola-lms/enums';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import { Checkbox, Space, Table, Tooltip } from 'antd';
@@ -19,7 +18,7 @@ import type {
 
 /* Attendance */
 
-import { getScheduleAttendanceHeaderState } from './helpers';
+import { examTitleMessageId, getScheduleAttendanceHeaderState, isPercentExam } from './helpers';
 
 export { isGroupStudent } from './helpers';
 
@@ -134,8 +133,6 @@ export const getAttendanceSummaryCells = ({
   attendanceChildren.forEach((col) => {
     const dataIndex = col.dataIndex as `attendance-${string}`;
     const scheduleId = Number(String(dataIndex).replace('attendance-', ''));
-    // Derive from the whole group (not the current page / name filter) so the
-    // header state matches what the group-wide bulk action actually writes.
     const { allPresent, allEmpty } = getScheduleAttendanceHeaderState(
       attendanceBySchedule,
       scheduleId,
@@ -148,8 +145,6 @@ export const getAttendanceSummaryCells = ({
           <Checkbox
             checked={allPresent}
             indeterminate={!allPresent && !allEmpty}
-            // Disable every header while any bulk toggle runs: a scalar
-            // in-flight id can't serialize concurrent writes across schedules.
             disabled={togglingScheduleId !== null}
             onChange={(e) => onToggle(scheduleId, e.target.checked)}
           />
@@ -182,22 +177,22 @@ export const getExamsCols = (exams: API.Exam[]): ProColumns<ClassRegisterTableIt
       ...acc,
       {
         dataIndex: `exam-${exam.id}`,
-        title:
-          exam.type === ExamGradeType.Manual ? (
-            <FormattedMessage id="examTitleWithWeight" values={exam} />
-          ) : (
-            <FormattedMessage id="examTitleWithoutWeight" values={exam} />
-          ),
+        title: <FormattedMessage id={examTitleMessageId(exam.weight)} values={exam} />,
         hideInSearch: true,
         width: 100,
-        render: (_n, record) => (
-          <ExamGradeInput
-            type={exam.type}
-            result={record?.[`exam-${exam.id}`]?.result}
-            exam_id={exam.id}
-            student_id={record.id}
-          />
-        ),
+        render: (_n, record) => {
+          const examResult = record?.[`exam-${exam.id}`];
+          return isPercentExam(exam.type) ? (
+            examResult?.grade ?? '-'
+          ) : (
+            <ExamGradeInput
+              type={exam.type}
+              result={examResult?.result}
+              exam_id={exam.id}
+              student_id={record.id}
+            />
+          );
+        },
       },
     ],
     [],
