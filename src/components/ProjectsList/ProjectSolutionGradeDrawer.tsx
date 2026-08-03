@@ -33,7 +33,6 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
       title={<FormattedMessage id="grade_project_solution" defaultMessage="Grade project" />}
-      // Grading needs a max score from the project topic; block submit until it's set.
       submitter={{ submitButtonProps: { disabled: !hasMaxScore } }}
       drawerProps={{
         width: 478,

@@ -1438,7 +1438,6 @@ declare namespace API {
   type ProjectSolution = EscolaLms.TopicTypeProject.Models.ProjectSolution & {
     file_url: string;
     tutor_feedback: string | null;
-    /** Lecturer grade — null until the solution has been graded. */
     score: number | null;
     max_score: number | null;
     graded_at: string | null;
@@ -1448,7 +1447,6 @@ declare namespace API {
     feedback: string | null;
   };
 
-  /** Body of PATCH /api/admin/topic-project-solutions/{id}/grade — rule: score <= max_score. */
   type UpdateProjectSolutionGrade = {
     score: number;
     max_score: number;
