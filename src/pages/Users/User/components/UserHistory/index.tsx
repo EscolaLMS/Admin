@@ -103,14 +103,16 @@ const UserHistory: React.FC<{ userId: number }> = ({ userId }) => {
               page: params.current,
               per_page: params.pageSize,
             });
-            setLoadError(false);
             if (response.success) {
+              setLoadError(false);
               return {
                 data: response.data,
                 total: response.meta.total,
                 success: true,
               };
             }
+            // A success:false body is a real failure, not an empty history.
+            setLoadError(true);
           } catch (error) {
             const status = (error as { response?: { status?: number } })?.response?.status;
             // Only surface genuine failures; a missing/forbidden endpoint stays an empty state.
