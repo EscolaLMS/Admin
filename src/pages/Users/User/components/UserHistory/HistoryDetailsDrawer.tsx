@@ -1,4 +1,5 @@
 import { DAY_FORMAT } from '@/consts/dates';
+import { AttendanceValue } from '@/services/escola-lms/enums';
 import { userHistoryEntry } from '@/services/escola-lms/user_history';
 import { Descriptions, Drawer, Empty, Space, Spin, Table, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
@@ -6,54 +7,62 @@ import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import { safeDate } from './formatDate';
-import {
-  displayText,
-  EMPTY_PLACEHOLDER,
-  formatAttendanceSummary,
-  formatGradesSummary,
-} from './utils';
+import { displayText, EMPTY_PLACEHOLDER, formatResultPercent } from './utils';
+
+/** Backend attendance status → existing i18n key (see AttendanceValue enum + locale catalogs). */
+const ATTENDANCE_STATUS_MESSAGE_ID: Record<string, string> = {
+  [AttendanceValue.PRESENT]: 'present',
+  [AttendanceValue.PRESENT_NOT_EXERCISING]: 'not_exercising',
+  [AttendanceValue.ABSENT]: 'absent',
+  [AttendanceValue.EXCUSED_ABSENCE]: 'excused_absence',
+};
 
 const attendanceColumns: TableColumnsType<API.StudentHistoryAttendanceEntry> = [
   {
-    title: <FormattedMessage id="date" defaultMessage="Date" />,
-    dataIndex: 'date',
-    render: (_v, record) => safeDate(record.date, DAY_FORMAT),
-  },
-  {
-    title: <FormattedMessage id="subject" defaultMessage="Subject" />,
-    dataIndex: 'subject_name',
-    render: (_v, record) => displayText(record.subject_name),
+    title: <FormattedMessage id="schedule" defaultMessage="Schedule" />,
+    dataIndex: 'schedule_id',
+    render: (_v, record) =>
+      record.schedule_id != null ? `#${record.schedule_id}` : EMPTY_PLACEHOLDER,
   },
   {
     title: <FormattedMessage id="attendance" defaultMessage="Attendance" />,
     dataIndex: 'value',
-    render: (_v, record) => displayText(record.value),
+    render: (_v, record) => {
+      const messageId = record.value ? ATTENDANCE_STATUS_MESSAGE_ID[record.value] : undefined;
+      return messageId ? <FormattedMessage id={messageId} /> : displayText(record.value);
+    },
   },
 ];
 
-const gradeColumns: TableColumnsType<API.StudentHistoryGradeEntry> = [
+const examColumns: TableColumnsType<API.StudentHistoryExamEntry> = [
   {
-    title: <FormattedMessage id="date" defaultMessage="Date" />,
-    dataIndex: 'date',
-    render: (_v, record) => safeDate(record.date, DAY_FORMAT),
+    title: <FormattedMessage id="title" defaultMessage="Title" />,
+    dataIndex: 'title',
+    render: (_v, record) => displayText(record.title),
   },
   {
-    title: <FormattedMessage id="subject" defaultMessage="Subject" />,
-    dataIndex: 'subject_name',
-    render: (_v, record) => displayText(record.subject_name),
+    title: <FormattedMessage id="result" defaultMessage="Result" />,
+    dataIndex: 'result',
+    render: (_v, record) => formatResultPercent(record.result),
   },
-  {
-    title: <FormattedMessage id="name" defaultMessage="Name" />,
-    dataIndex: 'name',
-    render: (_v, record) => displayText(record.name),
-  },
+];
+
+const gradeColumns: TableColumnsType<API.StudentHistoryFinalGrade> = [
   {
     title: <FormattedMessage id="grade" defaultMessage="Grade" />,
-    dataIndex: 'grade',
+    dataIndex: 'grade_name',
+    render: (_v, record) => displayText(record.grade_name),
+  },
+  {
+    title: <FormattedMessage id="value" defaultMessage="Value" />,
+    dataIndex: 'grade_value',
     render: (_v, record) =>
-      record.grade !== null && record.grade !== undefined && record.grade !== ''
-        ? String(record.grade)
-        : EMPTY_PLACEHOLDER,
+      record.grade_value != null ? String(record.grade_value) : EMPTY_PLACEHOLDER,
+  },
+  {
+    title: <FormattedMessage id="date" defaultMessage="Date" />,
+    dataIndex: 'grade_date',
+    render: (_v, record) => safeDate(record.grade_date, DAY_FORMAT),
   },
 ];
 
@@ -95,9 +104,9 @@ const HistoryDetailsDrawer: React.FC<Props> = ({ userId, historyId, open, onClos
     };
   }, [open, historyId, userId]);
 
-  const attendances = data?.attendances ?? [];
-  const grades = data?.grades ?? [];
-  const hasPeriod = Boolean(data?.date_from || data?.date_to);
+  const attendances = data?.snapshot?.attendances ?? [];
+  const exams = data?.snapshot?.exams ?? [];
+  const grades = data?.snapshot?.final_grades ?? [];
 
   return (
     <Drawer
@@ -125,33 +134,13 @@ const HistoryDetailsDrawer: React.FC<Props> = ({ userId, historyId, open, onClos
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <Descriptions bordered column={1} size="small">
             <Descriptions.Item label={<FormattedMessage id="date" defaultMessage="Date" />}>
-              {safeDate(data.created_at)}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={<FormattedMessage id="user_history.period" defaultMessage="Period" />}
-            >
-              {hasPeriod
-                ? `${safeDate(data.date_from, DAY_FORMAT)} – ${safeDate(data.date_to, DAY_FORMAT)}`
-                : EMPTY_PLACEHOLDER}
+              {safeDate(data.left_at)}
             </Descriptions.Item>
             <Descriptions.Item label={<FormattedMessage id="group" defaultMessage="Group" />}>
               {displayText(data.group_name)}
             </Descriptions.Item>
             <Descriptions.Item label={<FormattedMessage id="subject" defaultMessage="Subject" />}>
               {displayText(data.subject_name)}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={<FormattedMessage id="semester" defaultMessage="Semester" />}
-            >
-              {displayText(data.semester_name)}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={<FormattedMessage id="attendance" defaultMessage="Attendance" />}
-            >
-              {formatAttendanceSummary(data.attendance_summary)}
-            </Descriptions.Item>
-            <Descriptions.Item label={<FormattedMessage id="grades" defaultMessage="Grades" />}>
-              {formatGradesSummary(data.grades_summary)}
             </Descriptions.Item>
           </Descriptions>
 
@@ -164,11 +153,27 @@ const HistoryDetailsDrawer: React.FC<Props> = ({ userId, historyId, open, onClos
                 style={{ marginTop: 8 }}
                 size="small"
                 rowKey={(record, index) =>
-                  record.id != null ? String(record.id) : `attendance-${index}`
+                  record.schedule_id != null ? String(record.schedule_id) : `attendance-${index}`
                 }
                 pagination={false}
                 columns={attendanceColumns}
                 dataSource={attendances}
+              />
+            </div>
+          )}
+
+          {exams.length > 0 && (
+            <div>
+              <Typography.Text strong>
+                <FormattedMessage id="exams" defaultMessage="Exams (partial grades)" />
+              </Typography.Text>
+              <Table<API.StudentHistoryExamEntry>
+                style={{ marginTop: 8 }}
+                size="small"
+                rowKey={(_record, index) => `exam-${index}`}
+                pagination={false}
+                columns={examColumns}
+                dataSource={exams}
               />
             </div>
           )}
@@ -178,12 +183,10 @@ const HistoryDetailsDrawer: React.FC<Props> = ({ userId, historyId, open, onClos
               <Typography.Text strong>
                 <FormattedMessage id="grades" defaultMessage="Grades" />
               </Typography.Text>
-              <Table<API.StudentHistoryGradeEntry>
+              <Table<API.StudentHistoryFinalGrade>
                 style={{ marginTop: 8 }}
                 size="small"
-                rowKey={(record, index) =>
-                  record.id != null ? String(record.id) : `grade-${index}`
-                }
+                rowKey={(_record, index) => `grade-${index}`}
                 pagination={false}
                 columns={gradeColumns}
                 dataSource={grades}

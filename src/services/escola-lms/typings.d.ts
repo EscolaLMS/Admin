@@ -1219,75 +1219,65 @@ declare namespace API {
   type UserSetting = Record<string, string>;
 
   /**
-   * STUDENT HISTORY (AW-51) — placeholder contract.
-   * The `/api/admin/users/{id}/history[/{history_id}]` endpoints are delivered by a separate,
-   * not-yet-shipped backend task. Fields below are the FE's best-guess of the documented payload
-   * (dates, group/subject names, abbreviated attendance + grades). Everything is optional/nullable
-   * so rendering stays defensive until the real shape is confirmed against a live backend.
+   * STUDENT HISTORY (AW-51) — matches the delivered backend contract.
+   * `GET /api/admin/users/{student_id}/history` returns a paginated list, sorted `left_at` DESC;
+   * `GET /api/admin/users/{student_id}/history/{history_id}` returns the full per-record snapshot.
+   * Fields stay optional/nullable so rendering is defensive — e.g. `group_name` is null when the
+   * group was deleted after the snapshot was taken.
    */
-  type StudentHistoryAttendanceSummary = {
-    present?: number | null;
-    absent?: number | null;
-    late?: number | null;
-    excused?: number | null;
-    total?: number | null;
-    /** Whole-percent attendance, 0–100. */
-    percentage?: number | null;
+  type StudentHistoryFinalGrade = {
+    grade_name?: string | null;
+    grade_value?: number | null;
+    grade_date?: string | null;
   };
 
-  type StudentHistoryGradesSummary = {
-    average?: number | null;
-    final_grade?: string | number | null;
-    count?: number | null;
-  };
-
+  /** One row of the paginated history list. */
   type StudentHistoryItem = {
     id: number;
-    created_at?: string | null;
-    updated_at?: string | null;
-    /** Period the snapshot covers. */
-    date_from?: string | null;
-    date_to?: string | null;
-    group_id?: number | null;
+    /** When the student left the group; the list is sorted by this DESC. */
+    left_at?: string | null;
+    /** Null when the group was deleted after the snapshot. */
     group_name?: string | null;
-    subject_id?: number | null;
     subject_name?: string | null;
-    semester_name?: string | null;
-    attendance_summary?: StudentHistoryAttendanceSummary | null;
-    grades_summary?: StudentHistoryGradesSummary | null;
+    attendances_count?: number | null;
+    exams_count?: number | null;
+    final_grades?: StudentHistoryFinalGrade[] | null;
   };
 
   type StudentHistoryAttendanceEntry = {
-    id?: number | null;
-    date?: string | null;
+    schedule_id?: number | null;
+    /** Attendance status, e.g. "present" / "absent". */
     value?: string | null;
-    subject_name?: string | null;
   };
 
-  type StudentHistoryGradeEntry = {
-    id?: number | null;
-    name?: string | null;
-    grade?: string | number | null;
-    value?: number | null;
-    date?: string | null;
-    subject_name?: string | null;
+  /** A partial-grade exam captured in the snapshot. */
+  type StudentHistoryExamEntry = {
+    title?: string | null;
+    result?: string | null;
+  };
+
+  type StudentHistorySnapshot = {
+    attendances?: StudentHistoryAttendanceEntry[] | null;
+    exams?: StudentHistoryExamEntry[] | null;
+    final_grades?: StudentHistoryFinalGrade[] | null;
   };
 
   /** Full snapshot returned by the per-record endpoint, shown in the detail drawer. */
-  type StudentHistoryDetail = StudentHistoryItem & {
-    attendances?: StudentHistoryAttendanceEntry[] | null;
-    grades?: StudentHistoryGradeEntry[] | null;
+  type StudentHistoryDetail = {
+    id: number;
+    student_id?: number | null;
+    lesson_group_id?: number | null;
+    group_name?: string | null;
+    subject_name?: string | null;
+    left_at?: string | null;
+    snapshot?: StudentHistorySnapshot | null;
   };
 
   type StudentHistoryList = DefaultMetaResponse<StudentHistoryItem>;
 
   type StudentHistoryRow = DefaultResponse<StudentHistoryDetail>;
 
-  type StudentHistoryParams = PageParams &
-    PaginationParams & {
-      date_from?: string;
-      date_to?: string;
-    };
+  type StudentHistoryParams = PaginationParams;
 
   type UserGroup = {
     id: number;
