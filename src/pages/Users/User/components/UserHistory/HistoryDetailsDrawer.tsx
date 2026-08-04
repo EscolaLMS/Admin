@@ -25,10 +25,12 @@ const attendanceColumns: TableColumnsType<API.StudentHistoryAttendanceEntry> = [
       record.schedule_id != null ? `#${record.schedule_id}` : EMPTY_PLACEHOLDER,
   },
   {
-    title: <FormattedMessage id="attendance" defaultMessage="Attendance" />,
+    title: <FormattedMessage id="status" defaultMessage="Status" />,
     dataIndex: 'value',
     render: (_v, record) => {
-      const messageId = record.value ? ATTENDANCE_STATUS_MESSAGE_ID[record.value] : undefined;
+      const messageId = record.value
+        ? ATTENDANCE_STATUS_MESSAGE_ID[record.value.trim().toLowerCase()]
+        : undefined;
       return messageId ? <FormattedMessage id={messageId} /> : displayText(record.value);
     },
   },
@@ -116,7 +118,11 @@ const HistoryDetailsDrawer: React.FC<Props> = ({ userId, historyId, open, onClos
       onClose={onClose}
       destroyOnClose
     >
-      {loading && <Spin />}
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '48px 0' }}>
+          <Spin />
+        </div>
+      )}
 
       {!loading && (failed || !data) && (
         <Empty
