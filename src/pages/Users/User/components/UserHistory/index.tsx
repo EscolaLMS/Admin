@@ -7,7 +7,7 @@ import { FormattedMessage } from 'umi';
 
 import { safeDate } from './formatDate';
 import HistoryDetailsDrawer from './HistoryDetailsDrawer';
-import { displayText, formatAttendanceSummary, formatGradesSummary } from './utils';
+import { displayText, formatCount, formatFinalGrades } from './utils';
 
 /** HTTP statuses that mean "no history to show" rather than a real failure. */
 const GRACEFUL_EMPTY_STATUSES = [403, 404];
@@ -27,9 +27,9 @@ const UserHistory: React.FC<{ userId: number }> = ({ userId }) => {
   const columns: ProColumns<API.StudentHistoryItem>[] = [
     {
       title: <FormattedMessage id="date" defaultMessage="Date" />,
-      dataIndex: 'created_at',
+      dataIndex: 'left_at',
       width: 160,
-      render: (_v, record) => safeDate(record.created_at),
+      render: (_v, record) => safeDate(record.left_at),
     },
     {
       title: <FormattedMessage id="group" defaultMessage="Group" />,
@@ -42,16 +42,22 @@ const UserHistory: React.FC<{ userId: number }> = ({ userId }) => {
       render: (_v, record) => displayText(record.subject_name),
     },
     {
-      title: <FormattedMessage id="attendance" defaultMessage="Attendance" />,
-      dataIndex: 'attendance_summary',
-      width: 140,
-      render: (_v, record) => formatAttendanceSummary(record.attendance_summary),
+      title: <FormattedMessage id="attendances" defaultMessage="Attendances" />,
+      dataIndex: 'attendances_count',
+      width: 120,
+      render: (_v, record) => formatCount(record.attendances_count),
+    },
+    {
+      title: <FormattedMessage id="exams" defaultMessage="Exams (partial grades)" />,
+      dataIndex: 'exams_count',
+      width: 160,
+      render: (_v, record) => formatCount(record.exams_count),
     },
     {
       title: <FormattedMessage id="grades" defaultMessage="Grades" />,
-      dataIndex: 'grades_summary',
+      dataIndex: 'final_grades',
       width: 140,
-      render: (_v, record) => formatGradesSummary(record.grades_summary),
+      render: (_v, record) => formatFinalGrades(record.final_grades),
     },
     {
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Options" />,

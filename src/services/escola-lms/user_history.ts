@@ -5,9 +5,9 @@ import { request } from 'umi';
 /**
  * GET /api/admin/users/:id/history
  *
- * Paginated student-history list. `skipErrorHandler` keeps a 403 (viewer lacks
- * `student-history_list`) or transient failure from tearing down / redirecting the details page —
- * the caller degrades to an empty state instead. An empty history is a 200 with `data: []`.
+ * Paginated student-history list (sorted `left_at` DESC). `skipErrorHandler` keeps a 403 (viewer
+ * lacks `student-history_list`) or transient failure from tearing down / redirecting the details
+ * page — the caller degrades to an empty state instead. An empty history is a 200 with `data: []`.
  */
 export async function userHistory(
   userId: number,
