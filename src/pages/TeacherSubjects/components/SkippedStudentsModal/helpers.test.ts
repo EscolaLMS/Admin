@@ -5,7 +5,7 @@ import {
   NO_VALUE,
   partitionSkippedStudents,
   readParseExamResponse,
-} from './skippedStudents.helpers';
+} from './helpers';
 
 const otherGroupStudent: API.SkippedStudent = {
   result: 85,

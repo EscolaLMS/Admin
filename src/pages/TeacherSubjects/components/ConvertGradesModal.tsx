@@ -8,7 +8,7 @@ import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { useTeacherSubject } from '../context';
-import { readParseExamResponse } from './skippedStudents.helpers';
+import { readParseExamResponse } from './SkippedStudentsModal/helpers';
 import SkippedStudentsModal from './SkippedStudentsModal';
 
 const checkManualExamType = (type: ExamGradeType) =>

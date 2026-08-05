@@ -3,12 +3,10 @@ import type { ColumnsType } from 'antd/lib/table';
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'umi';
 
-import { TEACHER_SUBJECTS_PAGE_SIZE } from './consts';
-import {
-  formatSkippedStudentGroups,
-  NO_VALUE,
-  partitionSkippedStudents,
-} from './skippedStudents.helpers';
+import { TEACHER_SUBJECTS_PAGE_SIZE } from '../consts';
+import { formatSkippedStudentGroups, NO_VALUE, partitionSkippedStudents } from './helpers';
+
+import styles from './index.less';
 
 interface Props {
   open: boolean;
@@ -83,7 +81,7 @@ const SkippedStudentsModal: React.FC<Props> = ({ open, onClose, skippedStudents 
         </Button>,
       ]}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, paddingBottom: 24 }}>
+      <div className={styles.body}>
         {!!otherGroup.length && (
           <StudentsSection
             titleId="TeacherSubjects.Exams.skippedStudents.otherGroup.title"
