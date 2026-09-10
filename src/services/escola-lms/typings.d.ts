@@ -1218,6 +1218,67 @@ declare namespace API {
 
   type UserSetting = Record<string, string>;
 
+  /**
+   * STUDENT HISTORY (AW-51) — matches the delivered backend contract.
+   * `GET /api/admin/users/{student_id}/history` returns a paginated list, sorted `left_at` DESC;
+   * `GET /api/admin/users/{student_id}/history/{history_id}` returns the full per-record snapshot.
+   * Fields stay optional/nullable so rendering is defensive — e.g. `group_name` is null when the
+   * group was deleted after the snapshot was taken.
+   */
+  type StudentHistoryFinalGrade = {
+    grade_name?: string | null;
+    grade_value?: number | null;
+    grade_date?: string | null;
+  };
+
+  /** One row of the paginated history list. */
+  type StudentHistoryItem = {
+    id: number;
+    /** When the student left the group; the list is sorted by this DESC. */
+    left_at?: string | null;
+    /** Null when the group was deleted after the snapshot. */
+    group_name?: string | null;
+    subject_name?: string | null;
+    attendances_count?: number | null;
+    exams_count?: number | null;
+    final_grades?: StudentHistoryFinalGrade[] | null;
+  };
+
+  type StudentHistoryAttendanceEntry = {
+    schedule_id?: number | null;
+    /** Attendance status, e.g. "present" / "absent". */
+    value?: string | null;
+  };
+
+  /** A partial-grade exam captured in the snapshot. */
+  type StudentHistoryExamEntry = {
+    title?: string | null;
+    result?: string | null;
+  };
+
+  type StudentHistorySnapshot = {
+    attendances?: StudentHistoryAttendanceEntry[] | null;
+    exams?: StudentHistoryExamEntry[] | null;
+    final_grades?: StudentHistoryFinalGrade[] | null;
+  };
+
+  /** Full snapshot returned by the per-record endpoint, shown in the detail drawer. */
+  type StudentHistoryDetail = {
+    id: number;
+    student_id?: number | null;
+    lesson_group_id?: number | null;
+    group_name?: string | null;
+    subject_name?: string | null;
+    left_at?: string | null;
+    snapshot?: StudentHistorySnapshot | null;
+  };
+
+  type StudentHistoryList = DefaultMetaResponse<StudentHistoryItem>;
+
+  type StudentHistoryRow = DefaultResponse<StudentHistoryDetail>;
+
+  type StudentHistoryParams = PaginationParams;
+
   type UserGroup = {
     id: number;
     name: string;

@@ -8,6 +8,7 @@ import { user as fetchUser } from '@/services/escola-lms/user';
 import { categoriesArrToIds } from '@/utils/utils';
 import { useCallback, useEffect, useState } from 'react';
 import UserCategories from './components/Categories';
+import UserHistory from './components/UserHistory';
 
 export default () => {
   const params = useParams<{ user?: string; tab?: string }>();
@@ -105,6 +106,18 @@ export default () => {
             }
           >
             {user && <LogsWidget useAsWidget userID={Number(user)} />}
+          </ProCard.TabPane>
+        )}
+        {!isNew && data?.roles?.includes('student') && (
+          <ProCard.TabPane
+            key={'history'}
+            tab={
+              <span>
+                <FormattedMessage id="user_history" defaultMessage="History" />
+              </span>
+            }
+          >
+            {user && <UserHistory userId={Number(user)} />}
           </ProCard.TabPane>
         )}
       </ProCard>
