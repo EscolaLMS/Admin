@@ -1797,6 +1797,24 @@ declare namespace API {
     email: string;
   };
 
+  type SkippedStudentGroup = {
+    id: number;
+    name: string;
+  };
+
+  type SkippedStudent = {
+    result: number | string | null;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+    found_in_system: boolean;
+    user_groups: SkippedStudentGroup[];
+  };
+
+  type ParseExamResponse = Exam & {
+    skipped_students?: SkippedStudent[];
+  };
+
   type ExamSemester = {
     id: number;
     name: string;

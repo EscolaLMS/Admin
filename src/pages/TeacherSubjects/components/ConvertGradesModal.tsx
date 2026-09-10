@@ -8,6 +8,8 @@ import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { useTeacherSubject } from '../context';
+import { readParseExamResponse } from './SkippedStudentsModal/helpers';
+import SkippedStudentsModal from './SkippedStudentsModal';
 
 const checkManualExamType = (type: ExamGradeType) =>
   type === ExamGradeType.Manual ||
@@ -21,6 +23,7 @@ const FileExamGradeType: React.FC<{
 }> = ({ type, onDataConverted, groupSelectDisabled }) => {
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+  const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>([]);
 
   const groupOptions: DefaultOptionType[] = useMemo(
     () =>
@@ -37,15 +40,16 @@ const FileExamGradeType: React.FC<{
     semester_subject_id: semester_subject_id!,
   };
 
-  const onUploadFile = useCallback((response: API.DefaultResponse<API.Exam>) => {
-    if (response.success) {
-      // TODO #1037 error handling
-      // filter out users that are not in selected group
-      const exam_results = response.data.results.filter(({ user_id }) => user_id !== null);
-      if (!exam_results.length) return;
+  const onUploadFile = useCallback((response: API.DefaultResponse<API.ParseExamResponse>) => {
+    const { examResults, skippedStudents: skipped, groupId } = readParseExamResponse(response);
 
-      onDataConverted({ exam_results, group_id: response.data.group_id });
+    setSkippedStudents(skipped);
+
+    if (examResults.length && groupId !== null) {
+      onDataConverted({ exam_results: examResults, group_id: groupId });
     }
+    // TODO #1037 error handling: a failed parse (`success: false`) is still swallowed here —
+    // no notification is shown and the uploaded file stays in the list with OK disabled.
   }, []);
 
   return (
@@ -64,10 +68,20 @@ const FileExamGradeType: React.FC<{
         name="file"
         url="/api/admin/exams/parse"
         onUpload={onUploadFile}
-        onChange={(info) => !info.fileList.length && onDataConverted(undefined)}
+        onChange={(info) => {
+          if (!info.fileList.length) {
+            onDataConverted(undefined);
+            setSkippedStudents([]);
+          }
+        }}
         maxFiles={1}
         data={reqData}
         disabled={!selectedGroup}
+      />
+      <SkippedStudentsModal
+        open={skippedStudents.length > 0}
+        skippedStudents={skippedStudents}
+        onClose={() => setSkippedStudents([])}
       />
     </>
   );
