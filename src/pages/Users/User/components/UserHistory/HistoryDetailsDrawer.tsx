@@ -24,6 +24,11 @@ const attendanceColumns: TableColumnsType<API.StudentHistoryAttendanceEntry> = [
       record.schedule_id != null ? `#${record.schedule_id}` : EMPTY_PLACEHOLDER,
   },
   {
+    title: <FormattedMessage id="date" defaultMessage="Date" />,
+    dataIndex: 'date',
+    render: (_v, record) => safeDate(record.date, DAY_FORMAT),
+  },
+  {
     title: <FormattedMessage id="status" defaultMessage="Status" />,
     dataIndex: 'value',
     render: (_v, record) => {

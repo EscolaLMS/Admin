@@ -1236,6 +1236,7 @@ declare namespace API {
 
   type StudentHistoryAttendanceEntry = {
     schedule_id?: number | null;
+    date?: string | null;
     value?: string | null;
   };
 
