@@ -73,6 +73,8 @@ const SkippedStudentsModal: React.FC<Props> = ({ open, onClose, skippedStudents 
         </Typography.Title>
       }
       width={720}
+      centered
+      classNames={{ content: styles.modalContent, body: styles.modalBody }}
       open={open}
       onCancel={onClose}
       footer={[
