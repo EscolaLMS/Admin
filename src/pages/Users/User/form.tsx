@@ -91,8 +91,7 @@ export default ({
 }) => {
   const intl = useIntl();
   const access = useAccess();
-  // Read-only roles (e.g. dziekanat) can open user details to view history but must not see any
-  // edit controls. Gate the whole form by the existing create/update permissions.
+  // Read-only roles (e.g. dziekanat) reach this page to view history, so the form itself is gated.
   const canEdit = isNew ? access.userCreatePermission : access.userUpdatePermission;
   const params = useParams<{ user?: string }>();
   const { user } = params;

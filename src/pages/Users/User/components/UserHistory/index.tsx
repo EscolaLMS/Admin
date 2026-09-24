@@ -9,14 +9,12 @@ import { safeDate } from './formatDate';
 import HistoryDetailsDrawer from './HistoryDetailsDrawer';
 import { displayText, formatCount, formatFinalGrades } from './utils';
 
-/** HTTP statuses that mean "no history to show" rather than a real failure. */
+// 403 (viewer lacks the permission) / 404 (endpoint not deployed) render as empty history, not an error.
 const GRACEFUL_EMPTY_STATUSES = [403, 404];
 
 const UserHistory: React.FC<{ userId: number }> = ({ userId }) => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  // Distinguishes a genuine load failure (5xx / network) from an empty result. 403/404 stay
-  // graceful (the FE/BE split + the placeholder backend that isn't shipped yet).
   const [loadError, setLoadError] = useState(false);
 
   const openDetails = (id: number) => {
@@ -111,11 +109,9 @@ const UserHistory: React.FC<{ userId: number }> = ({ userId }) => {
                 success: true,
               };
             }
-            // A success:false body is a real failure, not an empty history.
             setLoadError(true);
           } catch (error) {
             const status = (error as { response?: { status?: number } })?.response?.status;
-            // Only surface genuine failures; a missing/forbidden endpoint stays an empty state.
             setLoadError(status === undefined || !GRACEFUL_EMPTY_STATUSES.includes(status));
           }
           return { data: [], total: 0, success: true };

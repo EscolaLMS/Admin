@@ -1,15 +1,14 @@
 import { DAY_FORMAT } from '@/consts/dates';
 import { AttendanceValue } from '@/services/escola-lms/enums';
 import { userHistoryEntry } from '@/services/escola-lms/user_history';
-import { Descriptions, Drawer, Empty, Space, Spin, Table, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
+import { Descriptions, Drawer, Empty, Space, Spin, Table, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
 
 import { safeDate } from './formatDate';
 import { displayText, EMPTY_PLACEHOLDER, formatResultPercent } from './utils';
 
-/** Backend attendance status → existing i18n key (see AttendanceValue enum + locale catalogs). */
 const ATTENDANCE_STATUS_MESSAGE_ID: Record<string, string> = {
   [AttendanceValue.PRESENT]: 'present',
   [AttendanceValue.PRESENT_NOT_EXERCISING]: 'not_exercising',
