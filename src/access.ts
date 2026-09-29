@@ -73,6 +73,8 @@ export default function (initialState: {
     userListPermission: havePermissionsInDashboard(PERMISSIONS.UserList),
     userDetailsPermission: havePermissionsInDashboard(PERMISSIONS.UserRead),
     userCreatePermission: havePermissionsInDashboard(PERMISSIONS.UserCreate),
+    userUpdatePermission: havePermissionsInDashboard(PERMISSIONS.UserUpdate),
+    userDeletePermission: havePermissionsInDashboard(PERMISSIONS.UserDelete),
 
     UserBulkNotificationListPermission: havePermissionsInDashboard(
       PERMISSIONS.UserBulkNotificationList,

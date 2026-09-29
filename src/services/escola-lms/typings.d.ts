@@ -1218,6 +1218,55 @@ declare namespace API {
 
   type UserSetting = Record<string, string>;
 
+  type StudentHistoryFinalGrade = {
+    grade_name?: string | null;
+    grade_value?: number | null;
+    grade_date?: string | null;
+  };
+
+  type StudentHistoryItem = {
+    id: number;
+    left_at?: string | null;
+    group_name?: string | null;
+    subject_name?: string | null;
+    attendances_count?: number | null;
+    exams_count?: number | null;
+    final_grades?: StudentHistoryFinalGrade[] | null;
+  };
+
+  type StudentHistoryAttendanceEntry = {
+    schedule_id?: number | null;
+    date?: string | null;
+    value?: string | null;
+  };
+
+  type StudentHistoryExamEntry = {
+    title?: string | null;
+    result?: string | null;
+  };
+
+  type StudentHistorySnapshot = {
+    attendances?: StudentHistoryAttendanceEntry[] | null;
+    exams?: StudentHistoryExamEntry[] | null;
+    final_grades?: StudentHistoryFinalGrade[] | null;
+  };
+
+  type StudentHistoryDetail = {
+    id: number;
+    student_id?: number | null;
+    lesson_group_id?: number | null;
+    group_name?: string | null;
+    subject_name?: string | null;
+    left_at?: string | null;
+    snapshot?: StudentHistorySnapshot | null;
+  };
+
+  type StudentHistoryList = DefaultMetaResponse<StudentHistoryItem>;
+
+  type StudentHistoryRow = DefaultResponse<StudentHistoryDetail>;
+
+  type StudentHistoryParams = PaginationParams;
+
   type UserGroup = {
     id: number;
     name: string;
