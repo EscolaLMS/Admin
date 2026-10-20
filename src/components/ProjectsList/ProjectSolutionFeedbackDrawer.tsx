@@ -1,5 +1,6 @@
 import { DrawerForm, ProFormTextArea } from '@ant-design/pro-form';
-import React, { useCallback } from 'react';
+import { Button, Space } from 'antd';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import { getProjectSolution, updateProjectSolutionFeedback } from '@/services/escola-lms/projects';
@@ -23,6 +24,7 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
   onSuccess,
 }) => {
   const intl = useIntl();
+  const [submitting, setSubmitting] = useState(false);
 
   const onFinish = useCallback(
     async (formData: FormData) => {
@@ -49,7 +51,11 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
       }}
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
+      onLoadingChange={setSubmitting}
       title={<FormattedMessage id="edit_comment" defaultMessage="Edit comment" />}
+      // DrawerForm portals its submitter into the drawer footer, where the floating
+      // accessibility widget covers it — render the buttons under the textarea instead.
+      submitter={false}
       drawerProps={{
         width: 478,
         destroyOnClose: true,
@@ -68,6 +74,14 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
           defaultMessage: 'Lecturer comment',
         })}
       />
+      <Space style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button onClick={onClose} disabled={submitting}>
+          <FormattedMessage id="cancel" defaultMessage="Cancel" />
+        </Button>
+        <Button type="primary" htmlType="submit" loading={submitting}>
+          <FormattedMessage id="ok" defaultMessage="OK" />
+        </Button>
+      </Space>
     </DrawerForm>
   );
 };
