@@ -47,4 +47,10 @@ test-results
 
 # agent files
 .claude
+.agents
+.cursor
 CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+GEMINI.md
+skills-lock.json

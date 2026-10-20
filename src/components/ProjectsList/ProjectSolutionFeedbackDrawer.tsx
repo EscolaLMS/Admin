@@ -1,10 +1,11 @@
 import { DrawerForm, ProFormTextArea } from '@ant-design/pro-form';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
 import { getProjectSolution, updateProjectSolutionFeedback } from '@/services/escola-lms/projects';
 import { TUTOR_FEEDBACK_MAX_LENGTH, normalizeTutorFeedback } from '@/utils/utils';
 
+import { InlineDrawerSubmitter } from './InlineDrawerSubmitter';
 import { notifyResult } from './notify';
 
 interface FormData {
@@ -23,6 +24,7 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
   onSuccess,
 }) => {
   const intl = useIntl();
+  const [submitting, setSubmitting] = useState(false);
 
   const onFinish = useCallback(
     async (formData: FormData) => {
@@ -49,7 +51,9 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
       }}
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
+      onLoadingChange={setSubmitting}
       title={<FormattedMessage id="edit_comment" defaultMessage="Edit comment" />}
+      submitter={false}
       drawerProps={{
         width: 478,
         destroyOnClose: true,
@@ -68,6 +72,7 @@ export const ProjectSolutionFeedbackDrawer: React.FC<Props> = ({
           defaultMessage: 'Lecturer comment',
         })}
       />
+      <InlineDrawerSubmitter onCancel={onClose} submitting={submitting} />
     </DrawerForm>
   );
 };

@@ -1,9 +1,10 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { DrawerForm, ProFormDigit } from '@ant-design/pro-form';
 import { Alert, Space, Tooltip } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'umi';
 
+import { InlineDrawerSubmitter } from './InlineDrawerSubmitter';
 import {
   ProjectSolutionGradeFormData,
   useProjectSolutionGrade,
@@ -24,6 +25,7 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
 }) => {
   const { effectiveMaxScore, hasMaxScore, minScore, loadInitial, onFinish, scoreRules } =
     useProjectSolutionGrade({ solution, maxScore, onSuccess });
+  const [submitting, setSubmitting] = useState(false);
 
   return (
     <DrawerForm<ProjectSolutionGradeFormData>
@@ -32,8 +34,9 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
       request={loadInitial}
       onVisibleChange={(visible) => !visible && onClose?.()}
       onFinish={onFinish}
+      onLoadingChange={setSubmitting}
       title={<FormattedMessage id="grade_project_solution" defaultMessage="Grade project" />}
-      submitter={{ submitButtonProps: { disabled: !hasMaxScore } }}
+      submitter={false}
       drawerProps={{
         width: 478,
         destroyOnClose: true,
@@ -77,6 +80,11 @@ export const ProjectSolutionGradeDrawer: React.FC<Props> = ({
           ),
         }}
         rules={scoreRules}
+      />
+      <InlineDrawerSubmitter
+        onCancel={onClose}
+        submitting={submitting}
+        submitDisabled={!hasMaxScore}
       />
     </DrawerForm>
   );
