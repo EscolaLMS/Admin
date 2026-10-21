@@ -324,6 +324,8 @@ export default {
   H5P_select_content: 'Select content for H5P',
   upload_click_here: 'Click here to add file',
   upload: 'Add file',
+  upload_error: 'File upload failed',
+  upload_error_invalid_file_type: 'Invalid file type. Allowed types: {types}',
   preview: 'Preview',
   export: 'Export',
   export_failed: 'Export failed',

@@ -11,13 +11,15 @@ import './index.css';
 import { Context } from '@/components/ProgramForm/Context';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Matches the backend `mimes:mp4,ogg,webm,mov` rule for video topics
+const VIDEO_ACCEPT = '.mp4,.ogg,.webm,.mov';
 const CONFIG = {
   acceptedTypes: {
     audio: '.mp3,audio/*',
-    video: '.mp3,video/*',
+    video: VIDEO_ACCEPT,
     document: '.doc,.docx,.pdf,.zip',
     [TopicType.Audio]: '.mp3,audio/*',
-    [TopicType.Video]: '.mp3,video/*',
+    [TopicType.Video]: VIDEO_ACCEPT,
     [TopicType.PDF]: '.pdf,application/pdf',
   },
 };
