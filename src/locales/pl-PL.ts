@@ -308,6 +308,8 @@ export default {
   H5P_select_content: 'Wybierz treść H5P',
   upload_click_here: 'Kliknij tutaj żeby dodać',
   upload: 'Dodaj plik',
+  upload_error: 'Nie udało się przesłać pliku',
+  upload_error_invalid_file_type: 'Nieprawidłowy typ pliku. Dozwolone typy: {types}',
   preview: 'Podgląd',
   export: 'Eksport',
   export_failed: 'Eksport nie powiódł się',

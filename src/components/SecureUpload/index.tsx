@@ -7,6 +7,7 @@ import ConditionalWrap from 'conditional-wrap';
 import type { PropsWithChildren } from 'react';
 import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
+import { formatUploadError } from './uploadError';
 declare const REACT_APP_API_URL: string;
 
 export type SecureUploadType<T = API.File> = {
@@ -48,6 +49,19 @@ function SecureUpload<Type = API.File>({
   const [infoState, setInfoState] = useState<UploadChangeParam<UploadFile<any>>>();
   const intl = useIntl();
 
+  // antd shows a string `response` as the failed item's tooltip; without it the tooltip is
+  // rc-upload's untranslated "cannot post <url> <status>". Only the displayed list is changed,
+  // consumers still get the original response in `onChange`.
+  const withTranslatedError = (info: UploadChangeParam<UploadFile<any>>) => {
+    const response = formatUploadError(intl, info.file.response);
+    return {
+      ...info,
+      fileList: info.fileList.map((file) =>
+        file.uid === info.file.uid ? { ...file, response } : file,
+      ),
+    };
+  };
+
   if (data && data[name]) {
     // eslint-disable-next-line no-param-reassign
     delete data[name];
@@ -78,7 +92,7 @@ function SecureUpload<Type = API.File>({
           showUploadList,
           headers: { Authorization: `Bearer ${localStorage.getItem('TOKEN')}` },
           onChange: (info) => {
-            setInfoState(info);
+            setInfoState(info.file.status === 'error' ? withTranslatedError(info) : info);
             if (onChange) {
               onChange(info);
             }
