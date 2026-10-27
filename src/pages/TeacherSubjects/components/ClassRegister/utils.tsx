@@ -27,6 +27,7 @@ interface AttendanceProps {
   handleDeleteColumn: (columnIndex: number, columnTitle: string) => void;
   scheduleDeletePermission?: boolean;
   onAttendanceChange: (scheduleId: number, studentId: number, value: API.AttendanceValue) => void;
+  getAttendance: (scheduleId: number, studentId: number) => API.AttendanceValue | null;
 }
 
 export const getAttendanceCols = ({
@@ -34,7 +35,15 @@ export const getAttendanceCols = ({
   handleDeleteColumn,
   scheduleDeletePermission = false,
   onAttendanceChange,
+  getAttendance,
 }: AttendanceProps): ProColumns<ClassRegisterTableItem> => {
+  // One handler shared by every cell, so the memoised AttendanceCheckbox can skip re-rendering
+  const handleAttendanceSuccess = (
+    value: API.AttendanceValue,
+    scheduleId: number,
+    studentId: number,
+  ) => onAttendanceChange(scheduleId, studentId, value);
+
   const dynamicCols = groupAttendanceSchedule.reduce<ProColumns<ClassRegisterTableItem>[]>(
     (acc, curr) => [
       ...acc,
@@ -59,9 +68,9 @@ export const getAttendanceCols = ({
         render: (_, record) => (
           <AttendanceCheckbox
             groupAttendanceScheduleId={curr.id}
-            attendance={record[`attendance-${curr?.id}`]}
+            attendance={getAttendance(curr.id, record.id)}
             studentId={record.id}
-            onSuccess={(value) => onAttendanceChange(curr.id, record.id, value)}
+            onSuccess={handleAttendanceSuccess}
           />
         ),
       },

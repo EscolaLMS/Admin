@@ -1,8 +1,8 @@
 import { changeStudentAttendance } from '@/services/escola-lms/attendances';
-import { Checkbox, Space, Spin, Tooltip } from 'antd';
+import { Checkbox, Spin } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FormattedMessage } from 'umi';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 
 import type { Status } from './types';
 import { parseToAttendanceValue, parseToStatus } from './utils';
@@ -11,7 +11,11 @@ interface AttendanceCheckboxProps {
   groupAttendanceScheduleId: number;
   studentId: number;
   attendance: API.AttendanceValue | null;
-  onSuccess?: (value: API.AttendanceValue) => void;
+  onSuccess?: (
+    value: API.AttendanceValue,
+    groupAttendanceScheduleId: number,
+    studentId: number,
+  ) => void;
 }
 
 const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
@@ -22,6 +26,7 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
 }) => {
   const [status, setStatus] = useState<Status>(parseToStatus(attendance));
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
 
   // Re-seed local state when the source value changes (e.g. after a bulk update
   // or a parent refetch). Only touches local state — never fires the API.
@@ -42,7 +47,7 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
         .then((res) => {
           if (res.success) {
             setStatus(next);
-            onSuccess?.(value);
+            onSuccess?.(value, groupAttendanceScheduleId, studentId);
           }
         })
         .finally(() => setLoading(false));
@@ -61,20 +66,26 @@ const AttendanceCheckbox: React.FC<AttendanceCheckboxProps> = ({
     [commit, status],
   );
 
+  // The class register renders one cell per student per date (thousands on large groups), so the
+  // cell sticks to native titles and a plain wrapper instead of antd Tooltip/Space, and only mounts
+  // the spinner while a save is in flight.
   return (
-    <Spin spinning={loading} size="small">
-      <Space>
-        <Tooltip title={<FormattedMessage id="present" />}>
-          <Checkbox disabled={loading} checked={status.ch1} onChange={onCh1Change} />
-        </Tooltip>
-        <Tooltip
-          title={<FormattedMessage id={status.ch1 ? 'not_exercising' : 'excused_absence'} />}
-        >
-          <Checkbox disabled={loading} checked={status.ch2} onChange={onCh2Change} />
-        </Tooltip>
-      </Space>
-    </Spin>
+    <span style={{ display: 'inline-flex', gap: 8 }}>
+      <Checkbox
+        title={intl.formatMessage({ id: 'present' })}
+        disabled={loading}
+        checked={status.ch1}
+        onChange={onCh1Change}
+      />
+      <Checkbox
+        title={intl.formatMessage({ id: status.ch1 ? 'not_exercising' : 'excused_absence' })}
+        disabled={loading}
+        checked={status.ch2}
+        onChange={onCh2Change}
+      />
+      {loading && <Spin size="small" />}
+    </span>
   );
 };
 
-export default AttendanceCheckbox;
+export default memo(AttendanceCheckbox);

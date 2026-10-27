@@ -63,6 +63,11 @@ export const ClassRegister: React.FC = () => {
     Record<number, Record<number, API.AttendanceValue>>
   >({});
   const [groupStudentIds, setGroupStudentIds] = useState<number[]>([]);
+  // The attendance columns are built once per load, inside `request`, so cells read the live map
+  // through a ref. Rows are paginated client-side without refetching, so the row data itself would
+  // still hold the value from the last load when a page is shown again.
+  const attendanceByScheduleRef = useRef(attendanceBySchedule);
+  attendanceByScheduleRef.current = attendanceBySchedule;
 
   const handleAttendanceChange = (
     scheduleId: number,
@@ -282,6 +287,8 @@ export const ClassRegister: React.FC = () => {
                 checkPermission(PERMISSIONS.PCGSchedulesDelete) ||
                 checkPermission(PERMISSIONS.PCGSchedulesDeleteOwn),
               onAttendanceChange: handleAttendanceChange,
+              getAttendance: (scheduleId, studentId) =>
+                attendanceByScheduleRef.current[scheduleId]?.[studentId] ?? null,
             });
             const examsCols = getExamsCols(examsRes.data);
             const finalGradeCols = getFinalGradesCols(
@@ -393,7 +400,6 @@ export const ClassRegister: React.FC = () => {
           actionRef={actionRef}
           pagination={{
             defaultPageSize: TEACHER_SUBJECTS_PAGE_SIZE,
-            onChange: () => actionRef.current?.reload(),
           }}
           rowKey="id"
         />
