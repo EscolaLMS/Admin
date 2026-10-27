@@ -47,7 +47,7 @@ export const getUploadErrorMessage = (body: unknown): UploadErrorMessage => {
   if (codec) {
     return {
       id: 'upload_error_unsupported_codec',
-      defaultMessage: 'Unsupported video codec: {codec}. Allowed: {allowed}',
+      defaultMessage: 'Unsupported video format (codec {codec}). Allowed codecs: {allowed}',
       values: { codec: codec[1], allowed: codec[2] },
     };
   }
