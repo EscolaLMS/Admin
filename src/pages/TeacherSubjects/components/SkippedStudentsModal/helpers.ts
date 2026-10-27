@@ -37,3 +37,20 @@ export const readParseExamResponse = (
     groupId: response.data.group_id ?? null,
   };
 };
+
+export type UploadBlockReason = 'selectGroup' | 'uploadFile' | 'noMatchingStudents';
+
+export const getUploadBlockReason = ({
+  groupSelected,
+  response,
+}: {
+  groupSelected: boolean;
+  response: API.DefaultResponse<API.ParseExamResponse> | undefined;
+}): UploadBlockReason | null => {
+  if (!groupSelected) return 'selectGroup';
+  if (!response?.success) return 'uploadFile';
+  const { examResults, skippedStudents } = readParseExamResponse(response);
+  if (!examResults.length) return skippedStudents.length ? 'noMatchingStudents' : 'uploadFile';
+
+  return null;
+};

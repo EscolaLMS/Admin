@@ -773,6 +773,11 @@ export default {
   'TeacherSubjects.Exams.skippedStudents.notInSystem.description':
     'Poniższych osób nie znaleziono w systemie, więc nie można było przypisać im oceny.',
   'TeacherSubjects.Exams.skippedStudents.groups': 'Przypisana grupa',
+  'TeacherSubjects.Exams.skippedStudents.nothingImportedTitle': 'Nie wpisano żadnej oceny',
+  'TeacherSubjects.Exams.upload.selectGroup': 'Najpierw wybierz grupę',
+  'TeacherSubjects.Exams.upload.uploadFile': 'Wgraj plik z wynikami dla wybranej grupy',
+  'TeacherSubjects.Exams.upload.noMatchingStudents':
+    'Żaden student z pliku nie należy do wybranej grupy. Usuń plik, aby wgrać inny albo wybrać inną grupę.',
   degree: 'Stopień',
   grade: 'Ocena',
   max_percent: 'Max procent (%)',

@@ -3,27 +3,48 @@ import { ExamGradeType } from '@/services/escola-lms/enums';
 import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import ProForm from '@ant-design/pro-form';
-import { Button, Image, Modal, Select, Space, Tooltip } from 'antd';
+import { Alert, Button, Image, Modal, Select, Space, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { useTeacherSubject } from '../context';
-import { readParseExamResponse } from './SkippedStudentsModal/helpers';
 import SkippedStudentsModal from './SkippedStudentsModal';
+import {
+  getUploadBlockReason,
+  readParseExamResponse,
+  type UploadBlockReason,
+} from './SkippedStudentsModal/helpers';
 
 const checkManualExamType = (type: ExamGradeType) =>
   type === ExamGradeType.Manual ||
   type === ExamGradeType.ManualPass ||
   type === ExamGradeType.ManualGrades;
 
+const UPLOAD_BLOCK_REASON_MESSAGES: Record<UploadBlockReason, string> = {
+  selectGroup: 'TeacherSubjects.Exams.upload.selectGroup',
+  uploadFile: 'TeacherSubjects.Exams.upload.uploadFile',
+  noMatchingStudents: 'TeacherSubjects.Exams.upload.noMatchingStudents',
+};
+
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
   groupSelectDisabled: boolean;
   onDataConverted: (data: ConvertedData | undefined) => void;
-}> = ({ type, onDataConverted, groupSelectDisabled }) => {
+  onBlockReasonChange: (reason: UploadBlockReason | null) => void;
+}> = ({ type, onDataConverted, onBlockReasonChange, groupSelectDisabled }) => {
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>([]);
+  const [parseResponse, setParseResponse] = useState<API.DefaultResponse<API.ParseExamResponse>>();
+
+  const blockReason = getUploadBlockReason({
+    groupSelected: selectedGroup !== null,
+    response: parseResponse,
+  });
+
+  useEffect(() => {
+    onBlockReasonChange(blockReason);
+  }, [blockReason]);
 
   const groupOptions: DefaultOptionType[] = useMemo(
     () =>
@@ -43,6 +64,7 @@ const FileExamGradeType: React.FC<{
   const onUploadFile = useCallback((response: API.DefaultResponse<API.ParseExamResponse>) => {
     const { examResults, skippedStudents: skipped, groupId } = readParseExamResponse(response);
 
+    setParseResponse(response);
     setSkippedStudents(skipped);
 
     if (examResults.length && groupId !== null) {
@@ -56,7 +78,8 @@ const FileExamGradeType: React.FC<{
     <>
       <ProForm.Item label={<FormattedMessage id="group" />}>
         <Select
-          disabled={groupSelectDisabled}
+          // a parsed file was matched against this group, so it has to be removed first
+          disabled={groupSelectDisabled || !!parseResponse}
           value={selectedGroup}
           onChange={(v) => setSelectedGroup(v)}
           options={groupOptions}
@@ -72,14 +95,23 @@ const FileExamGradeType: React.FC<{
           if (!info.fileList.length) {
             onDataConverted(undefined);
             setSkippedStudents([]);
+            setParseResponse(undefined);
           }
         }}
         maxFiles={1}
         data={reqData}
         disabled={!selectedGroup}
       />
+      {blockReason === 'noMatchingStudents' && (
+        <Alert
+          type="warning"
+          showIcon
+          message={<FormattedMessage id={UPLOAD_BLOCK_REASON_MESSAGES.noMatchingStudents} />}
+        />
+      )}
       <SkippedStudentsModal
         open={skippedStudents.length > 0}
+        nothingImported={blockReason === 'noMatchingStudents'}
         skippedStudents={skippedStudents}
         onClose={() => setSkippedStudents([])}
       />
@@ -207,7 +239,8 @@ const ModalFooter: React.FC<{
   onOk: () => void;
   onCancel: () => void;
   okDisabled: boolean;
-}> = ({ type, onOk, onCancel, okDisabled }) => {
+  okDisabledReason: UploadBlockReason | null;
+}> = ({ type, onOk, onCancel, okDisabled, okDisabledReason }) => {
   const currentImages = EXAM_GRADE_IMAGES?.[type] ?? EXAM_GRADE_IMAGES[ExamGradeType.Manual];
 
   return (
@@ -219,9 +252,18 @@ const ModalFooter: React.FC<{
         <Button onClick={onCancel}>
           <FormattedMessage id="cancel" />
         </Button>
-        <Button type="primary" disabled={okDisabled} onClick={onOk}>
-          <FormattedMessage id="ok" />
-        </Button>
+        <Tooltip
+          title={
+            okDisabled &&
+            okDisabledReason && (
+              <FormattedMessage id={UPLOAD_BLOCK_REASON_MESSAGES[okDisabledReason]} />
+            )
+          }
+        >
+          <Button type="primary" disabled={okDisabled} onClick={onOk}>
+            <FormattedMessage id="ok" />
+          </Button>
+        </Tooltip>
       </Space>
     </Space>
   );
@@ -232,6 +274,7 @@ const FILE_TYPES = [ExamGradeType.TeamsLecture, ExamGradeType.TestPortal, ExamGr
 export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSuccess, type }) => {
   const { teacherSubjectData, fetchGroupUsers } = useTeacherSubject();
   const [convertedData, setConvertedData] = useState<ConvertedData>();
+  const [uploadBlockReason, setUploadBlockReason] = useState<UploadBlockReason | null>(null);
 
   useEffect(() => {
     if (checkManualExamType(type) && open) {
@@ -255,6 +298,7 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
           }}
           onCancel={closeModal}
           okDisabled={!convertedData}
+          okDisabledReason={FILE_TYPES.includes(type) ? uploadBlockReason : null}
         />
       }
     >
@@ -262,6 +306,7 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
         <FileExamGradeType
           type={type}
           onDataConverted={setConvertedData}
+          onBlockReasonChange={setUploadBlockReason}
           groupSelectDisabled={!!convertedData}
         />
       )}

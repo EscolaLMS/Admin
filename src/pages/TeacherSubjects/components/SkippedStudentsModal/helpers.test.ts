@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   formatSkippedStudentGroups,
+  getUploadBlockReason,
   NO_VALUE,
   partitionSkippedStudents,
   readParseExamResponse,
@@ -173,5 +174,47 @@ describe('readParseExamResponse', () => {
       skippedStudents: [],
       groupId: null,
     });
+  });
+});
+
+describe('getUploadBlockReason', () => {
+  it('asks for a group before anything else', () => {
+    expect(getUploadBlockReason({ groupSelected: false, response: undefined })).toBe('selectGroup');
+  });
+
+  it('asks for a file once a group is chosen but nothing was parsed', () => {
+    expect(getUploadBlockReason({ groupSelected: true, response: undefined })).toBe('uploadFile');
+  });
+
+  it('asks for another file when the parse failed', () => {
+    const failed: API.DefaultResponse<API.ParseExamResponse> = {
+      success: false,
+      message: 'Invalid file',
+      errors: { file: ['Invalid file'] },
+    };
+
+    expect(getUploadBlockReason({ groupSelected: true, response: failed })).toBe('uploadFile');
+  });
+
+  it('explains that nobody in the file belongs to the selected group', () => {
+    const response = successResponse({
+      group_id: 1,
+      results: [],
+      skipped_students: [otherGroupStudent, notInSystemStudent],
+    });
+
+    expect(getUploadBlockReason({ groupSelected: true, response })).toBe('noMatchingStudents');
+  });
+
+  it('asks for another file when the parse found no student rows at all', () => {
+    const response = successResponse({ group_id: 1, results: [], skipped_students: [] });
+
+    expect(getUploadBlockReason({ groupSelected: true, response })).toBe('uploadFile');
+  });
+
+  it('has nothing to report once some students from the group were matched', () => {
+    const response = successResponse(realisticPayload);
+
+    expect(getUploadBlockReason({ groupSelected: true, response })).toBeNull();
   });
 });
