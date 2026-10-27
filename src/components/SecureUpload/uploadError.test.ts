@@ -28,6 +28,20 @@ describe('getUploadErrorMessage', () => {
     expect(getUploadErrorMessage(body).values).toEqual({ types: 'mp4, ogg, webm, mov' });
   });
 
+  it('maps the topic content codec error to the translated unsupported codec message', () => {
+    const body = {
+      success: false,
+      message: 'Topic Content Validation fails',
+      data: { value: ['Unsupported video codec: hevc. Allowed: h264.'] },
+    };
+
+    expect(getUploadErrorMessage(body)).toEqual({
+      id: 'upload_error_unsupported_codec',
+      defaultMessage: 'Unsupported video codec: {codec}. Allowed: {allowed}',
+      values: { codec: 'hevc', allowed: 'h264' },
+    });
+  });
+
   it('falls back to the generic translated message for any other failure', () => {
     const generic = { id: 'upload_error', defaultMessage: 'File upload failed' };
 

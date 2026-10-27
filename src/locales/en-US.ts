@@ -326,6 +326,7 @@ export default {
   upload: 'Add file',
   upload_error: 'File upload failed',
   upload_error_invalid_file_type: 'Invalid file type. Allowed types: {types}',
+  upload_error_unsupported_codec: 'Unsupported video codec: {codec}. Allowed: {allowed}',
   preview: 'Preview',
   export: 'Export',
   export_failed: 'Export failed',
