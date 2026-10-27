@@ -312,7 +312,7 @@ export const Topic: React.FC = () => {
                 currentState={topics}
                 onChange={(info) => {
                   setLoading(true);
-                  if (info.file.status === 'removed' || info.file.status === 'error') {
+                  if (info.file.status === 'removed') {
                     setLoading(false);
                   }
                 }}
