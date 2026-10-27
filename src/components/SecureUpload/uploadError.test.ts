@@ -1,54 +1,38 @@
 import { describe, expect, it } from '@jest/globals';
+import { createIntl } from 'react-intl';
 
-import { getUploadErrorMessage } from './uploadError';
+import plPL from '../../locales/pl-PL';
+import { formatUploadError } from './uploadError';
 
-describe('getUploadErrorMessage', () => {
-  it('maps the backend mimes rule to the translated invalid file type message', () => {
-    const body = {
-      message: 'The value field must be a file of type: mp4, ogg, webm, mov.',
-      errors: { value: ['The value field must be a file of type: mp4, ogg, webm, mov.'] },
-    };
+const { upload_error, upload_error_unsupported_codec } = plPL;
+const intl = createIntl({
+  locale: 'pl-PL',
+  messages: { upload_error, upload_error_unsupported_codec },
+});
 
-    expect(getUploadErrorMessage(body)).toEqual({
-      id: 'upload_error_invalid_file_type',
-      defaultMessage: 'Invalid file type. Allowed types: {types}',
-      values: { types: 'mp4, ogg, webm, mov' },
-    });
-  });
-
-  it('finds the mimes rule among several field errors', () => {
-    const body = {
-      message: 'The title field is required. (and 1 more error)',
-      errors: {
-        title: ['The title field is required.'],
-        value: ['The value field must be a file of type: mp4, ogg, webm, mov.'],
-      },
-    };
-
-    expect(getUploadErrorMessage(body).values).toEqual({ types: 'mp4, ogg, webm, mov' });
-  });
-
-  it('maps the topic content codec error to the translated unsupported codec message', () => {
+describe('formatUploadError', () => {
+  it('translates the topic content codec error into the unsupported video format message', () => {
     const body = {
       success: false,
       message: 'Topic Content Validation fails',
       data: { value: ['Unsupported video codec: hevc. Allowed: h264.'] },
     };
 
-    expect(getUploadErrorMessage(body)).toEqual({
-      id: 'upload_error_unsupported_codec',
-      defaultMessage: 'Unsupported video format (codec {codec}). Allowed format: MP4 (H.264/AVC)',
-      values: { codec: 'hevc' },
-    });
+    expect(formatUploadError(intl, body)).toBe(
+      'Nieobsługiwany format wideo (kodek hevc). Dozwolony format: MP4 (H.264/AVC)',
+    );
   });
 
   it('falls back to the generic translated message for any other failure', () => {
-    const generic = { id: 'upload_error', defaultMessage: 'File upload failed' };
+    const generic = 'Nie udało się przesłać pliku';
 
-    expect(getUploadErrorMessage({ message: 'The value has an unsupported video codec.' })).toEqual(
-      generic,
-    );
-    expect(getUploadErrorMessage(undefined)).toEqual(generic);
-    expect(getUploadErrorMessage('<html>413 Request Entity Too Large</html>')).toEqual(generic);
+    expect(
+      formatUploadError(intl, {
+        message: 'The value field must be a file of type: mp4, ogg, webm, mov.',
+        errors: { value: ['The value field must be a file of type: mp4, ogg, webm, mov.'] },
+      }),
+    ).toBe(generic);
+    expect(formatUploadError(intl, undefined)).toBe(generic);
+    expect(formatUploadError(intl, '<html>413 Request Entity Too Large</html>')).toBe(generic);
   });
 });

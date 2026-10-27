@@ -325,7 +325,6 @@ export default {
   upload_click_here: 'Click here to add file',
   upload: 'Add file',
   upload_error: 'File upload failed',
-  upload_error_invalid_file_type: 'Invalid file type. Allowed types: {types}',
   upload_error_unsupported_codec:
     'Unsupported video format (codec {codec}). Allowed format: MP4 (H.264/AVC)',
   preview: 'Preview',
