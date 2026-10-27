@@ -9,42 +9,24 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { useTeacherSubject } from '../context';
 import SkippedStudentsModal from './SkippedStudentsModal';
-import {
-  getUploadBlockReason,
-  readParseExamResponse,
-  type UploadBlockReason,
-} from './SkippedStudentsModal/helpers';
+import { hasNoMatchingStudents, readParseExamResponse } from './SkippedStudentsModal/helpers';
 
 const checkManualExamType = (type: ExamGradeType) =>
   type === ExamGradeType.Manual ||
   type === ExamGradeType.ManualPass ||
   type === ExamGradeType.ManualGrades;
 
-const UPLOAD_BLOCK_REASON_MESSAGES: Record<UploadBlockReason, string> = {
-  selectGroup: 'TeacherSubjects.Exams.upload.selectGroup',
-  uploadFile: 'TeacherSubjects.Exams.upload.uploadFile',
-  noMatchingStudents: 'TeacherSubjects.Exams.upload.noMatchingStudents',
-};
-
 const FileExamGradeType: React.FC<{
   type: ExamGradeType;
   groupSelectDisabled: boolean;
   onDataConverted: (data: ConvertedData | undefined) => void;
-  onBlockReasonChange: (reason: UploadBlockReason | null) => void;
-}> = ({ type, onDataConverted, onBlockReasonChange, groupSelectDisabled }) => {
+}> = ({ type, onDataConverted, groupSelectDisabled }) => {
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>([]);
   const [parseResponse, setParseResponse] = useState<API.DefaultResponse<API.ParseExamResponse>>();
 
-  const blockReason = getUploadBlockReason({
-    groupSelected: selectedGroup !== null,
-    response: parseResponse,
-  });
-
-  useEffect(() => {
-    onBlockReasonChange(blockReason);
-  }, [blockReason]);
+  const noMatchingStudents = hasNoMatchingStudents(parseResponse);
 
   const groupOptions: DefaultOptionType[] = useMemo(
     () =>
@@ -102,16 +84,16 @@ const FileExamGradeType: React.FC<{
         data={reqData}
         disabled={!selectedGroup}
       />
-      {blockReason === 'noMatchingStudents' && (
+      {noMatchingStudents && (
         <Alert
           type="warning"
           showIcon
-          message={<FormattedMessage id={UPLOAD_BLOCK_REASON_MESSAGES.noMatchingStudents} />}
+          message={<FormattedMessage id="TeacherSubjects.Exams.upload.noMatchingStudents" />}
         />
       )}
       <SkippedStudentsModal
         open={skippedStudents.length > 0}
-        nothingImported={blockReason === 'noMatchingStudents'}
+        nothingImported={noMatchingStudents}
         skippedStudents={skippedStudents}
         onClose={() => setSkippedStudents([])}
       />
@@ -239,8 +221,7 @@ const ModalFooter: React.FC<{
   onOk: () => void;
   onCancel: () => void;
   okDisabled: boolean;
-  okDisabledReason: UploadBlockReason | null;
-}> = ({ type, onOk, onCancel, okDisabled, okDisabledReason }) => {
+}> = ({ type, onOk, onCancel, okDisabled }) => {
   const currentImages = EXAM_GRADE_IMAGES?.[type] ?? EXAM_GRADE_IMAGES[ExamGradeType.Manual];
 
   return (
@@ -252,18 +233,9 @@ const ModalFooter: React.FC<{
         <Button onClick={onCancel}>
           <FormattedMessage id="cancel" />
         </Button>
-        <Tooltip
-          title={
-            okDisabled &&
-            okDisabledReason && (
-              <FormattedMessage id={UPLOAD_BLOCK_REASON_MESSAGES[okDisabledReason]} />
-            )
-          }
-        >
-          <Button type="primary" disabled={okDisabled} onClick={onOk}>
-            <FormattedMessage id="ok" />
-          </Button>
-        </Tooltip>
+        <Button type="primary" disabled={okDisabled} onClick={onOk}>
+          <FormattedMessage id="ok" />
+        </Button>
       </Space>
     </Space>
   );
@@ -274,7 +246,6 @@ const FILE_TYPES = [ExamGradeType.TeamsLecture, ExamGradeType.TestPortal, ExamGr
 export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSuccess, type }) => {
   const { teacherSubjectData, fetchGroupUsers } = useTeacherSubject();
   const [convertedData, setConvertedData] = useState<ConvertedData>();
-  const [uploadBlockReason, setUploadBlockReason] = useState<UploadBlockReason | null>(null);
 
   useEffect(() => {
     if (checkManualExamType(type) && open) {
@@ -298,7 +269,6 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
           }}
           onCancel={closeModal}
           okDisabled={!convertedData}
-          okDisabledReason={FILE_TYPES.includes(type) ? uploadBlockReason : null}
         />
       }
     >
@@ -306,7 +276,6 @@ export const ConvertGradesModal: React.FC<Props> = ({ open, closeModal, onSucces
         <FileExamGradeType
           type={type}
           onDataConverted={setConvertedData}
-          onBlockReasonChange={setUploadBlockReason}
           groupSelectDisabled={!!convertedData}
         />
       )}

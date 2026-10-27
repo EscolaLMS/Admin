@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   formatSkippedStudentGroups,
-  getUploadBlockReason,
+  hasNoMatchingStudents,
   NO_VALUE,
   partitionSkippedStudents,
   readParseExamResponse,
@@ -177,44 +177,38 @@ describe('readParseExamResponse', () => {
   });
 });
 
-describe('getUploadBlockReason', () => {
-  it('asks for a group before anything else', () => {
-    expect(getUploadBlockReason({ groupSelected: false, response: undefined })).toBe('selectGroup');
+describe('hasNoMatchingStudents', () => {
+  it('is false before any file was parsed', () => {
+    expect(hasNoMatchingStudents(undefined)).toBe(false);
   });
 
-  it('asks for a file once a group is chosen but nothing was parsed', () => {
-    expect(getUploadBlockReason({ groupSelected: true, response: undefined })).toBe('uploadFile');
-  });
-
-  it('asks for another file when the parse failed', () => {
+  it('is false when the parse failed', () => {
     const failed: API.DefaultResponse<API.ParseExamResponse> = {
       success: false,
       message: 'Invalid file',
       errors: { file: ['Invalid file'] },
     };
 
-    expect(getUploadBlockReason({ groupSelected: true, response: failed })).toBe('uploadFile');
+    expect(hasNoMatchingStudents(failed)).toBe(false);
   });
 
-  it('explains that nobody in the file belongs to the selected group', () => {
+  it('is true when nobody in the file belongs to the selected group', () => {
     const response = successResponse({
       group_id: 1,
       results: [],
       skipped_students: [otherGroupStudent, notInSystemStudent],
     });
 
-    expect(getUploadBlockReason({ groupSelected: true, response })).toBe('noMatchingStudents');
+    expect(hasNoMatchingStudents(response)).toBe(true);
   });
 
-  it('asks for another file when the parse found no student rows at all', () => {
+  it('is false when the file has no student rows at all', () => {
     const response = successResponse({ group_id: 1, results: [], skipped_students: [] });
 
-    expect(getUploadBlockReason({ groupSelected: true, response })).toBe('uploadFile');
+    expect(hasNoMatchingStudents(response)).toBe(false);
   });
 
-  it('has nothing to report once some students from the group were matched', () => {
-    const response = successResponse(realisticPayload);
-
-    expect(getUploadBlockReason({ groupSelected: true, response })).toBeNull();
+  it('is false once some students from the group were matched', () => {
+    expect(hasNoMatchingStudents(successResponse(realisticPayload))).toBe(false);
   });
 });

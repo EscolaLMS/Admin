@@ -805,8 +805,6 @@ export default {
     'The people below were not found in the system, so no grade could be assigned to them.',
   'TeacherSubjects.Exams.skippedStudents.groups': 'Assigned group',
   'TeacherSubjects.Exams.skippedStudents.nothingImportedTitle': 'No grades were imported',
-  'TeacherSubjects.Exams.upload.selectGroup': 'Select a group first',
-  'TeacherSubjects.Exams.upload.uploadFile': 'Upload a results file for the selected group',
   'TeacherSubjects.Exams.upload.noMatchingStudents':
     'None of the students in the file belong to the selected group. Remove the file to upload another one or to choose a different group.',
   degree: 'Degree',
