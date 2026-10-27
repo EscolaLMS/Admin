@@ -37,3 +37,11 @@ export const readParseExamResponse = (
     groupId: response.data.group_id ?? null,
   };
 };
+
+export const hasNoMatchingStudents = (
+  response: API.DefaultResponse<API.ParseExamResponse> | undefined,
+): boolean => {
+  const { examResults, skippedStudents } = readParseExamResponse(response);
+
+  return !examResults.length && skippedStudents.length > 0;
+};

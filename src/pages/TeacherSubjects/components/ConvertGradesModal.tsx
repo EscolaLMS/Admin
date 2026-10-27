@@ -3,13 +3,13 @@ import { ExamGradeType } from '@/services/escola-lms/enums';
 import { getGroupFinalGrades as fetchGroupFinalGrades } from '@/services/escola-lms/grades';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import ProForm from '@ant-design/pro-form';
-import { Button, Image, Modal, Select, Space, Tooltip } from 'antd';
+import { Alert, Button, Image, Modal, Select, Space, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/lib/select';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'umi';
 import { useTeacherSubject } from '../context';
-import { readParseExamResponse } from './SkippedStudentsModal/helpers';
 import SkippedStudentsModal from './SkippedStudentsModal';
+import { hasNoMatchingStudents, readParseExamResponse } from './SkippedStudentsModal/helpers';
 
 const checkManualExamType = (type: ExamGradeType) =>
   type === ExamGradeType.Manual ||
@@ -24,6 +24,9 @@ const FileExamGradeType: React.FC<{
   const { semester_subject_id, teacherSubjectData } = useTeacherSubject();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [skippedStudents, setSkippedStudents] = useState<API.SkippedStudent[]>([]);
+  const [parseResponse, setParseResponse] = useState<API.DefaultResponse<API.ParseExamResponse>>();
+
+  const noMatchingStudents = hasNoMatchingStudents(parseResponse);
 
   const groupOptions: DefaultOptionType[] = useMemo(
     () =>
@@ -43,6 +46,7 @@ const FileExamGradeType: React.FC<{
   const onUploadFile = useCallback((response: API.DefaultResponse<API.ParseExamResponse>) => {
     const { examResults, skippedStudents: skipped, groupId } = readParseExamResponse(response);
 
+    setParseResponse(response);
     setSkippedStudents(skipped);
 
     if (examResults.length && groupId !== null) {
@@ -56,7 +60,8 @@ const FileExamGradeType: React.FC<{
     <>
       <ProForm.Item label={<FormattedMessage id="group" />}>
         <Select
-          disabled={groupSelectDisabled}
+          // a parsed file was matched against this group, so it has to be removed first
+          disabled={groupSelectDisabled || !!parseResponse}
           value={selectedGroup}
           onChange={(v) => setSelectedGroup(v)}
           options={groupOptions}
@@ -72,14 +77,23 @@ const FileExamGradeType: React.FC<{
           if (!info.fileList.length) {
             onDataConverted(undefined);
             setSkippedStudents([]);
+            setParseResponse(undefined);
           }
         }}
         maxFiles={1}
         data={reqData}
         disabled={!selectedGroup}
       />
+      {noMatchingStudents && (
+        <Alert
+          type="warning"
+          showIcon
+          message={<FormattedMessage id="TeacherSubjects.Exams.upload.noMatchingStudents" />}
+        />
+      )}
       <SkippedStudentsModal
         open={skippedStudents.length > 0}
+        nothingImported={noMatchingStudents}
         skippedStudents={skippedStudents}
         onClose={() => setSkippedStudents([])}
       />

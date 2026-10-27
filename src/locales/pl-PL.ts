@@ -308,6 +308,9 @@ export default {
   H5P_select_content: 'Wybierz treść H5P',
   upload_click_here: 'Kliknij tutaj żeby dodać',
   upload: 'Dodaj plik',
+  upload_error: 'Nie udało się przesłać pliku',
+  upload_error_unsupported_codec:
+    'Nieobsługiwany format wideo (kodek {codec}). Dozwolony format: MP4 (H.264/AVC)',
   preview: 'Podgląd',
   export: 'Eksport',
   export_failed: 'Eksport nie powiódł się',
@@ -770,6 +773,9 @@ export default {
   'TeacherSubjects.Exams.skippedStudents.notInSystem.description':
     'Poniższych osób nie znaleziono w systemie, więc nie można było przypisać im oceny.',
   'TeacherSubjects.Exams.skippedStudents.groups': 'Przypisana grupa',
+  'TeacherSubjects.Exams.skippedStudents.nothingImportedTitle': 'Nie wpisano żadnej oceny',
+  'TeacherSubjects.Exams.upload.noMatchingStudents':
+    'Żaden student z pliku nie należy do wybranej grupy. Usuń plik, aby wgrać inny albo wybrać inną grupę.',
   degree: 'Stopień',
   grade: 'Ocena',
   max_percent: 'Max procent (%)',

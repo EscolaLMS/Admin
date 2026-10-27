@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   formatSkippedStudentGroups,
+  hasNoMatchingStudents,
   NO_VALUE,
   partitionSkippedStudents,
   readParseExamResponse,
@@ -173,5 +174,41 @@ describe('readParseExamResponse', () => {
       skippedStudents: [],
       groupId: null,
     });
+  });
+});
+
+describe('hasNoMatchingStudents', () => {
+  it('is false before any file was parsed', () => {
+    expect(hasNoMatchingStudents(undefined)).toBe(false);
+  });
+
+  it('is false when the parse failed', () => {
+    const failed: API.DefaultResponse<API.ParseExamResponse> = {
+      success: false,
+      message: 'Invalid file',
+      errors: { file: ['Invalid file'] },
+    };
+
+    expect(hasNoMatchingStudents(failed)).toBe(false);
+  });
+
+  it('is true when nobody in the file belongs to the selected group', () => {
+    const response = successResponse({
+      group_id: 1,
+      results: [],
+      skipped_students: [otherGroupStudent, notInSystemStudent],
+    });
+
+    expect(hasNoMatchingStudents(response)).toBe(true);
+  });
+
+  it('is false when the file has no student rows at all', () => {
+    const response = successResponse({ group_id: 1, results: [], skipped_students: [] });
+
+    expect(hasNoMatchingStudents(response)).toBe(false);
+  });
+
+  it('is false once some students from the group were matched', () => {
+    expect(hasNoMatchingStudents(successResponse(realisticPayload))).toBe(false);
   });
 });

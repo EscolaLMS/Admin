@@ -1,4 +1,4 @@
-import { Button, Modal, Table, Typography } from 'antd';
+import { Alert, Button, Modal, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'umi';
@@ -11,6 +11,7 @@ import styles from './index.less';
 interface Props {
   open: boolean;
   onClose: () => void;
+  nothingImported: boolean;
   skippedStudents: API.SkippedStudent[];
 }
 
@@ -59,7 +60,12 @@ const StudentsSection: React.FC<{
   </div>
 );
 
-const SkippedStudentsModal: React.FC<Props> = ({ open, onClose, skippedStudents }) => {
+const SkippedStudentsModal: React.FC<Props> = ({
+  open,
+  onClose,
+  nothingImported,
+  skippedStudents,
+}) => {
   const { otherGroup, notInSystem } = useMemo(
     () => partitionSkippedStudents(skippedStudents),
     [skippedStudents],
@@ -69,7 +75,13 @@ const SkippedStudentsModal: React.FC<Props> = ({ open, onClose, skippedStudents 
     <Modal
       title={
         <Typography.Title level={4} style={{ marginBottom: 0 }}>
-          <FormattedMessage id="TeacherSubjects.Exams.skippedStudents.title" />
+          <FormattedMessage
+            id={
+              nothingImported
+                ? 'TeacherSubjects.Exams.skippedStudents.nothingImportedTitle'
+                : 'TeacherSubjects.Exams.skippedStudents.title'
+            }
+          />
         </Typography.Title>
       }
       width={720}
@@ -84,6 +96,13 @@ const SkippedStudentsModal: React.FC<Props> = ({ open, onClose, skippedStudents 
       ]}
     >
       <div className={styles.body}>
+        {nothingImported && (
+          <Alert
+            type="warning"
+            showIcon
+            message={<FormattedMessage id="TeacherSubjects.Exams.upload.noMatchingStudents" />}
+          />
+        )}
         {!!otherGroup.length && (
           <StudentsSection
             titleId="TeacherSubjects.Exams.skippedStudents.otherGroup.title"

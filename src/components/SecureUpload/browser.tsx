@@ -6,8 +6,9 @@ import { Button, Modal, message } from 'antd';
 import type { UploadChangeParam } from 'antd/lib/upload';
 import type { PropsWithChildren } from 'react';
 import { useCallback, useState } from 'react';
-import { FormattedMessage, request } from 'umi';
+import { FormattedMessage, request, useIntl } from 'umi';
 import type { SecureUploadType } from './index';
+import { formatUploadError } from './uploadError';
 
 type PostResponse = API.DefaultResponse<EscolaLms.ModelFields.Models.Metadata>;
 
@@ -63,6 +64,7 @@ function SecureUploadBrowser<Type = API.File>({
   const [showBrowser, setShowBrowser] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { url, name, onChange, data } = props;
+  const intl = useIntl();
 
   const closeModal = useCallback(() => {
     setShowBrowser(false);
@@ -89,11 +91,11 @@ function SecureUploadBrowser<Type = API.File>({
           onChange(getUploadChangeSuccessParam(response));
         }
       } else {
-        message.error(response.message);
+        message.error(formatUploadError(intl, response));
       }
     } catch (err: any) {
       setLoading(false);
-      message.error('data' in err ? err.data.message : 'Unknown Error');
+      message.error(formatUploadError(intl, err?.response?.data));
     } finally {
       setLoading(false);
     }

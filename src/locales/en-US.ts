@@ -324,6 +324,9 @@ export default {
   H5P_select_content: 'Select content for H5P',
   upload_click_here: 'Click here to add file',
   upload: 'Add file',
+  upload_error: 'File upload failed',
+  upload_error_unsupported_codec:
+    'Unsupported video format (codec {codec}). Allowed format: MP4 (H.264/AVC)',
   preview: 'Preview',
   export: 'Export',
   export_failed: 'Export failed',
@@ -801,6 +804,9 @@ export default {
   'TeacherSubjects.Exams.skippedStudents.notInSystem.description':
     'The people below were not found in the system, so no grade could be assigned to them.',
   'TeacherSubjects.Exams.skippedStudents.groups': 'Assigned group',
+  'TeacherSubjects.Exams.skippedStudents.nothingImportedTitle': 'No grades were imported',
+  'TeacherSubjects.Exams.upload.noMatchingStudents':
+    'None of the students in the file belong to the selected group. Remove the file to upload another one or to choose a different group.',
   degree: 'Degree',
   grade: 'Grade',
   max_percent: 'Max percent (%)',
