@@ -310,7 +310,8 @@ export default {
   upload: 'Dodaj plik',
   upload_error: 'Nie udało się przesłać pliku',
   upload_error_invalid_file_type: 'Nieprawidłowy typ pliku. Dozwolone typy: {types}',
-  upload_error_unsupported_codec: 'Nieobsługiwany format wideo (kodek {codec}). Dozwolone kodeki: {allowed}',
+  upload_error_unsupported_codec:
+    'Nieobsługiwany format wideo (kodek {codec}). Dozwolony format: MP4 (H.264/AVC)',
   preview: 'Podgląd',
   export: 'Eksport',
   export_failed: 'Eksport nie powiódł się',

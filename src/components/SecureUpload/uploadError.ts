@@ -12,7 +12,8 @@ export type UploadErrorMessage = {
 // Laravel `mimes` rule, e.g. "The value field must be a file of type: mp4, ogg, webm, mov."
 const MIMES_RULE = /must be a file of type: (.+?)\.?$/;
 // Topic content validation, e.g. "Unsupported video codec: hevc. Allowed: h264."
-const CODEC_RULE = /Unsupported video codec: (.+?)\. Allowed: (.+?)\.?$/;
+// The allowed format shown is the client-approved MP4 (H.264/AVC), not the backend list.
+const CODEC_RULE = /Unsupported video codec: (.+?)\./;
 
 // Field errors come under `errors` (Laravel validation) or `data` (topic content validation)
 const getMessages = (body: unknown): string[] => {
@@ -47,8 +48,8 @@ export const getUploadErrorMessage = (body: unknown): UploadErrorMessage => {
   if (codec) {
     return {
       id: 'upload_error_unsupported_codec',
-      defaultMessage: 'Unsupported video format (codec {codec}). Allowed codecs: {allowed}',
-      values: { codec: codec[1], allowed: codec[2] },
+      defaultMessage: 'Unsupported video format (codec {codec}). Allowed format: MP4 (H.264/AVC)',
+      values: { codec: codec[1] },
     };
   }
 

@@ -37,8 +37,8 @@ describe('getUploadErrorMessage', () => {
 
     expect(getUploadErrorMessage(body)).toEqual({
       id: 'upload_error_unsupported_codec',
-      defaultMessage: 'Unsupported video format (codec {codec}). Allowed codecs: {allowed}',
-      values: { codec: 'hevc', allowed: 'h264' },
+      defaultMessage: 'Unsupported video format (codec {codec}). Allowed format: MP4 (H.264/AVC)',
+      values: { codec: 'hevc' },
     });
   });
 
